@@ -44,7 +44,21 @@
   var pending = {};   // lockId -> current instrument value(s), not saved
 
   function freshState() {
-    return { v: SAVE_V, found: {}, open: {}, hints: {}, wrongs: 0, left: TOTAL, done: null, vars: pickVariants() };
+    return { v: SAVE_V, found: {}, open: {}, hints: {}, wrongs: 0, left: TOTAL, done: null, vars: pickVariants(), order: shuffledIds() };
+  }
+
+  function shuffledIds() {
+    var ids = R.objects.map(function (o) { return o.id; });
+    for (var i = ids.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = ids[i]; ids[i] = ids[j]; ids[j] = tmp;
+    }
+    return ids;
+  }
+  function orderedObjects() {
+    return st.order.map(function (id) {
+      return R.objects.filter(function (o) { return o.id === id; })[0];
+    });
   }
 
   // ---------- variants ----------
@@ -70,9 +84,10 @@
   //   b. no lock's answer is printed in another lock's clues
   //   c. no lock's answer equals another lock's misconception
   //   d. no two locks share an answer
+  //   e. no herring figure equals any answer, misconception or clue figure
   // A clue figure is any number the student reads in a clue, token or numeral,
   // and a clue belongs to the lock whose tokens it uses. Rules (a) and (b)
-  // ignore figures of 2 or less; (c) and (d) apply at every size.
+  // ignore figures of 2 or less; (c), (d) and (e) apply at every size.
   // scripts/check-escape-rooms.py applies the same rules and fails a room with
   // fewer than 20 VALID draws — change the two together.
   //
@@ -121,7 +136,7 @@
                          return k === key && v[t] !== undefined ? String(formatToken(v[t])) : m;
                        })
                         .replace(/<[^>]*>|&[#\w]+;/g, ' ');
-            numbersIn(seen).forEach(function (f) { if (f > CLUE_EXEMPT) out.push(f); });
+            numbersIn(seen).forEach(function (f) { out.push(f); });
           });
           return out;
         }),
@@ -130,13 +145,31 @@
       };
     });
 
+    var herrings = R.objects.filter(function (o) { return !o.clue && o.flavour; });
     function valid(pick) {
+      var drawn = {};
+      locks.forEach(function (l, i) {
+        var source = R.locks[i], variant = (source.variants && source.variants[pick[i]]) || {};
+        for (var token in variant) drawn[(source.key || source.id) + '.' + token] = variant[token];
+      });
+      var herringFigs = [];
+      herrings.forEach(function (o) {
+        var printed = String(o.flavour).replace(/\{\{([\w.-]+)\}\}/g, function (m, key) {
+          return drawn[key] !== undefined ? String(formatToken(drawn[key])) : m;
+        }).replace(/<[^>]*>|&[#\w]+;/g, ' ');
+        herringFigs = herringFigs.concat(numbersIn(printed));
+      });
       for (var i = 0; i < locks.length; i++) {
+        if (shares(herringFigs, locks[i].ans[pick[i]]) || shares(herringFigs, locks[i].miss[pick[i]]) ||
+            shares(herringFigs, locks[i].figs[pick[i]])) return false;
         for (var j = 0; j < locks.length; j++) {
           if (i === j) continue;
           var a = locks[i], b = locks[j], p = pick[i], q = pick[j];
-          if (i < j && (shares(a.figs[p], b.figs[q]) || shares(a.ans[p], b.ans[q]))) return false;
-          if (shares(a.ans[p], b.figs[q]) || shares(a.ans[p], b.miss[q])) return false;
+          if (i < j && (shares(a.figs[p].filter(function (f) { return f > CLUE_EXEMPT; }),
+                                b.figs[q].filter(function (f) { return f > CLUE_EXEMPT; })) ||
+                        shares(a.ans[p], b.ans[q]))) return false;
+          if (shares(a.ans[p], b.figs[q].filter(function (f) { return f > CLUE_EXEMPT; })) ||
+              shares(a.ans[p], b.miss[q])) return false;
         }
       }
       return true;
@@ -283,6 +316,7 @@
         '<div class="cols">' +
           '<div class="panel">' +
             '<div class="panel-head"><h2>The room</h2><span class="count" id="searchCount"></span></div>' +
+            '<p class="lede">Not every note will help you. Part of the puzzle is working out which ones do.</p>' +
             '<div class="objects" id="objects"></div>' +
             '<div class="search-out" id="searchOut" role="status"></div>' +
             '<div class="panel-head" style="margin-top:18px"><h2>What you have found</h2></div>' +
@@ -330,6 +364,10 @@
       if (!raw) return null;
       var s = JSON.parse(raw);
       if (!s || s.v !== SAVE_V || s.done) return null;
+      if (!Array.isArray(s.order)) {
+        s.order = shuffledIds();
+        try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
+      }
       return s;
     } catch (e) { return null; }
   }
@@ -339,12 +377,12 @@
   function renderRoom() {
     var searched = R.objects.filter(function (o) { return st.found[o.id]; }).length;
     el('searchCount').textContent = searched + ' of ' + R.objects.length + ' searched';
-    el('objects').innerHTML = R.objects.map(function (o) {
+    el('objects').innerHTML = orderedObjects().map(function (o) {
       var done = st.found[o.id];
-      var cls = 'obj' + (done ? ' done' : '') + (done && !o.clue ? ' empty' : '');
+      var cls = 'obj' + (done ? ' done' : '');
       return '<button class="' + cls + '" data-obj="' + o.id + '">' +
         '<span class="obj-n">' + esc(o.name) + '</span>' +
-        '<span class="obj-w">' + esc(done ? (o.clue ? 'found something' : 'nothing here') : o.where) + '</span>' +
+        '<span class="obj-w">' + esc(done ? 'found something' : o.where) + '</span>' +
         '</button>';
     }).join('');
     Array.prototype.forEach.call(el('objects').querySelectorAll('[data-obj]'), function (b) {
@@ -358,13 +396,8 @@
     if (!o) return;
     st.found[o.id] = true;
     var out = el('searchOut');
-    if (o.clue) {
-      out.className = 'search-out show got';
-      out.innerHTML = '<b>' + esc(o.name) + '</b>' + fill(o.clue);
-    } else {
-      out.className = 'search-out show nowt';
-      out.innerHTML = '<b>' + esc(o.name) + '</b>' + fill(o.flavour || 'Nothing useful here.');
-    }
+    out.className = 'search-out show got';
+    out.innerHTML = '<b>' + esc(o.name) + '</b>' + fill(o.clue || o.flavour || '');
     // Searching sends no event: question_answered is a lock attempt only, numbered 1 to 3 (Jon, 11 Oct
     // 2026, contract ESCAPE-ANALYTICS). Until then the first search of each object was logged as a
     // correct answer at question_index 0.
@@ -373,10 +406,10 @@
   }
 
   function renderNotebook() {
-    var clues = R.objects.filter(function (o) { return st.found[o.id] && o.clue; });
+    var clues = orderedObjects().filter(function (o) { return st.found[o.id] && (o.clue || o.flavour); });
     el('notebook').innerHTML = clues.length
       ? clues.map(function (o) {
-          return '<div class="clue"><span class="clue-src">' + esc(o.name) + '</span>' + fill(o.clue) + '</div>';
+          return '<div class="clue"><span class="clue-src">' + esc(o.name) + '</span>' + fill(o.clue || o.flavour) + '</div>';
         }).join('')
       : '<p class="empty-note">Nothing yet. Search the room &mdash; the notes do not say which lock they are for.</p>';
   }
@@ -884,6 +917,7 @@
     renderLockBtns();
     renderLockPanel();
     paintClock();
+    save();
     if (timerId) clearInterval(timerId);
     timerId = setInterval(tick, 1000);
     publishVars();

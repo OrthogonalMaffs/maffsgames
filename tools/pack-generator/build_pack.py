@@ -226,10 +226,11 @@ def text_of(s):
 def valid_picks(checker, room_js, locks):
     """(every VALID joint draw as a tuple of variant indices, the number of joint draws)."""
     clues = checker.clue_strings(room_js)
+    herrings = checker.herring_strings(room_js)
     valid, total = [], 0
     for pick in itertools.product(*[range(len(l["variants"])) for l in locks]):
         total += 1
-        if checker.draw_is_valid([(l["key"], l["variants"][i]) for l, i in zip(locks, pick)], clues):
+        if checker.draw_is_valid([(l["key"], l["variants"][i]) for l, i in zip(locks, pick)], clues, herrings):
             valid.append(pick)
     return valid, total
 
@@ -327,9 +328,10 @@ def answer_caption(lock):
 def check_sets(checker, room_js, locks, sets):
     """Problems with a choice of sets: a joint draw that is not VALID, or a lock whose answer repeats across sets."""
     clues = checker.clue_strings(room_js)
+    herrings = checker.herring_strings(room_js)
     out = []
     for s in sets:
-        if not checker.draw_is_valid([(l["key"], v) for l, v in zip(locks, s["vars"])], clues):
+        if not checker.draw_is_valid([(l["key"], v) for l, v in zip(locks, s["vars"])], clues, herrings):
             out.append("set %s: its joint draw is not VALID" % s["letter"])
     for j, l in enumerate(locks):
         for a, b in itertools.combinations(sets, 2):
@@ -722,7 +724,8 @@ def about_box(room, teach, locks, sets):
             "<p><b>Locks:</b> %s.</p>%s"
             "<p><b>Final padlock (for you only):</b> every set&rsquo;s one solution is %s; targets %d to %d. "
             "Estimation is the intended route: round the target, then find the two answers whose product is close.</p>"
-            "<p>The common wrong answers below are for the debrief.</p></div>"
+            "<p>The common wrong answers below are for the debrief.</p>"
+            "<p>Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p></div>"
             % (len(sets), letters[0], letters[-1], topics,
                ("<p><b>Level (the locks):</b> %s</p>" % first_note.group(1)) if first_note else "",
                finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets)))
@@ -1142,6 +1145,8 @@ def selftest():
                     [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
                                             set_pages_line([(x["letter"], [5, 8]) for x in sets])))),
                      ("key", text_of(about_box(room, teach, locks, sets)))])
+                if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets)):
+                    failures.append("answer key does not tell teachers about the red herrings")
                 first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug)
         finally:
             browser.close()
@@ -1156,8 +1161,9 @@ def selftest():
 
     def plant_invalid():
         clues = checker.clue_strings(room_js)
+        herrings = checker.herring_strings(room_js)
         bad = next((pick for pick in itertools.product(*[range(len(l["variants"])) for l in locks])
-                    if not checker.draw_is_valid([(l["key"], l["variants"][i]) for l, i in zip(locks, pick)], clues)), None)
+                    if not checker.draw_is_valid([(l["key"], l["variants"][i]) for l, i in zip(locks, pick)], clues, herrings)), None)
         if bad is None:
             raise pc.StalePlant("invalid joint draw", "every joint draw of this room is VALID")
         s = copy.deepcopy(sets)

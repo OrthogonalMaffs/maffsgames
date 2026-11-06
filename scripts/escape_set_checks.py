@@ -58,6 +58,14 @@ def format_token(v):
     return str(v)
 
 
+def printed_figures(text, values):
+    """Numerals visible after token filling; shared by the checker for clues and herrings."""
+    filled = re.sub(r"\{\{([\w.-]+)\}\}",
+                    lambda m: format_token(values[m.group(1)]) if m.group(1) in values else m.group(0), text)
+    plain = re.sub(r"<[^>]*>|&[#\w]+;", " ", filled)
+    return {float(x) for x in re.findall(r"\d+(?:\.\d+)?", plain)}
+
+
 def grid(lo, hi, step):
     """Every value the instrument can actually be set to."""
     n = int(round((hi - lo) / step))
