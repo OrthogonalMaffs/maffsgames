@@ -80,27 +80,3 @@ Amendment 2 (6 Nov, same PR): the key's ADJ definition is now "ADJ, next to θ, 
 
 Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
 
-## 2026-11-06 (cloud): WHOSE-SIDE-PERSONALITY (`docs/history/contracts/2026-11-06-whose-side-personality.md`, Shared)
-
-DONE: #682 merged by merge-pr.py as c8b30dd on Jon's "merge" (6 Nov), after its Gate went green; main run 42220826186 GREEN. Review: not recorded before the merge. Open for Jon: "drawn height" read as the figure's (entry below).
-
-Agent: Claude Code, cloud, branch `claude/whose-side-look`. `games/whose-side-are-you-on/index.html`: Jon's subtitle, legend lines and closing line; a right answer held 2.0 s (was 0.8) with one of his three lines, never twice running; Stage 1 wrong taps get HYP's or the polite two's line above the unchanged teaching line (`whoSays`); shout-outs at streaks 3, 5, 10; results lines for 8-10 and 0-5 right. From 1024 px wide: column up to 1100 px, the card two columns (figure left, sized by measurement to the height down to the footer; question, answers and feedback right, so nothing moves when feedback shows), clamp() text, labels and theta marks scaled by g (tap bands and line styles unchanged). Phones: g = 1, every figure number as before.
-
-Measured (asking, every stage): figure 84% of the height at 1920x1080, 79% at 1366x768 and 1024x768, 78% at 1280x720; page height equals the viewport; every control and Next above the fold. "Drawn height" is read as the figure's: a 7-24-25 on its side needs a figure about 1,850 px wide to be 540 px tall; the figure column is about 640 px at 1920x1080.
-
-RAN (locally, KaTeX served from `scripts/fonts` because the container's proxy refuses cdn.jsdelivr.net): verify-whose-side-are-you-on exit 0 (33 plants caught, 4m45s; now `# ci-shards` work units, 3 parts until timed: at about 250 s in CI one line passed the per-line limit; and every finished round submits to `stub_board()`, the first Gate having shown the live board's initials prompt over the results in CI, where Firebase loads); check-theme exit 0 (MIGRATED, every rule holds); measure-phone-fit `--only` normal, `--aa`, `--laptop` exit 0, PASS (asking only: the driver cannot mark an answer here, the same on main; the verifier checks Next). check-changed.py not run (CLOUD-LEAN).
-
-Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-06 (cloud): LOGO-CENTRE (`docs/history/contracts/2026-11-06-logo-centre.md`, Shared)
-
-DONE: #680 merged by merge-pr.py as 193eeb1 on Jon's "merge" (6 Nov), after its Gate went green; main run 42205232598 GREEN. Review: not recorded before the merge.
-
-Agent: Claude Code, cloud, primary checkout, branch `claude/vibrant-davinci-61us0w`. Bars centred on the M's right leg (x 222.5, width 35; centre 240) in the master `schools/assets/m_plus_logo.svg` (master comment added), favicon.svg, index.html's header and about/index.html (both also #4CB5B0 -> #0d9488, the only uses of that teal in either page); og-image.svg x 82.5, width 35. New `scripts/check-logo.py` (ci-line): maps each copy into the master's coordinates from the M's bounding box and compares M, plus and bars; bars #0d9488; scans all 187 .svg/.html files so an unregistered copy fails. 7 plants caught (both contract plants plus 30-wide bars, a moved plus, the master moved alone, an unparseable copy, a half-size unregistered copy).
-
-Amendment 1 (Jon, 6 Nov: regenerate og-image.png in Chromium): STOPPED, PNG unchanged. The live PNG's text is not Outfit (a fallback sans); the Outfit render differs outside the bars in 10,509 pixels (max 229), all but 4 in the wordmark and tagline (those 4: the M's notch, max 8). A DejaVu render does not reproduce it either (4,073). Amendment 2 (6 Nov): option 1, the Outfit render committed (pixel-identical to the compared render). No sixth copy found. Not changed, for the home lane: canon §7.4 could name the master and the check.
-
-RAN: check-logo `--selftest --check` exit 0; ci-deps `--selftest` PASS; the five copies rendered in Chromium, bars centred. check-changed.py not run (CLOUD-LEAN).
-
-Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
-
