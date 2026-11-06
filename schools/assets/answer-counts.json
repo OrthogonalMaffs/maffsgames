@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-06T13:12:52Z",
+ "as_of": "2026-11-06T22:22:18Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -15,7 +15,7 @@
   "coordinate-geometry-dash": 8,
   "core-maths-paper1": 138,
   "core-maths-paper2a": 2,
-  "core-maths-paper2b": 10,
+  "core-maths-paper2b": 36,
   "core-maths-paper2c": 4,
   "correlation-or-coincidence": 157,
   "curling-friction": 4,
@@ -41,9 +41,9 @@
   "escape-roll-for-initiative": 9,
   "escape-rugby-mud": 239,
   "estimation-engine": 47,
-  "estimation-golf": 345,
+  "estimation-golf": 366,
   "expected-damage": 20,
-  "factor-race": 1795,
+  "factor-race": 1800,
   "factor-theorem": 3,
   "fermi-lab": 33,
   "force-resolver": 4,
@@ -85,11 +85,11 @@
   "quadratic-factoriser": 96,
   "screening-room": 5,
   "sequence-solver": 330,
-  "seven-bridges": 310,
+  "seven-bridges": 311,
   "shape-shifter": 5,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4108,
-  "split-it": 533,
+  "split-it": 554,
   "spot-the-error": 15,
   "spot-the-muppet": 53,
   "squared-squirrel": 38,
@@ -108,11 +108,11 @@
   "truth-buster": 46,
   "unit-converter": 527,
   "who-ate-all-the-pies": 22,
-  "whose-side-are-you-on": 139,
+  "whose-side-are-you-on": 163,
   "word-problem-decoder": 33,
   "wrong-on-the-internet": 12,
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 23259
+ "total": 23357
 }
