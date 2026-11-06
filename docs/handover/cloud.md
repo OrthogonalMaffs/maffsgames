@@ -64,6 +64,16 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-06 (cloud): WHOSE-SIDE-FIT (`docs/handover/contracts/2026-11-06-whose-side-fit.md`, Shared)
+
+At the Gate, holding for Project Claude's review and Jon's "merge" (PR on `claude/dazzling-knuth-yx7qnw`, from main 83d3999). Agent: Claude Code, cloud, primary checkout. Stopped once at STOP IF 1 (a 75% floor the contract's own pads cannot reach at 1920x1080); Project Claude's ruling, 17:58, is Amendment 1 in the contract: no wasted space instead of 75%, a 70% floor.
+
+Game: drawFigure() fits what it draws (corners ±22, label boxes, θ measured, the square; bisected; the drawing centred); the large-screen grid rows `minmax(0,1fr) ... minmax(0,1fr)`. Verifier: units `fit 1366x768`, `fit 1920x1080`, `fit 320x568`, `fit 390x844` (a seeded round of every stage, asked and answered: reach within 1 px, 70% floor, nothing clipped); `big` now at five sizes with the question's text against the first control and no text over another element; 3 plants (old margin, caught as wasted space; the triangle centred, caught as a clipped label; old grid rows, caught as text under a button). Full verifier 0 failures, 43 plants caught.
+
+Numbers: fill median / minimum 0.789 / 0.607 -> 0.889 / 0.739 at 1920x1080, 0.842 / 0.685 -> 0.896 / 0.783 at 1366x768. Label-limited, no slack (1920x1080 under 75%): 240 drawings, 80 Stage 3 asked and 160 Stage 4 answered, all tilt 0: 20-21-29 48, 12-16-20 48, 15-20-25 48, 9-12-15 24, 10-24-26 24, 16-30-34 24, 12-35-37 24. Whole bank (6,912 drawings at each of 1366, 1920, 390, 320): reach holds at both large sizes, nothing clipped, no label over another. Details in the PR.
+
+Pages (Amendment 1): no rerun made; after the timeouts on runs 1347 and 1348, runs 1349, 1350 (#673) and 1351 deployed green on their own (17:26 UTC).
+
 ## 2026-11-06 (cloud): WHOSE-SIDE-ART (`docs/history/contracts/2026-11-06-whose-side-art.md`, Shared)
 
 DONE: #684 merged by merge-pr.py as e42aa76 on Jon's "merge" (6 Nov), after its Gate went green on 16855283 (run 42231037198); main run 42236540900 GREEN. Review: Project Claude reviewed and passed the head 16855283 before the merge (6 Nov, relayed by Jon). Tip at the inner corner: accepted in Project Claude's review. Open for Jon: the art-inbox branch is his to delete.
