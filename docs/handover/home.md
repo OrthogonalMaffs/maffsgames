@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-FIT-ASIDE (Shared; Jon, 6 Nov): the phone-fit checker ignores controls inside `data-mfg-aside`. Branch claude/phone-fit-aside, worktree ~/mg-phone-fit-aside. Contract: docs/handover/contracts/2026-11-06-phone-fit-aside.md. The claims on equatle, 52dle and prime-or-composite were made and removed on the branch; main's list stays empty. At the Gate, holding for Project Claude's review and Jon's merge; entry below.
+- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov): STOPPED before any build (engine.js sets document.title at load); waiting on Jon's ruling; entry below. Branch claude/room-meta, worktree ~/mg-room-meta, no commits. Contract: docs/handover/contracts/2026-11-06-room-search-titles.md.
+
+- PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
 
 - WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line waits for WHOSE-SIDE-FIT to merge; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
 
@@ -17,6 +19,12 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-06 (home): ROOM-SEARCH-TITLES, STOPPED
+
+Nothing built. First version stopped on two descriptions over 155 characters; the consolidated contract (18:50) answered that and the rulings it raised, and replaces it in the contracts folder. Consolidated version stopped on "a change outside <head> seems necessary": escape-rooms/assets/engine.js:994 sets `document.title = R.title + ' — MaffsGames'` on every load, so a generated <title> is overwritten in the rendered page (tested on kiln-disaster and rightful-king with a title planted in the served head: story name by DOMContentLoaded). check-meta.py reads source, so it would pass while the rendered title stayed wrong. Asked Jon: may the line go, with a plant so it cannot return; and whether topics are lower-cased in full, first letter included, short_topics too (the contract's wording reads two ways). Clear: 14 timers read from room.js, 14 lockMeta blocks parse, hub og:description 127 characters and "Fourteen" equals the live rooms, no title needs the fallback.
+
+Record: agent Claude Code; wall n/a (stopped before build); review cycles 0; amendments 1 (the consolidation); usage n/a.
 
 ## 2026-11-06 (home): PHONE-FIT-ASIDE
 
