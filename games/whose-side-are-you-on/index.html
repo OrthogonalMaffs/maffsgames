@@ -54,6 +54,12 @@ a.back-link:hover{color:var(--text)}
 .key svg{display:block}
 .key line{stroke-width:5}
 .key b{font-family:var(--font-num)}
+/* The characters' lines (contract WHOSE-SIDE-PERSONALITY): each under its side's definition, in the text colour; only the side words carry colour. */
+.key .say{display:block;font-style:italic;line-height:1.35}
+.closing{font-weight:600}
+.fb-say{font-size:.95rem;line-height:1.4;color:var(--text);font-style:italic}
+.fb-shout{align-self:center;font-size:.95rem;font-weight:700;line-height:1.35;color:var(--accent);background:var(--accent-dim);border-radius:999px;padding:.2rem .8rem;text-align:center}
+.res-say{font-style:italic;color:var(--text);margin:.2rem auto .3rem;max-width:34em;line-height:1.45}
 line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line.ADJ{stroke:var(--adj);stroke-dasharray:1 8;stroke-linecap:round}
 
 .mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .3rem}
@@ -91,10 +97,10 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
 .figure .hit:focus-visible{stroke:var(--accent-dim)}
 .figure .square{fill:none;stroke:var(--text);stroke-width:1.8}
 .figure .arc{fill:none;stroke:var(--text);stroke-width:1.8}
-.figure text{font-family:var(--font-num);font-size:15px;font-weight:700;fill:var(--text);text-anchor:middle;dominant-baseline:central;pointer-events:none}
-.figure text.HYP,.figure text.OPP,.figure text.ADJ{font-size:19px}
+.figure text{font-family:var(--font-num);font-size:calc(15px * var(--g, 1));font-weight:700;fill:var(--text);text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.figure text.HYP,.figure text.OPP,.figure text.ADJ{font-size:calc(19px * var(--g, 1))}
 .figure text.HYP{fill:var(--hyp)}.figure text.OPP{fill:var(--opp)}.figure text.ADJ{fill:var(--adj)}
-.figure .theta{position:absolute;transform:translate(-50%,-50%);font-size:1.05rem;pointer-events:none;line-height:1}
+.figure .theta{position:absolute;transform:translate(-50%,-50%);font-size:calc(1.05rem * var(--g, 1));pointer-events:none;line-height:1}
 
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:.4rem}
 .opt{min-height:48px;padding:.3rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1.05rem;cursor:pointer}
@@ -123,6 +129,45 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
   .fracline{min-height:2.8rem;font-size:1.1rem}
 }
 @media (max-height:620px){.hud-label{display:none}.fb-line{font-size:.9rem}.ask{font-size:.98rem}}
+/* Large screens and projectors (contract WHOSE-SIDE-PERSONALITY, 6 Nov 2026): from 1024 px wide the column grows with the
+   screen to 1100 px, the card puts the figure on the left at the full height down to the footer (sized by bigSize() in the
+   script) with the question, answers and feedback beside it, so nothing moves when the feedback appears, and text and buttons
+   scale with the screen's height. Everything here is inside this query: phones are unchanged. */
+@media (min-width:1024px){
+  .container{max-width:clamp(560px,84vw,1100px)}
+  a.back-link{font-size:clamp(.82rem,1.6vh,1.05rem)}
+  .header h1{font-size:clamp(1.9rem,4.4vh,3rem)}
+  .header .sub{font-size:clamp(.95rem,2.2vh,1.45rem)}
+  .menu-info{font-size:clamp(.95rem,2.1vh,1.4rem)}
+  .w{font-size:clamp(19px,2.5vh,28px)}
+  .mode-h{font-size:clamp(.74rem,1.5vh,1rem)}
+  .stage-btn{min-height:clamp(56px,7.2vh,86px)}
+  .stage-btn .t{font-size:clamp(.95rem,2.1vh,1.4rem)}
+  .stage-btn .d{font-size:clamp(.8rem,1.75vh,1.15rem)}
+  .stage-btn .n{width:clamp(34px,4.4vh,50px);height:clamp(34px,4.4vh,50px)}
+  .btn{font-size:clamp(.95rem,2.1vh,1.35rem);min-height:clamp(44px,6vh,66px)}
+  .lb-link{font-size:clamp(.88rem,1.8vh,1.15rem)}
+  .hud-label{font-size:clamp(.6rem,1.35vh,.88rem)}
+  .hud-val{font-size:clamp(.92rem,2.6vh,1.7rem)}
+  .qcard{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,38%);grid-template-rows:1fr auto auto auto auto 1fr;column-gap:1.5rem;row-gap:.6rem;padding:.8rem 1.1rem}
+  #qarea{display:contents}
+  .figure{grid-column:1;grid-row:1 / -1;margin:0}
+  .ask{grid-column:2;grid-row:2;font-size:clamp(1.05rem,3vh,2rem)}
+  .fracline{grid-column:2;grid-row:3;font-size:clamp(1.25rem,3.3vh,2.2rem);min-height:3.2em;padding:.25em 0}
+  .opts{grid-column:2;grid-row:4;gap:.6rem}
+  .feedback{grid-column:2;grid-row:5}
+  .opt{font-size:clamp(1.05rem,2.8vh,1.8rem);min-height:clamp(48px,8vh,88px)}
+  .opt.tall{min-height:clamp(72px,11vh,124px)}
+  .slots{width:clamp(84px,11vh,140px)}
+  .slot{font-size:clamp(1.05rem,2.8vh,1.8rem);min-height:clamp(44px,6.4vh,72px)}
+  .fb{gap:.6rem;padding:.7rem .9rem}
+  .fb-head{font-size:clamp(1.05rem,3vh,2rem)}
+  .fb-line,.fb-say,.fb-shout{font-size:clamp(.95rem,2.4vh,1.55rem)}
+  .results h2{font-size:clamp(1.35rem,3.4vh,2.2rem)}
+  .res-say{font-size:clamp(1rem,2.4vh,1.55rem)}
+  .final-score{font-size:clamp(2.6rem,8vh,5rem)}
+  .stats{font-size:clamp(.95rem,2.1vh,1.4rem)}
+}
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible .hud-label,body.accessible .hud-val{letter-spacing:0}
 body.accessible .hud{flex-wrap:wrap;justify-content:center}
@@ -157,14 +202,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <div class="container">
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
-    <div class="header"><h1>Whose Side Are You On?</h1><div class="sub">Label the sides of a right-angled triangle from the marked angle, then link them to sin, cos and tan.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="header"><h1>Whose Side Are You On?</h1><div class="sub" id="subtitle">One side never moves. The other two can't stop being polite about it.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <div class="panel menu-info">
       <p>Every side gets its name from the marked angle. Each side keeps its colour, its line and its letter all the way through.</p>
       <div class="key" role="list">
-        <svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span role="listitem"><span class="w HYP">HYP</span> is the longest, across from the right angle.</span>
-        <svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span role="listitem"><span class="w OPP">OPP</span> is across from the marked angle.</span>
-        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem"><span class="w ADJ">ADJ</span> touches the marked angle and is not the longest.</span>
+        <svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span role="listitem" data-role="HYP"><span class="def"><span class="w HYP">HYP</span>, the longest side, across from the right angle.</span> <span class="say">“I'm here. I'm always here.”</span></span>
+        <svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span role="listitem" data-role="OPP"><span class="def"><span class="w OPP">OPP</span>, across from θ.</span> <span class="say">“Oh, I'm opposite today? Splendid.”</span></span>
+        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem" data-role="ADJ"><span class="def"><span class="w ADJ">ADJ</span>, next to θ.</span> <span class="say">“Then I shall stand beside it. After you.”</span></span>
       </div>
+      <p class="closing" id="closing">Move θ, and the polite two swap. <span class="w HYP">HYP</span> doesn't flinch.</p>
       <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>
       <div class="mode-h">Stages</div>
       <div class="stages" id="stageList"></div>
@@ -194,6 +240,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <div id="results" class="screen">
     <div class="results">
       <h2 id="resTitle">Stage done</h2>
+      <p class="res-say" id="resSay" hidden></p>
       <div class="final-score" id="resScore">0</div>
       <div class="stats" id="resStats"></div>
       <div class="res-btns">
@@ -209,7 +256,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script>
 (function () {
   'use strict';
-  var SLUG = 'whose-side-are-you-on', PER_ROUND = 10, LAST = 4, FOOTER_PX = 40, NS = 'http://www.w3.org/2000/svg';
+  var SLUG = 'whose-side-are-you-on', PER_ROUND = 10, LAST = 4, FOOTER_PX = 40, BIG_PX = 1024, NS = 'http://www.w3.org/2000/svg';
   // One level of content, GCSE; the stages are boards, not levels.
   var level = MaffsLevel.resolve({ slug: 'whose-side-are-you-on', levels: ['gcse'], fallback: 'gcse',
     boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
@@ -237,6 +284,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     square: 'Label from θ, not from the square corner.',
     both: 'Use both: the side you know AND the side you want.'
   };
+  // The characters (Jon, 6 Nov 2026, contract WHOSE-SIDE-PERSONALITY), verbatim: HYP stoic and immovable, OPP and ADJ an
+  // impeccably polite pair who swap places with θ, θ the guest of honour. They speak; they never replace a teaching line.
+  var SAYS = {
+    right: ['HYP: “Correct. I remain unmoved.”', 'OPP: “Spot on. Do carry on.”', 'ADJ: “Marvellous. After you.”'],
+    hyp: 'HYP: “I have been the hypotenuse since before you were born.”',
+    swap: 'OPP and ADJ: “Terribly sorry, I think you\'ll find we swapped.”',
+    shout: { 3: 'HYP nods, very slightly.', 5: 'OPP and ADJ bow so politely they bump heads.', 10: 'HYP shows emotion. Once. Never again.' },
+    high: 'Sides labelled. HYP is quietly proud. He will never say so.',
+    low: 'The polite two are still bowing at each other in the corridor. Shall we go again?'
+  };
+  var HOLD_MS = 2000;   // a right answer stays lit this long (Jon, 6 Nov: 0.8 s was far too short to take in the lit side)
 
   function fnOf(top, bottom) {
     for (var i = 0; i < FNS.length; i++) if (FN[FNS[i]][0] === top && FN[FNS[i]][1] === bottom) return FNS[i];
@@ -374,6 +432,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (it.ask === 'OPP') return tapped === uprightSide(it) ? 'upright' : 'square';
     return tapped === it.roles.HYP ? 'longest' : 'square';
   }
+  // Who speaks over a wrong tap on Stage 1, a key into SAYS: HYP if HYP was asked for or tapped, else the polite two, mixed up.
+  function whoSays(it, tapped) {
+    return it.ask === 'HYP' || tapped === it.roles.HYP ? 'hyp' : 'swap';
+  }
+  // One of the three right-answer lines at random, never the same twice running.
+  var lastRight = -1;
+  function rightSay() {
+    var i = Math.floor(Math.random() * (lastRight < 0 ? SAYS.right.length : SAYS.right.length - 1));
+    if (lastRight >= 0 && i >= lastRight) i++;
+    lastRight = i;
+    return SAYS.right[i];
+  }
   function scoreFor(seconds) { return Math.max(1, Math.round(100 / (1 + 0.15 * Math.log(1 + Math.max(0, seconds))))); }
 
   /* ---------- rendering ---------- */
@@ -410,26 +480,44 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function round1(v) { return Math.round(v * 10) / 10; }
   // The figure's size in CSS px, 1:1 with its viewBox, so the tap band's width is its real depth on screen.
   function figureSize(reserve) {
+    if (big()) return bigSize();
     var W = Math.min(340, $('qcard').clientWidth - 20);
     var H = Math.max(150, Math.min(W, window.innerHeight - FOOTER_PX - reserve));
-    return { W: W, H: H };
+    return { W: W, H: H, g: 1 };
+  }
+  // Large screens and projectors (1024 px and wider, the layout in the stylesheet): the figure takes the left of the card and
+  // the whole height down to the footer, measured, not reserved, so it fills the screen and the question, the answers and the
+  // feedback sit beside it. g scales the labels, the square and the θ marks with it; the tap bands and line styles never scale.
+  function big() { return window.innerWidth >= BIG_PX; }
+  function bigSize() {
+    var f = $('figure'), card = $('qcard'), cs = getComputedStyle(card);
+    f.innerHTML = ''; f.style.width = ''; f.style.height = '0px';
+    var W = Math.floor(f.getBoundingClientRect().width);
+    var top = card.getBoundingClientRect().top + window.pageYOffset;
+    var pad = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom) + parseFloat(cs.borderTopWidth) + parseFloat(cs.borderBottomWidth);
+    // below the card: the container's padding and the body's room for the fixed footer, so the page itself never scrolls
+    var below = parseFloat(getComputedStyle($('game').parentNode).paddingBottom) + parseFloat(getComputedStyle(document.body).paddingBottom);
+    var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));
+    // the card's height is set too, so its spacer rows share what the right-hand column leaves and it is no taller than the figure
+    return { W: W, H: H, g: Math.min(2, Math.max(1, H / 380)), card: H + pad };
   }
   // show: {role: true} draws those sides lit; labels: {sideId: text}; tap: the bands are live.
   function drawFigure(it, opts) {
-    var f = $('figure'), size = figureSize(opts.reserve), W = size.W, H = size.H;
+    var f = $('figure'), size = figureSize(opts.reserve), W = size.W, H = size.H, g = size.g;
     var roleOf = {}; Object.keys(it.roles).forEach(function (r) { roleOf[it.roles[r]] = r; });
     // Each side's label and its half-size on screen: a lit side's is 19 px bold (Amendment 1), so the triangle leaves room for it.
-    var texts = {}, mx = 30, my = 30;
+    var texts = {}, mx = 30 * g, my = 30 * g;
     it.sides.forEach(function (s) {
       var lit = opts.lit && opts.lit[roleOf[s.id]], num = opts.labels && opts.labels[s.id];
       var label = (lit ? { HYP: 'H', OPP: 'O', ADJ: 'A' }[roleOf[s.id]] : '') + (num !== undefined ? (lit ? ' ' : '') + num : '');
       if (!label) return;
-      var hw = label.length * (lit ? 5.8 : 4.6) + 2, hh = lit ? 11 : 9;
+      var hw = (label.length * (lit ? 5.8 : 4.6) + 2) * g, hh = (lit ? 11 : 9) * g;
       texts[s.id] = { label: label, lit: lit, hw: hw, hh: hh };
-      mx = Math.max(mx, 2 * hw + 10); my = Math.max(my, 2 * hh + 10);
+      mx = Math.max(mx, 2 * hw + 10 * g); my = Math.max(my, 2 * hh + 10 * g);
     });
     f.innerHTML = '';
-    f.style.width = W + 'px'; f.style.height = H + 'px';
+    f.style.width = W + 'px'; f.style.height = H + 'px'; f.style.setProperty('--g', String(g));
+    $('qcard').style.height = size.card ? size.card + 'px' : '';
     var xs = it.verts.map(function (v) { return v[0]; }), ys = it.verts.map(function (v) { return v[1]; });
     var bw = Math.max.apply(null, xs), bh = Math.max.apply(null, ys);
     var k = Math.min((W - 2 * mx) / bw, (H - 2 * my) / bh), ox = (W - bw * k) / 2, oy = (H - bh * k) / 2;
@@ -440,7 +528,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     // the right-angle square, from the two legs
     var R = P[it.right], legs = [0, 1, 2].filter(function (i) { return i !== it.right; }).map(function (i) {
       var dx = P[i][0] - R[0], dy = P[i][1] - R[1], d = Math.sqrt(dx * dx + dy * dy); return [dx / d, dy / d];
-    }), S = 15;
+    }), S = 15 * g;
     svg.appendChild(el('polyline', { class: 'square', 'data-square': '1', points: [
       [R[0] + legs[0][0] * S, R[1] + legs[0][1] * S], [R[0] + (legs[0][0] + legs[1][0]) * S, R[1] + (legs[0][1] + legs[1][1]) * S], [R[0] + legs[1][0] * S, R[1] + legs[1][1] * S]
     ].map(function (p) { return p[0].toFixed(1) + ',' + p[1].toFixed(1); }).join(' ') }));
@@ -451,7 +539,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var a0 = ends[0], a1 = ends[1], d = a1 - a0;
     while (d > Math.PI) d -= 2 * Math.PI;
     while (d < -Math.PI) d += 2 * Math.PI;
-    var half = Math.abs(d) / 2, arcR = 22, labR = Math.min(90, Math.max(33, 13 / Math.sin(half)));
+    var half = Math.abs(d) / 2, arcR = 22 * g, labR = g * Math.min(90, Math.max(33, 13 / Math.sin(half)));
     svg.appendChild(el('path', { class: 'arc', 'data-arc': '1', d: 'M' + (T[0] + arcR * Math.cos(a0)).toFixed(1) + ' ' + (T[1] + arcR * Math.sin(a0)).toFixed(1) +
       ' A' + arcR + ' ' + arcR + ' 0 0 ' + (d > 0 ? 1 : 0) + ' ' + (T[0] + arcR * Math.cos(a0 + d)).toFixed(1) + ' ' + (T[1] + arcR * Math.sin(a0 + d)).toFixed(1) }));
     it.sides.forEach(function (s) {
@@ -465,7 +553,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var a = P[s.from], b = P[s.to], len = Math.hypot(b[0] - a[0], b[1] - a[1]), nx = (a[1] - b[1]) / len, ny = (b[0] - a[0]) / len;
       var mid = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
       if (nx * (mid[0] - cx) + ny * (mid[1] - cy) < 0) { nx = -nx; ny = -ny; }
-      var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7;
+      var clear = Math.abs(nx) * t.hw + Math.abs(ny) * t.hh + 7 * g;
       svg.appendChild(el('text', { 'data-label': s.id, class: t.lit ? roleOf[s.id] : '', x: (mid[0] + nx * clear).toFixed(1), y: (mid[1] + ny * clear).toFixed(1) }, t.label));
     });
     if (opts.tap) {
@@ -641,7 +729,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (stage === 1) {
       if (!MaffsLock.lock($('qarea'))) return;
       var right = val === Q.key, lit = {}; lit[Q.ask] = true;
-      markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit });
+      markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit, who: right ? null : whoSays(Q, val) });
     } else if (stage === 2) {
       fillSlot(val);
     }
@@ -661,6 +749,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function head(ok) {
     return '<div class="fb-head" data-mark="' + (ok ? 'right' : 'wrong') + '"><span class="mark" aria-hidden="true">' + (ok ? '✓' : '✗') + '</span>' + (ok ? 'Right' : 'Not quite') + '</div>';
   }
+  // A character's line, in the feedback: plain text in data-say, the side words in their colours.
+  function say(text) { return '<div class="fb-say" data-say="' + esc(text) + '">' + rich(text) + '</div>'; }
   function markQuestion(ok, line, draw) {
     var seconds = (now() - askedAt) / 1000;
     if (clockId !== null) { MaffsLock.cancel(clockId); clockId = null; }
@@ -675,13 +765,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (ok) {
       state = 'right';
       drawFigure(Q, draw);
-      fb.innerHTML = '<div class="fb done">' + head(true) + (line ? '<div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div>' : '') + '</div>';
-      MaffsLock.timer(advance, 800);
+      var shout = SAYS.shout[streak];
+      fb.innerHTML = '<div class="fb done">' + head(true) + say(rightSay()) +
+        (shout ? '<div class="fb-shout" data-say="' + esc(shout) + '">' + rich(shout) + '</div>' : '') +
+        (line ? '<div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div>' : '') + '</div>';
+      MaffsLock.timer(advance, HOLD_MS);
     } else {
       state = 'wrong';
       $('qcard').classList.add('fb-open');
       drawFigure(Q, draw);
-      fb.innerHTML = '<div class="fb wrong">' + head(false) + '<div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
+      fb.innerHTML = '<div class="fb wrong">' + head(false) + (draw.who ? say(SAYS[draw.who]) : '') +
+        '<div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
@@ -701,6 +795,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
     $('resTitle').textContent = 'Stage ' + stage + ' done: ' + STAGES[stage].name;
     $('resScore').textContent = score;
+    var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5 ? SAYS.low : '';
+    $('resSay').hidden = !resLine;
+    $('resSay').dataset.say = resLine;
+    $('resSay').innerHTML = rich(resLine);
     $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b><br>Best streak <b>' + bestStreak + '</b>' + (pb ? '<br>New personal best' : '');
     $('nextStageBtn').hidden = stage >= LAST;
     $('nextStageBtn').dataset.stage = stage + 1;
@@ -745,8 +843,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }));
   }
   window.WS = {
-    SLUG: SLUG, LINE: LINE, TRIPLES: TRIPLES,
-    gen: { bank: bank, session: session, whyTap: whyTap, scoreFor: scoreFor },
+    SLUG: SLUG, LINE: LINE, SAYS: SAYS, HOLD_MS: HOLD_MS, TRIPLES: TRIPLES,
+    gen: { bank: bank, session: session, whyTap: whyTap, whoSays: whoSays, scoreFor: scoreFor },
     ui: {
       state: function () { return state; },
       level: function () { return level; },
