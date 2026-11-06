@@ -74,23 +74,3 @@ RAN: check-logo `--selftest --check` exit 0; ci-deps `--selftest` PASS; the five
 
 Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
 
-## 2026-11-06 (cloud): EQUATLE-PHONE-FIT (`docs/history/contracts/2026-11-06-equatle-phone-fit.md`, Small)
-
-DONE: #678 merged by merge-pr.py as 2590d92 on Jon's "merge" (6 Nov), after its Gate went green; main run 42188607101 GREEN. Review: not recorded before the merge. The phone-fit OPEN item below still stands.
-
-Agent: Claude Code, cloud, primary checkout, branch `claude/blissful-volta-4hoo02`. `games/equatle/index.html` only: Enter moved onto the operator row beside Del (third row gone; still teal, 54-66px wide); the board's width is min(column, what the height minus a measured `--chrome` allows for 6 square rows), `svh` with a `vh` fallback, floor 28px tiles; at max-height 740px the eyebrow and subtitle hide, the title drops to 1.6rem and the stats bar shrinks (48 to 36px). Before/after table in the PR: Enter now above the fold at every listed size in both modes (320x568: 521/528, was 626); tile sizes unchanged at every listed size (the cap binds only on shorter screens, e.g. 360x560: 30.8px tiles, Enter 517/520). Desktop at 1280x800 unchanged except Enter beside Del; 1280x720 is under 740 tall, so it takes the short layout.
-
-Not changed, for Project Claude: `phone-fit-state.json` keeps Equatle's known failures (normal 320/375/390, Aa 375/390, laptop 1280x720/1366x768). The gate's "last option" there is the daily leaderboard's Submit Score button (753/782/850px after, 858/886/897 before), not the keypad: the driver counts any visible text input and any "Submit..." button as an answer control. Clearing it needs a driver change in `measure-phone-fit.py` (shared script) or moving the leaderboard (DO NOT TOUCH); neither is in this contract.
-
-RAN: measure-phone-fit `--only equatle` normal/`--aa`/`--laptop` exit 0 (known failures only, nothing stale); verify-equatle exit 0; check-answer-lock `--game equatle` PASS; check-theme exit 0; check-site `--only equatle` exit 1 with the container's 3 CDN tunnel errors, identical on a copy of main; canonical-links, student-labels, public-claims, dash-minus `--check`, content-safety exit 0. check-changed.py not run (CLOUD-LEAN). Claim on the branch only, taken off in the fix commit.
-
-Record: agent Claude Code; wall n/a (contract receipt time not recorded); review cycles 0 (no review recorded before the merge); amendments 0; usage n/a.
-
-## 2026-11-05 (cloud): TRUE-MINUS (negative tokens print with U+2212)
-
-Contract and Jon's four answers (cloud lane, Shared, lane exception; CLOUD-LEAN; rule in rating.js; literal guard plus allowlist) saved verbatim. Built on a local branch while #668 held the session's push branch; rebased on e32608f after it merged, clean. One rule per language: formatToken() in escape-rooms/assets/rating.js (engine.js fill() and its VALID-figure step, teacher.js fill()); format_token() in scripts/escape_set_checks.py (build_pack.py, its js_string() removed; check-escape-rooms.py's figures). Answer checking reads raw values. New: scripts/test-escape-format.py (fixture scripts/fixtures/escape-format.html, so it is selective: always-run stays 11 of 12) and check-escape-rooms.py's guard, with the shrink-only scripts/escape-minus-warn.json holding Roll for Initiative's "Form R-1". No negative answer anywhere; fill() output never parsed.
-
-RAN: parity test PASS, both plants caught; check-escape-rooms.py exit 0, output identical to main's but for the new lines, three guard plants caught; 3305 renders in 1451 strings, 40 changed, all hyphen to U+2212 (JS and Python alike); escape dial, keypad, setcodes, rating, analytics, art, credit tests and the pack selftest (17/17) exit 0; ci-deps selftest, dash-minus, footer, publish scope, text-writes PASS; Christmas play-through 3875 checks, 0 fails (476 fails against main's engine). check-changed.py not run (CLOUD-LEAN). Next: Gate, then Shared review and Jon's "merge". No merge authority.
-
-Record: agent Claude Code; wall n/a (contract receipt time not recorded); review cycles 0; amendments 0; usage n/a.
-
