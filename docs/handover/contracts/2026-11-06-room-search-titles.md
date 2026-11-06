@@ -44,3 +44,10 @@ DO NOT TOUCH: room.js and teacher.html (read only), variants.json, any room's bo
 SUCCESS CONDITION: Every live room page and the hub carry a generated title and description that check-meta.py holds in CI; planted faults fail check-meta.py: a hand-edited room title, a live room missing from games.json, a description over 155 with no short_topics, a clock figure differing from room.js; apply-meta.py is idempotent; no title uses the fallback. Committed, PR open, Gate green, home.md entry; stop for Project Claude's review AND Jon's approval of the title table before merge.
 
 STOP IF: a room's timer cannot be read from its room.js (report which); the hub's og:description is over 155 or its room count is wrong; any title still needs the fallback; a room page's head has a shape the rewriter cannot read; a change outside <head> seems necessary.
+
+## Amendment 1 (Jon, 6 Nov 2026), verbatim
+
+Remove the line, all lower case. Project Claude's ruling, 6 Nov 18:55:
+1. Remove document.title = R.title + ' — MaffsGames'; from escape-rooms/assets/engine.js (the head is the only source of a room's title). Add the planted-fault check to check-meta.py: it fails if engine.js (or any room script) assigns document.title. Leave teacher.js:231 (noindex pages). Record the engine change in the PR body for review.
+2. Topics: all lower case except acronyms and proper names (LCM, HCF, Venn, Pythagoras); short_topics go through the same rule at generation.
+Everything else as the consolidated ROOM-SEARCH-TITLES contract. Stop at a green Gate for Project Claude's review and Jon's approval of the title table.

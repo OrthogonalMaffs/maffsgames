@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov): STOPPED before any build (engine.js sets document.title at load); waiting on Jon's ruling; entry below. Branch claude/room-meta, worktree ~/mg-room-meta, no commits. Contract: docs/handover/contracts/2026-11-06-room-search-titles.md.
+- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55): built; the PR holds at a green Gate for Project Claude's review and Jon's approval of the title table. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/handover/contracts/2026-11-06-room-search-titles.md. Entry below.
 
 - PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
 
@@ -19,6 +19,14 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-06 (home): ROOM-SEARCH-TITLES
+
+Built after the stop below. data/games.json gains "rooms" (14) and the hub joins "pages"; check-meta.py and apply-meta.py hold and write them; canon §2.1 says so. Topics come from each teacher page's lockMeta, the clock from room.js. engine.js's `document.title` line is gone (Amendment 1), and check-meta.py fails if a room script assigns it again; teacher.js:231 stays. No title uses the fallback; big-school-begins and rightful-king use short_topics. The full title table is in the PR body. In Chromium all 14 rooms and the hub keep the generated title after load. Browser tabs now show the search title during play, not the story name.
+
+Next: Project Claude's review and Jon's approval of the table, then merge-pr.py. The Gate file's label for this check still says "every game page and /essentials/": for the cloud lane, harmless.
+
+Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-06 (home): ROOM-SEARCH-TITLES, STOPPED
 
