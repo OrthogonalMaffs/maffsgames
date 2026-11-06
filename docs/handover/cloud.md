@@ -72,15 +72,3 @@ Game: the key's rows are buttons (aria-pressed) with the corrected definitions; 
 
 STOP IF 2, in part (reported, not stopped): within about 200 image px of the ramp's tip the base and slope's paint are closer than 44 px at 320, and the picture ends 24 px under the base, so the base's region is as deep as that room (33 px at 90% along at 320, 40.5 at 390). Everywhere else every strip is 44 px or more at 320 and 390; the regions never overlap. STOP IF 3 not hit: Next stays above the fold on every stage at 320, 375 and 390 (worst Stage 2, 501 / 528, 605 / 627, 648 / 804).
 
-## 2026-11-06 (cloud): WHOSE-SIDE-FIT (`docs/history/contracts/2026-11-06-whose-side-fit.md`, Shared)
-
-DONE: #688 merged as 86b56ec on Jon's "merge" (6 Nov, 18:39 UTC; PR head 5dede1a7); main run 42272668436 (check-site) GREEN. Review: Project Claude reviewed and passed it before the merge (relayed by Jon). Ruling of record (Project Claude, 6 Nov 17:58, Amendment 1): the 75% figure was an estimate; the pass condition is the reach check, the drawing's content box reaching the 6g pad on both sides of its limiting axis within 1 px at 1366x768 and 1920x1080, with a sanity floor of the triangle filling at least 70% of the figure on that axis; the old-margin plant must be caught by the reach check, not the percentage. Closed out in the WHOSE-SIDE-BIOS close-out PR (Jon, 6 Nov). The text below is the entry as it stood at the Gate.
-
-At the Gate, holding for Project Claude's review and Jon's "merge" (PR on `claude/dazzling-knuth-yx7qnw`, from main 83d3999). Agent: Claude Code, cloud, primary checkout. Stopped once at STOP IF 1 (a 75% floor the contract's own pads cannot reach at 1920x1080); Project Claude's ruling, 17:58, is Amendment 1 in the contract: no wasted space instead of 75%, a 70% floor.
-
-Game: drawFigure() fits what it draws (corners ±22, label boxes, θ measured, the square; bisected; the drawing centred); the large-screen grid rows `minmax(0,1fr) ... minmax(0,1fr)`. Verifier: units `fit 1366x768`, `fit 1920x1080`, `fit 320x568`, `fit 390x844` (a seeded round of every stage, asked and answered: reach within 1 px, 70% floor, nothing clipped); `big` now at five sizes with the question's text against the first control and no text over another element; 3 plants (old margin, caught as wasted space; the triangle centred, caught as a clipped label; old grid rows, caught as text under a button). Full verifier 0 failures, 43 plants caught.
-
-Numbers: fill median / minimum 0.789 / 0.607 -> 0.889 / 0.739 at 1920x1080, 0.842 / 0.685 -> 0.896 / 0.783 at 1366x768. Label-limited, no slack (1920x1080 under 75%): 240 drawings, 80 Stage 3 asked and 160 Stage 4 answered, all tilt 0: 20-21-29 48, 12-16-20 48, 15-20-25 48, 9-12-15 24, 10-24-26 24, 16-30-34 24, 12-35-37 24. Whole bank (6,912 drawings at each of 1366, 1920, 390, 320): reach holds at both large sizes, nothing clipped, no label over another. Details in the PR.
-
-Pages (Amendment 1): no rerun made; after the timeouts on runs 1347 and 1348, runs 1349, 1350 (#673) and 1351 deployed green on their own (17:26 UTC).
-
