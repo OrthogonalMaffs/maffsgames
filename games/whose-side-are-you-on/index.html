@@ -50,16 +50,23 @@ a.back-link:hover{color:var(--text)}
 /* The three sides: colour, line style and letter together, so colour is never the only cue. As text the colours need bold at 19 px or more (3:1, Amendment 1). */
 .w{font-weight:700;font-size:19px;white-space:nowrap}
 .w.HYP{color:var(--hyp)}.w.OPP{color:var(--opp)}.w.ADJ{color:var(--adj)}
-.key{display:grid;grid-template-columns:auto auto 1fr;align-items:center;gap:.25rem .6rem;margin:.6rem 0}
+/* The key (contract WHOSE-SIDE-BIOS, 6 Nov 2026): each row a button for its side, the swatch, letter and definition in the same
+   three columns; the pressed row is outlined in the accent (no fill, so the side words keep their contrast). Its bio shows below. */
+.key{display:flex;flex-direction:column;gap:.15rem;margin:.6rem 0}
+.key-row{display:grid;grid-template-columns:56px auto 1fr;align-items:center;gap:.6rem;width:100%;min-height:44px;padding:.15rem .45rem;border:2px solid transparent;border-radius:10px;background:transparent;color:var(--text);font:inherit;line-height:1.45;text-align:left;cursor:pointer}
+.key-row:hover{border-color:var(--border)}
+.key-row[aria-pressed="true"]{border-color:var(--accent)}
+.key-row:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
 .key svg{display:block}
 .key line{stroke-width:5}
 .key b{font-family:var(--font-num)}
-/* The characters' lines (contract WHOSE-SIDE-PERSONALITY): each under its side's definition, in the text colour; only the side words carry colour. */
-.key .say{display:block;font-style:italic;line-height:1.35}
+.bio{margin-top:.35rem;padding:.5rem .7rem;border:1px solid var(--border);border-radius:10px;background:var(--surface-alt);line-height:1.45;scroll-margin-bottom:56px}
+.bio-hint{color:var(--muted)}
+.bio-f+.bio-f{margin-top:.2rem}
+.bio-k{font-weight:700}
 .closing{font-weight:600}
-.fb-say{font-size:.95rem;line-height:1.4;color:var(--text);font-style:italic}
-.fb-shout{align-self:center;font-size:.95rem;font-weight:700;line-height:1.35;color:var(--accent);background:var(--accent-dim);border-radius:999px;padding:.2rem .8rem;text-align:center}
-.res-say{font-style:italic;color:var(--text);margin:.2rem auto .3rem;max-width:34em;line-height:1.45}
+/* The rule on every marked answer, Stages 2-4: the function equals the stacked fraction of side words, at the fraction line's size. */
+.fb-rule{text-align:center;font-size:1.25rem;line-height:1.2}
 line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line.ADJ{stroke:var(--adj);stroke-dasharray:1 8;stroke-linecap:round}
 
 .mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .3rem}
@@ -127,6 +134,7 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
   .container{padding:.5rem}
   .qcard{padding:.45rem}
   .fracline{min-height:2.8rem;font-size:1.1rem}
+  .fb-rule{font-size:1.1rem}
 }
 @media (max-height:620px){.hud-label{display:none}.fb-line{font-size:.9rem}.ask{font-size:.98rem}}
 /* Large screens and projectors (contract WHOSE-SIDE-PERSONALITY, 6 Nov 2026): from 1024 px wide the column grows with the
@@ -162,9 +170,9 @@ line.HYP{stroke:var(--hyp)}line.OPP{stroke:var(--opp);stroke-dasharray:11 7}line
   .slot{font-size:clamp(1.05rem,2.8vh,1.8rem);min-height:clamp(44px,6.4vh,72px)}
   .fb{gap:.6rem;padding:.7rem .9rem}
   .fb-head{font-size:clamp(1.05rem,3vh,2rem)}
-  .fb-line,.fb-say,.fb-shout{font-size:clamp(.95rem,2.4vh,1.55rem)}
+  .fb-line{font-size:clamp(.95rem,2.4vh,1.55rem)}
+  .fb-rule{font-size:clamp(1.25rem,3.3vh,2.2rem);padding:.25em 0}
   .results h2{font-size:clamp(1.35rem,3.4vh,2.2rem)}
-  .res-say{font-size:clamp(1rem,2.4vh,1.55rem)}
   .final-score{font-size:clamp(2.6rem,8vh,5rem)}
   .stats{font-size:clamp(.95rem,2.1vh,1.4rem)}
 }
@@ -189,6 +197,20 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .start-art path{fill:none;stroke:var(--text);stroke-width:2.5px;vector-effect:non-scaling-stroke;stroke-linecap:round}
 .start-theta{position:absolute;left:77.49%;top:81.50%;transform:translate(-50%,-50%);line-height:1;color:var(--text);pointer-events:none;
   font-size:16px;font-size:max(14px,2.2cqw);text-shadow:0 0 2px var(--surface),0 0 2px var(--surface),0 0 4px var(--surface),0 0 6px var(--surface)}
+/* The ramp's three strips as the three sides (contract WHOSE-SIDE-BIOS, 6 Nov 2026), in the picture's own coordinates, measured on
+   the WebP: each strip's pixels picked out by colour and a line fitted through them (total least squares). Upright x = 199.5 (blue,
+   x 186-212), slope y = 0.5389x + 5.3 (red), base y = 745.0 (green, y 734-756); they meet at (197.6, 744.9), the right angle,
+   (201.8, 114.1) and (1372.7, 745.1), the tip. Tap regions: each strip's centreline offset 120 image px inwards and 240 outwards
+   (at 320 px wide the picture is 304 px, 0.19 px a pixel: 22.8 and 45.6 px), cut where two regions meet on the corner's bisector, so
+   they never overlap. Near the tip the picture ends 128 px under the base, so the base keeps the wedge up to 14 px under the slope's
+   centreline, just clear of its paint (the slope's 240 outwards is 44 px deep on its own); within about 200 px of the tip the strips'
+   paint is closer than 44 px, and the base's region is as deep as that leaves. Pointer only (aria-hidden): the key rows are the controls.
+   A ring is each strip's edges 15 px out, drawn in the text colour in its side's line style when that side is chosen. */
+.start-sides .ring{visibility:hidden;fill:none;stroke:var(--text);stroke-width:3px;vector-effect:non-scaling-stroke;stroke-linejoin:round}
+.start-sides .ring.on{visibility:visible}
+.start-sides .ring.OPP{stroke-dasharray:12 8}
+.start-sides .ring.ADJ{stroke-dasharray:1 10;stroke-linecap:round}
+.start-sides .tap{fill:transparent;stroke:none;pointer-events:all;cursor:pointer}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -219,16 +241,25 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     <div class="start-art" id="startArt">
       <img src="assets/start.webp" width="1600" height="873" alt="A wooden skate ramp seen side-on: its slope, upright and base form a right-angled triangle, with the angle θ marked at the bottom of the slope">
       <svg viewBox="0 0 1600 873" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-arc d="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"/></svg>
+      <svg class="start-sides" id="startSides" viewBox="0 0 1600 873" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+        <polygon class="ring HYP" data-ring="HYP" points="186.0,88.5 1376.5,730.1 1313.3,730.1 186.0,122.5"/>
+        <polygon class="ring OPP" data-ring="OPP" points="216.8,128.0 186.8,128.0 182.5,759.0 212.5,759.0"/>
+        <polygon class="ring ADJ" data-ring="ADJ" points="214.0,729.9 1405.0,730.1 1405.0,760.1 214.0,759.9"/>
+        <polygon class="tap" data-tap="HYP" points="-35.5,-286.5 2400.0,1026.0 2400.0,1314.6 1120.5,625.0 897.0,625.0 320.5,314.3"/>
+        <polygon class="tap" data-tap="OPP" points="-35.5,-286.5 -44.0,984.9 318.4,625.0 320.5,314.3"/>
+        <polygon class="tap" data-tap="ADJ" points="-44.0,984.9 1788.7,985.1 1120.5,625.0 318.4,625.0"/>
+      </svg>
       <span class="start-theta" id="startTheta" aria-hidden="true">θ</span>
     </div>
     <div class="panel menu-info">
-      <p>Every side gets its name from the marked angle. Each side keeps its colour, its line and its letter all the way through.</p>
-      <div class="key" role="list">
-        <svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span role="listitem" data-role="HYP"><span class="def"><span class="w HYP">HYP</span>, the longest side, across from the right angle.</span> <span class="say">“I'm here. I'm always here.”</span></span>
-        <svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span role="listitem" data-role="OPP"><span class="def"><span class="w OPP">OPP</span>, across from θ.</span> <span class="say">“Oh, I'm opposite today? Splendid.”</span></span>
-        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem" data-role="ADJ"><span class="def"><span class="w ADJ">ADJ</span>, next to θ, and not the hypotenuse.</span> <span class="say">“Then I shall stand beside it. After you.”</span></span>
+      <p>Every side gets its name from the marked angle.</p>
+      <div class="key" id="key" role="group" aria-label="The three sides: choose one to meet it">
+        <button class="key-row" type="button" data-role="HYP" aria-pressed="false" aria-controls="bio"><svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span class="def"><span class="w HYP">HYP</span>, the longest side, across from the right angle.</span></button>
+        <button class="key-row" type="button" data-role="OPP" aria-pressed="false" aria-controls="bio"><svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span class="def"><span class="w OPP">OPP</span>, across from <span class="th">θ</span>: the only side that doesn't touch it.</span></button>
+        <button class="key-row" type="button" data-role="ADJ" aria-pressed="false" aria-controls="bio"><svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span class="def"><span class="w ADJ">ADJ</span>, next to <span class="th">θ</span>, and not the hypotenuse.</span></button>
+        <div class="bio" id="bio" aria-live="polite"><span class="bio-hint">Tap a side of the ramp, or its name, to meet it.</span></div>
       </div>
-      <p class="closing" id="closing">Move θ, and the polite two swap. <span class="w HYP">HYP</span> doesn't flinch.</p>
+      <p class="closing" id="closing">Put <span class="th">θ</span> in the other corner and <span class="w OPP">OPP</span> and <span class="w ADJ">ADJ</span> swap. <span class="w HYP">HYP</span> stays put.</p>
       <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>
       <div class="mode-h">Stages</div>
       <div class="stages" id="stageList"></div>
@@ -258,7 +289,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <div id="results" class="screen">
     <div class="results">
       <h2 id="resTitle">Stage done</h2>
-      <p class="res-say" id="resSay" hidden></p>
       <div class="final-score" id="resScore">0</div>
       <div class="stats" id="resStats"></div>
       <div class="res-btns">
@@ -302,15 +332,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     square: 'Label from θ, not from the square corner.',
     both: 'Use both: the side you know AND the side you want.'
   };
-  // The characters (Jon, 6 Nov 2026, contract WHOSE-SIDE-PERSONALITY), verbatim: HYP stoic and immovable, OPP and ADJ an
-  // impeccably polite pair who swap places with θ, θ the guest of honour. They speak; they never replace a teaching line.
-  var SAYS = {
-    right: ['HYP: “Correct. I remain unmoved.”', 'OPP: “Spot on. Do carry on.”', 'ADJ: “Marvellous. After you.”'],
-    hyp: 'HYP: “I have been the hypotenuse since before you were born.”',
-    swap: 'OPP and ADJ: “Terribly sorry, I think you\'ll find we swapped.”',
-    shout: { 3: 'HYP nods, very slightly.', 5: 'OPP and ADJ bow so politely they bump heads.', 10: 'HYP shows emotion. Once. Never again.' },
-    high: 'Sides labelled. HYP is quietly proud. He will never say so.',
-    low: 'The polite two are still bowing at each other in the corridor. Shall we go again?'
+  // Stage 1's rule, on right and wrong answers alike: the side asked for, said the way the start screen's key says it
+  // (contract WHOSE-SIDE-BIOS, 6 Nov 2026). A wrong tap gets its LINE as well, under this.
+  var RULE1 = {
+    HYP: "That's HYP: the longest side, across from the right angle.",
+    OPP: "That's OPP: the only side that doesn't touch θ.",
+    ADJ: "That's ADJ: next to θ, and not the hypotenuse."
+  };
+  // The sides' bios on the start screen, verbatim (Jon, 6 Nov 2026, contract WHOSE-SIDE-BIOS): the only place the sides speak.
+  var BIOS = {
+    HYP: [['Location', "Opposite the right angle. That's my spot, I earned it, and I'm not moving."], ['Length', 'Bigger than the other two. Always.'], ['Favourite number', 'The biggest one.']],
+    OPP: [['Location', "The only side that doesn't touch θ. I'm shy."], ['Length', 'Ask my friend Pythagoras, he always knows.'], ['Favourite number', "6. I'm opposite 1 on a dice."]],
+    ADJ: [['Location', "Right next to θ, and I'm not the hypotenuse. Personal space is overrated."], ['Length', "Always positive; other than that, I'm flexible. I can do a handstand, don't you know."], ['Favourite number', '52!']]
   };
   var HOLD_MS = 2000;   // a right answer stays lit this long (Jon, 6 Nov: 0.8 s was far too short to take in the lit side)
 
@@ -449,18 +482,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (it.ask === 'HYP') return 'longest';
     if (it.ask === 'OPP') return tapped === uprightSide(it) ? 'upright' : 'square';
     return tapped === it.roles.HYP ? 'longest' : 'square';
-  }
-  // Who speaks over a wrong tap on Stage 1, a key into SAYS: HYP if HYP was asked for or tapped, else the polite two, mixed up.
-  function whoSays(it, tapped) {
-    return it.ask === 'HYP' || tapped === it.roles.HYP ? 'hyp' : 'swap';
-  }
-  // One of the three right-answer lines at random, never the same twice running.
-  var lastRight = -1;
-  function rightSay() {
-    var i = Math.floor(Math.random() * (lastRight < 0 ? SAYS.right.length : SAYS.right.length - 1));
-    if (lastRight >= 0 && i >= lastRight) i++;
-    lastRight = i;
-    return SAYS.right[i];
   }
   function scoreFor(seconds) { return Math.max(1, Math.round(100 / (1 + 0.15 * Math.log(1 + Math.max(0, seconds))))); }
 
@@ -641,7 +662,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     $('stageList').innerHTML = h;
     $('startTheta').innerHTML = THETA();      // the θ over the ramp's tip, in KaTeX like every θ in the game
+    Array.prototype.forEach.call(document.querySelectorAll('#menu .th'), function (e) { e.innerHTML = THETA(); });
   })();
+
+  /* ---------- the start screen: meet a side, from the ramp or the key ---------- */
+  function meet(role) {
+    Array.prototype.forEach.call($('key').querySelectorAll('.key-row'), function (b) { b.setAttribute('aria-pressed', String(b.dataset.role === role)); });
+    Array.prototype.forEach.call($('startSides').querySelectorAll('.ring'), function (r) { r.classList.toggle('on', r.dataset.ring === role); });
+    var bio = $('bio');
+    bio.dataset.role = role;
+    bio.innerHTML = '<div class="bio-name">' + rich(role) + '</div>' + BIOS[role].map(function (f) {
+      return '<div class="bio-f" data-field="' + esc(f[0]) + '"><span class="bio-k">' + esc(f[0]) + ':</span> <span class="bio-v">' + rich(f[1]) + '</span></div>';
+    }).join('');
+  }
 
   /* ---------- the clock: a visible count-up that stops while feedback shows, and only ever feeds the score ---------- */
   function now() { return performance.now(); }
@@ -755,7 +788,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (state !== 'asking' || !top || !bottom || !MaffsLock.lock($('qarea'))) return;
     var ok = top === Q.keyTop && bottom === Q.keyBottom;
     $('fracline').innerHTML = tex(ok ? fracNums(Q.top, Q.bottom, Q.frac[0], Q.frac[1]) : '\\dfrac{\\mathbf{' + lengthOfId(Q, top) + '}}{\\mathbf{' + lengthOfId(Q, bottom) + '}}');
-    markQuestion(ok, ok ? '' : Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.',
+    // a wrong answer keeps the numbers under the equation: after a wrong Check the fraction line shows the student's own (Jon, 6 Nov)
+    markQuestion(ok, fnOf(Q.top, Q.bottom), ok ? [] : [Q.top + ' is ' + Q.frac[0] + ' and ' + Q.bottom + ' is ' + Q.frac[1] + ', so ' + Q.top + ' over ' + Q.bottom + ' is ' + Q.frac[0] + ' over ' + Q.frac[1] + '.'],
       { lit: allLit(), labels: lengthLabels(Q) });
   }
   function buildOptions(list, tall) {
@@ -783,7 +817,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (stage === 1) {
       if (!MaffsLock.lock($('qarea'))) return;
       var right = val === Q.key, lit = {}; lit[Q.ask] = true;
-      markQuestion(right, right ? 'That is the ' + Q.ask + '.' : LINE[whyTap(Q, val)], { lit: lit, who: right ? null : whoSays(Q, val) });
+      markQuestion(right, null, right ? [RULE1[Q.ask]] : [RULE1[Q.ask], LINE[whyTap(Q, val)]], { lit: lit });
     } else if (stage === 2) {
       fillSlot(val);
     }
@@ -792,20 +826,26 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (state !== 'asking' || !MaffsLock.lock($('qarea'))) return;
     var ok = val === Q.key;
     if (stage === 3) {
-      var f = Q.dir === 'name' ? Q.key : Q.fn, parts = FN[f];
-      markQuestion(ok, ok ? '' : f + ' θ is ' + parts[0] + ' over ' + parts[1] + '.', { lit: allLit(), labels: lengthLabels(Q) });
+      markQuestion(ok, Q.dir === 'name' ? Q.key : Q.fn, [], { lit: allLit(), labels: lengthLabels(Q) });
     } else {
       var labels = lengthLabels(Q); labels[Q.wanted] = '?';
-      var fp = FN[Q.key];
-      markQuestion(ok, ok ? fp[0] + ' over ' + fp[1] + ' is ' + Q.key + ' θ.' : LINE.both, { lit: allLit(), labels: labels });
+      markQuestion(ok, Q.key, ok ? [] : [LINE.both], { lit: allLit(), labels: labels });
     }
   }
   function head(ok) {
     return '<div class="fb-head" data-mark="' + (ok ? 'right' : 'wrong') + '"><span class="mark" aria-hidden="true">' + (ok ? '✓' : '✗') + '</span>' + (ok ? 'Right' : 'Not quite') + '</div>';
   }
-  // A character's line, in the feedback: plain text in data-say, the side words in their colours.
-  function say(text) { return '<div class="fb-say" data-say="' + esc(text) + '">' + rich(text) + '</div>'; }
-  function markQuestion(ok, line, draw) {
+  // The rule as an equation (Stages 2-4, right and wrong alike): the function of θ equals its stacked fraction of side words, each
+  // in its side's colour, from FN.
+  function ruleHtml(fn) {
+    return '<div class="fb-rule">' + tex('\\' + fn + '\\theta=' + fracWords(FN[fn][0], FN[fn][1])) + '</div>';
+  }
+  // A plain line of feedback, the side words in their colours; on a wrong answer the last one is the reason.
+  function lineHtml(text, reason) {
+    return '<div class="fb-line"' + (reason ? ' data-help="reason"' : '') + ' data-plain="' + esc(text) + '">' + rich(text) + '</div>';
+  }
+  // fn: the function whose equation is the rule (Stages 2-4), or null (Stage 1); lines: the sentences under it.
+  function markQuestion(ok, fn, lines, draw) {
     var seconds = (now() - askedAt) / 1000;
     if (clockId !== null) { MaffsLock.cancel(clockId); clockId = null; }
     clockMs += now() - askedAt; showClock(clockMs);
@@ -814,22 +854,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('hudStreak').textContent = streak;
     $('hudScore').textContent = score;
     ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, question_id: Q.id, correct: ok });
-    var fb = $('feedback');
+    var fb = $('feedback'), rule = (fn ? ruleHtml(fn) : '') + lines.map(function (l, i) { return lineHtml(l, !ok && i === lines.length - 1); }).join('');
     draw.reserve = ok ? RESERVE[stage] : reserveFeedback();
     if (ok) {
       state = 'right';
       drawFigure(Q, draw);
-      var shout = SAYS.shout[streak];
-      fb.innerHTML = '<div class="fb done">' + head(true) + say(rightSay()) +
-        (shout ? '<div class="fb-shout" data-say="' + esc(shout) + '">' + rich(shout) + '</div>' : '') +
-        (line ? '<div class="fb-line" data-plain="' + esc(line) + '">' + rich(line) + '</div>' : '') + '</div>';
+      fb.innerHTML = '<div class="fb done">' + head(true) + rule + '</div>';
       MaffsLock.timer(advance, HOLD_MS);
     } else {
       state = 'wrong';
       $('qcard').classList.add('fb-open');
       drawFigure(Q, draw);
-      fb.innerHTML = '<div class="fb wrong">' + head(false) + (draw.who ? say(SAYS[draw.who]) : '') +
-        '<div class="fb-line" data-help="reason" data-plain="' + esc(line) + '">' + rich(line) + '</div><div class="fb-next"></div></div>';
+      fb.innerHTML = '<div class="fb wrong">' + head(false) + rule + '<div class="fb-next"></div></div>';
       MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     }
   }
@@ -849,10 +885,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
     $('resTitle').textContent = 'Stage ' + stage + ' done: ' + STAGES[stage].name;
     $('resScore').textContent = score;
-    var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5 ? SAYS.low : '';
-    $('resSay').hidden = !resLine;
-    $('resSay').dataset.say = resLine;
-    $('resSay').innerHTML = rich(resLine);
     $('resStats').innerHTML = '<b>' + rightCount + '</b> right out of <b>' + answered + '</b><br>Best streak <b>' + bestStreak + '</b>' + (pb ? '<br>New personal best' : '');
     $('nextStageBtn').hidden = stage >= LAST;
     $('nextStageBtn').dataset.stage = stage + 1;
@@ -882,6 +914,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else if (e.target.closest('#checkBtn')) checkSlots();
   });
   $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) chose(b.dataset.val); });
+  $('key').addEventListener('click', function (e) { var b = e.target.closest('.key-row'); if (b) meet(b.dataset.role); });
+  // a tap on the ramp: its region names the strip; on a phone the bio may be below the fold, so it is brought into view
+  $('startSides').addEventListener('click', function (e) {
+    var t = e.target.closest && e.target.closest('[data-tap]');
+    if (!t) return;
+    meet(t.getAttribute('data-tap'));
+    $('bio').scrollIntoView({ block: 'nearest' });
+  });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
     function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
@@ -897,8 +937,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     b.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window, clientX: r.left + r.width / 2, clientY: r.top + r.height / 2 }));
   }
   window.WS = {
-    SLUG: SLUG, LINE: LINE, SAYS: SAYS, HOLD_MS: HOLD_MS, TRIPLES: TRIPLES,
-    gen: { bank: bank, session: session, whyTap: whyTap, whoSays: whoSays, scoreFor: scoreFor },
+    SLUG: SLUG, LINE: LINE, HOLD_MS: HOLD_MS, TRIPLES: TRIPLES,
+    gen: { bank: bank, session: session, whyTap: whyTap, scoreFor: scoreFor },
     ui: {
       state: function () { return state; },
       level: function () { return level; },
