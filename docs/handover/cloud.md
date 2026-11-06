@@ -64,6 +64,14 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-06 (cloud): WHOSE-SIDE-BIOS (`docs/handover/contracts/2026-11-06-whose-side-bios.md`, Shared)
+
+At the Gate, holding for Project Claude's review and Jon's "merge" (PR on `claude/whose-side-start-screen-850fga`, from main 86b56ec, #688 merged). Agent: Claude Code, cloud, primary checkout. Before building I asked Jon two questions (item 7 names `LINE` as dead code, but it holds his four approved misconception lines); his answers are in the contract file: keep the misconception lines under the rule; Stage 2's wrong panel keeps its numbers sentence under the equation.
+
+Game: the key's rows are buttons (aria-pressed) with the corrected definitions; a bio area in the key; the new opening and closing lines (θ in KaTeX); the ramp's three strips are tap regions measured from the WebP (each strip's pixels by colour, a line fitted through them; offsets 120 in, 240 out; bisector cuts, and near the tip the base keeps the wedge up to just under the slope's paint); the chosen strip ringed in the text colour in its line style. Play: SAYS, its callers and containers deleted; Stage 1's "That's X: ..." on right and wrong, the misconception line under it on a wrong tap; Stages 2-4 the stacked coloured equation on right and wrong. Removed lines archived in `docs/whose-side-lines.md`. Verifier: new units `bios` and the reworked `lines`; full run 0 failures, 46 plants caught.
+
+STOP IF 2, in part (reported, not stopped): within about 200 image px of the ramp's tip the base and slope's paint are closer than 44 px at 320, and the picture ends 24 px under the base, so the base's region is as deep as that room (33 px at 90% along at 320, 40.5 at 390). Everywhere else every strip is 44 px or more at 320 and 390; the regions never overlap. STOP IF 3 not hit: Next stays above the fold on every stage at 320, 375 and 390 (worst Stage 2, 501 / 528, 605 / 627, 648 / 804).
+
 ## 2026-11-06 (cloud): WHOSE-SIDE-FIT (`docs/handover/contracts/2026-11-06-whose-side-fit.md`, Shared)
 
 At the Gate, holding for Project Claude's review and Jon's "merge" (PR on `claude/dazzling-knuth-yx7qnw`, from main 83d3999). Agent: Claude Code, cloud, primary checkout. Stopped once at STOP IF 1 (a 75% floor the contract's own pads cannot reach at 1920x1080); Project Claude's ruling, 17:58, is Amendment 1 in the contract: no wasted space instead of 75%, a 70% floor.
