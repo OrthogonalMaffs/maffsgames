@@ -82,19 +82,3 @@ Numbers: fill median / minimum 0.789 / 0.607 -> 0.889 / 0.739 at 1920x1080, 0.84
 
 Pages (Amendment 1): no rerun made; after the timeouts on runs 1347 and 1348, runs 1349, 1350 (#673) and 1351 deployed green on their own (17:26 UTC).
 
-## 2026-11-06 (cloud): WHOSE-SIDE-ART (`docs/history/contracts/2026-11-06-whose-side-art.md`, Shared)
-
-DONE: #684 merged by merge-pr.py as e42aa76 on Jon's "merge" (6 Nov), after its Gate went green on 16855283 (run 42231037198); main run 42236540900 GREEN. Review: Project Claude reviewed and passed the head 16855283 before the merge (6 Nov, relayed by Jon). Tip at the inner corner: accepted in Project Claude's review. Open for Jon: the art-inbox branch is his to delete.
-
-Agent: Claude Code, cloud, primary checkout, branch `claude/funny-allen-wgvy20`, from main c8b30dd (#682 merged). Source checked: art-inbox 9ed06af, 1698x926 PNG, 2,154,880 bytes. `games/whose-side-are-you-on/assets/start.webp`: the house conversion (new_h = 873, so no crop), 1600x873, 94,132 bytes. Start screen: the picture under the title at the card's width (14 px corners, height auto), in a wrapper with the arc (an SVG in the picture's own coordinates) and a KaTeX θ in the text colour, haloed. Tip measured on the WebP: (1325.2, 733.0), where the slope's lower edge meets the base's top edge; slope 28.33 degrees. θ on the bisector 88 image px in (77.49%, 81.50%), 5.5% of the width from the tip; arc radius 170, centred on the tip.
-
-Decided for you (standing STOP IF rules, 27 Oct): (1) Start above the fold: the first stage button was ALREADY below it on main without the picture at 320x568 (830 / 528), 375x667 (761 / 627) and every Aa phone size; with it, 1002, 963 and 947 (390x844, was 736 / 804). Not shrunk; reported by the verifier, not judged (measure-phone-fit's R4; Jon's ESSENTIALS-ART ruling, 2 Nov). (2) "Within 6% of the tip": the contract's "about (1450, 790)" is the strips' centreline meeting (1371.6, 745.0); 6% from there leaves no clean place for a readable θ in a 28-degree wedge with 24 px strips, so the tip is the triangle's own corner, 47 px in. (3) Full card width on large screens too (1068 px): the first stage now ends at 1179 on 1366x768 (was 590) and 1359 on 1920x1080 (was 770). (4) No 120 px short-screen crop (ESSENTIALS-ART's): a crop moves the tip.
-
-Verifier: unit `art` at 320x568, 390x844, 1920x1080 (the tip fitted from the WebP's pixels in the browser; picture, corners, KaTeX θ inside the angle and within 6%, the arc centred on the tip, base to slope, opening left; WebP size), the start fold reported at the three phone sizes, normal and Aa; 5 plants (θ at the square corner, on the concrete, 7.5% up the slope, the arc moved, θ in plain text).
-
-Amendment 1 (6 Nov, same PR): the picture capped at 600 px, centred (`max-width:600px; margin-left/right:auto`, ESSENTIALS-ART's cap); θ, the arc and phones unchanged. First stage button against the fold (reported, not judged): 1366x768 1179 -> 924 (fold 728; 590 before the picture); 1920x1080 1359 -> 1104 (fold 1040; 770 before). Phones as before (1002, 963, 947). Verifier: the width check is min(card, 600) and centred; plant 6, the cap removed, caught at 1920.
-
-Amendment 2 (6 Nov, same PR): the key's ADJ definition is now "ADJ, next to θ, and not the hypotenuse." (the HYP and OPP rows and the .say lines unchanged); the cap was already in (Amendment 1). The longer line wraps once on phones: the first stage button 1002 -> 1026 at 320x568, 963 -> 987 at 375x667, 947 -> 971 at 390x844 (Aa 1616 -> 1664, 1420 -> 1469, 1429 -> 1477); large screens unchanged (924, 1104). Verifier: LEGEND expects the new text; plant 7, the old definition, caught by the start-screen check. Full verifier 0 failures, 40 plants caught; phone-fit normal, Aa and laptop PASS (asking only).
-
-Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
-
