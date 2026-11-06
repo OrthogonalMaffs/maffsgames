@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; fault-injection self-test: a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
+# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported; fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -18,12 +18,14 @@ coordinates, and the corners the page marks, and works everything out with vecto
   Feedback     which line a wrong tap gets is recomputed from the geometry, and the wording compared with the approved spec.
   Characters   which character speaks over a wrong tap on Stage 1 is recomputed from the geometry; every line is compared with
                the contract's text (WHOSE-SIDE-PERSONALITY, 6 Nov 2026), held here, never read from the page.
+  Start art    the ramp's tip is found from the WebP's own pixels (the red slope's lower edge fitted, the green base's top edge), and
+               the θ the page draws, and its arc, are judged against that point (contract WHOSE-SIDE-ART, 6 Nov 2026).
 In the page, a played round reads the drawn SVG back and compares it with the data; each tap goes through the real mouse.
 
     python scripts/verify-whose-side-are-you-on.py [--no-selftest] [--shard i/k] [--list-units]
 
 Work units (contract SHARD, canon 7.8.1): the engine, a round of every stage at each size, the slow answer, Aa, the hold, the
-lines, the large screen, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
+lines, the large screen, the start art, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
 """
 import argparse
 import math
@@ -758,6 +760,149 @@ def check_start(page, fails):
         fails.append('the "Ten quick questions" line or the stage list is missing: %s, %d stages' % (got['para'], got['stages']))
 
 
+# Jon's start-screen illustration and the θ over it (contract WHOSE-SIDE-ART, 6 Nov 2026).
+ART = os.path.join(ROOT, 'games', SLUG, 'assets', 'start.webp')
+ART_SIZE, ART_MAX_BYTES = (1600, 873), 450 * 1024
+ART_SIZES = [(320, 568), (390, 844), (1920, 1080)]
+ART_TOL = 0.06               # θ within 6% of the image's width of the tip
+FOLD_SIZES = [(320, 568), (375, 667), (390, 844)]
+# The tip, measured here from the picture's own pixels, never from the page's numbers: the red slope's lower edge is fitted by
+# least squares along the slope, the green base's top edge is its median row, and the tip is where the two meet. The strips are
+# picked out by colour (red: R > 190, G < 110, B < 90; green: G > 140, R < 130, B < 110).
+MEASURE_TIP = """async () => {
+  const img = document.querySelector('#startArt img');
+  if (!img) return null;
+  await img.decode();
+  const W = img.naturalWidth, H = img.naturalHeight, c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+  const d = g.getImageData(0, 0, W, H).data, px = (x, y) => { const i = (y * W + x) * 4; return [d[i], d[i + 1], d[i + 2]]; };
+  const red = (x, y) => { const [r, gg, b] = px(x, y); return r > 190 && gg < 110 && b < 90; };
+  const green = (x, y) => { const [r, gg, b] = px(x, y); return gg > 140 && r < 130 && b < 110; };
+  const pts = [];
+  for (let x = 400; x <= 1300; x += 10) { let lo = -1; for (let y = 0; y < H; y++) if (red(x, y)) lo = y; if (lo >= 0) pts.push([x, lo]); }
+  const n = pts.length, sx = pts.reduce((s, p) => s + p[0], 0), sy = pts.reduce((s, p) => s + p[1], 0);
+  const sxx = pts.reduce((s, p) => s + p[0] * p[0], 0), sxy = pts.reduce((s, p) => s + p[0] * p[1], 0);
+  const m = (n * sxy - sx * sy) / (n * sxx - sx * sx), k = (sy - m * sx) / n;
+  const tops = [];
+  for (let x = 300; x <= 1300; x += 10) { for (let y = 0; y < H; y++) if (green(x, y)) { tops.push(y); break; } }
+  tops.sort((a, b) => a - b);
+  const base = tops[Math.floor(tops.length / 2)];
+  return {W: W, H: H, m: m, k: k, base: base, x: (base - k) / m, y: base, n: n};
+}"""
+READ_ART = """() => {
+  const wrap = document.getElementById('startArt'), img = wrap && wrap.querySelector('img'), th = document.getElementById('startTheta');
+  const panel = document.querySelector('#menu .panel'), path = wrap && wrap.querySelector('path[data-arc]'), svg = wrap && wrap.querySelector('svg');
+  const box = e => { const r = e.getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; };
+  const f = document.querySelector('footer.site-footer'), fold = innerHeight - (f ? f.getBoundingClientRect().height : 0);
+  const first = document.querySelector('#stageList [data-stage]');
+  return {src: img ? img.getAttribute('src') : null, complete: !!img && img.complete, nat: img ? [img.naturalWidth, img.naturalHeight] : null,
+    first: !!wrap && wrap === document.querySelector('#menu .header').nextElementSibling,
+    img: img ? box(img) : null, panel: panel ? box(panel) : null, svg: svg ? box(svg) : null, vb: svg ? svg.getAttribute('viewBox') : null,
+    radius: wrap ? [getComputedStyle(wrap).borderTopLeftRadius, panel ? getComputedStyle(panel).borderTopLeftRadius : null] : null,
+    theta: th ? box(th) : null, katex: !!(th && th.querySelector('.katex')), thetaText: th ? th.textContent : null,
+    colour: th ? getComputedStyle(th).color : null, text: getComputedStyle(document.body).color,
+    font: th ? parseFloat(getComputedStyle(th).fontSize) : 0, arc: path ? path.getAttribute('d') : null,
+    sw: document.documentElement.scrollWidth, vw: innerWidth, fold: fold, start: first ? first.getBoundingClientRect().bottom : null};
+}"""
+
+
+def check_art_static(fails):
+    """The WebP itself: 1600 x 873 and under 450 KB (its pixels are read in the browser, below)."""
+    size = os.path.getsize(ART) if os.path.isfile(ART) else None
+    if size is None:
+        fails.append('art: %s is missing' % os.path.relpath(ART, ROOT))
+    elif size >= ART_MAX_BYTES:
+        fails.append('art: start.webp is %d bytes, not under %d' % (size, ART_MAX_BYTES))
+    return size
+
+
+def judge_art(got, tip, label, fails):
+    """One size: the picture at the top of the start screen at the card's width, θ in KaTeX over it, inside the angle at the tip,
+    within ART_TOL of it, and the arc centred on the tip between the base and the slope, opening to the left."""
+    if not got['src'] or not got['src'].endswith('assets/start.webp') or not got['complete'] or tuple(got['nat'] or ()) != ART_SIZE:
+        fails.append('art %s: the start screen does not show assets/start.webp at 1600x873 (%s, %s)' % (label, got['src'], got['nat']))
+        return
+    if not got['first']:
+        fails.append('art %s: the picture is not at the top of the start screen, under the title' % label)
+    ix, iy, iw, ih = got['img']
+    px, _, pw, _ = got['panel']
+    if abs(ix - px) > 1 or abs(iw - pw) > 1 or abs(ih - iw * ART_SIZE[1] / ART_SIZE[0]) > 1.5:
+        fails.append('art %s: the picture is %.0f px wide at x %.0f, the card %.0f at x %.0f (or its height is not auto)' % (label, iw, ix, pw, px))
+    if got['radius'][0] != got['radius'][1]:
+        fails.append('art %s: corners %s, the card %s' % (label, got['radius'][0], got['radius'][1]))
+    if got['sw'] > got['vw']:
+        fails.append('art %s: sideways scroll %d' % (label, got['sw']))
+    s = iw / ART_SIZE[0]                                   # CSS px per image px
+    if got['svg'] is None or got['vb'] != '0 0 1600 873' or any(abs(a - b) > 1 for a, b in zip(got['svg'], got['img'])):
+        fails.append('art %s: the arc layer does not cover the picture in its coordinates (%s, %s)' % (label, got['svg'], got['vb']))
+    if not got['katex'] or (got['thetaText'] or '').strip()[:1] != 'θ':
+        fails.append('art %s: θ is not drawn in KaTeX over the picture (%r)' % (label, got['thetaText']))
+        return
+    if got['colour'] != got['text'] or got['font'] < 14:
+        fails.append('art %s: θ is %s at %.1f px (the text colour %s, 14 px or more, wanted)' % (label, got['colour'], got['font'], got['text']))
+    tx, ty, tw, th = got['theta']
+    if tx < ix or ty < iy or tx + tw > ix + iw or ty + th > iy + ih:
+        fails.append('art %s: θ is not on the picture (%s inside %s)' % (label, got['theta'], got['img']))
+    cx, cy = (tx + tw / 2 - ix) / s, (ty + th / 2 - iy) / s    # θ's centre, in image pixels
+    off = math.hypot(cx - tip['x'], cy - tip['y']) / ART_SIZE[0]
+    if off > ART_TOL:
+        fails.append('art %s: θ at (%.0f, %.0f) is %.1f%% of the width from the tip (%.0f, %.0f); at most %.0f%%' % (
+            label, cx, cy, 100 * off, tip['x'], tip['y'], 100 * ART_TOL))
+    slope_y = tip['m'] * cx + tip['k']
+    if not (cx < tip['x'] and slope_y < cy < tip['base']):
+        fails.append('art %s: θ at (%.0f, %.0f) is not inside the angle between the slope and the base' % (label, cx, cy))
+    nums = [float(v) for v in (got['arc'] or '').replace(',', ' ').split() if v.replace('.', '', 1).replace('-', '', 1).isdigit()]
+    if len(nums) != 9:
+        fails.append('art %s: the arc %r is not one circular arc' % (label, got['arc']))
+        return
+    x0, y0, r, _, _, _, _, x1, y1 = nums
+    ang = math.degrees(math.atan(tip['m']))              # the slope's rise, from the fit
+    d0, d1 = math.hypot(x0 - tip['x'], y0 - tip['y']), math.hypot(x1 - tip['x'], y1 - tip['y'])
+    a0 = math.degrees(math.atan2(tip['y'] - y0, tip['x'] - x0))
+    a1 = math.degrees(math.atan2(tip['y'] - y1, tip['x'] - x1))
+    if (abs(d0 - r) > 8 or abs(d1 - r) > 8 or x0 >= tip['x'] or x1 >= tip['x'] or abs(a0) > 2 or abs(a1 - ang) > 2
+            or math.hypot(cx - tip['x'], cy - tip['y']) >= r):
+        fails.append('art %s: the arc %r is not centred on the tip (%.0f, %.0f) from the base to the slope (%.1f deg), opening left, '
+                     'with θ inside it' % (label, got['arc'], tip['x'], tip['y'], ang))
+
+
+def check_art(browser, base, fails, route=None, sizes=ART_SIZES, report=True):
+    """Jon's ramp on the start screen with θ at its tip, at 320, 390 and 1920 wide; the tip measured from the WebP's pixels. Then
+    where the first stage button ends against the fold at the phone sizes, normal and Aa: reported, never judged (it was already
+    below the fold at 320x568 on main before the picture: the start screen is report-only, measure-phone-fit.py's R4)."""
+    if check_art_static(fails) is None:
+        return
+    tip, combos = None, [(s, False) for s in sizes]
+    if report:
+        combos += [(s, False) for s in FOLD_SIZES if s not in sizes] + [(s, True) for s in FOLD_SIZES]
+    for (w, h), aa in combos:
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        if aa:
+            ctx.add_init_script("localStorage.setItem('mfg_accessible', 'true');")
+        page = ctx.new_page()
+        if route:
+            page.route('**/games/%s/**' % SLUG, route)
+        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+        page.wait_for_function('() => !!window.WS && !!window.katex' + (' && document.body.classList.contains("accessible")' if aa else ''))
+        bc.wait_settled(page)
+        if tip is None:
+            tip = page.evaluate(MEASURE_TIP)
+            if not tip or tip['n'] < 60 or not (0.45 < tip['m'] < 0.62) or not (1200 < tip['x'] < 1450 and 680 < tip['y'] < 790):
+                fails.append('art: the ramp\'s tip could not be measured from the picture (%s)' % tip)
+                ctx.close()
+                return
+            print('  art: tip measured at (%.1f, %.1f), slope %.2f deg' % (tip['x'], tip['y'], math.degrees(math.atan(tip['m']))))
+        got = page.evaluate(READ_ART)
+        label = '%dx%d%s' % (w, h, ' Aa' if aa else '')
+        if (w, h) in sizes and not aa:
+            judge_art(got, tip, label, fails)
+        if (w, h) in FOLD_SIZES and report:
+            print('  start fold %s: first stage ends at %.0f, fold %.0f (%s; reported, not judged)' % (
+                label, got['start'], got['fold'], 'above' if got['start'] <= got['fold'] else 'below'))
+        ctx.close()
+
+
 def check_says(browser, base, fails, route=None):
     """Whole rounds answered through the lock hint, at speed: a perfect Stage 1 round (every right-answer line, never the same twice
     running, the shout-outs at 3, 5 and 10 and nowhere else, the 8-10 results line), a round of four right (the Stage 1 speaker for
@@ -947,6 +1092,12 @@ PLANTS = [
     ('the same right-answer line twice running', "    if (lastRight >= 0 && i >= lastRight) i++;\n", "    i = 0;\n", 'says'),
     ('no results line at 8-10 right', "var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5", "var resLine = rightCount >= 11 ? SAYS.high : rightCount <= 5", 'says'),
     ('a small triangle at 1920x1080', "var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));", "var H = 400;", 'big'),
+    # contract WHOSE-SIDE-ART: θ over the ramp's tip
+    ('θ at the square corner', "left:77.49%;top:81.50%;", "left:14.5%;top:81.5%;", 'art'),
+    ('θ off the tip, on the concrete', "left:77.49%;top:81.50%;", "left:91%;top:80%;", 'art'),
+    ('θ slid up the slope, 7.5% from the tip', "left:77.49%;top:81.50%;", "left:76.2%;top:77.6%;", 'art'),
+    ('the arc centred off the tip', 'd="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"', 'd="M 1055.2 733 A 170 170 0 0 1 1075.6 652.3"', 'art'),
+    ('θ in plain text, not KaTeX', "    $('startTheta').innerHTML = THETA();", "", 'art'),
 ]
 
 
@@ -983,6 +1134,10 @@ def one_plant(browser, base, src, plant):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
+            if len(plant) > 3 and plant[3] == 'art':
+                check_art(browser, base, found, route=route(None), report=False)
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
+                return 0 if found else 1
             if len(plant) > 3 and plant[3] in ('says', 'big'):
                 (check_says(browser, base, found, route=route(None)) if plant[3] == 'says'
                  else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,)))
@@ -1010,7 +1165,7 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     bc.shard_args(ap)
     args = ap.parse_args()
-    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big']
+    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big', 'art']
     if not args.no_selftest:
         units += ['plant: ' + plant[0] for plant in PLANTS]
     shard = bc.Shard(__file__, args)
@@ -1025,7 +1180,7 @@ def main():
             work += [('play %dx%d' % s, lambda s=s: run_page(browser, base, fails, sizes=[s], engine=False)) for s in SIZES]
             work += [('slow', lambda: run_slow(browser, base, fails)), ('aa', lambda: check_aa(browser, base, fails)),
                      ('hold', lambda: check_hold(browser, base, fails)), ('lines', lambda: check_says(browser, base, fails)),
-                     ('big', lambda: check_big(browser, base, fails))]
+                     ('big', lambda: check_big(browser, base, fails)), ('art', lambda: check_art(browser, base, fails))]
             for uid, fn in work:
                 if uid in mine:
                     with shard.unit(uid):
