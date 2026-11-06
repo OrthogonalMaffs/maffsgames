@@ -59,7 +59,17 @@ nav{position:sticky;top:0;z-index:100;width:100%;display:flex;align-items:center
 .msg.err{color:var(--err)}
 .msg.ok{color:var(--cor)}
 
-.grid{display:flex;flex-direction:column;gap:5px;width:100%;max-width:420px}
+/* The board fits the screen's height as well as its width (EQUATLE-PHONE-FIT): its width is the smaller of the
+   column and what the height left after everything else on screen (--chrome) allows for 6 square rows: 8 tiles and
+   7 gaps across, 6 tiles and 5 gaps down. svh is the height with the phone's browser bars showing; vh is the
+   fallback for a browser without it. --chrome is measured: the nav, the title block, the stats bar, the message line,
+   the keypad, the gaps between them and the fixed site footer (Aa's taller lines on tall screens; on short screens
+   the lines that differ are hidden). Never narrower than 28px tiles (8 x 28 + 7 x 5 = 259px). */
+.page{--chrome:405px}
+body.accessible .page{--chrome:445px}
+.grid{display:flex;flex-direction:column;gap:5px;width:100%;max-width:420px;
+  width:min(100%,max(259px,calc((100vh - var(--chrome) - 25px) * 4 / 3 + 35px)));
+  width:min(100%,max(259px,calc((100svh - var(--chrome) - 25px) * 4 / 3 + 35px)))}
 .row{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}
 .tile{aspect-ratio:1;border:2px solid var(--bdrdim);background:var(--surface2);border-radius:3px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:clamp(.85rem,3.5vw,1.1rem);font-weight:500;color:var(--body);user-select:none;position:relative}
 .tile.f{border-color:var(--muted)}
@@ -92,6 +102,16 @@ body.cb .tile[data-s=present]::after{content:'▲';position:absolute;bottom:1px;
 .key[data-s=present]{background:var(--pre);color:#fff;border-color:var(--pre)}
 .key[data-s=absent]{background:var(--abs);color:var(--abst);border-color:var(--abs)}
 @media (max-width:360px){.kr{gap:3px}}
+
+/* Short screens (EQUATLE-PHONE-FIT): the eyebrow and the subtitle hide (the rules are behind ? in the nav), the title
+   shrinks and the stats bar is shorter, so the board and the whole keypad fit without scrolling. */
+@media (max-height:740px){
+  .page,body.accessible .page{--chrome:350px}
+  .kicker,.sub{display:none}
+  .title{font-size:1.6rem}
+  .si{padding:.25rem .2rem}
+  .sv{font-size:.8rem}
+}
 
 .ov{position:fixed;inset:0;z-index:200;background:rgba(7,11,20,.9);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:1rem}
 .ov.hidden{display:none}
@@ -249,9 +269,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
     <div class="kr">
       <button class="key" data-k="+" onclick="key('+')">+</button><button class="key" data-k="-" onclick="key('-')">−</button><button class="key" data-k="*" onclick="key('*')">×</button><button class="key" data-k="/" onclick="key('/')">÷</button><button class="key" data-k="=" onclick="key('=')">=</button>
-      <button class="key wide kd" onclick="key('DEL')">⌫ Del</button>
+      <button class="key wide kd" onclick="key('DEL')">⌫ Del</button><button class="key wide ke" onclick="key('ENTER')">↵ Enter</button>
     </div>
-    <div class="kr"><button class="key wide ke" onclick="key('ENTER')">↵ Enter</button></div>
   </div>
 
   <button class="btn bgh" id="nxtbtn" style="display:none;max-width:420px" onclick="nextFree()">Next Puzzle →</button>

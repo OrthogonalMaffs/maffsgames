@@ -67,6 +67,7 @@ MIGRATED = [
     "i-found-a-mark",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "hc-factor",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "y-so-steep",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
+    "whose-side-are-you-on",  # built to the theme, 5 Nov 2026 (unlisted until Jon approves it)
     "who-ate-all-the-pies",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "its-on-sale",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)
     "as-you-can-see",  # built to the theme, 27 Oct 2026 (unlisted until Jon approves it)

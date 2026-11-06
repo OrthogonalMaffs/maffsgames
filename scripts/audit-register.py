@@ -78,6 +78,7 @@ UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has pla
                          'i-found-a-mark': 'new, unlisted until Jon has played and approved it (contract FOUND-A-MARK)',
                          'hc-factor': 'new, unlisted until Jon has played and approved it (contract HC-FACTOR)',
                          'y-so-steep': 'new, unlisted until Jon has played and approved it (contract Y-SO-STEEP)',
+                         'whose-side-are-you-on': 'new, unlisted until Jon has played and approved it (contract WHOSE-SIDE)',
                          'who-ate-all-the-pies': 'new, unlisted until Jon has played and approved it (contract WHO-ATE-ALL-THE-PIES)',
                          'its-on-sale': 'new, unlisted until Jon has played and approved it (contract ITS-ON-SALE)',
                          'as-you-can-see': 'new, unlisted until Jon has played and approved it (contract AS-YOU-CAN-SEE)',
