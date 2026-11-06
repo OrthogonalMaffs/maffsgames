@@ -1297,6 +1297,10 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
   per-game sizes are in the file and in `docs/audits/phone-fit-gate-2026-10-26.md`. A game that took the
   1 Oct exception for a question taller than the screen (todo §3.9) and fails the gate is on the list:
   Better Value is.
+- **A declared non-answer region (6 Nov 2026, contract PHONE-FIT-ASIDE).** A container holding controls that are not
+  part of answering the question (a leaderboard's name box and Submit Score) carries `data-mfg-aside="<what>"`, and
+  `scripts/measure-phone-fit.py` neither counts nor presses anything inside it. It may never contain any part of the
+  question's answer controls: an option group found inside one fails the run, whatever the lists say.
 
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
 

@@ -15,6 +15,8 @@ its feedback on that screen), the options must START above the fold, and an over
 --laptop (ruling R2): at 1366x768 and 1280x720, normal mode, the last answer option AND Next after a wrong answer
 end above the fold. In every mode the page must not scroll sideways, on the asking screen or after a wrong answer.
 A canvas question (no option group, input or submit) is measured by the canvas's own box and the buttons beside it.
+A container marked data-mfg-aside="<what>" (a leaderboard) holds no part of the answer: its controls are never counted
+or pressed, and an option group found inside one FAILS (ASIDE_GUARD), whatever the lists say.
 The lists in scripts/phone-fit-state.json, per mode ("normal", "aa", "laptop"), grow only when the measurement itself
 improves, with Jon's ruling, never because of a new fault: "known-failures" (each game with the entries at which it
 fails the gate: reported, never failed), "sideways" (each game with the sizes at which it scrolls sideways) and
@@ -160,36 +162,51 @@ CORRECT_INIT = r"""
       .filter(function (el) { return vis(el) && !el.closest('.site-footer, header'); });
   }
 
+  // A declared non-answer region (canon 7.6.1): a leaderboard's name box and "Submit Score" read as answer controls
+  // by every rule below, so nothing inside [data-mfg-aside] counts.
+  function aside(el) { return el.closest('[data-mfg-aside]'); }
+
   // The answer controls on the asking screen, by tier 3's own reading of the page.
   window.__pfAsking = function () {
     window.__mfgProbe();
-    const els = (window.__mfgGroup || []).filter(vis);
+    const regions = new Map();
+    document.querySelectorAll('[data-mfg-aside]').forEach(function (r) { regions.set(r, new Set()); });
+    const counted = function (el) {
+      const r = aside(el);
+      if (r) regions.get(r).add(el);
+      return !r;
+    };
+    // The guard: tier 3's option group inside an aside means the marker hides the answer, or the probe has picked up
+    // the leaderboard. Either way the row fails; it never passes by measuring what is left.
+    const inAside = (window.__mfgGroup || []).some(aside);
+    const els = (window.__mfgGroup || []).filter(vis).filter(counted);
     document.querySelectorAll('input, textarea, [contenteditable="true"]').forEach(function (el) {
       const t = (el.getAttribute('type') || 'text').toLowerCase();
       if (el.disabled || el.readOnly || !vis(el)) return;
       if (el.tagName === 'INPUT' && ['text', 'number', 'tel', ''].indexOf(t) === -1) return;
-      els.push(el);
+      if (counted(el)) els.push(el);
     });
     clickables().forEach(function (el) {
-      if (els.indexOf(el) === -1 && SUBMIT_RE.test(txt(el))) els.push(el);
+      if (els.indexOf(el) === -1 && SUBMIT_RE.test(txt(el)) && counted(el)) els.push(el);
     });
     // A canvas question (contract FOLD-COMPONENTS, Jon 26 Oct 2026): the answer is a tap on the canvas, so with no
     // option group, input or submit the canvas's own box is the answer area, with the controls next to it: every
     // visible button that starts at or below the canvas's top (Fire, Undo, Check), never a link or the header's.
     let canvas = false;
     if (!els.length) {
-      const cv = [...document.querySelectorAll('canvas')].filter(function (el) { return vis(el) && !el.closest('.site-footer, header'); });
+      const cv = [...document.querySelectorAll('canvas')].filter(function (el) { return vis(el) && !el.closest('.site-footer, header') && counted(el); });
       if (cv.length) {
         canvas = true;
         const t0 = Math.min.apply(null, cv.map(top));
         cv.forEach(function (el) { els.push(el); });
         clickables().forEach(function (el) {
-          if (el.tagName !== 'A' && els.indexOf(el) === -1 && top(el) >= t0) els.push(el);
+          if (el.tagName !== 'A' && els.indexOf(el) === -1 && top(el) >= t0 && counted(el)) els.push(el);
         });
       }
     }
     return {
-      n: els.length, canvas: canvas,
+      n: els.length, canvas: canvas, inAside: inAside,
+      asides: [...regions].map(function (e) { return { value: e[0].getAttribute('data-mfg-aside'), skipped: e[1].size }; }),
       bottom: els.length ? Math.max.apply(null, els.map(bottom)) : null,
       top: els.length ? Math.min.apply(null, els.map(top)) : null,
       fold: fold(),
@@ -204,7 +221,7 @@ CORRECT_INIT = r"""
   window.__pfSubmit = function () {
     let hit = null;
     clickables().forEach(function (c) {
-      if (!hit && !c.disabled && SUBMIT_RE.test(txt(c))) hit = c;
+      if (!hit && !c.disabled && !aside(c) && SUBMIT_RE.test(txt(c))) hit = c;
     });
     if (!hit) return '';
     hit.click();
@@ -421,6 +438,11 @@ async def measure_one(browser, base, slug, size, args):
             ask = await ev("window.__pfAsking()")
             out["route"] = "declared start"
             on_start = out.get("start") and out["start"].get("picker") and ask["n"] and ask.get("top") == out["start"]["picker"]["top"]
+        out["inAside"], out["asides"] = ask["inAside"], ask["asides"]
+        if ask["inAside"]:
+            # The guard fails this row (classify): nothing further is pressed, least of all a control in the region.
+            out["ask"] = ask if ask["n"] else None
+            return out
         if on_start:
             # Still the start screen: what would be measured is the level picker, not a question.
             out["note"] = ("the start screen does not lead to a question generically (its first option, then %s); "
@@ -551,6 +573,9 @@ def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=
     gate (on a laptop it is the gate). In Aa at 320x568 an overflow that keeps the options starting above the fold is
     WARN (Aa at 320)."""
     known, sideways = set(known or ()), set(sideways or ())
+    guard = [size_key(r) for r in rows if r.get("inAside")]
+    if guard:
+        return HARD_FAIL, 0, "%s: %s" % (ASIDE_GUARD, ", ".join(guard))
     aa = mode == "aa"
     asks = [r for r in rows if r["ask"]]
     wrongs = [r for r in rows if r["wrong"]]
@@ -632,6 +657,7 @@ KNOWN_FAIL = "KNOWN FAIL"
 UNMEASURABLE = "UNMEASURABLE"
 WARN_AA = "WARN (Aa at 320)"
 GATE_FAILS = (HARD_FAIL, STALE, UNMEASURABLE_NEW)
+ASIDE_GUARD = "answer control inside data-mfg-aside"
 
 # The two lists that may only shrink (canon 7.6.1, Jon's ruling of 26 Oct 2026), per mode: "known-failures" maps a
 # game to the sizes at which it fails the gate; "unmeasurable" lists the games the driver cannot measure.
@@ -735,6 +761,15 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
     for slug, rows in sorted(starts):
         lines.append("| `%s` | " % slug + " | ".join(cell((r.get("start") or {}).get("picker")) for r in rows) + " | "
                      + " | ".join(cell((r.get("start") or {}).get("start")) for r in rows) + " |")
+    # Declared non-answer regions (canon 7.6.1): what each one kept out of the measurement on the asking screen.
+    asides = [(g[2], g[3]) for g in games if any(r.get("asides") for r in g[3])]
+    lines += ["", "## Declared non-answer regions (`data-mfg-aside`)", "",
+              "Each region's value and how many controls it skipped on the asking screen, per size. `0`: nothing in it "
+              "was showing.", "", "| Game | Region | " + " | ".join(szs) + " |", "|---|---|" + "---|" * len(szs)]
+    for slug, rows in sorted(asides):
+        for value in sorted({a["value"] for r in rows for a in r.get("asides") or ()}):
+            lines.append("| `%s` | %s | " % (slug, value) + " | ".join(
+                str(sum(a["skipped"] for a in r["asides"] if a["value"] == value)) if r.get("asides") else "–" for r in rows) + " |")
     with open(path, "w", encoding="utf-8", newline='') as fh:
         fh.write("\n".join(lines) + "\n")
     return games
@@ -924,6 +959,7 @@ def selftest():
                 print("  FAIL  phone-fit-state.json: sideways %s/%s has no sizes or an unknown one" % (mode, slug))
                 ok = False
     ok = canvas_plant() and ok
+    ok = aside_plant() and ok
     print("selftest: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -962,6 +998,65 @@ def canvas_plant():
             ok = ok and good
             pg.close()
         b.close()
+    return ok
+
+
+def aside_plant():
+    """The page side of data-mfg-aside, in Chromium on planted pages, then through classify() at the three phone sizes:
+    (a) a leaderboard's name box and "Submit Score" below the fold in a marked region, the answer controls above it:
+    passes, measured by the answer controls, and __pfSubmit never presses its button; (b) the same without the marker:
+    fails as today; (c) the option group inside a marked region: fails with the guard's message, even when listed."""
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        print("  FAIL  aside plant: Playwright is not installed")
+        return False
+    board = ("<div %s style='margin-top:1200px'><input type='text' value=''>"
+             "<button id='lb' onclick='window.__lbPressed=1'>Submit Score</button></div>")
+    options = "<div %s>" + "".join("<button onclick='1'>%d</button>" % n for n in (12, 15, 18)) + "</div>"
+    pages = {
+        "a": options % "" + board % "data-mfg-aside='leaderboard'",
+        "b": options % "" + board % "",
+        "c": options % "data-mfg-aside='leaderboard'",
+    }
+    rows = {}
+    pressed = None
+    with sync_playwright() as p:
+        b = p.chromium.launch()
+        for key, body in pages.items():
+            rows[key] = []
+            for w, h in SIZES:
+                pg = b.new_page(viewport={"width": w, "height": h})
+                pg.set_content("<!doctype html><html><head><meta name='viewport' content='width=device-width'></head>"
+                               "<body style='margin:0'>%s</body></html>" % body)
+                pg.evaluate(cs.TIER3_INIT)
+                pg.evaluate(CORRECT_INIT)
+                a = pg.evaluate("window.__pfAsking()")
+                rows[key].append({"w": w, "h": h, "note": "", "ask": a if a["n"] else None, "wrong": None,
+                                  "inAside": a["inAside"], "asides": a["asides"]})
+                if key == "a":
+                    label = pg.evaluate("window.__pfSubmit()")
+                    pressed = pressed or label or pg.evaluate("window.__lbPressed || ''")
+                pg.close()
+        b.close()
+    results = {k: classify(r, "normal") for k, r in rows.items()}
+    a_ask = rows["a"][0]["ask"]
+    checks = [
+        ("aside plant: a marked leaderboard below the fold passes",
+         results["a"][0] == "PASS (asking only)" and a_ask["n"] == 3 and a_ask["bottom"] <= a_ask["fold"], results["a"][0]),
+        ("aside plant: its two controls counted as skipped",
+         rows["a"][0]["asides"] == [{"value": "leaderboard", "skipped": 2}], rows["a"][0]["asides"]),
+        ("aside plant: __pfSubmit never presses its Submit Score", not pressed, repr(pressed)),
+        ("aside plant: the same page unmarked fails as today", results["b"][0] == HARD_FAIL, results["b"][0]),
+        ("aside plant: the option group inside an aside fails",
+         results["c"][0] == HARD_FAIL and ASIDE_GUARD in results["c"][2], results["c"][2]),
+        ("aside plant: the guard outranks a known-failures entry",
+         classify(rows["c"], "normal", ("320x568", "375x667", "390x844"))[0] == HARD_FAIL, "listed"),
+    ]
+    ok = True
+    for name, good, seen in checks:
+        print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, seen))
+        ok = ok and good
     return ok
 
 
