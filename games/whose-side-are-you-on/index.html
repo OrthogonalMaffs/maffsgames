@@ -176,6 +176,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Jon's start-screen illustration (assets/start.webp, contract WHOSE-SIDE-ART, 6 Nov 2026): the card's width up to 600 px, centred
+   (Amendment 1: on a projector the stages stay near the top), and the card's corners. θ is drawn over it, never baked in, at the ramp's bottom-right tip, so the blue upright really is OPP and the green base
+   really is ADJ. The tip is the triangle's corner there, where the slope's lower edge meets the base's top edge, measured on the
+   WebP at (1325.2, 733.0) of 1600 x 873 (82.83% across, 83.96% down); the slope rises at 28.33 degrees. The arc is centred on the
+   tip, radius 170, in the image's own coordinates (the SVG's viewBox), so it scales with the picture and stays on the wood; θ sits
+   on the angle's bisector, 88 image pixels in from the tip (77.49%, 81.50%), haloed so it reads where the wedge is thin on a phone.
+   No short-screen crop here: a crop would move the tip. */
+.start-art{position:relative;width:100%;margin:.4rem 0 .7rem;max-width:600px;margin-left:auto;margin-right:auto;border-radius:14px;overflow:hidden;container-type:inline-size}
+.start-art img{display:block;width:100%;height:auto}
+.start-art svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.start-art path{fill:none;stroke:var(--text);stroke-width:2.5px;vector-effect:non-scaling-stroke;stroke-linecap:round}
+.start-theta{position:absolute;left:77.49%;top:81.50%;transform:translate(-50%,-50%);line-height:1;color:var(--text);pointer-events:none;
+  font-size:16px;font-size:max(14px,2.2cqw);text-shadow:0 0 2px var(--surface),0 0 2px var(--surface),0 0 4px var(--surface),0 0 6px var(--surface)}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -203,12 +216,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>Whose Side Are You On?</h1><div class="sub" id="subtitle">One side never moves. The other two can't stop being polite about it.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="start-art" id="startArt">
+      <img src="assets/start.webp" width="1600" height="873" alt="A wooden skate ramp seen side-on: its slope, upright and base form a right-angled triangle, with the angle θ marked at the bottom of the slope">
+      <svg viewBox="0 0 1600 873" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path data-arc d="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"/></svg>
+      <span class="start-theta" id="startTheta" aria-hidden="true">θ</span>
+    </div>
     <div class="panel menu-info">
       <p>Every side gets its name from the marked angle. Each side keeps its colour, its line and its letter all the way through.</p>
       <div class="key" role="list">
         <svg width="56" height="10" aria-hidden="true"><line class="HYP" x1="2" y1="5" x2="54" y2="5"/></svg><b>H</b><span role="listitem" data-role="HYP"><span class="def"><span class="w HYP">HYP</span>, the longest side, across from the right angle.</span> <span class="say">“I'm here. I'm always here.”</span></span>
         <svg width="56" height="10" aria-hidden="true"><line class="OPP" x1="2" y1="5" x2="54" y2="5"/></svg><b>O</b><span role="listitem" data-role="OPP"><span class="def"><span class="w OPP">OPP</span>, across from θ.</span> <span class="say">“Oh, I'm opposite today? Splendid.”</span></span>
-        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem" data-role="ADJ"><span class="def"><span class="w ADJ">ADJ</span>, next to θ.</span> <span class="say">“Then I shall stand beside it. After you.”</span></span>
+        <svg width="56" height="10" aria-hidden="true"><line class="ADJ" x1="2" y1="5" x2="54" y2="5"/></svg><b>A</b><span role="listitem" data-role="ADJ"><span class="def"><span class="w ADJ">ADJ</span>, next to θ, and not the hypotenuse.</span> <span class="say">“Then I shall stand beside it. After you.”</span></span>
       </div>
       <p class="closing" id="closing">Move θ, and the polite two swap. <span class="w HYP">HYP</span> doesn't flinch.</p>
       <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>
@@ -587,6 +605,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         '</span><span class="d">' + esc(STAGES[n].blurb) + '</span></span></button>';
     }
     $('stageList').innerHTML = h;
+    $('startTheta').innerHTML = THETA();      // the θ over the ramp's tip, in KaTeX like every θ in the game
   })();
 
   /* ---------- the clock: a visible count-up that stops while feedback shows, and only ever feeds the score ---------- */
