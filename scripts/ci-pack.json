@@ -361,7 +361,7 @@
    "tier": "content"
   },
   "verify-whose-side-are-you-on.py": {
-   "how": "chosen from 42 timed unit(s)",
+   "how": "kept from the pack (3 needed)",
    "label": "Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; fault-injection self-test: a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught)",
    "parts": 3,
    "tier": "content"
