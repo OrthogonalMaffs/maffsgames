@@ -56,8 +56,8 @@ SUBTITLE = "One side never moves. The other two can't stop being polite about it
 LEGEND = [
     ('HYP', 'HYP, the longest side, across from the right angle.', '“I\'m here. I\'m always here.”'),
     ('OPP', 'OPP, across from θ.', '“Oh, I\'m opposite today? Splendid.”'),
-    ('ADJ', 'ADJ, next to θ.', '“Then I shall stand beside it. After you.”'),
-]
+    ('ADJ', 'ADJ, next to θ, and not the hypotenuse.', '“Then I shall stand beside it. After you.”'),
+]   # ADJ's definition corrected (WHOSE-SIDE-ART Amendment 2, 6 Nov): "next to θ" alone fits the hypotenuse too
 CLOSING = "Move θ, and the polite two swap. HYP doesn't flinch."
 RIGHT_SAYS = ['HYP: “Correct. I remain unmoved.”', 'OPP: “Spot on. Do carry on.”', 'ADJ: “Marvellous. After you.”']
 WRONG_SAYS = {
@@ -1103,6 +1103,7 @@ PLANTS = [
     ('the arc centred off the tip', 'd="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"', 'd="M 1055.2 733 A 170 170 0 0 1 1075.6 652.3"', 'art'),
     ('θ in plain text, not KaTeX', "    $('startTheta').innerHTML = THETA();", "", 'art'),
     ('the picture uncapped on a large screen', "max-width:600px;margin-left:auto;margin-right:auto;", "", 'art'),
+    ('the key\'s ADJ definition reverted to "next to θ."', "ADJ</span>, next to θ, and not the hypotenuse.</span>", "ADJ</span>, next to θ.</span>", 'start'),
 ]
 
 
@@ -1139,6 +1140,16 @@ def one_plant(browser, base, src, plant):
                                if rt.request.resource_type == 'document' else rt.continue_())
         found, err = [], None
         try:
+            if len(plant) > 3 and plant[3] == 'start':     # the start screen's text, read as run_engine reads it
+                ctx = browser.new_context(viewport={'width': SIZES[0][0], 'height': SIZES[0][1]})
+                pg = ctx.new_page()
+                pg.route('**/games/%s/**' % SLUG, route(None))
+                pg.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+                pg.wait_for_function('() => !!window.WS && !!window.katex')
+                check_start(pg, found)
+                ctx.close()
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
+                return 0 if found else 1
             if len(plant) > 3 and plant[3] == 'art':
                 check_art(browser, base, found, route=route(None), report=False)
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)

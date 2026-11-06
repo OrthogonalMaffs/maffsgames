@@ -48,3 +48,28 @@ DO NOT TOUCH: the WebP; θ and arc positions or styling; phone layout; game play
 SUCCESS CONDITION: Picture at most 600 px wide and centred at 1366 and 1920; unchanged on phones; θ still within 6% of the measured tip at 320, 390 and 1920; all plants caught including the new one; phone-fit passes; Gate green on #684; stop for Project Claude's review and Jon's "merge".
 
 STOP IF: θ or the arc drifts off the tip at the capped width; the cap changes the picture's size at 320 or 390; the Gate fails on anything outside this game.
+
+## Amendment 2 (Jon, via Project Claude, 6 Nov 2026), verbatim
+
+Items 1 and 4 (the 600 px cap and its fold numbers) were already done under Amendment 1 (commit 4ef7b48); item 2, the ADJ definition, and its plant are new.
+
+LANE: cloud (same session, PR #684) · TIER: Shared
+
+TASK: In PR #684, cap the Whose Side start-screen picture at 600 px wide, centred, and correct the start-screen key's ADJ definition.
+
+ROOT CAUSE: (1) .start-art is width:100% of the card, so on 1366x768 the picture is 1068x583 and pushes the first stage button from 590 to 1179 (1920x1080: 770 to 1359). (2) The key on main reads "ADJ, next to θ." The hypotenuse is also next to θ (two sides touch it), so the definition teaches the commonest ADJ mistake. It is a correctness fault on a live game; Jon chose to fix it now rather than wait for WHOSE-SIDE-BIOS.
+
+CLASS CHECK: Local. One rule on one game's start-art wrapper, matching the cap ESSENTIALS-ART uses; one definition in one game's key. No shared code.
+
+EXACT CHANGE:
+1. games/whose-side-are-you-on/index.html: .start-art gains max-width:600px; margin-left:auto; margin-right:auto (keep the existing top/bottom margins). θ, the arc and their percentages are unchanged: they scale with the wrapper.
+2. Same file, the key's ADJ row: the .def text becomes "ADJ, next to θ, and not the hypotenuse." (the "ADJ" word keeps its span and colour; θ as now). Nothing else in the key changes, including the .say lines (WHOSE-SIDE-BIOS removes those later).
+3. scripts/verify-whose-side-are-you-on.py: the art's "card's width" check becomes min(card width, 600); θ within 6% and arc checks re-run at 320, 390 and 1920 (at 1920 the picture is now 600 wide); any start-screen text check that compares the key's ADJ definition expects the new text. Plants: max-width removed, caught; ADJ definition reverted to "next to θ.", caught.
+4. Report the first stage button's bottom against the fold at 1366x768 and 1920x1080, before and after (reported, not judged).
+5. Record in docs/handover/cloud.md under the WHOSE-SIDE-ART entry.
+
+DO NOT TOUCH: the WebP; θ and arc positions or styling; phone layout; the key's HYP and OPP rows and all .say lines; game play, text and Jon's lines elsewhere; colours; any other game; escape-rooms/, tools/pack-generator/, docs/handover/home.md; the queued contracts' files.
+
+SUCCESS CONDITION: Picture at most 600 px wide and centred at 1366 and 1920, unchanged at 320 and 390; θ still within 6% of the measured tip at 320, 390 and 1920; the key reads "ADJ, next to θ, and not the hypotenuse."; all plants caught; phone-fit passes; Gate green on #684; stop for Project Claude's review and Jon's "merge".
+
+STOP IF: θ or the arc drifts off the tip at the capped width; the cap changes the picture's size at 320 or 390; the new ADJ text wraps the key so that a phone check passing on main fails; the Gate fails on anything outside this game.

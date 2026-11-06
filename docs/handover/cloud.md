@@ -74,7 +74,9 @@ Verifier: unit `art` at 320x568, 390x844, 1920x1080 (the tip fitted from the Web
 
 Amendment 1 (6 Nov, same PR): the picture capped at 600 px, centred (`max-width:600px; margin-left/right:auto`, ESSENTIALS-ART's cap); θ, the arc and phones unchanged. First stage button against the fold (reported, not judged): 1366x768 1179 -> 924 (fold 728; 590 before the picture); 1920x1080 1359 -> 1104 (fold 1040; 770 before). Phones as before (1002, 963, 947). Verifier: the width check is min(card, 600) and centred; plant 6, the cap removed, caught at 1920.
 
-Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 1; usage n/a.
+Amendment 2 (6 Nov, same PR): the key's ADJ definition is now "ADJ, next to θ, and not the hypotenuse." (the HYP and OPP rows and the .say lines unchanged); the cap was already in (Amendment 1). The longer line wraps once on phones: the first stage button 1002 -> 1026 at 320x568, 963 -> 987 at 375x667, 947 -> 971 at 390x844 (Aa 1616 -> 1664, 1420 -> 1469, 1429 -> 1477); large screens unchanged (924, 1104). Verifier: LEGEND expects the new text; plant 7, the old definition, caught by the start-screen check. Full verifier 0 failures, 40 plants caught; phone-fit normal, Aa and laptop PASS (asking only).
+
+Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-06 (cloud): WHOSE-SIDE-PERSONALITY (`docs/history/contracts/2026-11-06-whose-side-personality.md`, Shared)
 
