@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Every game page and /essentials/ carries the search title and description data/games.json generates.
+"""Every game page, live escape room, the escape-rooms hub and /essentials/ carries the search title and description data/games.json generates.
 
     python scripts/check-meta.py              # CI
     python scripts/check-meta.py --selftest   # plant faults in a copy of the tree; all must be caught
@@ -25,6 +25,14 @@ The rules (Jon, 5 Oct 2026):
   - og:title and twitter:title carry the title; og:description and twitter:description carry the
     description. Twitter tags are held wherever a page has them; og: tags are required.
   - /essentials/'s title and description are stated in games.json's "pages" and held the same way.
+  - Escape rooms (contract ROOM-SEARCH-TITLES, Jon, 6 Nov 2026): every live room (its index.html is not noindex) has one
+    entry in games.json's "rooms", and the hub is in "pages". Title: "<search_phrase> Escape Room – <level> | MaffsGames",
+    at most 60 characters; over 60, "<search_phrase> Escape Room | MaffsGames", reported. Description: "Maths escape room
+    on <topics>. <clock> minutes, <level>. Free, no sign-up.", at most 155 characters. <topics> is the lockMeta topics in
+    the room's teacher.html, joined "A, B and C", all lower case except acronyms and ROOM_PROPER; over 155, the entry's
+    short_topics through the same rule. <clock> is `minutes:` in its room.js, the start screen's figure, never the sum
+    of lockMeta minutes (those are puzzle time). The head is the only source of a room's title: neither the engine nor a
+    room script assigns document.title (teacher.js may: its pages are noindex).
   - Search keywords (contract SEARCH-KEYWORDS, Jon, 4 Nov 2026): every game has "keywords", at least 4, each lower
     case, trimmed, 2-40 characters, none twice. Every card on the portal (a.game-card) and /essentials/ (a.card)
     carries data-keywords="kw1 | kw2 | ..." from the record its link resolves to: the game's, or for a page that is not
@@ -33,6 +41,8 @@ The rules (Jon, 5 Oct 2026):
 It fails when:
   - games.json's slugs differ from the roster's numbered rows (a withdrawn game, numbered "—", is
     not one), or one is listed twice, or a phrase or description is empty or "PHRASE NEEDED";
+  - a live room has no "rooms" entry, an entry is not a live room or is listed twice, its timer or lockMeta cannot be
+    read, or its description is over 155 with no short_topics or with them; a room script assigns document.title;
   - a generated title is over 60 or a description over 155, two titles are the same, or any title
     or description says "Year 6" or "Starter";
   - a page's <title>, meta description, og:/twitter: copies differ from what games.json generates,
@@ -71,6 +81,11 @@ RANK = ["KS3", "GCSE", "Core Maths", "A-Level", "Level 3", "Further Maths", "Lev
 PENDING = {}
 
 BANNED = re.compile(r"\byear\s*6\b|\bstarter\b", re.I)
+
+ROOMS_DIR = "escape-rooms"
+# Keep their capitals in a room's topics, with any all-capitals word (LCM, HCF).
+ROOM_PROPER = {"Venn", "Pythagoras", "Celsius"}
+ASSIGNS_TITLE = re.compile(r"""document\s*(?:\.\s*title|\[\s*["']title["']\s*\])\s*=(?!=)""")
 
 
 # ---------------------------------------------------------------------------
@@ -133,6 +148,102 @@ def description_for(practises, words):
     return "%s For %s. Free, no sign-up." % (practises, s)
 
 
+def live_rooms(root):
+    """Every live room's slug: a folder with room.js whose index.html is not noindex (as check-escape-rooms.py reads it)."""
+    return sorted(d.name for d in (root / ROOMS_DIR).iterdir() if (d / "room.js").is_file() and (d / "index.html").is_file()
+                  and "noindex" not in (d / "index.html").read_text(encoding="utf-8"))
+
+
+def room_clock(js):
+    """The room's own timer, `minutes:` in room.js, the figure its start screen shows; None unless there is exactly one."""
+    found = re.findall(r"^\s*minutes:\s*(\d+)\s*,", js, re.M)
+    return int(found[0]) if len(found) == 1 else None
+
+
+def room_topics(page):
+    """The lockMeta topics in a teacher page's window.TEACH; [] when they cannot be read."""
+    m = re.search(r'"lockMeta"\s*:\s*(?=\[)', page)
+    if not m:
+        return []
+    try:
+        meta, _ = json.JSONDecoder().raw_decode(page[m.end():])
+        return [html.unescape(x["topic"]).strip() for x in meta]
+    except (ValueError, KeyError, TypeError):
+        return []
+
+
+def topics_lower(text):
+    """All lower case except acronyms and ROOM_PROPER."""
+    return re.sub(r"[^\W\d_]+", lambda m: m.group(0) if m.group(0) in ROOM_PROPER or (len(m.group(0)) > 1 and m.group(0).isupper())
+                  else m.group(0).lower(), text)
+
+
+def room_title(phrase, level):
+    """(title, used the fallback)."""
+    t = "%s Escape Room – %s | MaffsGames" % (phrase, level)
+    return (t, False) if len(t) <= TITLE_MAX else ("%s Escape Room | MaffsGames" % phrase, True)
+
+
+def room_description(topics, clock, level):
+    return "Maths escape room on %s. %d minutes, %s. Free, no sign-up." % (topics_lower(topics), clock, level)
+
+
+def expected_rooms(root, data):
+    """The live rooms' expected values, and [data errors]."""
+    out, errors, seen = {}, [], {}
+    rooms = data.get("rooms", [])
+    for r in rooms:
+        seen[r.get("slug")] = seen.get(r.get("slug"), 0) + 1
+    live = live_rooms(root)
+    for s, n in seen.items():
+        if n > 1:
+            errors.append("games.json: room %s listed %d times" % (s, n))
+    for s in sorted(set(live) - set(seen)):
+        errors.append("games.json: live room %s has no entry in \"rooms\"" % s)
+    for s in sorted(set(seen) - set(live)):
+        errors.append("games.json: room %s is not a live room" % s)
+    for r in rooms:
+        slug = r.get("slug")
+        if slug not in live:
+            continue
+        phrase, level = (r.get("search_phrase") or "").strip(), (r.get("level") or "").strip()
+        if not phrase or not level:
+            errors.append("games.json: room %s has no search_phrase or level" % slug)
+            continue
+        clock = room_clock((root / ROOMS_DIR / slug / "room.js").read_text(encoding="utf-8"))
+        if clock is None:
+            errors.append("%s: the room's timer cannot be read from its room.js" % slug)
+            continue
+        topics = room_topics((root / ROOMS_DIR / slug / "teacher.html").read_text(encoding="utf-8"))
+        if not topics:
+            errors.append("%s: no lockMeta topics can be read from its teacher.html" % slug)
+            continue
+        joined = topics[0] if len(topics) == 1 else ", ".join(topics[:-1]) + " and " + topics[-1]
+        description, short = room_description(joined, clock, level), False
+        if len(description) > DESC_MAX:
+            if not r.get("short_topics"):
+                errors.append("%s: description is %d characters with no short_topics (a person writes them)" % (slug, len(description)))
+                continue
+            description, short = room_description(r["short_topics"], clock, level), True
+            if len(description) > DESC_MAX:
+                errors.append("%s: description is still over %d characters with its short_topics (%d)" % (slug, DESC_MAX, len(description)))
+                continue
+        title, fallback = room_title(phrase, level)
+        out["%s/%s/index.html" % (ROOMS_DIR, slug)] = {
+            "slug": "%s/%s" % (ROOMS_DIR, slug), "title": title, "description": description,
+            "canonical": SITE + "%s/%s/" % (ROOMS_DIR, slug), "fallback": fallback, "short": short}
+    return out, errors
+
+
+def title_assignments(root):
+    """Every room script that assigns document.title: the head is the only source of a room's title. teacher.js may."""
+    rooms = root / ROOMS_DIR
+    paths = [p for p in sorted((rooms / "assets").glob("*.js")) if p.name != "teacher.js"]
+    paths += sorted(rooms.glob("*/room.js")) + [rooms / s / "index.html" for s in live_rooms(root)]
+    return ["%s assigns document.title (the head is the only source of a room's title)" % p.relative_to(root).as_posix()
+            for p in paths if ASSIGNS_TITLE.search(p.read_text(encoding="utf-8"))]
+
+
 def load(root):
     return json.loads((root / DATA).read_text(encoding="utf-8"))
 
@@ -178,6 +289,9 @@ def expected(root):
     for path, page in sorted(data.get("pages", {}).items()):
         out[path] = {"slug": None, "title": page["title"], "description": page["description"],
                      "canonical": SITE + path[:-len("index.html")]}
+    room_out, room_errors = expected_rooms(root, data)
+    out.update(room_out)
+    errors += room_errors
     titles = {}
     for path, v in out.items():
         if len(v["title"]) > TITLE_MAX:
@@ -429,6 +543,8 @@ def check(root):
             errors.append("%s: no such page" % path)
             continue
         errors += card_errors(path, p.read_text(encoding="utf-8"), cls, kw, known)
+    errors += title_assignments(root)
+    reports += ["FALLBACK title for %s: %s" % (v["slug"], v["title"]) for v in exp.values() if v.get("fallback")]
     return errors, reports
 
 
@@ -457,9 +573,20 @@ def selftest():
         for path in exp:
             (tmp / path).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(BASE / path, tmp / path)
+        # The room scripts the check reads, the withdrawn room's too (it must stay out).
+        rooms_read = [p.relative_to(BASE).as_posix() for p in sorted((BASE / ROOMS_DIR).glob("assets/*.js"))]
+        for d in (BASE / ROOMS_DIR).iterdir():
+            if (d / "room.js").is_file():
+                rooms_read += ["%s/%s/%s" % (ROOMS_DIR, d.name, f) for f in ("room.js", "index.html", "teacher.html")]
+        for rel in rooms_read:
+            (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy(BASE / rel, tmp / rel)
         pristine = {p: (tmp / p).read_text(encoding="utf-8") for p in list(exp) + [DATA]}
         apply_all(tmp)
-        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in set(exp) | set(CARD_PAGES)}
+        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in set(exp) | set(CARD_PAGES) | set(rooms_read)}
+        apply_all(tmp)
+        if any((tmp / p).read_text(encoding="utf-8") != t for p, t in applied.items()):
+            return ["apply is not idempotent: a second run changed a page"]
         errs, _ = check(tmp)
         if errs:
             return ["baseline after apply is not clean: %s" % errs[:3]]
@@ -475,6 +602,11 @@ def selftest():
             (tmp / DATA).write_text(json.dumps(d, ensure_ascii=False), encoding="utf-8", newline='')
 
         game = "games/split-it/index.html"
+        kiln, kiln_js = "escape-rooms/kiln-disaster/index.html", "escape-rooms/kiln-disaster/room.js"
+        engine = "escape-rooms/assets/engine.js"
+
+        def room_entry(slug):
+            return lambda d: next(r for r in d["rooms"] if r["slug"] == slug)
         kw0_slug = json.loads(pristine[DATA])["games"][0]["slug"]
         faults = [
             ("hand-edited title", lambda: edit(game, lambda t: re.sub(r"<title>.*?</title>", "<title>Split It — MaffsGames</title>", t, 1)),
@@ -518,6 +650,33 @@ def selftest():
              "games/no-such-game/?level=ks3, which has no games.json record"),
             ("a page record a card links to, without keywords", lambda: data(lambda d: d["pages"]["the-6-ps/index.html"].pop("keywords")),
              "the-6-ps/, whose games.json record has no keywords"),
+            # escape rooms (ROOM-SEARCH-TITLES)
+            ("a hand-edited room title", lambda: edit(kiln, lambda t: re.sub(r"<title>.*?</title>", "<title>The Kiln Disaster — MaffsGames</title>", t, 1)),
+             "escape-rooms/kiln-disaster/index.html: title is"),
+            ("a hand-edited room twitter:description", lambda: edit(kiln, lambda t: t.replace('name="twitter:description" content="', 'name="twitter:description" content="X', 1)),
+             "twitter:description is"),
+            ("a hand-edited hub title", lambda: edit("escape-rooms/index.html", lambda t: re.sub(r"<title>.*?</title>", "<title>Maths Escape Rooms — MaffsGames</title>", t, 1)),
+             "escape-rooms/index.html: title is"),
+            ("a live room missing from games.json", lambda: data(lambda d: d["rooms"].remove(room_entry("kiln-disaster")(d))),
+             "live room kiln-disaster has no entry"),
+            ("the withdrawn room given an entry", lambda: data(lambda d: d["rooms"].append({"slug": "it-vengeance", "search_phrase": "x", "level": "GCSE"})),
+             "room it-vengeance is not a live room"),
+            ("a room listed twice", lambda: data(lambda d: d["rooms"].append(dict(room_entry("kiln-disaster")(d)))),
+             "room kiln-disaster listed 2 times"),
+            ("a description over 155 with no short_topics", lambda: data(lambda d: room_entry("rightful-king")(d).pop("short_topics")),
+             "rightful-king: description is"),
+            ("short_topics still over 155", lambda: data(lambda d: room_entry("rightful-king")(d).update(short_topics="x" * 150)),
+             "still over 155"),
+            ("a clock differing from room.js", lambda: edit(kiln_js, lambda t: re.sub(r"(?m)^(\s*minutes:\s*)\d+", r"\g<1>16", t, 1)),
+             "escape-rooms/kiln-disaster/index.html: meta description is"),
+            ("a timer that cannot be read", lambda: edit(kiln_js, lambda t: re.sub(r"(?m)^\s*minutes:\s*\d+,?\n", "", t, 1)),
+             "kiln-disaster: the room's timer cannot be read"),
+            ("no lockMeta topics", lambda: edit("escape-rooms/kiln-disaster/teacher.html", lambda t: t.replace('"lockMeta"', '"lockmeta"', 1)),
+             "kiln-disaster: no lockMeta topics"),
+            ("the engine assigns document.title", lambda: edit(engine, lambda t: t + "\ndocument.title = R.title;\n"),
+             "escape-rooms/assets/engine.js assigns document.title"),
+            ("a room script assigns document.title", lambda: edit(kiln_js, lambda t: t + "\ndocument['title'] = 'x';\n"),
+             "escape-rooms/kiln-disaster/room.js assigns document.title"),
         ]
         if pend:
             faults.append(("stale PENDING entry", lambda: (tmp / ("games/%s/index.html" % pend)).write_text(
@@ -532,6 +691,15 @@ def selftest():
             errs, _ = check(tmp)
             if not any(needle in e for e in errs):
                 failures.append("planted fault not caught: %s (got %s)" % (name, errs[:2]))
+        # The over-60 fallback is reported, never silent.
+        for p, t in applied.items():
+            (tmp / p).write_text(t, encoding="utf-8", newline='')
+        data(lambda d: next(r for r in d["rooms"] if r["slug"] == "kiln-disaster").update(search_phrase="Multiples and Common Factors"))
+        apply_all(tmp)
+        if not any(r.startswith("FALLBACK title for escape-rooms/kiln-disaster") for r in check(tmp)[1]):
+            failures.append("a title over 60 did not report its fallback")
+        if topics_lower("Sets and Venn diagrams, LCM (Lower bound)") != "sets and Venn diagrams, LCM (lower bound)":
+            failures.append("topics_lower: %r" % topics_lower("Sets and Venn diagrams, LCM (Lower bound)"))
         print("self-test: %d of %d planted faults caught" % (len(faults) - len(failures), len(faults)))
         return failures
     finally:
@@ -548,6 +716,10 @@ def table(root):
         name = "`%s`" % (v["slug"] or "/" + path[:-len("index.html")])
         if v["slug"] in PENDING:
             name += " (PENDING)"
+        if v.get("fallback"):
+            name += " (fallback title)"
+        if v.get("short"):
+            name += " (short_topics)"
         lines.append("| %s | %s | %s | %d | %s | %d |" % (name, cell(cur), cell(v["title"]), len(v["title"]),
                                                        cell(v["description"]), len(v["description"])))
     return "\n".join(lines), errors
@@ -574,9 +746,9 @@ def main():
         print(r)
     for e in errors:
         print("FAIL: " + e)
-    n = len(expected(root)[0])
-    print("%s: %d pages (%d games + %d other), %d PENDING" % (
-        "FAILED" if errors else "OK", n, n - len(load(root).get("pages", {})), len(load(root).get("pages", {})), len(PENDING)))
+    n, nr, np = len(expected(root)[0]), len(load(root).get("rooms", [])), len(load(root).get("pages", {}))
+    print("%s: %d pages (%d games + %d rooms + %d other), %d PENDING" % (
+        "FAILED" if errors else "OK", n, n - nr - np, nr, np, len(PENDING)))
     return 1 if errors else 0
 
 
