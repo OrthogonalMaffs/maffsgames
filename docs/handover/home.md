@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- WHOSE-SIDE: #674 merged as 257e883, main green, on Jon's "merge" before Project Claude's review (still owed). Jon's play-test fixes: claude/whose-side-fixes, Windows worktree E:/jon/mg-whose-fix, contract docs/handover/contracts/2026-11-05-whose-side-fixes.md. Stops at a green Gate. Double clicks and the hold: claude/whose-side-double-tap, worktree E:/jon/mg-whose-dbl, on top of #675 (it needs #675's slots), contract docs/handover/contracts/2026-11-05-whose-side-double-tap.md. Merge #675 first. Close-out of all three contracts follows.
+- WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. All merged on Jon's word before Project Claude's review, still owed. Stage 5 and the art are later contracts; timer-policy.md does not list the game yet. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
 
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
 
@@ -18,11 +18,11 @@
 
 ## 2026-11-05 (home): WHOSE-SIDE-FIXES
 
-Jon's play-test. Stage 2 gets slots and Check; each side one hit line, nothing painted takes a tap; verifier clicks the dash and dot gaps at every size; 18 plants caught. No click on a side missed in reproduction; the clicks that did nothing came during MaffsLock's 300 ms window, and no bands exist during the 800 ms Right flash. No merge authority. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
+Jon's play-test. Stage 2 gets slots and Check; each side one hit line, nothing painted takes a tap; verifier clicks the dash and dot gaps at every size; 18 plants caught. No click on a side missed in reproduction; the clicks that did nothing came during MaffsLock's 300 ms window, and no bands exist during the 800 ms Right flash. Merged in #676 with Jon's second play-test (double clicks; the 0.8 s hold proven). Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-05 (home): WHOSE-SIDE
 
-New unlisted game, stages 1–4; stage 5 and the art are later. Amendment 1: light theme, games.json and precedent checker lines, side-word text bold 19 px. Amendment 2: side colours on sides and side words only; ✓/✗ and a word for right and wrong. Rulings 19:45: grey sides until answered (1, 2, 4), stage 3 coloured with coloured numbers; 16-30-34 for 9-40-41. Added beyond the contract: question_id = item id (check-question-id.py requires it of new games). Verifier: all 10,368 items recomputed from geometry; 13 plants caught. Next: Gate, review, Jon's merge; no merge authority. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 2; usage n/a.
+New unlisted game, stages 1–4; stage 5 and the art are later. Amendment 1: light theme, games.json and precedent checker lines, side-word text bold 19 px. Amendment 2: side colours on sides and side words only; ✓/✗ and a word for right and wrong. Rulings 19:45: grey sides until answered (1, 2, 4), stage 3 coloured with coloured numbers; 16-30-34 for 9-40-41. Added beyond the contract: question_id = item id (check-question-id.py requires it of new games). Verifier: all 10,368 items recomputed from geometry; 13 plants caught. Merged #674. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-05 (home): MERGE-669-671
 
