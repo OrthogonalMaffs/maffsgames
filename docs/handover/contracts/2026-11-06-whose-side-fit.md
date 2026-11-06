@@ -31,3 +31,16 @@ DO NOT TOUCH: the triples, turns, tilts and seeds; question wording; label text,
 SUCCESS CONDITION: On a large screen the triangle fills at least 75% of its figure box on the limiting axis for every item; the question text never runs under a control at any tested size or stage; nothing is clipped; the page never scrolls at the large sizes; the phone checks (Next above the fold, tap bands 44 px, no sideways scroll, Aa) still pass; all three plants are caught; full verifier 0 failures. Committed, PR open, Gate green, entry in docs/handover/cloud.md; stop for Project Claude's review and Jon's "merge".
 
 STOP IF: any item cannot reach 75% without shrinking labels or tap bands (report which, with numbers); the fit makes a phone layout fail a check that passes on main; a label would overlap another label or a side at the new fit; with the rows fix the right-hand column no longer fits a screen without scrolling at any tested size (report; do not shrink the text).
+
+## Amendment 1 (Project Claude, 6 Nov 2026, 17:58), verbatim
+
+RULING (Project Claude, 6 Nov 17:58) on WHOSE-SIDE-FIT STOP IF 1: neither A, B nor C.
+
+The 75% figure was an estimate; the property the check must prove is "no wasted space". Replace item 4a's threshold with:
+- For every item at 1366x768 and 1920x1080: on the drawing's limiting axis, its content box (triangle, labels, θ, right-angle square, corner pads) reaches the 6g pad on both sides, within 1 px. That is the pass condition.
+- Sanity floor: the triangle's own bounding box fills at least 70% of the figure box on that axis.
+- Keep the plants; the old-margin plant (mx = 2*hw + 10g) must now be caught by the reach check (it leaves slack), not by the percentage.
+- Report the fill distribution as you did (median/minimum per size, the 7-24-25 range), and list the 240 label-limited drawings by triple, as "label-limited, no slack".
+Labels, pads, label placement and the two-column layout stay exactly as the contract fixed them. Then do items 4-6, open the PR, stop at a green Gate.
+
+PAGES: after #673 merges on main, re-run the Pages deploy once (two timeouts were GitHub-side; the live site is at run 1346, 79b7bc3). Report the run and its result. Jon checks the live page in a browser.

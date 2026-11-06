@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width up to 600 px, centred, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported (phones, 1366x768, 1920x1080); fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
+# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; the triangle's fit (contract WHOSE-SIDE-FIT): a seeded round of every stage, as asked and after an answer, its content box (corners padded by half the tap band, labels, θ, the square) measured on screen reaching the 6g pad at both ends of its limiting axis within 1 px and the triangle at least 70% of the figure there at 1366x768 and 1920x1080, no label, θ or tap band clipped there and at 320 and 390; the question's last line of text above the first control below it and no text in the right-hand column over another element, every stage asking, wrong and right, at 1024x700, 1222x688, 1366x768, 1920x1080 and 1024x1366; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width up to 600 px, centred, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported (phones, 1366x768, 1920x1080); fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle, the old margin (as wasted space), the triangle centred (as a clipped label), the old grid rows (as text under a button) and more, each caught) | | 3
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -25,7 +25,7 @@ In the page, a played round reads the drawn SVG back and compares it with the da
     python scripts/verify-whose-side-are-you-on.py [--no-selftest] [--shard i/k] [--list-units]
 
 Work units (contract SHARD, canon 7.8.1): the engine, a round of every stage at each size, the slow answer, Aa, the hold, the
-lines, the large screen, the start art, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
+lines, the large screen, the start art, the fit at each of four sizes, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
 """
 import argparse
 import math
@@ -69,6 +69,15 @@ RESULT_SAYS = {'high': 'Sides labelled. HYP is quietly proud. He will never say 
                'low': 'The polite two are still bowing at each other in the corridor. Shall we go again?'}
 HOLD_MS = 2000
 BIG_SIZES = [(1366, 768), (1920, 1080)]
+# Contract WHOSE-SIDE-FIT (6 Nov 2026, Amendment 1): the fit is judged on a seeded round of every stage at these sizes (no wasted
+# space at the two large sizes, nothing clipped at all four), the question text against the controls at TEXT_SIZES.
+FIT_SIZES = [(1366, 768), (1920, 1080), (320, 568), (390, 844)]
+TEXT_SIZES = [(1024, 700), (1222, 688), (1366, 768), (1920, 1080), (1024, 1366)]
+FIT_SEED = 20261106
+FIT_FLOOR = 0.70
+# A fixed seed for the round's Math.random (canon 7.8.4: a gate never samples at random), set just before the stage starts.
+SEED_JS = """(s) => { let a = s >>> 0; Math.random = () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a);
+  t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }"""
 COLOURS = {'HYP': '#D55E00', 'OPP': '#0072B2', 'ADJ': '#009E73'}
 DASH = {'HYP': False, 'OPP': True, 'ADJ': True}
 FN_SIDES = {'sin': ('OPP', 'HYP'), 'cos': ('ADJ', 'HYP'), 'tan': ('OPP', 'ADJ')}
@@ -954,10 +963,140 @@ def check_says(browser, base, fails, route=None):
     ctx.close()
 
 
-def check_big(browser, base, fails, route=None, sizes=BIG_SIZES, stages=(1, 2, 3, 4)):
-    """Large screens (contract item 8): the figure's drawn height at least half the screen, the question and every answer control
-    on screen with nothing to scroll, before and after a wrong answer (Next too), and the right-answer line in view during the hold.
-    The triangle inside keeps its shape, so its own height varies with its proportions; the figure it fills is what is sized."""
+# The figure's content box, worked out here from what is on screen (contract WHOSE-SIDE-FIT, item 4a and Amendment 1): the corners
+# (the side lines' ends) padded by 22 px, half the 44 px tap band; each label's box at its drawn centre with the contract's half-size,
+# (characters x 5.8 + 2) x g by 11g lit, (characters x 4.6 + 2) x g by 9g otherwise; θ's box as drawn; the right-angle square's
+# points. Also each label's, θ's and each tap band's own box against the figure's edge.
+FIT_JS = """() => {
+  const f = document.getElementById('figure'), svg = f.querySelector('svg'), r = svg.getBoundingClientRect();
+  const W = +svg.getAttribute('width'), H = +svg.getAttribute('height'), g = parseFloat(f.style.getPropertyValue('--g')) || 1;
+  const bx = [], by = [], add = (x, y, hx, hy) => { bx.push(x - hx, x + hx); by.push(y - hy, y + hy); };
+  const cx = [], cy = [], clip = [], inside = (x0, y0, x1, y1) => x0 >= -0.5 && y0 >= -0.5 && x1 <= W + 0.5 && y1 <= H + 0.5;
+  svg.querySelectorAll('line.side').forEach(l => { [[+l.getAttribute('x1'), +l.getAttribute('y1')], [+l.getAttribute('x2'), +l.getAttribute('y2')]].forEach(p => {
+    cx.push(p[0]); cy.push(p[1]); add(p[0], p[1], 22, 22); }); });
+  svg.querySelectorAll('text[data-label]').forEach(t => {
+    const lit = /\\b(HYP|OPP|ADJ)\\b/.test(t.getAttribute('class') || ''), n = t.textContent.length;
+    add(+t.getAttribute('x'), +t.getAttribute('y'), (n * (lit ? 5.8 : 4.6) + 2) * g, (lit ? 11 : 9) * g);
+    const b = t.getBoundingClientRect();
+    if (!inside(b.left - r.left, b.top - r.top, b.right - r.left, b.bottom - r.top)) clip.push('label ' + t.textContent);
+  });
+  const th = f.querySelector('[data-theta]').getBoundingClientRect();
+  add((th.left + th.right) / 2 - r.left, (th.top + th.bottom) / 2 - r.top, th.width / 2, th.height / 2);
+  if (!inside(th.left - r.left, th.top - r.top, th.right - r.left, th.bottom - r.top)) clip.push('theta');
+  const sq = svg.querySelector('[data-square]');
+  (sq ? sq.getAttribute('points').trim().split(/\\s+/) : []).forEach(p => { const q = p.split(',').map(Number); add(q[0], q[1], 0, 0); });
+  svg.querySelectorAll('.hit').forEach(b => {
+    const x1 = +b.getAttribute('x1'), y1 = +b.getAttribute('y1'), x2 = +b.getAttribute('x2'), y2 = +b.getAttribute('y2');
+    const L = Math.hypot(x2 - x1, y2 - y1), h = +b.getAttribute('stroke-width') / 2, nx = (y1 - y2) / L * h, ny = (x2 - x1) / L * h;
+    const xs = [x1 + nx, x1 - nx, x2 + nx, x2 - nx], ys = [y1 + ny, y1 - ny, y2 + ny, y2 - ny];
+    if (!inside(Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys))) clip.push('tap band ' + b.dataset.val);
+  });
+  return {W: W, H: H, g: g, x0: Math.min(...bx), x1: Math.max(...bx), y0: Math.min(...by), y1: Math.max(...by),
+    tw: Math.max(...cx) - Math.min(...cx), th: Math.max(...cy) - Math.min(...cy), clip: clip, id: WS.ui.question().id}; }"""
+
+
+def judge_fit(m, label, fails, reach=True):
+    """Amendment 1: on the drawing's limiting axis the content box reaches the 6g pad at both ends, within 1 px, and the triangle
+    fills at least 70% of the figure on that axis; at every size nothing is clipped. Returns the triangle's fill on that axis."""
+    pad = 6 * m['g']
+    on_x = (m['x1'] - m['x0']) / (m['W'] - 2 * pad) >= (m['y1'] - m['y0']) / (m['H'] - 2 * pad)
+    lo, hi, size, tri = (m['x0'], m['x1'], m['W'], m['tw']) if on_x else (m['y0'], m['y1'], m['H'], m['th'])
+    ends = (lo - pad, size - pad - hi)
+    fill = tri / size
+    if reach:
+        if max(ends) > 1:
+            fails.append('%s %s: %.1f and %.1f px of slack on the limiting axis (%s) inside the %.0f px pad: wasted space'
+                         % (label, m['id'], ends[0], ends[1], 'x' if on_x else 'y', pad))
+        if min(ends) < -1:
+            fails.append('%s %s: the drawing runs %.1f px past the %.0f px pad on the %s axis'
+                         % (label, m['id'], -min(ends), pad, 'x' if on_x else 'y'))
+        if fill < FIT_FLOOR:
+            fails.append('%s %s: the triangle fills %.1f%% of the figure on its limiting axis, under the %d%% floor'
+                         % (label, m['id'], 100 * fill, 100 * FIT_FLOOR))
+    if m['clip']:
+        fails.append('%s %s: clipped by the figure\'s edge: %s' % (label, m['id'], ', '.join(m['clip'])))
+    return fill
+
+
+def seeded_start(page, stage, seed=FIT_SEED):
+    page.evaluate(SEED_JS, seed)
+    page.evaluate('(n) => WS.ui.start(n)', stage)
+
+
+def check_fit(browser, base, fails, route=None, sizes=FIT_SIZES, stages=(1, 2, 3, 4), report=True, stop_on=None):
+    """Item 4a with Amendment 1: every item of a seeded round of each stage, as asked and as redrawn after an answer (all three
+    sides lit), its content box measured from the screen. At 1366x768 and 1920x1080 no wasted space and the floor; at every size
+    nothing clipped, and no label on a side or on θ (check_labels). A self-test plant stops at its first finding containing stop_on."""
+    def stop():
+        return STOP_AT_FIRST and any(stop_on in f for f in fails) if stop_on else STOP_AT_FIRST and fails
+    for w, h in sizes:
+        big = (w, h) in BIG_SIZES
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+        page = ctx.new_page()
+        if route:
+            page.route('**/games/%s/**' % SLUG, route)
+        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+        page.wait_for_function('() => !!window.WS && !!window.katex')
+        stub_board(page)
+        fills = []
+        for stage in stages:
+            seeded_start(page, stage)
+            for n in range(10):
+                wait_asking(page)
+                bc.wait_settled(page, 50)
+                label = '%dx%d stage %d asking' % (w, h, stage)
+                fills.append(judge_fit(page.evaluate(FIT_JS), label, fails, reach=big))
+                if big:
+                    check_labels(page, label, fails)
+                page.evaluate('() => WS.ui.answer(false)')
+                page.wait_for_function("() => WS.ui.state() === 'wrong'", timeout=4000)
+                bc.wait_settled(page, 50)
+                judge_fit(page.evaluate(FIT_JS), '%dx%d stage %d answered' % (w, h, stage), fails, reach=big)
+                page.click('.maffs-next-wrap button, .fb-next button')
+                if stop():
+                    break
+            if stop():
+                break
+            page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
+        if report and fills:
+            fills.sort()
+            print('  fit %dx%d: triangle fill on the limiting axis, median %.3f, minimum %.3f (%d items as asked)'
+                  % (w, h, fills[len(fills) // 2], fills[0], len(fills)))
+        ctx.close()
+
+
+# Item 4b: the bottom of the question's last line of text (a Range over its text, not #ask's box) against the top of the first
+# control below it, and no text in the right-hand column overlapping another element there. KaTeX's hidden MathML is not text on screen.
+TEXT_JS = """() => {
+  const shown = e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden';
+  const leaves = [...new Set(Array.from(document.querySelectorAll('#ask, #fracline, #opts .opt, #slotTop, #slotBottom, #checkBtn, #feedback .fb-head, #feedback .fb-say, #feedback .fb-shout, #feedback .fb-line, .fb-next button, .maffs-next-wrap button')))].filter(shown);
+  const textRects = el => { const out = [], tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
+    while ((n = tw.nextNode())) { if (!n.textContent.trim() || n.parentElement.closest('.katex-mathml')) continue;
+      const rg = document.createRange(); rg.selectNodeContents(n); for (const x of rg.getClientRects()) if (x.width > 0 && x.height > 0) out.push(x); }
+    return out; };
+  const name = e => e.id || (e.className && e.className.baseVal === undefined ? e.className.split(' ')[0] : e.tagName);
+  const ask = document.getElementById('ask'), res = {askBottom: null, ctlTop: null, ctl: null, overlaps: []};
+  if (leaves.includes(ask)) {
+    const rs = textRects(ask), at = ask.getBoundingClientRect().top;
+    res.askBottom = Math.max(...rs.map(x => x.bottom));
+    leaves.filter(e => e !== ask && !ask.contains(e) && e.getBoundingClientRect().top >= at).forEach(e => {
+      const t = e.getBoundingClientRect().top; if (res.ctlTop === null || t < res.ctlTop) { res.ctlTop = t; res.ctl = name(e); } });
+  }
+  leaves.forEach(a => { const rs = textRects(a); leaves.forEach(b => {
+    if (a === b || a.contains(b) || b.contains(a)) return;
+    const bb = b.getBoundingClientRect();
+    if (rs.some(x => x.left < bb.right - 0.5 && x.right > bb.left + 0.5 && x.top < bb.bottom - 0.5 && x.bottom > bb.top + 0.5))
+      res.overlaps.push(name(a) + ' text over ' + name(b)); }); });
+  return res; }"""
+
+
+def check_big(browser, base, fails, route=None, sizes=TEXT_SIZES, stages=(1, 2, 3, 4), report=True):
+    """Large screens (contract WHOSE-SIDE-PERSONALITY item 8, WHOSE-SIDE-FIT item 4b): for every stage, asking, wrong and right,
+    the question's text ends at or above the first control below it and no text in the right-hand column overlaps another element
+    there; the question and every answer control on screen with nothing to scroll, Next after a wrong answer and the right-answer
+    line in view during the hold; at 1366x768 and 1920x1080 the figure's box at least half the screen's height (its content is
+    check_fit's)."""
     for w, h in sizes:
         ctx = browser.new_context(viewport={'width': w, 'height': h})
         ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
@@ -968,20 +1107,28 @@ def check_big(browser, base, fails, route=None, sizes=BIG_SIZES, stages=(1, 2, 3
         page.wait_for_function('() => !!window.WS && !!window.katex')
         for stage in stages:
             for when in ('asking', 'wrong', 'right'):
-                page.evaluate('(n) => WS.ui.start(n)', stage)
+                seeded_start(page, stage)
                 wait_asking(page)
                 if when != 'asking':
                     page.evaluate('(r) => WS.ui.answer(r)', when == 'right')
                     page.wait_for_function('(s) => WS.ui.state() === s', arg=when, timeout=4000)
-                    page.wait_for_timeout(100)
+                bc.wait_settled(page, 100)
                 m = page.evaluate("""() => { const b = e => e.getBoundingClientRect(), svg = document.querySelector('#figure svg');
                   const shown = s => Array.from(document.querySelectorAll(s)).filter(e => e.getClientRects().length);
                   const ctl = shown('#figure .hit, #slotTop, #slotBottom, #checkBtn, #opts .opt, #ask, .maffs-next-wrap button, .fb-next button, #feedback .fb-head, #feedback .fb-say');
                   return {svgH: svg ? b(svg).height : 0, bottom: Math.max(...ctl.map(e => b(e).bottom)), top: Math.min(...ctl.map(e => b(e).top)), n: ctl.length,
                     next: shown('.maffs-next-wrap button, .fb-next button').length, say: shown('#feedback .fb-say').length,
                     sh: document.documentElement.scrollHeight, sw: document.documentElement.scrollWidth}; }""")
+                t = page.evaluate(TEXT_JS)
                 label = '%dx%d stage %d %s' % (w, h, stage, when)
-                if m['svgH'] < 0.5 * h:
+                if t['askBottom'] is not None and t['ctlTop'] is not None and t['askBottom'] > t['ctlTop'] + 0.5:
+                    fails.append('%s: the question\'s text runs to %.0f, under %s from %.0f' % (label, t['askBottom'], t['ctl'], t['ctlTop']))
+                for o in t['overlaps'][:2]:
+                    fails.append('%s: %s' % (label, o))
+                if report and stage == 4 and when == 'asking':
+                    print('  text %dx%d stage 4: the question ends at %s, the buttons start at %s' % (
+                        w, h, '%.0f' % t['askBottom'] if t['askBottom'] is not None else '-', '%.0f' % t['ctlTop'] if t['ctlTop'] is not None else '-'))
+                if (w, h) in BIG_SIZES and m['svgH'] < 0.5 * h:
                     fails.append('%s: the figure is drawn %.0f px tall, under half the screen (%d)' % (label, m['svgH'], h))
                 if m['bottom'] > h - 40 or m['top'] < 0:
                     fails.append('%s: the question or a control is off screen (%.0f to %.0f, fold %d)' % (label, m['top'], m['bottom'], h - 40))
@@ -1096,6 +1243,15 @@ PLANTS = [
     ('the same right-answer line twice running', "    if (lastRight >= 0 && i >= lastRight) i++;\n", "    i = 0;\n", 'says'),
     ('no results line at 8-10 right', "var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5", "var resLine = rightCount >= 11 ? SAYS.high : rightCount <= 5", 'says'),
     ('a small triangle at 1920x1080', "var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));", "var H = 400;", 'big'),
+    # contract WHOSE-SIDE-FIT (Amendment 1): each must be caught by the check named in its last field, not by another
+    ('the old margin restored (mx = 2*hw + 10g)',
+     "    var k = fitScale(), c = extent(place(k, 0, 0)), ox = W / 2 - (c.x0 + c.x1) / 2, oy = H / 2 - (c.y0 + c.y1) / 2;\n",
+     "    var mx = 30 * g, my = 30 * g;\n    Object.keys(texts).forEach(function (id) { mx = Math.max(mx, 2 * texts[id].hw + 10 * g); my = Math.max(my, 2 * texts[id].hh + 10 * g); });\n"
+     "    var k = Math.min((W - 2 * mx) / bw, (H - 2 * my) / bh), ox = (W - bw * k) / 2, oy = (H - bh * k) / 2;\n", 'fit', 'wasted space'),
+    ('the triangle centred, not the drawing, a label pushed off the edge',
+     "ox = W / 2 - (c.x0 + c.x1) / 2, oy = H / 2 - (c.y0 + c.y1) / 2;", "ox = (W - bw * k) / 2, oy = (H - bh * k) / 2;", 'fit', 'clipped'),
+    ('the grid rows reverted to 1fr auto auto auto auto 1fr',
+     "grid-template-rows:minmax(0,1fr) auto auto auto auto minmax(0,1fr);", "grid-template-rows:1fr auto auto auto auto 1fr;", 'text', "question's text runs"),
     # contract WHOSE-SIDE-ART: θ over the ramp's tip
     ('θ at the square corner', "left:77.49%;top:81.50%;", "left:14.5%;top:81.5%;", 'art'),
     ('θ off the tip, on the concrete', "left:77.49%;top:81.50%;", "left:91%;top:80%;", 'art'),
@@ -1156,9 +1312,16 @@ def one_plant(browser, base, src, plant):
                 return 0 if found else 1
             if len(plant) > 3 and plant[3] in ('says', 'big'):
                 (check_says(browser, base, found, route=route(None)) if plant[3] == 'says'
-                 else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,)))
+                 else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,), report=False))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
                 return 0 if found else 1
+            if len(plant) > 3 and plant[3] in ('fit', 'text'):     # caught only by the finding its fifth field names
+                (check_fit(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(3,), report=False, stop_on=plant[4]) if plant[3] == 'fit'
+                 else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(4,), report=False))
+                mine = [f for f in found if plant[4] in f]
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(mine), mine[0][:110])) if mine else print(
+                    '  NOT CAUGHT: %s (no "%s" finding; %d others%s)' % (name, plant[4], len(found), (': ' + found[0][:90]) if found else ''))
+                return 0 if mine else 1
             if len(plant) > 3 and plant[3] == 'hold':
                 check_hold(browser, base, found, route=route(None), stages=(1,))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
@@ -1181,7 +1344,7 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     bc.shard_args(ap)
     args = ap.parse_args()
-    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big', 'art']
+    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big', 'art'] + ['fit %dx%d' % s for s in FIT_SIZES]
     if not args.no_selftest:
         units += ['plant: ' + plant[0] for plant in PLANTS]
     shard = bc.Shard(__file__, args)
@@ -1197,6 +1360,7 @@ def main():
             work += [('slow', lambda: run_slow(browser, base, fails)), ('aa', lambda: check_aa(browser, base, fails)),
                      ('hold', lambda: check_hold(browser, base, fails)), ('lines', lambda: check_says(browser, base, fails)),
                      ('big', lambda: check_big(browser, base, fails)), ('art', lambda: check_art(browser, base, fails))]
+            work += [('fit %dx%d' % s, lambda s=s: check_fit(browser, base, fails, sizes=[s])) for s in FIT_SIZES]
             for uid, fn in work:
                 if uid in mine:
                     with shard.unit(uid):
