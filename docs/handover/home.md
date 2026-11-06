@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- CHRISTMAS-PACK (Shared, Codex): in progress on `codex/christmas-pack`, `/home/maffs/mg-christmas-pack`; contract and Amendments 1-4: `docs/handover/contracts/2026-11-06-christmas-pack.md`. Room art/config, independent recompute and generic pack fixes are isolated there. Cloud's WHOSE-SIDE-FIT/BIOS and Claude Code's PHONE-FIT-ASIDE files are untouched. Review holds at green Gate for Project Claude's proof PNG review and Jon's "merge".
+
 - WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line waits for WHOSE-SIDE-FIT to merge; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
 
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
@@ -15,6 +17,12 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-06 (home): CHRISTMAS-PACK
+
+Agent Codex. Worktree `/home/maffs/mg-christmas-pack`, branch `codex/christmas-pack`, from origin/main 3d67615e after ROOM-ORDER-HERRINGS merged. Last commit pending; next: commit, PR and Gate. Shared review and Jon's "merge" hold. Coordination respected: cloud's WHOSE-SIDE game/verifier and Claude Code's PHONE-FIT-ASIDE files not touched.
+
+The six clue markup pairs are the only room.js changes. The room check stayed at 98 VALID of 900 with the same TRUE-MINUS result. Four end-to-end win/loss browser plays passed at 390 and 1100 px; each clue rendered bold printed words with filled tokens. All 11 PNGs on `art/christmas-pack` scanned clean, then converted without resize to WebP under 250 KB. The pack has six fair sets; all 29 variant records independently recompute. The Christmas PDF stays ignored in `dist-packs/`; six 100 dpi Christmas proof PNGs and three Kiln before/after page pairs are prepared for review. Generic fixes count only cover/evidence/locks in each set's range, fill Set A misconception figures in the key, and flex locks-page work boxes with a 25 mm minimum. Christmas boxes measure 28.8 mm in every set; Kiln's measure 35.5 mm after, 34.5 mm before. Christmas page 1 is 150 words; Kiln's is 147 after the three approved trims. Selftest: 20/20 plants caught across both rooms. Build checks pass; no warning beyond the known room's variant-0 draw being INVALID and never served. `check-changed.py`: all 51 selected checks passed (404s), seven heavy checks deferred to CI. Gate pending.
 
 ## 2026-11-06 (home): WHOSE-SIDE handover
 
