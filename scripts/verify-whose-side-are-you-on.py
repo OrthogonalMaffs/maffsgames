@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported; fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
+# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width up to 600 px, centred, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported (phones, 1366x768, 1920x1080); fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -766,6 +766,8 @@ ART_SIZE, ART_MAX_BYTES = (1600, 873), 450 * 1024
 ART_SIZES = [(320, 568), (390, 844), (1920, 1080)]
 ART_TOL = 0.06               # θ within 6% of the image's width of the tip
 FOLD_SIZES = [(320, 568), (375, 667), (390, 844)]
+BIG_FOLD_SIZES = [(1366, 768), (1920, 1080)]   # reported too (Amendment 1)
+ART_MAX_W = 600              # the picture's cap, centred (Amendment 1, 6 Nov 2026)
 # The tip, measured here from the picture's own pixels, never from the page's numbers: the red slope's lower edge is fitted by
 # least squares along the slope, the green base's top edge is its median row, and the tip is where the two meet. The strips are
 # picked out by colour (red: R > 190, G < 110, B < 90; green: G > 140, R < 130, B < 110).
@@ -827,8 +829,10 @@ def judge_art(got, tip, label, fails):
         fails.append('art %s: the picture is not at the top of the start screen, under the title' % label)
     ix, iy, iw, ih = got['img']
     px, _, pw, _ = got['panel']
-    if abs(ix - px) > 1 or abs(iw - pw) > 1 or abs(ih - iw * ART_SIZE[1] / ART_SIZE[0]) > 1.5:
-        fails.append('art %s: the picture is %.0f px wide at x %.0f, the card %.0f at x %.0f (or its height is not auto)' % (label, iw, ix, pw, px))
+    want = min(pw, ART_MAX_W)                              # the card's width, capped at 600 px and centred on it
+    if abs(iw - want) > 1 or abs(ix - (px + (pw - want) / 2)) > 1 or abs(ih - iw * ART_SIZE[1] / ART_SIZE[0]) > 1.5:
+        fails.append('art %s: the picture is %.0f px wide at x %.0f; wanted %.0f, centred on the card (%.0f at x %.0f), height auto' % (
+            label, iw, ix, want, pw, px))
     if got['radius'][0] != got['radius'][1]:
         fails.append('art %s: corners %s, the card %s' % (label, got['radius'][0], got['radius'][1]))
     if got['sw'] > got['vw']:
@@ -875,7 +879,7 @@ def check_art(browser, base, fails, route=None, sizes=ART_SIZES, report=True):
         return
     tip, combos = None, [(s, False) for s in sizes]
     if report:
-        combos += [(s, False) for s in FOLD_SIZES if s not in sizes] + [(s, True) for s in FOLD_SIZES]
+        combos += [(s, False) for s in FOLD_SIZES + BIG_FOLD_SIZES if s not in sizes] + [(s, True) for s in FOLD_SIZES]
     for (w, h), aa in combos:
         ctx = browser.new_context(viewport={'width': w, 'height': h})
         if aa:
@@ -897,7 +901,7 @@ def check_art(browser, base, fails, route=None, sizes=ART_SIZES, report=True):
         label = '%dx%d%s' % (w, h, ' Aa' if aa else '')
         if (w, h) in sizes and not aa:
             judge_art(got, tip, label, fails)
-        if (w, h) in FOLD_SIZES and report:
+        if (w, h) in FOLD_SIZES + BIG_FOLD_SIZES and report:
             print('  start fold %s: first stage ends at %.0f, fold %.0f (%s; reported, not judged)' % (
                 label, got['start'], got['fold'], 'above' if got['start'] <= got['fold'] else 'below'))
         ctx.close()
@@ -1098,6 +1102,7 @@ PLANTS = [
     ('θ slid up the slope, 7.5% from the tip', "left:77.49%;top:81.50%;", "left:76.2%;top:77.6%;", 'art'),
     ('the arc centred off the tip', 'd="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"', 'd="M 1055.2 733 A 170 170 0 0 1 1075.6 652.3"', 'art'),
     ('θ in plain text, not KaTeX', "    $('startTheta').innerHTML = THETA();", "", 'art'),
+    ('the picture uncapped on a large screen', "max-width:600px;margin-left:auto;margin-right:auto;", "", 'art'),
 ]
 
 

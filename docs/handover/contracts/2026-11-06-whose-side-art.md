@@ -25,3 +25,26 @@ DO NOT TOUCH: the image's content (no edits beyond the house conversion); game p
 SUCCESS CONDITION: The start screen shows the ramp with θ at its tip on phone and desktop; the WebP is 1600x873 and under 450 KB; no PNG in the diff; the verifier's new checks pass with the plant caught; phone-fit passes. Committed, PR open, Gate green, entry in docs/handover/cloud.md; stop for Project Claude's review and Jon's "merge".
 
 STOP IF: the art-inbox file is not a 1698x926 PNG of 2,154,880 bytes; Start cannot stay above the fold at 320x568 with the image (report; do not shrink the game); the θ overlay cannot sit cleanly on the tip at every size.
+
+
+## Amendment 1 (Jon, via Project Claude, 6 Nov 2026), verbatim
+
+LANE: cloud (same session, PR #684) · TIER: Shared
+
+TASK: Cap the Whose Side start-screen picture at 600 px wide, centred, so a teacher on a projector sees the stages without scrolling far.
+
+ROOT CAUSE: .start-art is width:100% of the card, so on 1366x768 the picture is 1068x583 and pushes the first stage button from 590 to 1179 (1920x1080: 770 to 1359). Jon's contract asked for full card width; the cost on large screens was not foreseen.
+
+CLASS CHECK: Local. One rule on one game's start-art wrapper, matching the cap ESSENTIALS-ART already uses. No shared code.
+
+EXACT CHANGE:
+1. games/whose-side-are-you-on/index.html: .start-art gains max-width:600px; margin-left:auto; margin-right:auto (keep the existing top/bottom margins). Nothing else in the overlay changes: θ, the arc and their percentages scale with the wrapper.
+2. scripts/verify-whose-side-are-you-on.py: the "card's width" check becomes min(card width, 600); θ within 6% and arc checks re-run at 320, 390 and 1920 (at 1920 the picture is now 600 wide); add one plant: max-width removed, caught.
+3. Report the first-stage-button bottom against the fold at 1366x768 and 1920x1080, before and after (reported, not judged).
+4. Record in docs/handover/cloud.md under the existing WHOSE-SIDE-ART entry.
+
+DO NOT TOUCH: the WebP; θ and arc positions or styling; phone layout; game play, text, Jon's lines, colours; any other game; escape-rooms/, tools/pack-generator/, docs/handover/home.md.
+
+SUCCESS CONDITION: Picture at most 600 px wide and centred at 1366 and 1920; unchanged on phones; θ still within 6% of the measured tip at 320, 390 and 1920; all plants caught including the new one; phone-fit passes; Gate green on #684; stop for Project Claude's review and Jon's "merge".
+
+STOP IF: θ or the arc drifts off the tip at the capped width; the cap changes the picture's size at 320 or 390; the Gate fails on anything outside this game.
