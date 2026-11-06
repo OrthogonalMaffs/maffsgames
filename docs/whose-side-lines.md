@@ -1,6 +1,6 @@
 # Whose Side Are You On? — lines taken out of the game
 
-Archived on 6 Nov 2026 by contract WHOSE-SIDE-BIOS (`docs/handover/contracts/2026-11-06-whose-side-bios.md`), verbatim as they were on main at 86b56ec.
+Archived on 6 Nov 2026 by contract WHOSE-SIDE-BIOS (`docs/history/contracts/2026-11-06-whose-side-bios.md`), verbatim as they were on main at 86b56ec.
 
 **Jon's reason (6 Nov 2026):** "just randomly saying 'Marvellous, After you' means nothing, the characters have not been introduced". The character lines arrived in play from characters the student had never met, and crowded the feedback panel, whose job is the verdict and the rule. HYP, OPP and ADJ now introduce themselves only in their bios on the start screen. The panel's closing line referred to the polite characters, who have left the game.
 
