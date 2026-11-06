@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; the triangle's fit (contract WHOSE-SIDE-FIT): a seeded round of every stage, as asked and after an answer, its content box (corners padded by half the tap band, labels, θ, the square) measured on screen reaching the 6g pad at both ends of its limiting axis within 1 px and the triangle at least 70% of the figure there at 1366x768 and 1920x1080, no label, θ or tap band clipped there and at 320 and 390; the question's last line of text above the first control below it and no text in the right-hand column over another element, every stage asking, wrong and right, at 1024x700, 1222x688, 1366x768, 1920x1080 and 1024x1366; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width up to 600 px, centred, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported (phones, 1366x768, 1920x1080); fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle, the old margin (as wasted space), the triangle centred (as a clipped label), the old grid rows (as text under a button) and more, each caught) | | 3
+# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and its rule, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; the start screen and the sides' bios (contract WHOSE-SIDE-BIOS): the key's definitions, the closing line, the three bios, the subtitle, the Stages heading, stage list and scoring line compared with the contract's text, each key row a button that shows its bio by mouse and keyboard, the ramp's three strips measured from the WebP's pixels and each one's side worked out from the triangle they make (HYP the strip not through the right angle, OPP the strip not through the tip), real clicks along each strip showing that side's bio and ringing that strip in its line style, every point of each strip's tap region 44 px deep at 320 and 390 and no two regions overlapping; no character line anywhere, on the start screen or in play or on the results screen; every marked answer's panel recomputed from the geometry: Stage 1's rule sentence and misconception line, on Stages 2-4 the equation (sin, cos or tan of θ over its stacked fraction, numerator and denominator from FN, each in its side colour, at the fraction line's size) on right and wrong answers alike, with Stage 2's numbers and Stage 4's 'Use both' line under it on a wrong answer; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; the triangle's fit (contract WHOSE-SIDE-FIT): a seeded round of every stage, as asked and after an answer, its content box (corners padded by half the tap band, labels, θ, the square) measured on screen reaching the 6g pad at both ends of its limiting axis within 1 px and the triangle at least 70% of the figure there at 1366x768 and 1920x1080, no label, θ or tap band clipped there and at 320 and 390; the question's last line of text above the first control below it and no text in the right-hand column over another element, every stage asking, wrong and right, at 1024x700, 1222x688, 1366x768, 1920x1080 and 1024x1366; Jon's ramp on the start screen (contract WHOSE-SIDE-ART): assets/start.webp at the card's width up to 600 px, centred, 1600x873 and under 450 KB, θ in KaTeX inside the angle at the ramp's tip and within 6% of it at 320, 390 and 1920 wide, the tip measured from the picture's own pixels, the arc centred on it, the first stage against the fold reported (phones, 1366x768, 1920x1080); fault-injection self-test: θ moved off the tip, a wrong label, a wrong function, bios swapped, a strip mapped to the wrong side, a character line in the panel, the rule missing, its fraction upside down or a sentence again, the old closing line, the scoring line removed, a small triangle, the old margin (as wasted space), the triangle centred (as a clipped label), the old grid rows (as text under a button) and more, each caught) | | 3
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -16,8 +16,12 @@ coordinates, and the corners the page marks, and works everything out with vecto
   Functions    from the measured angle theta: sin, cos and tan against the ratio, to 1e-9. A function is right only if it is the one
                real trig gives for those two sides, so a swapped table cannot pass.
   Feedback     which line a wrong tap gets is recomputed from the geometry, and the wording compared with the approved spec.
-  Characters   which character speaks over a wrong tap on Stage 1 is recomputed from the geometry; every line is compared with
-               the contract's text (WHOSE-SIDE-PERSONALITY, 6 Nov 2026), held here, never read from the page.
+  Panel        each marked answer's rule (Stage 1's sentence; on Stages 2-4 the function the geometry needs and the two sides FN
+               gives it, read back off the drawn equation: which word is on top, their colours) and the lines under it.
+  Start screen the key, the closing line and the bios compared with the contract's text (WHOSE-SIDE-BIOS, 6 Nov 2026), held here,
+               never read from the page; no character line anywhere (docs/whose-side-lines.md).
+  Ramp strips  the three strips are measured from the WebP's pixels, and which is HYP, OPP and ADJ is worked out from the triangle
+               their lines make: the corner at 90 degrees, and the tip where θ is.
   Start art    the ramp's tip is found from the WebP's own pixels (the red slope's lower edge fitted, the green base's top edge), and
                the θ the page draws, and its arc, are judged against that point (contract WHOSE-SIDE-ART, 6 Nov 2026).
 In the page, a played round reads the drawn SVG back and compares it with the data; each tap goes through the real mouse.
@@ -25,7 +29,7 @@ In the page, a played round reads the drawn SVG back and compares it with the da
     python scripts/verify-whose-side-are-you-on.py [--no-selftest] [--shard i/k] [--list-units]
 
 Work units (contract SHARD, canon 7.8.1): the engine, a round of every stage at each size, the slow answer, Aa, the hold, the
-lines, the large screen, the start art, the fit at each of four sizes, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
+lines, the bios, the large screen, the start art, the fit at each of four sizes, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
 """
 import argparse
 import math
@@ -51,22 +55,39 @@ SPEC_LINES = {
     'square': 'Label from θ, not from the square corner.',
     'both': 'Use both: the side you know AND the side you want.',
 }
-# Jon's characters and lines, verbatim from contract WHOSE-SIDE-PERSONALITY (6 Nov 2026). Compared exactly, never read from the page.
-SUBTITLE = "One side never moves. The other two can't stop being polite about it."
-LEGEND = [
-    ('HYP', 'HYP, the longest side, across from the right angle.', '“I\'m here. I\'m always here.”'),
-    ('OPP', 'OPP, across from θ.', '“Oh, I\'m opposite today? Splendid.”'),
-    ('ADJ', 'ADJ, next to θ, and not the hypotenuse.', '“Then I shall stand beside it. After you.”'),
-]   # ADJ's definition corrected (WHOSE-SIDE-ART Amendment 2, 6 Nov): "next to θ" alone fits the hypotenuse too
-CLOSING = "Move θ, and the polite two swap. HYP doesn't flinch."
-RIGHT_SAYS = ['HYP: “Correct. I remain unmoved.”', 'OPP: “Spot on. Do carry on.”', 'ADJ: “Marvellous. After you.”']
-WRONG_SAYS = {
-    'hyp': 'HYP: “I have been the hypotenuse since before you were born.”',
-    'swap': 'OPP and ADJ: “Terribly sorry, I think you\'ll find we swapped.”',
+# The start screen, verbatim from contract WHOSE-SIDE-BIOS (6 Nov 2026). Compared exactly, never read from the page.
+SUBTITLE = "One side never moves. The other two can't stop being polite about it."   # unchanged: Jon has not decided on it
+OPENING = 'Every side gets its name from the marked angle.'
+KEY = [
+    ('HYP', 'H', 'HYP, the longest side, across from the right angle.'),
+    ('OPP', 'O', "OPP, across from θ: the only side that doesn't touch it."),
+    ('ADJ', 'A', 'ADJ, next to θ, and not the hypotenuse.'),
+]
+BIO_DEFAULT = 'Tap a side of the ramp, or its name, to meet it.'
+CLOSING = 'Put θ in the other corner and OPP and ADJ swap. HYP stays put.'
+SCORING = 'Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.'
+STAGES_HEADING = 'Stages'
+STAGE_LIST = [('Tap the side', 'Find HYP, OPP or ADJ on the triangle, however it is turned.'),
+              ('Build the fraction', 'Tap the sides into a fraction: OPP over HYP.'),
+              ('Name it', 'Match each fraction to sin, cos or tan, then back again.'),
+              ('Which function?', 'One side known, one side wanted: pick the function.')]   # unchanged (DO NOT TOUCH): main at 86b56ec
+BIOS = {
+    'HYP': [('Location', "Opposite the right angle. That's my spot, I earned it, and I'm not moving."), ('Length', 'Bigger than the other two. Always.'),
+            ('Favourite number', 'The biggest one.')],
+    'OPP': [('Location', "The only side that doesn't touch θ. I'm shy."), ('Length', 'Ask my friend Pythagoras, he always knows.'),
+            ('Favourite number', "6. I'm opposite 1 on a dice.")],
+    'ADJ': [('Location', "Right next to θ, and I'm not the hypotenuse. Personal space is overrated."),
+            ('Length', "Always positive; other than that, I'm flexible. I can do a handstand, don't you know."), ('Favourite number', '52!')],
 }
-SHOUTS = {3: 'HYP nods, very slightly.', 5: 'OPP and ADJ bow so politely they bump heads.', 10: 'HYP shows emotion. Once. Never again.'}
-RESULT_SAYS = {'high': 'Sides labelled. HYP is quietly proud. He will never say so.',
-               'low': 'The polite two are still bowing at each other in the corridor. Shall we go again?'}
+# Stage 1's rule sentence, right and wrong (item 6; HYP's and ADJ's worded as the key words them, OPP's the contract's example).
+RULE1 = {'HYP': "That's HYP: the longest side, across from the right angle.", 'OPP': "That's OPP: the only side that doesn't touch θ.",
+         'ADJ': "That's ADJ: next to θ, and not the hypotenuse."}
+# Every character line taken out (docs/whose-side-lines.md): none may appear anywhere, on the start screen or in play.
+OLD_LINES = ["I'm here. I'm always here.", "Oh, I'm opposite today? Splendid.", 'Then I shall stand beside it. After you.',
+             "Move θ, and the polite two swap. HYP doesn't flinch.", 'Correct. I remain unmoved.', 'Spot on. Do carry on.', 'Marvellous. After you.',
+             'I have been the hypotenuse since before you were born.', "Terribly sorry, I think you'll find we swapped.",
+             'HYP nods, very slightly.', 'OPP and ADJ bow so politely they bump heads.', 'HYP shows emotion. Once. Never again.',
+             'Sides labelled. HYP is quietly proud. He will never say so.', 'The polite two are still bowing at each other in the corridor. Shall we go again?']
 HOLD_MS = 2000
 BIG_SIZES = [(1366, 768), (1920, 1080)]
 # Contract WHOSE-SIDE-FIT (6 Nov 2026, Amendment 1): the fit is judged on a seeded round of every stage at these sizes (no wasted
@@ -147,15 +168,30 @@ def expected_why(it, role_of_tap, tapped):
     return 'longest' if role_of_tap == 'HYP' else 'square'
 
 
-def expected_who(it, role_of_tap):
-    """Which character speaks over a wrong tap on Stage 1, from the contract's two cases: HYP whenever HYP is asked for or tapped,
-    the polite two when OPP and ADJ are mixed up. role_of_tap comes from geometry(), never from the game's own roles."""
-    return 'hyp' if it['ask'] == 'HYP' or role_of_tap == 'HYP' else 'swap'
-
-
-def result_say(right):
-    """The results screen's character line for `right` correct out of 10: 8-10 and 0-5 have one, 6-7 none."""
-    return RESULT_SAYS['high'] if right >= 8 else RESULT_SAYS['low'] if right <= 5 else None
+def expected_feedback(it, ok, tapped=None):
+    """What the panel must carry for this item (contract WHOSE-SIDE-BIOS item 6, Jon's answers of 6 Nov), from the geometry alone:
+    (the function whose equation is the rule, or None on Stage 1; the plain lines under it). On Stage 1 a wrong tap is `tapped`."""
+    geo, theta, _ = geometry(it)
+    role_by_id = {s['id']: k for k, s in geo.items()}
+    v = it['verts']
+    drawn = {k: dist(v[s['from']], v[s['to']]) for k, s in geo.items()}
+    lens = {k: s['len'] for k, s in geo.items()}
+    stage = it['stage']
+    if stage == 1:
+        return None, [RULE1[it['ask']]] if ok else [RULE1[it['ask']], SPEC_LINES[expected_why(it, role_by_id[tapped], tapped)]]
+    if stage == 2:
+        top, bottom = it['top'], it['bottom']
+        fns = real_function(theta, drawn, top, bottom)
+        line = '%s is %s and %s is %s, so %s over %s is %s over %s.' % (top, lens[top], bottom, lens[bottom], top, bottom, lens[top], lens[bottom])
+        return (fns[0] if len(fns) == 1 else '?'), ([] if ok else [line])
+    if stage == 3:
+        if it['dir'] == 'name':
+            fns = real_function(theta, drawn, it['top'], it['bottom'])
+            return (fns[0] if len(fns) == 1 else '?'), []
+        return it['fn'], []                                     # check_item has proven fn's sides against real trig
+    pair = {it['knownRole'], it['wantedRole']}
+    hits = [f for f, s in FN_SIDES.items() if set(s) == pair and abs(REAL[f](theta) - drawn[s[0]] / drawn[s[1]]) < 1e-9]
+    return (hits[0] if len(hits) == 1 else '?'), ([] if ok else [SPEC_LINES['both']])
 
 
 def check_item(it, fails):
@@ -234,19 +270,6 @@ def check_engine(page, fails, sample=None):
     turns = {o.split('.')[0] for o in orientations}
     if turns != {'0', '1', '2', '3'} or len({o.split('.')[2] for o in orientations}) != 2 or len({o.split('.')[3] for o in orientations}) != 2:
         fails.append('orientations missing: %s' % sorted(orientations)[:5])
-    # Who speaks over a wrong tap on Stage 1: recomputed from the geometry for both wrong sides of each item (all of them, or a
-    # sample of 60 in a self-test), never from the game's roles.
-    items = page.evaluate('() => WS.gen.bank(1)')
-    random.Random(5).shuffle(items)
-    for it in items[:60 if sample else len(items)]:
-        geo, _, _ = geometry(it)
-        role_by_id = {s['id']: k for k, s in geo.items()}
-        for s in it['sides']:
-            if s['id'] == it['key']:
-                continue
-            got = page.evaluate('([q, t]) => WS.gen.whoSays(q, t)', [it, s['id']])
-            if got != expected_who(it, role_by_id[s['id']]):
-                fails.append('%s: a wrong tap on %s (%s) gets %s speaking, should be %s' % (it['id'], s['id'], role_by_id[s['id']], got, expected_who(it, role_by_id[s['id']])))
     if sample:
         return
     # Feedback: 400 Stage 1 items, both wrong sides of each.
@@ -426,42 +449,84 @@ def rgb(hexa):
     return 'rgb(%d, %d, %d)' % tuple(int(hexa[i:i + 2], 16) for i in (1, 3, 5))
 
 
-LAST_RIGHT = {}       # per page: the last right-answer line shown, which the next must differ from
+# Text as a student reads it: each KaTeX formula as its rendered glyphs (θ, not its hidden MathML and TeX source), spaces collapsed.
+NORM_JS = """window.__norm = e => { if (!e) return null; const c = e.cloneNode(true);
+  c.querySelectorAll('.katex').forEach(k => { const h = k.querySelector('.katex-html'); k.replaceWith(document.createTextNode(h ? h.textContent : '')); });
+  return c.textContent.replace(/\\s+/g, ' ').trim(); };"""
+
+# The marked panel: the verdict, its plain lines, and its rule read off the screen: the function's name as KaTeX drew it, and the
+# two side words with their colours and boxes (so which is on top, and whether they are stacked over a fraction bar, is measured).
+READ_FB = """() => { const f = document.querySelector('#feedback .fb'); if (!f) return null;
+  const h = f.querySelector('.fb-head'), rules = Array.from(f.querySelectorAll('.fb-rule'));
+  const out = {mark: h ? [h.dataset.mark, h.textContent] : null, lines: Array.from(f.querySelectorAll('.fb-line')).map(l => __norm(l)),
+    rules: rules.length, rule: null};
+  const r = rules[0];
+  if (r) {
+    const html = r.querySelector('.katex-html'), words = [];
+    if (html) html.querySelectorAll('*').forEach(e => { if (e.children.length === 0 && /^(HYP|OPP|ADJ)$/.test(e.textContent.trim())) {
+      const b = e.getBoundingClientRect(); words.push({w: e.textContent.trim(), colour: getComputedStyle(e).color, top: b.top, bottom: b.bottom, cx: (b.left + b.right) / 2}); } });
+    const bar = html && html.querySelector('.frac-line'), bb = bar ? bar.getBoundingClientRect() : null;
+    const fr = document.getElementById('fracline');
+    out.rule = {fn: html ? Array.from(html.querySelectorAll('.mop')).map(e => e.textContent).join('|') : null, text: __norm(r), words: words,
+      bar: bb ? [bb.top, bb.bottom] : null, size: getComputedStyle(r).fontSize, fracSize: getComputedStyle(fr).fontSize};
+  }
+  return out; }"""
 
 
-def feedback_says(page):
-    """The feedback's character line (its data and its text as rendered), its streak shout-out, and whether the line sits above
-    the teaching line."""
-    return page.evaluate("""() => { const f = document.querySelector('#feedback .fb'); if (!f) return null;
-      const s = f.querySelector('.fb-say'), sh = f.querySelector('.fb-shout'), ln = f.querySelector('.fb-line');
-      const txt = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;
-      return {say: s ? s.dataset.say : null, sayText: txt(s), shout: sh ? sh.dataset.say : null, shoutText: txt(sh),
-              above: !!(s && ln && (s.compareDocumentPosition(ln) & Node.DOCUMENT_POSITION_FOLLOWING))}; }""")
-
-
-def check_right_says(page, streak, label, fails):
-    """A right answer: one of Jon's three lines, never the one shown last; the shout-out exactly at a streak of 3, 5 or 10."""
-    f = feedback_says(page)
-    if not f or f['say'] not in RIGHT_SAYS or f['sayText'] != f['say']:
-        fails.append('%s: right-answer line %s' % (label, f and (f['say'], f['sayText'])))
+def check_feedback(page, it, ok, label, fails, tapped=None):
+    """Item 6 with Jon's answers: the verdict; on Stages 2-4 one rule, the equation `fn θ = top/bottom` stacked, top and bottom the
+    sides FN_SIDES gives for the function the geometry needs, each in its side colour, at the fraction line's size; on Stage 1 no
+    equation; and the plain lines expected_feedback works out, in order. Nothing else."""
+    page.evaluate(NORM_JS)
+    f = page.evaluate(READ_FB)
+    if not f:
+        fails.append('%s: no feedback panel' % label)
         return
-    key = id(page)
-    if LAST_RIGHT.get(key) == f['say']:
-        fails.append('%s: the same right-answer line twice running: %s' % (label, f['say']))
-    LAST_RIGHT[key] = f['say']
-    want = SHOUTS.get(streak)
-    if f['shout'] != want or f['shoutText'] != want:
-        fails.append('%s: at a streak of %d the shout-out is %r, should be %r' % (label, streak, f['shoutText'], want))
+    if f['mark'] != (['right', '✓Right'] if ok else ['wrong', '✗Not quite']):
+        fails.append('%s: the verdict reads %s' % (label, f['mark']))
+    fn, lines = expected_feedback(it, ok, tapped)
+    if f['lines'] != lines:
+        fails.append('%s: the panel\'s lines %s, should be %s' % (label, f['lines'], lines))
+    if fn is None:
+        if f['rules']:
+            fails.append('%s: an equation on Stage 1: %s' % (label, f['rule']))
+        return
+    r = f['rule']
+    if f['rules'] != 1 or not r:
+        fails.append('%s: %d rule equations on a %s answer, should be 1 (%s)' % (label, f['rules'], 'right' if ok else 'wrong', fn))
+        return
+    top, bottom = FN_SIDES.get(fn, ('?', '?'))
+    words = r['words']
+    if r['fn'] != fn or not r['text'].replace(' ', '').startswith(fn + 'θ=') or len(words) != 2 or not r['bar']:
+        fails.append('%s: the rule is %r (function %s, %d side words, fraction bar %s), should be %s θ = %s/%s stacked'
+                     % (label, r['text'], r['fn'], len(words), r['bar'], fn, top, bottom))
+        return
+    up, down = sorted(words, key=lambda w: w['top'])
+    stacked = up['bottom'] <= r['bar'][1] + 1 and down['top'] >= r['bar'][0] - 1 and abs(up['cx'] - down['cx']) < 12
+    if (up['w'], down['w']) != (top, bottom) or not stacked:
+        fails.append('%s: the rule\'s fraction is %s over %s%s, should be %s over %s' % (label, up['w'], down['w'], '' if stacked else ' (not stacked)', top, bottom))
+    for w in words:
+        if w['colour'] != rgb(COLOURS[w['w']]):
+            fails.append('%s: %s in the rule is %s, not its side colour' % (label, w['w'], w['colour']))
+    if r['size'] != r['fracSize']:
+        fails.append('%s: the rule is %s, the fraction line %s' % (label, r['size'], r['fracSize']))
 
 
-def check_results_say(page, right, label, fails):
-    want = result_say(right)
-    got = page.evaluate("() => { const e = document.getElementById('resSay'); return e && e.getClientRects().length ? e.textContent.replace(/\\s+/g, ' ').trim() : null; }")
-    if got != want:
-        fails.append('%s: %d right: the results line is %r, should be %r' % (label, right, got, want))
-    above = page.evaluate("() => { const s = document.getElementById('resSay'), n = document.getElementById('resScore'); return !!(s && (s.compareDocumentPosition(n) & Node.DOCUMENT_POSITION_FOLLOWING)); }")
-    if want and not above:
-        fails.append('%s: the results line is not above the score' % label)
+# No character speaks: no quotation marks, none of the lines taken out, none of their old containers. On the start screen the
+# subtitle (#subtitle) is exempt (Jon has not decided on it) and the bios are the sides' own; `scope` is what is read.
+SPEECH_JS = """([scope, old]) => { const out = [], root = document.querySelector(scope); if (!root) return out;
+  const c = root.cloneNode(true), sub = c.querySelector('#subtitle'); if (sub) sub.remove();
+  c.querySelectorAll('.katex').forEach(k => { const h = k.querySelector('.katex-html'); k.replaceWith(document.createTextNode(h ? h.textContent : '')); });
+  const text = c.textContent.replace(/\\s+/g, ' ');
+  if (/[“”]/.test(text)) out.push('a quotation: ' + text.slice(Math.max(0, text.search(/[“”]/) - 40), text.search(/[“”]/) + 50));
+  old.forEach(l => { if (text.includes(l)) out.push('a line taken out: ' + l); });
+  if (root.querySelector('.fb-say, .fb-shout, .say, #resSay, .res-say, [data-say]')) out.push('a character line\\'s container');
+  return out; }"""
+
+
+def check_no_speech(page, scope, label, fails):
+    for p in page.evaluate(SPEECH_JS, [scope, OLD_LINES]):
+        fails.append('%s: %s' % (label, p))
 
 
 def wait_asking(page):
@@ -615,21 +680,10 @@ def play_round(page, stage, wrong_at, label, fails):
                 letter = page.evaluate('(id) => { const t = document.querySelector(\'#figure [data-label="\' + id + \'"]\'); return t ? t.textContent : null; }', ids[it['ask']])
                 if letter != it['ask'][0]:
                     fails.append('%s: lit side letter %s' % (label, letter))
-                line = page.evaluate("() => document.querySelector('.fb-line').dataset.plain")
-                role_by_id = {v: k for k, v in ids.items()}
-                other = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]
-                if line != SPEC_LINES[expected_why(it, role_by_id[other], other)]:
-                    fails.append('%s: feedback %r' % (label, line))
-                f = feedback_says(page)
-                want_say = WRONG_SAYS[expected_who(it, role_by_id[other])]
-                if not f or f['say'] != want_say or f['sayText'] != want_say or not f['above']:
-                    fails.append('%s: a wrong tap on %s for %s: character line %s, should be %r above the teaching line' % (label, role_by_id[other], it['ask'], f, want_say))
-            elif feedback_says(page)['say'] is not None:
-                fails.append('%s stage %d: a character line on a wrong answer outside Stage 1: %s' % (label, stage, feedback_says(page)['say']))
-            if stage == 4:
-                line = page.evaluate("() => document.querySelector('.fb-line').dataset.plain")
-                if line != SPEC_LINES['both']:
-                    fails.append('%s: stage 4 feedback %r' % (label, line))
+            # the panel: the verdict, the rule (Stage 1's sentence, or the equation) and the lines under it, from the geometry
+            check_feedback(page, it, False, '%s stage %d q%d' % (label, stage, n + 1), fails,
+                           tapped=[s['id'] for s in it['sides'] if s['id'] != it['key']][0] if stage == 1 else None)
+            check_no_speech(page, '#game', '%s stage %d q%d wrong' % (label, stage, n + 1), fails)
             btn = page.query_selector('.maffs-next-wrap button') or page.query_selector('.fb-next button')
             if not btn:
                 fails.append('%s: no Next on a wrong answer' % label)
@@ -639,10 +693,11 @@ def play_round(page, stage, wrong_at, label, fails):
                 fails.append('%s stage %d: Next below the fold, %.0f in %d' % (label, stage, r['y'] + r['height'], h))
             btn.click()
         else:
-            check_right_says(page, streak, '%s stage %d q%d' % (label, stage, n + 1), fails)
+            check_feedback(page, it, True, '%s stage %d q%d' % (label, stage, n + 1), fails)
+            check_no_speech(page, '#game', '%s stage %d q%d right' % (label, stage, n + 1), fails)
             page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
     page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
-    check_results_say(page, 10 - len(wrong_at), '%s stage %d' % (label, stage), fails)
+    check_no_speech(page, '#results', '%s stage %d results' % (label, stage), fails)
     if page.evaluate('() => document.documentElement.scrollWidth') > w:
         fails.append('%s stage %d: sideways scroll on results' % (label, stage))
     subs = page.evaluate('() => { const n = window.__sub.length; window.__sub = []; return n; }')
@@ -688,7 +743,7 @@ def check_aa(browser, base, fails):
 
 
 def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
-    """A right answer on each stage: lit, "Right" and a character's line, no Next, for the real 2.0 s (Jon, 6 Nov), measured from the
+    """A right answer on each stage: lit, "Right" and its rule, no Next, for the real 2.0 s (Jon, 6 Nov), measured from the
     answer to the next question; taps ignored; then the next question by itself. An hour jumped during the hold must not reach the
     clock or the score. Real timers here: run_page's fast pause would hide all of this."""
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
@@ -709,8 +764,8 @@ def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
         look = page.evaluate("""() => { const h = document.querySelector('.fb-head');
           return {mark: h ? h.textContent : null, lit: document.querySelectorAll('#figure line.side.lit').length,
                   next: document.querySelectorAll('.maffs-next-wrap button, .fb-next button').length, bands: document.querySelectorAll('#figure .hit').length, time: document.getElementById('hudTime').textContent,
-                  say: (document.querySelector('#feedback .fb-say') || {dataset: {}}).dataset.say || null}; }""")
-        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands'] or look['say'] not in RIGHT_SAYS:
+                  rule: document.querySelectorAll('#feedback .fb-rule, #feedback .fb-line').length}; }""")
+        if look['mark'] != '✓Right' or look['lit'] < 1 or look['next'] or look['bands'] or not look['rule']:
             fails.append('stage %d hold: %s' % (stage, look))
         page.evaluate('() => window.__skip(3600)')          # an hour passes on the clock's own time source, during the hold
         page.wait_for_timeout(600)
@@ -751,22 +806,66 @@ def stub_board(page):
       MaffsLeaderboard.submitScore = (g, l, s, n) => { window.__sub.push([g, l, s, n]); return Promise.resolve(); }; }""")
 
 
+READ_START = """() => { const panel = document.querySelector('#menu .menu-info'), bio = document.getElementById('bio');
+  const kids = panel ? Array.from(panel.children).map(e => e.tagName + (e.id ? '#' + e.id : '') + (e.className ? '.' + e.className.split(' ')[0] : '')) : [];
+  return {sub: __norm(document.getElementById('subtitle')), kids: kids, para: panel ? Array.from(panel.querySelectorAll(':scope > p')).map(p => __norm(p)) : [],
+    heading: __norm(panel && panel.querySelector(':scope > .mode-h')),
+    stages: Array.from(document.querySelectorAll('#stageList [data-stage]')).map(b => [b.dataset.stage, __norm(b.querySelector('.t')), __norm(b.querySelector('.d'))]),
+    rows: Array.from(document.querySelectorAll('#menu .key > *')).filter(e => e !== bio).map(r => ({tag: r.tagName, type: r.getAttribute('type'), role: r.dataset.role,
+      pressed: r.getAttribute('aria-pressed'), letter: __norm(r.querySelector(':scope > b')), swatch: !!r.querySelector(':scope > svg line.' + r.dataset.role),
+      def: __norm(r.querySelector('.def')), katex: r.querySelectorAll('.def .katex').length})),
+    bioInKey: !!bio && bio.parentElement === document.querySelector('#menu .key'), bio: __norm(bio),
+    closing: __norm(document.getElementById('closing')), closingKatex: document.querySelectorAll('#closing .katex').length}; }"""
+READ_BIO = """() => { const b = document.getElementById('bio'), name = b.querySelector('.bio-name .w');
+  return {role: b.dataset.role || null, name: name ? [name.textContent, getComputedStyle(name).color] : null,
+    fields: Array.from(b.querySelectorAll('.bio-f')).map(f => [__norm(f.querySelector('.bio-k')), __norm(f.querySelector('.bio-v'))]),
+    thetas: Array.from(b.querySelectorAll('.bio-v')).map(v => [v.querySelectorAll('.katex').length, /θ/.test(Array.from(v.childNodes).filter(n => n.nodeType === 3).map(n => n.textContent).join(''))]),
+    pressed: Array.from(document.querySelectorAll('#menu .key-row[aria-pressed="true"]')).map(r => r.dataset.role),
+    rings: Array.from(document.querySelectorAll('#startSides [data-ring]')).filter(r => getComputedStyle(r).visibility === 'visible').map(r => r.dataset.ring)}; }"""
+PANEL_KIDS = ['P', 'DIV#key.key', 'P#closing.closing', 'P', 'DIV.mode-h', 'DIV#stageList.stages']
+
+
+def judge_bio(got, role, label, fails):
+    """The bio for `role`, verbatim; its name in its side colour; θ drawn in KaTeX; that row alone pressed and that strip alone ringed."""
+    want = [[k + ':', v] for k, v in BIOS[role]]
+    if got['role'] != role or got['fields'] != want or not got['name'] or got['name'][0] != role or got['name'][1] != rgb(COLOURS[role]):
+        fails.append('%s: the bio for %s reads %s %s %s, should be %s' % (label, role, got['role'], got['name'], got['fields'], want))
+    if any(raw for _, raw in got['thetas']) or [n for n, _ in got['thetas']] != [v.count('θ') for _, v in BIOS[role]]:
+        fails.append('%s: θ in the %s bio is not drawn in KaTeX: %s' % (label, role, got['thetas']))
+    if got['pressed'] != [role] or got['rings'] != [role]:
+        fails.append('%s: %s chosen, but the pressed rows are %s and the ringed strips %s' % (label, role, got['pressed'], got['rings']))
+
+
 def check_start(page, fails):
-    """The start screen and subtitle, compared with the contract's text exactly; the legend keeps its line sample and letter."""
-    got = page.evaluate("""() => { const t = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;
-      return {sub: t(document.querySelector('#menu .header .sub')), closing: t(document.getElementById('closing')),
-        rows: Array.from(document.querySelectorAll('#menu .key [role=listitem]')).map(r => [r.dataset.role, t(r.querySelector('.def')), t(r.querySelector('.say')),
-          !!r.previousElementSibling && r.previousElementSibling.tagName === 'B' && !!r.previousElementSibling.previousElementSibling.querySelector('line.' + r.dataset.role)]),
-        para: Array.from(document.querySelectorAll('#menu .menu-info > p')).map(p => t(p)), stages: document.querySelectorAll('#stageList [data-stage]').length}; }""")
+    """Contract WHOSE-SIDE-BIOS items 1, 2 and 4: the panel's paragraphs, key, bio area and closing line against the contract's text;
+    the stages heading, stage list and scoring line unchanged; each key row a button with its swatch and letter that shows its bio;
+    no character line on the start screen (the subtitle exempt, and compared unchanged)."""
+    page.evaluate(NORM_JS)
+    got = page.evaluate(READ_START)
     if got['sub'] != SUBTITLE:
         fails.append('subtitle %r' % got['sub'])
-    rows = [r[:3] for r in got['rows']]
-    if rows != [list(r) for r in LEGEND] or not all(r[3] for r in got['rows']):
-        fails.append('start-screen legend %s' % got['rows'])
-    if got['closing'] != CLOSING:
-        fails.append('closing line %r' % got['closing'])
-    if not any(p.startswith('Ten quick questions a stage.') for p in got['para']) or got['stages'] != 4:
-        fails.append('the "Ten quick questions" line or the stage list is missing: %s, %d stages' % (got['para'], got['stages']))
+    if got['kids'] != PANEL_KIDS:
+        fails.append('the start panel holds %s, should be %s' % (got['kids'], PANEL_KIDS))
+    if got['para'] != [OPENING, CLOSING, SCORING]:
+        fails.append('the start panel\'s paragraphs are %s, should be %s' % (got['para'], [OPENING, CLOSING, SCORING]))
+    if got['heading'] != STAGES_HEADING or [s[1:] for s in got['stages']] != [list(s) for s in STAGE_LIST] or [s[0] for s in got['stages']] != ['1', '2', '3', '4']:
+        fails.append('the Stages heading or the stage list changed: %r %s' % (got['heading'], got['stages']))
+    rows = [(r['role'], r['letter'], r['def']) for r in got['rows']]
+    if rows != KEY:
+        fails.append('the key reads %s, should be %s' % (rows, KEY))
+    for r in got['rows']:
+        if r['tag'] != 'BUTTON' or r['type'] != 'button' or r['pressed'] != 'false' or not r['swatch'] or r['katex'] != r['def'].count('θ'):
+            fails.append('key row %s: %s %s, aria-pressed %s, swatch %s, %d KaTeX θ' % (r['role'], r['tag'], r['type'], r['pressed'], r['swatch'], r['katex']))
+    if got['closing'] != CLOSING or got['closingKatex'] != 1:
+        fails.append('closing line %r (%d KaTeX)' % (got['closing'], got['closingKatex']))
+    if not got['bioInKey'] or got['bio'] != BIO_DEFAULT:
+        fails.append('the bio area reads %r (in the key: %s), should be %r' % (got['bio'], got['bioInKey'], BIO_DEFAULT))
+    check_no_speech(page, '#menu', 'start screen', fails)
+    for role, _, _ in KEY:
+        page.click('#menu .key-row[data-role="%s"]' % role)
+        judge_bio(page.evaluate(READ_BIO), role, 'start screen, key row %s' % role, fails)
+        check_no_speech(page, '#menu', 'start screen, %s chosen' % role, fails)
+    page.evaluate('() => window.scrollTo(0, 0)')
 
 
 # Jon's start-screen illustration and the θ over it (contract WHOSE-SIDE-ART, 6 Nov 2026).
@@ -916,10 +1015,197 @@ def check_art(browser, base, fails, route=None, sizes=ART_SIZES, report=True):
         ctx.close()
 
 
-def check_says(browser, base, fails, route=None):
-    """Whole rounds answered through the lock hint, at speed: a perfect Stage 1 round (every right-answer line, never the same twice
-    running, the shout-outs at 3, 5 and 10 and nowhere else, the 8-10 results line), a round of four right (the Stage 1 speaker for
-    each wrong tap from the geometry, the 0-5 line) and one of six right (no results line)."""
+# The ramp's three strips (contract WHOSE-SIDE-BIOS item 3), measured here from the WebP's own pixels: each strip's pixels picked
+# out by colour only to tell the three apart (red: R > 190, G < 110, B < 90; green: G > 140, R < 130, B < 110; blue: B - R > 25,
+# B - G > 25, R < 140), and a line fitted through each by total least squares. Which strip is which side is then worked out from
+# the triangle the three lines make, never from the colours or the page's labels: HYP is the strip that does not pass through the
+# right-angled corner, OPP the strip that does not pass through the tip (the corner MEASURE_TIP finds, where θ is), ADJ the other.
+MEASURE_STRIPS = """async () => {
+  const img = document.querySelector('#startArt img'); await img.decode();
+  const W = img.naturalWidth, H = img.naturalHeight, c = document.createElement('canvas'); c.width = W; c.height = H;
+  const g = c.getContext('2d'); g.drawImage(img, 0, 0); const d = g.getImageData(0, 0, W, H).data;
+  const cls = {red: (r, gg, b) => r > 190 && gg < 110 && b < 90, green: (r, gg, b) => gg > 140 && r < 130 && b < 110,
+               blue: (r, gg, b) => b - r > 25 && b - gg > 25 && r < 140};
+  const out = {};
+  for (const k in cls) { let n = 0, sx = 0, sy = 0, sxx = 0, syy = 0, sxy = 0;
+    for (let y = 0; y < H; y += 2) for (let x = 0; x < W; x += 2) { const i = (y * W + x) * 4;
+      if (cls[k](d[i], d[i + 1], d[i + 2])) { n++; sx += x; sy += y; sxx += x * x; syy += y * y; sxy += x * y; } }
+    const mx = sx / n, my = sy / n, a = sxx / n - mx * mx, b = sxy / n - mx * my, cc = syy / n - my * my;
+    const ang = 0.5 * Math.atan2(2 * b, a - cc);
+    out[k] = {n: n, c: [mx, my], d: [Math.cos(ang), Math.sin(ang)], spread: Math.sqrt(Math.max(0, (a + cc) / 2 - Math.sqrt(((a - cc) / 2) ** 2 + b * b)))}; }
+  return out; }"""
+
+
+def meet_lines(p, q):
+    (a, u), (b, v) = p, q
+    det = u[0] * -v[1] - u[1] * -v[0]
+    t = ((b[0] - a[0]) * -v[1] - (b[1] - a[1]) * -v[0]) / det
+    return (a[0] + t * u[0], a[1] + t * u[1])
+
+
+def strip_roles(strips, tip):
+    """{role: (colour, centreline point, direction, corner at one end, corner at the other)} from the three fitted lines, or a problem."""
+    lines = {k: (v['c'], v['d']) for k, v in strips.items()}
+    ks = sorted(lines)
+    corners = {}
+    for i in range(3):
+        for j in range(i + 1, 3):
+            corners[(ks[i], ks[j])] = meet_lines(lines[ks[i]], lines[ks[j]])
+    right = [pair for pair in corners if abs(lines[pair[0]][1][0] * lines[pair[1]][1][0] + lines[pair[0]][1][1] * lines[pair[1]][1][1]) < 0.02]
+    if len(right) != 1:
+        return None, 'no single right-angled corner among %s' % {k: v[1] for k, v in lines.items()}
+    near = min(corners, key=lambda pair: math.hypot(corners[pair][0] - tip['x'], corners[pair][1] - tip['y']))
+    if near == right[0] or math.hypot(corners[near][0] - tip['x'], corners[near][1] - tip['y']) > 80:
+        return None, 'the tip (%.0f, %.0f) is not a corner of the strips\' triangle %s' % (tip['x'], tip['y'], corners)
+    hyp = [k for k in ks if k not in right[0]][0]
+    opp = [k for k in ks if k not in near][0]
+    adj = [k for k in ks if k not in (hyp, opp)][0]
+    out = {}
+    for role, k in (('HYP', hyp), ('OPP', opp), ('ADJ', adj)):
+        ends = [corners[pair] for pair in corners if k in pair]
+        out[role] = (k, lines[k][0], lines[k][1], ends[0], ends[1])
+    return out, None
+
+
+def inside(poly, x, y):
+    hit, n = False, len(poly)
+    for i in range(n):
+        (x1, y1), (x2, y2) = poly[i], poly[(i + 1) % n]
+        if (y1 > y) != (y2 > y) and x < x1 + (y - y1) * (x2 - x1) / (y2 - y1):
+            hit = not hit
+    return hit
+
+
+# The room across a strip at one of its points, from the WebP's pixels: how far the line through it, square to the strip, runs each
+# way before it meets another strip's paint or the picture's edge (image px). A tap region can be no deeper than that without
+# overlapping another strip; where the room is under 44 px on screen (near the tip, where the strips meet), it is judged against
+# the room instead, within ROOM_TOL, and reported.
+ROOM_JS = """async ([x, y, nx, ny, own]) => {
+  if (!window.__px) { const img = document.querySelector('#startArt img'); await img.decode();
+    const c = document.createElement('canvas'); c.width = img.naturalWidth; c.height = img.naturalHeight; const g = c.getContext('2d'); g.drawImage(img, 0, 0);
+    window.__px = {W: c.width, H: c.height, d: g.getImageData(0, 0, c.width, c.height).data}; }
+  const {W, H, d} = window.__px;
+  const cls = (px, py) => { const i = (py * W + px) * 4, r = d[i], gg = d[i + 1], b = d[i + 2];
+    return r > 190 && gg < 110 && b < 90 ? 'red' : gg > 140 && r < 130 && b < 110 ? 'green' : b - r > 25 && b - gg > 25 && r < 140 ? 'blue' : null; };
+  const run = s => { for (let k = 0; k < 2000; k += 0.5) { const px = Math.round(x + s * nx * k), py = Math.round(y + s * ny * k);
+    if (px < 0 || py < 0 || px >= W || py >= H) return k; const c = cls(px, py); if (c && c !== own) return k; } return 2000; };
+  return [run(1), run(-1)]; }"""
+ROOM_TOL = 1.5
+BIO_SIZES = [(320, 568), (390, 844), (1366, 768)]
+DEPTH_SIZES = [(320, 568), (390, 844)]
+RING_STYLE_JS = """(role) => { const r = document.querySelector('#startSides [data-ring="' + role + '"]'), c = getComputedStyle(r);
+  return [c.stroke, c.strokeDasharray, c.strokeLinecap, getComputedStyle(document.body).color]; }"""
+
+
+def check_bios(browser, base, fails, route=None, sizes=BIO_SIZES, report=True):
+    """Item 3 and 4: each strip's side worked out from the picture's geometry; real clicks along each strip show that side's bio,
+    press its key row and ring that strip alone in its line style in the text colour; at 320 and 390, from 10% to 90% along each
+    strip, its tap region is at least 44 px deep across it, or, where the other strips' paint and the picture's edge leave less
+    room (near the tip), as deep as that room within ROOM_TOL; 5% from each corner reported; no two regions overlap; the regions are hidden from assistive tech and out of the
+    tab order, while Tab reaches all three key rows and Enter and Space choose them."""
+    strips = roles = None
+    for w, h in sizes:
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        page = ctx.new_page()
+        if route:
+            page.route('**/games/%s/**' % SLUG, route)
+        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+        page.wait_for_function('() => !!window.WS && !!window.katex')
+        bc.wait_settled(page)
+        page.evaluate(NORM_JS)
+        label = 'bios %dx%d' % (w, h)
+        if roles is None:
+            strips, tip = page.evaluate(MEASURE_STRIPS), page.evaluate(MEASURE_TIP)
+            if any(v['n'] < 1000 or v['spread'] > 15 for v in strips.values()):
+                fails.append('bios: the strips could not be measured from the picture: %s' % strips)
+                ctx.close()
+                return
+            roles, problem = strip_roles(strips, tip)
+            if problem:
+                fails.append('bios: %s' % problem)
+                ctx.close()
+                return
+            if report:
+                print('  bios: strips measured from the WebP: %s' % ', '.join('%s = the %s strip, %s to %s' % (
+                    r, v[0], '(%.0f, %.0f)' % v[3], '(%.0f, %.0f)' % v[4]) for r, v in roles.items()))
+            polys = page.evaluate("() => Array.from(document.querySelectorAll('#startSides [data-tap]')).map(p => p.getAttribute('points').trim().split(/\\s+/).map(q => q.split(',').map(Number)))")
+            over = sum(1 for y in range(1, 873, 4) for x in range(1, 1600, 4) if sum(inside(pl, x + 0.37, y + 0.29) for pl in polys) > 1)
+            if over:
+                fails.append('bios: the tap regions overlap at %d sampled points of the picture' % over)
+        if page.evaluate("() => { const s = document.getElementById('startSides'); return !s || s.getAttribute('aria-hidden') !== 'true' || !!s.querySelector('[tabindex], a, button'); }"):
+            fails.append('%s: the ramp\'s tap regions are not hidden from assistive tech and out of the tab order' % label)
+        def art_at_top():
+            # a tap on the ramp scrolls its bio into view (MaffsScroll.reveal, which makes further passes for a moment): let those
+            # finish, go back to the top, and read where the picture is now
+            page.wait_for_timeout(250)
+            return page.evaluate("() => { window.scrollTo(0, 0); const r = document.querySelector('#startArt img').getBoundingClientRect(); return [r.left, r.top, r.width]; }")
+        art = art_at_top()
+        sc = art[2] / ART_SIZE[0]
+        mins, limited, corners = {}, [], []
+        for role, (colour, c0, dvec, e0, e1) in roles.items():
+            nvec = (-dvec[1], dvec[0])
+            for t in (0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.95):
+                ix, iy = e0[0] + (e1[0] - e0[0]) * t, e0[1] + (e1[1] - e0[1]) * t
+                if (w, h) in DEPTH_SIZES:
+                    # across the strip through this point: the run of screen pixels that land on the same tap region
+                    depth = page.evaluate("""([x, y, nx, ny]) => { const at = (k) => { const e = document.elementFromPoint(x + nx * k, y + ny * k);
+                        return e && e.closest('[data-tap]'); }, mid = at(0); if (!mid) return 0; let a = 0, b = 0;
+                      while (a < 200 && at(-(a + 0.5)) === mid) a += 0.5; while (b < 200 && at(b + 0.5) === mid) b += 0.5; return a + b; }""",
+                                          [art[0] + ix * sc, art[1] + iy * sc, nvec[0], nvec[1]])
+                    room = sum(page.evaluate(ROOM_JS, [ix, iy, nvec[0], nvec[1], colour])) * sc
+                    need = min(44, room)
+                    if t in (0.05, 0.95):       # within 5% of a corner two strips share the room: reported, not judged
+                        corners.append('%s %.0f%%: %.1f px' % (role, 100 * t, depth))
+                        continue
+                    mins[role] = min(mins.get(role, 999), depth)
+                    if room < 44:
+                        limited.append('%s %.0f%%: %.1f px deep, room %.1f' % (role, 100 * t, depth, room))
+                    if depth < need - ROOM_TOL:
+                        fails.append('%s: %s\'s tap region is %.1f px deep across the strip %.0f%% along it; %s' % (
+                            label, role, depth, 100 * t, 'it should be 44' if need == 44 else 'the strips leave room for %.1f' % room))
+                if t in (0.2, 0.5, 0.8):
+                    art = art_at_top()
+                    page.mouse.click(art[0] + ix * sc, art[1] + iy * sc)
+                    page.wait_for_timeout(250)
+                    shown = page.evaluate("() => { const f = document.querySelector('footer.site-footer'), fs = f ? getComputedStyle(f) : null;"
+                                          " const inset = fs && fs.position === 'fixed' ? f.getBoundingClientRect().height : 0;"
+                                          " return [document.getElementById('bio').getBoundingClientRect().bottom, innerHeight - inset]; }")
+                    if shown[0] > shown[1] + 1:
+                        fails.append('%s: after a tap on the %s strip its bio ends at %.0f, under the fold at %.0f' % (label, colour, shown[0], shown[1]))
+                    art = art_at_top()
+                    judge_bio(page.evaluate(READ_BIO), role, '%s, the %s strip %.0f%% along' % (label, colour, 100 * t), fails)
+            stroke, dash, cap, text = page.evaluate(RING_STYLE_JS, role)
+            parts = [float(v.replace('px', '')) for v in dash.replace(',', ' ').split()] if dash != 'none' else []
+            style_ok = (not parts) if role == 'HYP' else (len(parts) == 2 and parts[0] >= 6 and parts[1] >= 4) if role == 'OPP' else (
+                len(parts) == 2 and parts[0] <= 2 and parts[1] >= 6 and cap == 'round')
+            if stroke != text or not style_ok:
+                fails.append('%s: the %s ring is %s, dashes %s, caps %s; wanted the text colour %s in %s\'s line style' % (label, role, stroke, dash, cap, text, role))
+        if report and mins:
+            print('  bios %dx%d: shallowest tap region across each strip, 10-90%% along: %s; under 44 px of room: %s; 5%% from a corner (reported): %s' % (
+                w, h, ', '.join('%s %.1f px' % kv for kv in mins.items()), '; '.join(limited) or 'none', ', '.join(corners)))
+        check_no_speech(page, '#menu', label, fails)
+        # the keyboard: Tab from the top reaches the three key rows in order; Enter and Space choose
+        page.evaluate('() => { window.scrollTo(0, 0); document.activeElement && document.activeElement.blur(); }')
+        seen = []
+        for _ in range(40):
+            page.keyboard.press('Tab')
+            r = page.evaluate("() => { const a = document.activeElement; return a && a.classList.contains('key-row') ? a.dataset.role : (a && a.closest('#startSides') ? 'ramp' : null); }")
+            if r == 'ramp':
+                fails.append('%s: Tab lands on the ramp\'s tap regions' % label)
+            if r and r != 'ramp' and r not in seen:
+                seen.append(r)
+                page.keyboard.press('Enter' if len(seen) % 2 else 'Space')
+                judge_bio(page.evaluate(READ_BIO), r, '%s, the %s row by keyboard (%s)' % (label, r, 'Enter' if len(seen) % 2 else 'Space'), fails)
+            if len(seen) == 3:
+                break
+        if seen != ['HYP', 'OPP', 'ADJ']:
+            fails.append('%s: Tab reaches the key rows %s, should be HYP, OPP, ADJ' % (label, seen))
+        ctx.close()
+
+
+def check_lines(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
+    """Item 5 and 6 at speed through the lock hint: rounds of every stage, right and wrong, each panel's verdict, rule and lines
+    recomputed from the geometry, and no character line in play or on the results screen."""
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
     ctx.add_init_script("(() => { const st = window.setTimeout; window.setTimeout = (f, ms, ...a) => st(f, ms === %d ? 200 : ms, ...a); })();" % HOLD_MS)
@@ -929,37 +1215,31 @@ def check_says(browser, base, fails, route=None):
     page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
     page.wait_for_function('() => !!window.WS && !!window.katex')
     stub_board(page)
-    for stage, wrong_at in ((1, set()), (1, {0, 2, 4, 5, 6, 8}), (3, {1, 5, 6, 9})):
-        page.evaluate('(n) => WS.ui.start(n)', stage)
-        streak = 0
-        for n in range(10):
-            label = 'lines stage %d q%d' % (stage, n + 1)
-            wait_asking(page)
-            it = page.evaluate('() => WS.ui.question()')
-            wrong = n in wrong_at
-            page.evaluate('(r) => WS.ui.answer(r)', not wrong)
-            page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
-            if wrong:
-                streak = 0
-                if stage == 1:
-                    geo, _, _ = geometry(it)
-                    role_by_id = {s['id']: k for k, s in geo.items()}
-                    tapped = [s['id'] for s in it['sides'] if s['id'] != it['key']][0]      # the side WS.ui.answer(false) taps
-                    want = WRONG_SAYS[expected_who(it, role_by_id[tapped])]
-                    f = feedback_says(page)
-                    if not f or f['say'] != want or f['sayText'] != want or not f['above'] or f['shout']:
-                        fails.append('%s: wrong tap on %s for %s: %s, should be %r above the teaching line' % (label, role_by_id[tapped], it['ask'], f, want))
-                page.click('.maffs-next-wrap button, .fb-next button')
-            else:
-                streak += 1
-                check_right_says(page, streak, label, fails)
-                page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
-        page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
-        check_results_say(page, 10 - len(wrong_at), 'lines stage %d' % stage, fails)
-        if page.evaluate('() => { const n = window.__sub.length; window.__sub = []; return n; }') != 1:
-            fails.append('lines stage %d: not one board submission' % stage)
-        page.wait_for_function('() => !MaffsLock.isFresh()', timeout=4000)
-        page.click('#menuBtn')
+    for stage in stages:
+        for wrong_at in ({0, 2, 4, 5, 6, 8}, {1, 3, 7, 9}):
+            if STOP_AT_FIRST and fails:
+                break
+            page.evaluate('(n) => WS.ui.start(n)', stage)
+            for n in range(10):
+                label = 'lines stage %d q%d' % (stage, n + 1)
+                wait_asking(page)
+                it = page.evaluate('() => WS.ui.question()')
+                wrong = n in wrong_at
+                page.evaluate('(r) => WS.ui.answer(r)', not wrong)
+                page.wait_for_function("() => WS.ui.state() === 'right' || WS.ui.state() === 'wrong'", timeout=4000)
+                tapped = [s['id'] for s in it['sides'] if s['id'] != it['key']][0] if stage == 1 and wrong else None   # the side WS.ui.answer(false) taps
+                check_feedback(page, it, not wrong, label, fails, tapped=tapped)
+                check_no_speech(page, '#game', label, fails)
+                if wrong:
+                    page.click('.maffs-next-wrap button, .fb-next button')
+                else:
+                    page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
+            page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
+            check_no_speech(page, '#results', 'lines stage %d results' % stage, fails)
+            if page.evaluate('() => { const n = window.__sub.length; window.__sub = []; return n; }') != 1:
+                fails.append('lines stage %d: not one board submission' % stage)
+            page.wait_for_function('() => !MaffsLock.isFresh()', timeout=4000)
+            page.click('#menuBtn')
     ctx.close()
 
 
@@ -1070,7 +1350,7 @@ def check_fit(browser, base, fails, route=None, sizes=FIT_SIZES, stages=(1, 2, 3
 # control below it, and no text in the right-hand column overlapping another element there. KaTeX's hidden MathML is not text on screen.
 TEXT_JS = """() => {
   const shown = e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden';
-  const leaves = [...new Set(Array.from(document.querySelectorAll('#ask, #fracline, #opts .opt, #slotTop, #slotBottom, #checkBtn, #feedback .fb-head, #feedback .fb-say, #feedback .fb-shout, #feedback .fb-line, .fb-next button, .maffs-next-wrap button')))].filter(shown);
+  const leaves = [...new Set(Array.from(document.querySelectorAll('#ask, #fracline, #opts .opt, #slotTop, #slotBottom, #checkBtn, #feedback .fb-head, #feedback .fb-rule, #feedback .fb-line, .fb-next button, .maffs-next-wrap button')))].filter(shown);
   const textRects = el => { const out = [], tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
     while ((n = tw.nextNode())) { if (!n.textContent.trim() || n.parentElement.closest('.katex-mathml')) continue;
       const rg = document.createRange(); rg.selectNodeContents(n); for (const x of rg.getClientRects()) if (x.width > 0 && x.height > 0) out.push(x); }
@@ -1094,8 +1374,8 @@ TEXT_JS = """() => {
 def check_big(browser, base, fails, route=None, sizes=TEXT_SIZES, stages=(1, 2, 3, 4), report=True):
     """Large screens (contract WHOSE-SIDE-PERSONALITY item 8, WHOSE-SIDE-FIT item 4b): for every stage, asking, wrong and right,
     the question's text ends at or above the first control below it and no text in the right-hand column overlaps another element
-    there; the question and every answer control on screen with nothing to scroll, Next after a wrong answer and the right-answer
-    line in view during the hold; at 1366x768 and 1920x1080 the figure's box at least half the screen's height (its content is
+    there; the question and every answer control on screen with nothing to scroll, Next after a wrong answer and the rule
+    in view during the hold; at 1366x768 and 1920x1080 the figure's box at least half the screen's height (its content is
     check_fit's)."""
     for w, h in sizes:
         ctx = browser.new_context(viewport={'width': w, 'height': h})
@@ -1115,9 +1395,9 @@ def check_big(browser, base, fails, route=None, sizes=TEXT_SIZES, stages=(1, 2, 
                 bc.wait_settled(page, 100)
                 m = page.evaluate("""() => { const b = e => e.getBoundingClientRect(), svg = document.querySelector('#figure svg');
                   const shown = s => Array.from(document.querySelectorAll(s)).filter(e => e.getClientRects().length);
-                  const ctl = shown('#figure .hit, #slotTop, #slotBottom, #checkBtn, #opts .opt, #ask, .maffs-next-wrap button, .fb-next button, #feedback .fb-head, #feedback .fb-say');
+                  const ctl = shown('#figure .hit, #slotTop, #slotBottom, #checkBtn, #opts .opt, #ask, .maffs-next-wrap button, .fb-next button, #feedback .fb-head, #feedback .fb-rule, #feedback .fb-line');
                   return {svgH: svg ? b(svg).height : 0, bottom: Math.max(...ctl.map(e => b(e).bottom)), top: Math.min(...ctl.map(e => b(e).top)), n: ctl.length,
-                    next: shown('.maffs-next-wrap button, .fb-next button').length, say: shown('#feedback .fb-say').length,
+                    next: shown('.maffs-next-wrap button, .fb-next button').length, rule: shown('#feedback .fb-rule, #feedback .fb-line').length,
                     sh: document.documentElement.scrollHeight, sw: document.documentElement.scrollWidth}; }""")
                 t = page.evaluate(TEXT_JS)
                 label = '%dx%d stage %d %s' % (w, h, stage, when)
@@ -1136,8 +1416,8 @@ def check_big(browser, base, fails, route=None, sizes=TEXT_SIZES, stages=(1, 2, 
                     fails.append('%s: the page scrolls (%d x %d in %d x %d)' % (label, m['sw'], m['sh'], w, h))
                 if when == 'wrong' and not m['next']:
                     fails.append('%s: no Next' % label)
-                if when == 'right' and not m['say']:
-                    fails.append('%s: no right-answer line in view' % label)
+                if when == 'right' and not m['rule']:
+                    fails.append('%s: no rule in view on a right answer' % label)
         ctx.close()
 
 
@@ -1234,14 +1514,9 @@ PLANTS = [
     ('the clock runs during the hold', "    askedAt = now();\n    tick();\n", "    tick();\n", 'hold'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
-    # contract WHOSE-SIDE-PERSONALITY: Jon's lines, the speaker rule, the shout-outs, the results line, the large screen
-    ('a wrong line', "since before you were born.", "since you were born."),
-    ('a start-screen line reworded', "Oh, I'm opposite today? Splendid.", "Oh, I'm opposite today!"),
+    # contract WHOSE-SIDE-PERSONALITY's subtitle, kept (WHOSE-SIDE-BIOS: Jon has not decided on it); its other lines are retired with them
     ('the subtitle reworded', "The other two can't stop being polite about it.", "The other two are polite about it."),
-    ('the wrong speaker: HYP tapped, the polite two answer', "return it.ask === 'HYP' || tapped === it.roles.HYP ? 'hyp' : 'swap';", "return it.ask === 'HYP' ? 'hyp' : 'swap';"),
-    ('a missing streak shout-out at 5', " 5: 'OPP and ADJ bow so politely they bump heads.',", "", 'says'),
-    ('the same right-answer line twice running', "    if (lastRight >= 0 && i >= lastRight) i++;\n", "    i = 0;\n", 'says'),
-    ('no results line at 8-10 right', "var resLine = rightCount >= 8 ? SAYS.high : rightCount <= 5", "var resLine = rightCount >= 11 ? SAYS.high : rightCount <= 5", 'says'),
+    # the large screen
     ('a small triangle at 1920x1080', "var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));", "var H = 400;", 'big'),
     # contract WHOSE-SIDE-FIT (Amendment 1): each must be caught by the check named in its last field, not by another
     ('the old margin restored (mx = 2*hw + 10g)',
@@ -1259,7 +1534,22 @@ PLANTS = [
     ('the arc centred off the tip', 'd="M 1155.2 733 A 170 170 0 0 1 1175.6 652.3"', 'd="M 1055.2 733 A 170 170 0 0 1 1075.6 652.3"', 'art'),
     ('θ in plain text, not KaTeX', "    $('startTheta').innerHTML = THETA();", "", 'art'),
     ('the picture uncapped on a large screen', "max-width:600px;margin-left:auto;margin-right:auto;", "", 'art'),
-    ('the key\'s ADJ definition reverted to "next to θ."', "ADJ</span>, next to θ, and not the hypotenuse.</span>", "ADJ</span>, next to θ.</span>", 'start'),
+    # contract WHOSE-SIDE-BIOS: the start screen's text, the ramp's strips and the rule in the panel
+    ('the key\'s ADJ definition reverted to "next to θ."', 'ADJ</span>, next to <span class="th">θ</span>, and not the hypotenuse.</span>', 'ADJ</span>, next to <span class="th">θ</span>.</span>', 'start'),
+    ("OPP's and ADJ's bios swapped", [('    OPP: [[\'Location\', "The only side', '    ADJ: [[\'Location\', "The only side'),
+                                      ('    ADJ: [[\'Location\', "Right next', '    OPP: [[\'Location\', "Right next')], None, 'start'),
+    ('the old closing line restored', 'Put <span class="th">θ</span> in the other corner and <span class="w OPP">OPP</span> and <span class="w ADJ">ADJ</span> swap. <span class="w HYP">HYP</span> stays put.',
+     'Move <span class="th">θ</span>, and the polite two swap. <span class="w HYP">HYP</span> doesn\'t flinch.', 'start'),
+    ('the scoring line removed', '      <p>Ten quick questions a stage. No lives: a faster right answer scores more, a slow one is still right.</p>\n', '', 'start'),
+    ('a strip mapped to the wrong role', [('data-tap="HYP"', 'data-tap="X"'), ('data-tap="ADJ"', 'data-tap="HYP"'), ('data-tap="X"', 'data-tap="ADJ"')], None, 'bios'),
+    ('a ramp tap that leaves the bio under the fold', "    if (window.MaffsScroll) MaffsScroll.reveal($('bio'));\n", "", 'bios'),
+    ('a character line left in the right-answer panel', "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '</div>';",
+     "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '<div class=\"fb-line\">OPP: “Spot on. Do carry on.”</div></div>';", 'lines'),
+    ('the rule missing on a right answer', "fb.innerHTML = '<div class=\"fb done\">' + head(true) + rule + '</div>';", "fb.innerHTML = '<div class=\"fb done\">' + head(true) + '</div>';", 'lines'),
+    ('numerator and denominator swapped', "fracWords(FN[fn][0], FN[fn][1])", "fracWords(FN[fn][1], FN[fn][0])", 'lines'),
+    ('the equation shown as a sentence again', "'<div class=\"fb-rule\">' + tex('\\\\' + fn + '\\\\theta=' + fracWords(FN[fn][0], FN[fn][1])) + '</div>'",
+     "'<div class=\"fb-rule\">' + rich(fn + ' θ is ' + FN[fn][0] + ' over ' + FN[fn][1] + '.') + '</div>'", 'lines'),
+    ('the misconception line dropped from a wrong tap', "[RULE1[Q.ask], LINE[whyTap(Q, val)]]", "[RULE1[Q.ask]]", 'lines'),
 ]
 
 
@@ -1310,8 +1600,12 @@ def one_plant(browser, base, src, plant):
                 check_art(browser, base, found, route=route(None), report=False)
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
                 return 0 if found else 1
-            if len(plant) > 3 and plant[3] in ('says', 'big'):
-                (check_says(browser, base, found, route=route(None)) if plant[3] == 'says'
+            if len(plant) > 3 and plant[3] == 'bios':
+                check_bios(browser, base, found, route=route(None), sizes=BIO_SIZES[:1], report=False)
+                print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
+                return 0 if found else 1
+            if len(plant) > 3 and plant[3] in ('lines', 'big'):
+                (check_lines(browser, base, found, route=route(None)) if plant[3] == 'lines'
                  else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,), report=False))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
                 return 0 if found else 1
@@ -1344,7 +1638,7 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     bc.shard_args(ap)
     args = ap.parse_args()
-    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big', 'art'] + ['fit %dx%d' % s for s in FIT_SIZES]
+    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'bios', 'big', 'art'] + ['fit %dx%d' % s for s in FIT_SIZES]
     if not args.no_selftest:
         units += ['plant: ' + plant[0] for plant in PLANTS]
     shard = bc.Shard(__file__, args)
@@ -1358,7 +1652,8 @@ def main():
             work = [('engine', lambda: run_engine(browser, base, fails))]
             work += [('play %dx%d' % s, lambda s=s: run_page(browser, base, fails, sizes=[s], engine=False)) for s in SIZES]
             work += [('slow', lambda: run_slow(browser, base, fails)), ('aa', lambda: check_aa(browser, base, fails)),
-                     ('hold', lambda: check_hold(browser, base, fails)), ('lines', lambda: check_says(browser, base, fails)),
+                     ('hold', lambda: check_hold(browser, base, fails)), ('lines', lambda: check_lines(browser, base, fails)),
+                     ('bios', lambda: check_bios(browser, base, fails)),
                      ('big', lambda: check_big(browser, base, fails)), ('art', lambda: check_art(browser, base, fails))]
             work += [('fit %dx%d' % s, lambda s=s: check_fit(browser, base, fails, sizes=[s])) for s in FIT_SIZES]
             for uid, fn in work:
