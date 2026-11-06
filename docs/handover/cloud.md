@@ -64,7 +64,15 @@ start-up load). When the work merges, move the file to `docs/history/`.
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-## 2026-11-06 (cloud): WHOSE-SIDE-ART (`docs/history/contracts/2026-11-06-whose-side-art.md`, Shared)
+## 2026-11-06 (cloud): WHOSE-SIDE-FIT (`docs/handover/contracts/2026-11-06-whose-side-fit.md`, Shared)
+
+STOPPED at STOP IF 1, before the verifier work (items 4-5), waiting for Jon. Agent: Claude Code, cloud, primary checkout, branch `claude/dazzling-knuth-yx7qnw`, from main 83d3999. Done on the branch: items 1-3 (drawFigure fits what it draws: corners ±22, label boxes, θ measured, the square; bisected; the drawing centred; the grid rows `minmax(0,1fr) ... minmax(0,1fr)`).
+
+The stop: at 1920x1080 (figure 615x906, g = 2), 240 drawings cannot reach 75%: 80 Stage 3 pictures and 160 answered redraws, all tilt 0, triples 20-21-29, 9-12-15, 10-24-26, 12-16-20, 16-30-34, 12-35-37, 15-20-25. Worst 0.739 (20-21-29, 454 of 615 wide): pad 12 + "O 21" beside the upright leg 114 (2hw + 7g, hw 50.4) + corner pad 22 + pad 12 leave 455, so 74.0% is the ceiling under the contract's own rules. 1366x768: every item at least 0.783. Nothing clipped at any size.
+
+Measured (8 seeded rounds a stage; before -> after). Fill median 0.789 -> 0.889 at 1920x1080, 0.842 -> 0.896 at 1366x768; minimum 0.607 -> 0.739 and 0.685 -> 0.783. 7-24-25: 0.61-0.87 -> 0.82-0.92 (1920), 0.69-0.84 -> 0.86-0.90 (1366). Phones (figure unchanged, 340x340 and 282x282): median 0.824 -> 0.835 (390), 0.770 -> 0.801 (320). Stage 4, text bottom / buttons top: 1024x700 352/346 -> 339/359; 1222x688 345/339 -> 332/353; 1366x768 390/380 -> 375/395; 1920x1080 601/537 -> 558/580; 1024x1366 743/679 -> 700/722; no page scroll. The contract's 800x825 figure is not what 1920x1080 draws here (615x906; the column is capped at 1100 px).
+
+Next: Jon's ruling on the 75% floor, then items 4-6, the PR and the Gate.
 
 DONE: #684 merged by merge-pr.py as e42aa76 on Jon's "merge" (6 Nov), after its Gate went green on 16855283 (run 42231037198); main run 42236540900 GREEN. Review: Project Claude reviewed and passed the head 16855283 before the merge (6 Nov, relayed by Jon). Tip at the inner corner: accepted in Project Claude's review. Open for Jon: the art-inbox branch is his to delete.
 
