@@ -22,3 +22,7 @@ DO NOT TOUCH: the M and plus shapes, the header layout, page titles, tools/pack-
 SUCCESS CONDITION: All five copies match the master by the new check, which also catches both plants; the homepage header, about page, browser-tab icon and og-image show the bars centred on the right leg. Committed, PR open, Gate green, entry in docs/handover/cloud.md; stop for Project Claude's review and Jon's "merge".
 
 STOP IF: a sixth copy turns up that isn't SVG or HTML (e.g. an apple-touch-icon PNG) with no generator; changing the teal changes anything other than the bars.
+
+## Amendment 1 (Jon, 6 Nov 2026), saved verbatim
+
+Addition to #680 (Jon, 6 Nov), thank you: regenerate schools/assets/og-image.png by rendering the corrected og-image.svg in Chromium at exactly 1200x630 (the repo's own font copies). Prove it faithful: compare with the current PNG and require every pixel outside the two bar rectangles (plus a 3px margin) to match within a small tolerance; put the diff summary in the PR. STOP IF anything outside the bars differs (fonts or text rendering): leave the PNG and report. Same PR, stop at a green Gate.
