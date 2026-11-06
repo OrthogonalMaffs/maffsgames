@@ -70,7 +70,7 @@ Agent: Claude Code, cloud, branch `claude/whose-side-look`. `games/whose-side-ar
 
 Measured (asking, every stage): figure 84% of the height at 1920x1080, 79% at 1366x768 and 1024x768, 78% at 1280x720; page height equals the viewport; every control and Next above the fold. "Drawn height" is read as the figure's: a 7-24-25 on its side needs a figure about 1,850 px wide to be 540 px tall; the figure column is about 640 px at 1920x1080.
 
-RAN (locally, KaTeX served from `scripts/fonts` because the container's proxy refuses cdn.jsdelivr.net): verify-whose-side-are-you-on exit 0 (33 plants caught, 4m45s); check-theme exit 0 (MIGRATED, every rule holds); measure-phone-fit `--only` normal, `--aa`, `--laptop` exit 0, PASS (asking only: the driver cannot mark an answer here, the same on main; the verifier checks Next). check-changed.py not run (CLOUD-LEAN).
+RAN (locally, KaTeX served from `scripts/fonts` because the container's proxy refuses cdn.jsdelivr.net): verify-whose-side-are-you-on exit 0 (33 plants caught, 4m45s; now `# ci-shards` work units, 3 parts until timed: at about 250 s in CI one line passed the per-line limit; and every finished round submits to `stub_board()`, the first Gate having shown the live board's initials prompt over the results in CI, where Firebase loads); check-theme exit 0 (MIGRATED, every rule holds); measure-phone-fit `--only` normal, `--aa`, `--laptop` exit 0, PASS (asking only: the driver cannot mark an answer here, the same on main; the verifier checks Next). check-changed.py not run (CLOUD-LEAN).
 
 Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 0; usage n/a.
 

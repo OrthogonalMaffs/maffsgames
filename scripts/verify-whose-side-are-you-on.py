@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; fault-injection self-test: a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) |
+# ci-shards: Whose Side Are You On? (every item of the four stages recomputed from the triangle's own geometry, never the game's labels: which side is HYP, OPP and ADJ, every fraction, every function against real trig; the feedback table and its wording; 50 or more distinct items a stage; seeded rounds: HYP first, every quadrant; every stage played with real taps at 320, 390 and 1280 px: tap bands 44 px deep, each side clicked along its length and in the gaps of its dashes or dots, double clicks answering once and filling one slot, a right answer held 2.0 s (timed) lit with its mark and a character's line, the clock stopped, Stage 2's slots filled, cleared and refilled before Check, one answer a question, a slow right answer still right, no sideways scroll, Aa mode included, Next above the fold; Jon's characters (contract WHOSE-SIDE-PERSONALITY): the start screen, subtitle, right, wrong, streak and results lines compared with the contract's text, the right line never twice running, the Stage 1 speaker recomputed from the geometry; at 1366x768 and 1920x1080 the figure at least half the screen's height and every control on screen with nothing to scroll; fault-injection self-test: a wrong label, a wrong function, a wrong line, a missing shout-out, a small triangle and more, each caught) | | 3
 """Independent verification for Whose Side Are You On? (games/whose-side-are-you-on/), contract WHOSE-SIDE, 5 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -20,7 +20,10 @@ coordinates, and the corners the page marks, and works everything out with vecto
                the contract's text (WHOSE-SIDE-PERSONALITY, 6 Nov 2026), held here, never read from the page.
 In the page, a played round reads the drawn SVG back and compares it with the data; each tap goes through the real mouse.
 
-    python scripts/verify-whose-side-are-you-on.py [--no-selftest]
+    python scripts/verify-whose-side-are-you-on.py [--no-selftest] [--shard i/k] [--list-units]
+
+Work units (contract SHARD, canon 7.8.1): the engine, a round of every stage at each size, the slow answer, Aa, the hold, the
+lines, the large screen, then one unit a plant; CI runs them in the parts ci-groups.py chooses, locally all of them.
 """
 import argparse
 import math
@@ -730,6 +733,13 @@ def check_hold(browser, base, fails, route=None, stages=(1, 2, 3, 4)):
     ctx.close()
 
 
+def stub_board(page):
+    """Every round this script finishes submits to a stand-in, never the live leaderboard: with Firebase reachable (CI) the real
+    submitScore asks for initials over the results screen and would write to the board. Submissions are counted in window.__sub."""
+    page.evaluate("""() => { window.__sub = []; window.MaffsLeaderboard = window.MaffsLeaderboard || {};
+      MaffsLeaderboard.submitScore = (g, l, s, n) => { window.__sub.push([g, l, s, n]); return Promise.resolve(); }; }""")
+
+
 def check_start(page, fails):
     """The start screen and subtitle, compared with the contract's text exactly; the legend keeps its line sample and letter."""
     got = page.evaluate("""() => { const t = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : null;
@@ -760,6 +770,7 @@ def check_says(browser, base, fails, route=None):
         page.route('**/games/%s/**' % SLUG, route)
     page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
     page.wait_for_function('() => !!window.WS && !!window.katex')
+    stub_board(page)
     for stage, wrong_at in ((1, set()), (1, {0, 2, 4, 5, 6, 8}), (3, {1, 5, 6, 9})):
         page.evaluate('(n) => WS.ui.start(n)', stage)
         streak = 0
@@ -787,6 +798,8 @@ def check_says(browser, base, fails, route=None):
                 page.wait_for_function("() => WS.ui.state() !== 'right'", timeout=4000)
         page.wait_for_function("() => document.querySelector('#results').classList.contains('active')", timeout=4000)
         check_results_say(page, 10 - len(wrong_at), 'lines stage %d' % stage, fails)
+        if page.evaluate('() => { const n = window.__sub.length; window.__sub = []; return n; }') != 1:
+            fails.append('lines stage %d: not one board submission' % stage)
         page.wait_for_function('() => !MaffsLock.isFresh()', timeout=4000)
         page.click('#menuBtn')
     ctx.close()
@@ -859,8 +872,7 @@ def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=
         page.on('pageerror', lambda e, errs=errors: errs.append(str(e)))
         page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
         page.wait_for_function('() => !!window.WS && !!window.katex')
-        page.evaluate("""() => { window.__sub = []; window.MaffsLeaderboard = window.MaffsLeaderboard || {};
-          MaffsLeaderboard.submitScore = (g, l, s, n) => { window.__sub.push([g, l, s, n]); return Promise.resolve(); }; }""")
+        stub_board(page)
         if engine and (w, h) == sizes[0]:
             check_engine(page, fails, sample=None if stages == (1, 2, 3, 4) else 200)
             check_colours(page, fails)
@@ -872,11 +884,29 @@ def run_page(browser, base, fails, route=None, sizes=SIZES, engine=True, stages=
         if errors:
             fails.append('%dx%d: page errors %s' % (w, h, errors[:2]))
         page.close()
-    if stages == (1, 2, 3, 4):
-        page = ctx.new_page()
-        page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
-        page.wait_for_function('() => !!window.WS && !!window.katex')
-        check_slow(page, fails)
+    ctx.close()
+
+
+def one_page(browser, base, size=SIZES[0]):
+    ctx = browser.new_context(viewport={'width': size[0], 'height': size[1]})
+    page = ctx.new_page()
+    page.goto('%s/games/%s/?cb=%d' % (base, SLUG, random.randrange(10 ** 9)))
+    page.wait_for_function('() => !!window.WS && !!window.katex')
+    return ctx, page
+
+
+def run_engine(browser, base, fails):
+    """Every item of every stage from the geometry, the sessions, the speakers, the colours and the start screen."""
+    ctx, page = one_page(browser, base)
+    check_engine(page, fails)
+    check_colours(page, fails)
+    check_start(page, fails)
+    ctx.close()
+
+
+def run_slow(browser, base, fails):
+    ctx, page = one_page(browser, base)
+    check_slow(page, fails)
     ctx.close()
 
 
@@ -920,11 +950,22 @@ PLANTS = [
 ]
 
 
-def self_test(browser, base, src):
+def self_test(browser, base, src, shard, mine):
+    """Each plant is its own work unit: those in `mine` run, each timed by shard.unit()."""
     global STOP_AT_FIRST
     STOP_AT_FIRST = True
     problems = 0
     for plant in PLANTS:
+        if 'plant: ' + plant[0] not in mine:
+            continue
+        with shard.unit('plant: ' + plant[0]):
+            problems += one_plant(browser, base, src, plant)
+    return problems
+
+
+def one_plant(browser, base, src, plant):
+    """0 if the plant was caught, 1 if not (or stale)."""
+    if True:
         name, old, new = plant[:3]
         try:
             if isinstance(old, list):               # a plant of several edits
@@ -935,8 +976,7 @@ def self_test(browser, base, src):
                 planted = pc.apply_plant(src, old, new, name=name)
         except pc.StalePlant as e:
             print('  %s' % e)
-            problems += 1
-            continue
+            return 1
 
         def route(r, body=planted):
             return lambda rt: (rt.fulfill(status=200, content_type='text/html; charset=utf-8', body=body)
@@ -947,15 +987,13 @@ def self_test(browser, base, src):
                 (check_says(browser, base, found, route=route(None)) if plant[3] == 'says'
                  else check_big(browser, base, found, route=route(None), sizes=[(1920, 1080)], stages=(1,)))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else print('  NOT CAUGHT: %s' % name)
-                problems += 0 if found else 1
-                continue
+                return 0 if found else 1
             if len(plant) > 3 and plant[3] == 'hold':
                 check_hold(browser, base, found, route=route(None), stages=(1,))
                 print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110])) if found else None
-                problems += 0 if found else 1
                 if not found:
                     print('  NOT CAUGHT: %s' % name)
-                continue
+                return 0 if found else 1
             run_page(browser, base, found, route=route(None), sizes=SIZES[:1], stages=(2,) if len(plant) > 3 else (1,))
         except Exception as e:      # a plant that stops play is caught only if it left findings; an error alone is never a catch
             err = None if found else e
@@ -963,26 +1001,36 @@ def self_test(browser, base, src):
             print('  planted, caught: %s (%d findings; first: %s)' % (name, len(found), found[0][:110]))
         else:
             print('  NOT CAUGHT: %s (%s)' % (name, err))
-            problems += 1
-    return problems
+            return 1
+    return 0
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
+    bc.shard_args(ap)
     args = ap.parse_args()
+    units = ['engine'] + ['play %dx%d' % s for s in SIZES] + ['slow', 'aa', 'hold', 'lines', 'big']
+    if not args.no_selftest:
+        units += ['plant: ' + plant[0] for plant in PLANTS]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(units)
     fails, plants = [], 0
     proc, base = bc.start_stub_server()
     src = open(GAME, encoding='utf-8', newline='').read()
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch()
-            run_page(browser, base, fails)
-            check_aa(browser, base, fails)
-            check_hold(browser, base, fails)
-            check_says(browser, base, fails)
-            check_big(browser, base, fails)
-            plants = 0 if args.no_selftest else self_test(browser, base, src)
+            work = [('engine', lambda: run_engine(browser, base, fails))]
+            work += [('play %dx%d' % s, lambda s=s: run_page(browser, base, fails, sizes=[s], engine=False)) for s in SIZES]
+            work += [('slow', lambda: run_slow(browser, base, fails)), ('aa', lambda: check_aa(browser, base, fails)),
+                     ('hold', lambda: check_hold(browser, base, fails)), ('lines', lambda: check_says(browser, base, fails)),
+                     ('big', lambda: check_big(browser, base, fails))]
+            for uid, fn in work:
+                if uid in mine:
+                    with shard.unit(uid):
+                        fn()
+            plants = self_test(browser, base, src, shard, mine)
             browser.close()
     finally:
         proc.terminate()
