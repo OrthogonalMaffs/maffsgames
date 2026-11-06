@@ -70,7 +70,7 @@ Agent: Claude Code, cloud, branch `claude/whose-side-look`. `games/whose-side-ar
 
 Measured (asking, every stage): figure 84% of the height at 1920x1080, 79% at 1366x768 and 1024x768, 78% at 1280x720; page height equals the viewport; every control and Next above the fold. "Drawn height" is read as the figure's: a flat triangle (7-24-25 unturned) cannot be half a 1080 screen tall inside 1100 px wide.
 
-RAN (locally, KaTeX served from `scripts/fonts` because the container's proxy refuses cdn.jsdelivr.net): verify-whose-side-are-you-on `--no-selftest` exit 0 (the full run with the self-test: in the PR); check-theme exit 0 (MIGRATED, every rule holds). check-changed.py not run (CLOUD-LEAN).
+RAN (locally, KaTeX served from `scripts/fonts` because the container's proxy refuses cdn.jsdelivr.net): verify-whose-side-are-you-on exit 0 (33 plants caught, 4m45s); check-theme exit 0 (MIGRATED, every rule holds); measure-phone-fit `--only` normal, `--aa`, `--laptop` exit 0, PASS (asking only: the driver cannot mark an answer here, the same on main; the verifier checks Next). check-changed.py not run (CLOUD-LEAN).
 
 Record: agent Claude Code; wall n/a (receipt time not recorded); review cycles 0; amendments 0; usage n/a.
 
