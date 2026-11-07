@@ -4,6 +4,26 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-07 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-07 (cloud): PIZZA-CARDS (`docs/history/contracts/2026-11-07-pizza-cards.md`, Game, Shared by Amendment 1)
+
+DONE: #696 squash-merged as e8d607e on Jon's "merge" (7 Nov), through the GitHub connector by his one-off exception (merge-pr.py needs `gh api`, search-only in this session; recorded on #696). Gate green on 04a3cb8 (run 42363385833: 87 jobs, 85 success, 2 skipped); main run 42367841211. Agent: Claude Code, cloud, primary checkout, branch `claude/great-hamilton-srzi68`.
+
+Free Daily Pizza: `.stage-btn span` reached into KaTeX and stacked stage 3's 3/5 down the card; the rules now target the card's own children (`> b`, `> span`, line-height 1.35) and the card is a top-aligned flex column: one line at 1280, 390 and 320 in normal and Aa, titles level in every row. The same shape, latent, in Log Laws (`.mode-btn span`, line 480): fixed to `> span` (Amendment 1). New site-wide Gate check `scripts/check-katex-css.py` (canon 7.1.1): fails a descendant `span`/`*` rule with display:block on any KaTeX page under games/ or a local stylesheet it links; self-test 11 plants; 78 pages pass. Claims on free-daily-pizza and log-laws taken and released on the branch.
+
+Open: the Aa font on Pizza's stage cards and Log Laws' mode buttons (both set Outfit directly), queued separately by Jon. Pizza's Aa phone-fit FAIL is on main already and not in phone-fit-state.json.
+
+Record: agent Claude Code; wall n/a; review cycles 1; amendments 1; usage n/a.
+
+## 2026-11-06 (cloud): WHOSE-SIDE-BIOS (`docs/history/contracts/2026-11-06-whose-side-bios.md`, Shared)
+
+DONE: #692 merged by merge-pr.py as 1832670 on Jon's "merge" (6 Nov), after its Gate went green on 420dc22 (run 42280338919; round 1 on 8af9ff5 red only in `Scroll reveal`, fixed); main run 42305603642 GREEN. Review: Project Claude reviewed and PASSED the head 420dc22 before the merge (6 Nov, relayed by Jon). **Jon's rulings (6 Nov):** (1) the 33 px tap depth at the ramp's tip is accepted (WCAG 2.5.8 AA minimum 24 px; the key rows are full-size equivalents); (2) the subtitle changes to "One side never moves. The other two depend on θ." in the follow-up listing contract, not in #692. Built on `claude/whose-side-start-screen-850fga`, from main 86b56ec. Agent: Claude Code, cloud, primary checkout. Before building I asked Jon two questions (item 7 names `LINE` as dead code, but it holds his four approved misconception lines); his answers are in the contract file: keep the misconception lines under the rule; Stage 2's wrong panel keeps its numbers sentence under the equation.
+
+Game: the key's rows are buttons (aria-pressed) with the corrected definitions; a bio area in the key; the new opening and closing lines (θ in KaTeX); the ramp's three strips are tap regions measured from the WebP (each strip's pixels by colour, a line fitted through them; offsets 120 in, 240 out; bisector cuts, and near the tip the base keeps the wedge up to just under the slope's paint); the chosen strip ringed in the text colour in its line style. Play: SAYS, its callers and containers deleted; Stage 1's "That's X: ..." on right and wrong, the misconception line under it on a wrong tap; Stages 2-4 the stacked coloured equation on right and wrong. Removed lines archived in `docs/whose-side-lines.md`. Verifier: new units `bios` and the reworked `lines`; full run 0 failures, 46 plants caught.
+
+STOP IF 2, in part (reported, not stopped): within about 200 image px of the ramp's tip the base and slope's paint are closer than 44 px at 320, and the picture ends 24 px under the base, so the base's region is as deep as that room (33 px at 90% along at 320, 40.5 at 390). Everywhere else every strip is 44 px or more at 320 and 390; the regions never overlap. STOP IF 3 not hit: Next stays above the fold on every stage at 320, 375 and 390 (worst Stage 2, 501 / 528, 605 / 627, 648 / 804).
+
 ## Moved 2026-11-06 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-06 (cloud): WHOSE-SIDE-FIT (`docs/history/contracts/2026-11-06-whose-side-fit.md`, Shared)
