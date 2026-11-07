@@ -2,6 +2,8 @@
 
 **Queue (cross-lane facts; never archived)**
 
+- PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Main's full run stays red on screening-room's stale laptop entry until cloud's #707 merges. Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
+
 - ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55; Amendment 2, review fixes, 23:05): DONE. #693 merged as 5202a94; main run 42358602377 GREEN; claude/room-meta removed by end-task. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/history/contracts/2026-11-06-room-search-titles.md. Entry below.
 
 - PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
@@ -19,6 +21,25 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-07 (home): PHONE-FIT-RED
+
+Done: #701 merged by `merge-pr.py` as 3fe605d6; main run 42398273354 GREEN. Project Claude reviewed it and Jon authorised the merge. The workflow went in first through cloud's #702 (023a8215), because this lane's token can't push workflow files. #701 left draft by Jon's `gh pr ready`. Contract: `docs/history/contracts/2026-11-07-phone-fit-red.md`.
+
+Nine games were red on the full run, not seven: `its-on-sale` and `y-so-steep` had been dropped from the contract's list. The sideways group came from STAGE-EXIT (ed9b7374, #608), which added a HUD link that couldn't shrink; the Gate never runs `measure-phone-fit.py`, so nothing caught it. Fixed in `stage-exit.css` (five sideways games, and `possibly-maybe` by hand), plus Pies, `distinctly-average` and `better-value` in their own pages. `possibly-maybe` is on the unmeasurable list until PROBE-DATA-OPT.
+
+Full runs on main: 023a8215, without the fixes, red as expected (normal 663 s, aa 665 s, laptop 449 s; 30m43s in all). 3fe605d6, with them, normal and aa exit 0, laptop exit 1 on one pair: `screening-room`'s `1280x720 next` entry is stale (659 s, 659 s, 446 s; 30m27s in all). All nine games pass in CI.
+
+To do: cloud's #707 (PHONE-FIT-FULL-SPLIT) splits the workflow into per-mode jobs and removes the stale entry. Main's full run is red until it merges.
+
+Follow-ups:
+
+- PROBE-DATA-OPT: the checker should see `[data-opt]` delegated buttons, with `possibly-maybe`'s entry coming off; the sideways check should run on every game, including unmeasurable ones; "asking only" on `hc-factor`, `y-so-steep`, `i-found-a-mark` and `who-ate-all-the-pies` (diagnose, don't assume: `y-so-steep` and `i-found-a-mark` have no `[data-opt]`).
+- Aa audit: HUD label overlap at 375; `line-height` below 1.5 (`distinctly-average` sets 1.4).
+- Jon's decision: a shorter "← Games" label, as the wrapped link runs 3-9 px onto the next element at 320 Aa.
+- LOCAL-CHECKS: browser verifiers fail intermittently in WSL `maffs`, on clean main too. Leading lead, untested: WSL's clock stepping backwards, up to 2.884 s in 40 s. Local runs measure `screening-room` 717/680 while CI passes it; CI is the authority.
+
+Record: agent Claude Code; wall 6:35; review cycles 1; amendments 11; usage n/a.
 
 ## 2026-11-07 (home): PACK-COVER close-out
 
