@@ -1,7 +1,7 @@
 {
  "content": {
   "52-dle (every puzzle's number recomputed from its clue and hints; every guess marked exactly in Chromium)": "65",
-  "Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks; planted faults caught)": "61",
+  "Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail last; planted faults caught)": "38",
   "Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)": "5",
   "As You Can See (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own chart data and ask, never from the bank's or the game's code: pictogram rows, bar, dual and stacked heights, line readings, scatter correlation, line of best fit, outlier, every stage-5 flaw read off the chart; accepted intervals; slips outside them; the game's marking compared with an independent marker; every drawn chart read back from its SVG against its data; all five stages played in the page at 390 px and the first questions at 375, 360, 320, 1280 and 1366 px with a wide font; fault-injection self-test)": "29",
   "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": "6",
@@ -55,6 +55,7 @@
   "Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught)": "11",
   "Escape-room search order and herrings (every live room shows the note and treats a searched herring like a clue; Chromium checks shuffled positions over 60 plays, refresh persistence, replay and an old save without order)": "26",
   "Escape-room set codes (every live room, every lock, every set forced through a saved state in Chromium: the lock screen shows its letter, and a fresh teacher page with no game gives, under that letter, the answer that opens the lock; no bare single-set answer without a live game; four faults planted and caught)": "46",
+  "Escape-room times (every live room played on a fake clock: game_completed's detail is exactly \"escaped or timeout, wrongs, hints, used, played, locks\", used - played is the wrong-setting penalties, capped when a wrong runs the clock out, locks in lock order with \"-\" unopened, a resumed save keeps played and openAt, an old save resumes from nought, every room's worst case at most 100 characters; planted fault caught)": "45",
   "Escape-room token minus sign (formatToken in rating.js and format_token in escape_set_checks.py print a fixed table identically, negatives with U+2212; a hyphen-printing JS rule and a hyphen-printing Python rule planted and caught)": "16",
   "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section (including Exam technique) and its data-calc is the roster's Calculator field read separately with the named CALC_ACROSS_PAPERS exception, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "69",
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
@@ -261,7 +262,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -339,7 +340,7 @@
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 2,
    "tier": "content"
