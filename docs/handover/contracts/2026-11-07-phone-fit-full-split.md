@@ -1,0 +1,5 @@
+PHONE-FIT-FULL-SPLIT (cloud lane; Jon's rulings on PHONE-FIT-FULL-WORKFLOW's STOP, 7 Nov 2026). The first full run on main (run 42395102257) took about 30m42s with the three modes in series; the contract's STOP IF applied. Saved verbatim:
+
+Rulings: (1) Split .github/workflows/phone-fit-full.yml into three parallel jobs, one per mode (normal, aa, laptop), sharing the existing "changed" gate, plus a final job that fails if any mode job failed. No mode dropped, no games sampled. (2) In the same PR, remove screening-room's stale "1280x720" entry from scripts/phone-fit-state.json (it now passes; the lists only shrink; #701 has merged, so the file is free). Nothing else in that file changes. New PR, merge order and Gate as usual; stop for review and Jon's "merge". After merge, report the next full run on main: time per job and the whole run, and the failing pairs (expected: none). Do not open the PR as a draft.
+
+Parent contract: docs/handover/contracts/2026-11-07-phone-fit-full-workflow.md (PHONE-FIT-FULL-WORKFLOW, #702).
