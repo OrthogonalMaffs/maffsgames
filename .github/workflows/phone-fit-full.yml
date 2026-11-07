@@ -1,0 +1,133 @@
+# The whole library's phone fit (contract PHONE-FIT-RED, 7 Nov 2026; canon 7.6.1).
+#
+# scripts/measure-phone-fit.py is the phone rule's gate, but nothing ran it on games no PR had touched: #687's full run
+# found main red on games nobody had changed. This workflow runs it over every live game in every mode (normal, Aa,
+# laptop), nightly and after a push to main that changes a shared path. A failure not on scripts/phone-fit-state.json's
+# lists fails the run, and GitHub e-mails Jon a failed run on main, as it does scheduled-watch (no issue is opened).
+#
+# WHICH PATHS ARE SHARED. A `paths:` filter here would be a second list, so every push to main starts the small "changed"
+# job, which asks scripts/ci-deps.py, the Plan job's own selection code: its is_shared() is the one definition (CI itself
+# or an unknown path, a file two or more games load, the checker and what it reads). Nothing is listed.
+# This file is under .github/, which classify() counts as CI itself, so the push that adds or changes it runs the full measure.
+#
+# Same image, fallback fonts and write guards as check-site.yml's jobs, so a verdict here is a verdict there.
+name: phone-fit-full
+
+on:
+  schedule:
+    - cron: "23 2 * * *"          # 02:23 UTC nightly
+  push:
+    branches: [main]            # the "changed" job below decides; a `paths:` filter here would be a second list
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phone-fit-full
+  cancel-in-progress: false
+
+jobs:
+  changed:
+    name: Did this push change a shared path
+    if: github.event_name == 'push'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      shared: ${{ steps.ask.outputs.shared }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0           # the push's first commit, for the diff
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ask the Plan job's selection code
+        id: ask
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: |
+          python -X utf8 - <<'PY'
+          import importlib.util, os, subprocess
+          spec = importlib.util.spec_from_file_location("ci_deps", "scripts/ci-deps.py")
+          deps = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(deps)
+          diff = subprocess.run(["git", "diff", "--name-only", os.environ["BEFORE"], "HEAD"], capture_output=True, text=True)
+          if diff.returncode:                  # a new branch or a rewritten history: nothing to compare, so measure
+              why = ["no usable diff from %s" % os.environ["BEFORE"]]
+          else:
+              why = [p for p in diff.stdout.split("\n") if p and deps.is_shared(p)]
+          print("shared paths in this push:", why or "none")
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8", newline="") as fh:
+              fh.write("shared=%s\n" % ("true" if why else "false"))
+          PY
+
+  measure:
+    name: Every live game, every mode
+    needs: changed
+    # always(): `changed` is skipped on the schedule and a manual run, which measure regardless.
+    if: always() && (github.event_name != 'push' || needs.changed.outputs.shared == 'true')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    container:
+      image: mcr.microsoft.com/playwright/python:v1.63.0-noble   # check-site.yml's; requirements-ci.txt pins the same version
+      options: >-
+        --ipc=host
+        --add-host=script.google.com:0.0.0.0
+        --add-host=script.googleusercontent.com:0.0.0.0
+        --add-host=www.google-analytics.com:0.0.0.0
+        --add-host=region1.google-analytics.com:0.0.0.0
+    steps:
+      - uses: actions/checkout@v4
+      - name: Mark the workspace as a safe git directory
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+      - name: Pin fallback fonts to the bare runner's (DejaVu), as check-site.yml does
+        run: |
+          unpack() {
+            if echo "$2  scripts/fonts/dejavu/$1" | sha256sum -c --quiet; then
+              dpkg-deb -x "scripts/fonts/dejavu/$1" / && return 0
+            fi
+            echo "::error::scripts/fonts/dejavu/$1 is missing or does not match its pinned SHA256"; return 1
+          }
+          unpack fonts-dejavu-core_2.37-8_all.deb 40049660c194f3b8a2541fc7369efebb10e9f94bdac836a2f38fafedd10fa73a
+          unpack fonts-dejavu-mono_2.37-8_all.deb 8a599d6553307db7ecb795d2f0e5a301e03234afc75c7358b0ba43466454c89a
+          cat > /etc/fonts/local.conf <<'XML'
+          <?xml version="1.0"?>
+          <!DOCTYPE fontconfig SYSTEM "fonts.dtd">
+          <fontconfig>
+            <alias binding="strong"><family>sans-serif</family><prefer><family>DejaVu Sans</family></prefer></alias>
+            <alias binding="strong"><family>monospace</family><prefer><family>DejaVu Sans Mono</family></prefer></alias>
+          </fontconfig>
+          XML
+          fc-cache -f > /dev/null
+          fc-match sans-serif | grep -q '^DejaVuSans\.ttf' && fc-match monospace | grep -q '^DejaVuSansMono\.ttf' \
+            || { echo "::error::DejaVu fallback fonts not available in the image"; exit 1; }
+      - name: Python packages (pinned, requirements-ci.txt)
+        run: python -m pip install --disable-pip-version-check -q -r requirements-ci.txt
+      # Every mode runs even after one fails, so a single run reports every failure; the job fails if any did.
+      - name: Measure in normal, Aa and laptop modes
+        shell: bash
+        run: |
+          mkdir -p phone-fit-reports
+          failed=""
+          for mode in normal aa laptop; do
+            flag=""; [ "$mode" = aa ] && flag=--aa; [ "$mode" = laptop ] && flag=--laptop
+            t0=$(date +%s); rc=0
+            python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$mode.md" --json "phone-fit-reports/$mode.json" \
+              > "phone-fit-reports/$mode.log" 2>&1 || rc=$?
+            cat "phone-fit-reports/$mode.log"
+            line="$mode: exit $rc in $(($(date +%s) - t0)) s"
+            echo "$line"
+            { echo "### $line"; sed -n 's/^GATE /- /p' "phone-fit-reports/$mode.log"; } >> "$GITHUB_STEP_SUMMARY"
+            [ "$rc" -eq 0 ] || failed="$failed $mode"
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::a phone-fit failure not on scripts/phone-fit-state.json's lists, in:$failed (the job summary lists them)"
+            exit 1
+          fi
+      - name: Upload the full report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: phone-fit-reports
+          path: phone-fit-reports/
