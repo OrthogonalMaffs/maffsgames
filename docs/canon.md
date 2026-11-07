@@ -1325,6 +1325,10 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
   `scripts/measure-phone-fit.py` neither counts nor presses anything inside it. It may never contain any part of the
   question's answer controls: an option group found inside one fails the run, whatever the lists say.
 
+**The full run.** `.github/workflows/phone-fit-full.yml` runs `scripts/measure-phone-fit.py` over every live game in
+every mode (normal, Aa, laptop) nightly on main, and after a push to main that changes a shared path or the workflow itself.
+A red full run on main is fixed before new game work.
+
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
 
 A rule, method or reference a student may want while answering (Distinctly Average's "Finding the median")

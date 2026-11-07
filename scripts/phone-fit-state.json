@@ -327,8 +327,7 @@
       ],
       "better-value": [
         "1366x768 next",
-        "1280x720 next",
-        "1280x720 option"
+        "1280x720 next"
       ],
       "boolean-blitz": [
         "1280x720 next"
@@ -445,16 +444,19 @@
     "normal": {
       "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
       "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+      "possibly-maybe": "temporary: checker cannot see [data-opt] delegated buttons; removed by PROBE-DATA-OPT (Project Claude 7 Nov)",
       "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
     },
     "aa": {
       "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
       "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+      "possibly-maybe": "temporary: checker cannot see [data-opt] delegated buttons; removed by PROBE-DATA-OPT (Project Claude 7 Nov)",
       "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
     },
     "laptop": {
       "glorious-gantt": "the start screen does not lead to a question generically (its first option, then 'Start'); no declared start",
       "just-pythag-it-bruv": "started; no option group, input or submit; it shows a drawing, \"\"",
+      "possibly-maybe": "temporary: checker cannot see [data-opt] delegated buttons; removed by PROBE-DATA-OPT (Project Claude 7 Nov)",
       "spot-the-error": "started; no option group, input or submit; it shows \"Aa\""
     }
   },
