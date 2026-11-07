@@ -20,6 +20,14 @@
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
 
+## 2026-11-07 (home): PACK-COVER close-out
+
+Done: #703 merged by `merge-pr.py` as 7043a989; main run 42394072989 GREEN. Jon authorised merge on 7 Nov; no Project Claude review is recorded on #703. Contract: `docs/handover/contracts/2026-11-07-pack-cover.md`.
+
+The shared pack template now prints each room's own win scene on page 1. Christmas and Kiln build with a 1465 × 799 pixel image at about 200 dpi; the scenes remain readable in greyscale and show no visible digits. Proofs are in `docs/screens/pack-cover/`. Pages after page 1 are pixel-identical to clean main builds at 100 dpi. The missing-image and page-overflow plants passed with all existing plants (29/29); `check-changed.py` passed 42/42 selected checks, and #703's Gate was green before merge. The PDFs grew by 259,760 bytes (Christmas) and 197,232 bytes (Kiln).
+
+Record: agent Codex; wall n/a (work spanned conversations); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-07 (home): CHRISTMAS-PACK close-out
 
 Done: #689 merged by `merge-pr.py` as b4d0323; main run 42362844296 GREEN. Jon authorised merge on 7 Nov. The six-set Christmas Tree Fiasco printable pack builds with 98 of 900 joint draws VALID; its 18 printed lock answers agree with 108 independently recomputed values. The PDF stays gitignored in `dist-packs/`, never committed or uploaded. Contract and Amendments 1–5: `docs/handover/contracts/2026-11-06-christmas-pack.md`; the two later typography and box-measurement corrections are reported in #689.
