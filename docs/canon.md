@@ -881,6 +881,8 @@ in three sub-classes:
 worked **one game at a time, each played through before the next** — never as a sweep.
 Sweeps `96381d74`, `76514c70` and `4b3d7d3` are precisely why.
 
+**A game's CSS never reaches into KaTeX's spans** (Jon, 7 Nov 2026, contract PIZZA-CARDS): on a page that loads KaTeX, no rule whose selector ends in a descendant `span` or `*` sets `display:block` (it stacks a formula's own spans; use a child combinator, `.card > span`), and `scripts/check-katex-css.py` fails any that does, on every pull request.
+
 ### 7.1.2 Marking tolerances — never wide enough to accept a named wrong answer
 
 Ruled by Jon, 1 Oct 2026.
