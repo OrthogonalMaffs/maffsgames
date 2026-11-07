@@ -1,0 +1,16 @@
+CONTEXT: new cloud session, from current main.
+LANE: cloud · TIER: Shared (Gate + workflow) · CONTRACT: PHONE-FIT-FULL-WORKFLOW
+COORDINATION: home owns PHONE-FIT-RED (draft PR #701: games, scripts/measure-phone-fit.py, scripts/phone-fit-state.json, schools/assets/stage-exit.css). Another cloud session may own the portal index.html (TICKER-LINKS). Touch none. Close-out entry in the PR body under "Close-out entry (for cloud.md)". Save this contract in docs/handover/contracts/.
+
+TASK: Add the full phone-fit workflow PHONE-FIT-RED wrote, with "is this push shared?" defined once in Plan's own module.
+ROOT CAUSE: the Gate measures phone fit only for games a PR changes; nothing measures the whole library on main. The home lane's token cannot push workflow files. The workflow's draft decides "shared" with three conditions written inline; that would be a second definition beside Plan's.
+CLASS CHECK: Shared CI infrastructure. "Shared path" is defined once, in scripts/ci-deps.py, and every caller uses it.
+EXACT CHANGE:
+1. scripts/ci-deps.py: add is_shared(path) returning True when any of: classify(path) != "known"; the path is loaded by two or more game pages (page_deps over game_slugs()); the path is measure-phone-fit.py or one of its dependencies (script_deps + literal_paths). Docstring states the three rules. No change to any existing function or to Plan's behaviour.
+2. A self-test for is_shared (in ci-deps.py's existing self-test if it has one, else a small test with a ci-line header, no '|' in its label): the workflow file, a shared asset and the checker → True; one game's page, a handover doc and /updates/ → False.
+3. .github/workflows/phone-fit-full.yml from the fenced block under "Workflow for the cloud lane" in PR #701's body (https://github.com/OrthogonalMaffs/maffsgames/pull/701), with the inline three-condition expression replaced by a call to deps.is_shared(p). Keep its "no usable diff → measure" fallback. Triggers exactly: nightly schedule; push to main (the job decides via is_shared; no paths: filter); workflow_dispatch. No branch triggers.
+4. Gate green, then stop for Project Claude's review and Jon's "merge". Merge with merge-pr.py --watch --wait 3600; if it cannot run here, use the one-off route Jon approved for #696 (checks by hand, squash-merge through the connector, exception recorded on the PR).
+5. After merge, watch the workflow's first run on main; report failing game/mode pairs and wall time per mode, and post the same as a comment on #701 so the home session can put it in its PR body.
+DO NOT TOUCH: every other workflow and the Gate's triggers; every existing function in ci-deps.py; scripts/measure-phone-fit.py; games/; schools/assets/; index.html; docs/handover/home.md and cloud.md; the files under COORDINATION.
+SUCCESS CONDITION: is_shared exists with its self-test; the workflow calls it; the workflow is on main and its first run on main has finished and been reported here and on #701. Committed, contract saved, close-out entry in the PR body.
+STOP IF: PR #701's body has no workflow block; adding is_shared would change any existing Plan result (report which); the push is refused (paste the error); the first run exceeds 30 minutes (report the per-mode times; do not edit the workflow without a ruling).
