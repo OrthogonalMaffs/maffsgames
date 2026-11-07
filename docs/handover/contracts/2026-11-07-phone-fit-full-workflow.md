@@ -14,3 +14,6 @@ EXACT CHANGE:
 DO NOT TOUCH: every other workflow and the Gate's triggers; every existing function in ci-deps.py; scripts/measure-phone-fit.py; games/; schools/assets/; index.html; docs/handover/home.md and cloud.md; the files under COORDINATION.
 SUCCESS CONDITION: is_shared exists with its self-test; the workflow calls it; the workflow is on main and its first run on main has finished and been reported here and on #701. Committed, contract saved, close-out entry in the PR body.
 STOP IF: PR #701's body has no workflow block; adding is_shared would change any existing Plan result (report which); the push is refused (paste the error); the first run exceeds 30 minutes (report the per-mode times; do not edit the workflow without a ruling).
+
+Amendment 1 (Jon, 7 Nov 2026, before merge):
+Rule 3 ruling: narrow it in this PR before merge. is_shared() must not count the checker's own output (docs/phone-fit-report.md) or the coordination file scripts/answer-lock-state.json as checker dependencies. Add both to the self-test as False cases. Gate green again, then stop for "merge". After merge, report the first run on main here and on #701, as planned.
