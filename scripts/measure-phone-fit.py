@@ -22,7 +22,7 @@ improves, with Jon's ruling, never because of a new fault: "known-failures" (eac
 fails the gate: reported, never failed), "sideways" (each game with the sizes at which it scrolls sideways) and
 "unmeasurable" (the games this driver cannot measure, so they never read as passing). A failure not on its list, a
 listed entry that now passes or now measures, and an unmeasurable game not on its list each make the run exit 1. On a
-phone, Next below the fold is FAIL: reported, not a gate. Not run in CI yet (a later contract).
+phone, Next below the fold is FAIL: reported, not a gate. Run in CI by .github/workflows/phone-fit-full.yml.
 
 For every game on the roster, at 320x568, 375x667 and 390x844, it loads the game
 (bare URL, so its default level), gets to the first question and records:
