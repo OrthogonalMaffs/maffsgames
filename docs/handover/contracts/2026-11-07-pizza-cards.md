@@ -17,3 +17,17 @@ EXACT CHANGE:
 DO NOT TOUCH: questions, answers, generators, the daily seed, the pizza drawing, every other rule in the file, every other game, schools/assets/**, the files under COORDINATION.
 SUCCESS CONDITION: stage 3 reads "25% of 80, ⅗ of 45" with the fraction inline at every size; all five cards' titles start at the same height in each row; no other part of the page changes (before/after screenshots of the game, feedback and results screens identical); phone-fit for free-daily-pizza still passes in all modes; Gate green; contract saved; close-out entry in PR body. Stop for Project Claude's review of the screenshots and Jon's "merge".
 STOP IF: step 3 finds the same shape in any other game or shared asset (report the list, fix only Pizza, stop); the fraction still wraps at 320 wide in aa (report the card's width and the fraction's width); any screenshot outside the menu changes.
+
+## Amendment 1 (Jon, 7 Nov 2026, after the STOP), saved verbatim
+
+Thank you — good stop. Rulings, same PR #696, same branch:
+
+1. Log Laws: games/log-laws/index.html:480 `.mode-btn span` → `.mode-btn > span`. That one selector only; nothing else in log-laws changes. Claim log-laws on answer-lock-state.json in its own commit first; release in the PR. Screenshot its mode buttons before/after at 1280 and 320 (normal, aa): expected identical.
+2. Class guard: add a check to the Gate's site-wide checks (extend the existing site-wide checker if one fits; otherwise a new scripts/check-katex-css.py, wired the same way). It fails any game that loads KaTeX and has a CSS rule whose selector's last compound is `span` or `*` reached by a descendant (space) combinator, with `display:block` in the declarations. Self-test with planted faults: (a) `.x span{display:block}` fails; (b) `.x > span{display:block}` passes; (c) `.x span{color:red}` passes; (d) `.x *{display:block}` fails. Record the rule in canon §7.1.1 in one sentence. After steps 1–2, the check passes on the whole library.
+3. Report: is free-daily-pizza aa on scripts/phone-fit-state.json known-failures? Answer yes/no with the line. Do not change the file.
+4. Screenshot evidence: accepted as is.
+5. Not in this PR: the Aa font on stage cards (queued separately).
+6. Watch the PR; report the Gate per check when it finishes.
+
+DO NOT TOUCH (unchanged otherwise): every other game; schools/assets/**; scripts/measure-phone-fit.py and phone-fit-state.json; docs/handover/home.md and cloud.md.
+STOP IF: the check finds any other game (report it; do not fix); the check flags a rule that is not this shape (report it, so the pattern can be tightened); the Log Laws screenshots differ.
