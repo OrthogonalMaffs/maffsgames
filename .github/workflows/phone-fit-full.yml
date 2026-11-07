@@ -10,6 +10,10 @@
 # or an unknown path, a file two or more games load, the checker and what it reads). Nothing is listed.
 # This file is under .github/, which classify() counts as CI itself, so the push that adds or changes it runs the full measure.
 #
+# ONE JOB PER MODE (Jon's ruling, 7 Nov 2026, after the first run took 30m42s with the modes in series): normal, Aa and
+# laptop run as three parallel jobs of one matrix, each measuring every live game, and the "verdict" job fails the run
+# if any of them failed. No mode is dropped and no game is sampled.
+#
 # Same image, fallback fonts and write guards as check-site.yml's jobs, so a verdict here is a verdict there.
 name: phone-fit-full
 
@@ -63,12 +67,16 @@ jobs:
           PY
 
   measure:
-    name: Every live game, every mode
+    name: Every live game, ${{ matrix.mode }} mode
     needs: changed
     # always(): `changed` is skipped on the schedule and a manual run, which measure regardless.
     if: always() && (github.event_name != 'push' || needs.changed.outputs.shared == 'true')
     runs-on: ubuntu-24.04
     timeout-minutes: 60
+    strategy:
+      fail-fast: false             # every mode runs to the end even after one fails, so one run reports every failure
+      matrix:
+        mode: [normal, aa, laptop]
     container:
       image: mcr.microsoft.com/playwright/python:v1.63.0-noble   # check-site.yml's; requirements-ci.txt pins the same version
       options: >-
@@ -104,30 +112,45 @@ jobs:
             || { echo "::error::DejaVu fallback fonts not available in the image"; exit 1; }
       - name: Python packages (pinned, requirements-ci.txt)
         run: python -m pip install --disable-pip-version-check -q -r requirements-ci.txt
-      # Every mode runs even after one fails, so a single run reports every failure; the job fails if any did.
-      - name: Measure in normal, Aa and laptop modes
+      - name: Measure in ${{ matrix.mode }} mode
         shell: bash
+        env:
+          MODE: ${{ matrix.mode }}
         run: |
           mkdir -p phone-fit-reports
-          failed=""
-          for mode in normal aa laptop; do
-            flag=""; [ "$mode" = aa ] && flag=--aa; [ "$mode" = laptop ] && flag=--laptop
-            t0=$(date +%s); rc=0
-            python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$mode.md" --json "phone-fit-reports/$mode.json" \
-              > "phone-fit-reports/$mode.log" 2>&1 || rc=$?
-            cat "phone-fit-reports/$mode.log"
-            line="$mode: exit $rc in $(($(date +%s) - t0)) s"
-            echo "$line"
-            { echo "### $line"; sed -n 's/^GATE /- /p' "phone-fit-reports/$mode.log"; } >> "$GITHUB_STEP_SUMMARY"
-            [ "$rc" -eq 0 ] || failed="$failed $mode"
-          done
-          if [ -n "$failed" ]; then
-            echo "::error::a phone-fit failure not on scripts/phone-fit-state.json's lists, in:$failed (the job summary lists them)"
+          flag=""; [ "$MODE" = aa ] && flag=--aa; [ "$MODE" = laptop ] && flag=--laptop
+          t0=$(date +%s); rc=0
+          python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$MODE.md" --json "phone-fit-reports/$MODE.json" \
+            > "phone-fit-reports/$MODE.log" 2>&1 || rc=$?
+          cat "phone-fit-reports/$MODE.log"
+          line="$MODE: exit $rc in $(($(date +%s) - t0)) s"
+          echo "$line"
+          { echo "### $line"; sed -n 's/^GATE /- /p' "phone-fit-reports/$MODE.log"; } >> "$GITHUB_STEP_SUMMARY"
+          if [ "$rc" -ne 0 ]; then
+            echo "::error::a phone-fit failure not on scripts/phone-fit-state.json's lists, in $MODE mode (the job summary lists them)"
             exit 1
           fi
       - name: Upload the full report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: phone-fit-reports
+          name: phone-fit-reports-${{ matrix.mode }}
           path: phone-fit-reports/
+
+  verdict:
+    name: Every mode passed
+    needs: [changed, measure]
+    # The same condition as measure: skipped when a push changed nothing shared, run whenever the modes ran.
+    if: always() && (github.event_name != 'push' || needs.changed.outputs.shared == 'true')
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Fail if any mode job did not pass
+        env:
+          RESULT: ${{ needs.measure.result }}   # a matrix's result is "success" only when every mode job succeeded
+        run: |
+          echo "mode jobs (normal, aa, laptop): $RESULT"
+          if [ "$RESULT" != success ]; then
+            echo "::error::a mode job did not pass ($RESULT): see the failed mode's job summary"
+            exit 1
+          fi
