@@ -74,23 +74,3 @@ Discovery: run under `scripts/bg.py`, `merge-pr.py --watch` exited both times wh
 
 Record: agent Claude Code; wall 4:45 (14:26 to 19:10, including both waits for Jon's rulings and merges); review cycles 0; amendments 1; usage n/a.
 
-## 2026-11-07 (cloud): TICKER-LINKS (`docs/history/contracts/2026-11-07-ticker-links.md`, Portal, Amendments 1-2)
-
-DONE: #704 squash-merged as 4167374 by `merge-pr.py` on Jon's "merge" (7 Nov). Gate green on 3e1877e (run 42393736413: 89 checks, 87 success, 2 main-only skipped); main run 42397379850 GREEN. The first text stopped: about 30% of feed levelKeys are boards (q20, stage-n, all, daily-…), which ?level= would silently ignore. Amendment 1 stopped again on check-ticker-pause.py, outside the files; Amendment 2 ruled.
-
-Each portal ticker score whose game has a portal card links to games/<slug>/, with ?level= only when one of the slug's cards lists that key in data-levels; no card means plain text. The cue is "Play →"; repeat sets' links are tabindex -1; taps are 36 px at 390 and 1280. ticker_clicked {game_slug, detail: high|weekly|plain} lands in the Sheet's column S (endpoint 2026-11-07-a). Every Firebase string the ticker shows goes through esc(): the rules let `game` and `level` be any text. scripts/test-ticker-links.py (CI) has 7 plants, all caught; check-ticker-pause.py's focus step accepts any focus inside the scores. Read-only scan of all 558 live recent_scores entries (7 Nov, after the merge): no `<` or `>` in any game or level.
-
-Next, follow-ups for Project Claude: l4/level4 (Level 4 scores link without a level); escape leaderboards/index.html:394-395 (the hub's initials and scores, the one unescaped Firebase text left). This session's environment now allows the Firebase database host (added 7 Nov for the feed check); Jon keeps or removes it.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 2; usage n/a.
-
-## 2026-11-07 (cloud): ROOM-TIMES (`docs/history/contracts/2026-11-07-room-times.md`, Shared, Amendments 1-2)
-
-DONE: #699 squash-merged as 492baec by `merge-pr.py` on Jon's "merge" (7 Nov). Gate green on 7cd5868 (run 42371867847: 89 checks, 87 success, 2 main-only skipped); main run 42376196989 GREEN. The first text stopped: its CLASS CHECK assumed the Sheet kept `detail`, which `doPost` never wrote.
-
-Escape rooms' `game_completed` detail is now "escaped|timeout wrongs:n hints:n used:s played:s locks:t1,...": used is the clock (penalties in, capped at the total), played the seconds it ran, locks each lock's opening second in lock order, "-" unopened (canon §1.3). engine.js saves st.played and st.openAt; an older save resumes from nought ("-" for earlier locks accepted, Jon). Endpoint 2026-11-07-a appends column S, `detail` (every escape-room detail was dropped before); every Sheet reader looks columns up by header name; the redeploy runbook names S (Amendment 2). No GA4 custom dimension (Jon). `scripts/test-escape-times.py` (CI): 14 live rooms on a fake clock, worst case 74 characters; test-apps-script-report.py checks doPost's column order. First Gate red: a `|` in the new ci-line label (fixed, 7cd5868).
-
-Next: Jon redeploys the endpoint (steps in #699), then one real completion is checked in column S.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 2; usage n/a.
-
