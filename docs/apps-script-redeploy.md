@@ -129,6 +129,10 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
 - From `2026-11-04-a` (ROOM-ESCAPED): no new permission. A room counts as escaped only when every lock opened
   (`questions_correct` equals `questions_answered`, both above 0); any other room `game_completed` is a timeout, shown
   as "T timed out" in the email's rooms line and a **Timed out** column on the Dashboard's Escape Rooms table.
+- From `2026-11-07-a` (ROOM-TIMES): no new permission. Cell **S1** reads `detail` (the first post after the deploy
+  writes it, as R1 was), and an escape room's `game_completed` row has its times in column **S**, e.g.
+  `escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567` (canon §1.3). Its other rows carry the lock id
+  (`question_answered`), `lock:step` (`hint_used`) or `fresh`/`resumed` (`game_started`). Other games leave S blank.
 
 ---
 
@@ -179,6 +183,11 @@ that date have both blank; treat blank `client_ts` as "fall back to the `timesta
 written before the redeploy have it blank. It names the question a `question_answered` row was about: a game's own
 id, or `h` + the 8-hex FNV-1a hash of the question's text (`schools/assets/analytics.js`; the text itself is never
 sent). `python -X utf8 scripts/decode-question-ids.py <slug>` prints each id beside its question.
+
+`detail` was appended on 2026-11-07 (contract ROOM-TIMES) as column S, after `question_id`, the same way. Rows
+written before the redeploy have it blank. Only the escape-room engine sends it (`escape-rooms/assets/engine.js`); on
+`game_completed` it holds the outcome, wrong settings, hints, the clock's time used, the seconds played and each lock's
+opening second, in the format canon §1.3 records.
 
 ---
 

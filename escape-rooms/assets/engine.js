@@ -44,7 +44,7 @@
   var pending = {};   // lockId -> current instrument value(s), not saved
 
   function freshState() {
-    return { v: SAVE_V, found: {}, open: {}, hints: {}, wrongs: 0, left: TOTAL, done: null, vars: pickVariants(), order: shuffledIds() };
+    return { v: SAVE_V, found: {}, open: {}, hints: {}, wrongs: 0, left: TOTAL, played: 0, openAt: {}, done: null, vars: pickVariants(), order: shuffledIds() };
   }
 
   function shuffledIds() {
@@ -368,6 +368,10 @@
         s.order = shuffledIds();
         try { localStorage.setItem(SAVE_KEY, JSON.stringify(s)); } catch (e) {}
       }
+      // A save from before ROOM-TIMES has no clock record: it resumes from nought rather than being thrown away
+      // (SAVE_V unchanged), so that one game's played and lock times start at the resume.
+      if (typeof s.played !== 'number') s.played = 0;
+      if (!s.openAt || typeof s.openAt !== 'object') s.openAt = {};
       return s;
     } catch (e) { return null; }
   }
@@ -784,6 +788,7 @@
 
     if (ok) {
       st.open[l.id] = true;
+      st.openAt[l.id] = st.played;
       track('question_answered', { correct: true, question_index: R.locks.indexOf(l) + 1, detail: l.id });
       renderLockBtns();
       renderLockPanel();
@@ -901,7 +906,10 @@
     c.textContent = mmss(st.left);
     c.classList.toggle('low', st.left <= 120);
   }
+  // st.played counts the seconds the room's clock has actually run (one a tick); st.left also loses each
+  // wrong setting's penalty, so the clock's time used minus st.played is the penalty time (canon §1.3).
   function tick() {
+    st.played++;
     st.left--;
     paintClock();
     if (st.left % 10 === 0) save();
@@ -948,7 +956,9 @@
 
     track('game_completed', {
       score: opened, questions_answered: R.locks.length, questions_correct: opened,
-      detail: (win ? 'escaped' : 'timeout') + ' wrongs:' + st.wrongs + ' hints:' + hintCount
+      detail: (win ? 'escaped' : 'timeout') + ' wrongs:' + st.wrongs + ' hints:' + hintCount +
+              ' used:' + used + ' played:' + st.played + ' locks:' +
+              R.locks.map(function (l) { return st.openAt[l.id] === undefined ? '-' : st.openAt[l.id]; }).join(',')
     });
 
     el('endCard').innerHTML =

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks; planted faults caught) |
+# ci-line: Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail last; planted faults caught) |
 # ci-deps: docs/apps-script-endpoint.js data/games.json
 """Does the daily email and Dashboard (docs/apps-script-endpoint.js) report each kind of game by a measure that means
 something for it? Contract DASHBOARD-METRICS (Jon, 3 Nov 2026; Amendment 2: games.json is read from GitHub).
@@ -25,7 +25,9 @@ Utilities, Charts) with a fixed clock, and drives the real functions on fixture 
   - end to end: sendDailyReport sends one email and builds the Dashboard from the same model (--sample prints both).
 Then planted faults, each a small change to the script that must make a check fail: a room counted in accuracy, a row
 with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank ignored instead of counted wrong, every
-room game_completed counted as escaped.
+room game_completed counted as escaped, doPost leaving detail out of the row, doPost writing detail before question_id.
+  - f. doPost (ROOM-TIMES): EXPECTED_HEADERS is the 18 earlier columns in order then detail; each posted field lands
+    under its own header, detail last; an old 18-header row 1 gains "detail" in S1; no detail leaves it blank.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -51,7 +53,7 @@ HARNESS = r"""
 
   const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
     'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value',
-    'client_ts', 'seq', 'question_id'];
+    'client_ts', 'seq', 'question_id', 'detail'];
   const col = {}; HEAD.forEach((h, i) => col[h] = i);
   const row = (ts, event, slug, level, correct, qid) => {
     const r = HEAD.map(() => ''); r[0] = ts; r[1] = event; r[2] = slug; r[3] = level;
@@ -86,7 +88,7 @@ HARNESS = r"""
   rows.push(row('2026-09-29T19:59:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // a minute before: wrong
   rows.push(row('2026-09-29T20:01:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // after: not marked
 
-  function load(fetchMode) {
+  function load(fetchMode, eventsHead) {
     const env = { fetches: 0, mails: [], cells: {}, sheets: {} };
     const UrlFetchApp = { fetch(url) {
       env.fetches++; env.url = url;
@@ -101,6 +103,7 @@ HARNESS = r"""
         setTabColor() {}, setFrozenRows() {}, newChart: () => chain,
         getDataRange: () => ({ getValues: () => data }),
         getLastRow: () => data.length,
+        appendRow(r) { data.push(r); },
         getRange(r, c, nr, nc) {
           const rg = { setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
             setValues(vs) { vs.forEach((line, i) => line.forEach((v, j) => sh.cells[(r + i) + ',' + (c + j)] = v)); return rg; },
@@ -110,7 +113,8 @@ HARNESS = r"""
         } };
       return sh;
     }
-    const events = sheetFake('events', [HEAD].concat(rows));
+    const events = sheetFake('events', [eventsHead || HEAD].concat(eventsHead ? [] : rows));
+    env.events = events;
     const ss = { getActiveSheet: () => events, getSheetByName: n => env.sheets[n] || null,
       insertSheet: n => (env.sheets[n] = sheetFake(n, [])) };
     const DriveApp = { getFilesByName: () => ({ hasNext: () => true, next: () => ({}) }) };
@@ -118,10 +122,11 @@ HARNESS = r"""
     const MailApp = { sendEmail: (to, subject, body) => env.mails.push({ to, subject, body }) };
     const Utilities = { formatDate: (d, tz, f) => f === 'yyyy-MM-dd' ? d.toISOString().slice(0, 10) : d.toISOString().slice(0, 16) };
     const Charts = { ChartType: { BAR: 'BAR', PIE: 'PIE', LINE: 'LINE' } };
+    const ContentService = { MimeType: { JSON: 'JSON' }, createTextOutput: t => ({ setMimeType: () => JSON.parse(t) }) };
     const api = new Function('UrlFetchApp', 'DriveApp', 'SpreadsheetApp', 'MailApp', 'Utilities', 'Charts', 'Date', 'ContentService', 'ScriptApp',
       src + '\n;return {rptBuild, rptLoadKinds, rptMarked, rptKind, rptEmailText, sendDailyReport, rebuildDashboard,' +
-      ' RPT_MIN_GAME_ANSWERS, RPT_MIN_QUESTION_ATTEMPTS, GAMES_JSON_URL};')(
-      UrlFetchApp, DriveApp, SpreadsheetApp, MailApp, Utilities, Charts, FakeDate, {}, {});
+      ' RPT_MIN_GAME_ANSWERS, RPT_MIN_QUESTION_ATTEMPTS, GAMES_JSON_URL, doPost, EXPECTED_HEADERS};')(
+      UrlFetchApp, DriveApp, SpreadsheetApp, MailApp, Utilities, Charts, FakeDate, ContentService, {});
     return { api, env };
   }
   const dashText = sh => {
@@ -184,6 +189,32 @@ HARNESS = r"""
       dt.indexOf('Room | Started | Escaped | Escape % | Timed out | Attempts per lock') >= 0 && dt.indexOf('escape-alpha | 4 | 1 | 25% | 2 | 4') >= 0 && dt.indexOf('Left out of accuracy') >= 0 && dt.indexOf('1 game sends question_id so far') >= 0, dt);
     out.push(['__sample_email', true, mail.body]); out.push(['__sample_dash', true, dt]);
 
+    // ---- doPost: the column-order rule (ROOM-TIMES). The 18 columns before 7 Nov 2026 keep their order and
+    // detail is appended last; each posted field lands under its own header; a Sheet whose row 1 has only the old
+    // 18 headers gets "detail" written into S1 by the first post, as question_id's R1 was.
+    {
+      const OLD = HEAD.slice(0, 18);
+      ({ api, env } = load('ok', OLD.slice()));
+      ok('doPost: EXPECTED_HEADERS is the 18 earlier columns in order, then detail',
+         JSON.stringify(api.EXPECTED_HEADERS) === JSON.stringify(OLD.concat(['detail'])), JSON.stringify(api.EXPECTED_HEADERS));
+      const sent = {};
+      api.EXPECTED_HEADERS.forEach(h => { if (h !== 'timestamp') sent[h] = 'v_' + h; });
+      sent.detail = 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567';
+      const res = api.doPost({ postData: { contents: JSON.stringify(sent) } });
+      const got = env.events.getDataRange().getValues().slice(-1)[0];
+      const misplaced = api.EXPECTED_HEADERS.filter((h, i) => h !== 'timestamp' && got[i] !== sent[h]);
+      ok('doPost: every field is written under its own header, detail in the last column',
+         res && res.ok && got.length === api.EXPECTED_HEADERS.length && !misplaced.length && got[got.length - 1] === sent.detail,
+         JSON.stringify({ res, misplaced, got }));
+      ok('doPost: an old row 1 gains "detail" in S1 on the first post',
+         env.events.cells['1,19'] === 'detail' && env.events.cells['1,18'] === 'question_id', JSON.stringify(env.events.cells));
+      const bare = Object.assign({}, sent); delete bare.detail;
+      api.doPost({ postData: { contents: JSON.stringify(bare) } });
+      const g2 = env.events.getDataRange().getValues().slice(-1)[0];
+      ok('doPost: an event with no detail leaves the last column blank', g2.length === api.EXPECTED_HEADERS.length && g2[g2.length - 1] === '',
+         JSON.stringify(g2));
+    }
+
     // ---- games.json unreadable: every game a question game, one line saying so
     for (const mode of ['throw', '404']) {
       ({ api, env } = load(mode));
@@ -214,6 +245,10 @@ PLANTS = [
      "  if (c === '' && new Date(x[col['timestamp']]) < RPT_BLANK_WAS_WRONG_UNTIL) return false;\n", ""),
     ("every room game_completed counted as escaped",
      "{ if (rptEscaped(x, col)) rm.escaped++; else rm.timedOut++; }", "rm.escaped++;"),
+    ("doPost leaves detail out of the row", "      cellValue(data.question_id), cellValue(data.detail)\n",
+     "      cellValue(data.question_id)\n"),
+    ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail)\n",
+     "      cellValue(data.detail), cellValue(data.question_id)\n"),
 ]
 
 

@@ -207,6 +207,20 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
   and later killed by the OS fires no pagehide, so it sends nothing; abandons on mobile are undercounted.
 - An escape room sends `question_answered` for lock attempts only, numbered 1 to 3; searching the room
   sends nothing (until 11 Oct 2026 each first search was a correct answer at question_index 0)
+- **An escape room's times (Jon, 7 Nov 2026, contract ROOM-TIMES).** `game_completed`'s `detail` is exactly
+  `<escaped|timeout> wrongs:<n> hints:<n> used:<s> played:<s> locks:<t1>,<t2>,...`, e.g.
+  `escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567`. **used** is the room's clock, the end card's
+  "Time taken": real seconds plus each wrong setting's penalty (hints are free), capped at the room's total, so a
+  timeout always reads the total. **played** is the seconds the clock actually ran. So used − played = wrongs × the
+  room's penalty, except when the last wrong setting runs the clock out, where it is less (used stops at the total).
+  **locks** are the played-second at which each lock opened, in the room's lock order (room.js), `-` for a lock not
+  opened. Every other parameter is unchanged. A game resumed from a save made before 7 Nov 2026 reports played and lock
+  times from the resume only (its locks opened earlier read `-`; used is still right). One engine sends it for every
+  room (`escape-rooms/assets/engine.js`); the longest a live room can send is under GA4's 100 characters, held by
+  `scripts/test-escape-times.py` (CI). **The Sheet:** column S, `detail`, after `question_id`, from endpoint version
+  `2026-11-07-a` (`docs/apps-script-endpoint.js`); blank in every row written before Jon's redeploy. The engine is its
+  only sender: lock id on `question_answered`, `lock:step` on `hint_used`, `fresh`/`resumed` on `game_started`, all
+  dropped by the Sheet until then. In GA4 `detail` is reported only once registered as a custom dimension (§8.3).
 - Do not add additional data collection without explicit approval from Jon
 
 **Which question: `question_id` (Jon, 3 Nov 2026, contract QUESTION-ID; Jon approved the field that day).**
@@ -880,6 +894,8 @@ in three sub-classes:
 `games/suvat/` is the **reference implementation** of the fix. Categories A, B and C are
 worked **one game at a time, each played through before the next** — never as a sweep.
 Sweeps `96381d74`, `76514c70` and `4b3d7d3` are precisely why.
+
+**A game's CSS never reaches into KaTeX's spans** (Jon, 7 Nov 2026, contract PIZZA-CARDS): on a page that loads KaTeX, no rule whose selector ends in a descendant `span` or `*` sets `display:block` (it stacks a formula's own spans; use a child combinator, `.card > span`), and `scripts/check-katex-css.py` fails any that does, on every pull request.
 
 ### 7.1.2 Marking tolerances — never wide enough to accept a named wrong answer
 

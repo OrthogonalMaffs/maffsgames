@@ -332,6 +332,44 @@ def classify(path):
     return "known" if top in KNOWN_TOP else "unknown"
 
 
+# ---------------------------------------------------------------- shared paths (the full phone-fit run)
+PHONE_FIT_CHECKER = "scripts/measure-phone-fit.py"
+# Paths the checker's literals name that are not inputs to its verdict (Jon's rule 3 ruling, 7 Nov 2026,
+# PHONE-FIT-FULL-WORKFLOW Amendment 1): its own default output, and the cloud lane's claim list, which changes on
+# every claim and unclaim commit. Counting either would start a full measure for no change to any game.
+NOT_CHECKER_DEPS = {"docs/phone-fit-report.md", "scripts/answer-lock-state.json"}
+_SHARED_INDEX = None
+
+
+def _shared_index():
+    """(files two or more game pages load, the phone-fit checker's own files), built once per process."""
+    global _SHARED_INDEX
+    if _SHARED_INDEX is None:
+        loaded = {}
+        for slug in game_slugs():
+            for f in page_deps("games/%s/index.html" % slug)[0]:
+                loaded[f] = loaded.get(f, 0) + 1
+        paths, lits = script_deps(PHONE_FIT_CHECKER)
+        _SHARED_INDEX = ({f for f, n in loaded.items() if n >= 2}, (set(paths) | literal_paths(lits)) - NOT_CHECKER_DEPS)
+    return _SHARED_INDEX
+
+
+def is_shared(path):
+    """True when a change to this path can change a game it does not belong to, so the whole library is measured
+    (.github/workflows/phone-fit-full.yml, contract PHONE-FIT-FULL-WORKFLOW, 7 Nov 2026). The one definition of
+    "shared"; three rules, any one of which makes a path shared:
+      1. classify(path) is not "known": CI itself (.github/, scripts/ci-*, requirements*) or a path in no known area;
+      2. two or more game pages load it (page_deps over game_slugs(), followed through the JS and CSS they load);
+      3. it is scripts/measure-phone-fit.py or one of its dependencies (script_deps and the paths its literals name),
+         except NOT_CHECKER_DEPS: the checker's own output and the claim list.
+    Plan's selection (select()) does not call it; nothing here changes what Plan runs."""
+    path = path.replace("\\", "/").strip()
+    if classify(path) != "known":
+        return True
+    multi, checker = _shared_index()
+    return path in multi or in_deps(path, checker)
+
+
 def select(changed, dmap=None):
     """(run_all, reasons, {script: [why]}) for a list of changed paths."""
     dmap = dependency_map() if dmap is None else dmap
@@ -424,6 +462,13 @@ def selftest():
     for s, i in sorted(sel.items()):
         _, _, picked = select([s], dmap)
         check("its own script selects %s" % os.path.basename(s), s in picked, "")
+    # is_shared (PHONE-FIT-FULL-WORKFLOW, 7 Nov 2026): the workflow file, a shared asset and the checker are shared;
+    # one game's own page, a handover doc and /updates/ are not, nor the checker's output or the claim list (Amendment 1).
+    for p, want in ((".github/workflows/phone-fit-full.yml", True), ("schools/assets/theme.css", True),
+                    (PHONE_FIT_CHECKER, True), ("games/split-it/index.html", False),
+                    ("docs/handover/cloud.md", False), ("updates/index.html", False),
+                    ("docs/phone-fit-report.md", False), ("scripts/answer-lock-state.json", False)):
+        check("is_shared(%s) is %s" % (p, want), is_shared(p) == want, "")
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
     return 1 if fails else 0
 

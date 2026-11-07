@@ -28,6 +28,7 @@ The build, in order; any failure stops it before a PDF exists:
 The PDF goes to dist-packs/ (gitignored) and nowhere else. It is the product: never commit it, never upload it.
 """
 import argparse
+import base64
 import contextlib
 import copy
 import datetime
@@ -147,9 +148,12 @@ def load_config(slug):
             raise BuildError("config image missing: %s" % f.relative_to(ROOT))
         if im.get("font", "label") not in FONTS:
             raise BuildError("%s: font %r is not one of %s" % (im["file"], im.get("font"), sorted(FONTS)))
-        x0, y0, x1, y1 = im["label_box"]
-        if not (0 <= x0 < x1 and 0 <= y0 < y1):
-            raise BuildError("%s: label_box %r is not a box" % (im["file"], im["label_box"]))
+        boxes = im.get("label_boxes", [im.get("label_box")])
+        if not boxes or ("label_boxes" in im and "label_box" in im):
+            raise BuildError("%s: use one label_box or a nonempty label_boxes list" % im["file"])
+        for box in boxes:
+            if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
+                raise BuildError("%s: %r is not a label box" % (im["file"], box))
     return cfg
 
 
@@ -322,7 +326,17 @@ def instrument_hints(texts):
 def answer_caption(lock):
     """An answer box's words: the instrument's label and its unit, if it has one; nothing else (Amendment 4)."""
     ins = lock.get("instrument") or {}
-    return " ".join(x for x in (text_of(ins.get("label", "")).strip(), text_of(ins.get("unit", "")).strip()) if x)
+    label, unit = (text_of(ins.get(k, "")).strip() for k in ("label", "unit"))
+    if unit and re.search(r"(?<!\w)%s(?!\w)" % re.escape(unit), label, re.I):
+        unit = ""
+    caption = " ".join(x for x in (label, unit) if x)
+    if caption_unit_problems(caption, text_of(ins.get("unit", "")).strip()):
+        raise BuildError("answer caption repeats its unit: %r" % caption)
+    return caption
+
+
+def caption_unit_problems(caption, unit):
+    return unit and len(re.findall(r"(?<!\w)%s(?!\w)" % re.escape(unit), caption, re.I)) > 1
 
 
 def check_sets(checker, room_js, locks, sets):
@@ -379,6 +393,32 @@ def split_clue(clue):
     if len(parts) != 1:
         raise BuildError("a clue needs exactly one <b>...</b> part (the words on the object): %r" % clue[:80])
     return parts[0].strip(), re.sub(r"\s*<b>.*?</b>\s*", " ", clue, flags=re.S).strip()
+
+
+def label_parts(text, boxes):
+    """Split a clue over multiple measured glass areas, then bind figures before browser fitting."""
+    segments = text.split(" · ")
+    parts = segments if isinstance(boxes[0], list) else ["<br>".join(segments)]
+    count = len(boxes) if isinstance(boxes[0], list) else 1
+    if len(parts) != count:
+        raise BuildError("label has %d printed parts for %d boxes: %r" % (len(parts), count, text))
+    out = []
+    for part in parts:
+        part = re.sub(r"(?<!\w)-(?=\d)", "\u2212", part)
+        part = re.sub(r"(\d)\s+:\s+([\u2212-]?\d)", lambda m: m[1] + "\u00a0:\u00a0" + m[2], part)
+        part = re.sub(r"(\d)\s+(?=(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w))",
+                      lambda m: m[1] + "\u00a0", part, flags=re.I)
+        if label_text_problems(part):
+            raise BuildError("label figure has a broken binding or hyphen-minus: %r" % part)
+        out.append(part)
+    return out
+
+
+def label_text_problems(text):
+    """Figure spacing and TRUE-MINUS checks on the words that enter a fitted label."""
+    return [m.group() for pattern in (r" · ", r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d",
+                                     r"\d[ \t\n]+(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w)")
+            for m in re.finditer(pattern, text, re.I)]
 
 
 # ---- the pages -----------------------------------------------------------------------------------------------------
@@ -447,6 +487,7 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lbl.light > div { color: #fff; }
 .write { position: absolute; border: 0.8pt dashed #000; box-sizing: border-box; }
 .cover-art { width: 150mm; margin: 0 auto 3mm; display: block; }
+.run-win { display: block; width: 100%; height: auto; max-height: 105mm; object-fit: contain; margin-bottom: 3mm; }
 .team { margin: 3mm 0 2mm; font-size: 12pt; font-weight: 600; }
 .team span { display: inline-block; width: 120mm; border-bottom: 0.8pt solid #000; }
 .answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
@@ -460,6 +501,10 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lock { margin-bottom: 4mm; }
 .lock h2 { margin-top: 0; }
 .lock .opens { font-size: 9.5pt; }
+.page[data-kind=locks] .main { display: flex; flex-direction: column; }
+.page[data-kind=locks] .lock { display: flex; flex: 1 1 auto; flex-direction: column; }
+.page[data-kind=locks] .lock .work { height: auto; min-height: 25mm; flex: 1 1 auto; }
+.page[data-kind=locks] .final { flex: none; }
 .work { height: 34mm; border: 0.8pt solid #000; margin-top: 1.5mm;
         background-image: linear-gradient(#bbb 0.3pt, transparent 0.3pt), linear-gradient(90deg, #bbb 0.3pt, transparent 0.3pt);
         background-size: 5mm 5mm; }
@@ -551,6 +596,23 @@ AUDIT_JS = """
 }
 """
 
+DOWNSCALE_RUN_WIN_JS = """
+async (imageData) => {
+  const img = document.querySelector('.page[data-kind=run] .run-win');
+  if (!img) throw new Error('page 1 has no win image');
+  img.src = imageData;
+  await img.decode();
+  const width = Math.min(img.naturalWidth, Math.round(186 / 25.4 * 200));
+  const height = Math.round(img.naturalHeight * width / img.naturalWidth);
+  const canvas = document.createElement('canvas');
+  canvas.width = width; canvas.height = height;
+  canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  img.src = canvas.toDataURL('image/jpeg', 0.86);
+  await img.decode();
+  return {width, height};
+}
+"""
+
 
 def esc(s):
     return html.escape(str(s), quote=True)
@@ -558,12 +620,13 @@ def esc(s):
 
 def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX_PT):
     """An image with its label box laid over it (positions are set in the page from the image's natural size)."""
-    inner = ""
     if cls == "write":
         inner = '<div class="write" data-box="%s"></div>' % esc(json.dumps(box))
     else:
-        inner = ('<div class="lbl %s" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
-                 % (cls, esc(json.dumps(box)), esc(ident), esc(set_letter), max_pt, text or ""))
+        boxes = box if isinstance(box[0], list) else [box]
+        inner = "".join('<div class="lbl %s" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
+                        % (cls, esc(json.dumps(b)), esc(ident), esc(set_letter), max_pt, part)
+                        for b, part in zip(boxes, label_parts(text or "", box)))
     return '<div class="art"><img src="%s" alt="">%s</div>' % (img_path.as_uri(), inner)
 
 
@@ -674,8 +737,11 @@ RUN_IT_WORDS = 150        # page 1's cap (Amendment 9)
 SET_PAGES = "{SETPAGES}"    # page 1's line of each set's pages (Amendment 10), filled once the pages are numbered
 
 
-def set_pages_line(numbered):
+def set_pages_line(numbered, hint_pages=()):
     """"Each set is 4 pages: A 5-8, B 9-12, ..." from [(letter, [page numbers])] (Amendment 10)."""
+    for letter, nums in numbered:
+        if not nums or nums != list(range(nums[0], nums[-1] + 1)):
+            raise BuildError("set %s's pack page range is not contiguous: %s" % (letter, nums))
     sizes = {len(nums) for _, nums in numbered}
     flat = [n for _, nums in numbered for n in nums]
     in_order = flat == list(range(flat[0], flat[0] + len(flat)))
@@ -683,29 +749,40 @@ def set_pages_line(numbered):
         # The short form keeps page 1 inside its 150 words (Amendments 9, 10): the sets run in order, so the first and
         # last set's pages fix every other set's.
         (a, an), (z, zn) = numbered[0], numbered[-1]
-        return "Each set is %d pages: %s %d-%d \u2026 %s %d-%d." % (len(an), a, an[0], an[-1], z, zn[0], zn[-1])
-    head = ("Each set is %d pages:" % sizes.pop()) if len(sizes) == 1 else "Each set's pages:"
-    return head + " " + ", ".join("%s %d-%d" % (letter, nums[0], nums[-1]) for letter, nums in numbered) + "."
+        line = "Each set is %d pages: %s %d-%d \u2026 %s %d-%d." % (len(an), a, an[0], an[-1], z, zn[0], zn[-1])
+    else:
+        head = ("Each set is %d pages:" % sizes.pop()) if len(sizes) == 1 else "Each set's pages:"
+        line = head + " " + ", ".join("%s %d-%d" % (letter, nums[0], nums[-1]) for letter, nums in numbered) + "."
+    if len(hint_pages) > 1:
+        if len(hint_pages) != len(numbered):
+            raise BuildError("per-set hint page count %d differs from %d sets" % (len(hint_pages), len(numbered)))
+        line = line[:-1] + "; hint cards %d-%d." % (hint_pages[0], hint_pages[-1])
+    return line
 
 
 def run_it(letters, url, set_pages=SET_PAGES):
-    """Page 1 (Amendments 9, 10, 11): Project Claude's draft, verbatim but for the set letters (from the pack), each
-    set's pages (from the build) and Amendment 11's final-padlock line. Amendment 1's play-online line is on page 2:
+    """Page 1 (Amendments 9, 10, 11; CHRISTMAS-PACK Amendment 3): Project Claude's draft with its three approved
+    trims, the set letters (from the pack), each set's pages (from the build) and Amendment 11's final-padlock line.
+    Amendment 1's play-online line is on page 2:
     with it, page 1 would pass its 150 words."""
     return ("<h2>Before the lesson</h2><ol>"
             "<li>Print one set per team (%s-%s). Cut out the hint cards.<br>%s</li>"
             "<li>Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.</li></ol>"
             "<h2>In the lesson</h2><ol>"
-            "<li>Hand out the sets face down. Tell the teams your penalties.</li>"
+            "<li>Hand out the sets face down. Tell teams your penalties.</li>"
             "<li>Read the start script (page 2). Start a timer, counting up.</li>"
             "<li>Teams bring each answer to you. Check it against their set in the key.<br>"
             "Right: tick it. Wrong: check a box and say &ldquo;not yet&rdquo;.</li>"
-            "<li>A team wants a hint? Hand over the card and add one to Hints.</li>"
-            "<li>Final padlock ticked: write down the time.</li>"
+            "<li>A team wants a hint? Hand over the card; add one to Hints.</li>"
+            "<li>Final padlock ticked: note the time.</li>"
             "<li>Call time when you choose. Read the ending that fits. Lowest total time wins.</li></ol>"
             "<p><b>Final padlock:</b> No calculator. Any calculation that uses each answer once, with + &minus; "
             "&times; &divide; and no brackets, and makes the target counts (only one does).</p>"
             % (letters[0], letters[-1], set_pages))
+
+
+def lock_name_label(name):
+    return name if name.rstrip().endswith(("?", "!")) else name + ":"
 
 
 def about_box(room, teach, locks, sets):
@@ -714,7 +791,7 @@ def about_box(room, teach, locks, sets):
     meta = teach.get("lockMeta") or [{}] * len(locks)
     first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
     letters = [st["letter"] for st in sets]
-    topics = "; ".join("%s: %s%s" % (l["name"], esc(m.get("topic", "")),
+    topics = "; ".join("%s %s%s" % (lock_name_label(l["name"]), esc(m.get("topic", "")),
                                      (", about %d min" % m["minutes"]) if m.get("minutes") else "")
                        for l, m in zip(locks, meta))
     targets = [st["final"]["target"] for st in sets]
@@ -823,6 +900,14 @@ def stakes_problems(stakes_text, start_text, cover_texts):
     return out
 
 
+def win_image_path(slug, room):
+    art = room.get("art")
+    path = pathlib.Path("docs/art") / ("%s-win.webp" % art) if art else pathlib.Path("docs/art/<art>-win.webp")
+    if not art or not (ROOT / path).is_file():
+        raise BuildError("%s: win image missing: %s" % (slug, path))
+    return ROOT / path
+
+
 def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     rdir = HERE / "rooms" / slug
     images = cfg["images"]
@@ -849,7 +934,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     art = room.get("art")
     scene = ROOT / "docs" / "art" / ("%s-scene.webp" % art) if art else None
-    win = ROOT / "docs" / "art" / ("%s-win.webp" % art) if art else None
+    win = win_image_path(slug, room)
     title = room["title"]
     letters = [s["letter"] for s in sets]
     fill_a = filler(locks, sets[0])
@@ -858,7 +943,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9; DRAFT for Jon's wording)
     shape = sets[0]["final"]["shape"]
-    pages.append(page("run", run_it(letters, url), "%s: run it" % title, "Group race pack, %d sets" % len(sets),
+    pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
+                      "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
     reads = readouts(room, fill_a)
     script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
@@ -886,11 +972,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
         % (format_token(v["answer"]), format_token(v["miss"]) if v.get("miss") is not None else "none")
         for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
-    legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], l.get("missTitle", ""), l.get("missSays", ""))
+    legend = "".join("<li><b>%s</b> %s %s</li>" % (lock_name_label(l["name"]), fill_a(l.get("missTitle", "")),
+                                                     fill_a(l.get("missSays", "")))
                      for l in locks)
     final_note = ("<p>For each set, the final padlock&rsquo;s expression above is the only one that makes its target, "
                   "up to the order of its parts; the worked solutions show its working.</p>")
-    pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table><h2>The common wrong answers</h2><ul>%s</ul>%s"
+    pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table>"
+                      "<h2>The common wrong answers (shown with Set A's figures)</h2><ul>%s</ul>%s"
                       % (about_box(room, teach, locks, sets), head, rows, legend, final_note), "%s: answer key" % title, "One row per set"))
     sols = ""
     for s in sets:
@@ -902,7 +990,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         work = ("%s first: %s; then + and &minus;: %s" % (first, "; ".join(md), "; ".join(pm)) if md
                 else "+ and &minus; from left to right: %s" % "; ".join(pm))
         sols += "<div class='solution'><b class='set'>Set %s</b><br>%s<br><b>Final padlock:</b> %s = %s. %s.</div>" % (
-            s["letter"], "<br>".join("<b>%s:</b> %s" % (l["name"], f(l["solve"])) for l in locks),
+            s["letter"], "<br>".join("<b>%s</b> %s" % (lock_name_label(l["name"]), f(l["solve"])) for l in locks),
             fin["expr"], fin["target"], work)
     pages.append(page("solutions", sols, "%s: worked solutions" % title, "One line per lock and the final padlock, for each set"))
 
@@ -936,7 +1024,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                 printed, cls, extra = esc(im.get("text", "")), "card herring", f(o.get("flavour"))
             cards.append("<div class='%s' data-id='%s' data-set='%s'>%s<div class='cap'><span class='name'>%s</span>"
                          " &middot; <span class='where'>%s</span><br>%s</div></div>"
-                         % (cls, o["id"], L, art_block(rdir / im["file"], im["label_box"], font, printed, o["id"], L,
+                         % (cls, o["id"], L, art_block(rdir / im["file"], im.get("label_boxes", im.get("label_box")), font, printed, o["id"], L,
                                                        im.get("max_pt", MAX_PT)),
                             o["name"], o.get("where", ""), extra))
         per = 4
@@ -974,9 +1062,13 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                ('<img src="%s" alt="">' % win.as_uri()) if win and win.is_file() else "", fill_a(room.get("win", ""))))
     pages.append(page("certificate", cert, title, "Certificate"))
 
-    numbered = [(st["letter"], [i + 1 for i, pg in enumerate(pages) if ('data-set="%s"' % st["letter"]) in pg[:200]])
+    numbered = [(st["letter"], [i + 1 for i, pg in enumerate(pages)
+                                  if ('data-set="%s"' % st["letter"]) in pg[:200]
+                                  and any(('data-kind="%s"' % kind) in pg[:200]
+                                          for kind in ("cover", "evidence", "locks"))])
                 for st in sets]
-    pages[0] = pages[0].replace(SET_PAGES, set_pages_line(numbered))
+    hint_pages = [i + 1 for i, pg in enumerate(pages) if 'data-kind="hints"' in pg[:200]]
+    pages[0] = pages[0].replace(SET_PAGES, set_pages_line(numbered, hint_pages))
     fonts = "".join("@font-face { font-family: '%s'; src: url('%s'); font-weight: %s; }"
                     % (fam, (HERE / "fonts" / fn).as_uri(), w) for fam, fn, w, _ in FONTS.values())
     foot = ('<span class="brand"><span class="logo"><img src="%s" alt=""></span><b>MaffsGames</b>'
@@ -1064,6 +1156,8 @@ def build(slug, n, seed, target=None):
                 src = pathlib.Path(tmp) / ("%s-pack.html" % slug)
                 src.write_text(doc, encoding="utf-8")
                 pg.goto(src.as_uri())
+                image_data = "data:image/webp;base64," + base64.b64encode(win_image_path(slug, room).read_bytes()).decode("ascii")
+                embedded_win = pg.evaluate(DOWNSCALE_RUN_WIN_JS, image_data)
                 fit = pg.evaluate(FIT_JS, [MIN_PT])
                 for fam in ["Outfit"] + [f[0] for f in FONTS.values()]:
                     if fam not in fit["loaded"]:
@@ -1103,6 +1197,8 @@ def build(slug, n, seed, target=None):
                       % audit["studentPages"])
                 OUT_DIR.mkdir(exist_ok=True)
                 pg.pdf(path=str(out), format="A4", print_background=True, prefer_css_page_size=True)
+            print("page 1 win image embedded at %d x %d pixels (about 200 dpi at print size)"
+                  % (embedded_win["width"], embedded_win["height"]))
             got = pdf_page_count(out)
             if got != npages:
                 out.unlink()
@@ -1115,8 +1211,7 @@ def build(slug, n, seed, target=None):
 # ---- the selftest --------------------------------------------------------------------------------------------------
 
 def selftest():
-    """Every room with a config: its chosen sets must pass; then three faults are planted in the first room's sets,
-    through the same checks the build uses, and each must be caught. Builds no PDF."""
+    """Every configured room's chosen sets pass; planted faults must fail the same checks as the build. No PDF."""
     from playwright.sync_api import sync_playwright
     rooms = sorted(p.parent.name for p in (HERE / "rooms").glob("*/config.json"))
     failures, caught = [], 0
@@ -1143,7 +1238,8 @@ def selftest():
                 shape0 = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
                 probs += teacher_page_problems(
                     [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
-                                            set_pages_line([(x["letter"], [5, 8]) for x in sets])))),
+                                            set_pages_line([(x["letter"], list(range(5 + 4 * i, 9 + 4 * i)))
+                                                            for i, x in enumerate(sets)])))),
                      ("key", text_of(about_box(room, teach, locks, sets)))])
                 if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets)):
                     failures.append("answer key does not tell teachers about the red herrings")
@@ -1188,6 +1284,104 @@ def selftest():
             raise pc.StalePlant("a missing score-sheet row", "the score sheet has no row for set C")
         tables[0] = pc.apply_plant(tables[0], row.group(0), "", name="a missing score-sheet row")
         return [x for x in check_score_sheet(tables, locks, sets) if "0 rows for set C" in x]
+
+    def plant_hint_inside_set_range():
+        numbered = [("A", [6, 7, 8, 9, 30]), ("B", [10, 11, 12, 13])]
+        try:
+            set_pages_line(numbered, [30, 31])
+        except BuildError as e:
+            return [str(e)] if "pack page range is not contiguous" in str(e) else []
+        return []
+
+    def plant_label_box_count():
+        try:
+            label_parts("FIRST · SECOND", [[0, 0, 1, 1]])
+        except BuildError as e:
+            return [str(e)] if "printed parts for" in str(e) else []
+        return []
+
+    def plant_unsplit_single_box():
+        good = label_parts("FIRST · SECOND", [0, 0, 1, 1])[0]
+        if good != "FIRST<br>SECOND":
+            return []
+        bad = pc.apply_plant(good, "<br>", " · ", name="an unsplit single-box label")
+        return label_text_problems(bad)
+
+    def plant_question_colon():
+        good = lock_name_label("Will it fit?")
+        if good != "Will it fit?" or lock_name_label("Stop!") != "Stop!" or lock_name_label("Other") != "Other:":
+            return []
+        bad = pc.apply_plant(good, "?", "?:", name="a colon after a question lock name")
+        return [bad] if bad.endswith("?:") else []
+
+    def plant_broken_unit():
+        good = label_parts("AT 16 °C", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "16\u00a0°C", "16 °C", name="a split number and unit")
+        return label_text_problems(bad)
+
+    def plant_broken_ratio():
+        good = label_parts("= 5 : 1", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "5\u00a0:\u00a01", "5 : 1", name="a split ratio")
+        return label_text_problems(bad)
+
+    def plant_hyphen_minus():
+        good = label_parts("CHILLER \u22128 °C", [0, 0, 1, 1])[0]
+        bad = pc.apply_plant(good, "\u22128", "-8", name="a hyphen-minus on a label")
+        return label_text_problems(bad)
+
+    def plant_repeated_caption_unit():
+        lock = {"instrument": {"label": "CHRISTMAS UNICORNS", "unit": "unicorns"}}
+        good = answer_caption(lock)
+        bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
+        return [bad] if caption_unit_problems(bad, "unicorns") else []
+
+    def audit_planted_pack(bad_locks, overflow_run_image=False):
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            try:
+                pg = offline_context(browser).new_page()
+                cfg = load_config(slug0)
+                doc, _, _, _ = build_html(slug0, room, teach, bad_locks, sets, cfg,
+                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0))
+                with tempfile.TemporaryDirectory() as tmp:
+                    src = pathlib.Path(tmp) / "planted-pack.html"
+                    src.write_text(doc, encoding="utf-8")
+                    pg.goto(src.as_uri())
+                    if overflow_run_image:
+                        pg.locator('.page[data-kind=run] .run-win').evaluate(
+                            "img => { img.style.minHeight = '400mm'; img.style.maxHeight = 'none'; }")
+                    return pg.evaluate(AUDIT_JS)
+            finally:
+                browser.close()
+
+    def plant_unfilled_miss_title():
+        bad = copy.deepcopy(locks)
+        title = bad[0].get("missTitle", "")
+        token = re.search(r"\{\{[\w.-]+\}\}", title)
+        if not token:
+            raise pc.StalePlant("an unfilled missTitle token", "the first lock's missTitle has no token")
+        bad[0]["missTitle"] = pc.apply_plant(title, token.group(), "{{missing.figure}}",
+                                              name="an unfilled missTitle token")
+        return audit_planted_pack(bad)["tokens"]
+
+    def plant_lock_brief_overflow():
+        bad = copy.deepcopy(locks)
+        bad[0]["brief"] += " " + " ".join(["The printed brief still needs space."] * 80)
+        return [x for x in audit_planted_pack(bad)["overflow"] if "locks A" in x]
+
+    def plant_missing_win_image():
+        bad = dict(room, art="missing-win-plant")
+        cfg = load_config(slug0)
+        try:
+            build_html(slug0, bad, teach, locks, sets, cfg, cfg.get("seed", 1),
+                       datetime.date.today().isoformat(), room_url(slug0))
+        except BuildError as e:
+            msg = str(e)
+            return [msg] if slug0 in msg and "docs/art/missing-win-plant-win.webp" in msg else []
+        return []
+
+    def plant_run_image_overflow():
+        return [x for x in audit_planted_pack(locks, overflow_run_image=True)["overflow"] if "run" in x]
 
     def plant_two_expressions():
         # No Kiln set has a target two expressions reach, so the plant searches small whole numbers, in a fixed
@@ -1257,7 +1451,8 @@ def selftest():
     def teacher_texts(run_html=None, about_html=None):
         letters = [x["letter"] for x in sets]
         return [("run", text_of(run_html or run_it(letters, room_url(slug0),
-                                                   set_pages_line([(x, [5, 8]) for x in letters])))),
+                                                   set_pages_line([(x, list(range(5 + 4 * i, 9 + 4 * i)))
+                                                                   for i, x in enumerate(letters)])))),
                 ("key", text_of(about_html or about_box(room, teach, locks, sets)))]
 
     def plant_long_page_one():
@@ -1299,6 +1494,18 @@ def selftest():
               ("a wrong recomputed answer", plant_wrong_answer),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
+              ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
+              ("a clue with a different number of parts and label boxes", plant_label_box_count),
+              ("an unsplit single-box label", plant_unsplit_single_box),
+              ("a colon after a question lock name", plant_question_colon),
+              ("a number separated from its unit", plant_broken_unit),
+              ("a ratio broken around its colon", plant_broken_ratio),
+              ("a hyphen-minus on printed art", plant_hyphen_minus),
+              ("an answer caption repeating its unit", plant_repeated_caption_unit),
+              ("an unfilled missTitle token", plant_unfilled_miss_title),
+              ("a locks page whose briefs leave too little working space", plant_lock_brief_overflow),
+              ("a room with no win image", plant_missing_win_image),
+              ("a page 1 image overflowing the page", plant_run_image_overflow),
               ("a final target two expressions reach", plant_two_expressions),
               ("a final target no expression reaches", plant_no_expression),
               ("a fixed penalty figure on the score sheet", plant_fixed_penalty),

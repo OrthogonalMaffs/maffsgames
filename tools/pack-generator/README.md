@@ -20,6 +20,7 @@ with the same seed gives the same sets every time; `--seed 2` gives a different 
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
 
 Print it **at 100% (actual size), A4, double-sided off**. It is designed to print in black and white.
+Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room without one does not build.
 
 ## What to proofread
 
@@ -50,7 +51,9 @@ Print it **at 100% (actual size), A4, double-sided off**. It is designed to prin
    answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
    ends with the final padlock's target, its rules, a working box and the expression line.
 6. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
-   its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels).
+   its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels). Measure each
+   `label_box` inside the object's printable surface, never to its edge, with a margin of at least 2% of the art's
+   width on any side that meets an edge of the paper, card or screen.
 7. **Hint cards and certificate (last two pages):** the locks' three hints each, then the final padlock's card.
 8. **Footer:** the MaffsGames logo and name, the room, pack version, seed and build date on every page. Give a
    buyer's question the version and seed from the footer and the pack can be rebuilt exactly.

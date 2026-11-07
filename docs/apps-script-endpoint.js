@@ -33,7 +33,12 @@ const EXPECTED_HEADERS = [
   //   question_id — which question a question_answered event was about: the game's own id, or "h" + the
   //                 8-hex FNV-1a hash of the prompt's text (analytics.js; the text itself is never sent).
   //                 scripts/decode-question-ids.py <slug> maps an id back to its question.
-  'question_id'
+  'question_id',
+  // Appended 2026-11-07 (contract ROOM-TIMES) — also at the end. Rows written before the redeploy have it blank.
+  //   detail — the escape-room engine's own field (the only sender): the lock id on question_answered, lock:step on
+  //            hint_used, fresh/resumed on game_started, and on game_completed the outcome, wrongs, hints and the
+  //            times ("escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567"; canon §1.3).
+  'detail'
 ];
 
 // ============================================================
@@ -53,7 +58,7 @@ function doPost(e) {
       cellValue(data.questions_correct), cellValue(data.previous_score),
       cellValue(data.difficulty), cellValue(data.filter_type), cellValue(data.filter_value),
       cellValue(data.client_ts), cellValue(data.seq),
-      cellValue(data.question_id)
+      cellValue(data.question_id), cellValue(data.detail)
     ]);
 
     var rowCount = sheet.getLastRow();
@@ -70,7 +75,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-04-a';
+const SCRIPT_VERSION = '2026-11-07-a';
 
 function doGet(e) {
   return jsonResponse({

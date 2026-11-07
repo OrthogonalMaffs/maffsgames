@@ -11,6 +11,7 @@ generator compares each returned key with the variant's own; any difference fail
 when every lock in it has an entry here: a new room's locks are added here, by lock id, with their own method.
 """
 from fractions import Fraction
+from math import gcd
 
 
 def _sensor_limit(v):
@@ -48,10 +49,57 @@ def _cancel_check(v):
     return {"answer": whole(ans), "miss": whole(miss), "quot": whole(q)}
 
 
+def _christmas_cold_store(v):
+    """Count whole hours against the scaled temperature inequality, including the wrong-sign starting point."""
+    start, minimum, gain, hours = (v[k] for k in ("start", "min", "g", "h"))
+    def first_hour(initial):
+        t = 0
+        while initial * hours + gain * t < minimum * hours:
+            t += 1
+        return t
+    return {"answer": first_hour(start), "miss": first_hour(abs(start)),
+            "rate": Fraction(gain, hours), "rise": minimum - start,
+            "abs": abs(start), "short": minimum - abs(start)}
+
+
+def _christmas_scale_clearance(v):
+    """Convert every height to integer millimetres before subtracting the tree and stand."""
+    ceiling_mm = int(Fraction(str(v["c"])) * 1000)
+    tree_mm = v["d"] * v["k"] * 10
+    stand_mm = v["s"] * 10
+    if (ceiling_mm - tree_mm - stand_mm) % 10:
+        raise ValueError("clearance is not a whole centimetre")
+    return {"answer": (ceiling_mm - tree_mm - stand_mm) // 10,
+            "miss": (ceiling_mm - tree_mm) // 10,
+            "tree": tree_mm // 10, "total": (tree_mm + stand_mm) // 10,
+            "ccm": ceiling_mm // 10}
+
+
+def _christmas_combined_ratios(v):
+    """Enumerate positive B, T, U triples and derive the displayed simplest ratio from the sole solution."""
+    a, b, c, d, total = (v[k] for k in ("a", "b", "c", "d", "N"))
+    matches = [(B, T, total - B - T)
+               for B in range(1, total - 1)
+               for T in range(1, total - B)
+               if B * b == T * a and T * d == (total - B - T) * c]
+    if len(matches) != 1:
+        raise ValueError("combined ratios have %d positive solutions" % len(matches))
+    B, T, U = matches[0]
+    common = gcd(gcd(B, T), U)
+    r1, r2, r3 = B // common, T // common, U // common
+    miss = Fraction(total * d, a + b + d)
+    return {"answer": U, "miss": int(miss) if miss.denominator == 1 else miss,
+            "r1": r1, "r2": r2, "r3": r3,
+            "parts": r1 + r2 + r3, "each": common}
+
+
 RECOMPUTE = {
     "kiln-sensor-limit": _sensor_limit,
     "kiln-fan-restart": _fan_restart,
     "kiln-cancel-check": _cancel_check,
+    "christmas-cold-store": _christmas_cold_store,
+    "christmas-scale-clearance": _christmas_scale_clearance,
+    "christmas-combined-ratios": _christmas_combined_ratios,
 }
 
 
