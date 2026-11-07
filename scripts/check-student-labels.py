@@ -156,11 +156,11 @@ def selftest():
     errs = []
     room = 'escape-rooms/' + 'comic-caper' + '/index.html'
     html = open(os.path.join(ROOT, room), encoding='utf-8').read()
-    good = 'A GCSE escape room on factors, primes and HCF.'
+    good = 'Maths escape room on factors, primes and HCF.'
     if html.count(good) != 3:
         errs.append('%s no longer carries its description three times (description, og, twitter)' % room)
     plants = [
-        ('the old comic-caper description', html.replace(good, 'A GCSE resit escape room on factors, primes and HCF.')),
+        ('the old comic-caper description', html.replace(good, 'Maths resit escape room on factors, primes and HCF.')),
         ('a label in visible text', html.replace('<body>', '<body><p>For post-16 students</p>', 1)),
         ('a label in a script string', html.replace('</body>', '<script>var t = "Retake ready";</script></body>', 1)),
         ('a label in an alt attribute', html.replace('<body>', '<body><img alt="resit class" src="x.png">', 1)),

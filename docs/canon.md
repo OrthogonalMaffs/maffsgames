@@ -313,17 +313,23 @@ The daily email carries the same answer sections for yesterday. **Each kind of g
 
 ## 2.1 Required Tags
 
-**Every game page's and /essentials/'s title and description are generated, never hand-written (Jon, 5 Oct 2026,
-PR #72; /resit/ until 8 Oct 2026).** `data/games.json` holds one search phrase and one description per roster game (plus /essentials/'s
-stated pair); the levels come from the roster's Levels column. `scripts/apply-meta.py` writes `<title>`, the
+**Every game page's, live escape room's, the escape-rooms hub's and /essentials/'s title and description are generated, never hand-written (Jon, 5 Oct 2026,
+PR #72; /resit/ until 8 Oct 2026; rooms 6 Nov 2026, contract ROOM-SEARCH-TITLES).** `data/games.json` holds one search phrase and one description per roster game (plus /essentials/'s
+and the hub's stated pairs); the levels come from the roster's Levels column. `scripts/apply-meta.py` writes `<title>`, the
 meta description and their og:/twitter: copies; `scripts/check-meta.py` (CI) holds every page to it and is
 the authority on the rules:
 - Title: `<phrase> Game – <levels> Maths | MaffsGames`, at most 60 characters (over 60: GCSE only, else the
   game's lowest level; still over, `<phrase> Maths Game | MaffsGames`).
 - Description: `<what the student practises> For <levels>. Free, no sign-up.`, at most 155 characters.
 - "Year 6" and "Starter" never appear (SR-11): a Year 6-only game has no levels sentence.
+- Room title: `<phrase> Escape Room – <level> | MaffsGames`, at most 60 characters. Room description: `Maths escape
+  room on <topics>. <clock> minutes, <level>. Free, no sign-up.`, at most 155 characters: topics are the entry's required
+  `topics`, written by a person, all lower case except acronyms and proper names, never read from the teacher page's lockMeta
+  (whose topics carry their own commas and "and"s; Jon, 6 Nov 2026); the clock from `room.js`, never the sum of lockMeta
+  minutes. The head is a room's only title: its scripts never assign `document.title`. The hub's title and description
+  never count the rooms (§7.5.3); `check-meta.py` fails one that does.
 
-To change one, edit `data/games.json`, run `apply-meta.py`, then `check-meta.py`. A new game gets its
+To change one, edit `data/games.json`, run `apply-meta.py`, then `check-meta.py`. A new game or room gets its
 games.json entry in the PR that adds it, or `check-meta.py` fails.
 
 ### Meta description

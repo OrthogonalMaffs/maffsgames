@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Write every game page's and /essentials/'s search title and description, and every card's search keywords, from data/games.json.
+"""Write every game page's, live escape room's, the hub's and /essentials/'s search title and description, and every card's search keywords, from data/games.json.
 
     python scripts/apply-meta.py            # write
     python scripts/apply-meta.py --dry-run  # report what would change

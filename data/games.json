@@ -6,7 +6,8 @@
   "The rules live in scripts/check-meta.py (its docstring): titles at most 60 characters, descriptions at most 155,",
   "  'Year 6' never shown, the levels sentence and 'Free, no sign-up.' generated.",
   "search_phrase is written exactly as it appears in the title; description is what the student practises.",
-  "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title."
+  "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title.",
+  "\"rooms\": one entry per live escape room (a room whose index.html is not noindex): slug, search_phrase, level, and topics (required, written by a person, always used; never read from the teacher page's lockMeta)."
  ],
  "games": [
   {
@@ -1878,7 +1879,97 @@
    ]
   }
  ],
+ "rooms": [
+  {
+   "slug": "christmas-tree-fiasco",
+   "search_phrase": "Christmas Maths",
+   "level": "KS3 & GCSE",
+   "topics": "negative numbers, scale and ratio"
+  },
+  {
+   "slug": "kiln-disaster",
+   "search_phrase": "Multiples & LCM",
+   "level": "GCSE Foundation",
+   "topics": "multiples, LCM and order of operations"
+  },
+  {
+   "slug": "big-school-begins",
+   "search_phrase": "Year 7 Transition Maths",
+   "level": "KS3",
+   "topics": "coordinates, compass directions, time and money"
+  },
+  {
+   "slug": "canteen-hack",
+   "search_phrase": "Simultaneous Equations",
+   "level": "GCSE",
+   "topics": "averages, simultaneous equations and fractions of an amount"
+  },
+  {
+   "slug": "car-trap",
+   "search_phrase": "Arc Length Maths",
+   "level": "GCSE",
+   "topics": "error intervals, arc length and quadratics"
+  },
+  {
+   "slug": "comic-caper",
+   "search_phrase": "Factors, Primes & HCF",
+   "level": "KS3 & GCSE",
+   "topics": "factors, primes and HCF"
+  },
+  {
+   "slug": "hamster-heist",
+   "search_phrase": "Circumference Maths",
+   "level": "GCSE",
+   "topics": "circumference, bounds and gradient"
+  },
+  {
+   "slug": "heatwave-mutiny",
+   "search_phrase": "LCM and Inequalities",
+   "level": "GCSE",
+   "topics": "LCM, surface area to volume and inequalities"
+  },
+  {
+   "slug": "library-jam",
+   "search_phrase": "Decimals and Angles",
+   "level": "KS3",
+   "topics": "ordering decimals, angles on a straight line and money"
+  },
+  {
+   "slug": "pe-shed-rebellion",
+   "search_phrase": "Inverse Proportion",
+   "level": "GCSE",
+   "topics": "sector area, inverse proportion and sequences"
+  },
+  {
+   "slug": "prom-budget",
+   "search_phrase": "Reverse Percentages",
+   "level": "GCSE",
+   "topics": "reverse percentages, compound growth and Venn diagrams"
+  },
+  {
+   "slug": "rightful-king",
+   "search_phrase": "Venn Diagram",
+   "level": "GCSE Higher",
+   "topics": "counting, exponential decay and conditional probability"
+  },
+  {
+   "slug": "roll-for-initiative",
+   "search_phrase": "Probability Maths",
+   "level": "GCSE",
+   "topics": "probability, scale drawings and area of a circle"
+  },
+  {
+   "slug": "rugby-mud",
+   "search_phrase": "Index Laws Maths",
+   "level": "GCSE Higher",
+   "topics": "area scale factors, combined rates and index laws"
+  }
+ ],
  "pages": {
+  "escape-rooms/index.html": {
+   "title": "Free Maths Escape Rooms for KS3 & GCSE | MaffsGames",
+   "description": "Free maths escape rooms for KS3, GCSE and Core Maths: short, timed class puzzles, with every answer on a teacher page. No sign-up."
+  },
   "essentials/index.html": {
    "title": "Essentials: GCSE Foundation Maths Games | MaffsGames",
    "description": "Maths games for GCSE Foundation students aiming for grade 4: number, algebra, ratio, geometry, probability and statistics. Free, no sign-up."

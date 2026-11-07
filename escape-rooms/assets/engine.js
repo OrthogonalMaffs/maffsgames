@@ -991,7 +991,6 @@
   };
 
   // ---------- go ----------
-  document.title = R.title + ' — MaffsGames';
   build();
   if (load()) el('resumeBtn').style.display = '';
 })();
