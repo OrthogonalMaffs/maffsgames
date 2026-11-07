@@ -7,7 +7,7 @@
   "  'Year 6' never shown, the levels sentence and 'Free, no sign-up.' generated.",
   "search_phrase is written exactly as it appears in the title; description is what the student practises.",
   "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title.",
-  "\"rooms\": one entry per live escape room (a room whose index.html is not noindex): slug, search_phrase, level, and optional short_topics, used only when the topics from its teacher.html would take the description over 155 characters."
+  "\"rooms\": one entry per live escape room (a room whose index.html is not noindex): slug, search_phrase, level, and topics (required, written by a person, always used; never read from the teacher page's lockMeta)."
  ],
  "games": [
   {
