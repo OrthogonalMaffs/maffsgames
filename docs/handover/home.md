@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55): built; the PR holds at a green Gate for Project Claude's review and Jon's approval of the title table. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/handover/contracts/2026-11-06-room-search-titles.md. Entry below.
+- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55; Amendment 2, review fixes, 23:05): titles and topics approved by Jon; review fixes pushed to #693, which holds at the Gate for Project Claude's review and Jon's "merge". Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/handover/contracts/2026-11-06-room-search-titles.md. Entry below.
 
 - PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
 
@@ -19,6 +19,16 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-07 (home): ROOM-SEARCH-TITLES, review fixes (Amendment 2)
+
+Room descriptions no longer read lockMeta: every live room's games.json entry carries a required, person-written "topics" (short_topics renamed), the 14 lists verbatim from Amendment 2; check-meta.py fails a room with none or blank. Every description is at most 120 characters; nothing was shortened. The hub description is Amendment 2's, 130 characters, and check-meta.py fails a hub title or description that counts the rooms (a number, digits or words, up to five words before "room(s)"; KS3 is not one). Plants: no topics, blank topics, topics over 155, the hub count in words and in digits, a count in the hub title: 36 of 36 caught. Comic Caper's description is unchanged, so check-student-labels.py is untouched (its selftest passes). apply-meta.py rewrote 11 heads (kiln-disaster, big-school-begins, comic-caper and rightful-king already matched) and is idempotent. Canon §2.1 updated.
+
+For review: (1) the count check also covers the hub's title, outside the letter of item 3 but the same staleness; (2) it would flag "one room a lesson", rare and arguably a count; (3) this cloud container lacks Python playwright and sympy, so check-changed.py's 31 browser and SymPy checks failed on import and fall to the Gate; every other check passed.
+
+Next: the Gate, then Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall in the PR's report; review cycles 1; amendments 2; usage n/a.
 
 ## 2026-11-06 (home): ROOM-SEARCH-TITLES
 

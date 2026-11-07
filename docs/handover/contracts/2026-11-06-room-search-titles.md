@@ -51,3 +51,20 @@ Remove the line, all lower case. Project Claude's ruling, 6 Nov 18:55:
 1. Remove document.title = R.title + ' — MaffsGames'; from escape-rooms/assets/engine.js (the head is the only source of a room's title). Add the planted-fault check to check-meta.py: it fails if engine.js (or any room script) assigns document.title. Leave teacher.js:231 (noindex pages). Record the engine change in the PR body for review.
 2. Topics: all lower case except acronyms and proper names (LCM, HCF, Venn, Pythagoras); short_topics go through the same rule at generation.
 Everything else as the consolidated ROOM-SEARCH-TITLES contract. Stop at a green Gate for Project Claude's review and Jon's approval of the title table.
+
+## Amendment 2: review fixes (Project Claude, 6 Nov 23:05; Jon approved the titles and the topics table), verbatim
+
+ROOM-SEARCH-TITLES, PR #693, review fixes (Project Claude, 6 Nov 23:05; Jon approved the titles and the topics table). Continue on claude/room-meta, same PR.
+
+TASK: Make every room description read cleanly and remove the hub's room count.
+ROOT CAUSE: Descriptions join the teacher pages' lockMeta topics, which carry their own commas and "and"s ("mean averages, missing value, simultaneous equations and ..."), so several read as the wrong number of topics; the hub description says "Fourteen", which goes stale when a room is added or withdrawn (canon §7.5.3 avoids room counts).
+CLASS CHECK: Yes: the generation rule is shared; every room gets a person-written topics list, held by check-meta.py, not per-room patches.
+EXACT CHANGE:
+1. data/games.json "rooms": rename short_topics to topics, REQUIRED for every live room, and always used (lockMeta topics are no longer read for descriptions). check-meta.py: description = "Maths escape room on <topics>. <clock> minutes, <level>. Free, no sign-up." at most 155; CI fails a live room with no topics. Topics are written as given (no case rewriting needed beyond the existing acronym rule).
+2. Topics, verbatim: big-school-begins "coordinates, compass directions, time and money" · canteen-hack "averages, simultaneous equations and fractions of an amount" · car-trap "error intervals, arc length and quadratics" · christmas-tree-fiasco "negative numbers, scale and ratio" · comic-caper "factors, primes and HCF" · hamster-heist "circumference, bounds and gradient" · heatwave-mutiny "LCM, surface area to volume and inequalities" · kiln-disaster "multiples, LCM and order of operations" · library-jam "ordering decimals, angles on a straight line and money" · pe-shed-rebellion "sector area, inverse proportion and sequences" · prom-budget "reverse percentages, compound growth and Venn diagrams" · rightful-king "counting, exponential decay and conditional probability" · roll-for-initiative "probability, scale drawings and area of a circle" · rugby-mud "area scale factors, combined rates and index laws".
+3. Hub description, verbatim: "Free maths escape rooms for KS3, GCSE and Core Maths: short, timed class puzzles, with every answer on a teacher page. No sign-up." Add a check: the hub description contains no number word or digit counting rooms.
+4. Plants: a live room with no topics, fails; the hub description with a room count, fails. Update check-student-labels.py's fixture only if Comic Caper's description changed (it does not; topics unchanged).
+5. Re-run apply-meta.py, check-meta.py (selftest), check-changed.py; update the PR body's table.
+DO NOT TOUCH: titles (approved), the engine change, room.js and teacher pages, everything outside the metadata system.
+SUCCESS CONDITION: Every description lists its topics cleanly; the hub has no room count; checks and plants pass; Gate green; stop for Project Claude's review and Jon's "merge".
+STOP IF: any description exceeds 155 characters with its topics (report; do not shorten them); a change outside the metadata system seems necessary.

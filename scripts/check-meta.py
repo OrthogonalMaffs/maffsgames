@@ -28,11 +28,13 @@ The rules (Jon, 5 Oct 2026):
   - Escape rooms (contract ROOM-SEARCH-TITLES, Jon, 6 Nov 2026): every live room (its index.html is not noindex) has one
     entry in games.json's "rooms", and the hub is in "pages". Title: "<search_phrase> Escape Room – <level> | MaffsGames",
     at most 60 characters; over 60, "<search_phrase> Escape Room | MaffsGames", reported. Description: "Maths escape room
-    on <topics>. <clock> minutes, <level>. Free, no sign-up.", at most 155 characters. <topics> is the lockMeta topics in
-    the room's teacher.html, joined "A, B and C", all lower case except acronyms and ROOM_PROPER; over 155, the entry's
-    short_topics through the same rule. <clock> is `minutes:` in its room.js, the start screen's figure, never the sum
-    of lockMeta minutes (those are puzzle time). The head is the only source of a room's title: neither the engine nor a
-    room script assigns document.title (teacher.js may: its pages are noindex).
+    on <topics>. <clock> minutes, <level>. Free, no sign-up.", at most 155 characters. <topics> is the entry's required
+    "topics", written by a person ("A, B and C"), all lower case except acronyms and ROOM_PROPER; never read from the
+    teacher page's lockMeta, whose topics carry their own commas and "and"s (Jon, 6 Nov 2026, PR #693 review). <clock>
+    is `minutes:` in its room.js, the start screen's figure, never the sum of lockMeta minutes (those are puzzle time).
+    The head is the only source of a room's title: neither the engine nor a room script assigns document.title
+    (teacher.js may: its pages are noindex). The hub's title and description never count the rooms (canon §7.5.3):
+    a count goes stale when a room is added or withdrawn.
   - Search keywords (contract SEARCH-KEYWORDS, Jon, 4 Nov 2026): every game has "keywords", at least 4, each lower
     case, trimmed, 2-40 characters, none twice. Every card on the portal (a.game-card) and /essentials/ (a.card)
     carries data-keywords="kw1 | kw2 | ..." from the record its link resolves to: the game's, or for a page that is not
@@ -41,8 +43,8 @@ The rules (Jon, 5 Oct 2026):
 It fails when:
   - games.json's slugs differ from the roster's numbered rows (a withdrawn game, numbered "—", is
     not one), or one is listed twice, or a phrase or description is empty or "PHRASE NEEDED";
-  - a live room has no "rooms" entry, an entry is not a live room or is listed twice, its timer or lockMeta cannot be
-    read, or its description is over 155 with no short_topics or with them; a room script assigns document.title;
+  - a live room has no "rooms" entry, an entry is not a live room or is listed twice, has no topics, or its timer
+    cannot be read; a room script assigns document.title; the hub's title or description counts the rooms;
   - a generated title is over 60 or a description over 155, two titles are the same, or any title
     or description says "Year 6" or "Starter";
   - a page's <title>, meta description, og:/twitter: copies differ from what games.json generates,
@@ -86,6 +88,12 @@ ROOMS_DIR = "escape-rooms"
 # Keep their capitals in a room's topics, with any all-capitals word (LCM, HCF).
 ROOM_PROPER = {"Venn", "Pythagoras", "Celsius"}
 ASSIGNS_TITLE = re.compile(r"""document\s*(?:\.\s*title|\[\s*["']title["']\s*\])\s*=(?!=)""")
+HUB = ROOMS_DIR + "/index.html"
+# A count of rooms in the hub's head: a number, in digits or words, up to five words before "room(s)"
+# ("Fourteen free narrative maths escape rooms", "14 rooms"). A digit inside a word (KS3) is not one.
+ROOM_COUNT = re.compile(r"\b(?:\d+|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen"
+                        r"|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|dozen)\b"
+                        r"(?:[\s-]+[^\W\d_]+){0,5}?[\s-]+rooms?\b", re.I)
 
 
 # ---------------------------------------------------------------------------
@@ -160,18 +168,6 @@ def room_clock(js):
     return int(found[0]) if len(found) == 1 else None
 
 
-def room_topics(page):
-    """The lockMeta topics in a teacher page's window.TEACH; [] when they cannot be read."""
-    m = re.search(r'"lockMeta"\s*:\s*(?=\[)', page)
-    if not m:
-        return []
-    try:
-        meta, _ = json.JSONDecoder().raw_decode(page[m.end():])
-        return [html.unescape(x["topic"]).strip() for x in meta]
-    except (ValueError, KeyError, TypeError):
-        return []
-
-
 def topics_lower(text):
     """All lower case except acronyms and ROOM_PROPER."""
     return re.sub(r"[^\W\d_]+", lambda m: m.group(0) if m.group(0) in ROOM_PROPER or (len(m.group(0)) > 1 and m.group(0).isupper())
@@ -214,24 +210,20 @@ def expected_rooms(root, data):
         if clock is None:
             errors.append("%s: the room's timer cannot be read from its room.js" % slug)
             continue
-        topics = room_topics((root / ROOMS_DIR / slug / "teacher.html").read_text(encoding="utf-8"))
-        if not topics:
-            errors.append("%s: no lockMeta topics can be read from its teacher.html" % slug)
+        topics = r.get("topics")
+        if not isinstance(topics, str) or not topics.strip():
+            errors.append("games.json: room %s has no topics (a person writes them)" % slug)
             continue
-        joined = topics[0] if len(topics) == 1 else ", ".join(topics[:-1]) + " and " + topics[-1]
-        description, short = room_description(joined, clock, level), False
-        if len(description) > DESC_MAX:
-            if not r.get("short_topics"):
-                errors.append("%s: description is %d characters with no short_topics (a person writes them)" % (slug, len(description)))
-                continue
-            description, short = room_description(r["short_topics"], clock, level), True
-            if len(description) > DESC_MAX:
-                errors.append("%s: description is still over %d characters with its short_topics (%d)" % (slug, DESC_MAX, len(description)))
-                continue
         title, fallback = room_title(phrase, level)
+        # Over 155 is caught with every page's description in expected(); topics are never shortened here.
         out["%s/%s/index.html" % (ROOMS_DIR, slug)] = {
-            "slug": "%s/%s" % (ROOMS_DIR, slug), "title": title, "description": description,
-            "canonical": SITE + "%s/%s/" % (ROOMS_DIR, slug), "fallback": fallback, "short": short}
+            "slug": "%s/%s" % (ROOMS_DIR, slug), "title": title, "description": room_description(topics.strip(), clock, level),
+            "canonical": SITE + "%s/%s/" % (ROOMS_DIR, slug), "fallback": fallback}
+    hub = data.get("pages", {}).get(HUB, {})
+    for f in ("title", "description"):
+        m = ROOM_COUNT.search(hub.get(f, ""))
+        if m:
+            errors.append("games.json: pages %s %s counts the rooms (%r): a count goes stale (canon §7.5.3)" % (HUB, f, m.group(0)))
     return out, errors
 
 
@@ -577,7 +569,7 @@ def selftest():
         rooms_read = [p.relative_to(BASE).as_posix() for p in sorted((BASE / ROOMS_DIR).glob("assets/*.js"))]
         for d in (BASE / ROOMS_DIR).iterdir():
             if (d / "room.js").is_file():
-                rooms_read += ["%s/%s/%s" % (ROOMS_DIR, d.name, f) for f in ("room.js", "index.html", "teacher.html")]
+                rooms_read += ["%s/%s/%s" % (ROOMS_DIR, d.name, f) for f in ("room.js", "index.html")]
         for rel in rooms_read:
             (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(BASE / rel, tmp / rel)
@@ -663,16 +655,25 @@ def selftest():
              "room it-vengeance is not a live room"),
             ("a room listed twice", lambda: data(lambda d: d["rooms"].append(dict(room_entry("kiln-disaster")(d)))),
              "room kiln-disaster listed 2 times"),
-            ("a description over 155 with no short_topics", lambda: data(lambda d: room_entry("rightful-king")(d).pop("short_topics")),
-             "rightful-king: description is"),
-            ("short_topics still over 155", lambda: data(lambda d: room_entry("rightful-king")(d).update(short_topics="x" * 150)),
-             "still over 155"),
+            ("a live room with no topics", lambda: data(lambda d: room_entry("rightful-king")(d).pop("topics")),
+             "room rightful-king has no topics"),
+            ("a live room with blank topics", lambda: data(lambda d: room_entry("rightful-king")(d).update(topics="  ")),
+             "room rightful-king has no topics"),
+            ("topics that take the description over 155", lambda: data(lambda d: room_entry("rightful-king")(d).update(topics="x" * 120)),
+             "escape-rooms/rightful-king/index.html: description is"),
+            ("the hub description with a room count in words", lambda: data(lambda d: d["pages"][HUB].update(
+                description="Fourteen free narrative maths escape rooms for KS3, GCSE and Core Maths.")),
+             "escape-rooms/index.html description counts the rooms"),
+            ("the hub description with a room count in digits", lambda: data(lambda d: d["pages"][HUB].update(
+                description="15 maths escape rooms for KS3 and GCSE. No sign-up.")),
+             "escape-rooms/index.html description counts the rooms"),
+            ("the hub title with a room count", lambda: data(lambda d: d["pages"][HUB].update(
+                title="Fourteen Maths Escape Rooms | MaffsGames")),
+             "escape-rooms/index.html title counts the rooms"),
             ("a clock differing from room.js", lambda: edit(kiln_js, lambda t: re.sub(r"(?m)^(\s*minutes:\s*)\d+", r"\g<1>16", t, 1)),
              "escape-rooms/kiln-disaster/index.html: meta description is"),
             ("a timer that cannot be read", lambda: edit(kiln_js, lambda t: re.sub(r"(?m)^\s*minutes:\s*\d+,?\n", "", t, 1)),
              "kiln-disaster: the room's timer cannot be read"),
-            ("no lockMeta topics", lambda: edit("escape-rooms/kiln-disaster/teacher.html", lambda t: t.replace('"lockMeta"', '"lockmeta"', 1)),
-             "kiln-disaster: no lockMeta topics"),
             ("the engine assigns document.title", lambda: edit(engine, lambda t: t + "\ndocument.title = R.title;\n"),
              "escape-rooms/assets/engine.js assigns document.title"),
             ("a room script assigns document.title", lambda: edit(kiln_js, lambda t: t + "\ndocument['title'] = 'x';\n"),
@@ -718,8 +719,6 @@ def table(root):
             name += " (PENDING)"
         if v.get("fallback"):
             name += " (fallback title)"
-        if v.get("short"):
-            name += " (short_topics)"
         lines.append("| %s | %s | %s | %d | %s | %d |" % (name, cell(cur), cell(v["title"]), len(v["title"]),
                                                        cell(v["description"]), len(v["description"])))
     return "\n".join(lines), errors

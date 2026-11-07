@@ -323,9 +323,11 @@ the authority on the rules:
 - Description: `<what the student practises> For <levels>. Free, no sign-up.`, at most 155 characters.
 - "Year 6" and "Starter" never appear (SR-11): a Year 6-only game has no levels sentence.
 - Room title: `<phrase> Escape Room – <level> | MaffsGames`, at most 60 characters. Room description: `Maths escape
-  room on <topics>. <clock> minutes, <level>. Free, no sign-up.`, at most 155 characters: topics from the teacher page's
-  lockMeta, all lower case except acronyms and proper names (over 155: the entry's `short_topics`, or CI fails); the clock
-  from `room.js`, never the sum of lockMeta minutes. The head is a room's only title: its scripts never assign `document.title`.
+  room on <topics>. <clock> minutes, <level>. Free, no sign-up.`, at most 155 characters: topics are the entry's required
+  `topics`, written by a person, all lower case except acronyms and proper names, never read from the teacher page's lockMeta
+  (whose topics carry their own commas and "and"s; Jon, 6 Nov 2026); the clock from `room.js`, never the sum of lockMeta
+  minutes. The head is a room's only title: its scripts never assign `document.title`. The hub's title and description
+  never count the rooms (§7.5.3); `check-meta.py` fails one that does.
 
 To change one, edit `data/games.json`, run `apply-meta.py`, then `check-meta.py`. A new game or room gets its
 games.json entry in the PR that adds it, or `check-meta.py` fails.
