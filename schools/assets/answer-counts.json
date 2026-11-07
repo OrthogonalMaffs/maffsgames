@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-07T11:55:27Z",
+ "as_of": "2026-11-07T21:04:48Z",
  "games": {
   "52dle": 11,
   "angle-ace": 5,
@@ -30,7 +30,7 @@
   "escape-big-school-begins": 262,
   "escape-canteen-hack": 169,
   "escape-car-trap": 125,
-  "escape-comic-caper": 357,
+  "escape-comic-caper": 365,
   "escape-hamster-heist": 687,
   "escape-heatwave-mutiny": 184,
   "escape-it-vengeance": 23,
@@ -65,7 +65,7 @@
   "integration-duel": 30,
   "its-on-sale": 10,
   "just-pythag-it-bruv": 43,
-  "like-terms-collector": 2323,
+  "like-terms-collector": 2326,
   "linear-equation-solver": 147,
   "log-laws": 16,
   "maths-court": 77,
@@ -98,7 +98,7 @@
   "surd-simplifier": 239,
   "suvat": 19,
   "take-a-walk": 14,
-  "tax-theft": 339,
+  "tax-theft": 366,
   "terrible-advice": 133,
   "test-the-claim": 1,
   "the-6-ps": 61,
@@ -109,11 +109,11 @@
   "truth-buster": 63,
   "unit-converter": 527,
   "who-ate-all-the-pies": 22,
-  "whose-side-are-you-on": 178,
+  "whose-side-are-you-on": 181,
   "word-problem-decoder": 33,
   "wrong-on-the-internet": 12,
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 23519
+ "total": 23560
 }
