@@ -467,6 +467,10 @@ jobs:
           # under games/ formats a date or number in the browser's own locale (toLocale*String or Intl without 'en-GB'),
           # keeps its own *_scores list, or draws a Top scores panel any way but MaffsScoreHistory.renderTop. Its Chromium
           # half is a content line (scripts/test-top-scores.py).
+          # The KaTeX CSS check (stdlib, about a second; contract PIZZA-CARDS, Amendment 1, Jon, 7 Nov 2026; canon
+          # §7.1.1): no page under games/ that loads KaTeX, nor a local stylesheet it links, has a rule whose selector
+          # ends in a descendant `span` or `*` with display:block (it stacks KaTeX's own spans; use `>`). Self-test:
+          # the amendment's four planted rules, the scope, the two old game rules restored, a linked stylesheet.
           - name: Site-wide checks
             timeout: 10
             job_timeout: 20
@@ -493,6 +497,7 @@ jobs:
               Findings register (every audit finding filed per game, schema valid; fixed entries name their PR)|python scripts/audit-register.py --check --selftest
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
               Top scores, static (no date or number in the browser's locale under games/; no own *_scores list; panels on renderTop)|python scripts/check-top-scores.py && python scripts/check-top-scores.py --selftest
+              KaTeX CSS (canon 7.1.1: no rule on a KaTeX page ends in a descendant span or * with display:block)|python scripts/check-katex-css.py && python scripts/check-katex-css.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
