@@ -19,3 +19,16 @@ EXACT CHANGE (index.html only, plus test and /updates/):
 DO NOT TOUCH: schools/assets/firebase-leaderboard.js and Firebase rules; schools/assets/analytics.js and the Sheet endpoint; MaffsLevel; the ticker's animation, speed, pause button and reduced-motion rule; the badge logic; every game card; every other part of index.html; environment/network settings; the files under COORDINATION.
 SUCCESS CONDITION: every ticker item whose game has a live card opens that game, with ?level= only for a level its card declares; items without a card stay plain; only the first set is keyboard-reachable; pause unchanged; ticker_clicked sends slug and badge type; test and plants pass; Gate green; contract saved; close-out entry in the PR body. Stop for Project Claude's review and Jon's "merge".
 STOP IF: a card's data-levels is missing or not in a form the union can be built from (report which cards); a change outside index.html, its test, canon's analytics line and /updates/ seems necessary; merging needs a route other than merge-pr.py (stop and ask).
+
+---
+
+AMENDMENT 2 (Jon, 7 Nov 2026, rulings on the STOP for check-ticker-pause.py), verbatim:
+
+Thank you. Rulings:
+1. Yes: add the check-ticker-pause.py edit (accept focus on anything inside the scores; docstring updated). All five of its plants must still be caught.
+2. Your readings on focus ring (keyboard only), archived marker (none exists), and the second-card test are accepted.
+3. The endpoint redeploy is DONE (Jon, 16:41; /exec reports 2026-11-07-a): detail now lands in column S. State that in the PR body instead of "until then".
+4. Fix the docs/apps-script-endpoint.js comment that calls escape rooms "the only sender" of detail: comment only, no SCRIPT_VERSION bump, no behaviour change.
+5. SECURITY, in this PR: escape every Firebase-sourced string the ticker renders (game name, initials, level label, score text) with the existing esc helper, not only the new link label. Add plants: initials `<img src=x onerror=alert(1)>` and a game name containing `<b>`, both rendered as literal text, no element created. Report what the Firebase rules (database.rules.json or wherever they live) allow in initials and game fields.
+6. List, without changing, every other place on the site that renders Firebase leaderboard text (file:line), and whether each escapes it. That list goes in the PR body for a follow-up.
+Then open the PR with contract, report and close-out entry (cloud.md), and stop at a green Gate for review.

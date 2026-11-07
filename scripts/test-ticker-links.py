@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Portal score ticker links (a score whose game has a portal card opens it, with its level only when a card lists that level and never a board key; no card means plain text; only the first set is in the Tab order and focus on a link pauses the scores; ticker_clicked carries the slug and badge; taps at least 24 px at 390 and 1280; planted faults caught) |
+# ci-line: Portal score ticker links (a score whose game has a portal card opens it, with its level only when a card lists that level and never a board key; no card means plain text; only the first set is in the Tab order and focus on a link pauses the scores; ticker_clicked carries the slug and badge; Firebase text shown as text, never markup; taps at least 24 px at 390 and 1280; planted faults caught) |
 # ci-deps: index.html
-"""Contract TICKER-LINKS (Jon, 7 Nov 2026; Amendment 1): each score in the portal's ticker is a link to its game.
+"""Contract TICKER-LINKS (Jon, 7 Nov 2026; Amendments 1-2): each score in the portal's ticker is a link to its game.
 
     python scripts/test-ticker-links.py              # the checks at 1280 and 390, then the planted faults
     python scripts/test-ticker-links.py --no-plants
@@ -19,11 +19,14 @@ none today). Checked in Chromium:
   Size      every link is at least 24 px tall (WCAG 2.5.8); the heights are printed.
   Keyboard  Tab from the pause button visits the first set's links in order and no link in a repeat set; the focused link has a
             visible ring and the scores stop while it has focus. Every link in a repeat set has tabindex -1.
+  Escaping  hostile Firebase text (initials <img src=x onerror=alert(1)>, a game name with <b>, a level with <i>) shows as literal
+            text in the score and its accessible name; no element is made from it and no dialog opens.
   Clicks    with mfg() replaced by a recorder, a click on the high, weekly and plain links sends ticker_clicked once each, with
             exactly {game_slug, detail}; a click on a plain-text score sends nothing.
 
 Plants (scripts/plant_common.py, so a plant that does not apply fails the run): a board key passed as ?level=, a repeat set's links left
-focusable, a slug with no card linked, a click that sends no event, and (beyond the contract's four) no underline on hover.
+focusable, a slug with no card linked, a click that sends no event, and (beyond the contract's four) no underline on hover; from
+Amendment 2, the initials and the game name each rendered as markup.
 """
 import argparse
 import asyncio
@@ -39,7 +42,10 @@ import bank_common as bc  # noqa: E402
 import plant_common as pc  # noqa: E402
 
 DAY = 86400000
-# (slug, levelKey, level label, score, initials, expected tag, expected href, expected detail)
+HOSTILE_INITIALS = '<img src=x onerror=alert(1)>'
+HOSTILE_GAME = '<b>Bold</b> "Engine" & co'
+HOSTILE_LEVEL = '<i>GCSE</i>'
+# (slug, levelKey, level label, score, initials, expected tag, expected href, expected detail[, game name])
 FEED = [
     ('trig-wars', 'gcse', 'GCSE', 900, 'ABC', 'A', 'games/trig-wars/?level=gcse', 'high'),
     ('six-sevens-bruv', 'q20', '20 questions', 500, 'DEF', 'A', 'games/six-sevens-bruv/', 'weekly'),
@@ -48,6 +54,10 @@ FEED = [
     ('whose-side-are-you-on', 'stage-1', 'Stage 1', 40, 'JKL', 'SPAN', None, None),
     (None, None, 'GCSE', 41, 'MNO', 'SPAN', None, None),
     ('trig-wars', 'alevel', 'A-Level', 10, 'PQR', 'A', 'games/trig-wars/?level=alevel', 'plain'),
+    # Hostile text (Amendment 2, ruling 5). The rules refuse such initials, but let `game` and `level` be any text; each must show as
+    # literal text, with no element made from it.
+    (None, None, 'GCSE', 42, HOSTILE_INITIALS, 'SPAN', None, None),
+    ('estimation-engine', 'gcse', HOSTILE_LEVEL, 43, 'STU', 'A', 'games/estimation-engine/?level=gcse', 'plain', HOSTILE_GAME),
 ]
 # boards (Firebase keys): trig-wars gcse's best is r0's 900 (high score); six-sevens q20's week best is r1's 500 under an older 999
 # (weekly best); trig-wars alevel's best is an old 50 (plain, "best: 50"); estimation-engine has no board (plain).
@@ -57,6 +67,7 @@ BOARDS = {
     'trig_wars_alevel': {'a': {'score': 50, 'ago': 30 * DAY}},
 }
 NAME0 = 'Play Trig Wars (GCSE): high score 900 by ABC'
+NAME8 = 'Play %s (%s): score 43 by STU' % (HOSTILE_GAME, HOSTILE_LEVEL)
 GAME = {'trig-wars': 'Trig Wars', 'six-sevens-bruv': 'Six Sevens, Bruv', 'estimation-engine': 'Estimation Engine',
         'whose-side-are-you-on': 'whose-side-are-you-on'}
 
@@ -87,7 +98,7 @@ FAKE_SDK = r"""
   window.firebase = { apps: [], initializeApp: function () { window.firebase.apps.push({}); return {}; },
                       app: function () { return {}; }, database: function () { return { ref: ref }; } };
 })();
-""" % (json.dumps([list(f[:5]) + [GAME.get(f[0], 'Old Game')] for f in FEED]), json.dumps(BOARDS))
+""" % (json.dumps([list(f[:5]) + [f[8] if len(f) > 8 else GAME.get(f[0], 'Old Game')] for f in FEED]), json.dumps(BOARDS))
 
 # The second estimation-engine card, placed just before the real one (inside its grid).
 CARD_ANCHOR = '<a href="games/estimation-engine/" class="game-card"'
@@ -115,6 +126,10 @@ ACTIVE = """() => { const a = document.activeElement, inner = document.querySele
            paused: document.getElementById('scoreTicker').classList.contains('tp-focus') }; }"""
 TX = """() => { const i = document.querySelector('#scoreTickerTrack .score-ticker-inner'); if (!i) return null;
   const m = getComputedStyle(i).transform; return m === 'none' ? 0 : parseFloat(m.split(',')[4]); }"""
+HOSTILE_JS = """() => { const t = document.getElementById('scoreTickerTrack'), inner = t.querySelector('.score-ticker-inner');
+  const first = [...inner.children].filter(e => e.classList.contains('score-ticker-item'));
+  return { img: t.querySelectorAll('img').length, b: t.querySelectorAll('b').length, i: t.querySelectorAll('i').length,
+           t7: first[7] ? first[7].textContent : '', t8: first[8] ? first[8].textContent : '', n8: first[8] ? first[8].getAttribute('aria-label') : null }; }"""
 RECORDER = """() => { window.__calls = []; window.mfg = function (n, p) { window.__calls.push([n, JSON.parse(JSON.stringify(p || {}))]); };
   document.addEventListener('click', function (e) { if (e.target.closest && e.target.closest('#scoreTickerTrack a')) e.preventDefault(); }); }"""
 
@@ -138,6 +153,7 @@ async def context(browser, base, size, body):
     page = await ctx.new_page()
     errs = []
     page.on('pageerror', lambda e: errs.append(str(e)[:120]))
+    page.on('dialog', lambda d: (errs.append('a dialog opened: %s' % d.message), asyncio.ensure_future(d.dismiss())))
     await page.goto(base + '/', wait_until='load', timeout=20000)
     await page.wait_for_selector('#scoreTickerTrack .score-ticker-inner', timeout=8000)
     await page.wait_for_timeout(400)
@@ -179,6 +195,16 @@ async def checks(browser, base, size, body, report=None):
                 f.append('%s is %.1f px tall, under 24' % (what, it['h']))
         if items[0]['name'] != NAME0:
             f.append('%s: score 0 is named %r, expected %r' % (where, items[0]['name'], NAME0))
+        hz = await page.evaluate(HOSTILE_JS)
+        for tag, src in (('img', 'the initials'), ('b', 'the game name'), ('i', 'the level label')):
+            if hz[tag]:
+                f.append('%s: Firebase text became markup: %d <%s> element(s) made from %s' % (where, hz[tag], tag, src))
+        if HOSTILE_INITIALS not in hz['t7']:
+            f.append('%s: the hostile initials do not show as literal text (%r)' % (where, hz['t7'][:80]))
+        if HOSTILE_GAME not in hz['t8'] or HOSTILE_LEVEL not in hz['t8']:
+            f.append('%s: the hostile game name or level does not show as literal text (%r)' % (where, hz['t8'][:80]))
+        if hz['n8'] != NAME8:
+            f.append('%s: the hostile score is named %r, expected %r' % (where, hz['n8'], NAME8))
         if report is not None and heights:
             report.append('%s: links %.1f-%.1f px tall' % (where, min(heights), max(heights)))
 
@@ -258,6 +284,8 @@ PLANTS = [
      "if (!slug) return '';\n    if (!own.call(cardLevels, slug)) return 'games/' + slug + '/';", r'whose-side-are-you-on, stage-1\) is a <a>'),
     ('a click that sends no event', "mfg('ticker_clicked', {", "String('ticker_clicked', {", r'a click on score \d \(high\) sent \[\]'),
     ('no underline on hover', 'a.score-ticker-item:hover .play-cue,', '', r'not underlined on hover'),
+    ('initials rendered as markup', "esc(s.initials) + '</span> &mdash; '", "s.initials + '</span> &mdash; '", r'<img> element'),
+    ('a game name rendered as markup', "esc(s.game) + '</span>' + levelStr", "s.game + '</span>' + levelStr", r'<b> element'),
 ]
 
 

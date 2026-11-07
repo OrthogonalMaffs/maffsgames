@@ -3753,28 +3753,30 @@ loadFact();
     return 'games/' + slug + '/' + (levelKey && cardLevels[slug].indexOf(levelKey) >= 0 ? '?level=' + levelKey : '');
   }
 
-  function escAttr(v) { return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+  // Every string the ticker shows comes from Firebase, whose rules let `game` and `level` be any text (firebase/database.rules.json):
+  // each one goes through esc() into the page, as text or as an attribute value, never as markup.
+  function esc(v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
   // dup: the item is in one of the aria-hidden repeat sets, so its link is kept out of the Tab order.
   function buildTickerItem(s, dup) {
     var cls = s.highScore ? ' high-score' : s.weeklyBest ? ' weekly-best' : '';
-    var levelStr = s.level && s.level !== '' ? ' <span class="time-ago">(' + s.level + ')</span>' : '';
+    var levelStr = s.level && s.level !== '' ? ' <span class="time-ago">(' + esc(s.level) + ')</span>' : '';
     var href = tickerHref(s.slug, s.levelKey);
     var h;
     if (href) {
       var name = 'Play ' + s.game + (s.level ? ' (' + s.level + ')' : '') + ': ' +
         (s.highScore ? 'high score ' : s.weeklyBest ? 'weekly best ' : 'score ') + s.score + (s.initials ? ' by ' + s.initials : '');
-      h = '<a class="score-ticker-item' + cls + '" href="' + href + '" data-slug="' + s.slug + '" data-detail="' +
-        (s.highScore ? 'high' : s.weeklyBest ? 'weekly' : 'plain') + '" aria-label="' + escAttr(name) + '"' + (dup ? ' tabindex="-1"' : '') + '>';
+      h = '<a class="score-ticker-item' + cls + '" href="' + href + '" data-slug="' + esc(s.slug) + '" data-detail="' +
+        (s.highScore ? 'high' : s.weeklyBest ? 'weekly' : 'plain') + '" aria-label="' + esc(name) + '"' + (dup ? ' tabindex="-1"' : '') + '>';
     } else {
       h = '<span class="score-ticker-item' + cls + '">';
     }
     if (s.highScore) h += '<span class="hs-badge">&#127942; HIGH SCORE</span> ';
     else if (s.weeklyBest) h += '<span class="hs-badge">&#11088; WEEKLY BEST</span> ';
-    if (s.initials) h += '<span class="score-val">' + s.initials + '</span> &mdash; ';
-    h += '<span class="game-name">' + s.game + '</span>' + levelStr;
-    h += ' &mdash; <span class="score-val">' + s.score + '</span>';
-    if (!s.highScore && s.best) h += ' <span class="best-target">&middot; best: ' + s.best + '</span>';
+    if (s.initials) h += '<span class="score-val">' + esc(s.initials) + '</span> &mdash; ';
+    h += '<span class="game-name">' + esc(s.game) + '</span>' + levelStr;
+    h += ' &mdash; <span class="score-val">' + esc(s.score) + '</span>';
+    if (!s.highScore && s.best) h += ' <span class="best-target">&middot; best: ' + esc(s.best) + '</span>';
     h += ' <span class="time-ago">&middot; ' + timeAgo(s.timestamp) + '</span>';
     if (href) h += ' <span class="play-cue">Play <span aria-hidden="true">&rarr;</span></span>';
     h += (href ? '</a>' : '</span>') + '<span class="score-ticker-sep">|</span>';
