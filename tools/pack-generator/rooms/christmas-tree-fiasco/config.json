@@ -6,9 +6,9 @@
   "certificate_title": "Tree delivered",
   "images": [
     {"file": "art/xmas-01-truck-display.webp", "role": "clue", "object": "truck-display", "label_boxes": [[245, 315, 945, 470], [245, 575, 945, 735]], "font": "label"},
-    {"file": "art/xmas-02-clipboard.webp", "role": "clue", "object": "eric-clipboard", "label_box": [340, 230, 1025, 1070], "font": "hand"},
+    {"file": "art/xmas-02-clipboard.webp", "role": "clue", "object": "eric-clipboard", "label_box": [340, 230, 913, 1070], "font": "hand"},
     {"file": "art/xmas-03-prize-leaflet.webp", "role": "clue", "object": "prize-leaflet", "label_box": [565, 275, 1100, 1010], "font": "label"},
-    {"file": "art/xmas-04-hall-plan.webp", "role": "clue", "object": "hall-plan", "label_box": [145, 825, 1100, 995], "font": "label"},
+    {"file": "art/xmas-04-hall-plan.webp", "role": "clue", "object": "hall-plan", "label_box": [145, 790, 1100, 965], "font": "label"},
     {"file": "art/xmas-05-packing-slip.webp", "role": "clue", "object": "packing-slip", "label_box": [125, 390, 1120, 990], "font": "label"},
     {"file": "art/xmas-06-sticky-note.webp", "role": "clue", "object": "sticky-note", "label_box": [400, 245, 920, 1080], "font": "hand"},
     {"file": "art/xmas-07-old-box.webp", "role": "herring", "object": "old-box", "label_box": [280, 525, 1070, 925], "font": "hand", "text": "DO NOT USE"},
