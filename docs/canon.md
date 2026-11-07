@@ -249,6 +249,7 @@ student types is ever passed as `question_text`.** With neither field the event 
 | `filter_applied` | A level pill, topic pill or the New & updated toggle is clicked; or 1000 ms after the last search keystroke, and only if the trimmed query changed | level, topic, fresh, search_used, search_length, search_query, result_count, trigger |
 | `game_card_clicked` | A `.game-card` link is clicked, via one delegated listener | the same seven state parameters, plus game_slug and section |
 | `section_clicked` | A labelled element in a portal feature section is clicked (a link), or a labelled toggle is opened. Any page that loads `analytics.js`, via one delegated listener there | section, item, position, action, plus game_slug, filter_type, filter_value |
+| `ticker_clicked` | A score in the score ticker is clicked (each score whose game has a portal card links to it; contract TICKER-LINKS, Jon, 7 Nov 2026), via one delegated listener on the ticker | game_slug (the score's game), detail: `high` \| `weekly` \| `plain` (its badge; the Sheet's `detail` column) |
 
 `trigger` is `level` \| `topic` \| `fresh` \| `search` \| `reset`. (`reset` is reserved — the
 portal has no reset control today.) `section` is the containing section's id, or its heading text

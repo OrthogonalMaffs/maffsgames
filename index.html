@@ -532,6 +532,12 @@
   .score-ticker-item.weekly-best .hs-badge{color:#38bdf8;}
   .score-ticker-item .best-target{color:rgba(255,255,255,0.35);font-size:11px;}
   .score-ticker-sep{color:rgba(255,255,255,0.2);padding:0 4px;flex-shrink:0;}
+  /* A score whose game has a live card is a link to it (contract TICKER-LINKS): the item keeps its own colours, the cue says it opens the game.
+     It fills the ticker's height, so the tap area is the full 36 px (WCAG 2.5.8 asks 24); the ring is drawn inside it, because the track clips. */
+  a.score-ticker-item{text-decoration:none;cursor:pointer;align-self:stretch;}
+  a.score-ticker-item:focus-visible{outline:2px solid #fff;outline-offset:-4px;}
+  .score-ticker-item .play-cue{color:var(--teal);font-weight:700;}
+  a.score-ticker-item:hover .play-cue,a.score-ticker-item:focus-visible .play-cue{text-decoration:underline;}
   /* Paused: by the button (.tp-user, stays until the button is pressed again), while the pointer is over the scores, or while a keyboard-focused
      element in the scores has focus (.tp-focus). Hovering or focusing the button itself never holds the scores still, or Play could not be seen working. */
   .score-ticker-track:hover .score-ticker-inner,
@@ -3727,10 +3733,42 @@ loadFact();
     return Math.floor(diff / 86400) + 'd ago';
   }
 
-  function buildTickerItem(s) {
+  // Where a score opens (contract TICKER-LINKS), read from the portal's own game cards: the one place that says where a game lives
+  // and which levels it is listed under. Built once, on the first render. A feed levelKey is a leaderboard key, a level or a board
+  // (q20, stage-1, all, daily-...): it goes into ?level= only when one of the game's cards lists it, so a board never does.
+  // A slug with no card gets no link.
+  var cardLevels = null;
+  function tickerHref(slug, levelKey) {
+    var own = Object.prototype.hasOwnProperty;
+    if (!cardLevels) {
+      cardLevels = {};
+      document.querySelectorAll('a.game-card').forEach(function (c) {
+        var m = /^games\/([a-z0-9-]+)\//.exec(c.getAttribute('href') || '');
+        if (!m) return;
+        var lv = own.call(cardLevels, m[1]) ? cardLevels[m[1]] : (cardLevels[m[1]] = []);
+        (c.getAttribute('data-levels') || '').split(/\s+/).forEach(function (l) { if (l && lv.indexOf(l) < 0) lv.push(l); });
+      });
+    }
+    if (!slug || !own.call(cardLevels, slug)) return '';
+    return 'games/' + slug + '/' + (levelKey && cardLevels[slug].indexOf(levelKey) >= 0 ? '?level=' + levelKey : '');
+  }
+
+  function escAttr(v) { return String(v).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;'); }
+
+  // dup: the item is in one of the aria-hidden repeat sets, so its link is kept out of the Tab order.
+  function buildTickerItem(s, dup) {
     var cls = s.highScore ? ' high-score' : s.weeklyBest ? ' weekly-best' : '';
     var levelStr = s.level && s.level !== '' ? ' <span class="time-ago">(' + s.level + ')</span>' : '';
-    var h = '<span class="score-ticker-item' + cls + '">';
+    var href = tickerHref(s.slug, s.levelKey);
+    var h;
+    if (href) {
+      var name = 'Play ' + s.game + (s.level ? ' (' + s.level + ')' : '') + ': ' +
+        (s.highScore ? 'high score ' : s.weeklyBest ? 'weekly best ' : 'score ') + s.score + (s.initials ? ' by ' + s.initials : '');
+      h = '<a class="score-ticker-item' + cls + '" href="' + href + '" data-slug="' + s.slug + '" data-detail="' +
+        (s.highScore ? 'high' : s.weeklyBest ? 'weekly' : 'plain') + '" aria-label="' + escAttr(name) + '"' + (dup ? ' tabindex="-1"' : '') + '>';
+    } else {
+      h = '<span class="score-ticker-item' + cls + '">';
+    }
     if (s.highScore) h += '<span class="hs-badge">&#127942; HIGH SCORE</span> ';
     else if (s.weeklyBest) h += '<span class="hs-badge">&#11088; WEEKLY BEST</span> ';
     if (s.initials) h += '<span class="score-val">' + s.initials + '</span> &mdash; ';
@@ -3738,7 +3776,8 @@ loadFact();
     h += ' &mdash; <span class="score-val">' + s.score + '</span>';
     if (!s.highScore && s.best) h += ' <span class="best-target">&middot; best: ' + s.best + '</span>';
     h += ' <span class="time-ago">&middot; ' + timeAgo(s.timestamp) + '</span>';
-    h += '</span><span class="score-ticker-sep">|</span>';
+    if (href) h += ' <span class="play-cue">Play <span aria-hidden="true">&rarr;</span></span>';
+    h += (href ? '</a>' : '</span>') + '<span class="score-ticker-sep">|</span>';
     return h;
   }
 
@@ -3750,8 +3789,8 @@ loadFact();
     }
 
     // Build one set of items to measure width
-    var oneSet = '';
-    for (var i = 0; i < scores.length; i++) oneSet += buildTickerItem(scores[i]);
+    var oneSet = '', dupSet = '';
+    for (var i = 0; i < scores.length; i++) { oneSet += buildTickerItem(scores[i], false); dupSet += buildTickerItem(scores[i], true); }
 
     // Render once invisibly to measure
     var measure = document.createElement('div');
@@ -3768,7 +3807,7 @@ loadFact();
     var html = '<div class="score-ticker-inner">';
     // The first set is the content; the repeats only make the loop seamless, so they are hidden from screen readers and from reduced motion.
     html += oneSet;
-    for (var r = 1; r < repeats; r++) html += '<span class="ticker-dup" aria-hidden="true">' + oneSet + '</span>';
+    for (var r = 1; r < repeats; r++) html += '<span class="ticker-dup" aria-hidden="true">' + dupSet + '</span>';
     html += '</div>';
     ticker.innerHTML = html;
 
@@ -3795,10 +3834,11 @@ loadFact();
   // entries, written before this change) is ignored.
   var WEEK_MS = 604800000;
 
-  function deriveBadge(s, st) {
+  function deriveBadge(s, st, levelKey) {
     var out = {
       game: s.game, level: s.level, initials: s.initials,
       score: s.score, timestamp: s.timestamp,
+      slug: s.slug, levelKey: levelKey,   // for the score's link (tickerHref); levelKey as resolved by annotateAndRender()
       highScore: false, weeklyBest: false, best: null
     };
     if (!st.rankable) return out;
@@ -3821,7 +3861,7 @@ loadFact();
       var levelKey = s.levelKey || (canRank ? MaffsLeaderboard.levelKeyFromLabel(s.level || '') : '');
       var standingPromise = canRank ? MaffsLeaderboard.standing(s.slug, levelKey) : Promise.resolve(fallback);
       standingPromise.catch(function() { return fallback; }).then(function(st) {
-        annotated[i] = deriveBadge(s, st || fallback);
+        annotated[i] = deriveBadge(s, st || fallback, levelKey);
         pending--;
         if (pending === 0) buildTicker(annotated);
       });
@@ -3830,6 +3870,12 @@ loadFact();
 
   var live = window.MaffsLeaderboard && MaffsLeaderboard.watchRecent(20, annotateAndRender);
   if (!live) document.getElementById('scoreTicker').style.display = 'none';
+
+  // One delegated listener for the score links, as the cards have one. Never preventDefault or delay: mfg() posts with keepalive.
+  document.getElementById('scoreTickerTrack').addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a.score-ticker-item') : null;
+    if (a && typeof mfg === 'function') mfg('ticker_clicked', { game_slug: a.getAttribute('data-slug'), detail: a.getAttribute('data-detail') });
+  });
 
   // Pause and play (WCAG 2.2.2). The button's state is its own and persists until it is pressed again; hover and keyboard focus in the
   // scores add a pause in CSS (.score-ticker-track:hover) and here (.tp-focus), never undoing the button's.
