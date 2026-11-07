@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Escape-room times (every live room played on a fake clock: game_completed's detail is exactly "escaped|timeout wrongs hints used played locks", used - played is the wrong-setting penalties, capped when a wrong runs the clock out, locks in lock order with "-" unopened, a resumed save keeps played and openAt, an old save resumes from nought, every room's worst case at most 100 characters; planted fault caught) |
+# ci-line: Escape-room times (every live room played on a fake clock: game_completed's detail is exactly "escaped or timeout, wrongs, hints, used, played, locks", used - played is the wrong-setting penalties, capped when a wrong runs the clock out, locks in lock order with "-" unopened, a resumed save keeps played and openAt, an old save resumes from nought, every room's worst case at most 100 characters; planted fault caught) |
 # ci-deps: escape-rooms/ scripts/check-teacher-invite.py scripts/plant_common.py
 """What a finished escape room reports about time (contract ROOM-TIMES, 7 Nov 2026; canon §1.3).
 
