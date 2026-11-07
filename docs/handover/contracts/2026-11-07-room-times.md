@@ -1,0 +1,26 @@
+ROOM-TIMES — AMENDED (Amendment 1, Project Claude 7 Nov 11:45; Jon approved the Sheet detail column and will redeploy). Replaces the earlier text in full; save this version.
+
+LANE: cloud · TIER: Shared · CONTRACT: ROOM-TIMES
+COORDINATION: home owns possibly-maybe, who-ate-all-the-pies, as-you-can-see, distinctly-average, hc-factor, i-found-a-mark, its-on-sale, y-so-steep, better-value, scripts/measure-phone-fit.py, scripts/phone-fit-state.json, and may edit schools/assets/stage-exit.css (PHONE-FIT-RED). Touch none. Do NOT edit docs/handover/home.md or cloud.md in this PR: close-out entry in the PR body under "Close-out entry (for cloud.md)". Save this contract word for word in docs/handover/contracts/ per AGENTS.md.
+
+TASK: Record each escape-room completion's time taken (clock and real) and the time each lock opened, in the Sheet as well as GA4, so Jon can judge whether each lock is set at the right level.
+
+ROOT CAUSE: finish() in escape-rooms/assets/engine.js computes `used` (TOTAL - left) and shows it on the end card, but game_completed sends no time. Separately, the Sheet endpoint (docs/apps-script-endpoint.js doPost, 18 named columns) has never written `detail`, so every escape-room detail the engine sends (lock id per attempt, hint step, fresh/resumed) is posted by schools/assets/analytics.js and discarded. Per-lock times cannot be rebuilt from the Sheet (no session id; a class's devices interleave).
+
+CLASS CHECK: Yes, shared, at two layers. (a) One engine serves every room: the time change is in engine.js only. (b) The endpoint drops a field for every event that carries it: the fix is one detail column in the endpoint, not packing data into another event's columns (filter_type/filter_value are reserved for portal state, .claude/rules/analytics.md).
+
+EXACT CHANGE:
+1. engine.js state: st.played (whole seconds the room's clock has run, incremented in tick(), saved with the state) and st.openAt (lockId -> st.played when that lock opened). A save without them loads with played = 0 and openAt = {} (SAVE_V unchanged).
+2. finish(): game_completed's detail becomes exactly "<escaped|timeout> wrongs:<n> hints:<n> used:<s> played:<s> locks:<t1>,<t2>,<t3>" — used = TOTAL - max(0, left) (clock seconds, penalties included), played = st.played (real seconds), locks = each lock's openAt in lock order, "-" for unopened. Every other parameter unchanged. At most 100 characters for every live room.
+3. docs/apps-script-endpoint.js: append one column, detail, at the end (after question_id), written with the existing cellValue(); bump SCRIPT_VERSION. Header row handling as question_id's was. If scripts/test-apps-script-report.py (or any test) checks the column list, update it to include detail.
+4. Check the Dashboard and any script that reads Sheet columns by position: appending at the end must not shift anything. Report what reads the Sheet and how (header or index).
+5. Test (Chromium, ci-line header): win and timeout with a stubbed mfg(); assert the detail format; used - played = wrongs × the room's penalty (hints are free: takeHint() costs no time), EXCEPT when the last wrong runs the clock out, where used stops at TOTAL and used - played is less than the penalties (assert that case too); locks in order with "-" for unopened; resumed save keeps played and openAt; every live room's worst-case detail ≤ 100 characters. Plant: detail sent without the times, caught.
+6. docs/canon.md, analytics section: the game_completed detail format; used includes wrong-answer penalties (hints are free) and is capped at the room's total; played is real clock time; locks are seconds since the start in lock order; the Sheet's detail column exists from SCRIPT_VERSION <n> and is blank before the redeploy date.
+7. PR body: Jon's redeploy steps (copy docs/apps-script-endpoint.js into the Apps Script project, deploy as a new version of the existing deployment so the URL is unchanged, then confirm SCRIPT_VERSION via the existing check) — a numbered list he can follow.
+8. No privacy-page change (covered by "Session completion and score data"). No /updates/ line.
+
+DO NOT TOUCH: room.js files, teacher pages, tools/pack-generator/, schools/assets/analytics.js, every other event's parameters, every existing Sheet column and its order, the end card, data/games.json and room heads, the portal index.html, docs/handover/home.md and cloud.md, the files under COORDINATION.
+
+SUCCESS CONDITION: completed and timed-out rooms send the exact detail; the endpoint writes detail as the last column; nothing reading the Sheet shifts; tests and plant pass; every existing escape test and the play-through pass; redeploy steps in the PR body. Committed, contract saved, PR open, Gate green, close-out entry in the PR body; stop for Project Claude's review and Jon's "merge". After merge, Jon redeploys; one real completion is then checked in the Sheet.
+
+STOP IF: anything reads Sheet columns by position in a way an appended column would break (report it); the endpoint has no SCRIPT_VERSION or version check (report how deploys are verified); any live room's detail would exceed 100 characters; a change outside engine.js, the endpoint, its test, the new test and canon's analytics section seems necessary; merging needs a route other than merge-pr.py (stop and ask).
