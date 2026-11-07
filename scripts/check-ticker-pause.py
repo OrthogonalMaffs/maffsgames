@@ -10,7 +10,7 @@ The page is served with a fake Firebase SDK (twelve recent scores, so the ticker
 
   Running   the scores move on their own (the strip's transform changes over 350 ms).
   Hover     with the pointer over the scores they stop at once; off them they run again.
-  Focus     with keyboard focus on an element inside the scores (a link added by the test: the scores have none of their own today) they
+  Focus     with keyboard focus on an element inside the scores (the first score link, or, should none be linked, a link the test adds) they
             stop; with focus back on the button they run again.
   Button    a real <button> inside the ticker, at its left edge, named "Pause scores" with aria-pressed false; pressing it stops the scores
             at once, names it "Play scores", aria-pressed true; the stopped state survives the pointer going over the scores and off,
@@ -128,12 +128,13 @@ async def checks(browser, base, size, body=None):
         if not await moving(page):
             f.append('%s: the scores do not run again when the pointer leaves' % where)
 
-        # keyboard focus inside the scores (the test adds a link: the scores have none of their own)
+        # keyboard focus inside the scores: anything in them counts (scores whose game has a card are links, TICKER-LINKS; the test's own
+        # link is there for a feed with none)
         await page.evaluate("() => { const a = document.createElement('a'); a.href = '#t'; a.id = 'tpLink'; a.textContent = 'x'; "
                             "document.querySelector('.score-ticker-inner').appendChild(a); }")
         await page.focus('#tickerToggle')
         await page.keyboard.press('Tab')
-        if not await page.evaluate("() => document.activeElement && document.activeElement.id === 'tpLink'"):
+        if not await page.evaluate("() => !!document.activeElement && document.querySelector('.score-ticker-inner').contains(document.activeElement)"):
             f.append('%s: the test could not move keyboard focus into the scores' % where)
         elif await moving(page):
             f.append('%s: the scores keep moving while a keyboard-focused element in them has focus' % where)

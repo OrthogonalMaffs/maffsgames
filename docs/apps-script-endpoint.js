@@ -35,9 +35,10 @@ const EXPECTED_HEADERS = [
   //                 scripts/decode-question-ids.py <slug> maps an id back to its question.
   'question_id',
   // Appended 2026-11-07 (contract ROOM-TIMES) — also at the end. Rows written before the redeploy have it blank.
-  //   detail — the escape-room engine's own field (the only sender): the lock id on question_answered, lock:step on
+  //   detail — sent by two callers. The escape-room engine: the lock id on question_answered, lock:step on
   //            hint_used, fresh/resumed on game_started, and on game_completed the outcome, wrongs, hints and the
-  //            times ("escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567"; canon §1.3).
+  //            times ("escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567"; canon §1.3). The portal's
+  //            score ticker: high, weekly or plain on ticker_clicked (contract TICKER-LINKS, 7 Nov 2026).
   'detail'
 ];
 
