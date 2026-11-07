@@ -28,6 +28,7 @@ The build, in order; any failure stops it before a PDF exists:
 The PDF goes to dist-packs/ (gitignored) and nowhere else. It is the product: never commit it, never upload it.
 """
 import argparse
+import base64
 import contextlib
 import copy
 import datetime
@@ -486,6 +487,7 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lbl.light > div { color: #fff; }
 .write { position: absolute; border: 0.8pt dashed #000; box-sizing: border-box; }
 .cover-art { width: 150mm; margin: 0 auto 3mm; display: block; }
+.run-win { display: block; width: 100%; height: auto; max-height: 105mm; object-fit: contain; margin-bottom: 3mm; }
 .team { margin: 3mm 0 2mm; font-size: 12pt; font-weight: 600; }
 .team span { display: inline-block; width: 120mm; border-bottom: 0.8pt solid #000; }
 .answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5mm; }
@@ -591,6 +593,23 @@ AUDIT_JS = """
   });
   if (document.body.textContent.includes('{{')) out.tokens.push('an unfilled {{token}} is on a page');
   return out;
+}
+"""
+
+DOWNSCALE_RUN_WIN_JS = """
+async (imageData) => {
+  const img = document.querySelector('.page[data-kind=run] .run-win');
+  if (!img) throw new Error('page 1 has no win image');
+  img.src = imageData;
+  await img.decode();
+  const width = Math.min(img.naturalWidth, Math.round(186 / 25.4 * 200));
+  const height = Math.round(img.naturalHeight * width / img.naturalWidth);
+  const canvas = document.createElement('canvas');
+  canvas.width = width; canvas.height = height;
+  canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+  img.src = canvas.toDataURL('image/jpeg', 0.86);
+  await img.decode();
+  return {width, height};
 }
 """
 
@@ -881,6 +900,14 @@ def stakes_problems(stakes_text, start_text, cover_texts):
     return out
 
 
+def win_image_path(slug, room):
+    art = room.get("art")
+    path = pathlib.Path("docs/art") / ("%s-win.webp" % art) if art else pathlib.Path("docs/art/<art>-win.webp")
+    if not art or not (ROOT / path).is_file():
+        raise BuildError("%s: win image missing: %s" % (slug, path))
+    return ROOT / path
+
+
 def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     rdir = HERE / "rooms" / slug
     images = cfg["images"]
@@ -907,7 +934,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     art = room.get("art")
     scene = ROOT / "docs" / "art" / ("%s-scene.webp" % art) if art else None
-    win = ROOT / "docs" / "art" / ("%s-win.webp" % art) if art else None
+    win = win_image_path(slug, room)
     title = room["title"]
     letters = [s["letter"] for s in sets]
     fill_a = filler(locks, sets[0])
@@ -916,7 +943,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
 
     # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9; DRAFT for Jon's wording)
     shape = sets[0]["final"]["shape"]
-    pages.append(page("run", run_it(letters, url), "%s: run it" % title, "Group race pack, %d sets" % len(sets),
+    pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
+                      "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
     reads = readouts(room, fill_a)
     script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
@@ -1128,6 +1156,8 @@ def build(slug, n, seed, target=None):
                 src = pathlib.Path(tmp) / ("%s-pack.html" % slug)
                 src.write_text(doc, encoding="utf-8")
                 pg.goto(src.as_uri())
+                image_data = "data:image/webp;base64," + base64.b64encode(win_image_path(slug, room).read_bytes()).decode("ascii")
+                embedded_win = pg.evaluate(DOWNSCALE_RUN_WIN_JS, image_data)
                 fit = pg.evaluate(FIT_JS, [MIN_PT])
                 for fam in ["Outfit"] + [f[0] for f in FONTS.values()]:
                     if fam not in fit["loaded"]:
@@ -1167,6 +1197,8 @@ def build(slug, n, seed, target=None):
                       % audit["studentPages"])
                 OUT_DIR.mkdir(exist_ok=True)
                 pg.pdf(path=str(out), format="A4", print_background=True, prefer_css_page_size=True)
+            print("page 1 win image embedded at %d x %d pixels (about 200 dpi at print size)"
+                  % (embedded_win["width"], embedded_win["height"]))
             got = pdf_page_count(out)
             if got != npages:
                 out.unlink()
@@ -1303,7 +1335,7 @@ def selftest():
         bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
-    def audit_planted_pack(bad_locks):
+    def audit_planted_pack(bad_locks, overflow_run_image=False):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
@@ -1315,6 +1347,9 @@ def selftest():
                     src = pathlib.Path(tmp) / "planted-pack.html"
                     src.write_text(doc, encoding="utf-8")
                     pg.goto(src.as_uri())
+                    if overflow_run_image:
+                        pg.locator('.page[data-kind=run] .run-win').evaluate(
+                            "img => { img.style.minHeight = '400mm'; img.style.maxHeight = 'none'; }")
                     return pg.evaluate(AUDIT_JS)
             finally:
                 browser.close()
@@ -1333,6 +1368,20 @@ def selftest():
         bad = copy.deepcopy(locks)
         bad[0]["brief"] += " " + " ".join(["The printed brief still needs space."] * 80)
         return [x for x in audit_planted_pack(bad)["overflow"] if "locks A" in x]
+
+    def plant_missing_win_image():
+        bad = dict(room, art="missing-win-plant")
+        cfg = load_config(slug0)
+        try:
+            build_html(slug0, bad, teach, locks, sets, cfg, cfg.get("seed", 1),
+                       datetime.date.today().isoformat(), room_url(slug0))
+        except BuildError as e:
+            msg = str(e)
+            return [msg] if slug0 in msg and "docs/art/missing-win-plant-win.webp" in msg else []
+        return []
+
+    def plant_run_image_overflow():
+        return [x for x in audit_planted_pack(locks, overflow_run_image=True)["overflow"] if "run" in x]
 
     def plant_two_expressions():
         # No Kiln set has a target two expressions reach, so the plant searches small whole numbers, in a fixed
@@ -1455,6 +1504,8 @@ def selftest():
               ("an answer caption repeating its unit", plant_repeated_caption_unit),
               ("an unfilled missTitle token", plant_unfilled_miss_title),
               ("a locks page whose briefs leave too little working space", plant_lock_brief_overflow),
+              ("a room with no win image", plant_missing_win_image),
+              ("a page 1 image overflowing the page", plant_run_image_overflow),
               ("a final target two expressions reach", plant_two_expressions),
               ("a final target no expression reaches", plant_no_expression),
               ("a fixed penalty figure on the score sheet", plant_fixed_penalty),

@@ -20,6 +20,7 @@ with the same seed gives the same sets every time; `--seed 2` gives a different 
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
 
 Print it **at 100% (actual size), A4, double-sided off**. It is designed to print in black and white.
+Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room without one does not build.
 
 ## What to proofread
 
