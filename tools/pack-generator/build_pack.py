@@ -396,7 +396,8 @@ def split_clue(clue):
 
 def label_parts(text, boxes):
     """Split a clue over multiple measured glass areas, then bind figures before browser fitting."""
-    parts = text.split(" · ") if isinstance(boxes[0], list) else [text]
+    segments = text.split(" · ")
+    parts = segments if isinstance(boxes[0], list) else ["<br>".join(segments)]
     count = len(boxes) if isinstance(boxes[0], list) else 1
     if len(parts) != count:
         raise BuildError("label has %d printed parts for %d boxes: %r" % (len(parts), count, text))
@@ -414,7 +415,7 @@ def label_parts(text, boxes):
 
 def label_text_problems(text):
     """Figure spacing and TRUE-MINUS checks on the words that enter a fitted label."""
-    return [m.group() for pattern in (r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d",
+    return [m.group() for pattern in (r" · ", r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d",
                                      r"\d[ \t\n]+(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w)")
             for m in re.finditer(pattern, text, re.I)]
 
@@ -761,13 +762,17 @@ def run_it(letters, url, set_pages=SET_PAGES):
             % (letters[0], letters[-1], set_pages))
 
 
+def lock_name_label(name):
+    return name if name.rstrip().endswith(("?", "!")) else name + ":"
+
+
 def about_box(room, teach, locks, sets):
     """The answer key's "About this room" box (Amendment 9): contents, each lock's topic and time, the grade, the final
     padlock's shape and target range, and what the common wrong answers are for. It states no rule."""
     meta = teach.get("lockMeta") or [{}] * len(locks)
     first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
     letters = [st["letter"] for st in sets]
-    topics = "; ".join("%s: %s%s" % (l["name"], esc(m.get("topic", "")),
+    topics = "; ".join("%s %s%s" % (lock_name_label(l["name"]), esc(m.get("topic", "")),
                                      (", about %d min" % m["minutes"]) if m.get("minutes") else "")
                        for l, m in zip(locks, meta))
     targets = [st["final"]["target"] for st in sets]
@@ -939,7 +944,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
         % (format_token(v["answer"]), format_token(v["miss"]) if v.get("miss") is not None else "none")
         for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
-    legend = "".join("<li><b>%s:</b> %s %s</li>" % (l["name"], fill_a(l.get("missTitle", "")),
+    legend = "".join("<li><b>%s</b> %s %s</li>" % (lock_name_label(l["name"]), fill_a(l.get("missTitle", "")),
                                                      fill_a(l.get("missSays", "")))
                      for l in locks)
     final_note = ("<p>For each set, the final padlock&rsquo;s expression above is the only one that makes its target, "
@@ -957,7 +962,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
         work = ("%s first: %s; then + and &minus;: %s" % (first, "; ".join(md), "; ".join(pm)) if md
                 else "+ and &minus; from left to right: %s" % "; ".join(pm))
         sols += "<div class='solution'><b class='set'>Set %s</b><br>%s<br><b>Final padlock:</b> %s = %s. %s.</div>" % (
-            s["letter"], "<br>".join("<b>%s:</b> %s" % (l["name"], f(l["solve"])) for l in locks),
+            s["letter"], "<br>".join("<b>%s</b> %s" % (lock_name_label(l["name"]), f(l["solve"])) for l in locks),
             fin["expr"], fin["target"], work)
     pages.append(page("solutions", sols, "%s: worked solutions" % title, "One line per lock and the final padlock, for each set"))
 
@@ -1263,6 +1268,20 @@ def selftest():
             return [str(e)] if "printed parts for" in str(e) else []
         return []
 
+    def plant_unsplit_single_box():
+        good = label_parts("FIRST · SECOND", [0, 0, 1, 1])[0]
+        if good != "FIRST<br>SECOND":
+            return []
+        bad = pc.apply_plant(good, "<br>", " · ", name="an unsplit single-box label")
+        return label_text_problems(bad)
+
+    def plant_question_colon():
+        good = lock_name_label("Will it fit?")
+        if good != "Will it fit?" or lock_name_label("Stop!") != "Stop!" or lock_name_label("Other") != "Other:":
+            return []
+        bad = pc.apply_plant(good, "?", "?:", name="a colon after a question lock name")
+        return [bad] if bad.endswith("?:") else []
+
     def plant_broken_unit():
         good = label_parts("AT 16 °C", [0, 0, 1, 1])[0]
         bad = pc.apply_plant(good, "16\u00a0°C", "16 °C", name="a split number and unit")
@@ -1428,6 +1447,8 @@ def selftest():
               ("a missing score-sheet row", plant_missing_row),
               ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
               ("a clue with a different number of parts and label boxes", plant_label_box_count),
+              ("an unsplit single-box label", plant_unsplit_single_box),
+              ("a colon after a question lock name", plant_question_colon),
               ("a number separated from its unit", plant_broken_unit),
               ("a ratio broken around its colon", plant_broken_ratio),
               ("a hyphen-minus on printed art", plant_hyphen_minus),
