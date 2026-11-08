@@ -3377,3 +3377,9 @@ data. The privacy page already gave the purpose ("which questions students find 
 - **Privacy wording (Amendment 1, Jon, 3 Nov 2026).** The contract's line, "Nothing a student types is ever sent", would
   have contradicted the same page: the portal logs search-box text and leaderboard initials are typed. The line reads
   "Which question was asked, as an anonymous code. Answers a student types are never sent."
+
+## LIVE-BUG-RECHECK: the PR that fixes a todo row updates it (Jon, 8 Nov 2026)
+
+§1's rows recorded live bugs, but nothing tied a fixing PR to its row, so fixes merged elsewhere, or only in part, left
+rows open, and rows marked FIXED or DONE in their own text still sat in §1 owing a remainder. Nobody could tell from the
+backlog which live bugs a student could still hit.

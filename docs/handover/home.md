@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- BACKLOG-ONE (Docs; Project Claude, 7 Nov; Amendment 1, 22:10): at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/backlog-one, worktree ~/mg-backlog-one. Files in use: AGENTS.md, docs/todo.md, both handovers, docs/handover/contracts/. Contract: docs/handover/contracts/2026-11-07-backlog-one.md. Entry below.
+- LIVE-BUG-RECHECK (Docs; Project Claude, 8 Nov; Amendment 1, 19:08): at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/live-bug-recheck, worktree ~/mg-live-bug-recheck. Files in use: AGENTS.md, docs/todo.md, docs/history/todo-done.md, docs/canon.md (§12), home.md. Contract: docs/handover/contracts/2026-11-08-live-bug-recheck.md. Entry below.
+
+- BACKLOG-ONE: DONE. #710 merged as 68ae9e4 on Jon's word; main run 42512282061 GREEN; claude/backlog-one removed by end-task. Contract: docs/history/contracts/2026-11-07-backlog-one.md.
 
 - PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Cloud's #707 merged as 0ec5cd4; main's full run is green (42403456019). Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
 
@@ -23,6 +25,16 @@
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-08 (home): LIVE-BUG-RECHECK
+
+Every §1 row of `docs/todo.md` re-checked against main f8a287b4, each with a dated verdict and evidence appended to its text: 4 FIXED (1.8, 1.24, 1.30, 1.40, moved with the §7 row to `docs/history/todo-done.md`, "Closed by LIVE-BUG-RECHECK"), 10 PART, 9 STILL LIVE, no row wholly CAN'T TELL. No live wrong answer found. AGENTS.md gains the rule that a fixing PR updates its todo row; its reason is in canon §12. Table, fix order and evidence: the PR body.
+
+Discoveries: main's nightly phone-fit-full run 42466279497 is red in laptop mode alone (screening-room, Next 717 / 680 at 1280×720, not on the known-failures list), reported for the cloud lane. The `--live` checks owed by 1.8 and 1.14 ran: both OK, deployed pages byte-identical to main.
+
+Next: Project Claude's review and Jon's "merge"; then BRANCH-CLEANUP (START block).
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-07 (home): BACKLOG-ONE
 
