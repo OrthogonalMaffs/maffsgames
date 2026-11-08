@@ -1,5 +1,23 @@
 # Handover archive: home lane
 
+## 2026-11-08 (home): Queue DONE items moved 8 Nov (verbatim from `docs/handover/home.md`'s Queue, BRANCH-CLEANUP; history, unchanged)
+
+- LIVE-BUG-RECHECK: DONE. #711 merged as 04116a7 on Jon's word; main run 42517925373 GREEN; claude/live-bug-recheck removed by end-task. Contract: docs/history/contracts/2026-11-08-live-bug-recheck.md. Entry below.
+
+- BACKLOG-ONE: DONE. #710 merged as 68ae9e4 on Jon's word; main run 42512282061 GREEN; claude/backlog-one removed by end-task. Contract: docs/history/contracts/2026-11-07-backlog-one.md.
+
+- PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Cloud's #707 merged as 0ec5cd4; main's full run is green (42403456019). Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
+
+- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55; Amendment 2, review fixes, 23:05): DONE. #693 merged as 5202a94; main run 42358602377 GREEN; claude/room-meta removed by end-task. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/history/contracts/2026-11-06-room-search-titles.md. Entry below.
+
+- PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
+
+- WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line: `docs/todo.md` row WHOSE-SIDE-TIMER-LINE; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
+
+- CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
+
+- FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
 ## Moved 2026-11-07 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
 ## 2026-11-04 (home): CHRISTMAS-ROOM

@@ -2,21 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- BRANCH-CLEANUP (Docs; Project Claude, 8 Nov 20:35): phase 1 at the Gate, holding for Project Claude's review and Jon's "merge"; phase 2 (deleting the DELETE table's branches) only after it. Branch claude/branch-cleanup, worktree ~/mg-branch-cleanup. Files in use: docs/todo.md, both handovers, docs/history/branch-cleanup-2026-11.md. Contract: docs/handover/contracts/2026-11-08-branch-cleanup.md.
+- BRANCH-CLEANUP (Docs; Project Claude, 8 Nov 20:35; Amendment 1, 21:45): phase 1 #712 merged as 80f3eef on Jon's word, main run 42526066041 GREEN; phase 2 done (124 branches deleted). Close-out PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/branch-cleanup-close, worktree ~/mg-branch-cleanup-close. Contract: docs/history/contracts/2026-11-08-branch-cleanup.md. Entry below.
 
-- LIVE-BUG-RECHECK: DONE. #711 merged as 04116a7 on Jon's word; main run 42517925373 GREEN; claude/live-bug-recheck removed by end-task. Contract: docs/history/contracts/2026-11-08-live-bug-recheck.md. Entry below.
-
-- BACKLOG-ONE: DONE. #710 merged as 68ae9e4 on Jon's word; main run 42512282061 GREEN; claude/backlog-one removed by end-task. Contract: docs/history/contracts/2026-11-07-backlog-one.md.
-
-- PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Cloud's #707 merged as 0ec5cd4; main's full run is green (42403456019). Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
-
-- ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55; Amendment 2, review fixes, 23:05): DONE. #693 merged as 5202a94; main run 42358602377 GREEN; claude/room-meta removed by end-task. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/history/contracts/2026-11-06-room-search-titles.md. Entry below.
-
-- PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
-
-- WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line: `docs/todo.md` row WHOSE-SIDE-TIMER-LINE; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
-
-- CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
+- WHOSE-SIDE: the cloud lane owns the game until stage 5; timer-policy.md's line is `docs/todo.md` row WHOSE-SIDE-TIMER-LINE. DONE lines moved to docs/history/handover-home-archive.md, 8 Nov.
 
 - One lane at a time: AGENTS.md, Lane ownership (rule e, BACKLOG-ONE).
 
@@ -26,7 +14,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-- FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+## 2026-11-08 (home): BRANCH-CLEANUP
+
+Phase 1 (#712, 80f3eef; main run 42526066041 GREEN): `docs/history/branch-cleanup-2026-11.md` sorts the 156 remote branches into DELETE 124, KEEP 20 and NO PR AT TIP 12. `delete_branch_on_merge` was already true. cloud.md's contracts paragraph now matches AGENTS.md, and its Queue holds only in-flight facts and todo pointers (16,326 → 10,327 bytes); 12 todo rows added, SCREENING-ROOM-FOLD among them.
+
+Phase 2, after Jon's "merge": 124 REST deletes, each 204. `git ls-remote --heads origin` then listed 32 branches: the 20 KEEP and 12 NO PR AT TIP, none of the 124. GitHub removed claude/branch-cleanup on merge. The close-out PR adds Amendment 1's two rows (REPORT-EMAIL-PROPERTY, SR-NUMBERING), closes the BRANCH-CLEANUP row to todo-done.md, moves the contract to history, and moves home.md's DONE Queue lines to the archive verbatim.
+
+Discoveries: `scripts/test-answer-lock.py` now fails locally on clean main too (LOCAL-CHECKS); it passes in CI.
+
+Next: Project Claude's review and Jon's "merge". The 12 NO PR AT TIP verdicts (11 DELETE proposed, 1 JON) wait for a ruling; nothing deletes them.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-08 (home): LIVE-BUG-RECHECK
 
