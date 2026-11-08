@@ -228,7 +228,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "chosen from 106 timed unit(s)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
@@ -264,7 +264,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
