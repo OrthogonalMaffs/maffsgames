@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- LIVE-BUG-RECHECK (Docs; Project Claude, 8 Nov; Amendment 1, 19:08): at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/live-bug-recheck, worktree ~/mg-live-bug-recheck. Files in use: AGENTS.md, docs/todo.md, docs/history/todo-done.md, docs/canon.md (§12), home.md. Contract: docs/handover/contracts/2026-11-08-live-bug-recheck.md. Entry below.
+- BRANCH-CLEANUP (Docs; Project Claude, 8 Nov 20:35): phase 1 at the Gate, holding for Project Claude's review and Jon's "merge"; phase 2 (deleting the DELETE table's branches) only after it. Branch claude/branch-cleanup, worktree ~/mg-branch-cleanup. Files in use: docs/todo.md, both handovers, docs/history/branch-cleanup-2026-11.md. Contract: docs/handover/contracts/2026-11-08-branch-cleanup.md.
+
+- LIVE-BUG-RECHECK: DONE. #711 merged as 04116a7 on Jon's word; main run 42517925373 GREEN; claude/live-bug-recheck removed by end-task. Contract: docs/history/contracts/2026-11-08-live-bug-recheck.md. Entry below.
 
 - BACKLOG-ONE: DONE. #710 merged as 68ae9e4 on Jon's word; main run 42512282061 GREEN; claude/backlog-one removed by end-task. Contract: docs/history/contracts/2026-11-07-backlog-one.md.
 
