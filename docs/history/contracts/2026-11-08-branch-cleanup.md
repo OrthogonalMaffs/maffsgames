@@ -1,4 +1,4 @@
-# BRANCH-CLEANUP (Project Claude, 8 Nov 2026 20:35), verbatim
+# BRANCH-CLEANUP (Project Claude, 8 Nov 2026 20:35; Amendment 1, 21:45), verbatim
 
 BRANCH-CLEANUP (Project Claude, 8 Nov 20:35)
 LANE: home (Claude Code) · TIER: Docs · CONTRACT: BRANCH-CLEANUP · new worktree from origin/main 04116a7 or later (branch claude/branch-cleanup). No other lane is running. Two phases: phase 1 is a PR that stops at a green Gate for Project Claude's review and Jon's "merge"; phase 2 (branch deletion) happens only AFTER that merge. Not a draft. Save this contract verbatim in docs/handover/contracts/ in the first commit.
@@ -26,3 +26,11 @@ EXACT CHANGE:
 DO NOT TOUCH: any game, page, script, shared asset, workflow, test or verifier; canon; AGENTS.md; repo settings, branch protection, tokens; the existing text of any todo row; any branch outside the merged DELETE table; any local worktree other than this task's; cloud.md beyond steps 4a and 4b.
 SUCCESS CONDITION: the three tables exist with every non-main remote branch in exactly one; phase 1 Gate green; after merge, the DELETE branches are gone and nothing else is; SCREENING-ROOM-FOLD row exists and LOCAL-CHECKS carries its note; cloud.md's contracts paragraph matches AGENTS.md and its Queue holds only in-flight facts or todo pointers; LIVE-BUG-RECHECK contract in history; delete_branch_on_merge reported; the follow-up PR at a green Gate.
 STOP IF: a branch fits both DELETE and KEEP (put it in KEEP, list it, carry on); the DELETE table exceeds 130 branches or the NO-PR table differs from 24 by more than 3 (report the counts before phase 2); any DELETE call returns other than 204 or 422 "Reference does not exist" (stop deleting, report); a delete would need a setting or permission change; cloud.md's Queue holds something that is neither done, a todo row's work, nor an in-flight fact (list it, do not drop it).
+
+## Amendment 1 (Project Claude, 8 Nov 21:45), verbatim
+
+BRANCH-CLEANUP — Amendment 1 (Project Claude, 8 Nov 21:45). LANE: home.
+Phase 2's close-out PR also adds two docs/todo.md rows (append-only rule unchanged):
+1. REPORT-EMAIL-PROPERTY (§4): docs/apps-script-endpoint.js:15 ships REPORT_EMAIL = 'OWNER_EMAIL_HERE'; on 4 Nov a manual sendDailyReport failed "Invalid email: OWNER_EMAIL_HERE" because the pasted endpoint kept the placeholder (record: branch claude/stoic-galileo-xvzt45, which stays). Proposal: read the address from Script Properties, so the public repo never holds it and a redeploy cannot break the report. Owner: home lane (endpoint file); Jon sets the property and redeploys.
+2. SR-NUMBERING (§7): cloud.md's Queue holds SWEEP-1's "SR-30" (Jon, 13 Oct: a CRITICAL level whose fix a standing ruling decides is fixed the same day in its own PR, no unlist), never recorded in canon; canon's SR-30 is a different ruling. It narrows SR-20. Goes with STANDING-STOP-RULES into canon §0.3 as one contract. Owner: Project Claude to contract; Jon confirms the SR-20 narrowing.
+Nothing else in the contract changes.

@@ -640,6 +640,12 @@ Moved word for word from `docs/todo.md` §1 and §7, each with its re-check note
 
 - **LIVE-BUG-RECHECK (next):** re-check every open §1 row against main. BACKLOG-ONE moved no row: every row marked DONE or FIXED still names something owed, listed in its PR. Owner: home lane. Re-checked 2026-11-08 on main f8a287b4: FIXED — done by LIVE-BUG-RECHECK (#711): every §1 row carries a dated verdict with evidence; 1.8, 1.24, 1.30 and 1.40 closed. Nothing owed.
 
+## Closed by BRANCH-CLEANUP (Nov 2026)
+
+Moved word for word from `docs/todo.md` §7, with its closing note (contract BRANCH-CLEANUP, 8 Nov 2026).
+
+- **BRANCH-CLEANUP:** delete remote branches whose PR is merged or closed. Keep `art/`, `pr-assets/`, `wip/` and every branch holding unmerged contract work (`claude/fold-options*`, `claude/fold-figures-v2`, `claude/fold-canon`, `claude/fold-publish`, `claude/keypad-fraction*`) until their rows are settled. The `wt-*` worktrees named in cloud.md went with an earlier container. Owner: home lane; **Jon** switches on "Automatically delete head branches". Phase 1 (tables) in this PR; phase 2 (deletion) follows the merge. Re-checked 2026-11-08: DONE — phase 1 #712 (80f3eef); phase 2 deleted the DELETE table's 124 branches (124 × 204); `git ls-remote --heads origin` then showed 32, the 20 KEEP and 12 NO PR AT TIP branches, and none of the 124. Tables: `docs/history/branch-cleanup-2026-11.md`. Nothing owed.
+
 ## Done — full history
 
 ### Done 4 Oct 2026 (home, night: PRs #27–#29)
