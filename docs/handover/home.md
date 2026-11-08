@@ -2,25 +2,39 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Main's full run stays red on screening-room's stale laptop entry until cloud's #707 merges. Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
+- BACKLOG-ONE (Docs; Project Claude, 7 Nov; Amendment 1, 22:10): at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/backlog-one, worktree ~/mg-backlog-one. Files in use: AGENTS.md, docs/todo.md, both handovers, docs/handover/contracts/. Contract: docs/handover/contracts/2026-11-07-backlog-one.md. Entry below.
+
+- PHONE-FIT-RED (Shared; Project Claude, 7 Nov): DONE. #701 merged as 3fe605d6 on Jon's word; main run 42398273354 GREEN; branch removed by end-task. Cloud's #707 merged as 0ec5cd4; main's full run is green (42403456019). Contract: docs/history/contracts/2026-11-07-phone-fit-red.md.
 
 - ROOM-SEARCH-TITLES (Shared; Jon, 6 Nov; Amendment 1, 18:55; Amendment 2, review fixes, 23:05): DONE. #693 merged as 5202a94; main run 42358602377 GREEN; claude/room-meta removed by end-task. Branch claude/room-meta, worktree ~/mg-room-meta. Contract: docs/history/contracts/2026-11-06-room-search-titles.md. Entry below.
 
 - PHONE-FIT-ASIDE: DONE. #687 merged as 5b4931f on Jon's word; main run 42270819300 GREEN. No Project Claude review is recorded in this lane. Contract: docs/history/contracts/2026-11-06-phone-fit-aside.md.
 
-- WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line waits for WHOSE-SIDE-FIT to merge; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
+- WHOSE-SIDE: DONE and live, unlisted. #674 merged as 257e883; fixes #676 merged as f1acc1f (it contains #675, closed unmerged); main green. Merged on Jon's word before review; Project Claude reviewed #674 and #676 on 6 Nov and passed them (side roles in both θ positions, FN, Stage 4's key, all 12 triples, uniform scaling). Worktrees and claude/whose-side-fixes deleted on Jon's call, 6 Nov. Art done (#684). timer-policy.md's line: `docs/todo.md` row WHOSE-SIDE-TIMER-LINE; the cloud lane owns the game until stage 5, which follows WHOSE-SIDE-BIOS. Contracts: docs/history/contracts/2026-11-05-whose-side*.md.
 
 - CHRISTMAS-ROOM: DONE. #667 merged as 9cbedee; close-out #668 merged as e32608f. Contract: docs/history/contracts/2026-11-04-christmas-room.md.
 
-- Cloud lane: one session at a time from 6 Nov (Jon, 5 Nov). #669 and #671 are merged; no overlapping cloud sessions remain authorised.
+- One lane at a time: AGENTS.md, Lane ownership (rule e, BACKLOG-ONE).
 
 - DONE queue: docs/history/handover-home-archive.md
 
-- how-many-parts to move next (cloud lane, HOW-MANY-PARTS-FRACTION)
+- how-many-parts: `docs/todo.md` row HOW-MANY-PARTS-FRACTION (§3)
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
 - FRACTION-WHOLE: merged #662, b38ce399; Shared review passed and Jon authorised merge, 4 Nov. Contract: docs/history/contracts/2026-11-04-fraction-whole.md. Main run and cleanup recorded below.
+
+## 2026-11-07 (home): BACKLOG-ONE
+
+`docs/todo.md` is the single backlog. AGENTS.md gains rules b–h of the contract: no draft PRs; no environment, network or credential change without asking Jon; never merge on a Gate older than main's newest checks; one lane at a time (replacing "at most two implementers", line 70 removed); CI over local browser runs on maffs; Queues hold only in-flight cross-lane facts; a contract not finished is pointed to by a todo row. Lines 7, 69, 72 and 78 amended. Contract with Amendment 1: `docs/handover/contracts/2026-11-07-backlog-one.md`.
+
+Parked under Jon's standing STOP IF rules, as todo rows for Project Claude to rule on. Rule a (HANDOVER-IN-TASK-PRS) conflicts with AGENTS.md's "keep the branch handover current" and the takeover paragraph built on it. Rule i (STANDING-STOP-RULES) conflicts with "What may enter an always-loaded file": a 300-byte cap with reasons in canon §12, which this contract may not touch.
+
+Contracts: 53 moved to `docs/history/contracts/` (52 merged; PLAN-SHARED-ASSETS superseded by GATE-STEP-6); six kept, each with a todo row. Todo: 36 rows added, plus the START block. No row moved: each row marked DONE or FIXED still names something owed (listed in the PR). cloud.md's live pointers that held work now point to rows. Its Queue paragraph still holds unfinished items (FRACTION-STACK follow-up, the 27 Oct session queue): outside this contract.
+
+Next: Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall n/a (spanned a STOP and Amendment 1); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-07 (home): PHONE-FIT-RED
 
@@ -30,7 +44,7 @@ Nine games were red on the full run, not seven: `its-on-sale` and `y-so-steep` h
 
 Full runs on main: 023a8215, without the fixes, red as expected (normal 663 s, aa 665 s, laptop 449 s; 30m43s in all). 3fe605d6, with them, normal and aa exit 0, laptop exit 1 on one pair: `screening-room`'s `1280x720 next` entry is stale (659 s, 659 s, 446 s; 30m27s in all). All nine games pass in CI.
 
-To do: cloud's #707 (PHONE-FIT-FULL-SPLIT) splits the workflow into per-mode jobs and removes the stale entry. Main's full run is red until it merges.
+Done since: cloud's #707 (PHONE-FIT-FULL-SPLIT) split the workflow into per-mode jobs and removed the stale entry. It merged as 0ec5cd4, and main's full run is green (42403456019).
 
 Follow-ups:
 
@@ -43,7 +57,7 @@ Record: agent Claude Code; wall 6:35; review cycles 1; amendments 11; usage n/a.
 
 ## 2026-11-07 (home): PACK-COVER close-out
 
-Done: #703 merged by `merge-pr.py` as 7043a989; main run 42394072989 GREEN. Jon authorised merge on 7 Nov; no Project Claude review is recorded on #703. Contract: `docs/handover/contracts/2026-11-07-pack-cover.md`.
+Done: #703 merged by `merge-pr.py` as 7043a989; main run 42394072989 GREEN. Jon authorised merge on 7 Nov; Project Claude reviewed and passed #703's proofs on 7 Nov. Contract: `docs/history/contracts/2026-11-07-pack-cover.md`.
 
 The shared pack template now prints each room's own win scene on page 1. Christmas and Kiln build with a 1465 × 799 pixel image at about 200 dpi; the scenes remain readable in greyscale and show no visible digits. Proofs are in `docs/screens/pack-cover/`. Pages after page 1 are pixel-identical to clean main builds at 100 dpi. The missing-image and page-overflow plants passed with all existing plants (29/29); `check-changed.py` passed 42/42 selected checks, and #703's Gate was green before merge. The PDFs grew by 259,760 bytes (Christmas) and 197,232 bytes (Kiln).
 
@@ -51,7 +65,7 @@ Record: agent Codex; wall n/a (work spanned conversations); review cycles 0; ame
 
 ## 2026-11-07 (home): CHRISTMAS-PACK close-out
 
-Done: #689 merged by `merge-pr.py` as b4d0323; main run 42362844296 GREEN. Jon authorised merge on 7 Nov. The six-set Christmas Tree Fiasco printable pack builds with 98 of 900 joint draws VALID; its 18 printed lock answers agree with 108 independently recomputed values. The PDF stays gitignored in `dist-packs/`, never committed or uploaded. Contract and Amendments 1–5: `docs/handover/contracts/2026-11-06-christmas-pack.md`; the two later typography and box-measurement corrections are reported in #689.
+Done: #689 merged by `merge-pr.py` as b4d0323; main run 42362844296 GREEN. Jon authorised merge on 7 Nov. The six-set Christmas Tree Fiasco printable pack builds with 98 of 900 joint draws VALID; its 18 printed lock answers agree with 108 independently recomputed values. The PDF stays gitignored in `dist-packs/`, never committed or uploaded. Contract and Amendments 1–5: `docs/history/contracts/2026-11-06-christmas-pack.md`; the two later typography and box-measurement corrections are reported in #689.
 
 Final review fixes: a one-box label splits each ` · ` fact onto its own line; lock names ending `?` or `!` gain no colon in the key. The hall plan and Eric's clipboard boxes sit inside their drawn paper. All Christmas labels fit at 11 pt or more; all other fitted sizes stayed unchanged. Kiln's rebuilt PDF is pixel identical to the pre-fix build. The generator selftest caught 27 of 27 plants; `check-changed.py` passed 51 of 51 selected checks on the final branch, and #689's Gate was green before merge. Proof PNGs are in `docs/screens/christmas-pack/`. This entry follows #693's merged close-out on main, with #693's entry retained below.
 
