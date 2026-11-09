@@ -730,12 +730,15 @@ function handleGut(btn) {
 }
 
 // ─── PHASE 2: ICON ARRAY ───
-// How many of the population one icon stands for: 1 up to 10,000 icons; above that, the largest k dividing N and every
-// count drawn that keeps it within 10,000 (gcd(N, counts) if N / gcd fits), else the least whole k that fits.
+// How many of the population one icon stands for: 1 up to ICON_CAP icons; above that, the largest k dividing N and every
+// count drawn that keeps it within ICON_CAP (gcd(N, counts) if N / gcd fits), else the least whole k that fits.
+// ICON_CAP was 10,000 until SCREENING-ROOM-FIT (Jon, 9 Nov 2026: "the picture helps understanding; the maths is what
+// matters"): at 10,000 the array pushed Continue below the fold on a laptop for most items.
+var ICON_CAP = 1000;
 function iconScale(pop, counts) {
-  if (pop <= 10000) return 1;
+  if (pop <= ICON_CAP) return 1;
   var g = counts.reduce(function (a, b) { return gcd(a, b); }, pop);
-  return pop / g <= 10000 ? g : Math.ceil(pop / 10000);
+  return pop / g <= ICON_CAP ? g : Math.ceil(pop / ICON_CAP);
 }
 
 function showPhase2() {
@@ -759,24 +762,8 @@ function showPhase2() {
   var tp = q.testPositive.truePositive;
   var fp = q.testPositive.falsePositive;
 
-  // Determine grid layout
-  var gridWidth, sizeClass;
-  if (pop <= 200) {
-    gridWidth = 10; sizeClass = 'size-large';
-    grid.className = 'icon-grid grid-10';
-  } else if (pop <= 1000) {
-    gridWidth = 25; sizeClass = 'size-medium';
-    grid.className = 'icon-grid grid-25';
-  } else if (pop <= 10000) {
-    gridWidth = 100; sizeClass = 'size-small';
-    grid.className = 'icon-grid grid-100';
-  } else {
-    gridWidth = 100; sizeClass = 'size-tiny';
-    grid.className = 'icon-grid grid-100';
-  }
-
-  // Over 10,000 (t4-008; Project Claude's rule, 8 Oct 2026): one icon stands for k. k divides every count the array
-  // draws (N, the condition, true and false positives), the largest such k that keeps it within 10,000 icons, so every
+  // Over ICON_CAP (t4-008; Project Claude's rule, 8 Oct 2026): one icon stands for k. k divides every count the array
+  // draws (N, the condition, true and false positives), the largest such k that keeps it within ICON_CAP icons, so every
   // group is whole icons; when no k above 1 does, k is the least that fits and a group's remainder is one icon cut to
   // its share. Never rounded. A note gives k in the scenario's own unit, and each group's exact count.
   var k = iconScale(pop, [condCount, tp, fp]);
@@ -790,6 +777,22 @@ function showPhase2() {
   var scaledTp = plan.filter(function (x) { return x[0] === 'true-positive'; }).length;
   var scaledCond = scaledTp + plan.filter(function (x) { return x[0] === 'condition'; }).length;
   var scaledFp = plan.filter(function (x) { return x[0] === 'false-positive'; }).length;
+
+  // Determine grid layout, from the icons drawn (displayPop), not the population (SCREENING-ROOM-FIT, 9 Nov 2026)
+  var gridWidth, sizeClass;
+  if (displayPop <= 50) {
+    gridWidth = 10; sizeClass = 'size-large';
+    grid.className = 'icon-grid grid-10';
+  } else if (displayPop <= 250) {
+    gridWidth = 25; sizeClass = 'size-medium';
+    grid.className = 'icon-grid grid-25';
+  } else if (displayPop <= 10000) {
+    gridWidth = 100; sizeClass = 'size-small';
+    grid.className = 'icon-grid grid-100';
+  } else {
+    gridWidth = 100; sizeClass = 'size-tiny';
+    grid.className = 'icon-grid grid-100';
+  }
   var note = document.getElementById('iconScale');
   if (k > 1) {
     note.textContent = '1 icon = ' + numFmt(k) + ' ' + (q.unit || 'people') + '.' +

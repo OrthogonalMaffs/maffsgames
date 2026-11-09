@@ -23,7 +23,7 @@ rates, and computes everything else; this script recomputes it all with exact fr
     (ages, a year group); every number in the rendered scenario, explanation, answer line and Bayes working is
     one the data gives (a count, a stated rate, the answer, a "1 in N").
   - IN CHROMIUM (reduced motion), every item is played: the band's button is marked correct and the next one
-    wrong; the icon array (N <= 10,000) draws exactly its true positives, false positives and missed cases; the
+    wrong; the icon array (N <= ICON_CAP, 1,000) draws exactly its true positives, false positives and missed cases; the
     prompt states the precision; the box shows a fixed % and reads the figure typed as a percentage (Jon, 13 Oct
     2026): the key, with or without a typed %, is marked correct, one unit off and 0 are wrong; an over-precise
     answer, a fraction, "abc" and the key as a decimal are never marked (no score, no event, the input stays open,
@@ -35,16 +35,23 @@ rates, and computes everything else; this script recomputes it all with exact fr
       Next, after a right and a wrong answer: one advance, the new gut check unanswered; the session ends once.
     t4-006: ?level=constructor, __proto__, toString, xyz, l4: the start screen at the default level, nothing thrown,
       served or logged.
-    t4-008 (Project Claude's rule): over 10,000, k = gcd(N, condition, true and false positives) if N / k fits 10,000
-      icons, else the least whole k that fits; each group drawn as exactly count / k (whole icons and one part-icon);
-      the note says "1 icon = k <unit>" and gives every exact count.
+    t4-008 (Project Claude's rule): over ICON_CAP, k = gcd(N, condition, true and false positives) if N / k fits
+      ICON_CAP icons, else the least whole k that fits; each group drawn as exactly count / k (whole icons and one
+      part-icon); the note says "1 icon = k <unit>" and gives every exact count. ICON_CAP was 10,000 until
+      SCREENING-ROOM-FIT (Jon, 9 Nov 2026) lowered it to 1,000, so the array fits a laptop screen.
+    LAPTOP FOLD (SCREENING-ROOM-FIT, 9 Nov 2026): at 1366x768 and 1280x720, every item played to phase 2 after a wrong
+      gut check with the game's own timers (the page clock runs the 1.2 s pause and the 3.8 s animation; no ceiling
+      short of their end), Continue fully shown (opacity 1), and its bottom at most the viewport height less the 40 px
+      site footer. Each item's grid, icon size and Continue's bottom are printed. measure-phone-fit.py judges one
+      seeded item per game and gives up at 5 s, before this game's Continue appears (SCREENING-ROOM-FOLD), so this
+      game keeps its own check.
     t4-013: at 390x844 (touch), every item's phases 1-3 and its answer scroll no wider than 390 px; Next wholly on screen.
     t4-015: phase 3 keeps the scenario and the icon array above the question, Continue gone.
     t4-016 (fixed on main by #92, pinned): the prompt counts no "people"; the hint's examples are no item's answer.
 
     python scripts/verify-screening-room.py [--file PATH] [--selftest]
 
---selftest plants 17 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
+--selftest plants 23 faults in copies of the page (a hand-keyed band, alevel_16's old 130 false positives in the
 engine and typed into its explanation, marking that accepts 0, one or two for each SR-21 entry, and the old start
 screen, phase 1 prompt and gcse_09 wording, and the answer box without its % unit, from SWEEP-1) and requires each to
 be caught.
@@ -67,6 +74,13 @@ PAGE = os.path.join(bc.GAMES_DIR, SLUG, 'index.html')
 # The level reader the game declares (LEVEL-RESOLVER, 13 Oct 2026); the t4-006 plant swaps it for the unvalidated read.
 RESOLVE_CALL = "MaffsLevel.resolve({slug:'screening-room',levels:['gcse','alevel','core','level4'],fallback:'gcse'})"
 LEVELS = ['gcse', 'alevel', 'core', 'level4']
+# t4-008's cap, stated here and not read from the page: the most icons the array draws before one icon stands for k
+# (10,000 until SCREENING-ROOM-FIT, Jon, 9 Nov 2026)
+ICON_CAP = 1000
+# The laptop sizes the fold check plays every item at (canon 7.6.1's laptop rule, R2), and the site footer's height
+FOLD_SIZES = ((1366, 768), (1280, 720))
+FOOTER = 40
+FOLD_ROWS = []   # (size, item, grid, icon px, Continue's bottom, fold), printed by main()
 BANDS = [('very_likely', 'Over 75%'), ('likely', '25 – 75%'), ('unlikely', '5 – 25%'), ('very_unlikely', 'Under 5%')]
 NUM = re.compile(r'(?<![\w.])\d[\d,]*(?:\.\d+)?')
 
@@ -306,21 +320,21 @@ def check_play(page, lv, q, e, rep):
         rep[('chromium', iid)].append(f"the {e['band']} button is not marked correct: {r['gut']['right']}")
     if r['gut']['wrong']['gained'] != 0 or r['gut']['wrong']['text'].startswith('Correct'):
         rep[('chromium', iid)].append(f"the {wrong} button is marked correct")
-    if q['N'] <= 10000:
+    if q['N'] <= ICON_CAP:
         want = {'tp': e['tpi'], 'fp': e['fpi'], 'cond': e['ci'] - e['tpi'], 'all': q['N']}
         if r['icons'] != want:
             rep[('icon array', iid)].append(f"drawn {r['icons']}, data {want}")
-    # t4-008 (Project Claude's rule, 8 Oct 2026): over 10,000, one icon stands for k: the largest k dividing N and every
-    # count drawn that keeps the array within 10,000 icons, else the least whole k that fits; each group is drawn as its
+    # t4-008 (Project Claude's rule, 8 Oct 2026): over ICON_CAP, one icon stands for k: the largest k dividing N and every
+    # count drawn that keeps the array within ICON_CAP icons, else the least whole k that fits; each group is drawn as its
     # count / k exactly (whole icons, and one part-icon for a remainder), never rounded; a note gives k in the
     # scenario's unit and each group's exact count
-    if q['N'] > 10000:
+    if q['N'] > ICON_CAP:
         groups = {'true-positive': e['tpi'], 'condition': e['ci'] - e['tpi'], 'false-positive': e['fpi'],
                   'neither': q['N'] - e['ci'] - e['fpi']}
         g = q['N']
         for v in (e['ci'], e['tpi'], e['fpi']):
             g = math.gcd(g, v)
-        k = g if q['N'] // g <= 10000 else -(-q['N'] // 10000)
+        k = g if q['N'] // g <= ICON_CAP else -(-q['N'] // ICON_CAP)
         unit = q.get('unit') or 'people'
         if f'1 icon = {k:,} {unit}.' not in r['note'] or not all(f'{v:,}' in r['note'] for v in groups.values()):
             rep[('screening-room-t4-008', iid)].append(f"N = {q['N']:,} is drawn scaled, but the note does not say '1 icon = "
@@ -365,10 +379,13 @@ def check_play(page, lv, q, e, rep):
     return r
 
 
-def open_page(browser, base, src, path, query='', viewport=(1280, 900), fresh=False, mobile=False):
-    """A page of the game (the file at path), with MaffsLock's real fresh window if fresh, else answering at once."""
-    ctx = browser.new_context(reduced_motion='reduce', viewport={'width': viewport[0], 'height': viewport[1]},
-                              is_mobile=mobile, has_touch=mobile)
+def open_page(browser, base, src, path, query='', viewport=(1280, 900), fresh=False, mobile=False, motion=False):
+    """A page of the game (the file at path), with MaffsLock's real fresh window if fresh, else answering at once.
+    motion: the animated path a student sees (no reduced motion), its timers on the page clock, run by clock.run_for."""
+    ctx = browser.new_context(reduced_motion='no-preference' if motion else 'reduce',
+                              viewport={'width': viewport[0], 'height': viewport[1]}, is_mobile=mobile, has_touch=mobile)
+    if motion:
+        ctx.clock.install()
     if not fresh:
         ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
@@ -498,6 +515,36 @@ def extra_checks(browser, base, src, path, data, rep, only):
             if ex in answers:
                 rep[('screening-room-t4-016', 'hint')].append(f'the input hint gives {ex}, which is an item\'s answer: {hint!r}')
     ctx.close()
+    # LAPTOP FOLD (SCREENING-ROOM-FIT, 9 Nov 2026): every item, after a wrong gut check, on the animated path a student
+    # sees; the page clock runs the game's own timers (1.2 s, then the animation's 3.8 s), so nothing races them
+    order = [b for b, _ in BANDS]
+    for w, h in FOLD_SIZES:
+        ctx, page, errors = open_page(browser, base, src, path, '', (w, h), motion=True)
+        for lv, q in items:
+            page.evaluate("([lv, id]) => { currentLevel = lv; startGame(); const q = QUESTIONS[lv].find(x => x.id === id); "
+                          "sessionQuestions = [q, q, q, q, q, q, q, q]; qIdx = 0; showQuestion(); scrollTo(0, 0); }", [lv, q['id']])
+            page.click('.gut-btn[data-gut="%s"]' % order[(order.index(q['gut']) + 1) % 4])
+            page.clock.run_for(6000)
+            try:
+                page.wait_for_function("() => { const b = document.getElementById('continueBtn'); "
+                                       "return b.classList.contains('visible') && getComputedStyle(b).opacity === '1'; }",
+                                       polling=50, timeout=5000)
+            except Exception:
+                rep[('screening-room-fold', '%dx%d %s' % (w, h, q['id']))].append(
+                    'Continue never became fully visible after a wrong gut check and the animation')
+                continue
+            m = page.evaluate("""() => { scrollTo(0, 0); const b = document.getElementById('continueBtn').getBoundingClientRect();
+              const g = document.getElementById('iconGrid'), i = g.querySelector('.person-icon');
+              return { bottom: Math.round(b.bottom + scrollY), grid: g.className.replace('icon-grid ', ''),
+                       icon: i ? Math.round(i.getBoundingClientRect().width * 10) / 10 : 0, vh: innerHeight }; }""")
+            fold = m['vh'] - FOOTER
+            FOLD_ROWS.append(('%dx%d' % (w, h), q['id'], m['grid'], m['icon'], m['bottom'], fold))
+            if m['bottom'] > fold:
+                rep[('screening-room-fold', '%dx%d %s' % (w, h, q['id']))].append(
+                    f"Continue ends at {m['bottom']} px, below the fold at {fold} ({m['grid']}, {m['icon']} px icons)")
+        for e in errors:
+            rep[('page', 'script error')].append(e)
+        ctx.close()
 
 
 def run(path, play=True, only=None):
@@ -638,6 +685,8 @@ def selftest():
          lambda s: plant(s, 'of people with no prohibited item.', 'of people carrying harmless metal.')),
         ("t4-016 (pinned): the hint's example is an item's answer", 'screening-room-t4-016', {'gcse_01'},
          lambda s: plant(s, "[null, '12.5', '1.25', '0.125']", "[null, '25.8', '1.25', '0.125']")),
+        ('laptop fold: 1,000 icons on the 25-column grid (Continue below the fold)', 'screening-room-fold', {'gcse_14'},
+         lambda s: plant(s, '  } else if (displayPop <= 250) {', '  } else if (displayPop <= 1000) {')),
     ]
     failed = 0
     for label, where, only, mutate in cases:
@@ -662,7 +711,12 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    return report(*run(a.file or PAGE))
+    rc = report(*run(a.file or PAGE))
+    if FOLD_ROWS:
+        print('laptop fold (size, item, grid, icon px, Continue bottom / fold):')
+        for size, iid, grid, icon, bottom, fold in FOLD_ROWS:
+            print(f'  {size} {iid:<10} {grid:<8} {icon:>4} px  {bottom} / {fold}')
+    return rc
 
 
 if __name__ == '__main__':

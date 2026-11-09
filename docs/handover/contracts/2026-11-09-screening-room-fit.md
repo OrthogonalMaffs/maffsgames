@@ -21,3 +21,11 @@ EXACT CHANGE:
 DO NOT TOUCH: any phone layout (widths 320–600); the questions, figures, sources, wording, colours, fonts or marking; the number or meaning of icons; the animation's steps or timings; schools/assets/; scripts/measure-phone-fit.py and scripts/phone-fit-state.json (except entries the checker reports stale); Gate files; any other game; canon; AGENTS.md and docs/rules/; any other todo row; home.md.
 SUCCESS CONDITION: all 70 questions have Continue above the fold at both laptop sizes, proved by the extended verifier in CI; no phone size or mode worse; every icon still drawn, none below 6 px; screenshots in the PR body; row closed; /updates/ line drafted; claim released; Gate green; stopped for Project Claude's review and Jon's look and "merge".
 STOP IF: any question cannot fit even side-by-side at 6 px (report it with its figures); the fix would change the icon count, what an icon stands for, or the scale line; a phone layout would have to change; the side-by-side layout would break the reading order (summary before Continue); another lane or claim holds screening-room.
+
+SCREENING-ROOM-FIT — Amendment 1 (Project Claude, 9 Nov 08:50). LANE: cloud. Continue on the same branch and claim. Replaces the contract's EXACT CHANGE steps 1, 2 and 5 and every mention of the 6 px floor and the side-by-side layout.
+Jon, 08:46: the picture helps understanding; the maths is what matters. Fix it simply.
+1. games/screening-room/index.html: in iconScale(), lower the icon cap from 10,000 to the largest of 1,000 / 500 / 200 / 100 at which Continue sits above the fold at 1280×720 and 1366×768 on all 70 questions. Grouping, part-icons and the exact-count note work as they do today. Adjust only the grid-class thresholds in showPhase2() so each icon count uses a grid that suits it. No new layout, no new CSS beyond that.
+2. Keep step 3 (the verifier's every-question fold check) and step 4 (no phone size or mode worse; remove known-failures entries only if the checker reports them stale).
+3. Screenshots: one, at 1280×720, of the largest question after the change.
+4. STOP IF: no cap down to 100 fits every question (report which and by how much).
+Nothing else changes.
