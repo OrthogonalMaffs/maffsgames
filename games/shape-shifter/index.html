@@ -108,6 +108,30 @@ canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:cro
 .instruction-bar{font-size:13px;padding:12px 14px}
 .btn-row{flex-direction:column;gap:8px}
 }
+/* HEADER-FIT (todo §1.39, Amendment 1): the header fits a 320px phone with the title in full. The back link shows its
+   arrow only (named by aria-label), the title and the Aa toggle share the first row, and the mode pill and score take a row
+   under them. Below 375px (normal mode overflowed only there on main), and up to 480px in Aa mode, whose wider font
+   overflowed at every phone size. The ellipsis is a last resort only. */
+@media(max-width:374px){
+.header{flex-wrap:wrap;row-gap:0}
+.back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+.back-text,.header-div{display:none}
+.header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.header-right{display:contents}
+.header::after{content:"";order:1;flex-basis:100%}
+.header-right>:not(.a11y-toggle){order:2}
+.header-right>.a11y-toggle+*{margin-left:auto}
+}
+@media(max-width:480px){
+body.accessible .header{flex-wrap:wrap;row-gap:0}
+body.accessible .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+body.accessible .back-text,body.accessible .header-div{display:none}
+body.accessible .header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+body.accessible .header-right{display:contents}
+body.accessible .header::after{content:"";order:1;flex-basis:100%}
+body.accessible .header-right>:not(.a11y-toggle){order:2}
+body.accessible .header-right>.a11y-toggle+*{margin-left:auto}
+}
 
 /* === Accessibility === */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
@@ -142,7 +166,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 
 <!-- HEADER -->
 <div class="header" id="gameHeader" style="display:none">
-  <a href="../../" class="back-link">← Back to Games</a>
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
   <div class="header-div"></div>
   <span class="header-title">Shape Shifter</span>
   <div class="header-right">

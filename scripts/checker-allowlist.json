@@ -1774,13 +1774,6 @@
       "where": "div.canvas-panel; div.right-panel"
     },
     {
-      "path": "games/equation-builder/index.html",
-      "at": "start",
-      "width": 329,
-      "todo": "§1.39; §3.9, in no batch yet",
-      "where": "div.header-right"
-    },
-    {
       "path": "games/glorious-gantt/index.html",
       "at": "start",
       "width": 354,
@@ -1793,20 +1786,6 @@
       "width": 327,
       "todo": "§3.9, in no batch yet",
       "where": "canvas#graphCanvas"
-    },
-    {
-      "path": "games/probability-pioneer/index.html",
-      "at": "start",
-      "width": 355,
-      "todo": "§1.39; §3.9 batch 7",
-      "where": "div.header-right"
-    },
-    {
-      "path": "games/shape-shifter/index.html",
-      "at": "start",
-      "width": 375,
-      "todo": "§1.39; §3.9, in no batch yet",
-      "where": "div.header-right"
     },
     {
       "path": "games/tax-theft/index.html",
