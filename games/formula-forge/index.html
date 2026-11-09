@@ -108,6 +108,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
 <!-- The on-screen calculator with its scientific keys (canon §4.4 "scientific"; Jon's tagging ruling, 10 Oct 2026);
      keypad.js first, as MaffsCalc composes it. -->
 <script src="../../schools/assets/scroll.js"></script>
@@ -204,174 +205,174 @@ const Q={
 gcse:{
 s1:[// Stage 1: One step
 {formula:'v = u + at',subject:'u',correct:'u = v - at',distractors:['u = v + at','u = at - v','u = \\dfrac{v}{at}'],
-hint1:'u is being added to at. What is the inverse of adding at?',hint2:'Subtract at from both sides: u = v - at',
+hint1:'u is being added to at. What is the inverse of adding at?',hint2:'Subtract \\(at\\) from both sides: \\(u = v - at\\)',
 steps:['v = u + at','\\text{Subtract } at \\text{ from both sides}','v - at = u','u = v - at']},
 
 {formula:'P = 4l',subject:'l',correct:'l = \\dfrac{P}{4}',distractors:['l = 4P','l = P - 4','l = \\dfrac{4}{P}'],
-hint1:'l is being multiplied by 4. What undoes multiplication?',hint2:'Divide both sides by 4',
+hint1:'l is being multiplied by 4. What undoes multiplication?',hint2:'Divide both sides by \\(4\\)',
 steps:['P = 4l','\\text{Divide both sides by 4}','\\dfrac{P}{4} = l']},
 
 {formula:'C = \\pi d',subject:'d',correct:'d = \\dfrac{C}{\\pi}',distractors:['d = C\\pi','d = C - \\pi','d = \\dfrac{\\pi}{C}'],
-hint1:'d is multiplied by π. Undo it.',hint2:'d = \\dfrac{C}{\\pi}',
+hint1:'d is multiplied by π. Undo it.',hint2:'\\(d = \\dfrac{C}{\\pi}\\)',
 steps:['C = \\pi d','\\text{Divide both sides by } \\pi','d = \\dfrac{C}{\\pi}']},
 
 {formula:'y = x + 7',subject:'x',correct:'x = y - 7',distractors:['x = y + 7','x = 7 - y','x = 7y'],
-hint1:'x has 7 added to it.',hint2:'Subtract 7 from both sides',
+hint1:'x has 7 added to it.',hint2:'Subtract \\(7\\) from both sides',
 steps:['y = x + 7','y - 7 = x','x = y - 7']},
 
 {formula:'A = bh',subject:'h',correct:'h = \\dfrac{A}{b}',distractors:['h = Ab','h = A - b','h = \\dfrac{b}{A}'],
-hint1:'h is multiplied by b.',hint2:'Divide both sides by b',
+hint1:'h is multiplied by b.',hint2:'Divide both sides by \\(b\\)',
 steps:['A = bh','\\dfrac{A}{b} = h']},
 
 {formula:'F = ma',subject:'a',correct:'a = \\dfrac{F}{m}',distractors:['a = Fm','a = F - m','a = \\dfrac{m}{F}'],
-hint1:'a is multiplied by m.',hint2:'Divide both sides by m',
+hint1:'a is multiplied by m.',hint2:'Divide both sides by \\(m\\)',
 steps:['F = ma','a = \\dfrac{F}{m}']},
 
 {formula:'d = st',subject:'s',correct:'s = \\dfrac{d}{t}',distractors:['s = dt','s = d - t','s = \\dfrac{t}{d}'],
-hint1:'s is multiplied by t.',hint2:'Divide both sides by t',
+hint1:'s is multiplied by t.',hint2:'Divide both sides by \\(t\\)',
 steps:['d = st','s = \\dfrac{d}{t}'],ctx:'Distance = speed × time'},
 
 {formula:'y = mx + c',subject:'c',correct:'c = y - mx',distractors:['c = y + mx','c = \\dfrac{y}{mx}','c = mx - y'],
-hint1:'c is added to mx.',hint2:'Subtract mx from both sides',
+hint1:'c is added to mx.',hint2:'Subtract \\(mx\\) from both sides',
 steps:['y = mx + c','y - mx = c','c = y - mx']},
 ],
 s2:[// Stage 2: Two steps
 {formula:'v = u + at',subject:'t',correct:'t = \\dfrac{v - u}{a}',distractors:['t = \\dfrac{v + u}{a}','t = a(v - u)','t = \\dfrac{v}{a} - u'],
-hint1:'First isolate the term containing t. Subtract u from both sides.',hint2:'v - u = at. Now divide by a.',
+hint1:'First isolate the term containing t. Subtract u from both sides.',hint2:'\\(v - u = at\\). Now divide by \\(a\\).',
 steps:['v = u + at','\\text{Subtract } u: \\quad v - u = at','\\text{Divide by } a: \\quad t = \\dfrac{v - u}{a}'],
 misconception:'Isolate the term with your subject first, then deal with its coefficient.'},
 
 {formula:'y = mx + c',subject:'m',correct:'m = \\dfrac{y - c}{x}',distractors:['m = \\dfrac{y + c}{x}','m = x(y - c)','m = \\dfrac{y}{x} + c'],
-hint1:'Subtract c first.',hint2:'y - c = mx. Divide by x.',
+hint1:'Subtract c first.',hint2:'\\(y - c = mx\\). Divide by \\(x\\).',
 steps:['y = mx + c','y - c = mx','m = \\dfrac{y - c}{x}']},
 
 {formula:'y = mx + c',subject:'x',correct:'x = \\dfrac{y - c}{m}',distractors:['x = \\dfrac{y + c}{m}','x = m(y - c)','x = \\dfrac{y}{m} - c'],
-hint1:'Subtract c from both sides first.',hint2:'y - c = mx. Now divide by m.',
+hint1:'Subtract c from both sides first.',hint2:'\\(y - c = mx\\). Now divide by \\(m\\).',
 steps:['y - c = mx','x = \\dfrac{y - c}{m}']},
 
 {formula:'A = \\dfrac{1}{2}bh',subject:'h',correct:'h = \\dfrac{2A}{b}',distractors:['h = \\dfrac{A}{2b}','h = 2Ab','h = \\dfrac{Ab}{2}'],
-hint1:'Multiply both sides by 2 first to clear the fraction.',hint2:'2A = bh. Now divide by b.',
+hint1:'Multiply both sides by 2 first to clear the fraction.',hint2:'\\(2A = bh\\). Now divide by \\(b\\).',
 steps:['A = \\dfrac{1}{2}bh','2A = bh','h = \\dfrac{2A}{b}'],
 misconception:'When the formula has a fraction, multiply BOTH sides to clear it first. This is the cleanest approach.'},
 
 {formula:'P = 2(l + w)',subject:'w',correct:'w = \\dfrac{P}{2} - l',distractors:['w = \\dfrac{P - l}{2}','w = \\dfrac{P}{2l}','w = 2P - l'],
-hint1:'Divide both sides by 2 first.',hint2:'\\dfrac{P}{2} = l + w. Subtract l.',
+hint1:'Divide both sides by 2 first.',hint2:'\\(\\dfrac{P}{2} = l + w\\). Subtract \\(l\\).',
 steps:['P = 2(l + w)','\\dfrac{P}{2} = l + w','w = \\dfrac{P}{2} - l'],ctx:'Perimeter of a rectangle'},
 
 {formula:'C = \\dfrac{5}{9}(F - 32)',subject:'F',correct:'F = \\dfrac{9C}{5} + 32',distractors:['F = \\dfrac{5C}{9} + 32','F = \\dfrac{9C + 32}{5}','F = \\dfrac{9(C + 32)}{5}'],
-hint1:'Multiply both sides by 9/5 to clear the fraction.',hint2:'\\dfrac{9C}{5} = F - 32. Add 32.',
+hint1:'Multiply both sides by 9/5 to clear the fraction.',hint2:'\\(\\dfrac{9C}{5} = F - 32\\). Add \\(32\\).',
 steps:['C = \\dfrac{5}{9}(F - 32)','\\dfrac{9C}{5} = F - 32','F = \\dfrac{9C}{5} + 32'],ctx:'Celsius to Fahrenheit'},
 
 {formula:'s = \\dfrac{d}{t}',subject:'t',correct:'t = \\dfrac{d}{s}',distractors:['t = ds','t = s - d','t = \\dfrac{s}{d}'],
-hint1:'Multiply both sides by t first.',hint2:'st = d. Divide by s.',
+hint1:'Multiply both sides by t first.',hint2:'\\(st = d\\). Divide by \\(s\\).',
 steps:['s = \\dfrac{d}{t}','st = d','t = \\dfrac{d}{s}'],
 misconception:'When the subject is in the denominator, multiply both sides by it to bring it up.'},
 
 {formula:'T = 2\\pi\\sqrt{\\dfrac{l}{g}}',subject:'l',correct:'l = \\dfrac{gT^2}{4\\pi^2}',distractors:['l = \\dfrac{T^2}{4\\pi^2 g}','l = \\dfrac{T^2 g}{2\\pi}','l = g\\left(\\dfrac{T}{2\\pi}\\right)'],
-hint1:'Divide by 2π, then square both sides.',hint2:'\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}} \\implies \\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}',
+hint1:'Divide by 2π, then square both sides.',hint2:'\\(\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}} \\implies \\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}\\)',
 steps:['T = 2\\pi\\sqrt{\\dfrac{l}{g}}','\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{l}{g}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{l}{g}','l = \\dfrac{gT^2}{4\\pi^2}'],ctx:'Period of a pendulum'},
 ],
 s3:[// Stage 3: Powers and roots
 {formula:'v^2 = u^2 + 2as',subject:'v',correct:'v = \\sqrt{u^2 + 2as}',distractors:['v = u + \\sqrt{2as}','v = u^2 + 2as','v = (u^2 + 2as)^2'],
-hint1:'v is squared. What undoes squaring?',hint2:'Square root both sides: v = \\sqrt{u^2 + 2as}',
+hint1:'v is squared. What undoes squaring?',hint2:'Square root both sides: \\(v = \\sqrt{u^2 + 2as}\\)',
 steps:['v^2 = u^2 + 2as','v = \\sqrt{u^2 + 2as}'],
 misconception:'√(a² + b) ≠ a + √b. You cannot split a square root over addition. The WHOLE expression stays under the root.'},
 
 {formula:'v^2 = u^2 + 2as',subject:'s',correct:'s = \\dfrac{v^2 - u^2}{2a}',distractors:['s = \\dfrac{v - u}{2a}','s = \\dfrac{(v-u)^2}{2a}','s = 2a(v^2 - u^2)'],
-hint1:'Isolate the 2as term first. Subtract u².',hint2:'v^2 - u^2 = 2as. Divide by 2a.',
+hint1:'Isolate the 2as term first. Subtract u².',hint2:'\\(v^2 - u^2 = 2as\\). Divide by \\(2a\\).',
 steps:['v^2 = u^2 + 2as','v^2 - u^2 = 2as','s = \\dfrac{v^2 - u^2}{2a}']},
 
 {formula:'A = \\pi r^2',subject:'r',correct:'r = \\sqrt{\\dfrac{A}{\\pi}}',distractors:['r = \\dfrac{A}{\\pi^2}','r = \\dfrac{\\sqrt{A}}{\\pi}','r = \\dfrac{A}{2\\pi}'],
-hint1:'Divide by π first, then square root.',hint2:'\\dfrac{A}{\\pi} = r^2 \\implies r = \\sqrt{\\dfrac{A}{\\pi}}',
+hint1:'Divide by π first, then square root.',hint2:'\\(\\dfrac{A}{\\pi} = r^2 \\implies r = \\sqrt{\\dfrac{A}{\\pi}}\\)',
 steps:['A = \\pi r^2','\\dfrac{A}{\\pi} = r^2','r = \\sqrt{\\dfrac{A}{\\pi}}'],
 misconception:'Divide by π, then square root. If you square root first, divide by √π, not π: √A/π is wrong.'},
 
 {formula:'E = \\dfrac{1}{2}mv^2',subject:'v',correct:'v = \\sqrt{\\dfrac{2E}{m}}',distractors:['v = \\dfrac{2E}{m}','v = \\sqrt{\\dfrac{E}{2m}}','v = \\dfrac{\\sqrt{2E}}{m}'],
-hint1:'Multiply by 2, divide by m, then square root.',hint2:'\\dfrac{2E}{m} = v^2',
+hint1:'Multiply by 2, divide by m, then square root.',hint2:'\\(\\dfrac{2E}{m} = v^2\\)',
 steps:['E = \\dfrac{1}{2}mv^2','2E = mv^2','\\dfrac{2E}{m} = v^2','v = \\sqrt{\\dfrac{2E}{m}}'],ctx:'Kinetic energy'},
 
 {formula:'c^2 = a^2 + b^2',subject:'a',correct:'a = \\sqrt{c^2 - b^2}',distractors:['a = c - b','a = \\sqrt{c^2 + b^2}','a = (c-b)(c+b)'],
-hint1:'Subtract b² first.',hint2:'a^2 = c^2 - b^2. Square root.',
+hint1:'Subtract b² first.',hint2:'\\(a^2 = c^2 - b^2\\). Square root.',
 steps:['c^2 = a^2 + b^2','c^2 - b^2 = a^2','a = \\sqrt{c^2 - b^2}'],ctx:'Pythagoras',
 misconception:'√(c² − b²) ≠ c − b. You CANNOT split the root over subtraction.'},
 
 {formula:'V = \\dfrac{4}{3}\\pi r^3',subject:'r',correct:'r = \\sqrt[3]{\\dfrac{3V}{4\\pi}}',distractors:['r = \\dfrac{3V}{4\\pi}','r = \\sqrt{\\dfrac{3V}{4\\pi}}','r = \\left(\\dfrac{3V}{4\\pi}\\right)^3'],
-hint1:'Multiply by 3/(4π) to isolate r³.',hint2:'r^3 = \\dfrac{3V}{4\\pi}. Cube root.',
+hint1:'Multiply by 3/(4π) to isolate r³.',hint2:'\\(r^3 = \\dfrac{3V}{4\\pi}\\). Cube root.',
 steps:['V = \\dfrac{4}{3}\\pi r^3','\\dfrac{3V}{4\\pi} = r^3','r = \\sqrt[3]{\\dfrac{3V}{4\\pi}}'],ctx:'Volume of a sphere'},
 
 {formula:'s = ut + \\dfrac{1}{2}at^2',subject:'a',correct:'a = \\dfrac{2(s - ut)}{t^2}',distractors:['a = \\dfrac{2s - u}{t}','a = \\dfrac{s - ut}{2t^2}','a = \\dfrac{2s}{t^2} - u'],
-hint1:'Subtract ut, multiply by 2, divide by t².',hint2:'s - ut = \\dfrac{1}{2}at^2 \\implies 2(s-ut) = at^2',
+hint1:'Subtract ut, multiply by 2, divide by t².',hint2:'\\(s - ut = \\dfrac{1}{2}at^2 \\implies 2(s-ut) = at^2\\)',
 steps:['s = ut + \\dfrac{1}{2}at^2','s - ut = \\dfrac{1}{2}at^2','2(s - ut) = at^2','a = \\dfrac{2(s - ut)}{t^2}']},
 ],
 s4:[// Stage 4: Multiple instances
 {formula:'ax + b = cx + d',subject:'x',correct:'x = \\dfrac{d - b}{a - c}',distractors:['x = \\dfrac{d + b}{a + c}','x = \\dfrac{a - c}{d - b}','x = (d-b)(a-c)'],
-hint1:'Get all x terms on one side: ax − cx = d − b',hint2:'Factor out x: x(a − c) = d − b',
+hint1:'Get all x terms on one side: ax − cx = d − b',hint2:'Factor out \\(x\\): \\(x(a - c) = d - b\\)',
 steps:['ax + b = cx + d','ax - cx = d - b','x(a - c) = d - b','x = \\dfrac{d - b}{a - c}'],
 misconception:'When the subject appears on BOTH sides: collect terms, factorise, divide. This three-step process works every time.'},
 
 {formula:'\\dfrac{a}{x} = b + c',subject:'x',correct:'x = \\dfrac{a}{b + c}',distractors:['x = a(b+c)','x = \\dfrac{b+c}{a}','x = a - b - c'],
-hint1:'x is in the denominator. Multiply both sides by x.',hint2:'a = x(b+c). Divide by (b+c).',
+hint1:'x is in the denominator. Multiply both sides by x.',hint2:'\\(a = x(b+c)\\). Divide by \\((b+c)\\).',
 steps:['\\dfrac{a}{x} = b + c','a = x(b + c)','x = \\dfrac{a}{b + c}']},
 
 {formula:'y = \\dfrac{x + a}{x + b}',subject:'x',correct:'x = \\dfrac{a - yb}{y - 1}',distractors:['x = \\dfrac{y - a}{b}','x = \\dfrac{a + yb}{y + 1}','x = y(a-b)'],
-hint1:'Multiply both sides by (x + b) first.',hint2:'y(x+b) = x+a \\implies yx + yb = x + a \\implies yx - x = a - yb',
+hint1:'Multiply both sides by (x + b) first.',hint2:'\\(y(x+b) = x+a \\implies yx + yb = x + a \\implies yx - x = a - yb\\)',
 steps:['y(x + b) = x + a','yx + yb = x + a','yx - x = a - yb','x(y - 1) = a - yb','x = \\dfrac{a - yb}{y - 1}']},
 
 {formula:'P = \\dfrac{V^2}{R}',subject:'V',correct:'V = \\sqrt{PR}',distractors:['V = \\dfrac{\\sqrt{P}}{R}','V = PR','V = \\dfrac{P}{R^2}'],
-hint1:'Multiply by R first.',hint2:'PR = V^2. Square root.',
+hint1:'Multiply by R first.',hint2:'\\(PR = V^2\\). Square root.',
 steps:['P = \\dfrac{V^2}{R}','PR = V^2','V = \\sqrt{PR}'],ctx:'Electrical power'},
 
 {formula:'\\dfrac{1}{f} = \\dfrac{1}{u} + \\dfrac{1}{v}',subject:'v',correct:'v = \\dfrac{uf}{u - f}',distractors:['v = \\dfrac{u + f}{uf}','v = uf - f','v = \\dfrac{f}{u - f}'],
-hint1:'Subtract 1/u from both sides: 1/v = 1/f − 1/u',hint2:'\\dfrac{1}{v} = \\dfrac{u - f}{uf}. Flip both sides.',
+hint1:'Subtract 1/u from both sides: 1/v = 1/f − 1/u',hint2:'\\(\\dfrac{1}{v} = \\dfrac{u - f}{uf}\\). Flip both sides.',
 steps:['\\dfrac{1}{v} = \\dfrac{1}{f} - \\dfrac{1}{u}','\\dfrac{1}{v} = \\dfrac{u - f}{uf}','v = \\dfrac{uf}{u - f}'],ctx:'Lens equation'},
 
 {formula:'A = P\\left(1 + \\dfrac{r}{100}\\right)^n',subject:'r',correct:'r = 100\\left(\\sqrt[n]{\\dfrac{A}{P}} - 1\\right)',distractors:['r = \\dfrac{100(A-P)}{Pn}','r = 100\\left(\\dfrac{A}{P} - 1\\right)','r = \\left(\\dfrac{A}{P}\\right)^{1/n} \\times 100'],
-hint1:'Divide by P, then take the nth root.',hint2:'\\sqrt[n]{\\dfrac{A}{P}} = 1 + \\dfrac{r}{100}. Subtract 1, multiply by 100.',
+hint1:'Divide by P, then take the nth root.',hint2:'\\(\\sqrt[n]{\\dfrac{A}{P}} = 1 + \\dfrac{r}{100}\\). Subtract \\(1\\), multiply by \\(100\\).',
 steps:['\\dfrac{A}{P} = \\left(1 + \\dfrac{r}{100}\\right)^n','\\sqrt[n]{\\dfrac{A}{P}} = 1 + \\dfrac{r}{100}','\\dfrac{r}{100} = \\sqrt[n]{\\dfrac{A}{P}} - 1','r = 100\\left(\\sqrt[n]{\\dfrac{A}{P}} - 1\\right)'],ctx:'Compound interest'},
 ],
 },
 level4:{
 s1:[
 {formula:'V = IR',subject:'I',correct:'I = \\dfrac{V}{R}',distractors:['I = VR','I = R - V','I = \\dfrac{R}{V}'],
-hint1:'I is multiplied by R.',hint2:'Divide both sides by R.',steps:['V = IR','I = \\dfrac{V}{R}'],ctx:'Ohm\'s law'},
+hint1:'I is multiplied by R.',hint2:'Divide both sides by \\(R\\).',steps:['V = IR','I = \\dfrac{V}{R}'],ctx:'Ohm\'s law'},
 {formula:'\\sigma = \\dfrac{F}{A}',subject:'F',correct:'F = \\sigma A',distractors:['F = \\dfrac{\\sigma}{A}','F = \\dfrac{A}{\\sigma}','F = \\sigma + A'],
-hint1:'F is divided by A.',hint2:'Multiply both sides by A.',steps:['\\sigma = \\dfrac{F}{A}','F = \\sigma A'],ctx:'Stress = Force / Area'},
+hint1:'F is divided by A.',hint2:'Multiply both sides by \\(A\\).',steps:['\\sigma = \\dfrac{F}{A}','F = \\sigma A'],ctx:'Stress = Force / Area'},
 {formula:'\\varepsilon = \\dfrac{\\Delta L}{L_0}',subject:'\\Delta L',correct:'\\Delta L = \\varepsilon L_0',distractors:['\\Delta L = \\dfrac{\\varepsilon}{L_0}','\\Delta L = \\dfrac{L_0}{\\varepsilon}','\\Delta L = \\varepsilon + L_0'],
-hint1:'ΔL is divided by L₀.',hint2:'Multiply both sides by L₀.',steps:['\\varepsilon = \\dfrac{\\Delta L}{L_0}','\\Delta L = \\varepsilon L_0'],ctx:'Strain'},
+hint1:'ΔL is divided by L₀.',hint2:'Multiply both sides by \\(L_0\\).',steps:['\\varepsilon = \\dfrac{\\Delta L}{L_0}','\\Delta L = \\varepsilon L_0'],ctx:'Strain'},
 {formula:'P = \\dfrac{W}{t}',subject:'W',correct:'W = Pt',distractors:['W = \\dfrac{P}{t}','W = \\dfrac{t}{P}','W = P + t'],
-hint1:'W is divided by t.',hint2:'Multiply both sides by t.',steps:['P = \\dfrac{W}{t}','W = Pt'],ctx:'Power = Work / Time'},
+hint1:'W is divided by t.',hint2:'Multiply both sides by \\(t\\).',steps:['P = \\dfrac{W}{t}','W = Pt'],ctx:'Power = Work / Time'},
 ],
 s2:[
 {formula:'V = IR',subject:'R',correct:'R = \\dfrac{V}{I}',distractors:['R = VI','R = V - I','R = \\dfrac{I}{V}'],
-hint1:'R is multiplied by I.',hint2:'Divide both sides by I.',steps:['V = IR','R = \\dfrac{V}{I}'],ctx:'Ohm\'s law — find resistance'},
+hint1:'R is multiplied by I.',hint2:'Divide both sides by \\(I\\).',steps:['V = IR','R = \\dfrac{V}{I}'],ctx:'Ohm\'s law — find resistance'},
 {formula:'P = I^2 R',subject:'R',correct:'R = \\dfrac{P}{I^2}',distractors:['R = \\dfrac{P}{2I}','R = PI^2','R = \\sqrt{\\dfrac{P}{I}}'],
-hint1:'R is multiplied by I².',hint2:'Divide both sides by I².',steps:['P = I^2 R','R = \\dfrac{P}{I^2}'],ctx:'Electrical power'},
+hint1:'R is multiplied by I².',hint2:'Divide both sides by \\(I^2\\).',steps:['P = I^2 R','R = \\dfrac{P}{I^2}'],ctx:'Electrical power'},
 {formula:'E = \\dfrac{\\sigma}{\\varepsilon}',subject:'\\varepsilon',correct:'\\varepsilon = \\dfrac{\\sigma}{E}',distractors:['\\varepsilon = E\\sigma','\\varepsilon = \\dfrac{E}{\\sigma}','\\varepsilon = E - \\sigma'],
-hint1:'Multiply both sides by ε.',hint2:'E\\varepsilon = \\sigma. Divide by E.',steps:['E\\varepsilon = \\sigma','\\varepsilon = \\dfrac{\\sigma}{E}'],ctx:'Young\'s modulus E = σ/ε'},
+hint1:'Multiply both sides by ε.',hint2:'\\(E\\varepsilon = \\sigma\\). Divide by \\(E\\).',steps:['E\\varepsilon = \\sigma','\\varepsilon = \\dfrac{\\sigma}{E}'],ctx:'Young\'s modulus E = σ/ε'},
 {formula:'Q = mc\\Delta T',subject:'\\Delta T',correct:'\\Delta T = \\dfrac{Q}{mc}',distractors:['\\Delta T = Qmc','\\Delta T = \\dfrac{mc}{Q}','\\Delta T = Q - mc'],
-hint1:'ΔT is multiplied by mc.',hint2:'Divide both sides by mc.',steps:['Q = mc\\Delta T','\\Delta T = \\dfrac{Q}{mc}'],ctx:'Heat energy'},
+hint1:'ΔT is multiplied by mc.',hint2:'Divide both sides by \\(mc\\).',steps:['Q = mc\\Delta T','\\Delta T = \\dfrac{Q}{mc}'],ctx:'Heat energy'},
 {formula:'\\eta = \\dfrac{P_{out}}{P_{in}} \\times 100',subject:'P_{in}',correct:'P_{in} = \\dfrac{100 P_{out}}{\\eta}',distractors:['P_{in} = \\dfrac{\\eta P_{out}}{100}','P_{in} = \\dfrac{P_{out}}{100\\eta}','P_{in} = \\eta - P_{out}'],
-hint1:'Multiply both sides by P_in, divide by η.',hint2:'\\eta P_{in} = 100 P_{out}',steps:['\\eta = \\dfrac{100 P_{out}}{P_{in}}','\\eta P_{in} = 100 P_{out}','P_{in} = \\dfrac{100 P_{out}}{\\eta}'],ctx:'Efficiency'},
+hint1:'Multiply both sides by P_in, divide by η.',hint2:'\\(\\eta P_{in} = 100 P_{out}\\)',steps:['\\eta = \\dfrac{100 P_{out}}{P_{in}}','\\eta P_{in} = 100 P_{out}','P_{in} = \\dfrac{100 P_{out}}{\\eta}'],ctx:'Efficiency'},
 ],
 s3:[
 {formula:'P = I^2 R',subject:'I',correct:'I = \\sqrt{\\dfrac{P}{R}}',distractors:['I = \\dfrac{P}{R^2}','I = \\dfrac{\\sqrt{P}}{R}','I = \\dfrac{P}{2R}'],
-hint1:'Divide by R, then square root.',hint2:'I^2 = \\dfrac{P}{R}',steps:['I^2 = \\dfrac{P}{R}','I = \\sqrt{\\dfrac{P}{R}}'],ctx:'Find current from power'},
+hint1:'Divide by R, then square root.',hint2:'\\(I^2 = \\dfrac{P}{R}\\)',steps:['I^2 = \\dfrac{P}{R}','I = \\sqrt{\\dfrac{P}{R}}'],ctx:'Find current from power'},
 {formula:'P = \\dfrac{V^2}{R}',subject:'V',correct:'V = \\sqrt{PR}',distractors:['V = \\dfrac{PR}{2}','V = PR','V = \\dfrac{\\sqrt{P}}{\\sqrt{R}}'],
-hint1:'Multiply by R first.',hint2:'V^2 = PR. Square root.',steps:['PR = V^2','V = \\sqrt{PR}'],ctx:'Find voltage from power'},
+hint1:'Multiply by R first.',hint2:'\\(V^2 = PR\\). Square root.',steps:['PR = V^2','V = \\sqrt{PR}'],ctx:'Find voltage from power'},
 {formula:'v^2 = u^2 + 2as',subject:'u',correct:'u = \\sqrt{v^2 - 2as}',distractors:['u = v - \\sqrt{2as}','u = \\sqrt{v^2 + 2as}','u = v^2 - 2as'],
-hint1:'Subtract 2as, then square root.',hint2:'u^2 = v^2 - 2as',steps:['v^2 - 2as = u^2','u = \\sqrt{v^2 - 2as}'],ctx:'SUVAT — find initial velocity'},
+hint1:'Subtract 2as, then square root.',hint2:'\\(u^2 = v^2 - 2as\\)',steps:['v^2 - 2as = u^2','u = \\sqrt{v^2 - 2as}'],ctx:'SUVAT — find initial velocity'},
 {formula:'T = 2\\pi\\sqrt{\\dfrac{m}{k}}',subject:'k',correct:'k = \\dfrac{4\\pi^2 m}{T^2}',distractors:['k = \\dfrac{m}{T^2}','k = \\dfrac{2\\pi m}{T}','k = \\dfrac{T^2 m}{4\\pi^2}'],
-hint1:'Divide by 2π, square, then rearrange.',hint2:'\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}',steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{m}{k}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}','k = \\dfrac{4\\pi^2 m}{T^2}'],ctx:'Period of a spring-mass system'},
+hint1:'Divide by 2π, square, then rearrange.',hint2:'\\(\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}\\)',steps:['\\dfrac{T}{2\\pi} = \\sqrt{\\dfrac{m}{k}}','\\dfrac{T^2}{4\\pi^2} = \\dfrac{m}{k}','k = \\dfrac{4\\pi^2 m}{T^2}'],ctx:'Period of a spring-mass system'},
 ],
 s4:[
 {formula:'\\dfrac{1}{R_T} = \\dfrac{1}{R_1} + \\dfrac{1}{R_2}',subject:'R_1',correct:'R_1 = \\dfrac{R_T R_2}{R_2 - R_T}',distractors:['R_1 = R_T + R_2','R_1 = \\dfrac{R_T + R_2}{R_T R_2}','R_1 = \\dfrac{R_2 - R_T}{R_T R_2}'],
-hint1:'Subtract 1/R₂: 1/R₁ = 1/R_T − 1/R₂',hint2:'\\dfrac{1}{R_1} = \\dfrac{R_2 - R_T}{R_T R_2}. Flip.',
+hint1:'Subtract 1/R₂: 1/R₁ = 1/R_T − 1/R₂',hint2:'\\(\\dfrac{1}{R_1} = \\dfrac{R_2 - R_T}{R_T R_2}\\). Flip.',
 steps:['\\dfrac{1}{R_1} = \\dfrac{1}{R_T} - \\dfrac{1}{R_2}','\\dfrac{1}{R_1} = \\dfrac{R_2 - R_T}{R_T R_2}','R_1 = \\dfrac{R_T R_2}{R_2 - R_T}'],ctx:'Parallel resistors'},
 {formula:'P = I^2 R = \\dfrac{V^2}{R}',subject:'R',correct:'R = \\dfrac{V}{I}',distractors:['R = VI','R = \\dfrac{V^2}{I^2}','R = \\dfrac{I}{V}'],
-hint1:'From P = I²R and P = V²/R, eliminate P.',hint2:'I^2 R = \\dfrac{V^2}{R} \\implies R^2 = \\dfrac{V^2}{I^2}',
+hint1:'From P = I²R and P = V²/R, eliminate P.',hint2:'\\(I^2 R = \\dfrac{V^2}{R} \\implies R^2 = \\dfrac{V^2}{I^2}\\)',
 steps:['I^2 R = \\dfrac{V^2}{R}','I^2 R^2 = V^2','R^2 = \\dfrac{V^2}{I^2}','R = \\dfrac{V}{I}'],ctx:'Combining power equations'},
 {formula:'\\sigma = E\\varepsilon = \\dfrac{F}{A}',subject:'A',correct:'A = \\dfrac{F}{E\\varepsilon}',distractors:['A = FE\\varepsilon','A = \\dfrac{E\\varepsilon}{F}','A = F - E\\varepsilon'],
-hint1:'From σ = F/A, so A = F/σ. And σ = Eε.',hint2:'Substitute: A = \\dfrac{F}{E\\varepsilon}',
+hint1:'From σ = F/A, so A = F/σ. And σ = Eε.',hint2:'Substitute: \\(A = \\dfrac{F}{E\\varepsilon}\\)',
 steps:['\\sigma = \\dfrac{F}{A} \\implies A = \\dfrac{F}{\\sigma}','\\sigma = E\\varepsilon','A = \\dfrac{F}{E\\varepsilon}'],ctx:'Cross-sectional area from stress-strain'},
 ],
 }
@@ -462,7 +463,7 @@ function useHint(n){
   } else if(n===2&&!document.getElementById('hint2Btn').classList.contains('used')){
     document.getElementById('hint2Btn').classList.add('used');
     const panel=document.getElementById('hintPanel');
-    panel.innerHTML+='<br><strong>Hint 2:</strong> '+rkStr(currentQ.hint2||currentQ.hint1);
+    panel.innerHTML+='<br><strong>Hint 2:</strong> '+MaffsText.html(currentQ.hint2||currentQ.hint1);
     panel.className='hint-panel show';
     hintsUsed++;
   }
