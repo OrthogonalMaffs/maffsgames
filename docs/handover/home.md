@@ -129,37 +129,3 @@ Nothing built. First version stopped on two descriptions over 155 characters; th
 
 Record: agent Claude Code; wall n/a (stopped before build); review cycles 0; amendments 1 (the consolidation); usage n/a.
 
-## 2026-11-06 (home): PHONE-FIT-ASIDE
-
-measure-phone-fit.py neither counts nor presses anything inside `[data-mfg-aside]`; an option group inside one fails the row with "answer control inside data-mfg-aside", whatever the lists say, and the report lists each region and what it skipped. Tagged: equatle .lbw, 52dle #modal, prime-or-composite #modal. Canon 7.6.1 has the rule. Six new selftest lines cover the three contract cases plus the skipped count, __pfSubmit and the guard against a listed game.
-
-Equatle is off known-failures in normal, aa and laptop. Asking bottom / fold, before to after: 320x568 753/528 to 474/528; 375x667 782/627 to 516/627; 390x844 850/804 to 584/804; 1366x768 897/728 to 630/728; 1280x720 839/680 to 573/680. 52dle stays listed at every entry: its own #guess-input sets the bottom (906/528, 887/627, 868/804; Aa 1186/528 with its top at 1140, 1092/627, 1092/804; laptop 836/728, 836/680). prime-or-composite stays on sideways, Aa 320x568: scrollWidth 374 from its Accuracy stat. Neither is a leaderboard fault; the contract's account of 52dle (escaping only because the modal is hidden) does not match the known-failures it already had.
-
-Open for review: the checker reads Equatle's digit row, not the whole keypad. The option group is the 10 digits; the operator row with `↵ Enter` is outside it and `↵ Enter` does not match SUBMIT_RE (not to be touched). Measured directly, Enter ends at 521/528, 563/627, 631/804, 677/728, 620/680, the same in Aa on phones, so the pass is true, but a later slip of that row would not be caught. The driver still gets "could not get an answer marked" on Equatle (before and after), so it reads PASS (asking only). `__mfgHasInput` (tier 3, not __mfgProbe) still sees #lbname, so the driver may type in it; the guard's STOP IF was not hit (__mfgProbe never picked up a leaderboard).
-
-Other games: full runs before and after in all three modes, no status changed. Twelve cells moved in how-many-parts, screening-room, take-a-walk and squared-squirrel; the same cells move between repeat runs on untouched main, so noise. Already failing on main, unchanged: possibly-maybe not on unmeasurable (all modes); aa who-ate-all-the-pies, as-you-can-see, distinctly-average, hc-factor, i-found-a-mark, its-on-sale, y-so-steep; laptop better-value.
-
-Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-06 (home): WHOSE-SIDE handover
-
-Agent Claude Code, Windows, worktree E:/jon/mg-whose-rec, branch claude/whose-side-review-record, which carries this entry and the queue line above. Its local checks were running when this was written; it merges through merge-pr.py on a green Gate (Small, docs).
-
-Done: stages 1-4 live and unlisted (#674 257e883; fixes #676 f1acc1f, containing #675, closed unmerged; close-out #677). Project Claude passed #674 and #676 on 6 Nov. Art: #684 (e42aa76, cloud). Deleted on Jon's call, after confirming #675's changes are on main: E:/jon/mg-whose-fix, its local branch, remote claude/whose-side-fixes, and local claude/whose-side-are-you-on. E:/jon/mg-whose-side is also gone: no retry needed. Windows refused it because one of the verifier's serve-stubbed.py processes had outlived its run in that folder (PID 32912); stopping it let the folder go. Look for that before calling a folder undeletable.
-
-Open: (1) .claude/rules/timer-policy.md: add the game's line from the code (counts up, no lives, faster right answer scores more), docs only, after WHOSE-SIDE-FIT merges; Project Claude reviews. No WHOSE-SIDE-FIT PR found at 16:19 on 6 Nov. (2) After this branch merges: end-task for claude/whose-side-review-record. (3) Stage 5 follows WHOSE-SIDE-BIOS; the cloud lane owns games/whose-side-are-you-on/ until then, so home does not edit it.
-
-## 2026-11-05 (home): WHOSE-SIDE-FIXES
-
-Jon's play-test. Stage 2 gets slots and Check; each side one hit line, nothing painted takes a tap; verifier clicks the dash and dot gaps at every size; 18 plants caught. No click on a side missed in reproduction; the clicks that did nothing came during MaffsLock's 300 ms window, and no bands exist during the 800 ms Right flash. Merged in #676 with Jon's second play-test (double clicks; the 0.8 s hold proven). Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-05 (home): WHOSE-SIDE
-
-New unlisted game, stages 1–4; stage 5 and the art are later. Amendment 1: light theme, games.json and precedent checker lines, side-word text bold 19 px. Amendment 2: side colours on sides and side words only; ✓/✗ and a word for right and wrong. Rulings 19:45: grey sides until answered (1, 2, 4), stage 3 coloured with coloured numbers; 16-30-34 for 9-40-41. Added beyond the contract: question_id = item id (check-question-id.py requires it of new games). Verifier: all 10,368 items recomputed from geometry; 13 plants caught. Merged #674. Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 2; usage n/a.
-
-## 2026-11-05 (home): MERGE-669-671
-
-DONE: #669 EQUATLE-320 merged by merge-pr.py as d6e1ec5; main run 42082117555 GREEN. #671 TRUE-MINUS merged next by merge-pr.py as 3604b7f; main run 42087251109 GREEN. Each PR was rebased after a cloud.md conflict; main's CHRISTMAS-ROOM completion and every main entry were kept, and each PR's new entry was added. CLAUDE.md matched main. No exception to the merge guard was used. Cloud lane returns to one session at a time from 6 Nov.
-
-Record: agent Codex; wall n/a; review cycles 0; amendments 1 (Jon's 5 Nov handover ruling); usage n/a.
-
