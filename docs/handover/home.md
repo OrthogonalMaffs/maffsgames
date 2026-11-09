@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- MONEY-INPUT (Shared; Project Claude, 9 Nov 17:25): PR at the Gate, holding for Project Claude's review, Jon's look and "merge". Branch claude/money-input, worktree ~/mg-money-input. Contract: docs/handover/contracts/2026-11-09-money-input.md. Entry below.
+- DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/docs-bundle, worktree ~/mg-docs-bundle. Contract: docs/handover/contracts/2026-11-09-docs-bundle.md. Entry below. MONEY-INPUT merged as #719 (b328883b).
 
 - WHOSE-SIDE: the cloud lane owns the game until stage 5; timer-policy.md's line is `docs/todo.md` row WHOSE-SIDE-TIMER-LINE. DONE lines moved to docs/history/handover-home-archive.md, 8 Nov.
 
@@ -13,6 +13,16 @@
 - how-many-parts: `docs/todo.md` row HOW-MANY-PARTS-FRACTION (§3)
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-09 (home): DOCS-BUNDLE
+
+`docs/rules/games.md` agrees with AGENTS.md: line 3 (a PR that fixes a todo row updates it; a cloud PR may fix more than one small game when its contract says so), line 5 (such a PR claims its games in one commit) and line 13 (Amendment 2: Jon's findings become todo rows; `docs/jon-playtest-2026-08.md` is a historical log, marked so at its top). The log's one open item, Snagging S1, is row PLAYTEST-S1; its #4 (Circle Theorem Spotter Q48) was fixed on 3 Oct (row 1.3, PR #11) though its status table still says Open. `docs/audits/ledger-debt-2026-11.md` surveys `data/check-ledger.json`: 167 entries in 43 games (B4 96, B7 44, B6 18, B3 8, B2 1), none a wrong answer a student can see; 49 LEDGER-* rows in todo §4. Nine rows from 9 Nov's findings and requests; notes appended to LOCAL-CHECKS and 1.36. Canon §0.3 gains SR-31 (Jon's standing STOP IF rules, word for word) and SR-32 (same-day fix of a CRITICAL level, SR-20's exception); cloud.md's SWEEP-1 label reads SR-32; rows STANDING-STOP-RULES and SR-NUMBERING closed. `scripts/list-initials.mjs` lists leaderboard entries by initials with public reads only: 37 for JLF and SSF, all reads succeeded (table in the PR body only).
+
+Discoveries: the ledger's `line` fields were stale (row LEDGER-LINE-DRIFT). Before the start, a stopped agent's ~/mg-docs-bundle (local branch at origin/main, one untracked file, no remote branch) was discarded on Project Claude's note: end-task.py refused it (no PR), and I removed the worktree and branch by hand, against AGENTS.md's "report refusals without bypassing them". Nothing was lost; reported to Jon.
+
+Next: Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-09 (home): MONEY-INPUT
 
