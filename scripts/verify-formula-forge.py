@@ -14,14 +14,14 @@ carry its own TeX reader until the home lane gives bank_common an exact one). Th
   - no wrong option does, none equals the key in value, no two are equal in value, and the four are different strings (SR-4,
     SR-16); formula-forge-v20-001's three pairs were replaced on Jon's ruling (12 Oct 2026), so none is expected;
   - every worked line that is an equation (after any \\text{...} words) holds when the key is put in for the subject, and the
-    last line is the key; a Hint 2 that is an equation is checked the same way;
+    last line is the key; a Hint 2 that is an equation is checked the same way (its \\( \\) delimiters removed first);
   - KaTeX (pinned local copy) parses every formula, option and worked line;
   - sessions: startGame() at each level, dealt three times: 6 a stage (or the whole stage when it has fewer), stages in order,
     no item twice;
   - in Chromium (390x844) every option of every item is pressed through the game's own buttons: the key is marked correct and
     scores; any other is marked wrong, the key is shown, the worked solution shows the item's lines, and Next is mounted.
-Not asserted (open findings, left open): prose in Hint 2 losing its spaces in KaTeX (r-001, t4-004), Hint 2 alone showing the
-previous question's hints (t4-002), pool sizes and A-Level reusing GCSE (t4-003), stage labels (t4-005), the unstated positive
+Hint 2's prose keeping its spaces (r-001, t4-004, fixed by FORGE-HINT-SPACES) is held by check-banks.py's B7, not here.
+Not asserted (open findings, left open): Hint 2 alone showing the previous question's hints (t4-002), pool sizes and A-Level reusing GCSE (t4-003), stage labels (t4-005), the unstated positive
 root and the Hint 2s that give the answer (t4-006).
 
     python scripts/verify-formula-forge.py [--no-selftest] [--against FILE]
@@ -253,7 +253,9 @@ def check_item(fails, where, q):
             ends = [read(p) for p in last.split('=')]
             if not any(e == subj for e in ends) or not any(zero(e - key) for e in ends if e != subj):
                 fails.append('working: %s: the last worked line %r is not the key' % (where, lines[-1]))
-    h2 = (q.get('hint2') or '').replace('\\implies', '. ')
+    # Hint 2 marks its maths with \( \) (MaffsText, FORGE-HINT-SPACES): the delimiters go before it is read, so every
+    # equation in it is checked as before; a delimiter left in would make read() fail and the line drop out unchecked.
+    h2 = re.sub(r'\\[()]', '', q.get('hint2') or '').replace('\\implies', '. ')
     for seg in re.split(r'(?<=[.!?])\s+', h2):
         seg = seg.strip().rstrip('.')
         if '=' in seg and not re.search(r'[A-Za-z]{3,}', re.sub(r'\\[A-Za-z]+', '', seg)):
@@ -396,6 +398,8 @@ PLANTS = [
        "misconception:'Divide by π first, THEN square root. Not the other way around.'")]),
     ('s1-003: the non-zero assumption not stated', 'start:',
      [("Where an answer divides by an expression, assume that expression is not zero.", "Hints are scaffolding.")]),
+    ('a wrong Hint 2 equation inside \\( \\) (2A = 2bh)', 'working:', [("hint2:'\\\\(2A = bh\\\\). Now divide by \\\\(b\\\\).'",
+                                                                    "hint2:'\\\\(2A = 2bh\\\\). Now divide by \\\\(b\\\\).'")]),
     ('marking by the first character only', 'marking:', [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val[0]===q.correct[0];")]),
     ('five a stage dealt, not six', 'session:', [("const s1=shuffle([...bank.s1]).slice(0,6);", "const s1=shuffle([...bank.s1]).slice(0,5);")]),
 ]
@@ -414,7 +418,7 @@ def main():
           'classified, %d worked lines and Hint 2 equations checked; every option pressed in Chromium' % (SLUG, st.get('items', 0), st.get('lines', 0)))
     for k, fid in sorted(EQUAL_PAIRS.items()):
         print('  expected failure left open: %s (%s, make %s the subject: two wrong options equal in value)' % (fid, k[0], k[1]))
-    print('  not asserted (open): Hint 2 prose spacing (r-001, t4-004), Hint 2 alone (t4-002), pools (t4-003), stage labels (t4-005), '
+    print('  not asserted (open): Hint 2 alone (t4-002), pools (t4-003), stage labels (t4-005), '
           'positive root and Hint 2 giving the answer (t4-006)')
     ok = True
     if not args.no_selftest and not args.against:
