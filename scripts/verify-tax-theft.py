@@ -176,7 +176,7 @@ STATE = """() => ({
 def submit(page, raw):
     """Enter raw, press Check, and read the result, all in one page task, so the
     (shortened) advance timer can neither redraw the step nor clear the input between
-    them. The input is type="number": a valid number string is kept exactly as typed."""
+    them. The input is a text box (MaffsAnswer.moneyInput): the string is kept exactly as typed."""
     return page.evaluate('(raw) => { document.getElementById("stepInput").value = raw;'
                          ' checkAnswer(); return (' + STATE + ')(); }', raw)
 

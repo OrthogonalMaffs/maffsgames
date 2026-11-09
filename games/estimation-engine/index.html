@@ -76,7 +76,6 @@ a.back-link:hover{color:var(--text)}
 .cell.missed .val{border-color:var(--wrong)}
 .cell .you{font-size:.75rem;color:var(--wrong);text-align:center;font-family:var(--font-num)}
 .est-row{display:flex;align-items:center;gap:.5rem;max-width:260px;width:100%;margin:0 auto}
-.est-row .cur{font-family:var(--font-num);font-size:1.1rem;font-weight:700}
 .check-row{display:flex;justify-content:center}
 .check-row .btn{min-width:140px}
 .msg{font-size:.88rem;color:var(--wrong);text-align:center;min-height:1.2em}
@@ -397,6 +396,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
       inp.type = 'text'; inp.inputMode = 'decimal'; inp.setAttribute('aria-label', n + ' to 1 significant figure');
       inp.dataset.i = i;
       cell.appendChild(inp); row.appendChild(cell);
+      if (isMoney(i)) MaffsAnswer.moneyInput(inp, '£');
       return inp;
     });
     body.appendChild(row);
@@ -418,9 +418,9 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     // Show the correct roundings in the boxes, whatever was typed; a wrong one keeps the student's entry below it.
     // The boxes become plain values, so nothing from step 1 can be typed into or selected again.
     inputs.forEach(function (inp, i) {
-      var cell = inp.parentElement, typed = inp.value, val = document.createElement('span');
+      var cell = inp.closest('.cell'), typed = inp.value, val = document.createElement('span');
       val.className = 'val'; val.textContent = cur(i) + q.rounded[i];
-      cell.replaceChild(val, inp);
+      cell.replaceChild(val, inp.closest('.maffs-money') || inp);   // a money box goes with its sign
       var cue = cell.querySelector('.maffs-keypad-cue'); if (cue) cue.remove();
       cell.classList.add(results[i] === 'correct' ? 'done' : 'missed');
       if (results[i] !== 'correct') { var you = document.createElement('span'); you.className = 'you'; you.textContent = 'you: ' + typed; cell.appendChild(you); }
@@ -444,10 +444,10 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     var f = shapeForms(q.shape, q.rounded);
     $('stepHead').innerHTML = 'Step 2: estimate. ' + mathHtml(f.tex + ' = \\,?', f.plain + ' = ?');
     var row = document.createElement('div'); row.className = 'est-row';
-    if (q.money) { var c = document.createElement('span'); c.className = 'cur'; c.textContent = '£'; row.appendChild(c); }
     var inp = document.createElement('input');
     inp.type = 'text'; inp.inputMode = 'decimal'; inp.id = 'estimate'; inp.setAttribute('aria-label', 'Your estimate');
     row.appendChild(inp);
+    if (q.money) MaffsAnswer.moneyInput(inp, '£');
     var old = $('stepBody').querySelector('.est-row'); if (old) old.remove();
     $('stepBody').appendChild(row);
     keypadFor([inp]);

@@ -950,8 +950,7 @@
         if (q.unit) wrap.appendChild(sym(q.unit));
         break;
       case 'money':
-        wrap.appendChild(sym('£'));
-        add(box('value', 'Your answer in pounds'));
+        MaffsAnswer.moneyInput(add(box('value', 'Your answer in pounds')), '£');
         break;
       case 'fraction': {
         var f = document.createElement('span'); wrap.appendChild(f);

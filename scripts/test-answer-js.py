@@ -4,7 +4,12 @@
 Runs the real file in Chromium and checks every outcome of every function: correct, wrong,
 format and unreadable for money(), decimal(), exact(), fractionOrDecimal() and fractionForm() (value and form, 20 Oct 2026), the exact
 reading of a typed fraction (fraction(), 7 Oct 2026: a/b, negatives, whole numbers), the accepted £/€ prefix, parse(),
-and the words message() returns. Then an equivalence check: on every string a type="number"
+and the words message() returns. moneyInput() (MONEY-INPUT, 9 Nov 2026) on real inputs: a type="number" box becomes
+type="text" inputmode="decimal" autocomplete="off"; its sign shows inside the box's left edge, in the box's font and
+colour, with the typing clear of it; the aria-label gains "in pounds" / "in euros"; a second call changes nothing; a
+falsy currency takes the sign off; the wrapper is hidden with the box and keeps a flex:1 or 100% box's width; a box
+focused at once keeps the focus; and
+"£12.50" and "12.50", typed on the keyboard, are both 'correct' through money(). Then an equivalence check: on every string a type="number"
 input can hand a game (signs, leading dots, trailing dots, exponents, 0-4 decimal places) and
 a spread of keys, money() returns exactly what tax-theft's old moneyResult() returned. That is
 the proof that moving tax-theft onto the helper changes nothing it marks.
@@ -247,7 +252,7 @@ CASES = [
     ("message('format', '333.33', {dp: 1, fraction: true})",
      'Right value, but the question asks for 1 decimal place. In the exam, 333.33 loses the mark. Fix it and resubmit.'),
     ("typeof fractionForm + ' ' + Object.keys(MaffsAnswer).sort().join()",
-     'function decimal,exact,fraction,fractionForm,fractionOrDecimal,message,money,parse'),
+     'function decimal,exact,fraction,fractionForm,fractionOrDecimal,message,money,moneyInput,parse'),
     # parse
     ("String(parse('£12.34'))", '12.34'),
     ("String(parse('2.5'))", '2.5'),
@@ -279,6 +284,61 @@ OLD_MONEY_RESULT = r"""function oldMoneyResult(raw, keyPence) {
 }"""
 
 KEYS_PENCE = [0, 1, 5, 10, 50, 99, 100, 101, 125070, 305000, 1250, 1234, 3086, 123456]
+
+# moneyInput() on real inputs, the shapes the six money games build: a type="number" box (tax-theft), a flex:1 box in
+# a row (tax-theft), a width:100% box (estimation-engine), a fixed-width centred box (split-it), a box with no
+# aria-label (its placeholder "?" is no label), and one shared by money and other questions (squared-squirrel, its-on-sale).
+MONEY_PAGE = '''<!doctype html><title>t</title>
+<style>body{font:16px sans-serif;color:rgb(10,20,30)}
+.row{display:flex;gap:8px;width:400px}
+.box{font:600 20px monospace;color:rgb(200,0,0);padding:4px 6px;border:2px solid #888;box-sizing:border-box}
+#flex{flex:1}#full{width:100%}#fixed{width:120px;text-align:center}</style>
+<div class="row"><span>&pound;?</span><input id="num" class="box" type="number" aria-label="Your answer"></div>
+<div class="row"><input id="flex" class="box" type="text" placeholder="?"><button>Check</button></div>
+<div style="width:300px;display:flex"><input id="full" class="box" type="text" aria-label="Estimate"></div>
+<div><input id="fixed" class="box" type="text" aria-label="Your answer in pounds"></div>
+<div><input id="eur" class="box" type="text" aria-label="Share"></div>
+<div><input id="shared" class="box" type="text" inputmode="decimal" aria-label="Your answer"></div>'''
+
+MONEY_JS = '''() => {
+  const $ = id => document.getElementById(id), out = {};
+  const w0 = { flex: $('flex').offsetWidth, full: $('full').offsetWidth, fixed: $('fixed').offsetWidth };
+  ['num', 'flex', 'full', 'fixed'].forEach(id => MaffsAnswer.moneyInput($(id), '\u00a3'));
+  MaffsAnswer.moneyInput($('eur'), '\u20ac');
+  const look = id => {
+    const inp = $(id), wrap = inp.parentElement, sign = wrap.querySelector('.maffs-money-sign'), cs = getComputedStyle(inp);
+    const sc = sign && getComputedStyle(sign), ir = inp.getBoundingClientRect(), sr = sign && sign.getBoundingClientRect();
+    return { type: inp.type, im: inp.getAttribute('inputmode'), ac: inp.getAttribute('autocomplete'),
+             label: inp.getAttribute('aria-label'), wrapped: wrap.className, sign: sign && sign.textContent,
+             hiddenFromReaders: sign && sign.getAttribute('aria-hidden'),
+             shown: !!(sr && sr.width > 0 && sr.left >= ir.left && sr.right <= ir.left + parseFloat(cs.paddingLeft) + parseFloat(cs.borderLeftWidth)),
+             font: sc && sc.fontFamily === cs.fontFamily && sc.fontSize === cs.fontSize && sc.fontWeight === cs.fontWeight,
+             colour: sc && sc.color === cs.color, width: inp.offsetWidth };
+  };
+  ['num', 'flex', 'full', 'fixed', 'eur'].forEach(id => { out[id] = look(id); });
+  out.w0 = w0;
+  const before = $('num').parentElement.parentElement.innerHTML;
+  MaffsAnswer.moneyInput($('num'), '\u00a3');
+  out.idem = $('num').parentElement.parentElement.innerHTML === before && document.querySelectorAll('.maffs-money').length === 5
+             && document.querySelectorAll('#maffs-money-css').length === 1;
+  const sh = $('shared');
+  MaffsAnswer.moneyInput(sh, null);
+  out.offFirst = !sh.parentElement.classList.contains('maffs-money');
+  MaffsAnswer.moneyInput(sh, '\u00a3');
+  const on = look('shared');
+  MaffsAnswer.moneyInput(sh, null);
+  const sign = sh.parentElement.querySelector('.maffs-money-sign');
+  out.shared = { on: on.shown && on.label === 'Your answer in pounds',
+                 off: getComputedStyle(sign).display === 'none' && sh.getAttribute('aria-label') === 'Your answer'
+                      && sh.style.paddingLeft === '' };
+  MaffsAnswer.moneyInput(sh, '\u00a3');
+  sh.hidden = true;
+  return new Promise(r => setTimeout(() => {
+    out.hidden = sh.parentElement.hidden && sh.parentElement.offsetWidth === 0;
+    r(out);
+  }, 0));
+}'''
+
 
 
 def number_input_strings():
@@ -326,12 +386,77 @@ async def run():
         # 'unreadable' cannot occur for these strings (each is a valid number); check that too.
         unread = await page.evaluate(
             "raws => raws.filter(r => MaffsAnswer.money(r, 1) === 'unreadable')", raws)
+        fails += await money_input_fails(browser)
         await browser.close()
     for u in unread:
         fails.append(f'money({u!r}) is unreadable, but a type="number" input can pass it')
     for d in diff['out'][:20]:
         fails.append('tax-theft equivalence: ' + d)
     return fails, len(CASES), diff['n']
+
+
+async def money_input_fails(browser):
+    """moneyInput() on the MONEY_PAGE boxes, and typing into a money box on the keyboard."""
+    fails = []
+    page = await browser.new_page()
+    await page.set_content(MONEY_PAGE)
+    await page.add_script_tag(path=ANSWER_JS)
+    got = await page.evaluate(MONEY_JS)
+    words = {'num': 'Your answer in pounds', 'flex': 'Your answer in pounds', 'full': 'Estimate in pounds',
+             'fixed': 'Your answer in pounds', 'eur': 'Share in euros'}
+    for box, label in words.items():
+        g = got[box]
+        if (g['type'], g['im'], g['ac']) != ('text', 'decimal', 'off'):
+            fails.append('moneyInput #%s: type %r, inputmode %r, autocomplete %r (want text, decimal, off)'
+                         % (box, g['type'], g['im'], g['ac']))
+        if g['wrapped'] != 'maffs-money' or g['sign'] != ('\u20ac' if box == 'eur' else '\u00a3'):
+            fails.append('moneyInput #%s: wrapper %r, sign %r' % (box, g['wrapped'], g['sign']))
+        if not g['shown']:
+            fails.append('moneyInput #%s: the sign is not shown inside the box, clear of the typing' % box)
+        if g['hiddenFromReaders'] != 'true':
+            fails.append('moneyInput #%s: the sign is read out (aria-hidden %r); the label carries it'
+                         % (box, g['hiddenFromReaders']))
+        if not (g['font'] and g['colour']):
+            fails.append("moneyInput #%s: the sign is not in the box's font and colour" % box)
+        if g['label'] != label:
+            fails.append('moneyInput #%s: aria-label %r, want %r' % (box, g['label'], label))
+    for box in ('flex', 'full', 'fixed'):
+        if abs(got[box]['width'] - got['w0'][box]) > 1:
+            fails.append('moneyInput #%s: the box was %dpx wide and is %dpx in its wrapper'
+                         % (box, got['w0'][box], got[box]['width']))
+    if not got['idem']:
+        fails.append('moneyInput: a second call with the same currency changed the page')
+    if not got['offFirst']:
+        fails.append('moneyInput(input, null) on a plain box wrapped it')
+    if not got['shared']['on']:
+        fails.append('moneyInput: a shared box switched to money shows no sign or no "in pounds"')
+    if not got['shared']['off']:
+        fails.append('moneyInput(input, null): the sign, the label or the padding is not put back')
+    if not got['hidden']:
+        fails.append('moneyInput: a hidden box leaves its wrapper (and sign) showing')
+    # A game that focuses a new money box at once (estimation-engine's first box): measuring it on the next frame
+    # must not take the focus away, or the student's typing goes nowhere.
+    kept = await page.evaluate('''() => new Promise(r => {
+        const i = document.createElement('input'); i.id = 'late'; i.className = 'box';
+        document.body.appendChild(i); MaffsAnswer.moneyInput(i, '\u00a3'); i.focus();
+        requestAnimationFrame(() => requestAnimationFrame(() => r(document.activeElement === i))); })''')
+    if not kept:
+        fails.append('moneyInput: a box focused at once lost the focus when it was measured')
+    await page.keyboard.type('£5.00')
+    if await page.input_value('#late') != '£5.00':
+        fails.append('moneyInput: typing into a box focused at once went elsewhere (%r)' % await page.input_value('#late'))
+    for box in ('num', 'fixed'):
+        for typed in ('\u00a312.50', '12.50'):
+            await page.fill('#' + box, '')
+            await page.click('#' + box)
+            await page.keyboard.type(typed)
+            value = await page.input_value('#' + box)
+            res = await page.evaluate('v => MaffsAnswer.money(v, 12.5)', value)
+            if value != typed or res != 'correct':
+                fails.append('moneyInput #%s: typed %r, the box holds %r, money() says %r (want it kept, correct)'
+                             % (box, typed, value, res))
+    await page.close()
+    return fails
 
 
 def main():
@@ -345,7 +470,8 @@ def main():
     if fails:
         print(f'\nFAILED: {len(fails)} problem(s)')
         return 1
-    print(f'PASS: {ncases} outcome cases; money() equals the old moneyResult() on {nequiv} '
+    print(f'PASS: {ncases} outcome cases; moneyInput() on 7 boxes (type, inputmode, sign, label, width, a second '
+          f'call, sign off, hidden, focus kept, "£12.50" and "12.50" typed); money() equals the old moneyResult() on {nequiv} '
           f'(type="number" string, key) pairs')
     return 0
 

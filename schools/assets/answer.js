@@ -50,6 +50,21 @@
  *                                        'wrong'    a different value;
  *                                        'unreadable'.
  *   MaffsAnswer.parse(raw)             the typed value as a Number, or null if unreadable.
+ *   MaffsAnswer.moneyInput(input, currency)  the game's own <input> made a money box (Jon, 9 Nov 2026,
+ *                                      canon §7.1.3): type="text", inputmode="decimal" (left alone if a
+ *                                      keypad has set "none"), autocomplete="off", and a fixed currency
+ *                                      sign ('£' or '€') inside the box's left edge, in the input's own font
+ *                                      and colour; the aria-label gains "in pounds" / "in euros". Call it
+ *                                      right after the input is made. The input moves into a
+ *                                      span.maffs-money, which takes its place in the layout (its flex
+ *                                      settings, margins and a percentage width) and is hidden with it; a
+ *                                      keypad's "typing here" tag already beside it moves in too. A typed £
+ *                                      still works: money() accepts it. Calling it again with the same
+ *                                      currency changes nothing (it only measures the sign again, for a box
+ *                                      shown since); a different currency changes the sign, and a falsy one
+ *                                      takes it off (a box the game shares between money and other
+ *                                      questions). Returns the input. Every game that marks with money()
+ *                                      calls it (scripts/check-banks.py).
  *   MaffsAnswer.message(result, raw, opts)  the words to show for 'format' / 'unreadable';
  *                                      opts.currency ('£' or '€') for money, opts.dp for decimal,
  *                                      opts.sf when the question states significant figures (the
@@ -217,6 +232,121 @@
       '. In the exam, ' + fig + ' loses the mark. Fix it and resubmit.';
   }
 
+  // moneyInput(): the sign is a span over the box's left edge, in the box's own font and colour, and the box's left
+  // padding grows by its width so typing never runs under it. Both are measured from the box, so they are measured
+  // again when the page's fonts or size change.
+  var MONEY_CSS = '.maffs-money{position:relative;display:inline-flex;align-items:stretch;vertical-align:middle;max-width:100%}' +
+    '.maffs-money[hidden]{display:none!important}' +
+    '.maffs-money-sign{position:absolute;top:0;bottom:0;display:flex;align-items:center;pointer-events:none;' +
+    'user-select:none;-webkit-user-select:none;line-height:1}' +
+    '.maffs-money-off>.maffs-money-sign{display:none}';
+  var WORDS = { '£': 'in pounds', '€': 'in euros' };
+  var boxes = [];
+
+  function moneyStyles() {
+    if (document.getElementById('maffs-money-css')) return;
+    var st = document.createElement('style');
+    st.id = 'maffs-money-css';
+    st.textContent = MONEY_CSS;
+    (document.head || document.documentElement).appendChild(st);
+    window.addEventListener('resize', moneySyncAll);
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', moneySyncAll);
+    if (window.MutationObserver) {   // a font or text-size switch on the page (OpenDyslexic, say)
+      var mo = new MutationObserver(moneySyncAll);
+      mo.observe(document.documentElement, { attributes: true, attributeFilter: ['class', 'style'] });
+      if (document.body) mo.observe(document.body, { attributes: true, attributeFilter: ['class', 'style'] });
+    }
+  }
+  function moneySyncAll() {
+    boxes = boxes.filter(function (b) { return b.isConnected || !b.maffsMoney.laid; });
+    boxes.forEach(moneySync);
+  }
+
+  // The wrapper takes the box's place: what the box was to its parent (a flex item that grows, a percentage width,
+  // its margins) the wrapper becomes, and the box fills the wrapper. Done once, when the box is first in the page.
+  function moneyLayout(input) {
+    var m = input.maffsMoney;
+    if (m.laid || !input.isConnected) return;
+    m.laid = true;
+    // Its width as written ('100%'), not in pixels: what a box that is not rendered reports. Read from a hidden copy
+    // beside it, so the box itself (focused, perhaps) is never hidden.
+    var copy = input.cloneNode(false);
+    copy.style.display = 'none';
+    input.parentNode.insertBefore(copy, input);
+    var width = getComputedStyle(copy).width;
+    input.parentNode.removeChild(copy);
+    // Block or inline as it was before it moved: in the wrapper it is a flex item, and every flex item reads 'block'.
+    var cs = getComputedStyle(input), block = /^(block|flex|grid|table)$/.test(m.display);
+    var w = m.wrap.style, i = input.style;
+    w.flexGrow = cs.flexGrow; w.flexShrink = cs.flexShrink; w.flexBasis = cs.flexBasis; w.alignSelf = cs.alignSelf;
+    ['Top', 'Right', 'Bottom', 'Left'].forEach(function (k) { w['margin' + k] = cs['margin' + k]; i['margin' + k] = '0'; });
+    if (block) w.display = 'flex';
+    if (/%$/.test(width)) { w.width = width; i.width = '100%'; }
+    i.flex = '1 1 auto'; i.minWidth = '0';
+  }
+
+  function moneySync(input) {
+    var m = input.maffsMoney;
+    if (!input.isConnected) return;
+    moneyLayout(input);
+    var was = input.style.paddingLeft;
+    input.style.paddingLeft = '';
+    if (!m.currency) return;
+    var cs = getComputedStyle(input), s = m.sign.style, pad = parseFloat(cs.paddingLeft) || 0;
+    s.fontFamily = cs.fontFamily; s.fontSize = cs.fontSize; s.fontWeight = cs.fontWeight; s.color = cs.color;
+    s.left = (parseFloat(cs.borderLeftWidth) || 0) + pad + 'px';
+    var sw = m.sign.offsetWidth;
+    if (!sw) { input.style.paddingLeft = was; return; }   // not shown just now: measured again once it is
+    input.style.paddingLeft = pad + sw + 0.15 * (parseFloat(cs.fontSize) || 16) + 'px';
+  }
+
+  function moneyInput(input, currency) {
+    currency = currency || null;
+    var m = input.maffsMoney;
+    if (!m) {
+      if (!currency) return input;
+      moneyStyles();
+      var display = input.isConnected ? getComputedStyle(input).display : '';
+      input.type = 'text';
+      if (input.getAttribute('inputmode') !== 'none') input.setAttribute('inputmode', 'decimal');
+      input.setAttribute('autocomplete', 'off');
+      var wrap = document.createElement('span'), sign = document.createElement('span');
+      wrap.className = 'maffs-money';
+      sign.className = 'maffs-money-sign';
+      sign.setAttribute('aria-hidden', 'true');
+      if (input.parentNode) input.parentNode.insertBefore(wrap, input);
+      wrap.appendChild(sign);
+      wrap.appendChild(input);
+      // A keypad's or calculator's "typing here" tag already beside the box (mounted first) moves in with it.
+      while (wrap.nextElementSibling && /-cue-answer/.test(wrap.nextElementSibling.className)) wrap.appendChild(wrap.nextElementSibling);
+      wrap.hidden = input.hidden;
+      m = input.maffsMoney = { wrap: wrap, sign: sign, label: input.getAttribute('aria-label'), currency: null,
+                               display: display, laid: false };
+      if (window.MutationObserver) {
+        new MutationObserver(function () { wrap.hidden = input.hidden; moneySync(input); })
+          .observe(input, { attributes: true, attributeFilter: ['hidden'] });
+      }
+      input.addEventListener('focus', function () { moneySync(input); });
+      boxes.push(input);
+      // A box made off the page (built, then added): placed on the next frame, once it is in.
+      if (window.requestAnimationFrame) requestAnimationFrame(function () { moneySync(input); });
+    }
+    if (m.currency === currency) { moneySync(input); return input; }   // nothing changes; measured again if shown since
+    m.currency = currency;
+    m.sign.textContent = currency || '';
+    m.wrap.classList.toggle('maffs-money-off', !currency);
+    var ph = input.getAttribute('placeholder'), words = WORDS[currency];
+    var base = m.label || (ph && /[a-z]/i.test(ph) ? ph : 'Your answer');   // a placeholder in words ("Enter amount"), not "?"
+    if (!currency) {
+      if (m.label === null) input.removeAttribute('aria-label'); else input.setAttribute('aria-label', m.label);
+    } else {
+      input.setAttribute('aria-label', !words || base.indexOf(words) >= 0 ? base : base + ' ' + words);
+    }
+    moneySync(input);
+    return input;
+  }
+
   window.MaffsAnswer = { money: money, decimal: decimal, exact: exact, fraction: fraction,
-    fractionOrDecimal: fractionOrDecimal, fractionForm: fractionForm, parse: parse, message: message };
+    fractionOrDecimal: fractionOrDecimal, fractionForm: fractionForm, parse: parse, message: message,
+    moneyInput: moneyInput };
 })();

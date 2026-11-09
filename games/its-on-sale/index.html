@@ -202,7 +202,6 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       <div id="ansBlock">
         <form class="ans-row" id="ansForm" autocomplete="off">
           <div class="tag" id="tag">
-            <span class="unit" id="unitPre">£</span>
             <span class="aw" id="wrapA"><input id="ans" type="text" inputmode="decimal" aria-label="Your answer" autocomplete="off"></span>
             <span class="aw" id="wrapC" hidden><input id="ansc" type="text" inputmode="decimal" aria-label="Your answer" autocomplete="off"></span>
             <span class="unit" id="unitPost" hidden>%</span>
@@ -376,7 +375,7 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
       if (!calcOpt) calcOpt = MaffsCalc.mount($('calcOpt'), { dock: $('qcard') });
       calcOpt.close(); calcOpt.clear();
     }
-    $('unitPre').hidden = Q.answer.type !== 'money';
+    MaffsAnswer.moneyInput(input, Q.answer.type === 'money' ? '£' : null);   // the £ inside the box, money questions only
     $('unitPost').hidden = Q.answer.type !== 'percent';
     input.value = ''; $('msg').textContent = '';
     if (on) {

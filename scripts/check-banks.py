@@ -31,6 +31,14 @@ back). Eleven rules, each with an ID:
       content (bank_common.content_id), not by bank index or line. Deliberate
       form questions are listed in checker-allowlist.json, b11_form_questions.
 
+Not a bank rule, and not in the ledger: the money boxes (MONEY-INPUT, Jon, 9 Nov
+2026; canon §7.1.3). Every page that marks with MaffsAnswer.money( also calls
+MaffsAnswer.moneyInput(, so its money boxes show their currency sign and are
+text boxes a typed £ cannot empty. A page that does not fails --ci at once.
+Every .html page is read (the-6-ps is not a roster game); --ci and --selftest
+both plant a page that marks money without the helper, and fail unless it is
+caught.
+
 Every finding is identified by content, never by bank index or source line
 (todo item 7, 2 Oct 2026), so a known defect keeps its ledger match when the
 code around it moves. On 28 Sep a one-line edit above test-the-claim's B8
@@ -65,7 +73,7 @@ USAGE
     python scripts/check-banks.py --write-ledger         # (re)write the ledger
     python scripts/check-banks.py --ci                   # CI mode (see below)
     python scripts/check-banks.py --only matrix-crunch
-    python scripts/check-banks.py --selftest             # B7 + B11 value-equality + content_id fixtures
+    python scripts/check-banks.py --selftest             # B7 + B11 value-equality + content_id fixtures + money-box plant
     python scripts/check-banks.py --selftest-live        # B7 rendered in a real page + MaffsText throw check
 
 CI MODE
@@ -492,6 +500,66 @@ def lint_ast_rules(slug, tree, src, findings, known_names):
                      "%s[...] = ... patches the bank literal after declaration" % name, line)
 
 
+MONEY_CALL = re.compile(r"MaffsAnswer\.money\s*\(")
+MONEY_INPUT_CALL = re.compile(r"MaffsAnswer\.moneyInput\s*\(")
+MONEY_SKIP_DIRS = {"node_modules", "docs", "data"}
+
+
+def money_pages():
+    """[(path relative to the repo, source)] for every .html page, dot-directories, docs and data skipped."""
+    out = []
+    for d, dirs, files in os.walk(ROOT):
+        dirs[:] = sorted(x for x in dirs if not x.startswith(".") and x not in MONEY_SKIP_DIRS)
+        for f in sorted(files):
+            if f.endswith(".html"):
+                p = os.path.join(d, f)
+                with open(p, "r", encoding="utf-8", errors="replace") as fh:
+                    out.append((os.path.relpath(p, ROOT).replace(os.sep, "/"), fh.read()))
+    return out
+
+
+def lint_money_inputs(pages):
+    """(pages that mark money, [pages that mark money with MaffsAnswer.money( but never call
+    MaffsAnswer.moneyInput(])."""
+    marking = [p for p, src in pages if MONEY_CALL.search(src)]
+    bare = [p for p, src in pages if MONEY_CALL.search(src) and not MONEY_INPUT_CALL.search(src)]
+    return marking, bare
+
+
+def money_input_plant(pages):
+    """[error]: a real money page with its moneyInput( calls taken out, and a made-up game that marks money
+    without the helper, must both be caught; the real page as it stands must not be."""
+    errs = []
+    real = next(((p, s) for p, s in pages if MONEY_INPUT_CALL.search(s)), None)
+    if real is None:
+        return ["no page calls MaffsAnswer.moneyInput( to plant from"]
+    planted = (real[0], MONEY_INPUT_CALL.sub("(", real[1]))
+    made_up = ("plant/index.html", "<input id=a><script>var r = MaffsAnswer.money(a.value, 12.5);</script>")
+    if lint_money_inputs([planted])[1] != [real[0]]:
+        errs.append("planted %s (its moneyInput( calls taken out) was not caught" % real[0])
+    if lint_money_inputs([made_up])[1] != ["plant/index.html"]:
+        errs.append("a made-up game marking money without moneyInput( was not caught")
+    if lint_money_inputs([real])[1]:
+        errs.append("%s as it stands was caught" % real[0])
+    return errs
+
+
+def report_money_inputs():
+    """Prints the money-box rule's result and its plant; True when both pass."""
+    pages = money_pages()
+    marking, bare = lint_money_inputs(pages)
+    errs = money_input_plant(pages)
+    print("\nMoney boxes (MONEY-INPUT): %d page(s) mark money with MaffsAnswer.money(: %s"
+          % (len(marking), ", ".join(marking) or "none"))
+    for p in bare:
+        print("  FAIL %s marks money with MaffsAnswer.money( but never calls MaffsAnswer.moneyInput(" % p)
+    for e in errs:
+        print("  FAIL plant: " + e)
+    if not bare and not errs:
+        print("  every one calls MaffsAnswer.moneyInput(; plant caught")
+    return not bare and not errs
+
+
 def lint_game(slug, findings, b11_allowed=None, b11_allowed_seen=None):
     bank = load_bank(slug)
     if bank is None:
@@ -691,9 +759,15 @@ def run_selftest():
     for why, got in ledger_results:
         print("%-4s --write-ledger: %s" % ("OK" if got else "FAIL", why))
         ok = ok and got
+    money_errs = money_input_plant(money_pages())
+    for e in money_errs:
+        print("FAIL money boxes: " + e)
+    if not money_errs:
+        print("OK   money boxes: a page marking money without MaffsAnswer.moneyInput( is caught")
+    ok = ok and not money_errs
     total = (total_b7[0] + len(MATHTEXT_BALANCE_FIXTURES)
              + len(bc.VALUE_FIXTURES_EQUAL) + len(bc.VALUE_FIXTURES_UNEQUAL)
-             + len(content_id_fixtures()) + len(ledger_results))
+             + len(content_id_fixtures()) + len(ledger_results) + 1)
     print("\n%s: %d fixture(s)" % ("ALL PASS" if ok else "FAILED", total))
     return ok
 
@@ -1154,6 +1228,7 @@ def main():
         return 2
 
     print_render_sites(slugs)
+    money_ok = report_money_inputs()
 
     ledger = build_ledger(findings_by_game)
 
@@ -1206,9 +1281,10 @@ def main():
                   "(the question changed; re-read it):")
             for e in unused:
                 print("  " + e)
-        if new_v or stale or lost or unused:
+        if new_v or stale or lost or unused or not money_ok:
             extra = "".join([", %d bank(s) not read" % len(lost) if lost else "",
-                             ", %d unused allowlist" % len(unused) if unused else ""])
+                             ", %d unused allowlist" % len(unused) if unused else "",
+                             ", money boxes failed" if not money_ok else ""])
             print("\nFAILED - %d new, %d stale%s" % (len(new_v), len(stale), extra))
             return 1
         print("\nOK - matches the ledger exactly")

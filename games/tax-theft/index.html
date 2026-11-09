@@ -307,12 +307,6 @@ body {
   align-items: center;
 }
 
-.currency-prefix {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-
 .step-input {
   flex: 1;
   font-family: 'Outfit', system-ui, sans-serif;
@@ -686,7 +680,6 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
         <div class="step-instruction" id="stepInstruction"></div>
         <div class="step-bands" id="stepBands" style="display:none;"></div>
         <div class="input-row">
-          <span class="currency-prefix">&pound;</span>
           <input type="number" class="step-input" id="stepInput" placeholder="Enter amount" autocomplete="off">
           <button class="submit-btn" id="submitBtn" onclick="checkAnswer()">Check</button>
         </div>
@@ -1075,17 +1068,19 @@ function showStep() {
 function moneyResult(raw, keyPence) {
   return MaffsAnswer.money(raw, keyPence / 100);
 }
+// Every step's answer is money: a text box with its £ shown inside (MaffsAnswer.moneyInput, Jon, 9 Nov 2026).
+MaffsAnswer.moneyInput(document.getElementById('stepInput'), '\u00a3');
 
 function checkAnswer() {
   var area = document.getElementById('stepArea');
   if (MaffsLock.isLocked(area)) return;   // this step is answered (canon 7.6.0)
   var input = document.getElementById('stepInput');
   var raw = String(input.value).trim();
-  var val = parseFloat(raw);
+  var val = MaffsAnswer.parse(raw);   // reads a typed £ too (a text box): "£1250.70" is an amount, "12abc" is not
   var step = steps[currentStepIndex];
   var fb = document.getElementById('feedback');
 
-  if (isNaN(val)) {
+  if (val === null) {
     fb.textContent = 'Please enter a number.';
     fb.className = 'feedback wrong';
     return;
