@@ -19,15 +19,15 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 
 ## Counts
 
-1118 findings in 108 games.
+1119 findings in 108 games.
 
 | Severity | open | fixed | ruled | total |
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 164 | 333 | 5 | 502 |
+| MEDIUM | 164 | 334 | 5 | 503 |
 | LOW | 100 | 243 | 1 | 344 |
-| **All** | 272 | 840 | 6 | 1118 |
+| **All** | 272 | 841 | 6 | 1119 |
 
 ### By class
 
@@ -75,13 +75,13 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:input-cannot-type-answer | 0 | 3 |
 | NEW:key-ask mismatch | 0 | 3 |
 | NEW:phone-fold | 3 | 3 |
+| NEW:prose-through-katex | 2 | 3 |
 | NEW:wrong explanation | 0 | 3 |
 | uncounted | 0 | 3 |
 | NEW:analytics | 0 | 2 |
 | NEW:board-key-mismatch | 2 | 2 |
 | NEW:double-finish | 0 | 2 |
 | NEW:hidden-data | 0 | 2 |
-| NEW:prose-through-katex | 2 | 2 |
 | NEW:unmarkable free text | 0 | 2 |
 | NEW:wrong-key | 0 | 2 |
 | wording | 2 | 2 |
@@ -235,7 +235,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `take-a-walk` | yes | verify-take-a-walk.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `tax-theft` | yes | verify-tax-theft.py | 0 | 0 | 2 | 3 | 1 | 4 | 0 |
 | `terrible-advice` | yes | verify-terrible-advice.py | 0 | 6 | 11 | 3 | 0 | 20 | 0 |
-| `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 5 | 3 | 4 | 7 | 0 |
+| `test-the-claim` | yes | verify-test-the-claim.py | 1 | 2 | 6 | 3 | 4 | 8 | 0 |
 | `the-perfect-prank` | yes | none | 0 | 0 | 2 | 1 | 3 | 0 | 0 |
 | `think-of-a-number` | yes | verify-think-of-a-number.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `trig-identity-duel` | yes | verify-trig-identity-duel.py | 0 | 7 | 4 | 2 | 0 | 13 | 0 |
