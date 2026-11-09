@@ -136,6 +136,19 @@ body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
 
 .fade-out{opacity:0;transition:opacity 0.2s}.fade-in{opacity:1;transition:opacity 0.2s}
 @media(max-width:480px){.level-grid{grid-template-columns:1fr}.results-stats{grid-template-columns:1fr 1fr}}
+/* HEADER-FIT (todo §1.39): the header fits a 320px phone. The title shortens with an ellipsis; both Aa buttons stay on
+   the title's row and the level pill goes under them. Below 375px (normal mode overflowed only there on main), and up to 480px
+   in Aa mode, whose wider font overflowed at every phone size. */
+@media(max-width:374px){
+.header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.header-right{display:grid;grid-template-columns:auto auto;gap:4px 8px;justify-items:end;align-items:center}
+.level-pill{grid-column:1/-1;font-size:10px;padding:3px 8px}
+}
+@media(max-width:480px){
+body.accessible .header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+body.accessible .header-right{display:grid;grid-template-columns:auto auto;gap:4px 8px;justify-items:end;align-items:center}
+body.accessible .level-pill{grid-column:1/-1;font-size:10px;padding:3px 8px}
+}
 
 /* === Accessibility === */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
