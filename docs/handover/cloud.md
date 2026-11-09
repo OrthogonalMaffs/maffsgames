@@ -67,7 +67,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 STOPPED before any game code (STOP IF: a question cannot fit even side-by-side at 6 px). Branch `claude/compassionate-cray-pek7mp` restarted from main 46fea98 (#715 merged); worktree the primary checkout; no PR yet. Claim held (commit 83c2817) for the amendment; contract saved and SCREENING-ROOM-FOLD's moved to history (943a659). The contract's floor rests on a wrong premise: the live game ships 5 px icons with no gap (grid-100, populations up to 10,000; 38 questions) and 3 px (over 10,000; 16 questions), not 6 px. For 10,000 icons, even the icon card's whole inner box (678 px wide, top to fold, nothing else in it) allows at best 4.25 px at 1280x720 and 4.5 px at 1366x768: 29 and 27 questions cannot reach 6 px in any layout. Figures appended to the todo row.
 
-Next: an amendment on the floor (PR body of #715 and this entry's report give the options); then the build on this branch. Record: agent Claude Code; wall 0:15 (contract 08:35 to the stop); review cycles 0; amendments 0; usage n/a.
+Next: an amendment on the floor (PR body of #715 and this entry's report give the options); then the build on this branch. Record: agent Claude Code; wall n/a (contract stamped 08:35; stop pushed 08:32 UTC by this container's clock); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-09 (cloud): SCREENING-ROOM-FOLD (`docs/handover/contracts/2026-11-09-screening-room-fold.md`, Small, todo row SCREENING-ROOM-FOLD)
 
