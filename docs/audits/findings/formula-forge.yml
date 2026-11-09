@@ -30,7 +30,13 @@ findings:
     "y − c = mx.Nowdividebym." 33 hint2 strings affected; already in the B7 ledger and todo §1.31 counts. Listed
     because the hint is the scaffold a resit student relies on.'
   evidence: 'docs/audit-resit-correctness-2026-10-04.md F1. '
-  status: open
+  status: fixed
+  pr: 718
+  ruling: 'Contract FORGE-HINT-SPACES (Project Claude, 9 Nov 2026): every hint2 marks its maths with \( \) and
+    renders through MaffsText.html() (mathtext.js), so the English keeps its spaces and the maths stays maths; no
+    word, number or operation changed. B7''s 33 ledger entries are removed, so B7 now fails a new prose word in this
+    field. Played in Chromium through the game''s own Hint buttons: 74 of 74 Hint 2 renders (45 hints, three levels)
+    with spaces; main 34 of 45 fail (the 33, and "Substitute:" set in maths italic, which B7 did not catch).'
 - id: formula-forge-t4-001
   severity: HIGH
   jc: false
@@ -75,7 +81,9 @@ findings:
   where: games/formula-forge/index.html:433
   summary: Prose hint2 lines lose their spaces in KaTeX (known, B7 ledger)
   evidence: '''Divide both sides by 4'' renders ''Dividebothsidesby4''.'
-  status: open
+  status: fixed
+  pr: 718
+  ruling: 'The same defect as formula-forge-r-001, fixed by the same change (contract FORGE-HINT-SPACES, 9 Nov 2026).'
 - id: formula-forge-t4-005
   severity: MEDIUM
   jc: true
