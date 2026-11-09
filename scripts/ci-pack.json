@@ -330,7 +330,7 @@
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "kept from the pack (5 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 5,
    "tier": "content"
@@ -342,7 +342,7 @@
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (1 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 2,
    "tier": "content"
