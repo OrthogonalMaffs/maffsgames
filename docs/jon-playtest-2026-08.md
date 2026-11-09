@@ -1,3 +1,5 @@
+Historical log from 9 Nov 2026; open items are docs/todo.md rows (DOCS-BUNDLE).
+
 # Jon's Play-Test Log — August 2026
 
 **Source:** Jon, playing the games directly. Started 2026-08-26, random sample across the roster.
