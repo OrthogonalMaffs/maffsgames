@@ -646,6 +646,14 @@ Moved word for word from `docs/todo.md` §7, with its closing note (contract BRA
 
 - **BRANCH-CLEANUP:** delete remote branches whose PR is merged or closed. Keep `art/`, `pr-assets/`, `wip/` and every branch holding unmerged contract work (`claude/fold-options*`, `claude/fold-figures-v2`, `claude/fold-canon`, `claude/fold-publish`, `claude/keypad-fraction*`) until their rows are settled. The `wt-*` worktrees named in cloud.md went with an earlier container. Owner: home lane; **Jon** switches on "Automatically delete head branches". Phase 1 (tables) in this PR; phase 2 (deletion) follows the merge. Re-checked 2026-11-08: DONE — phase 1 #712 (80f3eef); phase 2 deleted the DELETE table's 124 branches (124 × 204); `git ls-remote --heads origin` then showed 32, the 20 KEEP and 12 NO PR AT TIP branches, and none of the 124. Tables: `docs/history/branch-cleanup-2026-11.md`. Nothing owed.
 
+## Closed by fix PRs (Nov 2026)
+
+Moved word for word from `docs/todo.md` §1, each with its closing note, by the fix PR that closed it.
+
+| # | Item | Owner |
+|---|---|---|
+| 1.32 | **`test-the-claim` shows `q.crExplanation` through `K(hint)` on a wrong Step 3 answer (critical-region method; `index.html:1718-1719`), so explanations that join their maths with a plain word lose their spaces.** Confirmed 2 Oct 2026 by calling the game's own `checkStep3()` with a wrong value on all 36 binomial, Poisson and Normal questions: **15 lose their spaces (8 binomial, 7 Poisson)**, e.g. `P(X ≤ 0) = 0.0352 < 0.05 and P(X ≤ 1) = 0.1671 > 0.05` shows as `P(X≤0)=0.0352<0.05andP(X≤1)=0.1671>0.05`. The other 21, and all 8 correlation explanations, were authored with `\text{}` and render correctly. (Jon's ruling filed this as "all 36 discrete explanations", from a figure the audit overstated mid-session; the count above is the corrected one.) Missed by §1.10, which fixed the prompts only (via `PQ`), and by B7, whose call-site match needs `K(x.field)` while this argument is a local variable. B7's prose test would flag only 1 of the 15 anyway ("and" and "Upper" are single words). **§1.14's verification (`verify-test-the-claim.py`) checked values, not rendering.** Found by the KaTeX wrapper audit, `docs/audit-katex-wrappers.md`. **B7 ledger, 2 Oct (PR 59): 15 entries**, all `QUESTIONS.crExplanation`, B7 now sees them through `K(hint)`. Re-checked 2026-11-08 on main f8a287b4: STILL LIVE — `games/test-the-claim/index.html:1797` still shows the explanation through `K(hint)`; `data/check-ledger.json` holds the 15 B7 `crExplanation` entries (e.g. `:330`). Fixed 2026-11-09 by CLAIM-EXPLAIN-SPACES (#714): the 15 strings wrap their words in \text{}; B7's 15 ledger entries removed; 36 of 36 render with spaces. | **Jon** — in the fix contract with §1.30/§1.31 |
+
 ## Done — full history
 
 ### Done 4 Oct 2026 (home, night: PRs #27–#29)

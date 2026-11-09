@@ -327,7 +327,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 0)',val:'0.0352'},{label:'P(X \\leq 1)',val:'0.1671'},{label:'P(X \\leq 2)',val:'0.3980'}],
     crBoundary:0,crDirection:'leq',crTailAlpha:0.05,
-    crExplanation:'P(X \\leq 0) = 0.0352 < 0.05 and P(X \\leq 1) = 0.1671 > 0.05',
+    crExplanation:'P(X \\leq 0) = 0.0352 < 0.05 \\text{ and } P(X \\leq 1) = 0.1671 > 0.05',
     pValue:0.1671,pValueExpr:'P(X \\leq 1) = 0.1671',
     inCR:false,reject:false,
     conclusionContext:'the defect rate has decreased below 20%'
@@ -345,7 +345,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 14)',val:'0.0577'},{label:'P(X \\geq 15)',val:'0.0207'},{label:'P(X \\geq 16)',val:'0.0059'}],
     crBoundary:15,crDirection:'geq',crTailAlpha:0.05,
-    crExplanation:'P(X \\geq 15) = 0.0207 < 0.05 and P(X \\geq 14) = 0.0577 > 0.05',
+    crExplanation:'P(X \\geq 15) = 0.0207 < 0.05 \\text{ and } P(X \\geq 14) = 0.0577 > 0.05',
     pValue:0.0207,pValueExpr:'P(X \\geq 15) = 0.0207',
     inCR:true,reject:true,
     conclusionContext:'the coin is biased towards heads'
@@ -363,7 +363,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 10)',val:'0.0139'},{label:'P(X \\leq 11)',val:'0.0409'},{label:'P(X \\geq 19)',val:'0.0243'},{label:'P(X \\geq 20)',val:'0.0032'}],
     crBoundary:'10 or 19',crBoundaryLower:10,crBoundaryUpper:19,crDirection:'two',crTailAlpha:0.025,
-    crExplanation:'Lower: P(X \\leq 10) = 0.0139 < 0.025. Upper: P(X \\geq 19) = 0.0243 < 0.025',
+    crExplanation:'\\text{Lower: } P(X \\leq 10) = 0.0139 < 0.025 \\text{. Upper: } P(X \\geq 19) = 0.0243 < 0.025',
     pValue:0.0409,pValueExpr:'P(X \\leq 11) = 0.0409',
     inCR:false,reject:false,
     conclusionContext:'the germination rate differs from 75%'
@@ -381,7 +381,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 4)',val:'0.0095'},{label:'P(X \\leq 5)',val:'0.0294'},{label:'P(X \\leq 6)',val:'0.0736'}],
     crBoundary:4,crDirection:'leq',crTailAlpha:0.01,
-    crExplanation:'P(X \\leq 4) = 0.0095 < 0.01 and P(X \\leq 5) = 0.0294 > 0.01',
+    crExplanation:'P(X \\leq 4) = 0.0095 < 0.01 \\text{ and } P(X \\leq 5) = 0.0294 > 0.01',
     pValue:0.0294,pValueExpr:'P(X \\leq 5) = 0.0294',
     inCR:false,reject:false,
     conclusionContext:'support has fallen below 40%'
@@ -399,7 +399,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 8)',val:'0.1018'},{label:'P(X \\geq 9)',val:'0.0409'},{label:'P(X \\geq 7)',val:'0.2142'}],
     crBoundary:9,crDirection:'geq',crTailAlpha:0.10,
-    crExplanation:'P(X \\geq 9) = 0.0409 < 0.10 and P(X \\geq 8) = 0.1018 > 0.10',
+    crExplanation:'P(X \\geq 9) = 0.0409 < 0.10 \\text{ and } P(X \\geq 8) = 0.1018 > 0.10',
     pValue:0.1018,pValueExpr:'P(X \\geq 8) = 0.1018',
     inCR:false,reject:false,
     conclusionContext:'the identification rate exceeds chance'
@@ -435,7 +435,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 2)',val:'0.0355'},{label:'P(X \\leq 3)',val:'0.1071'},{label:'P(X \\leq 4)',val:'0.2375'}],
     crBoundary:2,crDirection:'leq',crTailAlpha:0.05,
-    crExplanation:'P(X \\leq 2) = 0.0355 < 0.05 and P(X \\leq 3) = 0.1071 > 0.05',
+    crExplanation:'P(X \\leq 2) = 0.0355 < 0.05 \\text{ and } P(X \\leq 3) = 0.1071 > 0.05',
     pValue:0.1071,pValueExpr:'P(X \\leq 3) = 0.1071',
     inCR:false,reject:false,
     conclusionContext:'the conversion rate has fallen below 30%'
@@ -489,7 +489,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 14)',val:'0.1431'},{label:'P(X \\geq 15)',val:'0.0669'},{label:'P(X \\geq 16)',val:'0.0262'}],
     crBoundary:16,crDirection:'geq',crTailAlpha:0.05,
-    crExplanation:'P(X \\geq 16) = 0.0262 < 0.05 and P(X \\geq 15) = 0.0669 > 0.05',
+    crExplanation:'P(X \\geq 16) = 0.0262 < 0.05 \\text{ and } P(X \\geq 15) = 0.0669 > 0.05',
     pValue:0.1431,pValueExpr:'P(X \\geq 14) = 0.1431',
     inCR:false,reject:false,
     conclusionContext:'more than half of the county\'s Year 11 will pass'
@@ -525,7 +525,7 @@ binomial: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 4)',val:'0.0473'},{label:'P(X \\leq 5)',val:'0.1503'},{label:'P(X \\leq 6)',val:'0.3504'}],
     crBoundary:4,crDirection:'leq',crTailAlpha:0.10,
-    crExplanation:'P(X \\leq 4) = 0.0473 < 0.10 and P(X \\leq 5) = 0.1503 > 0.10',
+    crExplanation:'P(X \\leq 4) = 0.0473 < 0.10 \\text{ and } P(X \\leq 5) = 0.1503 > 0.10',
     pValue:0.1503,pValueExpr:'P(X \\leq 5) = 0.1503',
     inCR:false,reject:false,
     conclusionContext:'the school pass rate is below 70%'
@@ -545,7 +545,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 3)',val:'0.0424'},{label:'P(X \\leq 4)',val:'0.0996'},{label:'P(X \\leq 2)',val:'0.0138'}],
     crBoundary:3,crDirection:'leq',crTailAlpha:0.05,
-    crExplanation:'P(X \\leq 3) = 0.0424 < 0.05 and P(X \\leq 4) = 0.0996 > 0.05',
+    crExplanation:'P(X \\leq 3) = 0.0424 < 0.05 \\text{ and } P(X \\leq 4) = 0.0996 > 0.05',
     pValue:0.0424,pValueExpr:'P(X \\leq 3) = 0.0424',
     inCR:true,reject:true,
     conclusionContext:'emergency admissions have decreased'
@@ -563,7 +563,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 9)',val:'0.0681'},{label:'P(X \\geq 10)',val:'0.0318'},{label:'P(X \\geq 11)',val:'0.0137'}],
     crBoundary:10,crDirection:'geq',crTailAlpha:0.05,
-    crExplanation:'P(X \\geq 10) = 0.0318 < 0.05 and P(X \\geq 9) = 0.0681 > 0.05',
+    crExplanation:'P(X \\geq 10) = 0.0318 < 0.05 \\text{ and } P(X \\geq 9) = 0.0681 > 0.05',
     pValue:0.0318,pValueExpr:'P(X \\geq 10) = 0.0318',
     inCR:true,reject:true,
     conclusionContext:'complaints have increased above 5 per hour'
@@ -599,7 +599,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 0)',val:'0.0025'},{label:'P(X \\leq 1)',val:'0.0174'},{label:'P(X \\leq 2)',val:'0.0620'}],
     crBoundary:0,crDirection:'leq',crTailAlpha:0.01,
-    crExplanation:'P(X \\leq 0) = 0.0025 < 0.01 and P(X \\leq 1) = 0.0174 > 0.01',
+    crExplanation:'P(X \\leq 0) = 0.0025 < 0.01 \\text{ and } P(X \\leq 1) = 0.0174 > 0.01',
     pValue:0.0174,pValueExpr:'P(X \\leq 1) = 0.0174',
     inCR:false,reject:false,
     conclusionContext:'accidents have decreased'
@@ -675,7 +675,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 4)',val:'0.1429'},{label:'P(X \\geq 5)',val:'0.0527'},{label:'P(X \\geq 6)',val:'0.0166'}],
     crBoundary:5,crDirection:'geq',crTailAlpha:0.10,
-    crExplanation:'P(X \\geq 5) = 0.0527 < 0.10 and P(X \\geq 4) = 0.1429 > 0.10',
+    crExplanation:'P(X \\geq 5) = 0.0527 < 0.10 \\text{ and } P(X \\geq 4) = 0.1429 > 0.10',
     pValue:0.0527,pValueExpr:'P(X \\geq 5) = 0.0527',
     inCR:true,reject:true,
     conclusionContext:'the lightning strike rate exceeds average on this ridge'
@@ -693,7 +693,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 10)',val:'0.0081'},{label:'P(X \\geq 11)',val:'0.0028'},{label:'P(X \\leq 0)',val:'0.0183'}],
     crBoundary:'none feasible lower; 11 upper',crBoundaryLower:-1,crBoundaryUpper:11,crDirection:'two',crTailAlpha:0.005,
-    crExplanation:'Upper: P(X \\geq 11) = 0.0028 < 0.005. x = 9 does not reach CR.',
+    crExplanation:'\\text{Upper: } P(X \\geq 11) = 0.0028 < 0.005 \\text{. } x = 9 \\text{ does not reach CR.}',
     pValue:0.0214,pValueExpr:'P(X \\geq 9) = 0.0214',
     inCR:false,reject:false,
     conclusionContext:'the mis-shapen loaf rate has changed'
@@ -711,7 +711,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\geq 7)',val:'0.0335'},{label:'P(X \\geq 8)',val:'0.0119'},{label:'P(X \\geq 6)',val:'0.0839'}],
     crBoundary:7,crDirection:'geq',crTailAlpha:0.05,
-    crExplanation:'P(X \\geq 7) = 0.0335 < 0.05 and P(X \\geq 6) = 0.0839 > 0.05',
+    crExplanation:'P(X \\geq 7) = 0.0335 < 0.05 \\text{ and } P(X \\geq 6) = 0.0839 > 0.05',
     pValue:0.0119,pValueExpr:'P(X \\geq 8) = 0.0119',
     inCR:true,reject:true,
     conclusionContext:'the no-show rate has increased above 3 per day'
@@ -749,7 +749,7 @@ poisson: [
     distCorrect:0,
     givenCDF:[{label:'P(X \\leq 1)',val:'0.0404'},{label:'P(X \\leq 2)',val:'0.1247'},{label:'P(X \\leq 3)',val:'0.2650'}],
     crBoundary:1,crDirection:'leq',crTailAlpha:0.10,
-    crExplanation:'P(X \\leq 1) = 0.0404 < 0.10 and P(X \\leq 2) = 0.1247 > 0.10',
+    crExplanation:'P(X \\leq 1) = 0.0404 < 0.10 \\text{ and } P(X \\leq 2) = 0.1247 > 0.10',
     pValue:0.1247,pValueExpr:'P(X \\leq 2) = 0.1247',
     inCR:false,reject:false,
     conclusionContext:'the false alarm rate has decreased'

@@ -5926,84 +5926,8 @@
     "status": "fail"
    },
    "B7": {
-    "entries": [
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'Lower: P(X \\\\leq 10) = 0.0139 < 0.025. Upper: P(X \\\\geq 19) = 0.0243 < 0.025' renders as 'Lower : P(X ≤ 10) = 0.0139 < 0.025.Upper : P(X ≥ 19) = 0.0243 < 0.025' (lost a space beside: Upper)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::7930b524e88a#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 10) = 0.0318 < 0.05 and P(X \\\\geq 9) = 0.0681 > 0.05' renders as 'P(X ≥ 10) = 0.0318 < 0.05andP(X ≥ 9) = 0.0681 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::2645d95ff003#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 15) = 0.0207 < 0.05 and P(X \\\\geq 14) = 0.0577 > 0.05' renders as 'P(X ≥ 15) = 0.0207 < 0.05andP(X ≥ 14) = 0.0577 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::86bd788c89ab#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 16) = 0.0262 < 0.05 and P(X \\\\geq 15) = 0.0669 > 0.05' renders as 'P(X ≥ 16) = 0.0262 < 0.05andP(X ≥ 15) = 0.0669 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::8f33cd5df403#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 5) = 0.0527 < 0.10 and P(X \\\\geq 4) = 0.1429 > 0.10' renders as 'P(X ≥ 5) = 0.0527 < 0.10andP(X ≥ 4) = 0.1429 > 0.10' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::1a3dd6651b4c#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 7) = 0.0335 < 0.05 and P(X \\\\geq 6) = 0.0839 > 0.05' renders as 'P(X ≥ 7) = 0.0335 < 0.05andP(X ≥ 6) = 0.0839 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::282fe327bde3#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\geq 9) = 0.0409 < 0.10 and P(X \\\\geq 8) = 0.1018 > 0.10' renders as 'P(X ≥ 9) = 0.0409 < 0.10andP(X ≥ 8) = 0.1018 > 0.10' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::58345dc0f98d#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 0) = 0.0025 < 0.01 and P(X \\\\leq 1) = 0.0174 > 0.01' renders as 'P(X ≤ 0) = 0.0025 < 0.01andP(X ≤ 1) = 0.0174 > 0.01' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::b59afbd5ae1e#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 0) = 0.0352 < 0.05 and P(X \\\\leq 1) = 0.1671 > 0.05' renders as 'P(X ≤ 0) = 0.0352 < 0.05andP(X ≤ 1) = 0.1671 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::bc02620871a7#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 1) = 0.0404 < 0.10 and P(X \\\\leq 2) = 0.1247 > 0.10' renders as 'P(X ≤ 1) = 0.0404 < 0.10andP(X ≤ 2) = 0.1247 > 0.10' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::8dbb5d372dfc#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 2) = 0.0355 < 0.05 and P(X \\\\leq 3) = 0.1071 > 0.05' renders as 'P(X ≤ 2) = 0.0355 < 0.05andP(X ≤ 3) = 0.1071 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::a63ab52c2482#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 3) = 0.0424 < 0.05 and P(X \\\\leq 4) = 0.0996 > 0.05' renders as 'P(X ≤ 3) = 0.0424 < 0.05andP(X ≤ 4) = 0.0996 > 0.05' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::6c59b42a042b#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 4) = 0.0095 < 0.01 and P(X \\\\leq 5) = 0.0294 > 0.01' renders as 'P(X ≤ 4) = 0.0095 < 0.01andP(X ≤ 5) = 0.0294 > 0.01' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::fe70cd33c2aa#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'P(X \\\\leq 4) = 0.0473 < 0.10 and P(X \\\\leq 5) = 0.1503 > 0.10' renders as 'P(X ≤ 4) = 0.0473 < 0.10andP(X ≤ 5) = 0.1503 > 0.10' (lost a space beside: and)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::407d74639fbe#1",
-      "line": 1719
-     },
-     {
-      "detail": "QUESTIONS.crExplanation at K:1719: 'Upper: P(X \\\\geq 11) = 0.0028 < 0.005. x = 9 does not reach CR.' renders as 'Upper : P(X ≥ 11) = 0.0028 < 0.005.x = 9doesnotreachCR.' (lost a space beside: does, not, reach)",
-      "id": "test-the-claim::B7::katex[QUESTIONS.crExplanation]::61d73fb7d29a#1",
-      "line": 1719
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B8": {
     "entries": [],
