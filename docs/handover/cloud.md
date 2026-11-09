@@ -63,6 +63,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-09 (cloud): SCREENING-ROOM-FIT (`docs/handover/contracts/2026-11-09-screening-room-fit.md`, Medium, todo row SCREENING-ROOM-FOLD)
+
+STOPPED before any game code (STOP IF: a question cannot fit even side-by-side at 6 px). Branch `claude/compassionate-cray-pek7mp` restarted from main 46fea98 (#715 merged); worktree the primary checkout; no PR yet. Claim held (commit 83c2817) for the amendment; contract saved and SCREENING-ROOM-FOLD's moved to history (943a659). The contract's floor rests on a wrong premise: the live game ships 5 px icons with no gap (grid-100, populations up to 10,000; 38 questions) and 3 px (over 10,000; 16 questions), not 6 px. For 10,000 icons, even the icon card's whole inner box (678 px wide, top to fold, nothing else in it) allows at best 4.25 px at 1280x720 and 4.5 px at 1366x768: 29 and 27 questions cannot reach 6 px in any layout. Figures appended to the todo row.
+
+Next: an amendment on the floor (PR body of #715 and this entry's report give the options); then the build on this branch. Record: agent Claude Code; wall 0:15 (contract 08:35 to the stop); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-09 (cloud): SCREENING-ROOM-FOLD (`docs/handover/contracts/2026-11-09-screening-room-fold.md`, Small, todo row SCREENING-ROOM-FOLD)
 
 STOPPED (STOP IF: the fix needs a design change), at the Gate for Project Claude's review and Jon's "merge": [#715](https://github.com/OrthogonalMaffs/maffsgames/pull/715), branch `claude/compassionate-cray-pek7mp`, worktree the primary checkout. No game change. The measured "Next" is phase 2's Continue under the icon array after a wrong gut check, at 717/680 at 1280x720 (seeded question gcse_07; local and CI the same). It is real: Continue is below the fold for 17/20 GCSE questions at 1280x720 (up to 1013) and 14/20 at 1366x768, because everything but the grid takes 582 px and the grids are 75-467 px. Spacing would pass the seed only. The CI passes of 7 Nov were false: Continue appears at about 5.0 s and `settle()` stops at 5 s, so a slower page reads opacity 0 as "no Next" (both verdicts reproduced on one commit). That is how #707 took the 27 Oct entry off as STALE. Finding appended to the todo row; claim taken and released; #714's contract to history.
