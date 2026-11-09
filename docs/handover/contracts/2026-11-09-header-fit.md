@@ -16,3 +16,10 @@ EXACT CHANGE:
 DO NOT TOUCH: the other 21 games that carry .header-right; schools/assets/; questions, marking, wording; Gate files; scripts/measure-phone-fit.py; canon; AGENTS.md and docs/rules/; any other todo row; home.md.
 SUCCESS CONDITION: no sideways scroll in the three games at the three phone sizes in normal and Aa; nothing else worse; §1.39 closed; /updates/ line drafted; claims released; Gate green; stopped for review.
 STOP IF: both Aa buttons in equation-builder are wired; the fit needs removing a working control or shrinking a tap target under 44 px; another game's measurement changes; another lane or claim holds any of the three.
+
+HEADER-FIT — Amendment 1 (Project Claude, 9 Nov 11:36). LANE: cloud. Same branch, PR #717, claims held. Jon, 11:34: yes to both.
+1. equation-builder: one Aa button, the platform-standard a11yToggle (mfg_accessible). Move anything the game's own "dyslexia" class does that the standard accessible mode does not onto the accessible mode, then remove a11yBtn, its CSS and its mfg_dyslexia handler. Report what moved (or "nothing: accessible already covers it").
+2. All three games: on small phones (the widths where the title would otherwise truncate; at least ≤ 360 px), the back link shows "←" only, as Expected Damage does, with aria-label "Back to Games" kept and its tap target ≥ 44 px. The title then shows in full at 320 px in normal and Aa modes; report its width. Ellipsis stays only as a last resort, never down to one letter.
+3. Re-measure as before (normal and Aa, three phone sizes): no sideways scroll, nothing worse. Update the PR body's proofs and the /updates/ line if it changes.
+STOP IF: the dyslexia styling cannot move onto the standard mode without changing other games or schools/assets/ (report it); the title still truncates at 320 px with the arrow-only link.
+Nothing else changes.

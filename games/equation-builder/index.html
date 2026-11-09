@@ -124,30 +124,43 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .play-again:hover{opacity:0.9}
 
 /* Accessibility toggle */
-.a11y-btn{background:none;border:1px solid var(--border);color:var(--muted);border-radius:8px;padding:5px 8px;cursor:pointer;font-size:14px;line-height:1;transition:all 0.15s}
-.a11y-btn:hover{border-color:var(--teal);color:var(--text)}
-.a11y-btn.active{border-color:var(--teal);color:var(--teal);background:rgba(13,148,136,0.1)}
-body.dyslexia{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--ks3:#15803d;--gcse:#1d4ed8;--l4:#b91c1c}
-body.dyslexia .screen{font-size:18px;line-height:1.8;letter-spacing:0.12em;word-spacing:0.16em}
-body.dyslexia .question-card{font-size:18px;line-height:1.8;letter-spacing:0.05em;word-spacing:0.12em}
-body.dyslexia .slot,body.dyslexia .tile{font-size:15px;letter-spacing:0.05em}
-body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
+/* Aa mode's cream palette and larger text, moved from the game's former second Aa button (HEADER-FIT Amendment 1).
+   The standard mode's wider letter and word spacing is kept. The larger text applies above 480px only: on a phone, with
+   OpenDyslexic, it pushed Next below the fold (canon 7.6.1). */
+body.accessible{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--ks3:#15803d;--gcse:#1d4ed8;--l4:#b91c1c}
+@media(min-width:481px){
+body.accessible .screen{font-size:18px;line-height:1.8}
+body.accessible .question-card{font-size:18px;line-height:1.8}
+body.accessible .slot,body.accessible .tile{font-size:15px}
+}
+body.accessible .start-title,body.accessible .results-pct{color:var(--teal)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 .fade-out{opacity:0;transition:opacity 0.2s}.fade-in{opacity:1;transition:opacity 0.2s}
 @media(max-width:480px){.level-grid{grid-template-columns:1fr}.results-stats{grid-template-columns:1fr 1fr}}
-/* HEADER-FIT (todo §1.39): the header fits a 320px phone. The title shortens with an ellipsis; both Aa buttons stay on
-   the title's row and the level pill goes under them. Below 375px (normal mode overflowed only there on main), and up to 480px
-   in Aa mode, whose wider font overflowed at every phone size. */
+/* HEADER-FIT (todo §1.39, Amendment 1): the header fits a 320px phone with the title in full. The back link shows its
+   arrow only (named by aria-label), the title and the Aa toggle share the first row, and the level pill take a row
+   under them. Below 375px (normal mode overflowed only there on main), and up to 480px in Aa mode, whose wider font
+   overflowed at every phone size. The ellipsis is a last resort only. */
 @media(max-width:374px){
-.header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.header-right{display:grid;grid-template-columns:auto auto;gap:4px 8px;justify-items:end;align-items:center}
-.level-pill{grid-column:1/-1;font-size:10px;padding:3px 8px}
+.header{flex-wrap:wrap;row-gap:0}
+.back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+.back-text,.header-div{display:none}
+.header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.header-right{display:contents}
+.header::after{content:"";order:1;flex-basis:100%}
+.header-right>:not(.a11y-toggle){order:2}
+.header-right>.a11y-toggle+*{margin-left:auto}
 }
 @media(max-width:480px){
-body.accessible .header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-body.accessible .header-right{display:grid;grid-template-columns:auto auto;gap:4px 8px;justify-items:end;align-items:center}
-body.accessible .level-pill{grid-column:1/-1;font-size:10px;padding:3px 8px}
+body.accessible .header{flex-wrap:wrap;row-gap:0}
+body.accessible .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+body.accessible .back-text,body.accessible .header-div{display:none}
+body.accessible .header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+body.accessible .header-right{display:contents}
+body.accessible .header::after{content:"";order:1;flex-basis:100%}
+body.accessible .header-right>:not(.a11y-toggle){order:2}
+body.accessible .header-right>.a11y-toggle+*{margin-left:auto}
 }
 
 /* === Accessibility === */
@@ -191,13 +204,11 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <body>
 
 <div class="header">
-  <a href="../../" class="back-link">← Back to Games</a>
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
   <div class="header-div"></div>
   <div class="header-title">Equation Builder</div>
   <div class="header-right">
     <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
-
-    <button class="a11y-btn" id="a11yBtn" title="Accessibility: dyslexia-friendly mode">Aa</button>
     <span class="level-pill" id="levelPill"></span>
   </div>
 </div>
@@ -428,10 +439,6 @@ function init(){
   $('startBtn').addEventListener('click',startGame);
   $('playAgain').addEventListener('click',()=>showScreen('start'));
   $('checkBtn').addEventListener('click',checkAnswer);
-  // Accessibility toggle
-  const a11yBtn=$('a11yBtn');
-  if(localStorage.getItem('mfg_dyslexia')==='1'){document.body.classList.add('dyslexia');a11yBtn.classList.add('active');}
-  a11yBtn.addEventListener('click',()=>{document.body.classList.toggle('dyslexia');const on=document.body.classList.contains('dyslexia');localStorage.setItem('mfg_dyslexia',on?'1':'0');a11yBtn.classList.toggle('active',on);});
   // URL param level auto-select
   const urlLevel=MaffsLevel.resolve({slug:'equation-builder',levels:['ks3','gcse','level4'],fallback:'ks3'});
   if(MaffsLevel.declared('equation-builder').fromUrl){

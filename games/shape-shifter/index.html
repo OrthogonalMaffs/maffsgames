@@ -108,23 +108,29 @@ canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:cro
 .instruction-bar{font-size:13px;padding:12px 14px}
 .btn-row{flex-direction:column;gap:8px}
 }
-/* HEADER-FIT (todo §1.39): the header fits a 320px phone. The title shortens with an ellipsis; the Aa toggle stays on
-   the title's row and the mode pill and score go under it. Below 375px (normal mode overflowed only there on main), and
-   up to 480px in Aa mode, whose wider font overflowed at every phone size; there the pill is too wide to sit beside
-   the score, so the three stack. */
+/* HEADER-FIT (todo §1.39, Amendment 1): the header fits a 320px phone with the title in full. The back link shows its
+   arrow only (named by aria-label), the title and the Aa toggle share the first row, and the mode pill and score take a row
+   under them. Below 375px (normal mode overflowed only there on main), and up to 480px in Aa mode, whose wider font
+   overflowed at every phone size. The ellipsis is a last resort only. */
 @media(max-width:374px){
-.header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.header-right{display:grid;grid-template-columns:auto auto;gap:4px 8px;justify-items:end;align-items:center}
-.a11y-toggle{grid-column:2}
-.mode-pill{font-size:10px;padding:3px 8px}
-.score-display{font-size:13px}
+.header{flex-wrap:wrap;row-gap:0}
+.back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+.back-text,.header-div{display:none}
+.header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+.header-right{display:contents}
+.header::after{content:"";order:1;flex-basis:100%}
+.header-right>:not(.a11y-toggle){order:2}
+.header-right>.a11y-toggle+*{margin-left:auto}
 }
 @media(max-width:480px){
-body.accessible .header-title{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-body.accessible .header-right{display:grid;grid-template-columns:auto;gap:4px;justify-items:end;align-items:center}
-body.accessible .a11y-toggle{grid-column:auto}
-body.accessible .mode-pill{font-size:10px;padding:3px 8px}
-body.accessible .score-display{font-size:13px}
+body.accessible .header{flex-wrap:wrap;row-gap:0}
+body.accessible .back-link{display:flex;align-items:center;justify-content:center;min-width:44px;min-height:44px;font-size:20px}
+body.accessible .back-text,body.accessible .header-div{display:none}
+body.accessible .header-title{flex:1 1 0;min-width:0;overflow:hidden;text-overflow:ellipsis}
+body.accessible .header-right{display:contents}
+body.accessible .header::after{content:"";order:1;flex-basis:100%}
+body.accessible .header-right>:not(.a11y-toggle){order:2}
+body.accessible .header-right>.a11y-toggle+*{margin-left:auto}
 }
 
 /* === Accessibility === */
@@ -160,7 +166,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 
 <!-- HEADER -->
 <div class="header" id="gameHeader" style="display:none">
-  <a href="../../" class="back-link">← Back to Games</a>
+  <a href="../../" class="back-link" aria-label="Back to Games">←<span class="back-text"> Back to Games</span></a>
   <div class="header-div"></div>
   <span class="header-title">Shape Shifter</span>
   <div class="header-right">
