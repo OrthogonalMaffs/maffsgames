@@ -532,7 +532,6 @@ function renderQ(q){
     });
   } else if(q.type==='single'){
     html+=`<div class="input-row">
-      ${q.unit==='£'||q.unit==='€'?`<span class="unit-label">${q.unit}</span>`:''}
       <input ${inputType(q)} class="ratio-input" id="in0" placeholder="?" step="any" style="width:100px">
       ${q.unit&&q.unit!=='£'&&q.unit!=='€'?`<span class="unit-label">${q.unit}</span>`:''}
     </div>`;
@@ -547,6 +546,7 @@ function renderQ(q){
     html+=`<button class="check-btn" onclick="checkAnswer()">Check</button>`;
   }
   card.innerHTML=html;
+  if(q.money)card.querySelectorAll('.ratio-input').forEach(el=>MaffsAnswer.moneyInput(el,q.money));   // £ or € inside the box
   MaffsLock.fresh(card);   // a new question: a double-click on Start, or a second Enter, cannot answer it
 
   // Focus first input

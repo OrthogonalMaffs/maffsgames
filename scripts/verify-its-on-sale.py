@@ -408,7 +408,8 @@ def play_stage(page, st, size, out, nq):
             const note = document.getElementById('tryNote');
             return { last: Math.max(...els.map(x => x.bottom)), sw: document.documentElement.scrollWidth, iw: innerWidth, right: Math.max(...els.map(x => x.right)),
                      note: vis(note), tog: vis(document.querySelector('#calcOpt .maffs-calc-toggle')), togOpen: !!document.querySelector('#calcOpt .maffs-calc-toggle.open'),
-                     pre: vis(document.getElementById('unitPre')), post: vis(document.getElementById('unitPost')) }; }""")
+                     pre: [...document.querySelectorAll('#ansForm .maffs-money:not(.maffs-money-off) .maffs-money-sign')].some(vis),
+                     post: vis(document.getElementById('unitPost')) }; }""")
         if info['last'] > fold + 0.5:
             out.append('%s q%d: the answer box, Check or the keys end at %d, below the fold (%d)' % (where, qn, info['last'], fold))
         if info['sw'] > info['iw'] or info['right'] > info['iw'] + 0.5:

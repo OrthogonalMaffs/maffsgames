@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- BRANCH-CLEANUP (Docs; Project Claude, 8 Nov 20:35; Amendment 1, 21:45): phase 1 #712 merged as 80f3eef on Jon's word, main run 42526066041 GREEN; phase 2 done (124 branches deleted). Close-out PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/branch-cleanup-close, worktree ~/mg-branch-cleanup-close. Contract: docs/history/contracts/2026-11-08-branch-cleanup.md. Entry below.
+- MONEY-INPUT (Shared; Project Claude, 9 Nov 17:25): PR at the Gate, holding for Project Claude's review, Jon's look and "merge". Branch claude/money-input, worktree ~/mg-money-input. Contract: docs/handover/contracts/2026-11-09-money-input.md. Entry below.
 
 - WHOSE-SIDE: the cloud lane owns the game until stage 5; timer-policy.md's line is `docs/todo.md` row WHOSE-SIDE-TIMER-LINE. DONE lines moved to docs/history/handover-home-archive.md, 8 Nov.
 
@@ -13,6 +13,16 @@
 - how-many-parts: `docs/todo.md` row HOW-MANY-PARTS-FRACTION (§3)
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-09 (home): MONEY-INPUT
+
+`MaffsAnswer.moneyInput(input, currency)` in `schools/assets/answer.js` turns a game's own input into a money box: a text box with a number keypad (a typed £ no longer empties it) and a fixed £ or € inside its left edge (Jon, 9 Nov; canon §7.1.3). All six games that mark with `MaffsAnswer.money()` call it: estimation-engine, its-on-sale, split-it, squared-squirrel, tax-theft and the-6-ps. Each one's old £ beside the box went. tax-theft's "Please enter a number." check now reads a typed £. `scripts/check-banks.py` fails any page that marks money without the helper, and its plant runs in `--ci`. Marking is unchanged. growth-and-decay is not on the list: it marks to significant figures, never by `money()` (todo 1.36). Claims taken and released in the PR.
+
+Discoveries: four of the six verifiers fail locally on clean main as well (keypad and timeout races in WSL; LOCAL-CHECKS); CI is the authority.
+
+Next: Project Claude's review, Jon's look and "merge". Row 1.36 stays open for its 1 d.p. key check.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-08 (home): BRANCH-CLEANUP
 

@@ -973,6 +973,8 @@ separately, and a wrong form is never a mark.**
   whole-pound amount needs no .00.
 - **A leading £ or € is optional** (Jon, 3 Oct 2026): £12.34 and 12.34 are the same answer. A money input
   is `type="text" inputmode="decimal"`, because a `type="number"` input silently empties on a typed £.
+- **The currency sign is shown in the box** (Jon, 9 Nov 2026): every money input shows a fixed £ or € inside
+  its left edge, made by `MaffsAnswer.moneyInput()`, and a £ typed as well is still accepted.
 - **Implementation, REQUIRED for every typed numeric answer:** `MaffsAnswer` in
   `schools/assets/answer.js` (3 Oct 2026). No game marks a typed number with its own code or a
   tolerance band. It reads the raw typed string, never a number the game parsed (114.4 and 114.40 are

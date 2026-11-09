@@ -967,6 +967,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('ansBlock').hidden = false;
     var input = box();
     input.value = '';
+    MaffsAnswer.moneyInput(input, q.money ? '£' : null);   // the £ inside the box, money questions only
     if (H.STAGES[mode].calc !== 'scientific') {
       var holder = $('kpHolder'), el = document.createElement('div');
       holder.innerHTML = ''; holder.appendChild(el);
