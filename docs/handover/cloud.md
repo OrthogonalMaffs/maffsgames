@@ -63,6 +63,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-09 (cloud): SCREENING-ROOM-FOLD (`docs/handover/contracts/2026-11-09-screening-room-fold.md`, Small, todo row SCREENING-ROOM-FOLD)
+
+STOPPED (STOP IF: the fix needs a design change), at the Gate for Project Claude's review and Jon's "merge": [#715](https://github.com/OrthogonalMaffs/maffsgames/pull/715), branch `claude/compassionate-cray-pek7mp`, worktree the primary checkout. No game change. The measured "Next" is phase 2's Continue under the icon array after a wrong gut check, at 717/680 at 1280x720 (seeded question gcse_07; local and CI the same). It is real: Continue is below the fold for 17/20 GCSE questions at 1280x720 (up to 1013) and 14/20 at 1366x768, because everything but the grid takes 582 px and the grids are 75-467 px. Spacing would pass the seed only. The CI passes of 7 Nov were false: Continue appears at about 5.0 s and `settle()` stops at 5 s, so a slower page reads opacity 0 as "no Next" (both verdicts reproduced on one commit). That is how #707 took the 27 Oct entry off as STALE. Finding appended to the todo row; claim taken and released; #714's contract to history.
+
+Discoveries: the settle race is a checker defect (shared, home lane), not yet a todo row (outside this contract). `check-site.yml` has no phone-fit shard; only `phone-fit-full.yml` measures laptop mode. CI artifact zips are unreachable from this environment (blob host blocked); logs suffice. Next: Jon's ruling on the design (PR body, options a-e) and Project Claude's review; main's nightly laptop job stays red on screening-room until then.
+
+Record: agent Claude Code; wall 0:30 (contract 07:55 to hand-off); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-09 (cloud): CLAIM-EXPLAIN-SPACES (`docs/handover/contracts/2026-11-09-claim-explain-spaces.md`, Small, todo §1.32)
 
 Merged as d37644b (main run 42558847352 green): [#714](https://github.com/OrthogonalMaffs/maffsgames/pull/714), branch `claude/amazing-mccarthy-y7q1nh`, worktree the primary checkout. test-the-claim's 15 `crExplanation` strings (B1-B5, B7, B10, B12, P1, P2, P4, P8-P10, P12) wrap their words in `\text{}`; call site unchanged. Played in Chromium through the game's own `checkStep3()`: 21 of 36 with spaces on main, 36 of 36 after. Verifier PASS, output byte-identical; its regexes find the same 57 probability and 57 comparison claims. Ledger: the 15 B7 entries removed, B7 pass. Findings: `test-the-claim-kw-001` (MEDIUM, fixed). §1.32 moved to todo-done.md; /updates/ line; claim taken and released in this PR.
