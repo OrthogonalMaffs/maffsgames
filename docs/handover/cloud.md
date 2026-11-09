@@ -63,6 +63,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
+## 2026-11-09 (cloud): CLAIM-EXPLAIN-SPACES (`docs/handover/contracts/2026-11-09-claim-explain-spaces.md`, Small, todo §1.32)
+
+At the Gate, holding for Project Claude's review and Jon's "merge" (contract: do not merge): [#714](https://github.com/OrthogonalMaffs/maffsgames/pull/714), branch `claude/amazing-mccarthy-y7q1nh`, worktree the primary checkout. test-the-claim's 15 `crExplanation` strings (B1-B5, B7, B10, B12, P1, P2, P4, P8-P10, P12) wrap their words in `\text{}`; call site unchanged. Played in Chromium through the game's own `checkStep3()`: 21 of 36 with spaces on main, 36 of 36 after. Verifier PASS, output byte-identical; its regexes find the same 57 probability and 57 comparison claims. Ledger: the 15 B7 entries removed, B7 pass. Findings: `test-the-claim-kw-001` (MEDIUM, fixed). §1.32 moved to todo-done.md; /updates/ line; claim taken and released in this PR.
+
+Discoveries: `--write-ledger` also refreshes stale `line` fields (B6 855 → 899 here, the same on untouched main); B6's old value was restored by hand so only the 15 entries change (DO NOT TOUCH). Ledger lines drift whenever a page is edited without a regen; `--ci` matches by id, so nothing fails. Next: review, then Jon's "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Record: agent Claude Code; wall 0:25 (claim commit 03:19 UTC to the hand-off push; contract received shortly before); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-07 (cloud): PHONE-FIT-FULL-WORKFLOW and PHONE-FIT-FULL-SPLIT (`docs/history/contracts/2026-11-07-phone-fit-full-workflow.md`, `...-split.md`, Shared, Amendment 1)
 
 DONE: #702 squash-merged as 023a821 and #707 as 0ec5cd4, both by `merge-pr.py` on Jon's "merge" (7 Nov); main runs 42395102273 and 42403456036 GREEN. `.github/workflows/phone-fit-full.yml` runs `measure-phone-fit.py` over every live game, one parallel job per mode (normal, Aa, laptop) plus a verdict job, nightly at 02:23 UTC, on `workflow_dispatch`, and after a push to main that `scripts/ci-deps.py` `is_shared()` calls shared: `classify()` not "known", a file two or more game pages load, or the checker's own files except `NOT_CHECKER_DEPS` (its output `docs/phone-fit-report.md` and the claim list `scripts/answer-lock-state.json`; Amendment 1). No `paths:` filter, no branch trigger; Plan's selection unchanged (`--explain` byte-identical).

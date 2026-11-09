@@ -150,3 +150,20 @@ findings:
     Recorded under Jon''s rule of 13 Oct 2026; Step 3 marking, Step 1 options and Step 6 rewrites are now checked'
   evidence: 'NODE_DRIVER before this PR (SWEEP-1, batch 10)'
   status: open
+- id: test-the-claim-kw-001
+  severity: MEDIUM
+  jc: false
+  class: NEW:prose-through-katex
+  level: alevel, level4
+  where: games/test-the-claim/index.html checkStep3 (:1797, K(hint)); crExplanation of B1-B5, B7, B10, B12, P1, P2,
+    P4, P8-P10, P12
+  summary: 'After a wrong critical-region answer at Step 3, the explanation is rendered whole in KaTeX maths mode, and
+    15 of the 36 binomial, Poisson and Normal explanations carried plain words ("and", "Lower:", "Upper:", "does not
+    reach CR"), which lost their spaces and showed as italic variables (todo §1.32). Fixed: the 15 strings wrap their
+    words in \text{}, the form their 21 siblings use; no word, number or symbol changed; the call site is unchanged.
+    B7''s 15 ledger entries are removed, so B7 now fails a new prose word in this field. Played in Chromium through the
+    game''s own checkStep3(): 36 of 36 render with spaces'
+  evidence: '"P(X≤0)=0.0352<0.05andP(X≤1)=0.1671>0.05" (B1); found by the KaTeX wrapper audit, docs/audit-katex-wrappers.md
+    finding 4 (2 Oct 2026)'
+  status: fixed
+  pr: 714
