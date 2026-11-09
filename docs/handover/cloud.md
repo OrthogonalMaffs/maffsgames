@@ -63,11 +63,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-## 2026-11-09 (cloud): SCREENING-ROOM-FIT (`docs/handover/contracts/2026-11-09-screening-room-fit.md`, Medium, todo row SCREENING-ROOM-FOLD)
+## 2026-11-09 (cloud): SCREENING-ROOM-FIT (`docs/handover/contracts/2026-11-09-screening-room-fit.md`, Medium, Amendment 1, todo row SCREENING-ROOM-FOLD)
 
-STOPPED before any game code (STOP IF: a question cannot fit even side-by-side at 6 px). Branch `claude/compassionate-cray-pek7mp` restarted from main 46fea98 (#715 merged); worktree the primary checkout; no PR yet. Claim held (commit 83c2817) for the amendment; contract saved and SCREENING-ROOM-FOLD's moved to history (943a659). The contract's floor rests on a wrong premise: the live game ships 5 px icons with no gap (grid-100, populations up to 10,000; 38 questions) and 3 px (over 10,000; 16 questions), not 6 px. For 10,000 icons, even the icon card's whole inner box (678 px wide, top to fold, nothing else in it) allows at best 4.25 px at 1280x720 and 4.5 px at 1366x768: 29 and 27 questions cannot reach 6 px in any layout. Figures appended to the todo row.
+At the Gate, holding for Project Claude's review and Jon's look and "merge" (contract: do not merge): [#716](https://github.com/OrthogonalMaffs/maffsgames/pull/716), branch `claude/compassionate-cray-pek7mp` (restarted from main 46fea98 after #715 merged), worktree the primary checkout. First stopped before code: the 6 px floor rested on a wrong premise (the game ships 5 px and 3 px icons; 10,000 icons cannot reach 6 px in any layout). Amendment 1 (Jon, 08:46, "fix it simply"): `ICON_CAP` 10,000 -> 1,000, the largest allowed that fits; the grid class follows the icons drawn (50 / 250). Continue is above the fold on all 70 items at 1366x768 and 1280x720 (worst core_08 649 / 680; main 56 and 38 items over). `verify-screening-room.py` states the cap itself and plays every item at both sizes after a wrong gut check on the page clock (no 5 s race); selftest 23/23. measure-phone-fit, every mode: no size worse, Continue 95-245 px higher everywhere; no state entry stale. Todo row closed to todo-done.md; /updates/ line; claim taken and released.
 
-Next: an amendment on the floor (PR body of #715 and this entry's report give the options); then the build on this branch. Record: agent Claude Code; wall n/a (contract stamped 08:35; stop pushed 08:32 UTC by this container's clock); review cycles 0; amendments 0; usage n/a.
+Discoveries: on the rarest conditions the true positives are now a sliver of one icon (alevel_19: 0.014 of an icon; 0.14 before), flagged for Jon's look. `check-banks.py --ci` cannot pass in this container (CDN unreachable: KaTeX undefined, banks not read). Next: review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-09 (cloud): SCREENING-ROOM-FOLD (`docs/handover/contracts/2026-11-09-screening-room-fold.md`, Small, todo row SCREENING-ROOM-FOLD)
 
