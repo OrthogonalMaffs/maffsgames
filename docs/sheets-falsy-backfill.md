@@ -296,3 +296,7 @@ through.** Steps 1–4 kept below for the record and for any future redeploy of 
    `backfillFalsyBlanks`). Read the `Logger.log` output (View → Logs, or Executions) for the row
    counts changed. Running it again should log 0 for all three counts — that's the "safe to run
    twice" check.
+
+## 7. Backfill decision (10 Nov 2026)
+
+Rows timestamped before 2026-09-29T19:18Z: a blank correct, question_index or score means false / 0. Backfill not run (Jon, 10 Nov 2026): no report reads those rows.
