@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendment 1): PR #721, stopped on Amendment 1 item 2 (display maths clipped by one pixel row), waiting for Project Claude's ruling; then Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-2): PR #721, stopped on the Gate (verify-parent-guides.py pins the old Earth wording), waiting for Project Claude; then Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
 
 - DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
@@ -22,13 +22,15 @@ Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as 
 
 Wide tables and display maths scroll in their own box on a 320px phone. `escape-rooms/assets/teacher.js` wraps its three `table.tt` in `div.tt-scroll` (`engine.css`: `overflow-x:auto`, the table's margin moved to the box). `parents/guide.js` wraps every guide table in `div.table-scroll` (margin moved likewise), and `parents/guide.css` scrolls `.katex-display` in its own line. Amendment 1: standard-form's 33-digit number breaks at its commas (`<wbr>`, line 120 only) and "weighs" became "has a mass of"; the 2px display padding removed. 20 `tier1_phone_overflow` entries removed: 14 teacher pages and six guides. Todo 1.37 and 1.38 closed to todo-done.md; 1.34 updated. Tables pixel-identical to main at 1366×768. /updates/ line added.
 
-STOPPED on Amendment 1 item 2: display maths IS clipped. On 9 of the 94 display blocks (13 guides × 2 widths), `overflow-y:hidden` cuts one anti-aliased pixel row above or below a tall fraction (averages, area-perimeter, probability, standard-form, trigonometry). The 2px bottom padding did not prevent it either; my earlier "nothing clipped" covered 5 guides only. `padding:2px 0` makes all 94 ink-identical to main, at +4px per display line. Waiting for Project Claude's ruling (PR #721).
+Amendment 1 item 2 stopped: without padding, `overflow-y:hidden` cut one anti-aliased pixel row from a tall fraction on 9 of the 94 display blocks (13 guides × 2 widths); my earlier "nothing clipped" had covered 5 guides only. Amendment 2 (Project Claude, 06:50) reversed it: `.katex-display` gets `padding:2px 0`, and 0 of 94 blocks lose ink against main (+4px per display line).
+
+STOPPED again on the Gate: `scripts/verify-parent-guides.py:621` pins the old wording ("weighs about ... kg"), so Amendment 1's "has a mass of about" fails its SF check. A patched copy passes 353/353, but the script is outside EXACT CHANGE's files; waiting for Project Claude.
 
 Discoveries: `scripts/test-escape-rating.py` still hides `table.tt` at 320px, no longer needed (not touched: outside EXACT CHANGE).
 
-Next: the ruling on the clipping; then Gate green, Project Claude's review and Jon's "merge".
+Next: the ruling on the verifier; then Gate green, Project Claude's review and Jon's "merge".
 
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-09 (home): DOCS-BUNDLE
 

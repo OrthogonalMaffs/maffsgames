@@ -26,3 +26,6 @@ PHONE-SCROLL — Amendment 1 (Project Claude, 10 Nov 06:42; replaces the 06:40 d
 4. Lane: record in the close-out that this ran in a cloud container on claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane.
 5. The /updates/ line, if any, covers the standard-form wording change too.
 Then: green Gate, stop for Project Claude's review and Jon's "merge". Do not merge.
+
+PHONE-SCROLL — Amendment 2 (Project Claude, 10 Nov 06:50)
+Item 2 of Amendment 1 is reversed: .katex-display gets padding: 2px 0 (top and bottom). Re-run the same 94-block comparison (13 guides × 2 widths); success = 0 blocks losing ink against main. Record Amendment 2 in the close-out. Everything else in Amendment 1 stands. Green Gate, then stop for Project Claude's review and Jon's "merge". Do not merge.
