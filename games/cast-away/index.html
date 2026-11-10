@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract CAST-AWAY-BUILD, 10 Nov 2026): live at its URL for Jon to play; noindex and off the portal, the sitemap, Essentials and the leaderboard hub until he lists it. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Solve sin x = k, cos x = k and tan x = k from 0° to 360° with CAST and the graphs, finding every solution. For A-Level and Level 3. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/cast-away/">
+<meta property="og:title" content="Solving Trig Equations Game – A-Level Maths | MaffsGames">
+<meta property="og:description" content="Solve sin x = k, cos x = k and tan x = k from 0° to 360° with CAST and the graphs, finding every solution. For A-Level and Level 3. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/cast-away/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Solving Trig Equations Game – A-Level Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), dark row: the levels served are L3 and A-Level only. This game's own tokens:
+   a teal accent, the curve, the line y = k and the lit solutions. */
+:root{--accent:#5eead4;--accent-dim:#123c3a;--on-accent:#0f1420;--curve:#93c5fd;--kline:#f9a8d4;--lit:#5eead4;--quad:#1d4644;--grid:#2e3850;--axis:#6b7690}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;color:var(--accent);line-height:1.15}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.6}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .35rem}
+
+/* The character band (start and results screens only): sin, tan and cos drifting slowly left to right. Decoration, aria-hidden;
+   still under prefers-reduced-motion (the rule at the end of this sheet). */
+.band{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.5rem;max-width:520px;margin:.2rem auto .3rem}
+.band svg{display:block;width:100%;height:auto;border-radius:8px;background:var(--surface)}
+.band .bc{fill:none;stroke:var(--curve);stroke-width:2.2;stroke-linejoin:round}
+.band .ba{stroke:var(--axis);stroke-width:1}
+.band .bas{stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3}
+.band .bn{fill:var(--muted);font-family:var(--font-num);font-size:11px}
+.band .drift{animation:drift 26s linear infinite}
+@keyframes drift{from{transform:translateX(0)}to{transform:translateX(120px)}}
+
+/* Watch one first */
+.watch{border:2px solid var(--accent);border-radius:12px;padding:.6rem .8rem;margin:.6rem 0;background:var(--surface-alt)}
+.watch-h{font-weight:700;color:var(--accent);font-size:1rem}
+.watch-d{font-size:.85rem;color:var(--muted);margin:.15rem 0 .45rem}
+.watch-btns{display:flex;gap:.5rem;flex-wrap:wrap}
+.watch-btns .btn{flex:1 1 0;min-width:88px}
+
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.stage-btn .calc-badge{margin-top:.2rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.badge-row{text-align:center}
+.badge-row .calc-badge:empty{display:none}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem .7rem;display:flex;flex-direction:column;gap:.4rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.ask{font-size:1.05rem;line-height:1.4;text-align:center}
+.ask .katex{font-size:1.08em}
+.given{text-align:center;font-size:.95rem;color:var(--text);background:var(--surface-alt);border-radius:8px;padding:.2rem .5rem}
+.prompt{font-size:.92rem;color:var(--muted);text-align:center;line-height:1.35}
+
+/* The two figures: CAST and the graph, side by side; stacked on a phone in Stages 1 and 2, where a figure is the answer. */
+.figs{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.6fr);gap:.5rem;align-items:center}
+.fig svg{display:block;width:100%;height:auto;touch-action:manipulation}
+.fig.cast{max-width:240px;justify-self:center;width:100%}
+@media (max-width:600px) and (min-height:601px){
+  .qcard:not(.fb-open) .figs.stack{grid-template-columns:minmax(0,1fr)}
+  .qcard:not(.fb-open) .figs.stack .fig.cast{max-width:120px}
+  .qcard:not(.fb-open) .figs.stack .fig.graph svg{max-height:136px}
+  .qcard:not(.fb-open) .figs.stack.graph-first .fig.graph{order:-1}
+}
+/* A short screen: the typed stages' instruction goes (the boxes and the buttons say it), so the keypad stays above the fold. */
+@media (max-height:620px){.prompt.typed{display:none}}
+@media (min-width:601px){.fig.graph svg{max-height:36vh}}
+.g-grid{stroke:var(--grid);stroke-width:1}
+.g-axis{stroke:var(--axis);stroke-width:1.3}
+.g-tick{fill:var(--muted);font-family:var(--font-num);font-size:12px;text-anchor:middle}
+.g-curve{fill:none;stroke:var(--curve);stroke-width:2.6;stroke-linejoin:round}
+.g-asym{stroke:var(--muted);stroke-width:1.5;stroke-dasharray:6 5}
+.g-asym.em{stroke:var(--text);stroke-width:2.2}
+.g-k{stroke:var(--kline);stroke-width:2.6;stroke-dasharray:10 5}
+.g-iv{stroke:var(--accent);stroke-width:3;stroke-linecap:round;opacity:.5}
+.g-iv.em{opacity:1}
+.g-end{stroke:var(--accent);stroke-width:2.4;fill:var(--accent)}
+.g-end.open{fill:var(--surface)}
+.g-pick{fill:none;stroke:var(--text);stroke-width:3}
+.g-pt{fill:var(--lit);stroke:var(--surface);stroke-width:1.5}
+.g-drop{stroke:var(--lit);stroke-width:1.6;stroke-dasharray:3 3}
+.g-lab{fill:var(--lit);font-family:var(--font-num);font-size:13px;font-weight:700;text-anchor:middle}
+.g-hit{fill:transparent;cursor:crosshair}
+.g-cursor{stroke:var(--text);stroke-width:1.5;stroke-dasharray:2 3}
+.fig.graph svg:focus-visible,.fig.cast .quad:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.c-ring{fill:none;stroke:var(--axis);stroke-width:1.6}
+.c-axis{stroke:var(--axis);stroke-width:1.3}
+.quad{fill:transparent;stroke:none}
+.quad.tap{cursor:pointer}
+.quad.on{fill:var(--accent-dim)}
+.quad.lit{fill:var(--quad)}
+.c-let{fill:var(--text);font-family:var(--font-num);font-size:22px;font-weight:700;text-anchor:middle;dominant-baseline:central;pointer-events:none}
+.c-let.lit{fill:var(--accent)}
+.c-ray{stroke:var(--lit);stroke-width:3;stroke-linecap:round}
+.c-ray.alpha{stroke:var(--muted);stroke-dasharray:5 4;stroke-width:2.2}
+.c-ray.calc{stroke:var(--kline);stroke-dasharray:5 4;stroke-width:2.4}
+.c-dot{fill:var(--lit)}
+.c-sel{fill:none;stroke:var(--text);stroke-width:3;pointer-events:none}
+
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.4rem}
+.opt{min-height:48px;padding:.3rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1rem;cursor:pointer;font-family:inherit}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.picked{border-color:var(--accent)}
+.row{display:flex;gap:.45rem;justify-content:center;align-items:center;flex-wrap:wrap}
+.ans-row{display:flex;gap:.35rem;justify-content:center;align-items:center;flex-wrap:nowrap}
+.ans-box{display:flex;align-items:center;gap:.1rem}
+.ans-box input{width:5.2em;min-height:44px;padding:.3rem .4rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1rem;text-align:center}
+.ans-box input:focus{outline:none;border-color:var(--accent)}
+.ans-box .deg{font-family:var(--font-num);color:var(--muted)}
+@media (max-width:380px){.ans-box input{width:4.4em;font-size:.95rem}.ans-row{gap:.2rem}}
+.tryline{font-size:.92rem;line-height:1.4;color:var(--text);border-left:3px solid var(--wrong);padding:.25rem .5rem;background:var(--surface-alt);border-radius:6px}
+.tryline:empty{display:none}
+.msg{font-size:.9rem;color:var(--hint);text-align:center}
+.msg:empty{display:none}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.4rem}
+.fb-head{font-weight:700;font-size:1.02rem}
+.fb.right .fb-head{color:var(--correct)}
+.fb.wrong .fb-head{color:var(--wrong)}
+.fb-line{font-size:.94rem;line-height:1.4}
+.fb-next{display:flex;justify-content:center}
+.worked{margin:0 0 0 1.2rem;font-size:.92rem;line-height:1.45}
+.worked li+li{margin-top:.15rem}
+.feedback:empty{display:none}
+
+/* The walkthrough: one idea a screen, the student's Next. */
+.wt-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.wt-step{font-size:1.02rem;line-height:1.5;min-height:3em;text-align:center;padding:.2rem .3rem}
+.wt-count{font-size:.78rem;color:var(--muted);text-align:center}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.stats{color:var(--muted);line-height:1.8;font-size:.95rem;margin:.4rem 0 .7rem}
+.stats b{color:var(--text)}
+
+/* The phone rule (canon §7.6.1): once the question is resolved, the controls that cannot be used go and the feedback takes their place. */
+.qcard.fb-open #ansBlock,.qcard.fb-open .prompt,.qcard.fb-open .msg,.qcard.fb-open .given{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .5rem;gap:.3rem}
+  .ask{font-size:.98rem}
+}
+@media (max-height:620px){.hud-label{display:none}.prompt{font-size:.86rem}.stage-label{display:none}}
+@media (min-width:1024px){
+  .container{max-width:clamp(760px,74vw,1000px)}
+  .ask{font-size:clamp(1.05rem,2.6vh,1.5rem)}
+  .fig.cast{max-width:clamp(200px,28vh,280px)}
+  .fig.graph svg{max-height:32vh}
+  .wt-step{font-size:clamp(1.02rem,2.6vh,1.45rem)}
+}
+/* Aa (OpenDyslexic, already a wide face): more line height on the prose a student reads; on a phone the HUD keeps one row
+   (its labels go, the values stay) and the stage label goes, since the HUD and the badge say the stage. */
+body.accessible p,body.accessible .fb-line,body.accessible .tryline,body.accessible .worked,body.accessible .wt-step{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 answers the whole question right;
+     with i >= 1 it makes two wrong tries and presses "Show me", so the question is marked wrong and waits on Next.
+{
+  "start": "CA.ui.start(1)",
+  "ready": "!!window.CA && CA.ui.state() === 'asking'",
+  "answer": [
+    "CA.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The calculator, stage by stage (canon §4.4, `by stage`): optional in Stages 1-3 (the shared calculator behind its "Calculator"
+     toggle, closed; nothing in them needs one: the graph, CAST and α are given), and scientific in Stage 4, where the student finds α
+     with an inverse trig key. One mount with the scientific keys serves every stage. -->
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "optional", "stage-2": "optional", "stage-3": "optional", "stage-4": "scientific"}</script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>CAST Away</h1><div class="sub" id="tagline">Your calculator says one. The graph says infinity. Make up your mind: it's two.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="band" id="bandMenu" aria-hidden="true"></div>
+    <div class="panel menu-info">
+      <p>Solve <span class="tx" data-tex="\sin x = k"></span>, <span class="tx" data-tex="\cos x = k"></span> and <span class="tx" data-tex="\tan x = k"></span> between <span class="tx" data-tex="0^\circ"></span> and <span class="tx" data-tex="360^\circ"></span>. Find the size of the angle, use CAST to find the quadrants, and check every answer against the graph and the interval.</p>
+      <div class="watch">
+        <div class="watch-h">Watch one first</div>
+        <div class="watch-d">Six short steps, one idea at a time. No score, no clock.</div>
+        <div class="watch-btns" id="watchBtns">
+          <button class="btn solid" type="button" data-watch="sin">Sine</button>
+          <button class="btn solid" type="button" data-watch="cos">Cosine</button>
+          <button class="btn solid" type="button" data-watch="tan">Tangent</button>
+        </div>
+      </div>
+      <div class="mode-h">Stages</div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1"><span class="n">1</span><span><span class="t">Read it off</span><span class="d">Tap every crossing on the graph, then pick the angles.</span><span class="calc-badge" data-calc="optional" data-stage="stage-1">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2"><span class="n">2</span><span><span class="t">Where does it live?</span><span class="d">Tap the quadrants on CAST, then pick the angles' forms.</span><span class="calc-badge" data-calc="optional" data-stage="stage-2">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3"><span class="n">3</span><span><span class="t">The second angle</span><span class="d">The calculator's angle is given. Type every solution.</span><span class="calc-badge" data-calc="optional" data-stage="stage-3">Calculator optional</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4"><span class="n">4</span><span><span class="t">Solve it</span><span class="d">Type every solution, or say there are none.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-4">Scientific calculator required</span></span></button>
+      </div>
+      <p class="note">10 questions a stage. A point for each one right first time. Two tries, then "Show me" for the full working.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="example" class="screen">
+    <div class="qcard" id="wtCard">
+      <div class="wt-label" id="wtLabel"></div>
+      <div class="ask" id="wtAsk"></div>
+      <div class="figs" id="wtFigs"><div class="fig cast" id="wtCast"></div><div class="fig graph" id="wtGraph"></div></div>
+      <div class="wt-step" id="wtStep" aria-live="polite"></div>
+      <div class="wt-count" id="wtCount"></div>
+      <div class="row"><button class="btn solid" id="wtNext" type="button">Next →</button></div>
+    </div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="badge-row"><span class="calc-badge" id="calcBadge"></span></div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="ask" id="ask"></div>
+      <div class="given" id="given" hidden></div>
+      <div class="figs" id="figs"><div class="fig cast" id="castFig"></div><div class="fig graph" id="graphFig"></div></div>
+      <div class="prompt" id="prompt"></div>
+      <div id="ansBlock">
+        <div class="tryline" id="tryLine" aria-live="polite"></div>
+        <div class="opts" id="opts" role="group" aria-label="Your answer" hidden></div>
+        <div class="row" id="tapRow" hidden><button class="btn solid" id="doneBtn" type="button">Done</button></div>
+        <form class="ans-row" id="typeRow" autocomplete="off" hidden>
+          <span class="ans-box"><input id="ans1" type="text" inputmode="decimal" aria-label="First solution, in degrees" autocomplete="off"><span class="deg">°</span></span>
+          <span class="ans-box"><input id="ans2" type="text" inputmode="decimal" aria-label="Second solution, in degrees" autocomplete="off"><span class="deg">°</span></span>
+          <span class="ans-box"><input id="ans3" type="text" inputmode="decimal" aria-label="Third solution, in degrees" autocomplete="off"><span class="deg">°</span></span>
+        </form>
+        <div class="row" id="extraRow"><button class="btn solid" type="submit" form="typeRow" id="checkBtn" hidden>Check</button><button class="btn" id="noneBtn" type="button" hidden>No solutions</button><button class="btn" id="showBtn" type="button" hidden>Show me</button></div>
+        <div id="kpHolder"></div>
+        <div id="calcWrap"><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+      <div class="band" id="bandResults" aria-hidden="true"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'cast-away', PER = 10, LAST = 4, FOOTER_PX = 40, NS = 'http://www.w3.org/2000/svg';
+  // One level of content (L3, key level3, and A-Level, key alevel: no picker); the four stages are boards, not levels.
+  var level = MaffsLevel.resolve({ slug: 'cast-away', levels: ['level3', 'alevel'], fallback: 'level3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* ---------- maths on screen: KaTeX, with a readable fallback if the CDN is unreachable ---------- */
+  function plain(t) {
+    return t.replace(/\\tfrac\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}/g, '($1)/($2)')
+      .replace(/\\sqrt\{([^{}]*)\}/g, '√$1').replace(/\^\{-1\}/g, '⁻¹').replace(/\^\\circ/g, '°')
+      .replace(/\\(sin|cos|tan)/g, '$1').replace(/\\le/g, '≤').replace(/\\alpha/g, 'α').replace(/\\left|\\right/g, '')
+      .replace(/-/g, '−').replace(/[{}]/g, '').replace(/\\,/g, ' ');
+  }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(plain(t));
+  }
+  // A line with its maths between \( and \), each piece KaTeX.
+  function line(s) { return String(s).split(/\\\(|\\\)/).map(function (p, i) { return i % 2 ? tex(p) : esc(p); }).join(''); }
+  function renderStatic() {
+    var els = document.querySelectorAll('.tx[data-tex]');
+    for (var i = 0; i < els.length; i++) els[i].innerHTML = tex(els[i].getAttribute('data-tex'));
+  }
+
+  /* =====================================================================================================
+     THE ENGINE: pure data, no DOM. Every question is (function, k, interval); its solutions come from the
+     method the game teaches (contract CAST-AWAY-BUILD, item 3): alpha = the inverse of |k|, then CAST,
+     each form taken with its 360-degree neighbours and filtered to the stated interval. scripts/verify-cast-away.py
+     recomputes every solution set independently (it never uses these rules).
+     ===================================================================================================== */
+  var FNS = ['sin', 'cos', 'tan'];
+  var NAME = { sin: 'sine', cos: 'cosine', tan: 'tangent' };
+  // CAST: the forms of the solutions in terms of alpha, for a positive (or zero) value and a negative one.
+  var RULE = {
+    sin: { pos: ['a', '180-a'], neg: ['180+a', '360-a'] },
+    cos: { pos: ['a', '360-a'], neg: ['180-a', '180+a'] },
+    tan: { pos: ['a', '180+a'], neg: ['180-a', '360-a'] }
+  };
+  var FORM = { 'a': function (a) { return a; }, '180-a': function (a) { return 180 - a; }, '180+a': function (a) { return 180 + a; }, '360-a': function (a) { return 360 - a; } };
+  var FORM_TEX = { 'a': '\\alpha', '180-a': '180^\\circ - \\alpha', '180+a': '180^\\circ + \\alpha', '360-a': '360^\\circ - \\alpha' };
+  var FORM_QUAD = { 'a': 'A', '180-a': 'S', '180+a': 'T', '360-a': 'C' };
+  var QUADS = ['A', 'S', 'T', 'C'];
+  var QUAD_RANGE = { A: '0° to 90°', S: '90° to 180°', T: '180° to 270°', C: '270° to 360°' };
+
+  // The values of k. Standard values carry their exact alpha (degrees) for each function; several are written two ways,
+  // because reading 1/√2 as √2/2 is part of the skill.
+  var STD_SC = [
+    { m: 'half', v: 0.5, tex: '0.5', a: { sin: 30, cos: 60 } },
+    { m: 'halfF', v: 0.5, tex: '\\tfrac{1}{2}', a: { sin: 30, cos: 60 } },
+    { m: 'r2', v: Math.SQRT1_2, tex: '\\tfrac{\\sqrt{2}}{2}', a: { sin: 45, cos: 45 } },
+    { m: 'r2b', v: Math.SQRT1_2, tex: '\\tfrac{1}{\\sqrt{2}}', a: { sin: 45, cos: 45 } },
+    { m: 'r3', v: Math.sqrt(3) / 2, tex: '\\tfrac{\\sqrt{3}}{2}', a: { sin: 60, cos: 30 } }
+  ];
+  var SPECIAL_SC = [
+    { m: 'zero', v: 0, tex: '0', a: { sin: 0, cos: 90 } },
+    { m: 'one', v: 1, tex: '1', a: { sin: 90, cos: 0 } }
+  ];
+  var STD_T = [
+    { m: 't3', v: 1 / Math.sqrt(3), tex: '\\tfrac{1}{\\sqrt{3}}', a: { tan: 30 } },
+    { m: 't3b', v: 1 / Math.sqrt(3), tex: '\\tfrac{\\sqrt{3}}{3}', a: { tan: 30 } },
+    { m: 'one', v: 1, tex: '1', a: { tan: 45 } },
+    { m: 'r3', v: Math.sqrt(3), tex: '\\sqrt{3}', a: { tan: 60 } }
+  ];
+  var SPECIAL_T = [{ m: 'zero', v: 0, tex: '0', a: { tan: 0 } }];
+  var NON_SC = ['0.1', '0.15', '0.2', '0.25', '0.3', '0.35', '0.4', '0.45', '0.55', '0.6', '0.65', '0.7', '0.75', '0.8', '0.85', '0.9', '0.95'];
+  var NON_T = ['0.2', '0.3', '0.4', '0.5', '0.6', '0.8', '1.2', '1.5', '2', '2.5', '3', '4', '5'];
+  var IMPOSSIBLE = ['1.1', '1.2', '1.5', '2'];
+
+  var DEG = 180 / Math.PI;
+  function inv(fn, m) { return fn === 'sin' ? Math.asin(m) * DEG : fn === 'cos' ? Math.acos(m) * DEG : Math.atan(m) * DEG; }
+  function f(fn, x) { var r = x / DEG; return fn === 'sin' ? Math.sin(r) : fn === 'cos' ? Math.cos(r) : Math.tan(r); }
+  function r1(x) { var v = Math.round(x * 10) / 10; return v === 0 ? 0 : v; }   // to 1 d.p., half up (every value here is >= 0 or a negated one)
+  function fmt(x, whole) { return whole ? String(Math.round(x)) : (Math.round(x * 10) / 10).toFixed(1); }
+  function neg(texv) { return '-' + texv; }
+
+  // One k: {fn, m, sign, v (the signed value), tex, kind: 'std' | 'special' | 'non' | 'impossible', alpha (exact, or the full float)}.
+  function value(fn, entry, sign, kind) {
+    var isNum = typeof entry === 'string';
+    var mag = isNum ? parseFloat(entry) : entry.v;
+    var a = kind === 'impossible' ? null : isNum ? inv(fn, mag) : entry.a[fn];
+    var t = isNum ? entry : entry.tex;
+    var id = (isNum ? entry : entry.m);
+    return { fn: fn, m: id, sign: mag === 0 ? 0 : sign, v: sign < 0 ? -mag : mag, tex: sign < 0 && mag !== 0 ? neg(t) : t, kind: kind, alpha: a };
+  }
+  // The solutions by the method: each CAST form, and the form plus or minus 360, kept if in the interval.
+  function byRule(fn, side, alpha, closed) {
+    var out = [];
+    RULE[fn][side].forEach(function (form) {
+      var r = FORM[form](alpha);
+      [-360, 0, 360].forEach(function (d) {
+        var x = r + d;
+        if (x < -1e-9) return;
+        if (closed ? x > 360 + 1e-9 : x > 360 - 1e-9) return;
+        if (Math.abs(x) < 1e-9) x = 0;
+        if (!out.some(function (y) { return Math.abs(y - x) < 1e-7; })) out.push(x);
+      });
+    });
+    return out.sort(function (p, q) { return p - q; });
+  }
+  function sideOf(sign) { return sign < 0 ? 'neg' : 'pos'; }
+
+  // A question, with its exact solutions, its keys (whole degrees, or 1 d.p.) and the shown alpha.
+  function makeQ(stage, val, closed) {
+    var whole = val.kind !== 'non';
+    var q = { stage: stage, fn: val.fn, m: val.m, sign: val.sign, k: val.v, tex: val.tex, kind: val.kind, closed: closed, whole: whole };
+    q.id = 's' + stage + '|' + val.fn + '|' + (val.sign < 0 ? '-' : '+') + val.m + '|' + (closed ? 'le' : 'lt');
+    q.eq = val.fn + '|' + (val.sign < 0 ? '-' : '+') + (val.kind === 'non' || val.kind === 'impossible' ? val.m : String(val.alpha));
+    if (val.kind === 'impossible') { q.alpha = null; q.alphaShown = null; q.sols = []; q.keys = []; }
+    else {
+      q.alpha = val.alpha;
+      q.alphaShown = whole ? Math.round(val.alpha) : r1(val.alpha);
+      q.sols = byRule(val.fn, sideOf(val.sign), val.alpha, closed);
+      q.keys = q.sols.map(function (x) { return whole ? Math.round(x) : r1(x); });
+    }
+    q.quads = val.kind === 'non' || val.kind === 'std' ? RULE[val.fn][sideOf(val.sign)].map(function (fm) { return FORM_QUAD[fm]; }).sort() : null;
+    return q;
+  }
+
+  // The pools, stage by stage (contract item 4). Every combination is listed; a session draws 10.
+  function each(fns, entries, kind, signs, cb) {
+    fns.forEach(function (fn) { entries(fn).forEach(function (e) { signs(e).forEach(function (s) { cb(value(fn, e, s, kind)); }); }); });
+  }
+  function pm(e) { return (typeof e === 'string' ? parseFloat(e) : e.v) === 0 ? [1] : [1, -1]; }
+  function stdOf(fn) { return fn === 'tan' ? STD_T : STD_SC; }
+  function specOf(fn) { return fn === 'tan' ? SPECIAL_T : SPECIAL_SC; }
+  function nonOf(fn) { return fn === 'tan' ? NON_T : NON_SC; }
+  function pool(stage) {
+    var vals = [];
+    var push = function (v) { vals.push(v); };
+    if (stage === 1) { each(FNS, stdOf, 'std', pm, push); each(FNS, specOf, 'special', pm, push); }
+    if (stage === 2) { each(FNS, stdOf, 'std', pm, push); each(FNS, nonOf, 'non', pm, push); }
+    if (stage === 3) { each(FNS, nonOf, 'non', pm, push); each(FNS, stdOf, 'std', pm, push); each(FNS, specOf, 'special', pm, push); }
+    if (stage === 4) {
+      each(FNS, nonOf, 'non', pm, push); each(FNS, stdOf, 'std', pm, push); each(FNS, specOf, 'special', pm, push);
+      each(['sin', 'cos'], function () { return IMPOSSIBLE; }, 'impossible', pm, push);
+    }
+    // Stage 2 asks for quadrants, so the axis values (0 and 1) are not in it: their solutions sit on the axes, in no quadrant.
+    var out = [];
+    vals.forEach(function (v) { [false, true].forEach(function (closed) { out.push(makeQ(stage, v, closed)); }); });
+    return out;
+  }
+  // What a session needs of each kind (10 in all): a mix of the kinds, never the same equation twice, at most 4 of one function.
+  var QUOTA = {
+    1: { std: 7, special: 3 },
+    2: { std: 4, non: 6 },
+    3: { non: 6, std: 2, special: 2 },
+    4: { non: 6, std: 1, special: 2, impossible: 1 }
+  };
+  function makeRng(seed) {
+    var s = seed >>> 0;
+    return function () {
+      s = (s + 0x6D2B79F5) >>> 0;
+      var t = s; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  function shuffle(a, rng) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  // The scarce kinds are filled first (no solutions, then the axis values), so the cap of 4 a function never starves them.
+  function session(stage, seed) {
+    var rng = makeRng(seed), all = shuffle(pool(stage), rng), quota = QUOTA[stage], fnN = {}, eqs = {}, out = [], negN = 0;
+    ['impossible', 'special', 'std', 'non'].forEach(function (kind) {
+      var got = 0;
+      for (var i = 0; i < all.length && got < (quota[kind] || 0); i++) {
+        var q = all[i];
+        if (q.kind !== kind || (fnN[q.fn] || 0) >= 4 || eqs[q.eq]) continue;
+        if (stage === 2 && q.sign < 0 && negN >= 6) continue;
+        fnN[q.fn] = (fnN[q.fn] || 0) + 1; eqs[q.eq] = true; if (q.sign < 0) negN++;
+        got++; out.push(q);
+      }
+    });
+    return shuffle(out, rng);
+  }
+
+  /* ---------- the mistakes, each named (contract item 5) ---------- */
+  function keysOf(q, xs) { return xs.map(function (x) { return q.whole ? Math.round(x) : r1(x); }); }
+  function setId(xs) { return xs.slice().sort(function (p, r) { return p - r; }).map(function (x) { return String(x); }).join(','); }
+  // The candidate wrong answers for a question: sets of angles, each made by one nameable mistake.
+  function mistakes(q) {
+    if (q.kind === 'impossible') return [];
+    var out = [], side = sideOf(q.sign), other = side === 'pos' ? 'neg' : 'pos', key = q.keys, iv = q.closed;
+    FNS.forEach(function (g) { if (g !== q.fn) out.push({ why: 'fn', fn2: g, set: keysOf(q, byRule(g, side, q.alpha, iv)) }); });
+    if (q.sign !== 0) out.push({ why: 'sign', set: keysOf(q, byRule(q.fn, other, q.alpha, iv)) });
+    if (q.sign < 0 && q.fn !== 'cos') {
+      var nk = q.whole ? Math.round(q.alpha) : r1(q.alpha), c = q.whole ? 360 - nk : r1(360 - q.alpha);
+      if (key.indexOf(c) >= 0) out.push({ why: 'neg', set: key.filter(function (x) { return x !== c; }).concat([-nk]) });
+    }
+    if (!iv && key.indexOf(0) >= 0) out.push({ why: 'end360', set: key.concat([360]) });
+    if (key.length >= 2) out.push({ why: 'missed', set: key.slice(0, key.length - 1) });
+    if (q.fn !== 'tan') {
+      var p = [];
+      key.forEach(function (x) { [x - 180, x, x + 180].forEach(function (y) { if (y >= 0 && (iv ? y <= 360 : y < 360) && p.indexOf(y) < 0) p.push(q.whole ? Math.round(y) : r1(y)); }); });
+      out.push({ why: 'period', set: p });
+    }
+    out.push({ why: 'range', set: key.concat([key[key.length - 1] + 360]) });
+    if (key.length >= 2) out.push({ why: 'missed', set: key.slice(1) });
+    var seen = {}, kid = setId(key);
+    return out.filter(function (m) {
+      var id = setId(m.set);
+      if (!m.set.length || id === kid || seen[id]) return false;
+      seen[id] = true; m.id = id; return true;
+    });
+  }
+  // Stage 1's four options: the solutions and the first three distinct mistakes.
+  function options1(q, rng) {
+    var ms = mistakes(q).slice(0, 3);
+    return shuffle([{ why: 'right', set: q.keys, id: setId(q.keys) }].concat(ms), rng);
+  }
+  // Stage 2's four options: pairs of forms. The key is the CAST rule; the others are the other functions' rules for the same sign
+  // and this function's rule for the other sign.
+  function options2(q, rng) {
+    var side = sideOf(q.sign), other = side === 'pos' ? 'neg' : 'pos';
+    var out = [{ why: 'right', forms: RULE[q.fn][side] }];
+    FNS.forEach(function (g) { if (g !== q.fn) out.push({ why: 'fn', fn2: g, forms: RULE[g][side] }); });
+    out.push({ why: 'sign', forms: RULE[q.fn][other] });
+    out.forEach(function (o) { o.id = o.forms.join('&'); });
+    return shuffle(out, rng);
+  }
+
+  // Interval wording
+  function ivTex(q) { return q.closed ? '0^\\circ \\le x \\le 360^\\circ' : '0^\\circ \\le x < 360^\\circ'; }
+  function eqTex(q) { return '\\' + q.fn + ' x = ' + q.tex; }
+  function deg(x, whole) { return fmt(x, whole) + '^\\circ'; }
+  function list(xs, whole) {
+    if (!xs.length) return 'no solutions';
+    var p = xs.map(function (x) { return '\\(x = ' + deg(x, whole) + '\\)'; });
+    return p.length === 1 ? p[0] : p.slice(0, -1).join(', ') + ' or ' + p[p.length - 1];
+  }
+  function sideWord(q) { return q.sign > 0 ? 'positive' : q.sign < 0 ? 'negative' : 'zero'; }
+  function quadsOf(fn, side) { return RULE[fn][side].map(function (fm) { return FORM_QUAD[fm]; }); }
+  function qWords(qs) { return qs.slice().sort(function (a, b) { return 'ASTC'.indexOf(a) - 'ASTC'.indexOf(b); }).join(' and '); }
+  function ruleLine(q) {
+    var side = sideOf(q.sign), fms = RULE[q.fn][side];
+    return NAME[q.fn].charAt(0).toUpperCase() + NAME[q.fn].slice(1) + ' is ' + (q.sign < 0 ? 'negative' : 'positive') + ' in the ' + qWords(quadsOf(q.fn, side)) +
+      ' quadrants, so the angles are \\(' + FORM_TEX[fms[0]] + '\\) and \\(' + FORM_TEX[fms[1]] + '\\).';
+  }
+  // The words for a named mistake: {name, help}. The first wrong try shows the name; the second adds the help.
+  // v: the angle the mistake shows (as typed or chosen), if any.
+  function cap(w) { return w.charAt(0).toUpperCase() + w.slice(1); }
+  function why(q, kind, info) {
+    info = info || {};
+    var v = info.v, iv = '\\(' + ivTex(q) + '\\)', V = v != null ? '\\(' + deg(v, q.whole) + '\\)' : '';
+    switch (kind) {
+      case 'missed': return { name: 'There is more than that.', help: 'The line crosses the ' + NAME[q.fn] + ' curve ' + q.keys.length + ' times in ' + iv + '.' };
+      case 'fn': return { name: (V ? V + ' comes from ' : 'That is ') + NAME[info.fn2] + '\'s rule, not ' + NAME[q.fn] + '\'s.', help: ruleLine(q) };
+      case 'sign': return { name: (V ? V + ' solves' : 'Those solve') + ' \\(\\' + q.fn + ' x = ' + (q.sign < 0 ? q.tex.slice(1) : '-' + q.tex) + '\\): check the sign.', help: ruleLine(q) };
+      case 'neg': return { name: '\\(' + deg(-q.alphaShown, q.whole) + '\\) is the calculator\'s answer, and it is outside ' + iv + '.', help: 'Take the size, \\(\\alpha = ' + deg(q.alphaShown, q.whole) + '\\), and use CAST.' };
+      case 'end360': return { name: 'The interval is ' + iv + ': it stops just before \\(360^\\circ\\), so \\(360^\\circ\\) is not allowed.', help: '' };
+      case 'range': return { name: V + ' is outside ' + iv + '.', help: 'Every solution is in the interval: from \\(0^\\circ\\) to \\(360^\\circ\\).' };
+      case 'period': return { name: cap(NAME[q.fn]) + ' repeats every \\(360^\\circ\\), not every \\(180^\\circ\\).', help: 'Adding \\(180^\\circ\\) is tangent\'s habit. ' + (q.kind === 'special' ? '' : ruleLine(q)) };
+      case 'notsol': return { name: V + ' does not solve it: \\(\\' + q.fn + ' ' + deg(v, q.whole) + ' = ' + String(Math.round(f(q.fn, v) * 1000) / 1000) + '\\), not \\(' + q.tex + '\\).', help: q.kind === 'special' ? 'Look at where the line meets the curve.' : ruleLine(q) };
+      case 'nonebut': return { name: 'There are solutions: the line \\(y = ' + q.tex + '\\) does cross the ' + NAME[q.fn] + ' curve.', help: q.kind === 'special' ? '' : ruleLine(q) };
+      case 'impossible': return { name: '\\(\\' + q.fn + ' x\\) is never more than \\(1\\) or less than \\(-1\\).', help: 'So \\(' + eqTex(q) + '\\) has no solutions: the line \\(y = ' + q.tex + '\\) never meets the curve. Press No solutions.' };
+      case 'quadsign': return { name: 'Those are where ' + NAME[q.fn] + ' is ' + (q.sign < 0 ? 'positive' : 'negative') + '.', help: 'Here \\(\\' + q.fn + ' x\\) is ' + sideWord(q) + ': ' + cap(NAME[q.fn]) + ' is ' + sideWord(q) + ' in the ' + qWords(q.quads) + ' quadrants.' };
+      case 'quadfn': return { name: 'Those are ' + NAME[info.fn2] + '\'s quadrants.', help: cap(NAME[q.fn]) + ' is ' + sideWord(q) + ' in the ' + qWords(q.quads) + ' quadrants.' };
+      case 'quadmissed': return { name: 'There are two quadrants.', help: '\\(' + eqTex(q) + '\\) has two solutions here: ' + NAME[q.fn] + ' is ' + sideWord(q) + ' in the ' + qWords(q.quads) + ' quadrants.' };
+      case 'quadwrong': return { name: 'Not those.', help: 'Use CAST: ' + NAME[q.fn] + ' is ' + sideWord(q) + ' in the ' + qWords(q.quads) + ' quadrants.' };
+      case 'tapnone': return { name: 'Tap where the line \\(y = ' + q.tex + '\\) meets the curve.', help: '' };
+    }
+    return { name: 'Not quite.', help: '' };
+  }
+
+  // The full working ("Show me", and after a right answer).
+  function working(q) {
+    var L = [], w = q.whole;
+    if (q.kind === 'impossible') {
+      L.push('\\(\\' + q.fn + ' x\\) is always between \\(-1\\) and \\(1\\).');
+      L.push('So \\(' + eqTex(q) + '\\) has no solutions: the line \\(y = ' + q.tex + '\\) never meets the curve.');
+      return L;
+    }
+    var mag = q.sign < 0 ? q.tex.slice(1) : q.tex;
+    L.push('The size: \\(\\alpha = \\' + q.fn + '^{-1}\\left(' + mag + '\\right) = ' + deg(q.alphaShown, w) + '\\).');
+    if (q.kind === 'special') {
+      L.push('The value is ' + (q.sign === 0 ? '0' : q.sign < 0 ? '\\(-1\\)' : '1') + ': the solutions sit on the axes. Use \\(' + FORM_TEX[RULE[q.fn][sideOf(q.sign)][0]] + '\\) and \\(' + FORM_TEX[RULE[q.fn][sideOf(q.sign)][1]] + '\\).');
+    } else {
+      L.push(ruleLine(q));
+    }
+    var fms = RULE[q.fn][sideOf(q.sign)], a = q.alphaShown, parts = [];
+    fms.forEach(function (fm) {
+      var x = FORM[fm](a);
+      parts.push(fm === 'a' ? '\\(\\alpha = ' + deg(a, w) + '\\)' : '\\(' + FORM_TEX[fm].replace('\\alpha', deg(a, w)) + ' = ' + deg(x, w) + '\\)');
+    });
+    L.push(parts.join(' and ') + (Math.abs(FORM[fms[0]](a) - FORM[fms[1]](a)) < 1e-9 ? ': the same angle twice.' : '.'));
+    var base = fms.map(function (fm) { return w ? Math.round(FORM[fm](a)) : r1(FORM[fm](a)); });
+    var notes = [], has0 = base.indexOf(0) >= 0, has360 = base.indexOf(360) >= 0;
+    if (q.closed && has0 && !has360) notes.push('\\(0^\\circ + 360^\\circ = 360^\\circ\\) is in it too');
+    if (!q.closed && (has0 || has360)) notes.push('\\(360^\\circ\\) is not: it stops just before');
+    // The interval check and the answer, one line.
+    L.push('In \\(' + ivTex(q) + '\\)' + (notes.length ? ', ' + notes.join('; ') + '. So ' : ': ') + list(q.keys, w) + '.');
+    return L;
+  }
+
+  /* ---------- marking: typed answers through MaffsAnswer, choices by dataset.val ---------- */
+  function judge(q, raw, key) { return q.whole ? MaffsAnswer.exact(raw, key) : MaffsAnswer.decimal(raw, key, 1); }
+  // A set of typed answers: {kind: 'right' | 'wrong' | 'format' | 'unreadable' | 'empty' | 'twice', why, info, msg}.
+  function markTyped(q, raws, none) {
+    if (none) return q.keys.length ? { kind: 'wrong', why: 'nonebut' } : { kind: 'right' };
+    raws = raws.map(function (r) { return String(r == null ? '' : r).trim(); }).filter(function (r) { return r !== ''; });
+    if (!raws.length) return { kind: 'empty', msg: q.stage === 4 ? 'Type each solution in a box, or press No solutions.' : 'Type each solution in a box.' };
+    for (var i = 0; i < raws.length; i++) {
+      if (MaffsAnswer.parse(raws[i]) === null) return { kind: 'unreadable', msg: MaffsAnswer.message('unreadable', raws[i]) };
+    }
+    var matched = [], extras = [];
+    for (i = 0; i < raws.length; i++) {
+      var raw = raws[i], hit = -1, fmtHit = false;
+      q.keys.forEach(function (k, j) { var r = judge(q, raw, k); if (r === 'correct') hit = j; else if (r === 'format') fmtHit = true; });
+      if (hit >= 0) {
+        if (matched.indexOf(hit) >= 0) return { kind: 'twice', msg: 'You have typed ' + raw + '° twice. Each box takes a different angle.' };
+        matched.push(hit);
+      } else if (fmtHit) return { kind: 'format', msg: MaffsAnswer.message('format', raw, { dp: 1 }) };
+      else extras.push(raw);
+    }
+    if (q.kind === 'impossible') return { kind: 'wrong', why: 'impossible' };
+    if (!extras.length && matched.length === q.keys.length) return { kind: 'right' };
+    if (!extras.length) return { kind: 'wrong', why: 'missed', info: { have: matched.length } };
+    return diagnose(q, extras, matched);
+  }
+  function same(q, raw, x) { return judge(q, raw, x) === 'correct'; }
+  function diagnose(q, extras, matched) {
+    var ms = mistakes(q), raw, j, i;
+    var order = ['neg', 'range', 'fn', 'sign', 'period'];
+    for (j = 0; j < order.length; j++) {
+      for (i = 0; i < extras.length; i++) {
+        raw = extras[i];
+        var v = MaffsAnswer.parse(raw);
+        if (order[j] === 'range') {
+          if (v === 360 && !q.closed && q.keys.indexOf(0) >= 0) return { kind: 'wrong', why: 'end360', info: { v: v } };
+          if (v < 0 || v > 360 || (v === 360 && !q.closed)) return { kind: 'wrong', why: 'range', info: { v: v } };
+          continue;
+        }
+        for (var t = 0; t < ms.length; t++) {
+          var m = ms[t];
+          if (m.why !== order[j]) continue;
+          var hits = m.set.filter(function (x) { return q.keys.indexOf(x) < 0; });
+          if (hits.some(function (x) { return same(q, raw, x); })) return { kind: 'wrong', why: m.why, info: { v: v, fn2: m.fn2 } };
+        }
+      }
+    }
+    return { kind: 'wrong', why: 'notsol', info: { v: MaffsAnswer.parse(extras[0]) } };
+  }
+  // Stage 1's tapped crossings: angles (degrees) chosen from the snap points.
+  function markTaps(q, taps) {
+    if (!q.closed && taps.some(function (x) { return Math.abs(x - 360) < 1e-6; })) return { kind: 'wrong', why: 'end360' };
+    var have = q.sols.filter(function (s) { return taps.some(function (x) { return Math.abs(x - s) < 1e-6; }); }).length;
+    if (!taps.length) return { kind: 'wrong', why: 'missed', info: { have: 0 } };
+    if (have === q.sols.length) return { kind: 'right' };
+    return { kind: 'wrong', why: 'missed', info: { have: have } };
+  }
+  // Stage 2's quadrants.
+  function markQuads(q, picked) {
+    var key = q.quads, id = picked.slice().sort().join('');
+    if (id === key.join('')) return { kind: 'right' };
+    if (picked.length === 1 && key.indexOf(picked[0]) >= 0) return { kind: 'wrong', why: 'quadmissed' };
+    var other = quadsOf(q.fn, sideOf(q.sign) === 'pos' ? 'neg' : 'pos').sort().join('');
+    if (id === other) return { kind: 'wrong', why: 'quadsign' };
+    for (var i = 0; i < FNS.length; i++) {
+      var g = FNS[i];
+      if (g !== q.fn && quadsOf(g, sideOf(q.sign)).sort().join('') === id) return { kind: 'wrong', why: 'quadfn', info: { fn2: g } };
+    }
+    return { kind: 'wrong', why: 'quadwrong' };
+  }
+
+  /* =====================================================================================================
+     DRAWING: the graph and CAST, as SVG
+     ===================================================================================================== */
+  var GW = 400, GH = 162, GX0 = 34, GX1 = 378, GY0 = 8, GY1 = 128, GIV = 138;
+  function el(name, attrs, parent) {
+    var e = document.createElementNS(NS, name);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function yMax(fn, k) { return fn === 'tan' ? Math.max(3, Math.abs(k) + 1) : Math.max(1.5, Math.abs(k) + 0.5); }
+  function gx(d) { return GX0 + (GX1 - GX0) * d / 360; }
+  function gy(y, ym) { return (GY0 + GY1) / 2 - y / ym * (GY1 - GY0) / 2; }
+  function curvePath(fn, ym, from, to, step) {
+    var d = '', pen = false;
+    for (var x = from; x <= to + 1e-9; x += step) {
+      if (fn === 'tan' && Math.abs(((x % 180) + 180) % 180 - 90) < step / 2 + 1e-9) { pen = false; continue; }
+      var y = f(fn, x);
+      if (fn === 'tan' && Math.abs(y) > ym * 1.15) { pen = false; continue; }
+      d += (pen ? 'L' : 'M') + gx(x).toFixed(1) + ' ' + gy(Math.max(-ym * 1.15, Math.min(ym * 1.15, y)), ym).toFixed(1);
+      pen = true;
+    }
+    return d;
+  }
+  // opts: {line, points: [deg], picks: [deg], ivEm, asymEm, labels}
+  function drawGraph(box, q, opts) {
+    opts = opts || {};
+    box.innerHTML = '';
+    var ym = yMax(q.fn, q.k);
+    var svg = el('svg', { viewBox: '0 0 ' + GW + ' ' + GH, role: 'img', 'aria-label': 'The graph of y = ' + q.fn + ' x from 0 to 360 degrees' + (opts.line ? ', with the line y = ' + plain(q.tex) : '') }, box);
+    var clip = el('clipPath', { id: box.id + 'Clip' }, el('defs', {}, svg));
+    el('rect', { x: GX0 - 2, y: GY0 - 2, width: GX1 - GX0 + 4, height: GY1 - GY0 + 4 }, clip);
+    [0, 90, 180, 270, 360].forEach(function (d) {
+      el('line', { class: 'g-grid', x1: gx(d), y1: GY0, x2: gx(d), y2: GIV }, svg);
+      var t = el('text', { class: 'g-tick', x: gx(d), y: GH - 4 }, svg); t.textContent = d + '°';
+    });
+    [1, -1].forEach(function (y) {
+      if (Math.abs(y) > ym) return;
+      el('line', { class: 'g-grid', x1: GX0, y1: gy(y, ym), x2: GX1, y2: gy(y, ym) }, svg);
+      var t = el('text', { class: 'g-tick', x: 16, y: gy(y, ym) + 4 }, svg); t.textContent = y > 0 ? '1' : '−1';
+    });
+    el('line', { class: 'g-axis', x1: GX0, y1: gy(0, ym), x2: GX1, y2: gy(0, ym) }, svg);
+    el('line', { class: 'g-axis', x1: GX0, y1: GY0, x2: GX0, y2: GY1 }, svg);
+    // the interval, under the plot: filled at 0, open or filled at 360
+    el('line', { class: 'g-iv' + (opts.ivEm ? ' em' : ''), x1: gx(0), y1: GIV, x2: gx(360), y2: GIV }, svg);
+    el('circle', { class: 'g-end', cx: gx(0), cy: GIV, r: 4 }, svg);
+    el('circle', { class: 'g-end' + (q.closed ? '' : ' open'), cx: gx(360), cy: GIV, r: 4 }, svg);
+    if (q.fn === 'tan') [90, 270].forEach(function (d) { el('line', { class: 'g-asym' + (opts.asymEm ? ' em' : ''), x1: gx(d), y1: GY0, x2: gx(d), y2: GY1 }, svg); });
+    var g = el('g', { 'clip-path': 'url(#' + box.id + 'Clip)' }, svg);
+    el('path', { class: 'g-curve', d: curvePath(q.fn, ym, 0, 360, 1) }, g);
+    if (opts.line) el('line', { class: 'g-k', x1: GX0, y1: gy(q.k, ym), x2: GX1, y2: gy(q.k, ym) }, g);
+    (opts.points || []).forEach(function (d) {
+      el('line', { class: 'g-drop', x1: gx(d), y1: gy(q.k, ym), x2: gx(d), y2: gy(0, ym) }, svg);
+      el('circle', { class: 'g-pt', cx: gx(d), cy: gy(q.k, ym), r: 5.5 }, svg);
+      if (opts.labels !== false) {
+        var up = q.k >= 0 ? -10 : 18, t = el('text', { class: 'g-lab', x: Math.min(GX1 - 14, Math.max(GX0 + 14, gx(d))), y: gy(q.k, ym) + up }, svg);
+        t.textContent = fmt(d, q.whole && Math.abs(d - Math.round(d)) < 1e-9) + '°';
+      }
+    });
+    (opts.picks || []).forEach(function (d) { el('circle', { class: 'g-pick', cx: gx(d), cy: gy(q.k, ym), r: 9 }, svg); });
+    return { svg: svg, ym: ym };
+  }
+  function polar(cx, cy, r, d) { return [cx + r * Math.cos(d / DEG), cy - r * Math.sin(d / DEG)]; }
+  var CX = 100, CY = 100, CR = 84;
+  // opts: {lit: [quads], on: [quads], rays: [deg], alpha: deg, calc: deg, tap: bool}
+  function drawCast(box, q, opts) {
+    opts = opts || {};
+    box.innerHTML = '';
+    var svg = el('svg', { viewBox: '0 0 200 200', role: opts.tap ? 'group' : 'img', 'aria-label': opts.tap ? 'CAST: tap the quadrants' : 'The CAST diagram' }, box);
+    var POS = { A: [0, 90], S: [90, 180], T: [180, 270], C: [270, 360] };
+    QUADS.forEach(function (Q) {
+      var p0 = polar(CX, CY, CR, POS[Q][0]), p1 = polar(CX, CY, CR, POS[Q][1]);
+      var cls = 'quad' + (opts.tap ? ' tap' : '') + ((opts.on || []).indexOf(Q) >= 0 ? ' on' : '') + ((opts.lit || []).indexOf(Q) >= 0 ? ' lit' : '');
+      var attrs = { class: cls, d: 'M' + CX + ' ' + CY + 'L' + p0[0].toFixed(1) + ' ' + p0[1].toFixed(1) + 'A' + CR + ' ' + CR + ' 0 0 0 ' + p1[0].toFixed(1) + ' ' + p1[1].toFixed(1) + 'Z', 'data-q': Q };
+      if (opts.tap) { attrs.role = 'button'; attrs.tabindex = '0'; attrs['aria-label'] = Q + ' quadrant, ' + QUAD_RANGE[Q]; attrs['aria-pressed'] = String((opts.on || []).indexOf(Q) >= 0); attrs['data-val'] = Q; }
+      el('path', attrs, svg);
+    });
+    el('circle', { class: 'c-ring', cx: CX, cy: CY, r: CR }, svg);
+    el('line', { class: 'c-axis', x1: CX - CR - 6, y1: CY, x2: CX + CR + 6, y2: CY }, svg);
+    el('line', { class: 'c-axis', x1: CX, y1: CY - CR - 6, x2: CX, y2: CY + CR + 6 }, svg);
+    var LET = { A: [45, 'A'], S: [135, 'S'], T: [225, 'T'], C: [315, 'C'] };
+    QUADS.forEach(function (Q) {
+      var p = polar(CX, CY, CR * 0.55, LET[Q][0]);
+      var t = el('text', { class: 'c-let' + ((opts.lit || []).indexOf(Q) >= 0 || (opts.on || []).indexOf(Q) >= 0 ? ' lit' : ''), x: p[0].toFixed(1), y: p[1].toFixed(1) }, svg);
+      t.textContent = LET[Q][1];
+    });
+    if (opts.alpha != null) { var pa = polar(CX, CY, CR, opts.alpha); el('line', { class: 'c-ray alpha', x1: CX, y1: CY, x2: pa[0].toFixed(1), y2: pa[1].toFixed(1) }, svg); }
+    if (opts.calc != null) { var pc = polar(CX, CY, CR, opts.calc); el('line', { class: 'c-ray calc', x1: CX, y1: CY, x2: pc[0].toFixed(1), y2: pc[1].toFixed(1) }, svg); }
+    (opts.rays || []).forEach(function (d) {
+      var p = polar(CX, CY, CR, d);
+      el('line', { class: 'c-ray', x1: CX, y1: CY, x2: p[0].toFixed(1), y2: p[1].toFixed(1) }, svg);
+      el('circle', { class: 'c-dot', cx: p[0].toFixed(1), cy: p[1].toFixed(1), r: 5 }, svg);
+    });
+    return svg;
+  }
+  function solved(q) { return { line: true, points: q.sols, picks: [] }; }
+  function lightAll(q) {
+    drawGraph($('graphFig'), q, solved(q));
+    drawCast($('castFig'), q, { lit: q.sols.length ? uniq(q.sols.map(quadOfAngle).filter(Boolean)) : [], rays: q.sols });
+  }
+  function quadOfAngle(d) {
+    var x = ((d % 360) + 360) % 360;
+    if (Math.abs(x % 90) < 1e-9) return null;
+    return x < 90 ? 'A' : x < 180 ? 'S' : x < 270 ? 'T' : 'C';
+  }
+  function uniq(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+
+  /* ---------- the character band: sin, tan, cos, one 360-degree window each ---------- */
+  function band(box) {
+    if (!box || box.firstChild) return;
+    ['sin', 'tan', 'cos'].forEach(function (fn) {
+      var svg = el('svg', { viewBox: '0 0 120 54' }, box);
+      el('line', { class: 'ba', x1: 0, y1: 22, x2: 120, y2: 22 }, svg);
+      var g = el('g', { class: 'drift' }, svg), d = '', pen = false;
+      for (var x = -120; x <= 120; x += 1) {
+        var deg_ = x * 3, y;
+        if (fn === 'tan') {
+          var m = ((deg_ % 180) + 180) % 180;
+          if (Math.abs(m - 90) < 4) { pen = false; continue; }
+          y = Math.tan(deg_ / DEG); if (Math.abs(y) > 2.6) { pen = false; continue; }
+          y = y / 2.6;
+        } else y = fn === 'sin' ? Math.sin(deg_ / DEG) : Math.cos(deg_ / DEG);
+        d += (pen ? 'L' : 'M') + x + ' ' + (22 - y * 16).toFixed(1); pen = true;
+      }
+      if (fn === 'tan') for (var a = -90; a <= 120; a += 60) el('line', { class: 'bas', x1: a, y1: 3, x2: a, y2: 41 }, g);
+      el('path', { class: 'bc', d: d }, g);
+      var t = el('text', { class: 'bn', x: 60, y: 51, 'text-anchor': 'middle' }, svg); t.textContent = fn + ' x';
+    });
+  }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var STAGES = {
+    1: { name: 'Read it off', calc: 'optional' },
+    2: { name: 'Where does it live?', calc: 'optional' },
+    3: { name: 'The second angle', calc: 'optional' },
+    4: { name: 'Solve it', calc: 'scientific' }
+  };
+  var stage = 1, Q = null, qs = [], qi = 0, state = 'menu', step = 0, tries = 0, score = 0, marked = 0, rightCount = 0;
+  var taps = [], picked = [], opts = [], kp = null, calc = null, cursor = 180, optRng = makeRng(1);
+
+  function show(id) {
+    ['menu', 'example', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+    if (id === 'menu') band($('bandMenu'));
+    if (id === 'results') band($('bandResults'));
+  }
+  function stageBadge() {
+    var src = document.querySelector('.calc-badge[data-stage="stage-' + stage + '"]'), b = $('calcBadge');
+    if (src) { b.setAttribute('data-calc', src.getAttribute('data-calc')); b.textContent = src.textContent; }
+    else { b.removeAttribute('data-calc'); b.textContent = ''; }
+  }
+  function startStage(n) {
+    MaffsLock.newSession();
+    stage = n;
+    qs = session(n, Math.floor(Math.random() * 4294967296));
+    optRng = makeRng(Math.floor(Math.random() * 4294967296));
+    qi = 0; score = 0; marked = 0; rightCount = 0;
+    stageBadge();
+    if (calc) { calc.close(); calc.clear(); }
+    show('game');
+    $('hudStage').textContent = n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n });
+    nextQuestion();
+  }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++];
+    load(Q);
+  }
+  function load(q) {
+    Q = q; step = 0; tries = 0; taps = []; picked = []; cursor = 180;
+    $('hudQ').textContent = qi + '/' + PER;
+    $('hudScore').textContent = score;
+    $('stageLabel').textContent = 'Stage ' + stage + ' · ' + STAGES[stage].name;
+    // The precision is stated in the question (SR-1), as the walkthrough states it: ", to 1 d.p." whenever the answers are not whole.
+    $('ask').innerHTML = 'Solve ' + tex(eqTex(q)) + ' for ' + tex(ivTex(q)) + (stage >= 3 && !q.whole ? ', to 1 d.p.' : '.');
+    $('given').hidden = stage !== 3;
+    if (stage === 3) {
+      var mag = q.sign < 0 ? q.tex.slice(1) : q.tex;
+      $('given').innerHTML = 'From your calculator: ' + tex('\\alpha = \\' + q.fn + '^{-1}\\left(' + mag + '\\right) = ' + deg(q.alphaShown, q.whole));
+    }
+    $('prompt').classList.remove('typed');
+    var figs = $('figs');
+    figs.classList.toggle('stack', stage <= 2);
+    figs.classList.toggle('graph-first', stage === 1);
+    $('tryLine').innerHTML = ''; $('msg').textContent = '';
+    $('showBtn').hidden = true;
+    $('noneBtn').hidden = stage !== 4;
+    $('opts').hidden = true; $('tapRow').hidden = true; $('typeRow').hidden = true; $('checkBtn').hidden = stage < 3;
+    $('kpHolder').innerHTML = ''; kp = null;
+    ensureCalc();
+    if (stage === 1) askTaps();
+    else if (stage === 2) askQuads();
+    else askTyped();
+    MaffsLock.fresh($('ansBlock'));
+    state = 'asking';
+  }
+  function ensureCalc() {
+    if (!calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { dock: $('qcard'), keys: 'scientific' });
+  }
+
+  /* Stage 1, step 1: tap the crossings. A tap snaps to the nearest point where the line meets the curve (the open end at 360 included,
+     so a tap there can be named). */
+  function snaps(q) { var s = q.sols.slice(); if (!q.closed && q.sols.some(function (x) { return x === 0; })) s.push(360); return s; }
+  function askTaps() {
+    $('prompt').innerHTML = 'Tap every place the line meets the curve, then Done.';
+    $('tapRow').hidden = false;
+    redrawTaps();
+    drawCast($('castFig'), Q, {});
+  }
+  function redrawTaps() {
+    var gr = drawGraph($('graphFig'), Q, { line: true, picks: taps });
+    var svg = gr.svg;
+    svg.setAttribute('tabindex', '0');
+    svg.setAttribute('aria-label', 'The graph. Tap where the line meets the curve; with a keyboard, arrow keys move along the line and Enter marks a crossing.');
+    var hit = el('rect', { class: 'g-hit', x: 0, y: 0, width: GW, height: GH }, svg);
+    hit.addEventListener('click', function (e) {
+      if (state !== 'asking' || stage !== 1 || step !== 0 || MaffsLock.isLocked($('ansBlock'))) return;
+      var r = svg.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * GW, d = (x - GX0) / (GX1 - GX0) * 360;
+      tapAt(d);
+    });
+    }
+  function tapAt(d) {
+    var pts = snaps(Q), best = null, bd = 1e9;
+    pts.forEach(function (p) { var dd = Math.abs(p - d); if (dd < bd) { bd = dd; best = p; } });
+    if (best === null || bd > 40) { $('msg').innerHTML = line(why(Q, 'tapnone').name); return; }
+    $('msg').textContent = '';
+    var at = taps.findIndex ? taps.findIndex(function (t) { return Math.abs(t - best) < 1e-6; }) : -1;
+    if (at >= 0) taps.splice(at, 1); else taps.push(best);
+    redrawTaps();
+  }
+  /* Stage 1, step 2, and Stage 2, step 2: four options. */
+  function askOptions() {
+    var box = $('opts'), list_ = stage === 1 ? options1(Q, optRng) : options2(Q, optRng);
+    opts = list_;
+    box.innerHTML = '';
+    list_.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt';
+      b.dataset.val = o.id;
+      b.innerHTML = stage === 1 ? (o.set.map(function (x) { return tex(deg(x, true)); }).join(', ')) : (tex(FORM_TEX[o.forms[0]]) + ' and ' + tex(FORM_TEX[o.forms[1]]));
+      box.appendChild(b);
+    });
+    box.hidden = false;
+    $('prompt').innerHTML = stage === 1 ? 'Which angles are they?' : line('Which pair solves it? \\(\\alpha\\) is the size from your calculator.');
+  }
+  /* Stage 2, step 1: tap the quadrants. */
+  function askQuads() {
+    $('prompt').innerHTML = 'Tap the quadrants the solutions are in, then Done.';
+    $('tapRow').hidden = false;
+    drawGraph($('graphFig'), Q, { line: true });
+    redrawQuads();
+  }
+  function redrawQuads() {
+    var svg = drawCast($('castFig'), Q, { tap: true, on: picked });
+    var qsEls = svg.querySelectorAll('.quad');
+    for (var i = 0; i < qsEls.length; i++) {
+      qsEls[i].addEventListener('click', onQuad);
+      qsEls[i].addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onQuad.call(this, e); } });
+    }
+  }
+  function onQuad() {
+    if (state !== 'asking' || stage !== 2 || step !== 0 || MaffsLock.isLocked($('ansBlock'))) return;
+    var Qd = this.getAttribute('data-q'), at = picked.indexOf(Qd);
+    if (at >= 0) picked.splice(at, 1); else picked.push(Qd);
+    redrawQuads();
+    var again = $('castFig').querySelector('.quad[data-q="' + Qd + '"]'); if (again) try { again.focus({ preventScroll: true }); } catch (e) {}
+  }
+  /* Stages 3 and 4: typed. */
+  function boxes() { return [$('ans1'), $('ans2'), $('ans3')]; }
+  function askTyped() {
+    $('prompt').innerHTML = 'One solution to a box, in any order.';
+    $('prompt').classList.add('typed');
+    $('typeRow').hidden = false;
+    boxes().forEach(function (b) { b.value = ''; });
+    drawGraph($('graphFig'), Q, { line: stage === 3 });
+    drawCast($('castFig'), Q, {});
+    var holder = $('kpHolder'), d = document.createElement('div');
+    holder.appendChild(d);
+    kp = window.MaffsKeypad ? MaffsKeypad.mount(d, { targets: boxes(), keys: { minus: true }, keepInView: $('typeRow') }) : null;
+  }
+
+  /* ---------- trying ---------- */
+  function onDone() {
+    if (state !== 'asking') return;
+    if (stage === 1 && step === 0) { if (!MaffsLock.lock($('ansBlock'))) return; settle(markTaps(Q, taps)); }
+    else if (stage === 2 && step === 0) { if (!MaffsLock.lock($('ansBlock'))) return; settle(markQuads(Q, picked)); }
+  }
+  function onOption(b) {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    var o = opts.filter(function (x) { return x.id === b.dataset.val; })[0];
+    if (!o) return;
+    if (o.why === 'right') { settle({ kind: 'right' }); return; }
+    settle({ kind: 'wrong', why: o.why, info: { fn2: o.fn2, have: o.set ? o.set.length : 0, v: stage === 1 && o.why === 'range' ? o.set[o.set.length - 1] : null } });
+  }
+  function onCheck(none) {
+    if (state !== 'asking' || stage < 3) return;
+    var r = markTyped(Q, boxes().map(function (b) { return b.value; }), none);
+    if (r.kind === 'format' || r.kind === 'unreadable' || r.kind === 'empty' || r.kind === 'twice') { $('msg').textContent = r.msg; $('msg').dataset.why = r.kind; return; }   // never marked
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    settle(r);
+  }
+  // One marked try. A right step moves on; a wrong one names the mistake, and after two wrong tries "Show me" appears.
+  function settle(r) {
+    $('msg').textContent = ''; delete $('msg').dataset.why;
+    var last = stage >= 3 || step === 1;
+    if (r.kind === 'right') {
+      if (!last) {
+        step = 1;
+        $('tryLine').innerHTML = '';
+        $('tapRow').hidden = true;
+        if (stage === 1) { drawGraph($('graphFig'), Q, { line: true, points: Q.sols, labels: false }); }
+        if (stage === 2) { drawCast($('castFig'), Q, { lit: Q.quads }); }
+        askOptions();
+        MaffsLock.fresh($('ansBlock'));
+        return;
+      }
+      resolve(true);
+      return;
+    }
+    tries++;
+    var t = $('tryLine');
+    var w = why(Q, r.why, r.info);
+    t.innerHTML = '<span class="tw">' + (tries === 1 ? 'Not yet. ' : 'Still not right. ') + '</span>' + line(w.name + (tries >= 2 && w.help ? ' ' + w.help : ''));
+    t.dataset.why = r.why;
+    if (tries >= 2) $('showBtn').hidden = false;
+    MaffsLock.fresh($('ansBlock'));
+    if (window.MaffsScroll) MaffsScroll.reveal($('ansBlock'), { keep: $('tryLine') });
+  }
+  // The question is over: right (scored if first time), or shown.
+  function resolve(right) {
+    state = right ? 'done' : 'wrong';
+    var first = right && tries === 0;
+    marked++; if (first) { rightCount++; score++; }
+    $('hudScore').textContent = score;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: first });
+    $('qcard').classList.add('fb-open');
+    if (kp && kp.select) try { kp.select(-1); } catch (e) {}
+    lightAll(Q);
+    var fb = $('feedback'), W = working(Q);
+    if (right) {
+      fb.innerHTML = '<div class="fb right" data-why="right"><div class="fb-head">✓ Right' + (first ? '' : ', at the ' + (tries === 1 ? 'second' : 'next') + ' try') + '</div>' +
+        '<div class="fb-line">' + line('So ' + list(Q.keys, Q.whole) + '.') + '</div>' +
+        '<div class="fb-next"><button class="btn solid" id="nextBtn" type="button" data-maffs-lock-skip>' + (qi >= PER ? 'See results →' : 'Next →') + '</button></div></div>';
+      MaffsLock.fresh(fb);
+      try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+    } else {
+      fb.innerHTML = '<div class="fb wrong" data-why="shown"><div class="fb-head">Here is the working</div>' +
+        '<ol class="worked">' + W.map(function (l) { return '<li>' + line(l) + '</li>'; }).join('') + '</ol><div class="fb-next"></div></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    }
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('ask') });
+  }
+  function onShow() {
+    if (state !== 'asking' || tries < 2) return;
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    resolve(false);
+  }
+  function advance() {
+    if (state === 'moving') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    nextQuestion();
+  }
+
+  // Once per stage (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var board = 'stage-' + stage;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: board, score: score, questions_answered: marked, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board, score, marked).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, board, score);
+    var pbKey = 'cast_best_' + stage, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: board, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = 'Stage ' + stage + ' done';
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + PER + ' · ' + STAGES[stage].name;
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> right first time out of <b>' + marked + '</b>' + (pb ? '<br>New personal best' : '');
+    $('nextStageBtn').hidden = stage >= LAST;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (stage + 1);
+    show('results');
+  });
+
+  /* =====================================================================================================
+     WATCH ONE FIRST: the three walkthroughs, word for word from the contract (item 6). Each step lights part of the figures.
+     ===================================================================================================== */
+  var WALK = {
+    sin: {
+      title: 'Sine', fn: 'sin', m: 'half', sign: 1, kind: 'std', closed: false,
+      ask: 'Solve \\(\\sin x = 0.5\\) for \\(0^\\circ \\le x < 360^\\circ\\).',
+      steps: [
+        { text: 'Your calculator says \\(\\sin^{-1}(0.5) = 30^\\circ\\). That\'s one answer.', cast: { rays: [30] }, graph: { line: true, points: [30] } },
+        { text: 'But look at the graph: the line \\(y = 0.5\\) crosses the sine curve twice between \\(0^\\circ\\) and \\(360^\\circ\\).', cast: { rays: [30] }, graph: { line: true, points: 'sols', labels: false } },
+        { text: 'Sine is positive in the S and A quadrants — the first two.', cast: { lit: ['A', 'S'], rays: [30] }, graph: { line: true, points: 'sols', labels: false } },
+        { text: 'In the S quadrant the angle is \\(180^\\circ - 30^\\circ = 150^\\circ\\).', cast: { lit: ['A', 'S'], rays: 'sols' }, graph: { line: true, points: 'sols' } },
+        { text: 'Check the interval: \\(30^\\circ\\) and \\(150^\\circ\\) are both in it.', cast: { lit: ['A', 'S'], rays: 'sols' }, graph: { line: true, points: 'sols', ivEm: true } },
+        { text: '\\(x = 30^\\circ\\) or \\(x = 150^\\circ\\). Not one. Not infinity. Two.', cast: { lit: ['A', 'S'], rays: 'sols' }, graph: { line: true, points: 'sols' } }
+      ],
+      numbers: { alpha: 30, sols: [30, 150] }
+    },
+    cos: {
+      title: 'Cosine', fn: 'cos', m: '0.4', sign: -1, kind: 'non', closed: false,
+      ask: 'Solve \\(\\cos x = -0.4\\) for \\(0^\\circ \\le x < 360^\\circ\\), to 1 d.p.',
+      steps: [
+        { text: 'Start with the size: \\(\\cos^{-1}(0.4) = 66.4^\\circ\\). Call it \\(\\alpha\\).', cast: { alpha: 'alpha' }, graph: {} },
+        { text: 'The answer is negative, so cosine must be negative: the S and T quadrants.', cast: { lit: ['S', 'T'], alpha: 'alpha' }, graph: {} },
+        { text: 'In S: \\(180^\\circ - 66.4^\\circ = 113.6^\\circ\\).', cast: { lit: ['S', 'T'], alpha: 'alpha', rays: 'sol0' }, graph: {} },
+        { text: 'In T: \\(180^\\circ + 66.4^\\circ = 246.4^\\circ\\).', cast: { lit: ['S', 'T'], alpha: 'alpha', rays: 'sols' }, graph: {} },
+        { text: 'On the graph, \\(y = -0.4\\) crosses the cosine curve at exactly those two places.', cast: { lit: ['S', 'T'], rays: 'sols' }, graph: { line: true, points: 'sols' } },
+        { text: '\\(x = 113.6^\\circ\\) or \\(x = 246.4^\\circ\\).', cast: { lit: ['S', 'T'], rays: 'sols' }, graph: { line: true, points: 'sols' } }
+      ],
+      numbers: { alpha: 66.4, sols: [113.6, 246.4] }
+    },
+    tan: {
+      title: 'Tangent', fn: 'tan', m: 'one', sign: -1, kind: 'std', closed: true,
+      ask: 'Solve \\(\\tan x = -1\\) for \\(0^\\circ \\le x \\le 360^\\circ\\).',
+      steps: [
+        { text: 'Your calculator says \\(\\tan^{-1}(-1) = -45^\\circ\\). That\'s not in the interval — don\'t stop there.', cast: { calc: -45 }, graph: { ivEm: true } },
+        { text: 'Take the size: \\(\\alpha = 45^\\circ\\).', cast: { alpha: 'alpha' }, graph: {} },
+        { text: 'Tangent is negative in the S and C quadrants.', cast: { lit: ['S', 'C'], alpha: 'alpha' }, graph: {} },
+        { text: 'In S: \\(180^\\circ - 45^\\circ = 135^\\circ\\). In C: \\(360^\\circ - 45^\\circ = 315^\\circ\\).', cast: { lit: ['S', 'C'], alpha: 'alpha', rays: 'sols' }, graph: {} },
+        { text: 'The dashed lines at \\(90^\\circ\\) and \\(270^\\circ\\) are asymptotes: the graph never touches them, and it crosses \\(y = -1\\) once between each pair.', cast: { lit: ['S', 'C'], rays: 'sols' }, graph: { line: true, points: 'sols', asymEm: true } },
+        { text: '\\(x = 135^\\circ\\) or \\(x = 315^\\circ\\).', cast: { lit: ['S', 'C'], rays: 'sols' }, graph: { line: true, points: 'sols' } }
+      ],
+      numbers: { alpha: 45, sols: [135, 315] },
+      calcSays: -45
+    }
+  };
+  function walkQ(w) {
+    var entry = w.kind === 'non' ? w.m : (w.fn === 'tan' ? STD_T : STD_SC).filter(function (e) { return e.m === w.m; })[0];
+    return makeQ(0, value(w.fn, entry, w.sign, w.kind), w.closed);
+  }
+  var wt = null, wtStep = 0, wtQ = null;
+  function startWalk(fn) {
+    wt = WALK[fn]; wtStep = 0; wtQ = walkQ(wt);
+    $('wtLabel').textContent = 'Watch one first · ' + wt.title;
+    $('wtAsk').innerHTML = line(wt.ask);
+    show('example');
+    drawWalk();
+  }
+  function resolveRef(v) {
+    if (v === 'sols') return wtQ.sols;
+    if (v === 'sol0') return [wtQ.sols[0]];
+    if (v === 'alpha') return wtQ.alpha;
+    return v;
+  }
+  function drawWalk() {
+    var s = wt.steps[wtStep], c = {}, g = {}, k;
+    for (k in s.cast) c[k] = resolveRef(s.cast[k]);
+    for (k in s.graph) g[k] = resolveRef(s.graph[k]);
+    drawCast($('wtCast'), wtQ, c);
+    drawGraph($('wtGraph'), wtQ, g);
+    $('wtStep').innerHTML = line(s.text);
+    $('wtCount').textContent = 'Step ' + (wtStep + 1) + ' of ' + wt.steps.length;
+    $('wtNext').textContent = wtStep >= wt.steps.length - 1 ? 'Done: back to the stages' : 'Next →';
+    MaffsLock.fresh($('example'));
+  }
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startStage(parseInt(b.dataset.stage, 10)); });
+  $('watchBtns').addEventListener('click', function (e) { var b = e.target.closest('[data-watch]'); if (b) startWalk(b.dataset.watch); });
+  $('wtNext').addEventListener('click', function () {
+    if (wtStep >= wt.steps.length - 1) { state = 'menu'; show('menu'); return; }
+    wtStep++; drawWalk();
+  });
+  $('doneBtn').addEventListener('click', onDone);
+  $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) onOption(b); });
+  $('typeRow').addEventListener('submit', function (e) { e.preventDefault(); onCheck(false); });
+  $('noneBtn').addEventListener('click', function () { onCheck(true); });
+  $('showBtn').addEventListener('click', onShow);
+  $('graphFig').addEventListener('keydown', function (e) {
+    if (state !== 'asking' || stage !== 1 || step !== 0) return;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault(); cursor = Math.max(0, Math.min(360, cursor + (e.key === 'ArrowRight' ? 15 : -15)));
+      $('msg').textContent = 'At ' + cursor + '°. Press Enter to mark the nearest crossing.';
+    } else if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tapAt(cursor); }
+  });
+  $('nextStageBtn').addEventListener('click', function () { startStage(Math.min(stage + 1, LAST)); });
+  $('againBtn').addEventListener('click', function () { startStage(stage); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+  renderStatic();
+  band($('bandMenu'));
+
+  // Read-only views of the engine and live state, for scripts/verify-cast-away.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  window.CA = {
+    SLUG: SLUG, STAGES: STAGES, RULE: RULE, WALK: WALK, QUOTA: QUOTA,
+    pool: function (n) { return copy(pool(n)); },
+    session: function (n, seed) { return copy(session(n, seed)); },
+    mistakes: function (n, id) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? copy(mistakes(q)) : null; },
+    options: function (n, id, seed) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? copy(n === 1 ? options1(q, makeRng(seed || 1)) : options2(q, makeRng(seed || 1))) : null; },
+    markTyped: function (n, id, raws, none) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? copy(markTyped(q, raws, !!none)) : null; },
+    markTaps: function (n, id, t) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? copy(markTaps(q, t)) : null; },
+    markQuads: function (n, id, p) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? copy(markQuads(q, p)) : null; },
+    snaps: function (n, id) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? snaps(q) : null; },
+    working: function (n, id) { var q = pool(n).filter(function (x) { return x.id === id; })[0]; return q ? working(q) : null; },
+    walkQ: function (fn) { return copy(walkQ(WALK[fn])); },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      stage: function () { return stage; },
+      step: function () { return step; },
+      tries: function () { return tries; },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      calcMounted: function () { return !!calc; },
+      start: function (n) { startStage(n); },
+      walk: function (fn) { startWalk(fn); },
+      walkStep: function () { return wtStep; },
+      // One pool question on screen by itself (stage, id), so a verifier can see any question.
+      preview: function (n, id) {
+        var q = pool(n).filter(function (x) { return x.id === id; })[0];
+        MaffsLock.newSession(); stage = n; qs = [q]; qi = 0; score = 0; marked = 0; rightCount = 0;
+        stageBadge(); show('game'); $('hudStage').textContent = n; ev('game_started', { game_slug: SLUG, level: level, mode: 'stage-' + n }); nextQuestion();
+      },
+      tap: function (d) { tapAt(d); },
+      quad: function (Qd) { var e = $('castFig').querySelector('.quad[data-q="' + Qd + '"]'); if (e) e.dispatchEvent(new MouseEvent('click', { bubbles: true })); },
+      // Answer the question on screen: right (every step), or wrong (two wrong tries, then "Show me").
+      answer: function (right) {
+        if (state !== 'asking') return;
+        MaffsLock.fresh($('ansBlock'), 0);
+        if (right) {
+          if (stage === 1) { if (step === 0) { taps = []; Q.sols.forEach(function (s) { taps.push(s); }); redrawTaps(); $('doneBtn').click(); MaffsLock.fresh($('ansBlock'), 0); } pickRight(); return; }
+          if (stage === 2) { if (step === 0) { picked = Q.quads.slice(); redrawQuads(); $('doneBtn').click(); MaffsLock.fresh($('ansBlock'), 0); } pickRight(); return; }
+          if (Q.keys.length === 0) { $('noneBtn').click(); return; }
+          boxes().forEach(function (b, i) { b.value = i < Q.keys.length ? fmt(Q.keys[i], Q.whole) : ''; });
+          $('checkBtn').click();
+          return;
+        }
+        for (var n = 0; n < 2; n++) wrongTry();
+        MaffsLock.fresh($('ansBlock'), 0);
+        $('showBtn').click();
+      }
+    }
+  };
+  function pickRight() {
+    var b = $('opts').querySelector('.opt[data-val="' + (stage === 1 ? setId(Q.keys) : RULE[Q.fn][sideOf(Q.sign)].join('&')) + '"]');
+    if (b) b.click();
+  }
+  function wrongTry() {
+    MaffsLock.fresh($('ansBlock'), 0);
+    if (stage === 1 && step === 0) { taps = []; redrawTaps(); $('doneBtn').click(); return; }
+    if (stage === 2 && step === 0) { picked = []; redrawQuads(); $('doneBtn').click(); return; }
+    if (stage <= 2) { var w = $('opts').querySelector('.opt:not([data-val="' + (stage === 1 ? setId(Q.keys) : RULE[Q.fn][sideOf(Q.sign)].join('&')) + '"])'); if (w) w.click(); return; }
+    if (Q.keys.length === 0) { boxes()[0].value = '90'; boxes()[1].value = ''; boxes()[2].value = ''; $('checkBtn').click(); return; }
+    boxes().forEach(function (b, i) { b.value = i === 0 ? '400' : ''; });
+    $('checkBtn').click();
+  }
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'cast-away');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+</body>
+</html>
