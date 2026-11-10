@@ -16,6 +16,10 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-10 (home): HOME-DOCS-1110
+
+Claude Code (home lane), worktree `~/mg-home-docs-1110`, branch `claude/home-docs-1110`; contract `docs/handover/contracts/2026-11-10-home-docs-1110.md`. R1 and R2 match cloud.md's standing rules line for line. Canon §12 gains "MERGE-ROUTE and CLOSE-OUTS"; AGENTS.md's merge bullet gains the CLOUD-MERGE-TOKEN exception (151 bytes) and a close-outs bullet (245 bytes); seven todo rows added; PLAYTEST-S1 closed to todo-done.md. Cloud close-outs carried: none (#725's rides on CAST-AWAY-DIAGNOSE, the lane's next task). STOPPED before item 5: row 1.25 also holds the untracked `previous_score` dead-column finding (`docs/apps-script-endpoint.js:21`, `:59`), so closing it would lose that work. Next step: Jon's or Project Claude's ruling, then item 5, check-changed.py, push, PR.
+
 ## 2026-11-10 (home): PHONE-SCROLL
 
 Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane (Amendment 1, item 4). PR #721.

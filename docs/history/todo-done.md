@@ -668,6 +668,14 @@ Moved word for word from `docs/todo.md` §7, each with its closing note (contrac
 - **STANDING-STOP-RULES:** copy Jon's standing STOP IF rules (27 Oct; `docs/handover/contracts/2026-10-27-standing-stop-rules.md`) into AGENTS.md word for word. Parked by BACKLOG-ONE: AGENTS.md's "What may enter an always-loaded file" caps a new entry at 300 bytes, with its reasons in canon §12, and the ruling is about 1,250 bytes. Owner: Project Claude to rule; home lane. **Closed 9 Nov 2026 (DOCS-BUNDLE, Amendment 1):** recorded word for word as canon §0.3 SR-31, not in AGENTS.md; the file moved to `docs/history/contracts/2026-10-27-standing-stop-rules.md`.
 - **SR-NUMBERING:** cloud.md's Queue holds SWEEP-1's "SR-30" (Jon, 13 Oct: a CRITICAL level whose fix a standing ruling decides is fixed the same day in its own PR, no unlist), never recorded in canon; canon's SR-30 is a different ruling. It narrows SR-20. Goes with STANDING-STOP-RULES into canon §0.3 as one contract. BRANCH-CLEANUP Amendment 1, 8 Nov. Owner: Project Claude to contract; Jon confirms the SR-20 narrowing. **Closed 9 Nov 2026 (DOCS-BUNDLE, Amendment 1):** recorded as canon §0.3 SR-32 (Jon confirmed 9 Nov); SR-20's row reads "Exception: SR-32."; cloud.md's SWEEP-1 label now reads SR-32.
 
+## Closed by HOME-DOCS-1110 (Nov 2026)
+
+Moved word for word from `docs/todo.md` §1, each with its closing note (contract HOME-DOCS-1110, 10 Nov 2026).
+
+| # | Item | Owner |
+|---|---|---|
+| PLAYTEST-S1 | **Truth Will Set You Free: a "can be simplified" claim reported against `A · B`, not reproduced** (Jon's play-test, August 2026). Every `A · B`-shaped question has `bbLink: null`, which shows only the neutral "try Boolean Blitz" line. `docs/jon-playtest-2026-08.md`, section "Snagging", row S1. Recorded 9 Nov 2026 (DOCS-BUNDLE). Closed (Jon, 10 Nov 2026): no code route to the reported wording; the 19 questions with bbLink null show only the neutral line; all 13 bbLink simplifications checked by hand and correct, including :501 AB̄C̄ + AC = A(B̄ + C). | **Jon**: replay once, then close it or give the wording seen and the question |
+
 ## Done — full history
 
 ### Done 4 Oct 2026 (home, night: PRs #27–#29)
