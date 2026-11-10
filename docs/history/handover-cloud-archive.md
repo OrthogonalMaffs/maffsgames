@@ -6,6 +6,43 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-10 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-10 (cloud): CAST-AWAY-BUILD (`docs/history/contracts/2026-11-09-cast-away-build.md`, Medium, todo row CAST-AWAY)
+
+DONE, merged and live (unlisted): [#723](https://github.com/OrthogonalMaffs/maffsgames/pull/723), branch `claude/relaxed-tesla-8o84r1`, worktree the primary checkout. `gh auth status` failed at the start (GH_TOKEN invalid), so the merge took the standing route above. `games/cast-away/`: sin, cos and tan x = k on 0-360 with CAST and the graph, four stages and boards (pools 70, 244, 258, 290), named feedback, "Show me" after two wrong tries, the three walkthroughs word for word, the band on start and results only. `verify-cast-away.py` PASS: every key by an mpmath root search, every feedback rule fired, seven sizes and modes, 12 of 12 plants. Answer lock PASS; phone-fit PASS (asking only) in normal, Aa and laptop; stage exit OK. Registered unlisted; todo row closed to todo-done.md; no claim taken.
+
+Deviations for review (PR body): level key `level3` (the roster's L3), not `l3`; figures side by side on phones in Stages 3-4 and after answering; Stage 2 asks for the pair of forms; Stage 2 has no axis values; Stage 1 is 25 equations by value. Discoveries: the standing ruling names todo row CLOUD-MERGE-TOKEN, which does not exist; phone-fit's generic driver cannot get a question marked when it resolves only after two tries. Next: Jon lists it after his look (played 10 Nov; listing waits on his word).
+
+Project Claude review (10 Nov 2026): approved. 862 pool questions independently recomputed, 0 mismatches. Stage 1's 25 distinct equations accepted (the full standard exact-value set; the contract's '40+' was impossible); level key 'level3' accepted (matches scripts/roster-levels.json; the contract's 'l3' was wrong); Stage 2's 'which pair solves it?' accepted (works for negative k, where neither solution is α).
+
+Merged as 39df31b via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: `github.com` / `X Failed to log in to github.com using token (GH_TOKEN)` / `- Active account: true` / `- The token in GH_TOKEN is invalid.`, exit 1; output of `gh auth status` re-run 10 Nov before this push); main runs 42809397904 (check-site, 92 of 92 jobs) and 42809397779 (phone-fit-full) green.
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 1; amendments 0; usage n/a.
+
+## 2026-11-10 (cloud): #722 merge route
+
+RULING (Jon, Tue 10 Nov 2026, 07:40): one-off merge route for #722 only (docs-only close-out of #721).
+Merge through the GitHub connection after re-checking and reporting: (1) #722's Gate is green on its head b0a7e99, (2) it is mergeable with no conflicts, (3) main's newest full run is green and nothing newer has landed. If any fails, STOP. Squash-merge pinned to b0a7e99, "[skip ci]" disarmed as merge-pr.py does; watch main's run and report it. Record this ruling verbatim (in the next close-out, not a new PR). merge-pr.py remains the only standing route.
+
+#722 merged as 9fdfe7a (squash, pinned to b0a7e99); main's run 42776601366 recorded 07:48.
+
+## 2026-11-09 (cloud): FORGE-HINT-SPACES (`docs/history/contracts/2026-11-09-forge-hint-spaces.md`, Small, todo row FORGE-HINT-SPACES)
+
+Merged as f3d27d3 (main run 42658241563 green): [#718](https://github.com/OrthogonalMaffs/maffsgames/pull/718), branch `claude/festive-cori-ntxpzg`, worktree the primary checkout. formula-forge's 45 hint2 strings mark their maths with `\( \)` and render through `MaffsText.html()` (mathtext.js loaded); token check 45 of 45, no word, number or operation changed. B7 33 -> 0; `--write-ledger` removed exactly the 33 entries (no line field moved). Chromium, the game's own Hint buttons: 74 of 74 Hint 2 renders pass on the branch, main 34 of 45 hints fail. `check-banks.py --ci` OK. Findings r-001 and t4-004 fixed; todo row added and closed to todo-done.md; /updates/ line for Jon to confirm; claim taken (89da753) and released.
+
+Outside EXACT CHANGE, for review: `verify-formula-forge.py` read Hint 2 raw, so with the delimiters its equations failed to parse, the ValueError was swallowed and 32 dropped out unchecked (159 -> 127) under a PASS. It now removes the delimiters first (the same 159, identical digest) and has a planted fault for it (MISSED without the fix). Separate commit 97f5242, to drop if Project Claude prefers. Discoveries: `Substitute: A = ...` (L4 s4) set "Substitute:" in maths italic, which B7 cannot see (one word, no space to lose); fixed by the same convention. Next: review and Jon's "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-09 (cloud): HEADER-FIT (`docs/history/contracts/2026-11-09-header-fit.md`, Small, Amendment 1, todo row 1.39)
+
+Merged as 3929b1a (main run 42618722393 green): [#717](https://github.com/OrthogonalMaffs/maffsgames/pull/717), branch `claude/festive-lovelace-iukjhc`, worktree the primary checkout. First Gate green on da3d4fe (run 42605952691) with both of equation-builder's Aa buttons kept (STOP IF 1, both wired) and the titles cut short at 320px. Amendment 1 (Jon, 11:34, "yes to both"): equation-builder keeps the standard `a11yToggle`; the second button's cream palette and teal start title moved onto Aa mode, and its larger text too but above 480px only (on a phone, with OpenDyslexic, it put Next at 836 against an 804 fold at 390x844); its tighter letter spacing gave way to the standard's. All three: below 375px, and up to 480px in Aa mode, the back link is its arrow only (aria-label "Back to Games", 44x44), the divider hides, title and Aa share the first row and the pill and score take a row under them; the title shows in full at 320px (168px wide; two lines at a word break in Aa). measure-phone-fit (normal, Aa): no sideways scroll, every figure the same or better than main; tier 1 clean. Todo row 1.39 closed to todo-done.md; /updates/ line; the three claimed together and released.
+
+Discoveries: measure-phone-fit's `--aa` sets `mfg_accessible`, but probability-pioneer and shape-shifter (and like-terms-collector, by the same key) read only `mfg_dyslexia`, so their Aa mode is never measured; in it both headers overflowed at every size (489, 498 px on main). probability-pioneer in its own Aa mode still scrolls sideways (418 px) from `div.scale-label`, question content outside this contract. Next: review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 1; usage n/a.
+
+## Moved 2026-11-10 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-09 (cloud): SCREENING-ROOM-FIT (`docs/history/contracts/2026-11-09-screening-room-fit.md`, Medium, Amendment 1, todo row SCREENING-ROOM-FOLD)
 
 Merged as 0e27f06 (main run 42597611148 green): [#716](https://github.com/OrthogonalMaffs/maffsgames/pull/716), branch `claude/compassionate-cray-pek7mp` (restarted from main 46fea98 after #715 merged), worktree the primary checkout. First stopped before code: the 6 px floor rested on a wrong premise (the game ships 5 px and 3 px icons; 10,000 icons cannot reach 6 px in any layout). Amendment 1 (Jon, 08:46, "fix it simply"): `ICON_CAP` 10,000 -> 1,000, the largest allowed that fits; the grid class follows the icons drawn (50 / 250). Continue is above the fold on all 70 items at 1366x768 and 1280x720 (worst core_08 649 / 680; main 56 and 38 items over). `verify-screening-room.py` states the cap itself and plays every item at both sizes after a wrong gut check on the page clock (no 5 s race); selftest 23/23. measure-phone-fit, every mode: no size worse, Continue 95-245 px higher everywhere; no state entry stale. Todo row closed to todo-done.md; /updates/ line; claim taken and released.
