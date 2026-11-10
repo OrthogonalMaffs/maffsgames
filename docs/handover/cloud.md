@@ -106,37 +106,3 @@ Discoveries: measure-phone-fit's `--aa` sets `mfg_accessible`, but probability-p
 
 Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 1; usage n/a.
 
-## 2026-11-09 (cloud): SCREENING-ROOM-FIT (`docs/history/contracts/2026-11-09-screening-room-fit.md`, Medium, Amendment 1, todo row SCREENING-ROOM-FOLD)
-
-Merged as 0e27f06 (main run 42597611148 green): [#716](https://github.com/OrthogonalMaffs/maffsgames/pull/716), branch `claude/compassionate-cray-pek7mp` (restarted from main 46fea98 after #715 merged), worktree the primary checkout. First stopped before code: the 6 px floor rested on a wrong premise (the game ships 5 px and 3 px icons; 10,000 icons cannot reach 6 px in any layout). Amendment 1 (Jon, 08:46, "fix it simply"): `ICON_CAP` 10,000 -> 1,000, the largest allowed that fits; the grid class follows the icons drawn (50 / 250). Continue is above the fold on all 70 items at 1366x768 and 1280x720 (worst core_08 649 / 680; main 56 and 38 items over). `verify-screening-room.py` states the cap itself and plays every item at both sizes after a wrong gut check on the page clock (no 5 s race); selftest 23/23. measure-phone-fit, every mode: no size worse, Continue 95-245 px higher everywhere; no state entry stale. Todo row closed to todo-done.md; /updates/ line; claim taken and released.
-
-Discoveries: on the rarest conditions the true positives are now a sliver of one icon (alevel_19: 0.014 of an icon; 0.14 before), flagged for Jon's look. `check-banks.py --ci` cannot pass in this container (CDN unreachable: KaTeX undefined, banks not read). Next: review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
-
-Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-09 (cloud): SCREENING-ROOM-FOLD (`docs/handover/contracts/2026-11-09-screening-room-fold.md`, Small, todo row SCREENING-ROOM-FOLD)
-
-STOPPED (STOP IF: the fix needs a design change), at the Gate for Project Claude's review and Jon's "merge": [#715](https://github.com/OrthogonalMaffs/maffsgames/pull/715), branch `claude/compassionate-cray-pek7mp`, worktree the primary checkout. No game change. The measured "Next" is phase 2's Continue under the icon array after a wrong gut check, at 717/680 at 1280x720 (seeded question gcse_07; local and CI the same). It is real: Continue is below the fold for 17/20 GCSE questions at 1280x720 (up to 1013) and 14/20 at 1366x768, because everything but the grid takes 582 px and the grids are 75-467 px. Spacing would pass the seed only. The CI passes of 7 Nov were false: Continue appears at about 5.0 s and `settle()` stops at 5 s, so a slower page reads opacity 0 as "no Next" (both verdicts reproduced on one commit). That is how #707 took the 27 Oct entry off as STALE. Finding appended to the todo row; claim taken and released; #714's contract to history.
-
-Discoveries: the settle race is a checker defect (shared, home lane), not yet a todo row (outside this contract). `check-site.yml` has no phone-fit shard; only `phone-fit-full.yml` measures laptop mode. CI artifact zips are unreachable from this environment (blob host blocked); logs suffice. Next: Jon's ruling on the design (PR body, options a-e) and Project Claude's review; main's nightly laptop job stays red on screening-room until then.
-
-Record: agent Claude Code; wall 0:30 (contract 07:55 to hand-off); review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-09 (cloud): CLAIM-EXPLAIN-SPACES (`docs/handover/contracts/2026-11-09-claim-explain-spaces.md`, Small, todo §1.32)
-
-Merged as d37644b (main run 42558847352 green): [#714](https://github.com/OrthogonalMaffs/maffsgames/pull/714), branch `claude/amazing-mccarthy-y7q1nh`, worktree the primary checkout. test-the-claim's 15 `crExplanation` strings (B1-B5, B7, B10, B12, P1, P2, P4, P8-P10, P12) wrap their words in `\text{}`; call site unchanged. Played in Chromium through the game's own `checkStep3()`: 21 of 36 with spaces on main, 36 of 36 after. Verifier PASS, output byte-identical; its regexes find the same 57 probability and 57 comparison claims. Ledger: the 15 B7 entries removed, B7 pass. Findings: `test-the-claim-kw-001` (MEDIUM, fixed). §1.32 moved to todo-done.md; /updates/ line; claim taken and released in this PR.
-
-Discoveries: `--write-ledger` also refreshes stale `line` fields (B6 855 → 899 here, the same on untouched main); B6's old value was restored by hand so only the 15 entries change (DO NOT TOUCH). Ledger lines drift whenever a page is edited without a regen; `--ci` matches by id, so nothing fails. Next: review, then Jon's "merge"; the contract file moves to `docs/history/contracts/` after merge.
-
-Record: agent Claude Code; wall 0:25 (claim commit 03:19 UTC to the hand-off push; contract received shortly before); review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-07 (cloud): PHONE-FIT-FULL-WORKFLOW and PHONE-FIT-FULL-SPLIT (`docs/history/contracts/2026-11-07-phone-fit-full-workflow.md`, `...-split.md`, Shared, Amendment 1)
-
-DONE: #702 squash-merged as 023a821 and #707 as 0ec5cd4, both by `merge-pr.py` on Jon's "merge" (7 Nov); main runs 42395102273 and 42403456036 GREEN. `.github/workflows/phone-fit-full.yml` runs `measure-phone-fit.py` over every live game, one parallel job per mode (normal, Aa, laptop) plus a verdict job, nightly at 02:23 UTC, on `workflow_dispatch`, and after a push to main that `scripts/ci-deps.py` `is_shared()` calls shared: `classify()` not "known", a file two or more game pages load, or the checker's own files except `NOT_CHECKER_DEPS` (its output `docs/phone-fit-report.md` and the claim list `scripts/answer-lock-state.json`; Amendment 1). No `paths:` filter, no branch trigger; Plan's selection unchanged (`--explain` byte-identical).
-
-First run (42395102257, modes in series): red as PHONE-FIT-RED expected, about 30m42s, over the contract's 30 minutes: STOP. Jon ruled one job per mode plus a verdict job, and screening-room's stale laptop entry off `phone-fit-state.json` (#707). Run after #707 (42403456019): GREEN, no failing pairs; jobs normal 11m49s, aa 11m51s, laptop 8m26s, verdict 4 s; whole run about 12m13s.
-
-Discovery: run under `scripts/bg.py`, `merge-pr.py --watch` exited both times while main's run was in progress, without its final line; main's runs were read from GitHub instead. Cause not looked into.
-
-Record: agent Claude Code; wall 4:45 (14:26 to 19:10, including both waits for Jon's rulings and merges); review cycles 0; amendments 1; usage n/a.
-
