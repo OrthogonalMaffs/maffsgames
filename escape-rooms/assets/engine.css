@@ -162,7 +162,9 @@ input[type=range]::-moz-range-thumb{width:24px;height:24px;border-radius:50%;bac
 .room-card h3{font-size:16.5px;margin-bottom:4px}
 .room-card p{font-size:13.5px;color:var(--muted);line-height:1.55}
 .unlisted{background:var(--blue-dim);border:1px solid var(--blue);border-radius:10px;padding:12px 15px;font-size:13.5px;line-height:1.65;margin-bottom:16px}
-table.tt{width:100%;border-collapse:collapse;margin:10px 0 16px;font-size:14px}
+/* PHONE-SCROLL: a wide answer table scrolls inside its own box on a phone, never the page */
+.tt-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0 16px}
+table.tt{width:100%;border-collapse:collapse;margin:0;font-size:14px}
 table.tt th,table.tt td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}
 table.tt th{background:var(--surface-alt);font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
 table.tt code{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent)}

@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/docs-bundle, worktree ~/mg-docs-bundle. Contract: docs/handover/contracts/2026-11-09-docs-bundle.md. Entry below. MONEY-INPUT merged as #719 (b328883b).
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-3): PR #721 at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
+
+- DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
 - WHOSE-SIDE: the cloud lane owns the game until stage 5; timer-policy.md's line is `docs/todo.md` row WHOSE-SIDE-TIMER-LINE. DONE lines moved to docs/history/handover-home-archive.md, 8 Nov.
 
@@ -13,6 +15,22 @@
 - how-many-parts: `docs/todo.md` row HOW-MANY-PARTS-FRACTION (§3)
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-10 (home): PHONE-SCROLL
+
+Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane (Amendment 1, item 4). PR #721.
+
+Wide tables and display maths scroll in their own box on a 320px phone. `escape-rooms/assets/teacher.js` wraps its three `table.tt` in `div.tt-scroll` (`engine.css`: `overflow-x:auto`, the table's margin moved to the box). `parents/guide.js` wraps every guide table in `div.table-scroll` (margin moved likewise), and `parents/guide.css` scrolls `.katex-display` in its own line. Amendment 1: standard-form's 33-digit number breaks at its commas (`<wbr>`, line 120 only) and "weighs" became "has a mass of"; the 2px display padding removed. 20 `tier1_phone_overflow` entries removed: 14 teacher pages and six guides. Todo 1.37 and 1.38 closed to todo-done.md; 1.34 updated. Tables pixel-identical to main at 1366×768. /updates/ line added.
+
+Amendment 1 item 2 stopped: without padding, `overflow-y:hidden` cut one anti-aliased pixel row from a tall fraction on 9 of the 94 display blocks (13 guides × 2 widths); my earlier "nothing clipped" had covered 5 guides only. Amendment 2 (Project Claude, 06:50) reversed it: `.katex-display` gets `padding:2px 0`, and 0 of 94 blocks lose ink against main (+4px per display line).
+
+Amendment 3: `scripts/verify-parent-guides.py:621`'s locator pinned the old wording ("weighs about"), so the Gate failed its SF check; the regex now reads "has a mass of about", nothing else changed. 353 checks, 0 failed; its ARITH check runs and passes (5,970,000,000,000,000,000,000,000 = 5.97 × 10^24). The script has no selftest; two faults planted in a scratch copy were caught (a wrong power, FAIL ARITH; the old wording, FAIL FOUND).
+
+Discoveries: `scripts/test-escape-rating.py` still hides `table.tt` at 320px, no longer needed (not touched: outside EXACT CHANGE).
+
+Next: Gate green, then Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 3; usage n/a.
 
 ## 2026-11-09 (home): DOCS-BUNDLE
 

@@ -618,7 +618,7 @@ def standard_form():
     if m:
         a, e, b, f, c, g = (int(x) for x in m.groups())
         check("SF", "ARITH", a * b == c and e + f == g, "(%d × 10^%d)(%d × 10^%d) = %d × 10^%d" % (a, e, b, f, c, g))
-    m = find("SF", slug, r"weighs about ([\d,]+) kg.*?Answer: (\d+\.\d+) × 10\^\(?(\d+)\)? kg", "the Earth's mass")
+    m = find("SF", slug, r"has a mass of about ([\d,]+) kg.*?Answer: (\d+\.\d+) × 10\^\(?(\d+)\)? kg", "the Earth's mass")
     if m:
         check("SF", "ARITH", n(m.group(1)) == n(m.group(2)) * F(10) ** int(m.group(3)), "%s = %s × 10^%s" % m.groups())
     says("SF-2", slug, present=["This usually loses marks."], absent=["This loses marks every time."])
