@@ -317,6 +317,7 @@ see the START block's NEXT line. | **Code Claude**, batch by batch; **Jon** rule
 | CLAIM-WALKTHROUGH | **Test the Claim: an optional, very clearly shown "Watch one first" worked example per mode** (one idea per screen, the student's Next, unscored); step feedback naming the actual mistake; "Show me" after two wrong tries. Jon, 9 Nov 2026 (DOCS-BUNDLE). | Project Claude writes the scripts for Jon's approval before the build; then cloud lane |
 | FORGE-SUBJECT-PROMPT | **Formula Forge: the subject letter in "Make … the subject" much more prominent**, and a start-screen line "Powers and Multi: have paper handy". Jon, 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | FAKE-BAG | **Idea: "Is That a Fake Bag?"** ("a sim tote…" = asymptote), reserved for a future graph-sketching / asymptotes game. Not scheduled. Jon, 9 Nov 2026 (DOCS-BUNDLE). | **Jon** (idea) |
+| CAST-AWAY | **CAST Away (new build, unlisted): solving sin x = k, cos x = k, tan x = k in 0–360° with CAST and the graphs, for Level 3 and A-Level** (contract CAST-AWAY-BUILD, Project Claude 9 Nov 2026; `docs/handover/contracts/2026-11-09-cast-away-build.md`). Jon's four Level 3 classes are on this unit now. Four stages, each its own board; "Watch one first" walkthroughs; `scripts/verify-cast-away.py` in CI. In progress on the cloud lane (10 Nov 2026). | Cloud lane: the build; **Jon**: his look, then listing |
 
 ### 3.9 — Phone fit order (Jon, 1 Oct 2026)
 

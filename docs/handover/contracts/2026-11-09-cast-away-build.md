@@ -1,0 +1,50 @@
+# CAST-AWAY-BUILD (Project Claude, 9 Nov 2026, 18:40), verbatim; received by the cloud lane 10 Nov 2026 with Project Claude's preamble of 08:05 (below the contract, verbatim)
+
+CAST-AWAY-BUILD (Project Claude, 9 Nov 18:40)
+LANE: cloud (Claude Code web) · TIER: Medium (new game) · CONTRACT: CAST-AWAY-BUILD · branch from current origin/main. No other lane is running (check: no open PR from another lane; if one is open, STOP). Stop at a green Gate for Project Claude's review and Jon's look and "merge"; do not merge. Not a draft. Save this contract verbatim in docs/handover/contracts/ in the first commit, plus a todo row CAST-AWAY (closed by this PR). In the same first commit: cloud.md's FORGE-HINT-SPACES entry → "merged as f3d27d3 (main run 42658241563 green)"; move any merged contract still in docs/handover/contracts/ to docs/history/contracts/ (list them).
+
+TASK: Build CAST Away, a new unlisted game for Level 3 (and A-Level): solving sin x = k, cos x = k, tan x = k in 0–360° with CAST and the graphs, to the approved spec below.
+ROOT CAUSE: No game covers solving trig equations in an interval (the roster's trig games cover SOHCAHTOA aiming, exact values and side labels). Jon's four Level 3 classes are on this unit now, test in 3–5 weeks.
+CLASS CHECK: New build, not a bug fix. It must use the shared layers rather than re-invent them: MaffsAnswer (decimal/exact, format message), MaffsLock/next-control, MaffsScroll, MaffsLevel, the leaderboard, analytics, the standard start mount, Aa toggle (standard mfg_accessible key), calculator asset, stage-exit link. Any need the shared layer cannot meet: STOP and report, do not fork it.
+EXACT CHANGE:
+1. games/cast-away/index.html, single file, KaTeX for maths. Title "CAST Away"; start-screen tagline (exact): "Your calculator says one. The graph says infinity. Make up your mind: it's two." Levels: L3 (key l3) and A-Level, theme dark (canon §7.5.1). Calculator allowed.
+2. Character: on the start and results screens only, three small graphs scrolling slowly left to right in a band: sin on the left, tan in the middle (dashed asymptotes), cos on the right. Static under prefers-reduced-motion. No motion during questions. Not decoration that pushes Next below the fold on any phone or laptop size.
+3. The maths, generated in-page from the spec's pools (sin/cos/tan; standard and non-standard k; both interval forms 0≤x<360 and 0≤x≤360; special cases k = 0, ±1, |k|>1). Method everywhere: α = inverse of |k|, then CAST — sin: α, 180−α (k>0) / 180+α, 360−α (k<0); cos: α, 360−α / 180−α, 180+α; tan: α, 180+α / 180−α, 360−α; filter to the interval.
+4. Four stages, each its own leaderboard (SR-22), 10 per session, 40+ distinct questions per stage: (1) Read it off — graph with y = k, tap every crossing (snaps), then pick the angles; standard k only. (2) Where does it live? — tap the quadrant(s) on CAST, then pick the second angle's form. (3) The second angle — α given "from your calculator", type every solution. (4) Solve it — type every solution, any order, 1 d.p. where not whole; "No solutions" button for |k| > 1.
+5. Every question: CAST diagram and graph side by side (stacked on phones), both lit with the solutions after answering. Feedback names the mistake: missed a solution; sin's rule used for cos (or any wrong function's rule); the calculator's negative angle kept; 360 included when the interval says < 360; a value out of range; and the format message for right-value-wrong-precision. "Show me" after two wrong tries on a question: full working, waits on Next. Marking via MaffsAnswer.decimal(raw, key, 1) / MaffsAnswer.exact; answer sets order-free; dataset.val for any tapped choice.
+6. "Watch one first": a clearly visible button on the start screen (optional; not auto-run). One idea per screen, student's Next, unscored, no timer, graph and CAST lit step by step. Scripts (exact text; KaTeX for maths):
+   SINE — Solve sin x = 0.5 for 0° ≤ x < 360°.
+   1 "Your calculator says sin⁻¹(0.5) = 30°. That's one answer." 2 "But look at the graph: the line y = 0.5 crosses the sine curve twice between 0° and 360°." 3 "Sine is positive in the S and A quadrants — the first two." 4 "In the S quadrant the angle is 180° − 30° = 150°." 5 "Check the interval: 30° and 150° are both in it." 6 "x = 30° or x = 150°. Not one. Not infinity. Two."
+   COSINE — Solve cos x = −0.4 for 0° ≤ x < 360°, to 1 d.p.
+   1 "Start with the size: cos⁻¹(0.4) = 66.4°. Call it α." 2 "The answer is negative, so cosine must be negative: the S and T quadrants." 3 "In S: 180° − 66.4° = 113.6°." 4 "In T: 180° + 66.4° = 246.4°." 5 "On the graph, y = −0.4 crosses the cosine curve at exactly those two places." 6 "x = 113.6° or x = 246.4°."
+   TANGENT — Solve tan x = −1 for 0° ≤ x ≤ 360°.
+   1 "Your calculator says tan⁻¹(−1) = −45°. That's not in the interval — don't stop there." 2 "Take the size: α = 45°." 3 "Tangent is negative in the S and C quadrants." 4 "In S: 180° − 45° = 135°. In C: 360° − 45° = 315°." 5 "The dashed lines at 90° and 270° are asymptotes: the graph never touches them, and it crosses y = −1 once between each pair." 6 "x = 135° or x = 315°."
+7. scripts/verify-cast-away.py (cloud owns it): recompute every question's solution set independently in Python (degrees, stated interval, endpoints, 1 d.p. half-up), check keys match exactly, every distractor is wrong, every stage-1 crossing lies on the curve, every feedback rule fires on a planted mistake, and the three walkthroughs' numbers (30/150; 66.4/113.6/246.4; −45/135/315) are right. Wire it into CI like other verifiers; selftest plants included.
+8. Registration as unlisted: roster row (L3, A-Level; Look awaiting Jon), leaderboard level labels, answer-lock and phone-fit coverage, timer policy entry; NOT listed on the portal, sitemap, Essentials or /updates/ (Jon lists it after his look).
+9. Proof in the PR body: screenshots at 375×667 and 1366×768 of the start screen (character band), one question per stage after answering, and one walkthrough screen per function; the verifier's counts; answer-lock and phone-fit green for cast-away in normal, Aa and laptop modes.
+10. Release any claim; close-out entry in docs/handover/cloud.md.
+DO NOT TOUCH: schools/assets/ (use, do not edit); any other game; Gate files and workflows; canon; AGENTS.md and docs/rules/; the portal, sitemap, Essentials, /updates/; other todo rows; home.md.
+SUCCESS CONDITION: cast-away playable at all four stages, 40+ questions each, every key verified independently in CI; walkthroughs present with the exact scripts; character band on start/results only and static under reduced motion; Next above the fold at every phone and laptop size; unlisted; Gate green; stopped for Project Claude's review and Jon's look.
+STOP IF: another lane is running; a shared asset would need editing; any spec rule (method, interval, special case) is ambiguous for a generated question (report the case); a walkthrough number disagrees with the verifier; the character band cannot fit without pushing Next below the fold (report sizes; drop it to results only rather than shrink the question area).
+
+---
+
+## Preamble (Project Claude, Tue 10 Nov 2026, 08:05), verbatim
+
+PREAMBLE for this session (Project Claude, Tue 10 Nov 2026, 08:05). Read before the contract that follows.
+
+1. STANDING RULING (Jon, Tue 10 Nov 2026, approved 07:58): merge route when merge-pr.py cannot authenticate.
+Applies to any session, either lane, in which `gh auth status` fails (record its output in the report). It changes the ROUTE only, never the authorisation: a PR still merges only when its contract allows it (Jon's "merge", or a standing authorisation already in force).
+Before merging, the session itself checks and reports what merge-pr.py would: (1) the PR's Gate is green on its current head SHA; (2) the PR is mergeable with no conflicts; (3) main's newest full run is green, and nothing has landed on main since that run other than the bot's own "[skip ci]" record commits (timings, answer counts, REGISTER.md), with no run on main queued or in progress. Any failure: STOP.
+Then squash-merge through the GitHub connection pinned to that head SHA (refuse if it has moved), with the message as merge-pr.py would write it (the PR body, any "[skip ci]" disarmed to "(skip ci)"); watch main's run on the merge commit and report its result, as merge-pr.py --watch would.
+Record each use in the PR's close-out: "Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: <output>)".
+merge-pr.py remains the first route wherever it authenticates. This ruling expires when todo row CLOUD-MERGE-TOKEN closes, or on Tue 24 Nov 2026, whichever is first. Record it verbatim in docs/handover/cloud.md's standing rules in this contract's first commit.
+
+2. RECORD OWED from the previous session: add to docs/handover/cloud.md, in this contract's first commit, under a dated line "#722 merge route", this ruling verbatim:
+RULING (Jon, Tue 10 Nov 2026, 07:40): one-off merge route for #722 only (docs-only close-out of #721).
+Merge through the GitHub connection after re-checking and reporting: (1) #722's Gate is green on its head b0a7e99, (2) it is mergeable with no conflicts, (3) main's newest full run is green and nothing newer has landed. If any fails, STOP. Squash-merge pinned to b0a7e99, "[skip ci]" disarmed as merge-pr.py does; watch main's run and report it. Record this ruling verbatim (in the next close-out, not a new PR). merge-pr.py remains the only standing route.
+Followed by: "#722 merged as 9fdfe7a (squash, pinned to b0a7e99); main's run 42776601366 recorded 07:48."
+
+3. Contract notes: the contract's "check: no open PR from another lane" is satisfied as of 08:05 (#721 and #722 both merged; main green on 9fdfe7a). Its first-commit housekeeping still applies: move every merged contract still in docs/handover/contracts/ (2026-11-09-docs-bundle.md at least) to docs/history/contracts/. Run `gh auth status` at the start and report it, so a broken token is known before the end.
+
+Then: the contract below.
