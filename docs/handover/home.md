@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55): in progress on branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Files in use: escape-rooms/assets/teacher.js and engine.css, parents/guide.css and guide.js, scripts/checker-allowlist.json. Contract: docs/handover/contracts/2026-11-10-phone-scroll.md.
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55): PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
 
 - DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
@@ -15,6 +15,16 @@
 - how-many-parts: `docs/todo.md` row HOW-MANY-PARTS-FRACTION (§3)
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
+
+## 2026-11-10 (home): PHONE-SCROLL
+
+Wide tables and display maths scroll in their own box on a 320px phone. `escape-rooms/assets/teacher.js` wraps its three `table.tt` in `div.tt-scroll` (`engine.css`: `overflow-x:auto`, the table's margin moved to the box). `parents/guide.js` wraps every guide table in `div.table-scroll` (margin moved likewise), and `parents/guide.css` scrolls `.katex-display` in its own line. 19 `tier1_phone_overflow` entries removed: 14 teacher pages, `fractions`, and the four display-maths guides. Todo 1.37 and 1.38 closed to todo-done.md; 1.34 updated. At 1366×768 the tables are pixel-identical to main; each display line is 2px taller (the contract's `padding-bottom:2px`). /updates/ line added.
+
+Discoveries: `standard-form` still measures 326px in this container: its table fits, but the prose number "5,970,000,000,000,000,000,000,000 kg" in its Conversation starter cannot wrap. Not a table and not maths, so its entry stays (row 1.34), for a ruling. No inline maths widens any page. `scripts/test-escape-rating.py` still hides `table.tt` at 320px, which is no longer needed (not touched: outside EXACT CHANGE).
+
+Next: Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-09 (home): DOCS-BUNDLE
 
