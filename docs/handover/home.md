@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-3): PR #721 at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-3): merged as a594c8f (#721) under Jon's one-off ruling of 10 Nov 07:05; main run 42772678182 pending. Entry below.
 
 - DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
@@ -28,7 +28,12 @@ Amendment 3: `scripts/verify-parent-guides.py:621`'s locator pinned the old word
 
 Discoveries: `scripts/test-escape-rating.py` still hides `table.tt` at 320px, no longer needed (not touched: outside EXACT CHANGE).
 
-Next: Gate green, then Project Claude's review and Jon's "merge".
+Merged as a594c8f (#721), squash pinned to 8e5e1e7, through the GitHub connection under Jon's one-off ruling below (merge-pr.py could not run: this container's GH_TOKEN is invalid). Re-checked first, as the ruling asks: the Gate on 8e5e1e7 green (89 jobs: 87 success, 2 skipped); mergeable, no conflicts; main's newest merge 10d3167's run 42691430373 green (89/89 jobs), nothing newer on main but the bot's c8ac737, no run on main queued or in progress. No skip marker in the title or body. The squash message was a condensed form of the PR body with the ruling noted, not the body verbatim as merge-pr.py would send. Main's run on a594c8f: check-site 42772678182, pending at the time of writing. Contract moved to `docs/history/contracts/`. Cleanup: end-task.py always refuses in a cloud session (cloud.md); GitHub deleted the merged branch.
+
+The ruling, verbatim:
+
+> RULING (Jon, Tue 10 Nov 2026, 07:05): one-off merge route for #721 only.
+> merge-pr.py cannot run in this container (GH_TOKEN invalid). For #721 only, merge through the GitHub connection: first re-check and report (1) the Gate on 8e5e1e7 is green, (2) the PR is mergeable with no conflicts, (3) main's newest full run is green and no newer commit has landed on main since; if any fails, STOP. Squash-merge pinned to head SHA 8e5e1e7 (refuse if the head has moved), with any "[skip ci]" in the message disarmed as merge-pr.py does. Then watch main's run on the merge commit and report its result. Record this ruling verbatim in the close-out entry. merge-pr.py remains the only standing route; this ruling covers #721 and nothing else.
 
 Record: agent Claude Code; wall n/a; review cycles 0; amendments 3; usage n/a.
 
