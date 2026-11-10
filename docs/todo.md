@@ -46,7 +46,7 @@ This file's old START block (last updated 6 Oct 2026) is in `docs/history/todo-d
 
 ## 1. Live bugs and false claims
 
-Done rows moved word for word to `docs/history/todo-done.md` ("Done rows from §1 and §3", 10 Oct 2026, TODO-SLIM); their numbers still resolve there: 1.3, 1.6, 1.7, 1.9, 1.10, 1.13, 1.15, 1.18, 1.19, 1.20, 1.21, 1.22, 1.28, 1.29, 1.31, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.49, 1.50, 1.55, 1.57, 3.13. Closed by LIVE-BUG-RECHECK (8 Nov 2026), under that heading there: 1.8, 1.24, 1.30, 1.40. Closed by fix PRs (Nov 2026), under that heading there: 1.32, FORGE-HINT-SPACES, 1.37, 1.38.
+Done rows moved word for word to `docs/history/todo-done.md` ("Done rows from §1 and §3", 10 Oct 2026, TODO-SLIM); their numbers still resolve there: 1.3, 1.6, 1.7, 1.9, 1.10, 1.13, 1.15, 1.18, 1.19, 1.20, 1.21, 1.22, 1.28, 1.29, 1.31, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.49, 1.50, 1.55, 1.57, 3.13. Closed by LIVE-BUG-RECHECK (8 Nov 2026), under that heading there: 1.8, 1.24, 1.30, 1.40. Closed by fix PRs (Nov 2026), under that heading there: 1.32, FORGE-HINT-SPACES, 1.37, 1.38, CAST-AWAY (from §3).
 
 | # | Item | Owner |
 |---|---|---|

@@ -172,7 +172,9 @@ const NOT_ON_HUB = {
   // New (contract AS-YOU-CAN-SEE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'as-you-can-see': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract POSSIBLY-MAYBE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing'
+  'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing',
+  // New (contract CAST-AWAY-BUILD, 10 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
+  'cast-away': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
 // The levels a game submits under are read from its source: the level argument of
@@ -199,7 +201,8 @@ const LEVEL_OVERRIDES = {
   'who-ate-all-the-pies': [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = boardOf(stage): one board a stage, stage-1..stage-5 (the stage-5 label already exists in firebase-leaderboard.js; contract WHO-ATE-ALL-THE-PIES, 27 Oct 2026)"],
   'its-on-sale':          [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = 'stage-' + stage: one board per stage, stage-1..stage-5 (every key already has a label; contract ITS-ON-SALE, 27 Oct 2026)"],
   'as-you-can-see':       [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = boardOf(stage): one board a stage, stage-1..stage-5 (contract AS-YOU-CAN-SEE, 27 Oct 2026)"],
-  'possibly-maybe':       [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = 'stage-' + stage: one board a stage, stage-1..stage-5 (every key already has a label; contract POSSIBLY-MAYBE, 27 Oct 2026)"]
+  'possibly-maybe':       [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board = 'stage-' + stage: one board a stage, stage-1..stage-5 (every key already has a label; contract POSSIBLY-MAYBE, 27 Oct 2026)"],
+  'cast-away':            [['stage-1', 'stage-2', 'stage-3', 'stage-4'], "board = 'stage-' + stage: one board per stage, stage-1..stage-4 (every key already has a label; contract CAST-AWAY-BUILD, 10 Nov 2026)"]
 };
 
 // Games that may submit only under keys ending '-tournament' (SR-22): the level argument of every submitScore()

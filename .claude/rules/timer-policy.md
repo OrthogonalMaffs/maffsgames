@@ -27,7 +27,8 @@ section. Both show a timer now, and Trig Identity Duel's feeds the score: those 
 ## No Timer
 Interactive/exploratory/reasoning games.
 
-Games: **Unit Converter** (moved from Hidden Count-Up 9 Oct 2026: since #196 it shows, logs and scores no clock;
+Games: **CAST Away** (added 10 Nov 2026, contract CAST-AWAY-BUILD: no clock shown, logged or scored; a point for each
+question right first time; its "Watch one first" walkthroughs are unscored and untimed), **Unit Converter** (moved from Hidden Count-Up 9 Oct 2026: since #196 it shows, logs and scores no clock;
 score on correct answers only, Jon 8 Oct), **Estimation Engine** (countdown removed in its SR-12 rebuild, 5 Oct 2026, Jon's contract: no timer;
 two marks a question, round then estimate), **Index Laws** (countdown removed 22 Sep 2026 — Jon: students use it in class and do not
 need the pressure. It had been running a 7s countdown that failed the question outright, despite

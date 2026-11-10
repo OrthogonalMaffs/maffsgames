@@ -1,0 +1,11 @@
+# Findings register for cast-away (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract CAST-AWAY-BUILD, 10 Nov 2026; SR-30: checked from its first PR by scripts/verify-cast-away.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: cast-away
+audited:
+  tranche: none (not yet audited)
+  head: 2382aaab
+  date: 2026-11-10
+  served: {}
+findings: []

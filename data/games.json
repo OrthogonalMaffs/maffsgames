@@ -1877,6 +1877,24 @@
     "ks3",
     "foundation"
    ]
+  },
+  {
+   "slug": "cast-away",
+   "search_phrase": "Solving Trig Equations",
+   "description": "Solve sin x = k, cos x = k and tan x = k from 0° to 360° with CAST and the graphs, finding every solution.",
+   "keywords": [
+    "solving trig equations",
+    "trigonometric equations",
+    "cast diagram",
+    "cast rule",
+    "quadrants",
+    "sin x = k",
+    "inverse sine",
+    "solutions in an interval",
+    "trig graphs",
+    "a level",
+    "level 3"
+   ]
   }
  ],
  "rooms": [

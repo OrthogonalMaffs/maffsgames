@@ -63,9 +63,36 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-## 2026-11-09 (cloud): FORGE-HINT-SPACES (`docs/handover/contracts/2026-11-09-forge-hint-spaces.md`, Small, todo row FORGE-HINT-SPACES)
+**Standing ruling, merge route (Jon, 10 Nov 2026, 07:58; recorded verbatim, contract CAST-AWAY-BUILD's first commit):**
+> STANDING RULING (Jon, Tue 10 Nov 2026, approved 07:58): merge route when merge-pr.py cannot authenticate.
+> Applies to any session, either lane, in which `gh auth status` fails (record its output in the report). It changes the ROUTE only, never the authorisation: a PR still merges only when its contract allows it (Jon's "merge", or a standing authorisation already in force).
+> Before merging, the session itself checks and reports what merge-pr.py would: (1) the PR's Gate is green on its current head SHA; (2) the PR is mergeable with no conflicts; (3) main's newest full run is green, and nothing has landed on main since that run other than the bot's own "[skip ci]" record commits (timings, answer counts, REGISTER.md), with no run on main queued or in progress. Any failure: STOP.
+> Then squash-merge through the GitHub connection pinned to that head SHA (refuse if it has moved), with the message as merge-pr.py would write it (the PR body, any "[skip ci]" disarmed to "(skip ci)"); watch main's run on the merge commit and report its result, as merge-pr.py --watch would.
+> Record each use in the PR's close-out: "Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: <output>)".
+> merge-pr.py remains the first route wherever it authenticates. This ruling expires when todo row CLOUD-MERGE-TOKEN closes, or on Tue 24 Nov 2026, whichever is first. Record it verbatim in docs/handover/cloud.md's standing rules in this contract's first commit.
 
-At the Gate, holding for Project Claude's review and Jon's "merge" (contract: do not merge): [#718](https://github.com/OrthogonalMaffs/maffsgames/pull/718), branch `claude/festive-cori-ntxpzg`, worktree the primary checkout. formula-forge's 45 hint2 strings mark their maths with `\( \)` and render through `MaffsText.html()` (mathtext.js loaded); token check 45 of 45, no word, number or operation changed. B7 33 -> 0; `--write-ledger` removed exactly the 33 entries (no line field moved). Chromium, the game's own Hint buttons: 74 of 74 Hint 2 renders pass on the branch, main 34 of 45 hints fail. `check-banks.py --ci` OK. Findings r-001 and t4-004 fixed; todo row added and closed to todo-done.md; /updates/ line for Jon to confirm; claim taken (89da753) and released.
+## 2026-11-10 (cloud): CAST-AWAY-BUILD (`docs/handover/contracts/2026-11-09-cast-away-build.md`, Medium, todo row CAST-AWAY)
+
+At the Gate, approved by Project Claude, holding for Jon's look and "merge" (contract: do not merge): [#723](https://github.com/OrthogonalMaffs/maffsgames/pull/723), branch `claude/relaxed-tesla-8o84r1`, worktree the primary checkout. `gh auth status` failed at the start (GH_TOKEN invalid), so a later merge takes the standing route above. `games/cast-away/`: sin, cos and tan x = k on 0-360 with CAST and the graph, four stages and boards (pools 70, 244, 258, 290), named feedback, "Show me" after two wrong tries, the three walkthroughs word for word, the band on start and results only. `verify-cast-away.py` PASS: every key by an mpmath root search, every feedback rule fired, seven sizes and modes, 12 of 12 plants. Answer lock PASS; phone-fit PASS (asking only) in normal, Aa and laptop; stage exit OK. Registered unlisted; todo row closed to todo-done.md; no claim taken.
+
+Deviations for review (PR body): level key `level3` (the roster's L3), not `l3`; figures side by side on phones in Stages 3-4 and after answering; Stage 2 asks for the pair of forms; Stage 2 has no axis values; Stage 1 is 25 equations by value. Discoveries: the standing ruling names todo row CLOUD-MERGE-TOKEN, which does not exist; phone-fit's generic driver cannot get a question marked when it resolves only after two tries. Next: the Gate, review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Project Claude review (10 Nov 2026): approved. 862 pool questions independently recomputed, 0 mismatches. Stage 1's 25 distinct equations accepted (the full standard exact-value set; the contract's '40+' was impossible); level key 'level3' accepted (matches scripts/roster-levels.json; the contract's 'l3' was wrong); Stage 2's 'which pair solves it?' accepted (works for negative k, where neither solution is α).
+
+Merge route: to be merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: `github.com` / `X Failed to log in to github.com using token (GH_TOKEN)` / `- Active account: true` / `- The token in GH_TOKEN is invalid.`, exit 1; output of `gh auth status` re-run 10 Nov before this push).
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 1; amendments 0; usage n/a.
+
+## 2026-11-10 (cloud): #722 merge route
+
+RULING (Jon, Tue 10 Nov 2026, 07:40): one-off merge route for #722 only (docs-only close-out of #721).
+Merge through the GitHub connection after re-checking and reporting: (1) #722's Gate is green on its head b0a7e99, (2) it is mergeable with no conflicts, (3) main's newest full run is green and nothing newer has landed. If any fails, STOP. Squash-merge pinned to b0a7e99, "[skip ci]" disarmed as merge-pr.py does; watch main's run and report it. Record this ruling verbatim (in the next close-out, not a new PR). merge-pr.py remains the only standing route.
+
+#722 merged as 9fdfe7a (squash, pinned to b0a7e99); main's run 42776601366 recorded 07:48.
+
+## 2026-11-09 (cloud): FORGE-HINT-SPACES (`docs/history/contracts/2026-11-09-forge-hint-spaces.md`, Small, todo row FORGE-HINT-SPACES)
+
+Merged as f3d27d3 (main run 42658241563 green): [#718](https://github.com/OrthogonalMaffs/maffsgames/pull/718), branch `claude/festive-cori-ntxpzg`, worktree the primary checkout. formula-forge's 45 hint2 strings mark their maths with `\( \)` and render through `MaffsText.html()` (mathtext.js loaded); token check 45 of 45, no word, number or operation changed. B7 33 -> 0; `--write-ledger` removed exactly the 33 entries (no line field moved). Chromium, the game's own Hint buttons: 74 of 74 Hint 2 renders pass on the branch, main 34 of 45 hints fail. `check-banks.py --ci` OK. Findings r-001 and t4-004 fixed; todo row added and closed to todo-done.md; /updates/ line for Jon to confirm; claim taken (89da753) and released.
 
 Outside EXACT CHANGE, for review: `verify-formula-forge.py` read Hint 2 raw, so with the delimiters its equations failed to parse, the ValueError was swallowed and 32 dropped out unchecked (159 -> 127) under a PASS. It now removes the delimiters first (the same 159, identical digest) and has a planted fault for it (MISSED without the fix). Separate commit 97f5242, to drop if Project Claude prefers. Discoveries: `Substitute: A = ...` (L4 s4) set "Substitute:" in maths italic, which B7 cannot see (one word, no space to lose); fixed by the same convention. Next: review and Jon's "merge"; the contract file moves to `docs/history/contracts/` after merge.
 
