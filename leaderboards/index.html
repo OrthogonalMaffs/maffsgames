@@ -181,10 +181,10 @@ var GAMES = [
   ['estimation-golf','Estimation Golf',['year6','ks3','gcse','alevel','level4']],
   ['estimation-engine','Estimation Engine',['gcse']],
   ['factor-race','Factor Race',['year6','ks3']],
-  ['prime-factorisation','Prime Sprint',['year6','ks3','gcse']],
+  ['prime-factorisation','Prime Sprint',['year6','all']],
   ['prime-or-composite','Prime or Composite',['all']],
-  ['percentage-flip','Percentage Flip',['year6','ks3','gcse']],
-  ['fraction-equivalence','Fraction Snap',['year6','ks3','gcse']],
+  ['percentage-flip','Percentage Flip',['year6','all']],
+  ['fraction-equivalence','Fraction Snap',['year6','all']],
   ['equatle','Equatle',['all']],
   ['52dle','52-dle',['all']],
   ['split-it','Split It',['ks3','gcse']],
@@ -404,8 +404,10 @@ function buildCard(game){
   card.dataset.slug = game.slug;
   card.dataset.name = game.name.toLowerCase();
 
+  /* levelLabel('all') is '' on purpose (a one-board game shows no level); a pill
+     needs words, so the 'all' board of a game that also has others is "All levels". */
   var levelPillsHTML = game.levels.map(function(lv, i){
-    return '<button class="gc-level-pill' + (i===0?' active':'') + '" data-level="' + lv + '">' + levelName(lv) + '</button>';
+    return '<button class="gc-level-pill' + (i===0?' active':'') + '" data-level="' + lv + '">' + (levelName(lv) || 'All levels') + '</button>';
   }).join('');
 
   card.innerHTML =

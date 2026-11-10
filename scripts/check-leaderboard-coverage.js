@@ -175,20 +175,17 @@ const NOT_ON_HUB = {
   'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
-// The levels a game submits under are read from its source: the level argument of
-// every submitScore() call if they are all string literals, otherwise the roster's
-// levels for the game (the hub registry's own documented rule). Where the level is
-// a variable whose values are NOT the roster's tier keys, the true set was read from
-// the game by hand and is declared here, with where it comes from. An override that
-// the default rule would already produce is stale and fails the check.
+// The levels a game submits under are read from its source by submittedLevels() below
+// (string literals, and the values a level variable is assigned). Where the level is a
+// variable whose values that rule cannot read and that are NOT the roster's tier keys,
+// the true set was read from the game by hand and is declared here, with where it comes
+// from. An override that the default rule would already produce is stale and fails the check.
 const LEVEL_OVERRIDES = {
   'six-sevens-bruv':      [['q20', 'q40'], "board = 'q' + session length; clear-the-grid submits nothing (Jon, 30 Sep 2026)"],
   'free-daily-pizza':     [['practice-q20', 'practice-q40'], "FDP.boardFor(): mixed practice is 'practice-q' + session length (single-stage practice submits nothing); the daily pizza's keys are in OFF_HUB_LEVEL_PATTERNS"],
   'quadratic-factoriser': [['gcse', 'higher', 'formula'], 'IMPLEMENTED_LEVELS'],
   'prisoners-dilemma':    [['ks3-tournament', 'gcse-tournament', 'alevel-tournament', 'core-tournament'], "submitScore level is currentLevel + '-tournament': only a completed tournament's total is submitted (SR-22, prisoners-dilemma-t4-001)"],
   'chart-interrogator':   [['gcse', 'alevel', 'core', 'l4'], "selectedLevel = the level button's data-level; the L4 button says 'l4'"],
-  'the-perfect-prank':    [['ks3'], "const LEVEL='ks3'; no roster row (unlisted prototype), so the default rule finds nothing"],
-  'correlation-or-coincidence': [['gcse'], "const LEVEL='gcse': one board, as before the rebuild (4 Oct 2026); the roster's A-Level and Core tiers play the same bank"],
   'simultaneous-solver':  [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'alevel'], "BOARD = board(): STAGES[stage].board for Foundation (one board per stage, never the old 'gcse' board), 'alevel' kept (Jon, 6 Oct 2026)"],
   'how-many-parts':       [['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5', 'gcse'], "boardKey(): H.FSTAGES[mode].board for Foundation (one board per stage, the level staying ks3), the level 'gcse' for Advanced (one board; contract HMP-LEVELS, 22 Oct 2026)"],
   'take-a-walk':          [['stage-1', 'stage-2', 'stage-3', 'stage-4'], "board = mode: one board per stage, stage-1..stage-4 (contract TAKE-A-WALK, 23 Oct 2026)"],
@@ -272,14 +269,133 @@ function readRegistry() {
   return { levels: out, names: names, bad: bad };
 }
 
-function submittedLevels(slug, html, roster) {
-  const calls = [];
-  const re = /MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*([^,]+),/g;
+// Inline <script> bodies only: an attribute such as data-level="gcse" is markup, not an assignment.
+function scriptText(html) {
+  const out = [];
+  const re = /<script\b(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/gi;
   let m;
-  while ((m = re.exec(html))) calls.push(m[1].trim());
-  const literals = calls.filter(a => /^'[^']*'$|^"[^"]*"$/.test(a)).map(a => a.slice(1, -1));
-  if (literals.length === calls.length) return [...new Set(literals)].sort();
-  return [...new Set((roster[slug] || []).concat(literals))].sort();
+  while ((m = re.exec(html))) out.push(m[1]);
+  return out.join('\n;\n');
+}
+
+// Index of the first depth-0 occurrence of ch in s at or after from; strings and brackets are skipped.
+// With ch null, the end of the expression starting at from: the first depth-0 ; , or newline, or an
+// unmatched closing bracket.
+function topIndex(s, ch, from) {
+  let depth = 0;
+  for (let j = from; j < s.length; j++) {
+    const c = s[j];
+    if (c === "'" || c === '"' || c === '`') {
+      for (j++; j < s.length && s[j] !== c; j++) if (s[j] === '\\') j++;
+      continue;
+    }
+    if (c === '(' || c === '[' || c === '{') depth++;
+    else if (c === ')' || c === ']' || c === '}') { if (depth === 0 && ch === null) return j; depth--; }
+    else if (depth === 0 && (ch === null ? (c === ';' || c === ',' || c === '\n') : c === ch)) return j;
+  }
+  return ch === null ? s.length : -1;
+}
+
+// The values an expression can take, when every one is a string literal: a literal, or a ternary
+// whose branches are. The condition, and any literal compared in it, is ignored. Anything else
+// (a call, a concatenation, an identifier) returns null: its values cannot be read here.
+function literalValues(expr) {
+  const e = expr.trim();
+  if (/^'[^'\\]*'$|^"[^"\\]*"$/.test(e)) return [e.slice(1, -1)];
+  const q = topIndex(e, '?', 0);
+  if (q < 0) return e.startsWith('(') && topIndex(e, null, 1) === e.length - 1 ? literalValues(e.slice(1, -1)) : null;
+  let nested = 0, colon = -1;          // the ':' that closes this '?', past any nested ternary
+  for (let j = q + 1; j < e.length;) {
+    const nq = topIndex(e, '?', j), nc = topIndex(e, ':', j);
+    if (nc < 0) break;
+    if (nq >= 0 && nq < nc) { nested++; j = nq + 1; continue; }
+    if (nested === 0) { colon = nc; break; }
+    nested--; j = nc + 1;
+  }
+  if (colon < 0) return null;
+  const a = literalValues(e.slice(q + 1, colon)), b = literalValues(e.slice(colon + 1));
+  return a && b ? a.concat(b) : null;
+}
+
+// The level argument of every submitScore() call in a page.
+function levelArguments(html) {
+  return [...html.matchAll(/MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*([^,]+),/g)].map(x => x[1].trim());
+}
+
+// The levels a game submits under (HUB-ALL-BOARDS, 10 Nov 2026). A string-literal argument is its own
+// level. A variable argument (name or name.prop) takes the values of its assignments in the page's
+// inline scripts: each assignment that is a literal, or a ternary of literals, gives those literals
+// (`lv = u === 'year6' ? 'year6' : 'all'` gives year6 and all; the compared 'year6' counts only as a
+// branch). An assignment the rule cannot read (a call, input, concatenation), or a variable with no
+// assignment found, adds the roster's tiers, as the rule did for every variable before.
+// Before this rule a variable always meant the roster's tiers, so the hub listed year6/ks3/gcse for
+// Fraction Snap, Percentage Flip and Prime Sprint, which submit year6 or 'all', and the check passed it.
+// correlation-or-coincidence: one 'gcse' board (const LEVEL = 'gcse', since the 4 Oct 2026 rebuild);
+// the roster's A-Level and Core tiers play the same bank.
+function submittedLevels(slug, html, roster) {
+  const src = scriptText(html);
+  const out = [];
+  let useRoster = false;
+  for (const a of levelArguments(html)) {
+    if (/^'[^']*'$|^"[^"]*"$/.test(a)) { out.push(a.slice(1, -1)); continue; }
+    if (!/^[A-Za-z_$][\w$]*(\.[A-Za-z_$][\w$]*)?$/.test(a)) { useRoster = true; continue; }
+    const re = new RegExp('(?<![\\w$.])' + a.replace(/[.$]/g, '\\$&') + '\\s*=(?![=>])', 'g');
+    let m, found = 0;
+    while ((m = re.exec(src))) {
+      found++;
+      const start = m.index + m[0].length;
+      const vals = literalValues(src.slice(start, topIndex(src, null, start)));
+      if (vals) out.push(...vals); else useRoster = true;
+    }
+    if (!found) useRoster = true;
+  }
+  if (useRoster) out.push(...(roster[slug] || []));
+  return [...new Set(out)].sort();
+}
+
+// The registry comparison: null when the hub row lists exactly the levels the game submits.
+function registryMismatch(slug, have, want) {
+  const got = [...new Set(have)].sort();
+  return got.join() === want.join() ? null
+    : `${slug}: hub registry lists [${got.join(', ')}], but the game submits under [${want.join(', ')}]`;
+}
+
+// Selftest of the rule, run on every invocation. The plant is the fault this rule was written for: a
+// page submitting through a year6/'all' variable while the hub lists the roster's tiers.
+function selftest() {
+  const problems = [];
+  const roster = { 'plant-game': ['year6', 'ks3', 'gcse'] };
+  const page = `<button data-level="gcse">GCSE</button><script>
+var lv = urlLevel === 'year6' ? 'year6' : 'all';
+MaffsLeaderboard.submitScore('plant-game', lv, score, 10);
+</script>`;
+  const want = submittedLevels('plant-game', page, roster);
+  if (want.join() !== 'all,year6') problems.push(`year6/'all' variable read as [${want.join(', ')}], expected [all, year6]`);
+  if (!registryMismatch('plant-game', ['year6', 'ks3', 'gcse'], want)) problems.push('the planted hub row (roster tiers) was not caught');
+  if (registryMismatch('plant-game', ['year6', 'all'], want)) problems.push('the fixed hub row [year6, all] was refused');
+  const cases = [
+    ["var L = 'ks3'; MaffsLeaderboard.submitScore('g', L, s, n);", 'ks3'],
+    ["let L = 'gcse', BASE = 100; MaffsLeaderboard.submitScore('g', L, s, n);", 'gcse'],
+    ["let L = 'gcse'; function f(b){ L = b.dataset.level; } MaffsLeaderboard.submitScore('g', L, s, n);", 'gcse,ks3,year6'],
+    ["var B = 'stage-' + st; MaffsLeaderboard.submitScore('g', B, s, n);", 'gcse,ks3,year6'],
+    ["var L = MaffsLevel.resolve({slug:'g',levels:['ks3'],fallback:'ks3'}); MaffsLeaderboard.submitScore('g', L, s, n);", 'gcse,ks3,year6'],
+    ["var L = a ? 'x' : (b === 'q' ? 'y' : 'z'); MaffsLeaderboard.submitScore('g', L, s, n);", 'x,y,z'],
+    ["MaffsLeaderboard.submitScore('g', 'all', s, n);", 'all']
+  ];
+  for (const [js, expect] of cases) {
+    const got = submittedLevels('plant-game', '<script>' + js + '</script>', roster).join();
+    if (got !== expect) problems.push(`${js.slice(0, 60)}...: read as [${got}], expected [${expect}]`);
+  }
+  return problems;
+}
+
+const selftestProblems = selftest();
+if (selftestProblems.length) {
+  console.log(`\nSelftest of the level rule (submittedLevels) failed in ${selftestProblems.length} place(s):`);
+  selftestProblems.forEach(p => console.log('  - ' + p));
+  failed = true;
+} else {
+  console.log('Selftest: the level rule reads a variable\'s assigned values; the planted hub (roster tiers for a year6/all game) is caught.');
 }
 
 const registry = readRegistry();
@@ -312,8 +428,8 @@ if (!registry) {
     if (NOT_ON_HUB[slug]) continue;
     const have = registry.levels[slug];
     if (!have) { hubProblems.push(`${slug}: calls submitScore() but is not in the hub registry (submits under: ${want.join(', ')})`); continue; }
-    const got = [...new Set(have)].sort();
-    if (got.join() !== want.join()) hubProblems.push(`${slug}: hub registry lists [${got.join(', ')}], but the game submits under [${want.join(', ')}]`);
+    const mismatch = registryMismatch(slug, have, want);
+    if (mismatch) hubProblems.push(mismatch);
   }
   for (const slug of Object.keys(registry.levels)) {
     if (WITHDRAWN[slug]) {
