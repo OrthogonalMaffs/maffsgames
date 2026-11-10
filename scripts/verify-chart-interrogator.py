@@ -16,8 +16,14 @@ own values against them, then marks answers through the game's own controls:
   frequency        capped below half the gap to the nearest named wrong answer: the other two
                    quartiles and the quartile's own position (n/4, n/2, 3n/4); for the IQR the
                    position difference n/2 and the axis range; for the count its complement.
-                   Keys are recomputed here from the Bezier curve the game draws, and every
-                   pixel-measured reading of the drawn curve (Contract B's record) must pass.
+                   The curve is rebuilt here from its rule (CUMFREQ-CURVE, Jon 10 Nov 2026: a
+                   monotone cubic by Fritsch and Carlson, one Bezier per class), never from the
+                   game's output, and every key and band is recomputed from it; every
+                   pixel-measured reading of the drawn curve (re-measured 10 Nov 2026) must pass.
+                   The drawn segments: (a) each passes through its two cumulative points and
+                   never goes down; (b) no flat spot at an inner point unless a class beside it
+                   is empty, and no corner. (e) No band, the curve's or the polygon's, is under
+                   half its standard band: a correct reading must be markable by eye.
   all three      - no named wrong answer is ever accepted; just inside the band is accepted,
                    just outside is rejected (submitPhase1(), and submitPhase2() for the count).
                    Every histogram class is a whole number of observations (todo 1.15).
@@ -29,8 +35,8 @@ own values against them, then marks answers through the game's own controls:
                    scenario is accepted, and choosing the most-observations option where the key
                    is Yes says "Right answer, wrong reason." Reports the Yes/No split.
 
-A fault-injection self-test runs on every invocation: eight faults are injected into the page
-source, and each must make the check FAIL, or the run fails.
+A fault-injection self-test runs on every invocation: each fault in FAULTS is injected into the page
+source and must make the check FAIL (where a fault names its check, that check), or the run fails.
 
   python scripts/verify-chart-interrogator.py [--chromium PATH]
 
@@ -281,25 +287,56 @@ CF_BENCH = """(cases) => {
   });
 }"""
 
-# Contract B's record (docs/audit-chart-interrogator-cumfreq.md): Q1, median and Q3 measured
-# from the pixels of the drawn curve, independent of any key code. A correct reading must pass.
+# Q1, median and Q3 measured from the pixels of the drawn curve, independent of any key code. A correct reading
+# must pass. Contract B's method (docs/audit-chart-interrogator-cumfreq.md): the weighted centre of the curve's own
+# pixels on the two pixel rows either side of each quartile's line, interpolated to it. Re-measured 10 Nov 2026 from
+# the CUMFREQ-CURVE drawing (Fritsch-Carlson curve, CF5's new data), because the old record measured the old curve.
+# The dots share the curve's colour now and CF5's Q1 sits on one, so the curve's own pixels were taken as the
+# difference between drawCumFreq drawn with and without its curve, both without the dots. Largest gap to the key:
+# 0.080% of the axis (CF4 Q3), under half a pixel.
 CF_PIXEL = {
-    "CF1": (33.846, 44.779, 54.737), "CF2": (105.432, 115.897, 126.147), "CF3": (34.118, 43.935, 53.281),
-    "CF4": (21.468, 26.907, 34.563), "CF5": (33.392, 37.904, 45.097), "CF6": (185.552, 231.326, 280.604),
-    "CF7": (1120.876, 1330.478, 1546.757), "CF8": (33.267, 37.913, 42.639), "CF9": (1.525, 2.525, 3.565),
-    "CF10": (48.696, 50.768, 52.724),
+    "CF1": (33.258, 44.669, 53.957), "CF2": (106.288, 116.695, 126.701), "CF3": (33.796, 43.027, 51.631),
+    "CF4": (20.870, 26.374, 33.028), "CF5": (29.994, 36.158, 43.995), "CF6": (193.722, 236.506, 282.729),
+    "CF7": (1145.192, 1354.295, 1567.385), "CF8": (34.126, 38.289, 42.388), "CF9": (1.593, 2.538, 3.559),
+    "CF10": (48.518, 50.586, 52.431),
 }
 
 
-def cf_curve(s):
-    """The game's curve, rebuilt here: per class one cubic Bezier between its two cumulative
-    points, both control points at the class midpoint, level with each end."""
-    segs, x, c = [], float(s["data"][0]["lo"]), 0.0
+def cf_points(s):
+    """The plotted points: (lower boundary, 0), then (each class's upper boundary, cumulative frequency)."""
+    pts, c = [(float(s["data"][0]["lo"]), 0.0)], 0.0
     for d in s["data"]:
-        hi, f = float(d["hi"]), float(d["f"])
-        mid = (x + hi) / 2
-        segs.append(((x, c), (mid, c), (mid, c + f), (hi, c + f)))
-        x, c = hi, c + f
+        c += float(d["f"])
+        pts.append((float(d["hi"]), c))
+    return pts
+
+
+def fc_tangents(pts):
+    """Fritsch-Carlson tangents for a monotone cubic Hermite through the points, built here from the rule
+    (Fritsch and Carlson, SIAM J. Numer. Anal. 17, 1980), never from the game's output: one-sided at the ends,
+    the mean of the two secants inside, 0 beside a flat class, and any class with a^2 + b^2 > 9 scaled to 3."""
+    sec = [(y1 - y0) / (x1 - x0) for (x0, y0), (x1, y1) in zip(pts, pts[1:])]
+    m = [sec[0]] + [(a + b) / 2 if a > 0 and b > 0 else 0.0 for a, b in zip(sec, sec[1:])] + [sec[-1]]
+    for k, d in enumerate(sec):
+        if d == 0:
+            m[k] = m[k + 1] = 0.0
+            continue
+        a, b = m[k] / d, m[k + 1] / d
+        if a * a + b * b > 9:
+            t = 3 / (a * a + b * b) ** 0.5
+            m[k], m[k + 1] = t * a * d, t * b * d
+    return m
+
+
+def cf_curve(s):
+    """The curve rebuilt here (CUMFREQ-CURVE, Jon 10 Nov 2026, option A): per class the Hermite cubic with
+    Fritsch-Carlson tangents, as a Bezier with control points a third of the way along the class."""
+    pts = cf_points(s)
+    m = fc_tangents(pts)
+    segs = []
+    for k, ((x0, y0), (x1, y1)) in enumerate(zip(pts, pts[1:])):
+        h = x1 - x0
+        segs.append(((x0, y0), (x0 + h / 3, y0 + m[k] * h / 3), (x1 - h / 3, y1 - m[k + 1] * h / 3), (x1, y1)))
     return segs
 
 
@@ -348,6 +385,45 @@ def cf_truth(s):
         tol[k] = min(band[k], min(gaps) / 2) if gaps else band[k]
         wrong[k] = [w for w in wrong[k] if abs(w - keys[k]) > 1e-9]
     return keys, tol, wrong, band, span
+
+
+# The segments the game draws and reads, for the shape checks only; the keys are recomputed from cf_curve above.
+CF_SEGS = """() => CUM_FREQ.map(s => ({id: s.id, segs: cfCurve(s).map(g => [g.p0, g.c1, g.c2, g.p1])}))"""
+
+
+def check_cf_shape(page, data, fails):
+    """(a) every drawn segment passes through its two cumulative points and never goes down; (b) no flat spot at an
+    inner point unless a class beside it has frequency 0, and one gradient on both sides of it (one smooth curve)."""
+    checks = 0
+    drawn = {d["id"]: d["segs"] for d in page.evaluate(CF_SEGS)}
+    for s in data["cumfreq"]:
+        pts, segs, sid = cf_points(s), drawn[s["id"]], s["id"]
+        checks += 1
+        if len(segs) != len(pts) - 1:
+            fails.append("%s: (a) %d segments drawn for %d classes" % (sid, len(segs), len(pts) - 1))
+            continue
+        for k, g in enumerate(segs):
+            checks += 2
+            for end, want in ((g[0], pts[k]), (g[3], pts[k + 1])):
+                if abs(end[0] - want[0]) > 1e-9 or abs(end[1] - want[1]) > 1e-9:
+                    fails.append("%s: (a) segment %d ends at %r, not the cumulative point %r" % (sid, k + 1, end, want))
+            ys = [_bez(g, 1, t / 400) for t in range(401)]
+            xs = [_bez(g, 0, t / 400) for t in range(401)]
+            if any(b < a - 1e-9 for a, b in zip(ys, ys[1:])) or any(b < a - 1e-9 for a, b in zip(xs, xs[1:])):
+                fails.append("%s: (a) segment %d goes down between its points (a dip or overshoot)" % (sid, k + 1))
+        for k in range(1, len(pts) - 1):
+            checks += 2
+            left, right = segs[k - 1], segs[k]
+            gl = (left[3][1] - left[2][1]) / (left[3][0] - left[2][0])
+            gr = (right[1][1] - right[0][1]) / (right[1][0] - right[0][0])
+            empty = float(s["data"][k - 1]["f"]) == 0 or float(s["data"][k]["f"]) == 0
+            if (abs(gl) < 1e-12 or abs(gr) < 1e-12) and not empty:
+                fails.append("%s: (b) the curve is flat at the point (%g, %g), and neither class beside it is empty"
+                             % (sid, pts[k][0], pts[k][1]))
+            if abs(gl - gr) > 1e-9 * max(1.0, abs(gl)):
+                fails.append("%s: (b) a corner at (%g, %g): gradient %g on the left, %g on the right"
+                             % (sid, pts[k][0], pts[k][1], gl, gr))
+    return checks
 
 
 def cf_poly(s):
@@ -408,6 +484,14 @@ def check_cumfreq(page, data, fails):
             k = q["key"]
             where = "%s %s" % (s["id"], k)
             checks += 4
+            # (e) no band narrower than half its standard band (CUMFREQ-CURVE Amendment 1, Jon 10 Nov 2026): a
+            # correct reading must be markable by eye. capTol has no floor, so a key next to a named wrong answer
+            # is a data problem, caught here.
+            ga = q.get("alt") or {}
+            for name, t in (("curve", q["tolerance"]), ("polygon", ga.get("tolerance", 0))):
+                checks += 1
+                if t < band[k] / 2 - 1e-9:
+                    fails.append("%s: (e) the %s band +-%.4g is under half the standard +-%.4g" % (where, name, t, band[k]))
             if abs(q["expected"] - keys[k]) > span * 1e-9:
                 fails.append("%s: key %r, recomputed %r" % (where, q["expected"], keys[k]))
             if abs(q["tolerance"] - tol[k]) > span * 1e-7:
@@ -434,6 +518,11 @@ def check_cumfreq(page, data, fails):
                     add(v, ok_at(k, v), "%s the polygon's band" % lab)
             if k in ("q1", "median", "q3"):
                 add(CF_PIXEL[s["id"]][("q1", "median", "q3").index(k)], True, "the pixel-measured reading of the drawn curve")
+        # (e) for the benchmark count, typed in Phase 2: the game's bands equal these, as its band-edge cases below show.
+        for name, t in (("curve", tol["bench"]), ("polygon", atol["bench"])):
+            checks += 1
+            if t < band["bench"] / 2 - 1e-9:
+                fails.append("%s bench: (e) the %s band +-%.4g is under half the standard +-%.4g" % (s["id"], name, t, band["bench"]))
         cases_b = [(keys["bench"], True, "the key"), (alt["bench"], True, "the polygon's reading")]
         cases_b += [(w, False, "named wrong answer %g" % w) for w in wrong["bench"]]
         for sg in (1, -1):
@@ -624,6 +713,7 @@ def run(browser, base, mutate=None):
     data = page.evaluate(DATA)
     checks, n_cases = check_readings(page, data, fails)
     c_checks, c_cases, cf_report = check_cumfreq(page, data, fails)
+    c_checks += check_cf_shape(page, data, fails)
     h_checks, split, report = check_histograms(page, data, fails)
     hr_checks, hr_cases, hr_report = check_hist_readings(page, data, fails)
     h_checks += hr_checks + check_stemleaf_layout(page, data, fails)
@@ -657,6 +747,15 @@ FAULTS = [
      "correct:isModal?HIST_YES:HIST_NO,", "correct:isModal&&isMost?mostOpt:isModal?HIST_YES:HIST_NO,"),
     ("no 'right answer, wrong reason' feedback",
      "fb.textContent=near?'Right answer, wrong reason. '+near.dataset.why", "fb.textContent=false?''"),
+    # CUMFREQ-CURVE (Jon, 10 Nov 2026): each must fail its own check, named by the fourth field.
+    ("the old curve: control points level with each end",
+     "segs.push({p0:[xs[i],ys[i]],c1:[xs[i]+h/3,ys[i]+m[i]*h/3],c2:[xs[i+1]-h/3,ys[i+1]-m[i+1]*h/3],p1:[xs[i+1],ys[i+1]]});",
+     "segs.push({p0:[xs[i],ys[i]],c1:[(xs[i]+xs[i+1])/2,ys[i]],c2:[(xs[i]+xs[i+1])/2,ys[i+1]],p1:[xs[i+1],ys[i+1]]});", ": (b) "),
+    ("a control point that makes a segment dip",
+     "c1:[xs[i]+h/3,ys[i]+m[i]*h/3]", "c1:[xs[i]+h/3,ys[i]-(ys[i+1]-ys[i])]", ": (a) "),
+    ("CF5's old data: a median band of +-0.34 (Amendment 1)",
+     "data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:16},{lo:30,hi:40,f:32},{lo:40,hi:48,f:14},{lo:48,hi:60,f:14}]",
+     "data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:10},{lo:30,hi:40,f:28},{lo:40,hi:48,f:24},{lo:48,hi:60,f:14}]", ": (e) "),
 ]
 
 
@@ -670,12 +769,14 @@ def main():
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(**({"executable_path": args.chromium} if args.chromium else {}))
-            for name, old, new in FAULTS:
+            for name, old, new, *want in FAULTS:
                 def mutate(src, old=old, new=new, name=name):
                     if src.count(old) != 1:
                         raise SystemExit("self-test: the text for fault '%s' is not in the game once; update FAULTS" % name)
                     return src.replace(old, new)
                 caught = run(browser, base, mutate)[0]
+                if want:    # it must fail the check it plants against, not only some other one
+                    caught = [f for f in caught if want[0] in f]
                 print("self-test: %-45s %s" % (name, "caught (%d failures)" % len(caught) if caught else "NOT CAUGHT"))
                 if not caught:
                     missed.append(name)

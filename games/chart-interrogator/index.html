@@ -309,7 +309,7 @@ var CUM_FREQ = [
  data:[{lo:0,hi:15,f:8},{lo:15,hi:20,f:18},{lo:20,hi:25,f:26},{lo:25,hi:30,f:28},{lo:30,hi:40,f:24},{lo:40,hi:60,f:16}]},
 {id:'CF5',context:'Weekly hours worked',n:80,benchmark:'Legal maximum = 48 hrs',benchVal:48,level:'alevel',contextNoun:'hours',contextPlural:'workers',unit:'hrs',
  benchQuestion:'How many work over the legal maximum?',benchSide:'above',compLabel:'last year',compIQR:20,
- data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:10},{lo:30,hi:40,f:28},{lo:40,hi:48,f:24},{lo:48,hi:60,f:14}]},
+ data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:16},{lo:30,hi:40,f:32},{lo:40,hi:48,f:14},{lo:48,hi:60,f:14}]},
 {id:'CF6',context:'House prices (£k)',n:100,benchmark:'Regional average = £220k',benchVal:220,level:'core',contextNoun:'price',contextPlural:'properties',unit:'£k',
  benchQuestion:'How many properties are below the regional average?',benchSide:'below',compLabel:'a neighbouring town',compIQR:60,
  data:[{lo:100,hi:150,f:8},{lo:150,hi:200,f:20},{lo:200,hi:250,f:30},{lo:250,hi:300,f:24},{lo:300,hi:400,f:18}]},
@@ -617,8 +617,10 @@ function drawCumFreq(container){
   var segs=cfCurve(s);
   var points=[segs[0].p0].concat(segs.map(function(g){return g.p1;}));
 
-  // Draw smooth curve
-  ctx.strokeStyle='var(--accent)';ctx.lineWidth=2.5;ctx.beginPath();
+  // Draw smooth curve, in the game's accent: canvas cannot resolve 'var(--accent)', so the
+  // colour is read from the page's computed style, the axis grey only if that is empty.
+  var accent=getComputedStyle(document.documentElement).getPropertyValue('--accent').trim()||'#5a5e6a';
+  ctx.strokeStyle=accent;ctx.lineWidth=2.5;ctx.beginPath();
   ctx.moveTo(xc(points[0][0]),yc(points[0][1]));
   segs.forEach(function(g){
     ctx.bezierCurveTo(xc(g.c1[0]),yc(g.c1[1]),xc(g.c2[0]),yc(g.c2[1]),xc(g.p1[0]),yc(g.p1[1]));
@@ -782,16 +784,35 @@ function buildPhase1Questions(){
 // One definition of the curve: drawCumFreq draws it and every cumfreq key is read off it.
 // The keys used to join the points with straight lines while the picture was drawn as a
 // Bezier, so a student who read the drawn curve accurately was marked wrong (todo 1.9).
-// Each class is one cubic Bezier between its two cumulative points, with both control
-// points at the class midpoint, level with each end. A Bezier survives the linear map to
-// the canvas, so solving it in data units reads exactly the curve on screen.
+// One smooth curve through every plotted point that never goes down (Jon, 10 Nov 2026,
+// CUMFREQ-CURVE option A): a monotone cubic Hermite by Fritsch and Carlson, written as one
+// cubic Bezier per class. Tangents: the end points take their class's own gradient; an
+// inner point takes the mean of its two classes' gradients, or 0 beside a class of
+// frequency 0; a class whose two tangents are too steep for it (a^2 + b^2 > 9, a and b
+// each tangent over the class's gradient) has both scaled down to the circle of radius 3,
+// which keeps the curve between its two points. For a class of width h the control points
+// sit a third of the way along: c1 = (x0 + h/3, y0 + m0 h/3), c2 = (x1 - h/3, y1 - m1 h/3),
+// so x rises linearly along each segment and cfSolve's bisection still applies. A Bezier
+// survives the linear map to the canvas, so solving it in data units reads exactly the
+// curve on screen.
 function cfCurve(s){
-  var segs=[],x=s.data[0].lo,cf=0;
-  s.data.forEach(function(d){
-    var mid=(x+d.hi)/2;
-    segs.push({p0:[x,cf],c1:[mid,cf],c2:[mid,cf+d.f],p1:[d.hi,cf+d.f]});
-    x=d.hi;cf+=d.f;
-  });
+  var xs=[s.data[0].lo],ys=[0],g=[],m=[],i;
+  s.data.forEach(function(d){xs.push(d.hi);ys.push(ys[ys.length-1]+d.f);});
+  var k=s.data.length;
+  for(i=0;i<k;i++)g.push((ys[i+1]-ys[i])/(xs[i+1]-xs[i]));
+  m.push(g[0]);
+  for(i=1;i<k;i++)m.push(g[i-1]>0&&g[i]>0?(g[i-1]+g[i])/2:0);
+  m.push(g[k-1]);
+  for(i=0;i<k;i++){
+    if(g[i]===0){m[i]=0;m[i+1]=0;continue;}
+    var a=m[i]/g[i],b=m[i+1]/g[i],r=a*a+b*b;
+    if(r>9){var t=3/Math.sqrt(r);m[i]=t*a*g[i];m[i+1]=t*b*g[i];}
+  }
+  var segs=[];
+  for(i=0;i<k;i++){
+    var h=xs[i+1]-xs[i];
+    segs.push({p0:[xs[i],ys[i]],c1:[xs[i]+h/3,ys[i]+m[i]*h/3],c2:[xs[i+1]-h/3,ys[i+1]-m[i+1]*h/3],p1:[xs[i+1],ys[i+1]]});
+  }
   return segs;
 }
 
