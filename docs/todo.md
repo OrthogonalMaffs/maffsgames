@@ -41,7 +41,7 @@ file's numbered sections only once it's bigger than a one-line fix.
 
 ## START OF NEXT SESSION
 
-This file is the single backlog (AGENTS.md); the lane handovers hold only work in flight. Order: LIVE-BUG-RECHECK (§7) first, then BRANCH-CLEANUP (§7), then by priority (canon §0.2).
+This file is the single backlog (AGENTS.md); the lane handovers hold only work in flight. Order: by priority (canon §0.2).
 This file's old START block (last updated 6 Oct 2026) is in `docs/history/todo-done.md`, word for word.
 
 ## 1. Live bugs and false claims

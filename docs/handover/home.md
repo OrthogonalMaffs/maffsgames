@@ -2,7 +2,9 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/docs-bundle, worktree ~/mg-docs-bundle. Contract: docs/handover/contracts/2026-11-09-docs-bundle.md. Entry below. MONEY-INPUT merged as #719 (b328883b).
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55): in progress on branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Files in use: escape-rooms/assets/teacher.js and engine.css, parents/guide.css and guide.js, scripts/checker-allowlist.json. Contract: docs/handover/contracts/2026-11-10-phone-scroll.md.
+
+- DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
 - WHOSE-SIDE: the cloud lane owns the game until stage 5; timer-policy.md's line is `docs/todo.md` row WHOSE-SIDE-TIMER-LINE. DONE lines moved to docs/history/handover-home-archive.md, 8 Nov.
 
