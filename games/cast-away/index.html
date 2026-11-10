@@ -206,8 +206,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/stage-exit.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 answers the whole question right;
-     with i >= 1 it makes two wrong tries and presses "Show me", so the question is marked wrong and waits on Next.
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 answers the whole question right; with i >= 1 it makes two wrong tries and presses "Show me", so the question is marked wrong and waits on Next.
 {
   "start": "CA.ui.start(1)",
   "ready": "!!window.CA && CA.ui.state() === 'asking'",
@@ -1027,7 +1026,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var first = right && tries === 0;
     marked++; if (first) { rightCount++; score++; }
     $('hudScore').textContent = score;
-    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, correct: first });
+    ev('question_answered', { game_slug: SLUG, level: level, mode: 'stage-' + stage, question_index: qi, question_id: Q.id, correct: first });
     $('qcard').classList.add('fb-open');
     if (kp && kp.select) try { kp.select(-1); } catch (e) {}
     lightAll(Q);

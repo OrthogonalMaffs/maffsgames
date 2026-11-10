@@ -88,6 +88,7 @@ RESULTS = {
     "eigenvector-engine": "results", "six-sevens-bruv": "results", "free-daily-pizza": "results",
     "just-pythag-it-bruv": "results", "estimation-engine": "results", "how-many-parts": "results", "take-a-walk": "results",
     "squared-squirrel": "results", "i-found-a-mark": "results", "hc-factor": "results", "y-so-steep": "results", "whose-side-are-you-on": "results", "who-ate-all-the-pies": "results", "its-on-sale": "results", "as-you-can-see": "results", "possibly-maybe": "results",
+    "cast-away": "results",
 }
 
 START_SCREEN = {
