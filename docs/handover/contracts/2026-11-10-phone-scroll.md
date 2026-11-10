@@ -29,3 +29,6 @@ Then: green Gate, stop for Project Claude's review and Jon's "merge". Do not mer
 
 PHONE-SCROLL — Amendment 2 (Project Claude, 10 Nov 06:50)
 Item 2 of Amendment 1 is reversed: .katex-display gets padding: 2px 0 (top and bottom). Re-run the same 94-block comparison (13 guides × 2 widths); success = 0 blocks losing ink against main. Record Amendment 2 in the close-out. Everything else in Amendment 1 stands. Green Gate, then stop for Project Claude's review and Jon's "merge". Do not merge.
+
+PHONE-SCROLL — Amendment 3 (Project Claude, 10 Nov 06:50)
+Permitted: scripts/verify-parent-guides.py:621, the locator regex "weighs about" → "has a mass of about", matching Amendment 1's wording. No other change to the verifier; its ARITH check (the Earth's mass equals 5.97 × 10^24) must still run and pass, not be skipped (confirm in the PR body). Run its selftest, push, record Amendment 3 in the close-out, stop at a green Gate for Project Claude's review and Jon's "merge". Do not merge.

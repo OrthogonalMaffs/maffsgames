@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-2): PR #721, stopped on the Gate (verify-parent-guides.py pins the old Earth wording), waiting for Project Claude; then Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendments 1-3): PR #721 at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
 
 - DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
@@ -24,13 +24,13 @@ Wide tables and display maths scroll in their own box on a 320px phone. `escape-
 
 Amendment 1 item 2 stopped: without padding, `overflow-y:hidden` cut one anti-aliased pixel row from a tall fraction on 9 of the 94 display blocks (13 guides × 2 widths); my earlier "nothing clipped" had covered 5 guides only. Amendment 2 (Project Claude, 06:50) reversed it: `.katex-display` gets `padding:2px 0`, and 0 of 94 blocks lose ink against main (+4px per display line).
 
-STOPPED again on the Gate: `scripts/verify-parent-guides.py:621` pins the old wording ("weighs about ... kg"), so Amendment 1's "has a mass of about" fails its SF check. A patched copy passes 353/353, but the script is outside EXACT CHANGE's files; waiting for Project Claude.
+Amendment 3: `scripts/verify-parent-guides.py:621`'s locator pinned the old wording ("weighs about"), so the Gate failed its SF check; the regex now reads "has a mass of about", nothing else changed. 353 checks, 0 failed; its ARITH check runs and passes (5,970,000,000,000,000,000,000,000 = 5.97 × 10^24). The script has no selftest; two faults planted in a scratch copy were caught (a wrong power, FAIL ARITH; the old wording, FAIL FOUND).
 
 Discoveries: `scripts/test-escape-rating.py` still hides `table.tt` at 320px, no longer needed (not touched: outside EXACT CHANGE).
 
-Next: the ruling on the verifier; then Gate green, Project Claude's review and Jon's "merge".
+Next: Gate green, then Project Claude's review and Jon's "merge".
 
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 2; usage n/a.
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 3; usage n/a.
 
 ## 2026-11-09 (home): DOCS-BUNDLE
 
