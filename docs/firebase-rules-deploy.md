@@ -105,6 +105,35 @@ The same suite run against open rules (read and write for anyone, as live today)
 3. **An overwrite is refused.** Same entry: `curl -X PUT -d '{"score":99999,"timestamp":1}' <same URL>`
    → `Permission denied`.
 
+## 10 Nov 2026 change
+
+**Status: Written, NOT deployed — Jon deploys.** (Contract FIREBASE-ESCAPING, 10 Nov 2026.) No session deploys or writes to the live database.
+
+`recent_scores`' `game` and `level` refuse `<` and `>`; their length rules are unchanged, and nothing else in the file changes. No game sends either character (every name in `GAME_NAMES` and every level label checked, 10 Nov 2026), so no real score is refused. The portal ticker and the hub already escape what they show; this closes the field at the source.
+
+Before:
+
+```
+"game": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80" },
+"level": { ".validate": "newData.isString() && newData.val().length <= 60" },
+```
+
+After:
+
+```
+"game": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80 && !newData.val().matches(/[<>]/)" },
+"level": { ".validate": "newData.isString() && newData.val().length <= 60 && !newData.val().matches(/[<>]/)" },
+```
+
+**Deploy:** steps 1, 2 and 4 of "Deploy (Firebase console)" above: save the current rules as the rollback, paste the whole of `firebase/database.rules.json` from `main`, Publish.
+
+**Test straight after publishing**, in the console's **Rules Playground** (it simulates; nothing is written). Simulation type **set**, unauthenticated, location `/recent_scores/test1`:
+
+1. **Refused:** data `{"game": "<b>x</b>", "slug": "factor-race", "level": "GCSE", "levelKey": "gcse", "score": 1, "timestamp": <now in ms>}` → **denied**.
+2. **Accepted:** the same with `"game": "Factor Race"` → **allowed**.
+
+Then finish one real game on maffsgames.co.uk and check its score appears on the front-page ticker (step 1 of "Verify" above).
+
 ## Roll back
 
 Rules tab → paste the saved `firebase/database.rules.previous.json` → Publish. The site

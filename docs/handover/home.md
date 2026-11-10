@@ -16,6 +16,10 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-10 (home): FIREBASE-ESCAPING
+
+Claude Code (home lane), worktree `~/mg-firebase-escaping`, branch `claude/firebase-escaping`, PR #PRNUM; contract `docs/handover/contracts/2026-11-10-firebase-escaping.md`. The hub escapes every Firebase value it renders (board initials, score and timestamp; the all-time high's score and date) through one esc(); the '&mdash;' fallback stays markup. The rules file refuses `<` and `>` in `recent_scores` `game` and `level`, written, NOT deployed: Jon deploys (`docs/firebase-rules-deploy.md`, "10 Nov 2026 change"). Plant in `scripts/test-scores-offline.py`: markup initials on a fake board; the unescaped hub is caught. STOP IF checks: no other page or shared asset renders Firebase data unescaped (the ticker escapes; Free Daily Pizza's target is a number checked with typeof); no game name or level label holds `<` or `>`; the rules are tested in the console's Rules Playground, no write. No claim held. Todo row FIREBASE-ESCAPING stays open for the deploy only.
+
 ## 2026-11-10 (home): HUB-ALL-BOARDS
 
 Claude Code (home lane), worktree `~/mg-hub-all-boards`, branch `claude/hub-all-boards`, PR #727; contract `docs/handover/contracts/2026-11-10-hub-all-boards.md` (preamble, contract and Jon's ruling). The hub lists year6 and all for Fraction Snap, Percentage Flip and Prime Sprint; the 'all' pill reads "All levels" (levelLabel('all') is '' by design, so the hub page labels its own pill; no shared asset touched). check-leaderboard-coverage.js reads a level variable's literal or ternary-of-literal assignments, else the roster's tiers; a selftest runs on every invocation. STOP IF hit: correlation-or-coincidence and the-perfect-prank also changed derivation; on Jon's ruling both now-stale LEVEL_OVERRIDES entries were removed, the correlation reason kept as a comment. Row 1.35: hub part fixed, extract-banks part left open. No claim held. Next: FIREBASE-ESCAPING from the new main.

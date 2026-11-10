@@ -281,6 +281,10 @@ var GAMES = [
 ].map(function(g){ return { slug:g[0], name:g[1], levels:g[2] }; });
 
 /* ---- Helpers ---- */
+/* Every value read from Firebase (a board entry's initials, score and timestamp) goes through esc()
+   into the page, as text, never as markup: the rules constrain those fields today, but the page does
+   not rely on them (contract FIREBASE-ESCAPING). Same helper as the portal ticker's (index.html). */
+function esc(v) { return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 function fmtDate(ts){
   var d = new Date(ts);
   return d.toLocaleDateString('en-GB', { day:'numeric', month:'short' });
@@ -379,7 +383,7 @@ function renderCardBody(card, slug, level){
 
     var best = sorted[0];
     athEl.style.display = 'flex';
-    athEl.innerHTML = '<span class="ath-label">&#127942; All-time high</span><span class="ath-val">' + best.score + ' &middot; ' + fmtDate(best.timestamp) + '</span>';
+    athEl.innerHTML = '<span class="ath-label">&#127942; All-time high</span><span class="ath-val">' + esc(best.score) + ' &middot; ' + esc(fmtDate(best.timestamp)) + '</span>';
 
     var cutoff = Date.now() - SEVEN_DAYS;
     var recent = entries.filter(function(e){ return e.timestamp >= cutoff; })
@@ -392,8 +396,8 @@ function renderCardBody(card, slug, level){
     }
 
     rowsEl.innerHTML = recent.map(function(e, i){
-      var initials = e.initials ? e.initials : '&mdash;';
-      return '<div class="gc-row"><span class="gc-rank">#' + (i+1) + '</span><span class="gc-initials">' + initials + '</span><span class="gc-gdate">' + timeAgo(e.timestamp) + '</span><span class="gc-gscore">' + e.score + '</span></div>';
+      var initials = e.initials ? esc(e.initials) : '&mdash;';
+      return '<div class="gc-row"><span class="gc-rank">#' + (i+1) + '</span><span class="gc-initials">' + initials + '</span><span class="gc-gdate">' + esc(timeAgo(e.timestamp)) + '</span><span class="gc-gscore">' + esc(e.score) + '</span></div>';
     }).join('');
   });
 }
