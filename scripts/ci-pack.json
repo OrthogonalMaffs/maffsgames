@@ -259,7 +259,7 @@
    "tier": "content"
   },
   "verify-cast-away.py": {
-   "how": "chosen from 21 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "CAST Away (every question of the four stages recomputed independently: k read from the TeX the student sees, every solution of sin, cos or tan x = k found by a numeric root search in mpmath on the stated interval, never by the CAST rule, rounded half up to 1 d.p. or kept whole; keys, the shown alpha, Stage 2's quadrants and Stage 1's snap points (each on the curve); every option's set wrong and its named mistake true; every feedback rule fired by a planted typed answer, taps and quadrants; the working's arithmetic; sessions of 10 with their mix; the three walkthroughs word for word against the contract and their numbers recomputed; every stage played in the page at 390 px and the first questions at 375, 320, 1366 and 1280 px and in Aa mode: the controls and Next above the fold, no sideways scroll, one board submission a stage, the score right first time only, the character band on the start and results screens only and still under reduced motion; fault-injection self-test)",
    "parts": 1,
    "tier": "content"
