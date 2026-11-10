@@ -73,11 +73,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 ## 2026-11-10 (cloud): CAST-AWAY-BUILD (`docs/handover/contracts/2026-11-09-cast-away-build.md`, Medium, todo row CAST-AWAY)
 
-At the Gate, holding for Project Claude's review and Jon's look and "merge" (contract: do not merge): [#723](https://github.com/OrthogonalMaffs/maffsgames/pull/723), branch `claude/relaxed-tesla-8o84r1`, worktree the primary checkout. `gh auth status` failed at the start (GH_TOKEN invalid), so a later merge takes the standing route above. `games/cast-away/`: sin, cos and tan x = k on 0-360 with CAST and the graph, four stages and boards (pools 70, 244, 258, 290), named feedback, "Show me" after two wrong tries, the three walkthroughs word for word, the band on start and results only. `verify-cast-away.py` PASS: every key by an mpmath root search, every feedback rule fired, seven sizes and modes, 12 of 12 plants. Answer lock PASS; phone-fit PASS (asking only) in normal, Aa and laptop; stage exit OK. Registered unlisted; todo row closed to todo-done.md; no claim taken.
+At the Gate, approved by Project Claude, holding for Jon's look and "merge" (contract: do not merge): [#723](https://github.com/OrthogonalMaffs/maffsgames/pull/723), branch `claude/relaxed-tesla-8o84r1`, worktree the primary checkout. `gh auth status` failed at the start (GH_TOKEN invalid), so a later merge takes the standing route above. `games/cast-away/`: sin, cos and tan x = k on 0-360 with CAST and the graph, four stages and boards (pools 70, 244, 258, 290), named feedback, "Show me" after two wrong tries, the three walkthroughs word for word, the band on start and results only. `verify-cast-away.py` PASS: every key by an mpmath root search, every feedback rule fired, seven sizes and modes, 12 of 12 plants. Answer lock PASS; phone-fit PASS (asking only) in normal, Aa and laptop; stage exit OK. Registered unlisted; todo row closed to todo-done.md; no claim taken.
 
 Deviations for review (PR body): level key `level3` (the roster's L3), not `l3`; figures side by side on phones in Stages 3-4 and after answering; Stage 2 asks for the pair of forms; Stage 2 has no axis values; Stage 1 is 25 equations by value. Discoveries: the standing ruling names todo row CLOUD-MERGE-TOKEN, which does not exist; phone-fit's generic driver cannot get a question marked when it resolves only after two tries. Next: the Gate, review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
 
-Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 0; usage n/a.
+Project Claude review (10 Nov 2026): approved. 862 pool questions independently recomputed, 0 mismatches. Stage 1's 25 distinct equations accepted (the full standard exact-value set; the contract's '40+' was impossible); level key 'level3' accepted (matches scripts/roster-levels.json; the contract's 'l3' was wrong); Stage 2's 'which pair solves it?' accepted (works for negative k, where neither solution is α).
+
+Merge route: to be merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: `github.com` / `X Failed to log in to github.com using token (GH_TOKEN)` / `- Active account: true` / `- The token in GH_TOKEN is invalid.`, exit 1; output of `gh auth status` re-run 10 Nov before this push).
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 1; amendments 0; usage n/a.
 
 ## 2026-11-10 (cloud): #722 merge route
 
