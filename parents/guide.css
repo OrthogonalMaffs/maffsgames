@@ -356,7 +356,6 @@ tbody tr:last-child td { border-bottom: none; }
 .katex-display {
   overflow-x: auto;
   overflow-y: hidden;
-  padding-bottom: 2px;
 }
 
 /* -------------------------------------------------- guide-specific bits */

@@ -15,3 +15,14 @@ EXACT CHANGE:
 DO NOT TOUCH: any game; schools/assets/; room.js, engine.js or any student-facing room page; per-page guide HTML; spec-map; Gate files and workflows; canon; cloud.md; any todo row not named above.
 SUCCESS CONDITION: Tier 1 green with the entries removed; no page wider than its viewport at 320×568 among those listed; tables and display maths unchanged at 1366×768 (before/after screenshot of one of each); Gate green; stopped for review.
 STOP IF: an overflow is inline maths rather than display maths (report which page and expression); wrapping tables in guide.js changes any table's look at desktop width; a teacher page still overflows from something other than table.tt; the work will not reach a green Gate in time for Jon to say "merge" before he leaves.
+
+PHONE-SCROLL — Amendment 1 (Project Claude, 10 Nov 06:42; replaces the 06:40 draft)
+1. standard-form (parents/standard-form/index.html:120 ONLY), two changes on that line and nothing else on the page:
+   a. Insert <wbr> after each comma in "5,970,000,000,000,000,000,000,000" so the number can break only at a comma. This is the only grouped-digit run in parents/ (searched); not a class, so no shared rule.
+   b. "The Earth weighs about" → "The Earth has a mass of about" (kg is a mass, not a weight; Jon, 10 Nov).
+   Remove its tier1_phone_overflow entry if Tier 1 then passes at 320×568; if it still overflows, STOP and report the element.
+2. Remove the 2px padding-bottom from .katex-display in parents/guide.css. Confirm no display maths is clipped on every guide that renders display maths (list them), 320×568 and 1366×768.
+3. Deviations accepted as reported: table margins on the scroll box; the in-play row outline drawn inside the row; touch scrolling on the guide box.
+4. Lane: record in the close-out that this ran in a cloud container on claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane.
+5. The /updates/ line, if any, covers the standard-form wording change too.
+Then: green Gate, stop for Project Claude's review and Jon's "merge". Do not merge.

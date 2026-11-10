@@ -2,7 +2,7 @@
 
 **Queue (cross-lane facts; never archived)**
 
-- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55): PR at the Gate, holding for Project Claude's review and Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
+- PHONE-SCROLL (Small; Project Claude, 10 Nov 05:55, Amendment 1): PR #721, stopped on Amendment 1 item 2 (display maths clipped by one pixel row), waiting for Project Claude's ruling; then Jon's "merge". Branch claude/amazing-goldberg-2eiqbm (a cloud container working the home lane). Contract: docs/handover/contracts/2026-11-10-phone-scroll.md. Entry below.
 
 - DOCS-BUNDLE (Docs; Project Claude, 9 Nov 19:10, Amendments 1-2): merged as 10d3167.
 
@@ -18,13 +18,17 @@
 
 ## 2026-11-10 (home): PHONE-SCROLL
 
-Wide tables and display maths scroll in their own box on a 320px phone. `escape-rooms/assets/teacher.js` wraps its three `table.tt` in `div.tt-scroll` (`engine.css`: `overflow-x:auto`, the table's margin moved to the box). `parents/guide.js` wraps every guide table in `div.table-scroll` (margin moved likewise), and `parents/guide.css` scrolls `.katex-display` in its own line. 19 `tier1_phone_overflow` entries removed: 14 teacher pages, `fractions`, and the four display-maths guides. Todo 1.37 and 1.38 closed to todo-done.md; 1.34 updated. At 1366×768 the tables are pixel-identical to main; each display line is 2px taller (the contract's `padding-bottom:2px`). /updates/ line added.
+Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane (Amendment 1, item 4). PR #721.
 
-Discoveries: `standard-form` still measures 326px in this container: its table fits, but the prose number "5,970,000,000,000,000,000,000,000 kg" in its Conversation starter cannot wrap. Not a table and not maths, so its entry stays (row 1.34), for a ruling. No inline maths widens any page. `scripts/test-escape-rating.py` still hides `table.tt` at 320px, which is no longer needed (not touched: outside EXACT CHANGE).
+Wide tables and display maths scroll in their own box on a 320px phone. `escape-rooms/assets/teacher.js` wraps its three `table.tt` in `div.tt-scroll` (`engine.css`: `overflow-x:auto`, the table's margin moved to the box). `parents/guide.js` wraps every guide table in `div.table-scroll` (margin moved likewise), and `parents/guide.css` scrolls `.katex-display` in its own line. Amendment 1: standard-form's 33-digit number breaks at its commas (`<wbr>`, line 120 only) and "weighs" became "has a mass of"; the 2px display padding removed. 20 `tier1_phone_overflow` entries removed: 14 teacher pages and six guides. Todo 1.37 and 1.38 closed to todo-done.md; 1.34 updated. Tables pixel-identical to main at 1366×768. /updates/ line added.
 
-Next: Project Claude's review and Jon's "merge".
+STOPPED on Amendment 1 item 2: display maths IS clipped. On 9 of the 94 display blocks (13 guides × 2 widths), `overflow-y:hidden` cuts one anti-aliased pixel row above or below a tall fraction (averages, area-perimeter, probability, standard-form, trigonometry). The 2px bottom padding did not prevent it either; my earlier "nothing clipped" covered 5 guides only. `padding:2px 0` makes all 94 ink-identical to main, at +4px per display line. Waiting for Project Claude's ruling (PR #721).
 
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
+Discoveries: `scripts/test-escape-rating.py` still hides `table.tt` at 320px, no longer needed (not touched: outside EXACT CHANGE).
+
+Next: the ruling on the clipping; then Gate green, Project Claude's review and Jon's "merge".
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-09 (home): DOCS-BUNDLE
 
