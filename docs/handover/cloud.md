@@ -71,6 +71,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > Record each use in the PR's close-out: "Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: <output>)".
 > merge-pr.py remains the first route wherever it authenticates. This ruling expires when todo row CLOUD-MERGE-TOKEN closes, or on Tue 24 Nov 2026, whichever is first. Record it verbatim in docs/handover/cloud.md's standing rules in this contract's first commit.
 
+## 2026-11-10 (cloud): CAST-AWAY-BUILD (`docs/handover/contracts/2026-11-09-cast-away-build.md`, Medium, todo row CAST-AWAY)
+
+At the Gate, holding for Project Claude's review and Jon's look and "merge" (contract: do not merge): [#723](https://github.com/OrthogonalMaffs/maffsgames/pull/723), branch `claude/relaxed-tesla-8o84r1`, worktree the primary checkout. `gh auth status` failed at the start (GH_TOKEN invalid), so a later merge takes the standing route above. `games/cast-away/`: sin, cos and tan x = k on 0-360 with CAST and the graph, four stages and boards (pools 70, 244, 258, 290), named feedback, "Show me" after two wrong tries, the three walkthroughs word for word, the band on start and results only. `verify-cast-away.py` PASS: every key by an mpmath root search, every feedback rule fired, seven sizes and modes, 12 of 12 plants. Answer lock PASS; phone-fit PASS (asking only) in normal, Aa and laptop; stage exit OK. Registered unlisted; todo row closed to todo-done.md; no claim taken.
+
+Deviations for review (PR body): level key `level3` (the roster's L3), not `l3`; figures side by side on phones in Stages 3-4 and after answering; Stage 2 asks for the pair of forms; Stage 2 has no axis values; Stage 1 is 25 equations by value. Discoveries: the standing ruling names todo row CLOUD-MERGE-TOKEN, which does not exist; phone-fit's generic driver cannot get a question marked when it resolves only after two tries. Next: the Gate, review, Jon's look and "merge"; the contract file moves to `docs/history/contracts/` after merge.
+
+Record: agent Claude Code; wall n/a (planner and container clocks differ); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-10 (cloud): #722 merge route
 
 RULING (Jon, Tue 10 Nov 2026, 07:40): one-off merge route for #722 only (docs-only close-out of #721).
