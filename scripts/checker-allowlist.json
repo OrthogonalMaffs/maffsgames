@@ -1651,107 +1651,13 @@
     "recorded in the old fallback font fitted in them and were removed; distinctly-average (its Aa toggle) is",
     "new in them, listed for Jon to order (docs/audits/font-fit-2026-10-10.md). parents/fractions stays: CI's",
     "Chromium measures it 321px wide in the real fonts (the cloud container's older build measured 320).",
-    "26 Oct 2026 (LOOK-REDS-2): distinctly-average's two entries removed; on theme.css it fits 320px."
+    "26 Oct 2026 (LOOK-REDS-2): distinctly-average's two entries removed; on theme.css it fits 320px.",
+    "10 Nov 2026 (PHONE-SCROLL): 19 entries removed: the 14 teacher pages (their tables scroll in .tt-scroll,",
+    "escape-rooms/assets/engine.css) and five parent guides (tables in .table-scroll from parents/guide.js, display maths",
+    "scrolling in its own line, parents/guide.css). parents/standard-form stays: its table fits, but a 33-digit number in",
+    "its prose (the Conversation starter tip) cannot wrap (todo §1.34)."
   ],
   "tier1_phone_overflow": [
-    {
-      "path": "escape-rooms/big-school-begins/teacher.html",
-      "at": "load",
-      "width": 555,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/canteen-hack/teacher.html",
-      "at": "load",
-      "width": 617,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/car-trap/teacher.html",
-      "at": "load",
-      "width": 570,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/christmas-tree-fiasco/teacher.html",
-      "at": "load",
-      "width": 535,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/comic-caper/teacher.html",
-      "at": "load",
-      "width": 528,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/hamster-heist/teacher.html",
-      "at": "load",
-      "width": 591,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/heatwave-mutiny/teacher.html",
-      "at": "load",
-      "width": 583,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/kiln-disaster/teacher.html",
-      "at": "load",
-      "width": 575,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/library-jam/teacher.html",
-      "at": "load",
-      "width": 538,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/pe-shed-rebellion/teacher.html",
-      "at": "load",
-      "width": 590,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/prom-budget/teacher.html",
-      "at": "load",
-      "width": 589,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/rightful-king/teacher.html",
-      "at": "load",
-      "width": 558,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/roll-for-initiative/teacher.html",
-      "at": "load",
-      "width": 547,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
-    {
-      "path": "escape-rooms/rugby-mud/teacher.html",
-      "at": "load",
-      "width": 603,
-      "todo": "§1.37",
-      "where": "table.tt; table.tt"
-    },
     {
       "path": "games/better-value/index.html",
       "at": "load",
@@ -1809,46 +1715,11 @@
       "where": "div.top-bar; canvas#battlefield; div.game-ui"
     },
     {
-      "path": "parents/fractions/index.html",
-      "at": "load",
-      "width": 321,
-      "todo": "§1.34",
-      "where": "table.equiv-table"
-    },
-    {
-      "path": "parents/indices-surds/index.html",
-      "at": "load",
-      "width": 364,
-      "todo": "§1.38 (listed in §1.34)",
-      "where": "span.base; span.base"
-    },
-    {
-      "path": "parents/probability-trees/index.html",
-      "at": "load",
-      "width": 397,
-      "todo": "§1.38 (listed in §1.34)",
-      "where": "span.base; span.base; span.base"
-    },
-    {
-      "path": "parents/pythagoras/index.html",
-      "at": "load",
-      "width": 325,
-      "todo": "§1.38 (listed in §1.34)",
-      "where": "span.base; span.base"
-    },
-    {
       "path": "parents/standard-form/index.html",
       "at": "load",
       "width": 338,
       "todo": "§1.34",
       "where": "table.example-table"
-    },
-    {
-      "path": "parents/statistics-data/index.html",
-      "at": "load",
-      "width": 325,
-      "todo": "§1.38 (listed in §1.34)",
-      "where": "span.base"
     },
     {
       "path": "spec-map/index.html",

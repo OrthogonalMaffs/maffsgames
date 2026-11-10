@@ -144,7 +144,7 @@
           ' number sets, so the room can be replayed without repeating itself.</div>' +
 
         '<h2>The locks</h2>' +
-        '<table class="tt"><thead><tr><th>Lock</th><th>Topic</th><th>Instrument</th><th>Answer</th>' +
+        '<div class="tt-scroll"><table class="tt"><thead><tr><th>Lock</th><th>Topic</th><th>Instrument</th><th>Answer</th>' +
         '<th>Wrong answer to expect</th><th>Time</th></tr></thead><tbody>' +
         R.locks.map(function (l, i) {
           var m = meta[i] || {}, ins = l.instrument;
@@ -158,20 +158,20 @@
             '<td class="wrongans">' + (undecided(l) ? BY_SET : missOf(l)) + '</td>' +
             '<td>' + (m.minutes ? m.minutes + ' min' : '&mdash;') + '</td></tr>';
         }).join('') +
-        '</tbody></table>' +
+        '</tbody></table></div>' +
 
         '<h2>Where the clues are, and what they say this time</h2>' +
         '<p class="lede">Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p>' +
         (live ? '' : '<p class="print-note">With no game on this device, a clue below shows each lock&rsquo;s Set A figures, as an example.</p>') +
         '<p class="lede">The room deliberately does not tell students which note belongs to which lock &mdash; that ' +
           'is the first real piece of thinking, and it is where the difficulty lives. This table is for you.</p>' +
-        '<table class="tt"><thead><tr><th>Object</th><th>Where</th><th>Feeds</th><th>What it says</th></tr></thead><tbody>' +
+        '<div class="tt-scroll"><table class="tt"><thead><tr><th>Object</th><th>Where</th><th>Feeds</th><th>What it says</th></tr></thead><tbody>' +
         R.objects.map(function (o) {
           var feeds = (T.clueMap && T.clueMap[o.id]) || (o.clue ? '' : 'nothing &mdash; a blank');
           return '<tr><td><b>' + esc(o.name) + '</b></td><td>' + esc(o.where) + '</td><td>' + feeds + '</td>' +
                  '<td>' + (o.clue ? fill(o.clue) : '<i>' + fill(o.flavour || '') + '</i>') + '</td></tr>';
         }).join('') +
-        '</tbody></table>' +
+        '</tbody></table></div>' +
 
         '<h2>Answers, method and the hint ladder</h2>' +
         R.locks.map(function (l, i) {
@@ -214,15 +214,15 @@
   function libraryTable(l) {
     var here = indexOf(l);
     return '<p style="margin-top:12px"><b>This lock’s library</b> — every set that can come up, by the letter on the lock screen:</p>' +
-      '<table class="tt"><thead><tr><th>Set</th><th>Answer</th><th>Wrong answer</th></tr></thead><tbody>' +
+      '<div class="tt-scroll"><table class="tt"><thead><tr><th>Set</th><th>Answer</th><th>Wrong answer</th></tr></thead><tbody>' +
       l.variants.map(function (v, i) {
         var mark = live && i === here;
-        return '<tr data-set="' + codeOf(i) + '"' + (mark ? ' style="outline:2px solid var(--accent)"' : '') + '>' +
+        return '<tr data-set="' + codeOf(i) + '"' + (mark ? ' style="outline:2px solid var(--accent);outline-offset:-2px"' : '') + '>' +
           '<td><b>' + codeOf(i) + '</b>' + (mark ? ' <b>&larr; in play</b>' : '') + '</td>' +
           '<td class="ans">' + ansOf(l, v) + '</td>' +
           '<td class="wrongans">' + missOf(l, v) + '</td></tr>';
       }).join('') +
-      '</tbody></table>';
+      '</tbody></table></div>';
   }
 
   // ---- go, and keep up with the other tab ----

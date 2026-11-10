@@ -331,15 +331,33 @@ a { color: var(--teal-dark); }
 .warning-label { color: var(--red); }
 
 /* ------------------------------------------------------------- tables */
+/* PHONE-SCROLL: guide.js wraps every table in .table-scroll, so a wide table scrolls
+   inside its own box on a phone and never the page. The table's margin is the wrapper's:
+   the wrapper's overflow would otherwise keep the table's margin inside it, and the
+   spacing at desktop width would change. */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 1rem 0;
+}
 table {
   width: 100%;
   border-collapse: collapse;
   margin: 1rem 0;
   font-size: 0.95rem;
 }
+.table-scroll > table { margin: 0; }
 th, td { padding: 0.6rem 0.75rem; border-bottom: 1px solid var(--border); text-align: left; }
 th { font-weight: 700; color: var(--navy); background: var(--bg); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
 tbody tr:last-child td { border-bottom: none; }
+
+/* PHONE-SCROLL: a KaTeX display line wider than the phone scrolls inside its own line,
+   never the page. Inline maths is untouched. */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 2px;
+}
 
 /* -------------------------------------------------- guide-specific bits */
 .number-line {

@@ -92,8 +92,24 @@
     }
   }
 
+  /* PHONE-SCROLL: every table goes in a .table-scroll box (guide.css), so a table wider
+     than a phone scrolls inside the box and the page never scrolls sideways. Done here,
+     once, so no guide's HTML carries its own wrapper. */
+  function wrapTables() {
+    var tables = document.querySelectorAll('body table');
+    for (var i = 0; i < tables.length; i++) {
+      var t = tables[i];
+      if (t.parentElement && t.parentElement.classList.contains('table-scroll')) continue;
+      var box = document.createElement('div');
+      box.className = 'table-scroll';
+      t.parentNode.insertBefore(box, t);
+      box.appendChild(t);
+    }
+  }
+
   function init() {
     renderTierBadges();
+    wrapTables();
 
     var btn = document.getElementById('a11yBtn');
     if (btn) {
