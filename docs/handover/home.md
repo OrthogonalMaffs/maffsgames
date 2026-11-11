@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-10 (home): FIREBASE-ESCAPING
+
+Claude Code (home lane), worktree `~/mg-firebase-escaping`, branch `claude/firebase-escaping`, PR #728; contract `docs/handover/contracts/2026-11-10-firebase-escaping.md`. The hub escapes every Firebase value it renders (board initials, score and timestamp; the all-time high's score and date) through one esc(); the '&mdash;' fallback stays markup. The rules file refuses `<` and `>` in `recent_scores` `game` and `level`, written, NOT deployed: Jon deploys (`docs/firebase-rules-deploy.md`, "10 Nov 2026 change"). Plant in `scripts/test-scores-offline.py`: markup initials on a fake board; the unescaped hub is caught. STOP IF checks: no other page or shared asset renders Firebase data unescaped (the ticker escapes; Free Daily Pizza's target is a number checked with typeof); no game name or level label holds `<` or `>`; the rules are tested in the console's Rules Playground, no write. No claim held. Todo row FIREBASE-ESCAPING stays open for the deploy only.
+
+## 2026-11-10 (home): HUB-ALL-BOARDS
+
+Claude Code (home lane), worktree `~/mg-hub-all-boards`, branch `claude/hub-all-boards`, PR #727; contract `docs/handover/contracts/2026-11-10-hub-all-boards.md` (preamble, contract and Jon's ruling). The hub lists year6 and all for Fraction Snap, Percentage Flip and Prime Sprint; the 'all' pill reads "All levels" (levelLabel('all') is '' by design, so the hub page labels its own pill; no shared asset touched). check-leaderboard-coverage.js reads a level variable's literal or ternary-of-literal assignments, else the roster's tiers; a selftest runs on every invocation. STOP IF hit: correlation-or-coincidence and the-perfect-prank also changed derivation; on Jon's ruling both now-stale LEVEL_OVERRIDES entries were removed, the correlation reason kept as a comment. Row 1.35: hub part fixed, extract-banks part left open. No claim held. Next: FIREBASE-ESCAPING from the new main.
+
+## 2026-11-10 (home): HOME-DOCS-1110
+
+Claude Code (home lane), worktree `~/mg-home-docs-1110`, branch `claude/home-docs-1110`; contract `docs/handover/contracts/2026-11-10-home-docs-1110.md`. R1 and R2 match cloud.md's standing rules line for line. Canon §12 gains "MERGE-ROUTE and CLOSE-OUTS"; AGENTS.md's merge bullet gains the CLOUD-MERGE-TOKEN exception (151 bytes) and a close-outs bullet (245 bytes); todo rows added; PLAYTEST-S1 closed to todo-done.md. Cloud close-outs carried: none (#725's rides on CAST-AWAY-DIAGNOSE, the lane's next task). Item 5 stopped on its STOP IF (row 1.25 also held the untracked `previous_score` dead-column finding); Jon's ruling (10 Nov evening, option 1) added row PREVIOUS-SCORE-COLUMN (§4 item 43), so eight rows in all, then 1.25 closed to todo-done.md and the backfill note added to `docs/sheets-falsy-backfill.md` §7. Next step: Gate green, then Project Claude's review and Jon's "merge".
+
 ## 2026-11-10 (home): PHONE-SCROLL
 
 Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane (Amendment 1, item 4). PR #721.
@@ -125,30 +137,4 @@ Done: #689 merged by `merge-pr.py` as b4d0323; main run 42362844296 GREEN. Jon a
 Final review fixes: a one-box label splits each ` · ` fact onto its own line; lock names ending `?` or `!` gain no colon in the key. The hall plan and Eric's clipboard boxes sit inside their drawn paper. All Christmas labels fit at 11 pt or more; all other fitted sizes stayed unchanged. Kiln's rebuilt PDF is pixel identical to the pre-fix build. The generator selftest caught 27 of 27 plants; `check-changed.py` passed 51 of 51 selected checks on the final branch, and #689's Gate was green before merge. Proof PNGs are in `docs/screens/christmas-pack/`. This entry follows #693's merged close-out on main, with #693's entry retained below.
 
 Record: agent Codex; wall n/a (work spanned fresh sessions); review cycles 3; amendments 5; usage n/a.
-
-## 2026-11-07 (home): ROOM-SEARCH-TITLES, review fixes (Amendment 2)
-
-Room descriptions no longer read lockMeta: every live room's games.json entry carries a required, person-written "topics" (short_topics renamed), the 14 lists verbatim from Amendment 2; check-meta.py fails a room with none or blank. Every description is at most 120 characters; nothing was shortened. The hub description is Amendment 2's, 130 characters, and check-meta.py fails a hub title or description that counts the rooms (a number, digits or words, up to five words before "room(s)"; KS3 is not one). Plants: no topics, blank topics, topics over 155, the hub count in words and in digits, a count in the hub title: 36 of 36 caught. Comic Caper's description is unchanged, so check-student-labels.py is untouched (its selftest passes). apply-meta.py rewrote 11 heads (kiln-disaster, big-school-begins, comic-caper and rightful-king already matched) and is idempotent. Canon §2.1 updated. Gate green on fb9028e (run 42357252313).
-
-Review, 7 Nov: the count check on the hub title approved; "one room a lesson" being flagged accepted; the contract file stays in task PRs, only home.md and cloud.md wait for close-out. home.md was restored to the merge-base; this entry lands at close-out. The cloud container lacked Python playwright and sympy, so check-changed.py's 31 browser and SymPy checks failed on import and fell to the Gate, which passed them.
-
-Next: Merged as 5202a94; main run 42358602377 green; end-task removed claude/room-meta.
-
-Record: agent Claude Code; wall in the PR's report; review cycles 2; amendments 2; usage n/a.
-
-## 2026-11-06 (home): ROOM-SEARCH-TITLES
-
-Built after the stop below. data/games.json gains "rooms" (14) and the hub joins "pages"; check-meta.py and apply-meta.py hold and write them; canon §2.1 says so. Topics come from each teacher page's lockMeta, the clock from room.js. engine.js's `document.title` line is gone (Amendment 1), and check-meta.py fails if a room script assigns it again; teacher.js:231 stays. No title uses the fallback; big-school-begins and rightful-king use short_topics. The full title table is in the PR body. In Chromium all 14 rooms and the hub keep the generated title after load. Browser tabs now show the search title during play, not the story name.
-
-Deviation approved by Project Claude, 6 Nov 22:32: check-student-labels.py's selftest pinned Comic Caper's old description, so its expected string and planted fault now use the generated one; the rule is unchanged. For later, not this PR: that selftest borrows live page wording, and synthetic fixtures would stop it breaking on content changes.
-
-Next: Project Claude's review and Jon's approval of the table, then merge-pr.py. The Gate file's label for this check still says "every game page and /essentials/": for the cloud lane, harmless.
-
-Record: agent Claude Code; wall in the PR's report; review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-06 (home): ROOM-SEARCH-TITLES, STOPPED
-
-Nothing built. First version stopped on two descriptions over 155 characters; the consolidated contract (18:50) answered that and the rulings it raised, and replaces it in the contracts folder. Consolidated version stopped on "a change outside <head> seems necessary": escape-rooms/assets/engine.js:994 sets `document.title = R.title + ' — MaffsGames'` on every load, so a generated <title> is overwritten in the rendered page (tested on kiln-disaster and rightful-king with a title planted in the served head: story name by DOMContentLoaded). check-meta.py reads source, so it would pass while the rendered title stayed wrong. Asked Jon: may the line go, with a plant so it cannot return; and whether topics are lower-cased in full, first letter included, short_topics too (the contract's wording reads two ways). Clear: 14 timers read from room.js, 14 lockMeta blocks parse, hub og:description 127 characters and "Fourteen" equals the live rooms, no title needs the fallback.
-
-Record: agent Claude Code; wall n/a (stopped before build); review cycles 0; amendments 1 (the consolidation); usage n/a.
 

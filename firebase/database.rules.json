@@ -23,9 +23,9 @@
       "$entry": {
         ".write": "!data.exists() && newData.exists()",
         ".validate": "newData.hasChildren(['game', 'slug', 'level', 'levelKey', 'score', 'timestamp'])",
-        "game": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80" },
+        "game": { ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 80 && !newData.val().matches(/[<>]/)" },
         "slug": { ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9-]{1,60}$/)" },
-        "level": { ".validate": "newData.isString() && newData.val().length <= 60" },
+        "level": { ".validate": "newData.isString() && newData.val().length <= 60 && !newData.val().matches(/[<>]/)" },
         "levelKey": { ".validate": "newData.isString() && newData.val().matches(/^[a-z0-9-]{1,40}$/)" },
         "score": { ".validate": "newData.isNumber()" },
         "timestamp": { ".validate": "newData.isNumber() && newData.val() >= now - 60000 && newData.val() <= now + 60000" },
