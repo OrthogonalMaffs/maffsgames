@@ -3100,4 +3100,4 @@ Moved word for word from `docs/todo.md`, each with its closing note (contract HO
 
 | # | Item | Owner |
 |---|---|---|
-| PACK-APPROVED | **Printable packs: the DRAFT badge shows only when a room's wording is not approved, and `--final` refuses an unapproved room.** Both rooms approved by Jon 7 Nov. Needed before the Christmas pack goes to Tes, about 23 Nov. **DONE 11 Nov 2026 (contract HOME-QUEUE-1111 PR 1, PR #PRNUM):** each pack config's `wording_approved` governs the badge; `--final` refuses an unapproved room; both packs build with `--final` with no DRAFT on any page. | done |
+| PACK-APPROVED | **Printable packs: the DRAFT badge shows only when a room's wording is not approved, and `--final` refuses an unapproved room.** Both rooms approved by Jon 7 Nov. Needed before the Christmas pack goes to Tes, about 23 Nov. **DONE 11 Nov 2026 (contract HOME-QUEUE-1111 PR 1, PR #737):** each pack config's `wording_approved` governs the badge; `--final` refuses an unapproved room; both packs build with `--final` with no DRAFT on any page. | done |
