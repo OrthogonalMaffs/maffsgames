@@ -2,37 +2,7 @@
 
 **Repository history:** this repository started fresh on 2 Oct 2026. Any PR number or commit hash from before then, here or in canon and CLAUDE.md, refers to `OrthogonalMaffs/maffsgames-archive` (archived, read-only). This repository's PRs are #1–#31 so far.
 
-Last updated: 6 Oct 2026 (home, night: Jon's rulings on audit tranches 3-6; 18 games unlisted, canon SR-16 to SR-20 and the build freeze, relist checklists §1.58-§1.75). Before that, 6 Oct 2026 (home: Simultaneous Solver PR #83, staged elimination, Foundation Stages 1-4 + A-Level verified; docs and the #82 relist checklists in this PR). Before that, 6 Oct 2026 (cloud: the four open PRs, one at a time): #75 (CI group D and the 75% time budget), #72 (search titles from data/games.json), #73 (teacher line on the results screen) and #74 (Estimation Engine rebuilt under SR-12, its own CI group E, back on /resit/ at 32) merged, each with main green; their docs in #76, #77 and this PR.
-**29 Sep 2026, later still — three read-only follow-ups, no code touched.**
-- **1.25 redeployed** by Jon, ~19:18Z; live rows confirm `correct`/`score` writing through. Only the
-  backfill and a backup ahead of it remain, parked as Jon's own tasks — see 1.25's row and
-  `docs/sheets-falsy-backfill.md` §6.
-- **Snag #8 (recorded here, not in `docs/snagging-list.md`): Graph Transformer's analytics coverage
-  against canon §1.3.** `question_answered` sends `game_slug, level, correct, question_index` — full
-  coverage of §1.3's required set. `game_completed` sends `game_slug, level, score,
-  questions_answered, accuracy` — **`questions_correct` is not sent**, the one §1.3-required
-  parameter this game omits (confirmed live: rows show `correct` and `score`, not
-  `questions_correct`); `questions_answered` here is always `puzzles.length` (12, the fixed session
-  size), not a count of puzzles actually solved. `game_started` sends `game_slug, level` (no `mode`
-  — this game isn't multi-mode, so §1.3 doesn't require one). `personal_best_set` sends `game_slug,
-  level, score, previous_best` — full coverage. `game_abandoned` (automatic, via `analytics.js`)
-  sends `game_slug, level, questions_answered` (the puzzle index reached, `pIdx`) in place of
-  §1.3's `question_index` — same value, different key name, likely why live rows show it landing in
-  the `questions_answered` column rather than `question_index`. **Skip is not a distinct event.**
-  `skipPuzzle()` fires the exact same `question_answered` shape as a real wrong answer —
-  `correct:false, question_index:pIdx+1` — with no flag distinguishing "skipped" from "tried and
-  failed." In practice the two are indistinguishable in the data, but also inseparable from each
-  other by design: `checkMatch()` only ever fires on a match (always `correct:true`), so every
-  `correct:false` row for this game **is** a skip; there is no event at all for an unmatched
-  attempt along the way (the whole point of continuous curve-manipulation gameplay — there's no
-  discrete "submit"). No parameter added or changed to check any of this.
-- **Leaderboard: Project Claude's recommendation, pending Jon's ruling — leave the old
-  `graph-transformer` entries as they are.** The old marking rule only ever depressed scores (a
-  rejected valid route forced extra moves or a skip; every multi-unit shift over-counted moves
-  against par), never inflated them, so old entries undersell what the same play would score under
-  the fixed rules rather than misstate it. New scores under the fixed rules will naturally displace
-  them at the top of the board over time as students replay, without needing any write to Firebase.
-  Not touched.
+History: `git log -p docs/todo.md`.
 
 **Snagging list:** small, testable issues Jon finds while play-testing live games go in
 `docs/snagging-list.md`, not here — check it alongside this file; an entry graduates into this
@@ -247,7 +217,7 @@ started.** Widen it before it runs so it covers the whole class:
     "submitted"/"leaderboard" wording not backed by `MaffsLeaderboard`/`MaffsScoreHistory`, and
     list what's found — two turned up just from looking at two games.
 - **`like-terms-collector`'s banked runs** (Stage 3 "Finish here", 25 or 35 answered) share a
-  board with full 45-question runs, scored as raw correct count. Pre-existing; keep, or separate?
+  board with full 45-question runs, scored as raw correct count. Pre-existing; keep, or separate? **RULED 29 Sep 2026 (Jon): separate.** Give Stage 3's banked finishes ("Finish here" at 25/35) their own leaderboard entry/tag so they stop competing directly with full 45-question runs. Not yet built: every run submits to one board, `'year6'` (`games/like-terms-collector/index.html:608`), on 11 Nov 2026. Moved from §6 (TODO-TIDY).
 - **Housekeeping in the contract itself:** remove `MIN_QUESTIONS_FOR_LEADERBOARD` from its DO NOT
   TOUCH — confirmed gone from the codebase (`grep` clean, 26 Sep).
 - **Still unverified:** `node` is not installed on the Windows machine (checked again 26 Sep,
@@ -313,11 +283,13 @@ see the START block's NEXT line. | **Code Claude**, batch by batch; **Jon** rule
 | BOOLEAN-BLITZ-LENGTH | **Boolean Blitz: a start-screen choice of 10, 20 or all 42 questions, with one leaderboard per length (SR-22).** After the live-bug fixes. Jon, 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | CLAIM-WALKTHROUGH | **Test the Claim: an optional, very clearly shown "Watch one first" worked example per mode** (one idea per screen, the student's Next, unscored); step feedback naming the actual mistake; "Show me" after two wrong tries. Jon, 9 Nov 2026 (DOCS-BUNDLE). | Project Claude writes the scripts for Jon's approval before the build; then cloud lane |
 | FORGE-SUBJECT-PROMPT | **Formula Forge: the subject letter in "Make … the subject" much more prominent**, and a start-screen line "Powers and Multi: have paper handy". Jon, 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
-| FAKE-BAG | **Idea: "Is That a Fake Bag?"** ("a sim tote…" = asymptote), reserved for a future graph-sketching / asymptotes game. Not scheduled. Jon, 9 Nov 2026 (DOCS-BUNDLE). | **Jon** (idea) |
 | SCROLL-BOX-FOCUS | SCROLL-BOX-FOCUS — the .tt-scroll and .table-scroll boxes from #721 are not keyboard-focusable in Safari; add tabindex="0" (and an aria-label naming the table) where the wrapper is created (teacher.js, guide.js). (Project Claude's review of #721, 10 Nov 2026.) | home lane |
 | CHART-INTERROGATOR-SCROLL | CHART-INTERROGATOR-SCROLL — Chart Interrogator scrolls 34 px sideways at 375 px wide (found by #725's checks, 10 Nov 2026; on main before #725). Find the element that overflows and fix it in the game. (Code Claude, #725, 10 Nov 2026.) | cloud lane |
 | WHEN-WILL-I-USE-THIS | WHEN-WILL-I-USE-THIS — a 'When will I use this?' section: for each area of maths, where it appears in real life and careers, by topic and by vocational route (Skills England's 15 routes), each scenario sourced and linked to the games that practise it; as many areas of maths as possible (Jon, 10 Nov 2026). Spec: Project Claude (draft 10 Nov), then contract. | **Project Claude** (spec) |
 | EVERYDAY-MAFFS | EVERYDAY-MAFFS — an 'Everyday MAFFS' section teaching the maths people need in daily life (tax, compound interest and debt, mortgages, pensions, inflation, everyday probability), migrated from MathsWins' six Everyday Maths courses and rewritten: every tax/NI/pension figure states its tax year and check date (yearly review row); nothing from or naming the MathsWins Academy's gambling courses comes across (Jon, 10 Nov 2026). Separate from WHEN-WILL-I-USE-THIS. | **Jon** (scope), then Project Claude |
+| SIX-PS-SHORT-WRONG | **The 6 P's wrong state on short screens (Jon's ruling, 27 Oct 2026): 14 questions at 320 x 568 have Next 1 to 208 px below the fold** (worked lines plus figure taller than the screen: area 5, basic-probability 3, pie-charts 3, percentages-money 2, simultaneous 1). Parked in `KNOWN_FAILURES` in `scripts/sweep-six-ps-wrong.py`, which only shrinks. The working is not shortened. **Later fix:** on short screens in the wrong state, shrink or hide the figure; then delete the entries. Moved from §6, 11 Nov 2026 (TODO-TIDY). | cloud lane |
+| EXPECTATION-EXACT | **Expectation Station: exact everywhere. RULED 29 Sep 2026 (Jon): go exact everywhere.** Retire `formatPNum` globally — all 42 decimal scenarios move from "0.50"-style padded output to exact ("0.5"), matching FRACTION mode. Not yet built: `formatPNum` still has 3 uses in `games/expectation-station/index.html` on 11 Nov 2026. Moved from §6 (TODO-TIDY). | cloud lane |
+| KILN-FOLLOW-UPS | **The Kiln Disaster's follow-ups, RULED 29 Sep 2026 (Jon), not built on 11 Nov 2026.** (1) **Name him.** Add Mr Stephen Mudge's real name to the teacher page alongside "Smudgey", so a teacher opening it cold isn't confused (the name is only in `escape-rooms/kiln-disaster/room.js:43`'s hook, which `teacher.js` does not show). (2) **Add the explanation.** Document on the teacher page (not just canon §11.3) that a group hitting only named misconceptions skips some of Smudgey's wrong-entry lines by design. (3) **Set a floor on `a`.** Constrain the check-value lock generator so no future variant lands as lopsided as "2 + 48 ÷ 2" (`scripts/gen-escape-variants.py:638`; that variant is still in `room.js`). Moved from §6 (TODO-TIDY). | home lane (the shared variant generator) |
 
 ### 3.9 — Phone fit order (Jon, 1 Oct 2026)
 
@@ -419,35 +391,36 @@ Line numbers are `games/<slug>/index.html` on 1 Oct 2026. Every one of the 56 ap
 
 **Aa mode: one fix across three games (Jon, 1 Oct 2026).** `six-sevens-bruv`, `free-daily-pizza` and `new-shapes` are each fitted to the phone rule in normal mode. Two are known to be over the fold in Aa (OpenDyslexic) mode: Six Sevens' Next at 320×568 and 375×667 (canon §7.6.1's known gap), and New Shapes' parallelogram asking screen at 320×568, 11px over (Enter at 539 against a fold of 528), because "AREA OF A PARALLELOGRAM" wraps. Free Daily Pizza has not been measured in Aa. To be fixed **once, for all three**, not game by game. All three load the shared `schools/assets/opendyslexic.css`, which makes it the candidate layer; the fix design, and measuring Free Daily Pizza in Aa, are for that contract. Canon §7.6.1's "needs its own ruling" is now ruled.
 
-### Resit strand — game slate (Jon, 30 Sep)
+### Game ideas, not yet built (Jon, 10 Nov 2026)
 
-Build order. The strand's voice word is **"Bruv"**, never "Bro". **[PROPOSED]** marks a working name
-Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resit-coverage-audit.md`).
+Each idea is one line here and nowhere else in the repo; detail goes in its spec when it is scheduled. New builds follow SR-30 (canon §0.3). Spec references are DfE subject-content parts (`docs/resit-coverage-audit.md`). The strand's voice word is "Bruv", never "Bro". [PROPOSED] = working name not fixed.
 
-3. **How Many Parts?**: fraction operations, with misconception distractors.
-4. **Not in Pen**: charts, reading AND constructing (drag bars, set pie angles, plot scatter points) (S2, S6).
-5. **It's Not a Diamond** [PROPOSED]: shape vocabulary and properties (G1, G4, G9.1, G12).
-6. **Use a Ruler, PLEASE** [PROPOSED]: straight-line and real-life graphs (A9.1, A14.1, A14.4).
-7. **It's Not 50/50** [PROPOSED]: probability (P1.1, P6.1, P6.2).
-8. **It's Just Base 60, Bruv**: time only.
+**Resit strand games:**
+- **It's Not a Diamond** [PROPOSED]: shape vocabulary and properties (G1, G4, G9.1, G12).
+- **It's Just Base 60, Bruv**: time only.
+- **Small, or Far Away?**: metric units, map scales, scale drawings, measuring lines and angles (N13, R2.1, G15.1). Father Ted reference in the title only: no characters, lines or look-alike art.
+- **Letters? In Maffs? Y?!**: algebra basics (A1.1, A3.1, A4.1, A7.1), carrying A4.3 (expanding one bracket); each stage opens with why letters are used. Decide first whether to link to `like-terms-collector` instead of restyling it.
+- **Bond. Number Bond.** [PROPOSED]: number bonds to 10/100/1000, and decimals to 1.
+- **Maths Wizard** [PROPOSED]: Jon's mental strategies; each card gives the trick, why it works and where it breaks, then a drill. Undecided: whether adding by compensation (add 8 = add 10, subtract 2) goes here.
+- **Don't Count the Zeroes**: standard form (STRETCH), scaffold-first with a place-value chart; `standard-form-blitz` stays the source until it is built.
+- **Venn Diagrams AGAIN?**: HCF and LCM via prime-factor Venn diagrams.
+- **Not in Pen**: constructing charts (drag bars, set pie angles, plot scatter points) (S2, S6).
+- **Use a Ruler, PLEASE** [PROPOSED]: real-life graphs (A14.1, A14.4). Straight lines are `y-so-steep` (Jon, 27 Oct 2026).
+- **It's Not 50/50** [PROPOSED]: constructing Venn diagrams and two-way tables (P6.1, P6.2). `possibly-maybe` covers the rest; `given-that` only reads them (Jon, 11 Nov 2026).
 
-   8b. **Small, or Far Away?**: metric units, map scales, scale drawings, measuring lines and angles (N13, R2.1, G15.1). The Father Ted reference is in the title only: no characters, lines or look-alike art.
-9. **Letters? In Maffs? Y?!**: algebra basics (A1.1, A3.1, A4.1, A7.1). This is item 3.5(4)'s one algebra game, which also carries the A4.3 sub-skill (expanding one bracket). Each stage opens with why letters are used. **Decide before building** whether to link to `like-terms-collector` (live in a Google Classroom) rather than restyle it.
-10. **Bond. Number Bond.** [PROPOSED]: number bonds to 10/100/1000, and decimals to 1.
-11. **Maths Wizard** [PROPOSED]: Jon's mental strategies. Each card gives the trick, why it works and where it breaks, then a drill.
-12. **Don't Count the Zeroes**: standard form (STRETCH). Item 3.5(3): built beside `standard-form-blitz`, scaffold-first with a place-value chart.
-13. **Venn Diagrams AGAIN?**: HCF and LCM via prime-factor Venn diagrams.
-14. **Just Pythag It, Bruv** (working title, Jon): Pythagoras' theorem, find the hypotenuse, find a shorter side, in
-    context (G20.1's Pythagoras half; **STRETCH**, Jon 4 Oct 2026; for the June 2027 exams). **There is no dedicated
-    Pythagoras game in the library:** G20's COVERED verdict rests on `trig-worms`, which never tests Pythagoras
-    (audit §10.4, STRETCH build target). Design (Jon, 4 Oct 2026): (1) every question starts by identifying the
-    hypotenuse; (2) the bank is weighted towards finding a shorter side (subtract); (3) the two types are mixed
-    unpredictably so students can't add by habit; (4) the adding-instead-of-subtracting answer must appear as a
-    distractor where options are shown; (5) Stage (a) includes scaled triples (e.g. 6-8-10, 9-12-15, 15-20-25,
-    30-40-50, 10-24-26). When a question is a 3-4-5 or 5-12-13 multiple, the feedback after answering names it:
-    "Spotted it? 6, 8, 10 is the 3-4-5 triangle doubled. No calculation needed." (adjusted to the triple and scale).
-    The full worked method is still shown. The verifier checks every triple-family message names the correct base
-    triple and scale factor. Still to specify: the stages (only stage (a) is named) and the build contract.
+**Other games:**
+- **Holey Moley** [PROPOSED]: circles (area, circumference, arcs, sectors); after the three highest-mark gap games.
+- **Sine and cosine rule game**: for Jon's Level 3 class (asked 6 Nov 2026).
+- **Is That a Fake Bag?**: asymptotes (Jon, 9 Nov 2026).
+- **8:53**: grade 7–9 exam-prep game; deliberately outside the mission, parked as long as needed.
+- **Log Laws basic level**: Log Laws is too hard for Jon's Level 3 class; research the level needed first.
+
+**Escape rooms:**
+- **IT Vengeance**: rebuild (withdrawn, awaiting its voice rewrite).
+- **Food Technology** (bake-off) and **Music** (PA feedback): Gemini seeds stored.
+- **Anime Society**: Mrs Rogers's idea, credited.
+- **Environmental Club**: Jon's; exponential growth and decay, ratios for ppm air quality; probably 3 stars.
+- **Pi Day**: idea only.
 
 ## 4. Prevention and quality — after §1–3
 
@@ -633,6 +606,12 @@ Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resi
 41. **TEST-ESCAPE-RATING-UNHIDE** — scripts/test-escape-rating.py still hides the teacher tables before measuring; since #721 they scroll in their own box, so the hiding can go. (Code Claude, #722, 10 Nov 2026.) Owner: home lane.
 42. **ROSTER-CELLS** — a roster Description containing '|' splits its table row (#723 wrote '|k| > 1', found at listing by #724); the look sign-off check skips Unlisted rows, so the fault hid there. Add a check that every roster row in every section, Unlisted included, has the header's cell count. (Project Claude, 10 Nov 2026.) Owner: home lane.
 43. **PREVIOUS-SCORE-COLUMN** — the Sheets endpoint reads data.previous_score (docs/apps-script-endpoint.js:21, :59) but every game sends previous_best, the documented field (.claude/rules/analytics.md:22), so the Sheet's previous_score column has always been blank; GA4 is unaffected. Fix it in the endpoint (read previous_best; keep the column header as is or rename it, say which), then Jon redeploys the live Apps Script. Found while closing 1.25 (Code Claude, HOME-DOCS-1110, 10 Nov 2026). Owner: home lane (endpoint), then Jon (redeploys the live Apps Script).
+44. **STALE-PLANTS-STOP** — Stop a planted browser run at its first measured finding (Jon, 28 Oct 2026; STALE-PLANTS). Done in `verify-just-pythag-it-bruv.py` (`phone_fit`: `patch and len(out) > n0` checkpoints), because a fault that breaks the page makes the steps after it time out, and a timeout must never read as a catch. Not yet applied to the other verifiers that run a planted fault through an interactive session: `verify-decimal-detective.py`, `verify-free-daily-pizza.py` (both patch a live page; check whether a caught fault is followed by a step that can time out); neither has the checkpoint on 11 Nov 2026. `plant_common.py` does not run plants, so the rule lives in each verifier's loop. Moved from §6 (TODO-TIDY). Owner: cloud lane (per-game verifiers).
+45. **PLAN-MAP-ONCE** (cloud lane, after 2 Nov). `ci-deps.py` builds the dependency map once per Plan job, used by both `--selftest` and `--changed-from`; then the Plan timeout in `.github/workflows/check-site.yml` goes back to 5 in the same PR (it is 10 under Jon's freeze exception of 29 Oct 2026, a stopgap; still 10 at `:70` on 11 Nov 2026). Evidence: #614 cancelled 5x, run 40820873132. Moved from §6 (TODO-TIDY). Owner: cloud lane (gate files).
+46. **ESCAPE-COUNT-SOURCE** (after 2 Nov): one source for the live escape-room count and roster; index.html and escape-rooms/index.html read from it or a CI check compares them; the check proved by a planted mismatch. Moved from §6 (TODO-TIDY). Owner: home lane.
+47. **PE-SHED-VARIANT-0** — `pe-shed-rebellion` variant 0 collision (48 psi vs "48π"; 12 m vs "day 12"). **RULED 29 Sep 2026 (Jon): fix it.** Change the audited bank locks per voice-rewrite doc §5h, even though the engine never currently serves variant 0 — latent, not worth leaving. Not built: `scripts/check-escape-rooms.py` still reports `pe-shed-rebellion` "variant 0 INVALID" on 11 Nov 2026. Moved from §6 (TODO-TIDY). Owner: home lane (bank and generator).
+48. **NEW-GAME-GATE** — block merging a new game until it passes tier 4 layer A. **RULED 29 Sep 2026 (Jon): adopt the gate.** Layers B–E stay advisory until built. Half there on 11 Nov 2026: layer A runs on every PR (`check-banks.py --ci`, `check-site.yml:530`) and fails any violation not in the ledger, and a merge needs a green Gate (merge-pr.py's check (a); the standing merge-route ruling). Missing: an unreadable bank passes as a generator without declaring itself one (`extract-banks.py:519` records it `generator: True`; `check-banks.py --ci` fails a lost bank only when the ledger already knows it as read, `:1268`). Add the declaration requirement: a new game extracts a static bank or is declared a generator, or CI fails. `docs/checker-tier4-design.md:139` still says "awaiting Jon's ruling" (not edited here). Moved from §6 (TODO-TIDY; Jon's ruling 2 of 11 Nov 2026). Owner: home lane (`scripts/extract-banks.py`, `scripts/check-banks.py`).
+49. **GROUP-C-EXPLANATIONS** — §7.6 Group C. **RULED 29 Sep 2026 (Jon): author real explanations** for all 6 (`equation-builder`, `factor-race`, `simultaneous-solver`, `estimation-engine`, `fraction-equivalence`, `quadratic-factoriser`). Four are still answer-only (Jon, 11 Nov 2026): `simultaneous-solver` A-Level (`:1274`, "The answer is …"), `equation-builder` (`:657`, the key only), `factor-race` (`:398`, the two factor counts) and Fraction Snap (`fraction-equivalence:360`, one cross-multiplication line). `estimation-engine`, `quadratic-factoriser` and Simultaneous Solver's Foundation stages show the working. Moved from §6 (TODO-TIDY; Jon's ruling 3 of 11 Nov 2026). Owner: cloud lane (per-game).
 
 ### Check-ledger debt (DOCS-BUNDLE, 9 Nov 2026)
 
@@ -703,101 +682,27 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
   40–50 platform minimum, and all resit-audience games: `wrong-on-the-internet` core 10 /
   ks3 15 / gcse 20; `spot-the-muppet` core 12 / ks3 18 / gcse 20; `expected-damage` ks3 15 /
   core 15 / gcse 20; `better-value` gcse 20.
-- Escape rooms: IT Vengeance and Car Trap voice rewrites (each needs a premise/image conversation
+- Escape rooms: the Car Trap voice rewrite (it needs a premise/image conversation
   first), rooms A and B.
 - Certificates (Phase 1b), teacher portal (Phase 2).
 
 ## 6. Jon — decisions and manual tasks
 
-**Blocking something:**
-- **The 6 P's wrong state on short screens (Jon's ruling, 27 Oct 2026): 14 questions at 320 x 568 have Next 1 to 208 px below the fold** (worked lines plus figure taller than the screen: area 5, basic-probability 3, pie-charts 3, percentages-money 2, simultaneous 1). Parked in `KNOWN_FAILURES` in `scripts/sweep-six-ps-wrong.py`, which only shrinks. The working is not shortened. **Later fix:** on short screens in the wrong state, shrink or hide the figure; then delete the entries.
-- **Stop a planted browser run at its first measured finding (Jon, 28 Oct 2026; STALE-PLANTS).** Done in `verify-just-pythag-it-bruv.py` (`phone_fit`: `patch and len(out) > n0` checkpoints), because a fault that breaks the page makes the steps after it time out, and a timeout must never read as a catch. Not yet applied to the other verifiers that run a planted fault through an interactive session: `verify-decimal-detective.py`, `verify-free-daily-pizza.py` (both patch a live page; check whether a caught fault is followed by a step that can time out). `plant_common.py` does not run plants, so the rule lives in each verifier's loop.
-- **Full `check-changed` runs must not run concurrently on this machine (Jon, 29 Oct 2026).** Two 225-check runs ran out of memory on 28 Oct and Claude Code stopped them. Run one at a time with nothing else heavy open; `--workers 2` is a safe setting (the default is half the CPUs, at most 6; heavy checks already run one at a time). A run killed this way is not a check failure.
-- **PLAN-MAP-ONCE (cloud lane, after 2 Nov).** `ci-deps.py` builds the dependency map once per Plan job, used by both `--selftest` and `--changed-from`; then the Plan timeout in `.github/workflows/check-site.yml` goes back to 5 in the same PR (it is 10 under Jon's freeze exception of 29 Oct 2026, a stopgap). Evidence: #614 cancelled 5x, run 40820873132.
-- ESCAPE-COUNT-SOURCE (after 2 Nov): one source for the live escape-room count and roster; index.html and escape-rooms/index.html read from it or a CI check compares them; the check proved by a planted mismatch.
-- **CLAUDE.md consolidation (Jon, 28 Oct 2026; do it AFTER the 6 P's card layout).** CLAUDE.md sits within ~180 bytes of its 20,480-byte cap. Move older handover detail into `docs/handover/`, keep the opening block current, and restore headroom under the cap (it should end well under, e.g. 18 KB). The stale-plants list lives in `docs/handover/stale-plants.md` for the same reason.
-- **Regression Rumble rebuild — needs Jon's content steer.** Withdrawn 30 Sep behind a holding page; what the rebuild needs is in §1.26.
-- **Value-equivalent options (§1.24, queue item 8).** Issue or amend the two draft contracts. Choose
-  the group A replacement distractors per game, starting with `probability-pioneer`. Confirm
-  Contract 2's `ask` wording. **Not ruled 29 Sep** — needs its own session, per-game distractor
-  authoring is too big to rule in passing.
-- ~~New-game gate: block merging a new game until it passes tier 4 layer A?~~ **RULED 29 Sep 2026
-  (Jon): adopt the gate.** Layers B–E stay advisory until built. **Not yet implemented** — this
-  rules the policy, the CI/branch-protection wiring is still to build.
-- Spec-map spot-check (blocks §3.1) — still **Jon's own manual task**, not done 29 Sep.
-- Circle Theorem Spotter Q48 numbers (§1.3); the two distractors (§1.4) — **not ruled 29 Sep**, need
-  the actual question content read first; still open.
-- ~~§7.6 Group C: author explanations, or accept answer-only?~~ **RULED 29 Sep 2026 (Jon): author
-  real explanations** for all 6 (`equation-builder`, `factor-race`, `simultaneous-solver`,
-  `estimation-engine`, `fraction-equivalence`, `quadratic-factoriser`). Not yet built.
-- ~~§7.6 5s floor: adopt platform-wide?~~ **RULED 29 Sep 2026 (Jon): adopt platform-wide, but at
-  3 seconds, not 5** — one change to `next-control.js`. Not yet built.
+Only what needs Jon: a ruling, a content review, or a task only he can do. Build work goes in §1–§4 and §7 whoever ruled it; a ruled item moves there the day it is ruled.
 
-**Small, unblock whenever:**
-- ~~`trigger: 'reset'`?~~ **RULED 29 Sep 2026 (Jon): fire it on a cleared search.** Not yet built —
-  wire `reportFilter('reset')` (or equivalent) into whatever clears the portal search box.
-- ~~`like-terms-collector` banked runs: share or separate?~~ **RULED 29 Sep 2026 (Jon): separate.**
-  Give Stage 3's banked finishes ("Finish here" at 25/35) their own leaderboard entry/tag so they
-  stop competing directly with full 45-question runs. Not yet built; overlaps §2.
-- ~~Expectation Station: exact everywhere, or keep the split?~~ **RULED 29 Sep 2026 (Jon): go exact
-  everywhere.** Retire `formatPNum` globally — all 42 decimal scenarios move from "0.50"-style
-  padded output to exact ("0.5"), matching FRACTION mode. Not yet built.
-- Expectation Station bank mixes rounding conventions: `es_gcse_003`/`es_gcse_008` authored to
-  rounded sums (1.33, 1.67), `es_gcse_005` exactly (1.5). No authoring errors — derived E(X) is
-  always within 0.005 of the stated answer. Not raised for a ruling 29 Sep — not a decision, just a
-  note.
-- The four Kiln follow-ups — all **RULED 29 Sep 2026 (Jon)**, none built yet:
-  - **Name him.** Add Mr Stephen Mudge's real name to the teacher page alongside "Smudgey", so a
-    teacher opening it cold isn't confused.
-  - **Add the explanation.** Document on the teacher page (not just canon §11.3) that a group
-    hitting only named misconceptions skips some of Smudgey's wrong-entry lines by design.
-  - **Leave the art as is.** The frayed-strap/finger ambiguity at thumbnail size is accepted, not
-    rerolled.
-  - **Set a floor on `a`.** Constrain the check-value lock generator so no future variant lands as
-    lopsided as "2 + 48 ÷ 2".
-- ~~`pe-shed-rebellion` variant 0 collision (48 psi vs "48π"; 12 m vs "day 12")?~~ **RULED 29 Sep
-  2026 (Jon): fix it.** Change the audited bank locks per voice-rewrite doc §5h, even though the
-  engine never currently serves variant 0 — latent, not worth leaving.
-- ~~Footers everywhere?~~ **RULED 29 Sep 2026 (Jon): yes, standardise.** ~~Add the standard footer to
-  `truth-will-set-you-free`~~ and a feedback link to the escape rooms.
-  ~~**Also (1 Oct 2026): the site-wide "What's changed" link (`/updates/`).** It is on the portal and
-  About footers only; every other footer gets it here, with the footer bug in §1.28.~~
-  **Footer standardisation DONE, PR 57, 2 Oct 2026** (§1.28): every page but the exempt ones carries
-  the one footer, "What's changed" included; `truth-will-set-you-free`, `boolean-blitz` (its own
-  in-flow footer, Jon 2 Oct) and the `regression-rumble` holding page (Jon 2 Oct) gained it.
-  **Still open: the escape-room feedback link.** No room page has a footer, and the footer PR left
-  `escape-rooms/` alone: a fixed bar over the room engine needs its own layout check, so it is
-  exempt in `check-footer.py` until that is done.
-- **Sheets endpoint, checked 29 Sep 2026:**
-  - `question_index` **is 1-based**, confirmed both by the documented convention
-    (`.claude/rules/analytics.md:61`, "`question_index` is 1-based") and by
-    `escape-rooms/assets/engine.js` itself (`R.locks.indexOf(l) + 1`, `activeLock + 1`). The one
-    exception is the escape-room "search" event, which uses a `0` sentinel with its own `detail:
-    'searched:...'` tag (`:347`) — not a real question index.
-    **Removed 11 Oct 2026 (contract ESCAPE-ANALYTICS): searching sends no event now.**
-  - **Found a real bug, not yet fixed:** `docs/apps-script-endpoint.js`'s `doPost` (`:42`–`:47`)
-    writes every field as `data.field || ''` — including `data.correct` and `data.question_index`.
-    `false || ''` and `0 || ''` both collapse to blank, so **every genuinely wrong answer
-    (`correct: false`) writes an empty `correct` cell in the Sheet**, indistinguishable from an
-    event that never carried a `correct` field at all — and the escape-room's `question_index: 0`
-    search event blanks the same way. This only affects the Sheets export; GA4 is unaffected (it
-    receives the real values). Filed as **1.25** in §1.
-- ~~`analytics.js`: `game_restarted` ignoring mode?~~ Not investigated 29 Sep — carried forward,
-  still open.
+**Decisions:**
+- **matrix-crunch's fourth distractor (§1.4).** One to author for `matrix-crunch:186`; formula-unlocked's was fixed by #116.
+
+**Content to review:**
+- Spot the Error banks (§1.23): KS3 35, Level 4 30.
+- New Shapes banks (§1.27): 15 / 20 / 15.
+- Regression Rumble (§1.26): Jon's look at the rebuilt game before the holding page is replaced.
 
 **Manual tasks:**
-- GA4: update the internal-traffic Data Filter to Jon's current home IP — Ivybridge traffic is
-  still dirtying the portal analytics.
-- Search Console: request indexing for `/escape-rooms/` and each live room (including
-  `/escape-rooms/comic-caper/` and `/escape-rooms/kiln-disaster/`).
-- **The mid-September analytics checkpoint is overdue.** Re-answer the three open questions in
-  the project's `analytics-notes.md` against the 289/193/61.3% baseline.
-- Events sheet: filter `game_abandoned` by `game_slug`, 1–15 Sep, to confirm no abandons are
-  recorded against the homepage.
-- Events sheet: check whether `FALSE` ever appears in the `correct` column for
-  `question_answered` on any quiz game.
-- Events sheet: optional — `binomial-blaster` `game_completed` with score 400 around 17:16 UTC
-  16 Sep. If present, the deleted Firebase score was a real user and can be restored.
+- Spec-map spot-check (blocks §3.1): 10 of the 34 mixed statements in `data/dfe-gcse-parts.json` against the PDF.
+- Analytics checkpoint (overdue): re-answer the open questions in the project's `analytics-notes.md`. From 10 Nov 2026 GA4 excludes Jon's home IPv4 and IPv6 /56 (filter Version 3), so figures step down from that date: compare like with like.
+- Events sheet: confirm no `game_abandoned` against the homepage, 1–15 Sep.
+- Events sheet (optional): `binomial-blaster` `game_completed`, score 400, about 17:16 UTC 16 Sep; if present, the deleted Firebase score was real and can be restored.
 
 ## 7. Housekeeping
 
@@ -811,7 +716,7 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
   them and treat the repo as the only source — and delete the temporary `plan` doc once this
   merge lands (see the note at the top of this file).
 - canon.md: `game_restarted` event not in canon's event table; factor-theorem start counts now
-  reflect real runs from `883b3ca` (completion-rate jump is a measurement correction).
+  reflect real runs from `883b3ca` (completion-rate jump is a measurement correction). Also `analytics.js`: `game_restarted` ignoring mode? Not investigated 29 Sep — carried forward, still open (moved from §6, 11 Nov 2026, TODO-TIDY).
 - **CI maintenance:**
   - `serve-stubbed.py`'s port probe has no `SO_REUSEADDR`. For ~60s after a checker run the port
     sits in TIME_WAIT, the probe's plain `bind()` fails, the server exits, and `check-site.py`
@@ -830,6 +735,9 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
 - **ROOM-TIMES-READING:** read the room-time data, live from 7 Nov 16:41; exclude Jon's Comic Caper test, 16:42–16:45. Owner: Project Claude.
 - **TICKER-CLICKED-REVIEW (about 21 Nov):** review the `ticker_clicked` data from TICKER-LINKS (#704). Owner: Project Claude.
 - **BURST-CLEANUP:** remove `schools/assets/burst.js` and its hooks in a cleanup contract after The 6 P's launch (Jon, 25 Oct); until then do NOT remove them. The 6 P's v2 is built (SIX-PS-PLAYER, 25 Oct; `docs/history/contracts/2026-10-25-six-ps-player.md`). Moved from cloud.md's Queue 8 Nov (BRANCH-CLEANUP). Owner: home lane (shared asset).
+- **CHECK-CHANGED-ONE-RUN** (Jon, 29 Oct 2026): full `check-changed` runs must not run concurrently on this machine. Two 225-check runs ran out of memory on 28 Oct and Claude Code stopped them. Run one at a time with nothing else heavy open; `--workers 2` is a safe setting (the default is half the CPUs, at most 6; heavy checks already run one at a time). A run killed this way is not a check failure. Not yet written as a rule: AGENTS.md and canon do not state it, and `docs/rules/scripts.md`'s two queues cover heavy checks inside one run, not two runs at once (11 Nov 2026). Write it into `docs/rules/scripts.md`, its reason in canon §12. Moved from §6 (TODO-TIDY). Owner: home lane.
+- **PORTAL-RESET-TRIGGER** — `trigger: 'reset'`: **RULED 29 Sep 2026 (Jon): fire it on a cleared search.** Not yet built — wire `reportFilter('reset')` (or equivalent) into whatever clears the portal search box. On 11 Nov 2026 `index.html` calls `reportFilter` only with 'fresh', 'level', 'topic' and 'search' (`:3380`–`:3507`), and `.claude/rules/analytics.md` still calls `reset` reserved. Moved from §6 (TODO-TIDY). Owner: home lane (portal).
+- **ESCAPE-FEEDBACK-LINK** — the escape-room feedback link, the remainder of "Footers everywhere" (**RULED 29 Sep 2026 (Jon): yes, standardise**; footer standardisation done, PR 57, 2 Oct 2026). No room page has a footer, and the footer PR left `escape-rooms/` alone: a fixed bar over the room engine needs its own layout check, so it is exempt in `check-footer.py` until that is done. Moved from §6 (TODO-TIDY). Owner: home lane.
 
 ## Parked, low priority
 - `check-lock-bank.py` flags a computed `n == len([...])` VERIFY as a tautology; batch 6 works

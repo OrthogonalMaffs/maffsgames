@@ -2964,3 +2964,119 @@ on both levels, and a formula worked solution are on file (not committed to the 
   class (highest frequency density). **HELD 1 Oct 2026 (Jon):** under that definition H2's 170–180 is not modal (165–170 is), so the ruling changes no key; re-filed in §1.8 as a wording fix. **DONE 1 Oct 2026 (PR 41):** reworded as a modal-class question, keyed on frequency density; see §1.8.
 
 | 1.33 | ~~**`games/sequence-solver/index-original.html` is a stale, publicly served copy of Sequence Solver.** 531 lines, added 14 Mar 2026 (`757837d`), last touched 25 Mar 2026: the original single-mode "next term" game (a `SEQUENCES` array of term lists, a device-local `seq_lb` leaderboard), not the tiered rebuild. Checked 2 Oct 2026: **it does not serve `alevel[23]`** (it has no level banks at all; §1.29's fix is not missing from it, there is nothing for it to be missing from) but its own content has never been through any bank check; **it sends no game events** (no `mfg()`, no `analytics.js`, no `game_slug`, no Firebase), only GA4's automatic `page_view` under its own path, with the same `<title>` as the real game; **it is not in `sitemap.xml`** and is linked from nowhere in the repo, but it has no `noindex` and no canonical, so whether Google holds it is unknown (not checkable from a cloud session: Search Console, Jon). Exempt in `check-footer.py` with this row as its reason, untouched by the footer PR. **Proposed fix (Jon to confirm):** replace it with a redirect stub to `/games/sequence-solver/` (git history keeps the original).~~ **FIXED, PR 58, 2 Oct 2026:** replaced by a redirect stub to `/games/sequence-solver/` in the `/schools/` stubs' shape (meta refresh, canonical, link fallback); the original is in git history at `757837d`. Not indexed (Search Console, Jon, 2 Oct). Now a redirect-stub exemption in `check-footer.py`, and in `check-canonical-links.py`'s `REDIRECTS`, so a link to it fails CI. A search of `games/` found no other served copy of a game. Tier 1 cannot load it (§4 item 12). | — fixed |
+
+## 29 Sep 2026, later still (todo.md's header block, moved 11 Nov 2026, contract TODO-TIDY)
+
+Moved word for word from the top of `docs/todo.md`, where it sat between the "Last updated" paragraph and the snagging-list note.
+
+**29 Sep 2026, later still — three read-only follow-ups, no code touched.**
+- **1.25 redeployed** by Jon, ~19:18Z; live rows confirm `correct`/`score` writing through. Only the
+  backfill and a backup ahead of it remain, parked as Jon's own tasks — see 1.25's row and
+  `docs/sheets-falsy-backfill.md` §6.
+- **Snag #8 (recorded here, not in `docs/snagging-list.md`): Graph Transformer's analytics coverage
+  against canon §1.3.** `question_answered` sends `game_slug, level, correct, question_index` — full
+  coverage of §1.3's required set. `game_completed` sends `game_slug, level, score,
+  questions_answered, accuracy` — **`questions_correct` is not sent**, the one §1.3-required
+  parameter this game omits (confirmed live: rows show `correct` and `score`, not
+  `questions_correct`); `questions_answered` here is always `puzzles.length` (12, the fixed session
+  size), not a count of puzzles actually solved. `game_started` sends `game_slug, level` (no `mode`
+  — this game isn't multi-mode, so §1.3 doesn't require one). `personal_best_set` sends `game_slug,
+  level, score, previous_best` — full coverage. `game_abandoned` (automatic, via `analytics.js`)
+  sends `game_slug, level, questions_answered` (the puzzle index reached, `pIdx`) in place of
+  §1.3's `question_index` — same value, different key name, likely why live rows show it landing in
+  the `questions_answered` column rather than `question_index`. **Skip is not a distinct event.**
+  `skipPuzzle()` fires the exact same `question_answered` shape as a real wrong answer —
+  `correct:false, question_index:pIdx+1` — with no flag distinguishing "skipped" from "tried and
+  failed." In practice the two are indistinguishable in the data, but also inseparable from each
+  other by design: `checkMatch()` only ever fires on a match (always `correct:true`), so every
+  `correct:false` row for this game **is** a skip; there is no event at all for an unmatched
+  attempt along the way (the whole point of continuous curve-manipulation gameplay — there's no
+  discrete "submit"). No parameter added or changed to check any of this.
+- **Leaderboard: Project Claude's recommendation, pending Jon's ruling — leave the old
+  `graph-transformer` entries as they are.** The old marking rule only ever depressed scores (a
+  rejected valid route forced extra moves or a skip; every multi-unit shift over-counted moves
+  against par), never inflated them, so old entries undersell what the same play would score under
+  the fixed rules rather than misstate it. New scores under the fixed rules will naturally displace
+  them at the top of the board over time as students replay, without needing any write to Firebase.
+  Not touched.
+
+## Resit strand — game slate (Jon, 30 Sep): todo.md §3's subsection, moved 11 Nov 2026 (contract TODO-TIDY)
+
+Moved word for word. Replaced in `docs/todo.md` §3 by "Game ideas, not yet built (Jon, 10 Nov 2026)". Built and closed: How Many Parts? (`games/how-many-parts/`, roster #99) and Just Pythag It, Bruv (`games/just-pythag-it-bruv/`, roster #98).
+
+### Resit strand — game slate (Jon, 30 Sep)
+
+Build order. The strand's voice word is **"Bruv"**, never "Bro". **[PROPOSED]** marks a working name
+Jon has not yet fixed. Spec references are DfE subject-content parts (`docs/resit-coverage-audit.md`).
+
+3. **How Many Parts?**: fraction operations, with misconception distractors.
+4. **Not in Pen**: charts, reading AND constructing (drag bars, set pie angles, plot scatter points) (S2, S6).
+5. **It's Not a Diamond** [PROPOSED]: shape vocabulary and properties (G1, G4, G9.1, G12).
+6. **Use a Ruler, PLEASE** [PROPOSED]: straight-line and real-life graphs (A9.1, A14.1, A14.4).
+7. **It's Not 50/50** [PROPOSED]: probability (P1.1, P6.1, P6.2).
+8. **It's Just Base 60, Bruv**: time only.
+
+   8b. **Small, or Far Away?**: metric units, map scales, scale drawings, measuring lines and angles (N13, R2.1, G15.1). The Father Ted reference is in the title only: no characters, lines or look-alike art.
+9. **Letters? In Maffs? Y?!**: algebra basics (A1.1, A3.1, A4.1, A7.1). This is item 3.5(4)'s one algebra game, which also carries the A4.3 sub-skill (expanding one bracket). Each stage opens with why letters are used. **Decide before building** whether to link to `like-terms-collector` (live in a Google Classroom) rather than restyle it.
+10. **Bond. Number Bond.** [PROPOSED]: number bonds to 10/100/1000, and decimals to 1.
+11. **Maths Wizard** [PROPOSED]: Jon's mental strategies. Each card gives the trick, why it works and where it breaks, then a drill.
+12. **Don't Count the Zeroes**: standard form (STRETCH). Item 3.5(3): built beside `standard-form-blitz`, scaffold-first with a place-value chart.
+13. **Venn Diagrams AGAIN?**: HCF and LCM via prime-factor Venn diagrams.
+14. **Just Pythag It, Bruv** (working title, Jon): Pythagoras' theorem, find the hypotenuse, find a shorter side, in
+    context (G20.1's Pythagoras half; **STRETCH**, Jon 4 Oct 2026; for the June 2027 exams). **There is no dedicated
+    Pythagoras game in the library:** G20's COVERED verdict rests on `trig-worms`, which never tests Pythagoras
+    (audit §10.4, STRETCH build target). Design (Jon, 4 Oct 2026): (1) every question starts by identifying the
+    hypotenuse; (2) the bank is weighted towards finding a shorter side (subtract); (3) the two types are mixed
+    unpredictably so students can't add by habit; (4) the adding-instead-of-subtracting answer must appear as a
+    distractor where options are shown; (5) Stage (a) includes scaled triples (e.g. 6-8-10, 9-12-15, 15-20-25,
+    30-40-50, 10-24-26). When a question is a 3-4-5 or 5-12-13 multiple, the feedback after answering names it:
+    "Spotted it? 6, 8, 10 is the 3-4-5 triangle doubled. No calculation needed." (adjusted to the triple and scale).
+    The full worked method is still shown. The verifier checks every triple-family message names the correct base
+    triple and scale factor. Still to specify: the stages (only stage (a) is named) and the build contract.
+
+## Closed by TODO-TIDY (11 Nov 2026)
+
+Items of `docs/todo.md` §6 (and §3's FAKE-BAG row) closed by contract TODO-TIDY, each moved word for word with its closing note. The moved items are listed in that PR's table.
+
+- **CLAUDE.md consolidation (Jon, 28 Oct 2026; do it AFTER the 6 P's card layout).** CLAUDE.md sits within ~180 bytes of its 20,480-byte cap. Move older handover detail into `docs/handover/`, keep the opening block current, and restore headroom under the cap (it should end well under, e.g. 18 KB). The stale-plants list lives in `docs/handover/stale-plants.md` for the same reason. Closed 11 Nov 2026 (TODO-TIDY): done; CLAUDE.md is 628 bytes (`wc -c CLAUDE.md`).
+- **Regression Rumble rebuild — needs Jon's content steer.** Withdrawn 30 Sep behind a holding page; what the rebuild needs is in §1.26. Closed 11 Nov 2026 (TODO-TIDY): steer given 10 Nov 2026 (approach approved 20:23 and 20:35; data in Project Claude's batch files); the rebuild is §1.26's.
+- **Value-equivalent options (§1.24, queue item 8).** Issue or amend the two draft contracts. Choose
+  the group A replacement distractors per game, starting with `probability-pioneer`. Confirm
+  Contract 2's `ask` wording. **Not ruled 29 Sep** — needs its own session, per-game distractor
+  authoring is too big to rule in passing. Closed 11 Nov 2026 (TODO-TIDY, Jon's ruling 6): §1.24 closed 8 Nov 2026 (LIVE-BUG-RECHECK, nothing owed; group A fixed in PR 48, Contract 2 in PR 54).
+- Circle Theorem Spotter Q48 numbers (§1.3); the two distractors (§1.4) — **not ruled 29 Sep**, need
+  the actual question content read first; still open. Closed 11 Nov 2026 (TODO-TIDY): Q48 done 3 Oct 2026 (row 1.3, PR #11). "The two distractors (§1.4)" were never Circle Theorem Spotter's: they are §1.4's, now one left (`matrix-crunch:186`), kept in §6.
+- ~~§7.6 5s floor: adopt platform-wide?~~ **RULED 29 Sep 2026 (Jon): adopt platform-wide, but at
+  3 seconds, not 5** — one change to `next-control.js`. Not yet built. Closed 11 Nov 2026 (TODO-TIDY): built; `FLOOR_MS = 3000` in `schools/assets/next-control.js` (documented `:20`, set `:54`).
+- Expectation Station bank mixes rounding conventions: `es_gcse_003`/`es_gcse_008` authored to
+  rounded sums (1.33, 1.67), `es_gcse_005` exactly (1.5). No authoring errors — derived E(X) is
+  always within 0.005 of the stated answer. Not raised for a ruling 29 Sep — not a decision, just a
+  note. Closed 11 Nov 2026 (TODO-TIDY): a note, no action.
+- **Leave the art as is.** The frayed-strap/finger ambiguity at thumbnail size is accepted, not
+  rerolled. Closed 11 Nov 2026 (TODO-TIDY): ruled, no action. (The Kiln's other three follow-ups moved to §3, KILN-FOLLOW-UPS.)
+- **Sheets endpoint, checked 29 Sep 2026:**
+  - `question_index` **is 1-based**, confirmed both by the documented convention
+    (`.claude/rules/analytics.md:61`, "`question_index` is 1-based") and by
+    `escape-rooms/assets/engine.js` itself (`R.locks.indexOf(l) + 1`, `activeLock + 1`). The one
+    exception is the escape-room "search" event, which uses a `0` sentinel with its own `detail:
+    'searched:...'` tag (`:347`) — not a real question index.
+    **Removed 11 Oct 2026 (contract ESCAPE-ANALYTICS): searching sends no event now.**
+  - **Found a real bug, not yet fixed:** `docs/apps-script-endpoint.js`'s `doPost` (`:42`–`:47`)
+    writes every field as `data.field || ''` — including `data.correct` and `data.question_index`.
+    `false || ''` and `0 || ''` both collapse to blank, so **every genuinely wrong answer
+    (`correct: false`) writes an empty `correct` cell in the Sheet**, indistinguishable from an
+    event that never carried a `correct` field at all — and the escape-room's `question_index: 0`
+    search event blanks the same way. This only affects the Sheets export; GA4 is unaffected (it
+    receives the real values). Filed as **1.25** in §1. Closed 11 Nov 2026 (TODO-TIDY): filed and fixed as 1.25 (closed 10 Nov 2026, "Closed by HOME-DOCS-1110" above).
+- GA4: update the internal-traffic Data Filter to Jon's current home IP — Ivybridge traffic is
+  still dirtying the portal analytics. Closed 11 Nov 2026 (TODO-TIDY): done by Jon 10 Nov 2026 (filter Version 3, 20:11, verified in Realtime).
+- Search Console: request indexing for `/escape-rooms/` and each live room (including
+  `/escape-rooms/comic-caper/` and `/escape-rooms/kiln-disaster/`). Closed 11 Nov 2026 (TODO-TIDY): sitemap resubmitted by Jon 10 Nov 2026 (148 discovered); a monthly sitemap check is scheduled.
+- Events sheet: check whether `FALSE` ever appears in the `correct` column for
+  `question_answered` on any quiz game. Closed 11 Nov 2026 (TODO-TIDY, Jon's ruling 1): row 1.25 above: `false` is written as-is since the 29 Sep redeploy.
+
+### §3's FAKE-BAG row, word for word (folded into the ideas list, Jon's ruling 5 of 11 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| FAKE-BAG | **Idea: "Is That a Fake Bag?"** ("a sim tote…" = asymptote), reserved for a future graph-sketching / asymptotes game. Not scheduled. Jon, 9 Nov 2026 (DOCS-BUNDLE). | **Jon** (idea) |
