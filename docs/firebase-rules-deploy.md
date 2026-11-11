@@ -78,6 +78,8 @@ The same suite run against open rules (read and write for anyone, as live today)
 
 ## Deploy (Firebase console)
 
+**Every rules change adds its REFUSE/ACCEPT cases to `firebase/rules.test.mjs` and runs the suite before Jon deploys** (from `firebase/`: `npm install`, then `npx firebase emulators:exec --only database --project demo-maffsgames "node rules.test.mjs"`; needs Java 21 for firebase-tools 15). The Rules Playground is optional, never the proof: a hand-typed payload's timestamp leaves the 60 s window within a minute, so it is refused whatever the rule under test does. (Contract RULES-EMULATOR-TEST, 11 Nov 2026.)
+
 1. **Save the current rules.** Firebase console → project **maffsgames-c1c9f** → Build →
    Realtime Database → **Rules** tab. Select all, copy, and paste into a new file
    `firebase/database.rules.previous.json` (commit it, or keep it somewhere safe). This is
@@ -87,7 +89,7 @@ The same suite run against open rules (read and write for anyone, as live today)
 3. Optional: the console's **Rules Playground** can simulate a write. Location
    `/leaderboards/factor_race_gcse/test1`, type **set**, unauthenticated, data
    `{"score": 1, "timestamp": <now in ms>}` should be allowed; type **remove** on an
-   existing entry should be denied.
+   existing entry should be denied. Never the proof (above).
 4. **Publish.**
 
 ## Verify (straight after publishing)
@@ -107,7 +109,7 @@ The same suite run against open rules (read and write for anyone, as live today)
 
 ## 10 Nov 2026 change
 
-**Status: Written, NOT deployed — Jon deploys.** (Contract FIREBASE-ESCAPING, 10 Nov 2026.) No session deploys or writes to the live database.
+**Status: DEPLOYED by Jon 08:12 11 Nov 2026**; a real score reached its board. (Written by contract FIREBASE-ESCAPING, 10 Nov 2026.) No session deploys or writes to the live database.
 
 `recent_scores`' `game` and `level` refuse `<` and `>`; their length rules are unchanged, and nothing else in the file changes. No game sends either character (every name in `GAME_NAMES` and every level label checked, 10 Nov 2026), so no real score is refused. The portal ticker and the hub already escape what they show; this closes the field at the source.
 
@@ -127,12 +129,9 @@ After:
 
 **Deploy:** steps 1, 2 and 4 of "Deploy (Firebase console)" above: save the current rules as the rollback, paste the whole of `firebase/database.rules.json` from `main`, Publish.
 
-**Test straight after publishing**, in the console's **Rules Playground** (it simulates; nothing is written). Simulation type **set**, unauthenticated, location `/recent_scores/test1`:
+**Tested (emulator, 11 Nov 2026, contract RULES-EMULATOR-TEST):** from `firebase/`, `npx firebase emulators:exec --only database --project demo-maffsgames "node rules.test.mjs"` → **ALL PASS: 36 of 36 cases**. The four new cases in `rules.test.mjs`: game `"<b>x</b>"` refused; game `"a<b"` refused (one `<` mid-string, so `matches()` is unanchored); level `"GCSE > Higher"` refused; game "Factor Race", level "GCSE" accepted (control). Against the rules before #728 the three refusals fail (the write succeeds), so the cases test the new rule. Nothing to simulate in the console.
 
-1. **Refused:** data `{"game": "<b>x</b>", "slug": "factor-race", "level": "GCSE", "levelKey": "gcse", "score": 1, "timestamp": <now in ms>}` → **denied**.
-2. **Accepted:** the same with `"game": "Factor Race"` → **allowed**.
-
-Then finish one real game on maffsgames.co.uk and check its score appears on the front-page ticker (step 1 of "Verify" above).
+**Check straight after publishing:** finish one real game on maffsgames.co.uk and check its score appears on the front-page ticker (step 1 of "Verify" above). Done 11 Nov 2026: a real score reached its board after Jon's 08:12 deploy.
 
 ## Roll back
 

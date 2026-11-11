@@ -62,6 +62,12 @@ const cases = [
   ['REFUSE ticker entry missing levelKey', 'fail', () => { const e = goodRecent(); delete e.levelKey; return recent().push(e); }],
   ['REFUSE ticker slug with capitals', 'fail', () => recent().push(goodRecent({ slug: 'Free-Daily-Pizza' }))],
   ['REFUSE ticker game name of 200 characters', 'fail', () => recent().push(goodRecent({ game: 'x'.repeat(200) }))],
+  // < and > in the ticker's game and level (10 Nov 2026 change); "a<b" proves matches() is unanchored
+  ['REFUSE ticker game containing "<b>x</b>"', 'fail', () => recent().push(goodRecent({ game: '<b>x</b>' }))],
+  ['REFUSE ticker game "a<b" (one < mid-string)', 'fail', () => recent().push(goodRecent({ game: 'a<b' }))],
+  ['REFUSE ticker level containing ">"', 'fail', () => recent().push(goodRecent({ level: 'GCSE > Higher' }))],
+  ['ACCEPT ticker game "Factor Race", level "GCSE" (control)', 'ok',
+    () => recent().push(goodRecent({ game: 'Factor Race', slug: 'factor-race', level: 'GCSE', levelKey: 'gcse' }))],
   ['REFUSE ticker unexpected child', 'fail', () => recent().push(goodRecent({ highScore: true }))],
   ['REFUSE board key with capitals', 'fail', () => board('Factor_Race').push(goodBoard())],
   ['REFUSE write outside leaderboards/recent_scores', 'fail', () => db.ref('anything/else').set({ a: 1 })],
