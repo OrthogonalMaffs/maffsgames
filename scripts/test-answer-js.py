@@ -3,7 +3,8 @@
 
 Runs the real file in Chromium and checks every outcome of every function: correct, wrong,
 format and unreadable for money(), decimal(), exact(), fractionOrDecimal() and fractionForm() (value and form, 20 Oct 2026), the exact
-reading of a typed fraction (fraction(), 7 Oct 2026: a/b, negatives, whole numbers), the accepted £/€ prefix, parse(),
+reading of a typed fraction (fraction(), 7 Oct 2026: a/b, negatives, whole numbers), the accepted £/€ prefix (and
+decimal()/exact() with opts.currency, 11 Nov 2026: that sign only, nothing without it), parse(),
 and the words message() returns. moneyInput() (MONEY-INPUT, 9 Nov 2026) on real inputs: a type="number" box becomes
 type="text" inputmode="decimal" autocomplete="off"; its sign shows inside the box's left edge, in the box's font and
 colour, with the typing clear of it; the aria-label gains "in pounds" / "in euros"; a second call changes nothing; a
@@ -89,6 +90,30 @@ CASES = [
     ("exact('2', 2.5)", 'wrong'),
     ("exact('x', 24)", 'unreadable'),
     ("exact('', 24)", 'unreadable'),
+    # decimal() and exact() with opts.currency (MONEY-ANSWERS, 11 Nov 2026): one leading sign of that currency,
+    # as money() takes it; without opts, or with the other currency's sign, unreadable exactly as before
+    ("decimal('£8140', '8140', 0, {currency: '£'})", 'correct'),
+    ("decimal('£8140', '8140', 0)", 'unreadable'),
+    ("decimal('8140', '8140', 0, {currency: '£'})", 'correct'),
+    ("decimal(' £ 8140 ', '8140', 0, {currency: '£'})", 'correct'),
+    ("decimal('£8143', '8140', 0, {currency: '£'})", 'wrong'),
+    ("decimal('£10.79', '10.8', 1, {currency: '£'})", 'format'),
+    ("decimal('£10.8', '10.8', 1, {currency: '£'})", 'correct'),
+    ("decimal('€8140', '8140', 0, {currency: '£'})", 'unreadable'),
+    ("decimal('££8140', '8140', 0, {currency: '£'})", 'unreadable'),
+    ("decimal('8140£', '8140', 0, {currency: '£'})", 'unreadable'),
+    ("decimal('£8140', '8140', 0, {})", 'unreadable'),
+    ("decimal('£8140', '8140', 0, {currency: null})", 'unreadable'),
+    ("decimal('€12.5', '12.5', 1, {currency: '€'})", 'correct'),
+    ("decimal('£12.5', '12.5', 1, {currency: '€'})", 'unreadable'),
+    ("exact('£18000', 18000, {currency: '£'})", 'correct'),
+    ("exact('£18000', 18000)", 'unreadable'),
+    ("exact('18000', 18000, {currency: '£'})", 'correct'),
+    ("exact('£18001', 18000, {currency: '£'})", 'wrong'),
+    ("exact('€18000', 18000, {currency: '£'})", 'unreadable'),
+    ("exact('€18000', 18000, {currency: '€'})", 'correct'),
+    ("exact('£18000', 18000, {currency: '€'})", 'unreadable'),
+    ("exact('£', 18000, {currency: '£'})", 'unreadable'),
     # fraction: the exact reading of a/b or a whole number, in lowest terms, den > 0
     ("JSON.stringify(fraction('3/7'))", '{"num":3,"den":7}'),
     ("JSON.stringify(fraction('6/14'))", '{"num":3,"den":7}'),

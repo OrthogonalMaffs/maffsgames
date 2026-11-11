@@ -529,14 +529,19 @@
   /* ------------------------------------------------------------ marking (every typed box through MaffsAnswer) */
   function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while (b) { var t = a % b; a = b; b = t; } return a; }
 
-  function numberResult(raw, ans, acc) {
+  // cur: '£' for a number_unit answer in pounds (£, £/kg, £/m: moneyCur), which takes one leading £ (MONEY-ANSWERS).
+  function numberResult(raw, ans, acc, cur) {
     if (acc.rule === 'range') {
       var v = MaffsAnswer.parse(raw);
       if (v === null) return 'unreadable';
       return v >= acc.lo && v <= acc.hi ? 'correct' : 'wrong';
     }
-    return ans.dp !== undefined ? MaffsAnswer.decimal(raw, ans.value, ans.dp) : MaffsAnswer.exact(raw, ans.value);
+    return ans.dp !== undefined ? MaffsAnswer.decimal(raw, ans.value, ans.dp, { currency: cur })
+      : MaffsAnswer.exact(raw, ans.value, { currency: cur });
   }
+  // A number_unit answer whose unit is in pounds (£, £/kg, £/m) is an amount of money: its box shows the £ inside it
+  // and its marker takes one leading £ (MONEY-ANSWERS, 11 Nov 2026). The unit is still picked from the buttons.
+  function moneyCur(q) { return q.format === 'number_unit' && /^£/.test(q.answer.unit) ? '£' : null; }
 
   // A range moved to sit round another value (a slip's), the same half-widths either side.
   function rangeFor(q, acc, ans) {
@@ -561,7 +566,7 @@
         r = numberResult(inp.value, ans, rangeFor(q, acc, ans));
         return { result: r, msg: MaffsAnswer.message(r, inp.value, { dp: ans.dp }) };
       case 'number_unit':
-        r = numberResult(inp.value, ans, rangeFor(q, acc, ans));
+        r = numberResult(inp.value, ans, rangeFor(q, acc, ans), moneyCur(q));
         if (r === 'unreadable') return { result: r, msg: MaffsAnswer.message(r, inp.value, {}) };
         if (!inp.unit) return { result: 'nounit', msg: 'Pick a unit as well as the number.' };
         if (inp.unit !== ans.unit) return { result: 'wrong', msg: '' };
@@ -989,7 +994,7 @@
         break;
       }
       case 'number_unit':
-        add(box('value', 'Your answer'));
+        MaffsAnswer.moneyInput(add(box('value', 'Your answer')), moneyCur(q));
         $('qUnits').hidden = false;
         q.units.forEach(function (u) {
           var b = document.createElement('button');

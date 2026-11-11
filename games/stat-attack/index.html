@@ -958,10 +958,17 @@ function meanKey(q){ const t=_sums(q); return _sf3(t.s1, _B100*t.n, false); }
 function varKey(q){ const t=_sums(q); return _sf3(_B100*t.n*t.s2-t.s1*t.s1, _B10000*t.n*t.n, false); }
 function sdKey(q){ const t=_sums(q); return _sf3(_B100*t.n*t.s2-t.s1*t.s1, _B10000*t.n*t.n, true); }
 // A typed table entry is exact (f × x, x²): marked by MaffsAnswer.exact(), never to a band (SR-2).
-function _exactCol(id,vals){
-  for(let i=0;i<vals.length;i++){ if(MaffsAnswer.exact($(id+i).value,vals[i])!=='correct') return false; }
+// cur: '£' when the column is an amount of money (midpoints and fx of a £ scenario), else null (MONEY-ANSWERS).
+function _exactCol(id,vals,cur){
+  for(let i=0;i<vals.length;i++){ if(MaffsAnswer.exact($(id+i).value,vals[i],{currency:cur})!=='correct') return false; }
   return true;
 }
+
+// Money answers (MONEY-ANSWERS, 11 Nov 2026): in a £ scenario the mean, the standard deviation, the midpoints and
+// fx are amounts of money, so their boxes show the £ inside (MaffsAnswer.moneyInput) and their markers take one
+// leading £. x², fx² and the variance are in £², so they are not. '£k' scenarios are left as they are (MONEY-THOUSANDS).
+function saCur(q){return q.unit==='£'?'£':null;}
+function saMoney(q,area,sel){const c=saCur(q);if(c)area.querySelectorAll(sel).forEach(el=>MaffsAnswer.moneyInput(el,c));}
 
 // ============================================================
 //  RENDER QUESTION
@@ -1046,13 +1053,14 @@ function renderMeanQ(q,area){
     <button class="check-btn" onclick="checkMean()">Check</button>
     <div id="meanFb"></div>
   `;
+  saMoney(q,area,'#meanInput');
 }
 
 function checkMean(){
   const q=G.questions[G.qIdx];
   const raw=$('meanInput').value;
   if(!raw.trim()) return;
-  const k=meanKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp);
+  const k=meanKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp,{currency:saCur(q)});
   const fb=$('meanFb');
   if(res==='format'||res==='unreadable'){   // not marked (canon §7.1.3): the student resubmits
     fb.innerHTML=`<div class="feedback hint">${MaffsAnswer.message(res,raw,{sf:3})}</div>`;
@@ -1097,12 +1105,13 @@ function renderSD_midpoints(q,area){
     <button class="check-btn" onclick="checkMidpoints()">Check</button>
     <div id="sdFb"></div>`;
   area.innerHTML=html;
+  saMoney(q,area,'.sd-inputs input');
 }
 
 function checkMidpoints(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  const allCorrect=_exactCol('mp',q.midpoints.slice(0,n));
+  const allCorrect=_exactCol('mp',q.midpoints.slice(0,n),saCur(q));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1131,12 +1140,13 @@ function renderSD_fx(q,area){
     <button class="check-btn" onclick="checkFx()">Check</button>
     <div id="sdFb"></div>`;
   area.innerHTML=html;
+  saMoney(q,area,'.sd-inputs input');
 }
 
 function checkFx(){
   const q=G.questions[G.qIdx];
   const n=q.classes.length;
-  const allCorrect=_exactCol('fx',q.fx.slice(0,n));
+  const allCorrect=_exactCol('fx',q.fx.slice(0,n),saCur(q));
   if(!MaffsLock.lock($('qArea')))return;   // one mark per attempt (canon 7.6.0)
   const fb=$('sdFb');
   if(allCorrect){
@@ -1269,13 +1279,14 @@ function renderSD_final(q,area){
     <button class="check-btn" onclick="checkSD()">Check</button>
     <div id="sdFb"></div>
   `;
+  saMoney(q,area,'#sdInput');
 }
 
 function checkSD(){
   const q=G.questions[G.qIdx];
   const raw=$('sdInput').value;
   if(!raw.trim()) return;
-  const k=sdKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp);
+  const k=sdKey(q), res=MaffsAnswer.decimal(raw,k.key,k.dp,{currency:saCur(q)});
   const fb=$('sdFb');
   if(res==='format'||res==='unreadable'){   // not marked (canon §7.1.3): the student resubmits
     fb.innerHTML=`<div class="feedback hint">${MaffsAnswer.message(res,raw,{sf:3})}</div>`;
