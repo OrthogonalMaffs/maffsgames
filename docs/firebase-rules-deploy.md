@@ -109,7 +109,7 @@ The same suite run against open rules (read and write for anyone, as live today)
 
 ## 10 Nov 2026 change
 
-**Status: Written, NOT deployed — Jon deploys.** (Contract FIREBASE-ESCAPING, 10 Nov 2026.) No session deploys or writes to the live database.
+**Status: DEPLOYED by Jon 08:12 11 Nov 2026**; a real score reached its board. (Written by contract FIREBASE-ESCAPING, 10 Nov 2026.) No session deploys or writes to the live database.
 
 `recent_scores`' `game` and `level` refuse `<` and `>`; their length rules are unchanged, and nothing else in the file changes. No game sends either character (every name in `GAME_NAMES` and every level label checked, 10 Nov 2026), so no real score is refused. The portal ticker and the hub already escape what they show; this closes the field at the source.
 
@@ -131,7 +131,7 @@ After:
 
 **Tested (emulator, 11 Nov 2026, contract RULES-EMULATOR-TEST):** from `firebase/`, `npx firebase emulators:exec --only database --project demo-maffsgames "node rules.test.mjs"` → **ALL PASS: 36 of 36 cases**. The four new cases in `rules.test.mjs`: game `"<b>x</b>"` refused; game `"a<b"` refused (one `<` mid-string, so `matches()` is unanchored); level `"GCSE > Higher"` refused; game "Factor Race", level "GCSE" accepted (control). Against the rules before #728 the three refusals fail (the write succeeds), so the cases test the new rule. Nothing to simulate in the console.
 
-**Check straight after publishing:** finish one real game on maffsgames.co.uk and check its score appears on the front-page ticker (step 1 of "Verify" above).
+**Check straight after publishing:** finish one real game on maffsgames.co.uk and check its score appears on the front-page ticker (step 1 of "Verify" above). Done 11 Nov 2026: a real score reached its board after Jon's 08:12 deploy.
 
 ## Roll back
 
