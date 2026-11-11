@@ -566,7 +566,7 @@ PLAY_JS = """async (a) => {
       if (!inp) { out.cells[tag] = 'no input'; continue; }
       inp.value = String(v); checkCell(inp);
       const m = document.getElementById('tableMsg');
-      out.cells[tag] = inp.parentElement.classList.contains('correct-cell') ? 'ok' : (m && m.textContent ? 'unmarked' : 'rejected');
+      out.cells[tag] = inp.closest('td').classList.contains('correct-cell') ? 'ok' : (m && m.textContent ? 'unmarked' : 'rejected');
     }
     document.getElementById('qBox').style.display = 'block';
     for (const [tag, v] of Object.entries(a.iqs)) {
@@ -708,7 +708,7 @@ def selftest(bank, fn_vals, played):
     _, _, old = load("""(() => {
         checkCell = function (input) { const q = G.questions[G.qIdx], e = q.answers[input.dataset.x], v = parseFloat(input.value);
           const tol = Math.abs(e) <= 10 ? Math.max(0.15, Math.abs(e) * 0.02) : Math.max(0.5, Math.abs(e) * 0.01);
-          if (Math.abs(v - e) <= tol) input.parentElement.classList.add('correct-cell'); };
+          if (Math.abs(v - e) <= tol) input.closest('td').classList.add('correct-cell'); };
         const R = checkRootsIQ;
         checkRootsIQ = function () { const q = G.questions[G.qIdx], iq = q.iqs[G.iqIdx];
           const vals = document.getElementById('iqInput').value.split(',').map(Number);
