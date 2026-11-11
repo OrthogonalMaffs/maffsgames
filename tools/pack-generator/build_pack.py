@@ -4,6 +4,7 @@
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster              # -> dist-packs/kiln-disaster-pack.pdf
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --sets 7 --seed 1
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --target 67   # one final-padlock target for all
+    python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --final       # the copy for Tes: approved wording only
     python -X utf8 tools/pack-generator/build_pack.py --selftest                 # planted faults; builds no PDF
 
 Room-agnostic. Everything about a room comes from three places, none of them typed here:
@@ -11,7 +12,9 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
     objects, locks, hints and worked-solution templates; and teacher.html's window.TEACH (topics, minutes);
   * escape-rooms/variants.json, the verified variant libraries (room.js must equal them, as check-escape-rooms.py holds);
   * tools/pack-generator/rooms/<slug>/config.json: the art, each image's role and label box in image pixels, the font
-    per card, the set count, seed and pack version, and the words printed on red-herring objects.
+    per card, the set count, seed and pack version, the words printed on red-herring objects, and whether Jon has
+    approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
+    --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
 
 The build, in order; any failure stops it before a PDF exists:
   1. scripts/check-escape-rooms.py is imported (run in full, unchanged): its draw_is_valid() and clue_strings() are the
@@ -154,7 +157,50 @@ def load_config(slug):
         for box in boxes:
             if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
                 raise BuildError("%s: %r is not a label box" % (im["file"], box))
+    wording_approved(cfg, slug)
     return cfg
+
+
+DRAFT_BADGE = '<div class="draft">DRAFT: Jon&rsquo;s wording</div>'
+
+
+def wording_approved(cfg, slug):
+    """The room's approval of its printed wording: config.json's "wording_approved", {"by": ..., "date": "YYYY-MM-DD"}
+    once Jon has approved it, else null. A config without the key counts as null (contract PACK-APPROVED)."""
+    a = cfg.get("wording_approved")
+    if a is None:
+        return None
+    ok = isinstance(a, dict) and set(a) == {"by", "date"} and isinstance(a["by"], str) and a["by"].strip() \
+        and isinstance(a["date"], str)
+    if ok:
+        try:
+            ok = datetime.date.fromisoformat(a["date"]).isoformat() == a["date"]
+        except ValueError:
+            ok = False
+    if not ok:
+        raise BuildError('%s: "wording_approved" must be {"by": ..., "date": "YYYY-MM-DD"} or null, not %r' % (slug, a))
+    return a
+
+
+def draft_badge(cfg, slug):
+    """The DRAFT badge for pages 1 and 2, only while the room's wording is not approved."""
+    return "" if wording_approved(cfg, slug) else DRAFT_BADGE
+
+
+def check_final(cfg, slug):
+    """--final: the copy for Tes is built only from approved wording."""
+    if not wording_approved(cfg, slug):
+        raise BuildError("%s: --final refuses a room whose wording is not approved (\"wording_approved\" is null in "
+                         "tools/pack-generator/rooms/%s/config.json)" % (slug, slug))
+
+
+def draft_problems(draft_pages, approved, slug):
+    """draft_pages: [page number, kind] for every page whose printed text says DRAFT (AUDIT_JS). An approved room
+    prints DRAFT nowhere; an unapproved one carries the badge on pages 1 and 2."""
+    if approved:
+        return ["%s: the wording is approved, but page %d (%s) says DRAFT" % (slug, n, k) for n, k in draft_pages]
+    on = {n for n, _ in draft_pages}
+    return ["%s: the wording is not approved, but page %d has no DRAFT badge" % (slug, n) for n in (1, 2) if n not in on]
 
 
 def room_locks(room, slug):
@@ -565,10 +611,11 @@ async ([minPt]) => {
 AUDIT_JS = """
 () => {
   const pages = [...document.querySelectorAll('.page')];
-  const out = {pages: pages.length, studentPages: 0, overflow: [], setLetters: [], herringDigits: [], tokens: [], logo: [], logoMm: 0, text: []};
+  const out = {pages: pages.length, studentPages: 0, overflow: [], setLetters: [], herringDigits: [], tokens: [], logo: [], logoMm: 0, text: [], draft: []};
   const mm = px => px * 25.4 / 96;
   pages.forEach((p, i) => {
     out.text.push([p.dataset.kind, p.querySelector('.main').innerText]);
+    if (/\\bdraft\\b/i.test(p.innerText)) out.draft.push([i + 1, p.dataset.kind]);
     const logos = p.querySelectorAll('.logo');
     const lg = p.querySelector('.foot .logo img');
     if (logos.length !== 1 || !lg || !lg.naturalWidth) out.logo.push((i + 1) + ': the logo is not in the footer once');
@@ -941,11 +988,12 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     meta = teach.get("lockMeta") or [{}] * len(locks)
     pages, box_texts = [], []
 
-    # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9; DRAFT for Jon's wording)
+    # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9); the DRAFT badge only while the room's
+    #    wording is not approved (PACK-APPROVED)
     shape = sets[0]["final"]["shape"]
     pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
                       "%s: run it" % title, "Group race pack, %d sets" % len(sets),
-                      badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
+                      badge=draft_badge(cfg, slug)))
     reads = readouts(room, fill_a)
     script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
               "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
@@ -955,7 +1003,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
     if any("{{" in (room.get(k) or "") for k in ("hook", "brief")):
         script = "<p>At the start, read the hook and brief from any team&rsquo;s cover sheet.</p>" + script
     pages.append(page("readouts", script, "%s: read-outs" % title, "Each for its moment; the ending is yours to call",
-                      badge='<div class="draft">DRAFT: Jon&rsquo;s wording</div>'))
+                      badge=draft_badge(cfg, slug)))
 
     # a2. score sheet (Amendment 3): landscape, one row per set, a column group per lock
     tables = score_sheet(locks, sets)
@@ -1107,8 +1155,10 @@ def prepare(slug, n, seed, page, target=None):
     return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed
 
 
-def build(slug, n, seed, target=None):
+def build(slug, n, seed, target=None, final=False):
     from playwright.sync_api import sync_playwright
+    if final:
+        check_final(load_config(slug), slug)
     out = OUT_DIR / ("%s-pack.pdf" % slug)
     if not ignored_by_git(out):
         raise BuildError("%s is not ignored by git: refusing to write the product where it could be committed"
@@ -1170,7 +1220,8 @@ def build(slug, n, seed, target=None):
                 printed = (check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
                            + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))), text_of(start_html),
                                              [t for k, t in audit["text"] if k == "cover"])
-                           + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"]))
+                           + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
+                           + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -1179,6 +1230,9 @@ def build(slug, n, seed, target=None):
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
                 print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
+                appr = wording_approved(cfg, slug)
+                print("wording approved by %s on %s: no page says DRAFT%s" % (appr["by"], appr["date"], " (--final)" if final else "")
+                      if appr else "wording NOT approved: the DRAFT badge is on pages 1 and 2 (--final would refuse)")
                 print("no final-padlock shape or calculator allowance on any student page")
                 print("page 1 (run it) is %d words, at most %d; no rule stated on more than one teacher page"
                       % (len(next(t for k, t in audit["text"] if k == "run").split()), RUN_IT_WORDS))
@@ -1335,14 +1389,16 @@ def selftest():
         bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
-    def audit_planted_pack(bad_locks, overflow_run_image=False):
+    def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
                 pg = offline_context(browser).new_page()
-                cfg = load_config(slug0)
+                cfg = load_config(slug0) if cfg is None else cfg
                 doc, _, _, _ = build_html(slug0, room, teach, bad_locks, sets, cfg,
                                           cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0))
+                if doc_plant:
+                    doc = doc_plant(doc)
                 with tempfile.TemporaryDirectory() as tmp:
                     src = pathlib.Path(tmp) / "planted-pack.html"
                     src.write_text(doc, encoding="utf-8")
@@ -1476,6 +1532,52 @@ def selftest():
                              "<b>Calculator allowed.</b>", name="a calculator allowance on a locks page")
         return [x for x in student_page_final_problems([("locks", text_of(sec))]) if "calculator" in x]
 
+    def unapproved_cfg(drop_key=False):
+        cfg = copy.deepcopy(load_config(slug0))
+        if drop_key:
+            cfg.pop("wording_approved", None)
+        else:
+            cfg["wording_approved"] = None
+        return cfg
+
+    def check_draft_controls():
+        # the real config (approved): no page says DRAFT; the same room unapproved: the badge on pages 1 and 2 only
+        problems = []
+        appr = wording_approved(load_config(slug0), slug0)
+        drafts = audit_planted_pack(locks)["draft"]
+        if appr and drafts:
+            problems.append("%s is approved, but these pages say DRAFT: %s" % (slug0, drafts))
+        drafts = audit_planted_pack(locks, cfg=unapproved_cfg())["draft"]
+        if [n for n, _ in drafts] != [1, 2]:
+            problems.append("%s unapproved: DRAFT on pages %s, not 1 and 2" % (slug0, [n for n, _ in drafts]))
+        return problems
+
+    def plant_draft_on_approved():
+        # the old generator's hard-coded badge, on page 1 of an approved room
+        if not wording_approved(load_config(slug0), slug0):
+            raise pc.StalePlant("DRAFT on an approved room", "%s is not approved in its config" % slug0)
+        head = '%s: run it</h1><div class="sub">Group race pack, %d sets</div></div>' % (room["title"], len(sets))
+        audit = audit_planted_pack(locks, doc_plant=lambda d: pc.apply_plant(d, head, head + DRAFT_BADGE,
+                                                                             name="DRAFT on an approved room"))
+        return draft_problems(audit["draft"], True, slug0)
+
+    def plant_unapproved_without_badge():
+        head = ('%s: read-outs</h1><div class="sub">Each for its moment; the ending is yours to call</div></div>'
+                % room["title"])
+        audit = audit_planted_pack(locks, cfg=unapproved_cfg(), doc_plant=lambda d: pc.apply_plant(
+            d, head + DRAFT_BADGE, head, name="an unapproved room without its page 2 badge"))
+        return [x for x in draft_problems(audit["draft"], False, slug0) if "page 2" in x]
+
+    def plant_final_unapproved():
+        caught = []
+        for drop in (False, True):          # null, and a config without the key
+            try:
+                check_final(unapproved_cfg(drop_key=drop), slug0)
+            except BuildError as e:
+                if slug0 in str(e):
+                    caught.append(str(e))
+        return caught if len(caught) == 2 else []
+
     def plant_unfriendly_product():
         pools = [answers_of(checker, locks, x) for x in sets] + [(13, 17, 19)]
         for nums in pools:
@@ -1517,7 +1619,17 @@ def selftest():
               ("a rule stated on two teacher pages", plant_repeated_rule),
               ("the final padlock's shape on a student page", plant_shape_on_student_page),
               ("a calculator allowance on a student page", plant_calculator_on_student_page),
-              ("a set whose product is not friendly", plant_unfriendly_product))
+              ("a set whose product is not friendly", plant_unfriendly_product),
+              ("DRAFT on an approved room's page 1", plant_draft_on_approved),
+              ("an unapproved room without its page 2 badge", plant_unapproved_without_badge),
+              ("--final on an unapproved room (null, and no key)", plant_final_unapproved))
+    try:
+        dc = check_draft_controls()
+    except Exception as e:              # an error is never a pass
+        dc = ["the DRAFT controls raised %r" % e]
+    failures += dc
+    print("DRAFT controls: %s" % ("OK (approved: no page says DRAFT; unapproved: the badge on pages 1 and 2)"
+                                  if not dc else dc))
     for name, fn in plants:
         found, err = [], None
         try:
@@ -1547,6 +1659,8 @@ def main():
     ap.add_argument("--sets", type=int, help="how many sets (default: the room's config)")
     ap.add_argument("--seed", type=int, help="the selection seed (default: the room's config)")
     ap.add_argument("--target", type=int, help="one final-padlock target for every set (default: one per set)")
+    ap.add_argument("--final", action="store_true",
+                    help="the copy for Tes: refuse a room whose wording is not approved (its config's wording_approved)")
     ap.add_argument("--selftest", action="store_true", help="planted faults; builds no PDF")
     a = ap.parse_args()
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -1557,7 +1671,7 @@ def main():
             ap.error("name a room, e.g. kiln-disaster")
         if a.sets is not None and not 1 <= a.sets <= 26:
             ap.error("--sets is 1 to 26 (one letter a set)")
-        build(a.room, a.sets, a.seed, a.target)
+        build(a.room, a.sets, a.seed, a.target, a.final)
         return 0
     except BuildError as e:
         print("BUILD FAILED: %s" % e)

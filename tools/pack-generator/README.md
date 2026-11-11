@@ -19,16 +19,22 @@ with the same seed gives the same sets every time; `--seed 2` gives a different 
 `--target 67` one final-padlock target for every set (the build fails, naming each set and why, if any cannot make it). Any
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
 
+**Approval and the DRAFT badge.** Whether Jon has approved a room's printed wording lives in its
+`rooms/<slug>/config.json`, once: `"wording_approved": {"by": "Jon", "date": "YYYY-MM-DD"}`, or `null` (no key counts
+as `null`). Pages 1 and 2 carry the "DRAFT: Jon's wording" badge only while it is `null`, and the build fails if an
+approved room prints DRAFT anywhere. Copies for Tes are built with `--final`, which refuses an unapproved room:
+`python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --final`.
+
 Print it **at 100% (actual size), A4, double-sided off**. It is designed to print in black and white.
 Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room without one does not build.
 
 ## What to proofread
 
-1. **Page 1, Run it (DRAFT until you say "wording final"):** Project Claude's draft, verbatim, with each set's pages
+1. **Page 1, Run it (DRAFT badge until the room's `wording_approved` is set, above):** Project Claude's draft, verbatim, with each set's pages
    (generated: "Each set is 4 pages: A 6-9 ... G 30-33.") and Amendment 11's final-padlock line; at most 150 words
-   (the build counts them; it is exactly 150 for Kiln, so the play-online line is on page 2). Send your wording to Code Claude: it goes into `run_it()` in `build_pack.py`, and the DRAFT badge comes off
-   in the same change.
-2. **Page 2, Read-outs (DRAFT):** three boxed scripts, each for its moment: the start (hook, brief and one line to the
+   (the build counts them; it is exactly 150 for Kiln, so the play-online line is on page 2). Send your wording to Code Claude: it goes into `run_it()` in `build_pack.py`; your approval goes into
+   the room's config, and the badge follows it.
+2. **Page 2, Read-outs (DRAFT badge until approved):** three boxed scripts, each for its moment: the start (hook, brief and one line to the
    students), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
    nowhere else and printed on the covers only as "If time runs out: ..."); then the play-online line.
 3. **Page 3, Score sheet (landscape):** two blanks you fill in first ("Each wrong answer adds ___ min", "Each hint

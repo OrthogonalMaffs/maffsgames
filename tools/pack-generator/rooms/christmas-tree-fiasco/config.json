@@ -4,6 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Tree delivered",
+  "wording_approved": {"by": "Jon", "date": "2026-11-07"},
   "images": [
     {"file": "art/xmas-01-truck-display.webp", "role": "clue", "object": "truck-display", "label_boxes": [[245, 315, 945, 470], [245, 575, 945, 735]], "font": "label"},
     {"file": "art/xmas-02-clipboard.webp", "role": "clue", "object": "eric-clipboard", "label_box": [340, 230, 913, 1070], "font": "hand"},

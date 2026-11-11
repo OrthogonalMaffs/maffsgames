@@ -3093,3 +3093,11 @@ Moved word for word from `docs/todo.md` §1, with its closing note (contract RUL
 | # | Item | Owner |
 |---|---|---|
 | FIREBASE-ESCAPING | **The leaderboard hub writes initials and scores into the page unescaped** (`leaderboards/index.html:394-395`, built into `innerHTML`). Escape both, and tighten the Firebase rules so `game` and `level` refuse `<` and `>`. Recorded 7 Nov 2026 (BACKLOG-ONE). Re-checked 2026-11-08 on main f8a287b4: STILL LIVE — `leaderboards/index.html:394-395` still joins `initials` and `score` into `innerHTML` unescaped, and `firebase/database.rules.json:26` and `:28` let `game` and `level` hold `<` and `>`. Initials are held to `^[A-Z]{0,3}$` (`:14`) and score to a number (`:12`); CAN'T TELL from the repository whether those are the deployed rules (Jon's Firebase). **Code part DONE 10 Nov 2026 (contract FIREBASE-ESCAPING, PR #728):** the hub puts every Firebase value it renders (a board entry's initials, score and timestamp, and the all-time high's score and date) through one esc(), the same helper as the portal ticker's; `scripts/test-scores-offline.py` plants a board entry whose initials are markup and catches the unescaped hub. `firebase/database.rules.json`: `recent_scores` `game` and `level` refuse `<` and `>` (no game sends either). Jon's Firebase export of 10 Nov shows the deployed rules are the repo's of 30 Sep. **Open for the deploy only:** `docs/firebase-rules-deploy.md`, "10 Nov 2026 change". **DONE: deployed by Jon 08:12 11 Nov 2026**; a real score reached its board. Emulator-proven 11 Nov 2026 (contract RULES-EMULATOR-TEST, PR #736): 36 of 36 cases pass. Closed 11 Nov 2026 (RULES-EMULATOR-TEST). | done |
+
+## Closed by HOME-QUEUE-1111 (11 Nov 2026)
+
+Moved word for word from `docs/todo.md`, each with its closing note (contract HOME-QUEUE-1111, 11 Nov 2026).
+
+| # | Item | Owner |
+|---|---|---|
+| PACK-APPROVED | **Printable packs: the DRAFT badge shows only when a room's wording is not approved, and `--final` refuses an unapproved room.** Both rooms approved by Jon 7 Nov. Needed before the Christmas pack goes to Tes, about 23 Nov. **DONE 11 Nov 2026 (contract HOME-QUEUE-1111 PR 1, PR #737):** each pack config's `wording_approved` governs the badge; `--final` refuses an unapproved room; both packs build with `--final` with no DRAFT on any page. | done |
