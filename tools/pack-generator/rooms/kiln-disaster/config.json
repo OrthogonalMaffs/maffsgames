@@ -4,6 +4,7 @@
   "sets": 7,
   "seed": 1,
   "certificate_title": "Kiln opened",
+  "wording_approved": {"by": "Jon", "date": "2026-11-07"},
   "images": [
     {"file": "art/kiln-01-asset-tag.webp",        "role": "clue",    "object": "asset-tag",        "label_box": [290, 592, 966, 740],  "font": "label"},
     {"file": "art/kiln-02-cable-label.webp",      "role": "clue",    "object": "cable-label",      "label_box": [215, 620, 990, 955],  "font": "hand"},
