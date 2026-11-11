@@ -1,9 +1,9 @@
 /* MaffsStageExit: one shared way out of a stage game mid-play (STAGE-EXIT, 28 Oct 2026).
  *
- * The stage games hid "← Back to Games" while a question was on screen (body.playing), so the only
+ * The stage games hid their "← Games" link while a question was on screen (body.playing), so the only
  * ways out were ten questions or the browser's Back button. Include this file and stage-exit.css and
  * the page gets, with no other change:
- *   - on a question: a "← Stages" button and a "← Back to Games" link at the two ends of the game's HUD row
+ *   - on a question: a "← Stages" button and a "← Games" link at the two ends of the game's HUD row
  *     (no extra height: a phone's fold has only a few pixels spare);
  *   - on the worked example (no HUD): the same two controls in one header row.
  *
@@ -14,11 +14,15 @@
  * Any pending "Next →" control is cleared first, so its fallback timer cannot advance a stage that was left.
  *
  * Label: <script src="stage-exit.js" data-label="← Rounds"> (default "← Stages").
+ * Home label: data-home-label="..." on the same tag (default "← Games"). build() sets the page's own back link to
+ * it before the HUD copy is made, so the row and the HUD read the same. The full "← Back to Games" wrapped at 320px
+ * in Aa mode and ran onto the next element (STAGE-EXIT-LABEL, Jon, 7 Nov 2026); games without this file keep it.
  */
 (function () {
   'use strict';
   var script = document.currentScript;
   var label = (script && script.getAttribute('data-label')) || '← Stages';
+  var homeLabel = (script && script.getAttribute('data-home-label')) || '← Games';
 
   function leave() {
     if (window.MaffsNext) {
@@ -42,6 +46,7 @@
   function build() {
     var link = document.querySelector('a.back-link');
     if (!link || document.querySelector('.stage-exit-row')) return;
+    link.textContent = homeLabel;
     var row = document.createElement('div');
     row.className = 'stage-exit-row';
     link.parentNode.insertBefore(row, link);
