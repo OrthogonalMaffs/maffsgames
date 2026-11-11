@@ -229,7 +229,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
+   "how": "kept from the pack (6 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
