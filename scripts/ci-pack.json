@@ -172,7 +172,7 @@
   "Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium; Stage 5 word problems: unique solutions, every key form marked, tiles build every key, a session played)": "22",
   "Six Sevens, Bruv (independent recomputation + session simulation)": "12",
   "Split It (every generator's keys recomputed + marking at the stated precision)": "49",
-  "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium)": "18",
+  "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 125 played in Chromium)": "30",
   "Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "28",
   "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 2": "25",
   "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 2 of 2": "59",
@@ -271,7 +271,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
