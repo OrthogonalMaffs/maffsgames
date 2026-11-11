@@ -77,6 +77,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-11 (cloud): BANKS-40 PR 1, new-shapes (`docs/handover/contracts/2026-11-11-banks-40.md`, Small)
+
+At the Gate, to merge on green; PR 2 (spot-the-error, still claimed) follows from main. Branch `claude/practical-archimedes-3k6s2p` from main 3a4971f: claim 29c5f0e; #730 close-out 039e70c. New Shapes 40/40/40 (70 items); `verify-new-shapes.py` PASS on 120; check-banks --ci OK. Sandbox: extract-banks and check-answer-lock need KaTeX routed from `scripts/fonts/katex/dist` (docs/sandbox-checks.md's wrapper).
+
 ## 2026-11-11 (cloud): TODO-TIDY (`docs/history/contracts/2026-11-11-todo-tidy.md`, Docs, Jon's six rulings of 11 Nov)
 
 DONE, merged and live: [#730](https://github.com/OrthogonalMaffs/maffsgames/pull/730) merged as fd5d75a on a green Gate under the standing authorisation, via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: `X Failed to log in to github.com using token (GH_TOKEN)` / `The token in GH_TOKEN is invalid.`), the message the PR title and body word for word (checked); Gate check-site 42989347627 green on aba7613 (87 passed, 2 main-only skipped). Main on fd5d75a: check-site 42990756668 green (89 of 89), phone-fit-full 42990756886 green. Close-out carried by BANKS-40's first commit after its claim. Branch `claude/practical-archimedes-3k6s2p` from main e04a4f9: contract 48e0a41; #729 close-out de37f1e; work 18539cc. todo.md §6 holds only what needs Jon; its build items moved to §2–§4 and §7, its done items closed to todo-done.md; §3's slate became the ideas list. Discovery: this file's ownership paragraph ("never edits ... `docs/todo.md`") is stale against AGENTS.md:83; not edited (Jon's lane exception).
