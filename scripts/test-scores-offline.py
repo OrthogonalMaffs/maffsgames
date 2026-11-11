@@ -12,10 +12,12 @@
             Scores from the device (one seeded game) and shows its "can't load on this network" line; the portal
             has no page error and hides its ticker
   live      a fake SDK in its place: /leaderboards/ renders its game cards, the portal ticker shows the fake
-            recent score; neither shows the offline line (everything behaves as before)
+            recent score; neither shows the offline line (everything behaves as before). The fake board entry's
+            initials are markup, which the hub must show as text (contract FIREBASE-ESCAPING, 10 Nov 2026)
 
 Plants: a page that calls firebase.database() itself (the rule must name it); /leaderboards/ with the direct SDK
-call put back at load, under "blocked" (its Your Scores must be caught never rendering).
+call put back at load, under "blocked" (its Your Scores must be caught never rendering); /leaderboards/ with its
+esc() taken off the board initials, under "live" (the planted markup must be caught rendering as an element).
 """
 import argparse
 import asyncio
@@ -38,7 +40,7 @@ FAKE_SDK = r"""
   var now = Date.now();
   var DATA = {
     recent_scores: { a: { game: 'Fake Game', slug: 'angle-ace', level: 'GCSE', score: 42, initials: 'ZZZ', timestamp: now } },
-    leaderboards: {}
+    leaderboards: { sequence_solver_ks3: { p: { initials: '<i id="mfgPlant">X</i>', score: 5, timestamp: now } } }
   };
   function at(path) {
     var o = DATA;
@@ -63,6 +65,7 @@ FAKE_SDK = r"""
 })();
 """
 
+PLANT_INITIALS = '<i id="mfgPlant">X</i>'   # the fake board entry's initials (FAKE_SDK): markup, shown as text
 SEED = """localStorage.setItem('mfg_hist_v1::angle-ace::gcse', JSON.stringify([{score: 17, timestamp: Date.now()}]));"""
 
 
@@ -96,11 +99,18 @@ async def page_state(browser, base, path, mode, body=None):
         page.on('pageerror', lambda e: errs.append(str(e)[:120]))
         await page.goto(base + path, wait_until='load', timeout=20000)
         await page.wait_for_timeout(800)
+        if path == '/leaderboards/' and mode == 'live':
+            # Sequence Solver is the first card; load it whether or not it has scrolled into view.
+            await page.evaluate('''() => { const c = document.querySelector('.game-card[data-slug="sequence-solver"]');
+                                         if (c && c._loadFn) c._loadFn(); }''')
+            await page.wait_for_timeout(500)
         st = await page.evaluate('''() => {
             const vis = id => { const e = document.getElementById(id); return !!e && !e.hidden && getComputedStyle(e).display !== 'none'; };
             const ys = document.getElementById('yourScoresBody');
             const t = document.getElementById('scoreTicker');
-            return { yours: ys ? ys.innerText : null, offline: vis('lbOffline'), cards: document.querySelectorAll('#gameGrid > *').length,
+            const ini = document.querySelector('.game-card[data-slug="sequence-solver"] .gc-initials');
+            return { plantText: ini ? ini.textContent : null, plantElement: !!document.getElementById('mfgPlant'),
+                     yours: ys ? ys.innerText : null, offline: vis('lbOffline'), cards: document.querySelectorAll('#gameGrid > *').length,
                      ticker: t ? (vis('scoreTicker') ? t.innerText : 'HIDDEN') : null };
         }''')
         st['errs'] = errs
@@ -118,6 +128,9 @@ def judge(path, mode, st):
             f.append('%s (blocked): no "can\'t load on this network" line' % path)
         if mode == 'live' and (st['offline'] or not st['cards']):
             f.append('%s (live): offline line %s, %d game cards' % (path, st['offline'], st['cards']))
+        if mode == 'live' and (st['plantElement'] or st['plantText'] != PLANT_INITIALS):
+            f.append('%s (live): board initials with markup rendered as markup, not text (element made: %s, text %r)'
+                     % (path, st['plantElement'], st['plantText']))
     else:
         if mode == 'blocked' and st['ticker'] != 'HIDDEN':
             f.append('/ (blocked): the ticker is not hidden (%r)' % (st['ticker'] or '')[:60])
@@ -171,6 +184,18 @@ def main():
             print('  plant: /leaderboards/ before the contract, Firebase blocked: %s' % ('CAUGHT (%s)' % f[0][:90] if caught else 'MISSED'))
             if not caught:
                 fails.append('plant: the pre-contract /leaderboards/ passed with Firebase blocked')
+        # The hub before FIREBASE-ESCAPING: board initials joined into the page unescaped.
+        esc_ini = "e.initials ? esc(e.initials) : '&mdash;'"
+        unesc = cur.replace(esc_ini, "e.initials ? e.initials : '&mdash;'", 1) if esc_ini in cur else ''
+        if not unesc:
+            fails.append('plant: /leaderboards/ no longer escapes its board initials as planned against')
+        else:
+            (_, _, f), = asyncio.run(run([('/leaderboards/', 'live', unesc)]))
+            caught = any('rendered as markup' in x for x in f)
+            print('  plant: /leaderboards/ with unescaped board initials, fake SDK: %s'
+                  % ('CAUGHT (%s)' % next(x for x in f if 'rendered as markup' in x)[:110] if caught else 'MISSED'))
+            if not caught:
+                fails.append('plant: the hub with unescaped board initials passed')
     print('PASS' if not fails else 'FAIL: %d' % len(fails))
     return 0 if not fails else 1
 
