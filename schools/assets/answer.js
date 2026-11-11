@@ -14,13 +14,21 @@
  *                                      £ or € is accepted. Pence answers need exactly 2 d.p.; a
  *                                      whole-pound key also accepts an integer. 1250.7, 3050.0 and
  *                                      1250.700 are 'format'.
- *   MaffsAnswer.decimal(raw, key, dp)  the question states dp decimal places and key is already
+ *   MaffsAnswer.decimal(raw, key, dp, opts)  the question states dp decimal places and key is already
  *                                      rounded to them. Any form equal in value is 'correct'
  *                                      (2.5, 2.50); a value that rounds (half up) to the key but
  *                                      is not equal to it is 'format' (333.33 when 333.3 is asked).
- *   MaffsAnswer.exact(raw, key)        an answer that needs no rounding (whole-number ratios, an
+ *   MaffsAnswer.exact(raw, key, opts)  an answer that needs no rounding (whole-number ratios, an
  *                                      integer scale factor): equal in value or 'wrong'. Nothing is
  *                                      'format', since no precision was asked for.
+ *     opts.currency ('£' or '€', MONEY-ANSWERS, 11 Nov 2026): the answer is an amount of money that
+ *                                      decimal() or exact() marks (to s.f., to d.p., or exactly), not
+ *                                      money(). One leading sign of THAT currency is accepted, as money()
+ *                                      accepts it ("£8140", "£ 8140"); the other currency's sign, or two
+ *                                      signs, is 'unreadable'. Nothing else changes: the key, dp and form
+ *                                      rules are as without it. Without opts (or with no currency) neither
+ *                                      takes a sign, exactly as before. Such a game also calls moneyInput()
+ *                                      on that question's box (scripts/check-banks.py).
  *   MaffsAnswer.fraction(raw)          the exact reading of a typed fraction a/b (a sign on either
  *                                      part, spaces round the slash) or a whole number: {num, den}
  *                                      in lowest terms with den > 0, or null (a decimal, b = 0,
@@ -81,10 +89,15 @@
   var NUM = /^([+-]?)(\d*)(?:\.(\d*))?(?:[eE]([+-]?\d+))?$/;
   var CURRENCY = /^[£€]\s*/;
 
+  // allowCurrency: true takes one leading £ or € (money(), parse(), message()); '£' or '€' takes that sign only
+  // (decimal() and exact() with opts.currency); anything else takes none.
+  function isSign(c) { return c === '£' || c === '€'; }
   function strip(raw, allowCurrency) {
     var s = String(raw == null ? '' : raw).trim();
-    return allowCurrency ? s.replace(CURRENCY, '') : s;
+    if (allowCurrency === true) return s.replace(CURRENCY, '');
+    return isSign(allowCurrency) ? s.replace(new RegExp('^' + allowCurrency + '\\s*'), '') : s;
   }
+  function currencyOf(opts) { return opts && isSign(opts.currency) ? opts.currency : false; }
 
   // Exact decimal: {neg, digits, scale} with value = (neg ? -1 : 1) * digits / 10^scale.
   function read(s) {
@@ -133,16 +146,16 @@
     return written.test(s) ? 'correct' : 'format';
   }
 
-  function decimal(raw, key, dp) {
-    var d = read(strip(raw, false));
+  function decimal(raw, key, dp, opts) {
+    var d = read(strip(raw, currencyOf(opts)));
     if (!d) return 'unreadable';
     var k = keyScaled(key, dp), v = scaledExact(d, dp);
     if (v === k) return 'correct';
     return scaledHalfUp(d, dp) === k ? 'format' : 'wrong';
   }
 
-  function exact(raw, key) {
-    var d = read(strip(raw, false));
+  function exact(raw, key, opts) {
+    var d = read(strip(raw, currencyOf(opts)));
     if (!d) return 'unreadable';
     var dp = Math.max(d.scale, 0), k = Number(key) * Math.pow(10, dp);
     return scaledExact(d, dp) === Math.round(k) && Math.abs(k - Math.round(k)) < 1e-6 ? 'correct' : 'wrong';

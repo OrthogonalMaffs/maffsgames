@@ -34,10 +34,14 @@ back). Eleven rules, each with an ID:
 Not a bank rule, and not in the ledger: the money boxes (MONEY-INPUT, Jon, 9 Nov
 2026; canon §7.1.3). Every page that marks with MaffsAnswer.money( also calls
 MaffsAnswer.moneyInput(, so its money boxes show their currency sign and are
-text boxes a typed £ cannot empty. A page that does not fails --ci at once.
+text boxes a typed £ cannot empty. Widened 11 Nov 2026 (MONEY-ANSWERS): a page
+also has money answers if it passes a currency to MaffsAnswer.decimal( or
+MaffsAnswer.exact( (opts {currency}), or declares a currency unit on a question
+(unit:'£', unit:"€", unit:'\u00a3' ...; '£k' is not one). A page with money
+answers by any of the three that does not call moneyInput( fails --ci at once.
 Every .html page is read (the-6-ps is not a roster game); --ci and --selftest
-both plant a page that marks money without the helper, and fail unless it is
-caught.
+both plant pages with money answers by each route without the helper, and fail
+unless each is caught (and a page with neither is not).
 
 Every finding is identified by content, never by bank index or source line
 (todo item 7, 2 Oct 2026), so a known defect keeps its ledger match when the
@@ -502,6 +506,9 @@ def lint_ast_rules(slug, tree, src, findings, known_names):
 
 MONEY_CALL = re.compile(r"MaffsAnswer\.money\s*\(")
 MONEY_INPUT_CALL = re.compile(r"MaffsAnswer\.moneyInput\s*\(")
+# MONEY-ANSWERS (11 Nov 2026): the other two ways a page shows it has money answers.
+MARKER_CALL = re.compile(r"MaffsAnswer\.(?:decimal|exact)\s*\(")
+CURRENCY_UNIT = re.compile(r"""\bunit\s*:\s*(['"])(?:£|€|\\u00[aA]3|\\u20[aA][cC])\1""")
 MONEY_SKIP_DIRS = {"node_modules", "docs", "data"}
 
 
@@ -518,11 +525,39 @@ def money_pages():
     return out
 
 
+def call_text(src, open_at):
+    """The argument text of the call whose "(" is at open_at, to its matching ")" (quotes not parsed: a
+    marker call's arguments hold no parentheses inside strings)."""
+    depth = 0
+    for i in range(open_at, len(src)):
+        if src[i] == "(":
+            depth += 1
+        elif src[i] == ")":
+            depth -= 1
+            if depth == 0:
+                return src[open_at + 1:i]
+    return src[open_at + 1:]
+
+
+def money_routes(src):
+    """How a page shows it has money answers: [] or some of 'money(', 'decimal(/exact( with a currency',
+    'a currency unit'."""
+    routes = []
+    if MONEY_CALL.search(src):
+        routes.append("money(")
+    if any("currency" in call_text(src, m.end() - 1) for m in MARKER_CALL.finditer(src)):
+        routes.append("decimal(/exact( with a currency")
+    if CURRENCY_UNIT.search(src):
+        routes.append("a currency unit")
+    return routes
+
+
 def lint_money_inputs(pages):
-    """(pages that mark money, [pages that mark money with MaffsAnswer.money( but never call
+    """(pages with money answers, [pages with money answers -- marked by MaffsAnswer.money(, or by
+    decimal(/exact( with a currency, or a question with a currency unit -- that never call
     MaffsAnswer.moneyInput(])."""
-    marking = [p for p, src in pages if MONEY_CALL.search(src)]
-    bare = [p for p, src in pages if MONEY_CALL.search(src) and not MONEY_INPUT_CALL.search(src)]
+    marking = [p for p, src in pages if money_routes(src)]
+    bare = [p for p, src in pages if money_routes(src) and not MONEY_INPUT_CALL.search(src)]
     return marking, bare
 
 
@@ -534,11 +569,27 @@ def money_input_plant(pages):
     if real is None:
         return ["no page calls MaffsAnswer.moneyInput( to plant from"]
     planted = (real[0], MONEY_INPUT_CALL.sub("(", real[1]))
-    made_up = ("plant/index.html", "<input id=a><script>var r = MaffsAnswer.money(a.value, 12.5);</script>")
+    made_up = [
+        ("plant/index.html", "<input id=a><script>var r = MaffsAnswer.money(a.value, 12.5);</script>",
+         "a made-up game marking money with money("),
+        ("plant/decimal.html", "<input id=a><script>var r = MaffsAnswer.decimal(a.value, (8140).toFixed(0), 0, "
+         "{currency: '\u00a3'});</script>", "a made-up game passing a currency to decimal("),
+        ("plant/exact.html", "<input id=a><script>var r = MaffsAnswer.exact(a.value, 18000, opts.currency ? "
+         "{currency: opts.currency} : {});</script>", "a made-up game passing a currency to exact("),
+        ("plant/unit.html", "<input id=a><script>var Q = [{prompt: 'Find V.', answer: 8140, unit:'\u00a3'}];"
+         "</script>", "a made-up game with a question in unit:'\u00a3'"),
+    ]
+    plain = ("plant/plain.html", "<input id=a><script>var Q = [{answer: 12, unit:'\u00a3k'}, {answer: 3, unit:'kg'}];"
+             "var r = MaffsAnswer.decimal(a.value, (2.5).toFixed(1), 1); MaffsAnswer.exact(a.value, 3);</script>")
     if lint_money_inputs([planted])[1] != [real[0]]:
         errs.append("planted %s (its moneyInput( calls taken out) was not caught" % real[0])
-    if lint_money_inputs([made_up])[1] != ["plant/index.html"]:
-        errs.append("a made-up game marking money without moneyInput( was not caught")
+    for path, src, what in made_up:
+        if lint_money_inputs([(path, src)])[1] != [path]:
+            errs.append("%s without moneyInput( was not caught" % what)
+        if lint_money_inputs([(path, src + "<script>MaffsAnswer.moneyInput(a, '\u00a3');</script>")])[1]:
+            errs.append("%s, with moneyInput(, was caught" % what)
+    if lint_money_inputs([plain])[1] or lint_money_inputs([plain])[0]:
+        errs.append("a made-up game with no money answers ('\u00a3k' and kg units, no currency) was caught")
     if lint_money_inputs([real])[1]:
         errs.append("%s as it stands was caught" % real[0])
     return errs
@@ -549,10 +600,11 @@ def report_money_inputs():
     pages = money_pages()
     marking, bare = lint_money_inputs(pages)
     errs = money_input_plant(pages)
-    print("\nMoney boxes (MONEY-INPUT): %d page(s) mark money with MaffsAnswer.money(: %s"
-          % (len(marking), ", ".join(marking) or "none"))
+    routes = dict((p, money_routes(src)) for p, src in pages)
+    print("\nMoney boxes (MONEY-INPUT, MONEY-ANSWERS): %d page(s) have money answers: %s"
+          % (len(marking), ", ".join("%s (%s)" % (p, "; ".join(routes[p])) for p in marking) or "none"))
     for p in bare:
-        print("  FAIL %s marks money with MaffsAnswer.money( but never calls MaffsAnswer.moneyInput(" % p)
+        print("  FAIL %s has money answers (%s) but never calls MaffsAnswer.moneyInput(" % (p, "; ".join(routes[p])))
     for e in errs:
         print("  FAIL plant: " + e)
     if not bare and not errs:
@@ -763,7 +815,8 @@ def run_selftest():
     for e in money_errs:
         print("FAIL money boxes: " + e)
     if not money_errs:
-        print("OK   money boxes: a page marking money without MaffsAnswer.moneyInput( is caught")
+        print("OK   money boxes: a page with money answers (money(, decimal(/exact( with a currency, a currency "
+              "unit) without MaffsAnswer.moneyInput( is caught")
     ok = ok and not money_errs
     total = (total_b7[0] + len(MATHTEXT_BALANCE_FIXTURES)
              + len(bc.VALUE_FIXTURES_EQUAL) + len(bc.VALUE_FIXTURES_UNEQUAL)

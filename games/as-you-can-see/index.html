@@ -618,10 +618,20 @@ body.accessible p,body.accessible .qtext,body.accessible .fb-line{line-height:2;
     h = '<div class="ans-row" role="group" aria-label="Your answer"><label class="nb"><input type="text" inputmode="decimal" autocomplete="off" maxlength="6" aria-label="Your answer" data-i="0"></label>' + CHECK + '</div>';
     a.innerHTML = h;
     inputs = Array.prototype.slice.call(a.querySelectorAll('input'));
+    if (moneyCur(Q)) A.moneyInput(inputs[0], moneyCur(Q));   // an amount in pounds: the £ inside its box (MONEY-ANSWERS)
     var holder = $('kpHolder'), k = document.createElement('div');
     holder.innerHTML = ''; holder.hidden = false; holder.appendChild(k);
     kp = window.MaffsKeypad ? MaffsKeypad.mount(k, { targets: inputs, keys: {}, maxLength: 5, keepInView: a, foldInset: FOOTER_PX }) : null;
     if (!(kp && kp.enabled && kp.enabled())) { holder.hidden = true; try { inputs[0].focus({ preventScroll: true }); } catch (e) {} }
+  }
+  // A typed answer is an amount of money when the axis it is read on is in pounds (MONEY-ANSWERS, 11 Nov 2026): a line
+  // graph's readings, changes and range (the up axis, 'Savings (£)'), a scatter graph's estimate of x ('Price (£)'). A
+  // '(£100s)' axis is left as it is (MONEY-THOUSANDS). The marking is unchanged: cleanTyped keeps only digits and a point.
+  var Y_OPS = ['read', 'change', 'range', 'esty', 'outlierY'], X_OPS = ['estx', 'outlierX'];
+  function moneyCur(q) {
+    if (q.type !== 'number' || !q.chart || !q.ask) return null;
+    var axis = Y_OPS.indexOf(q.ask.op) >= 0 ? q.chart.yLabel : X_OPS.indexOf(q.ask.op) >= 0 ? q.chart.xLabel : '';
+    return /\(£\)$/.test(axis || '') ? '£' : null;
   }
   // Digits and one decimal point.
   function cleanTyped(v) {

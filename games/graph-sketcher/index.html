@@ -350,8 +350,8 @@ core:[
    tableX:[0,5,10,15,20,25],given:{0:500,25:1332.9},
    answers:{5:608.3,10:740.1,15:900.5,20:1095.6},
    iqs:[
-     {type:'read',prompt:'Estimate A when n = 18.',answer:1012.9,tol:50},
-     {type:'extrap',prompt:'Use the model to estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,reliable:false,either:true,eitherNote:'it assumes the interest rate stays at 4% for 30 years',reason:'Assumes interest rate stays constant for 30 years'}
+     {type:'read',prompt:'Estimate A when n = 18.',answer:1012.9,tol:50,money:'£'},
+     {type:'extrap',prompt:'Use the model to estimate A when n = 30. Is this reliable?',answer:1621.7,tol:80,money:'£',reliable:false,either:true,eitherNote:'it assumes the interest rate stays at 4% for 30 years',reason:'Assumes interest rate stays constant for 30 years'}
    ]},
   {id:'CM12',eqLatex:'F = -0.003v^2 + 0.3v',context:'Fuel efficiency F (km/L) vs speed v (km/h).',
    fn:v=>-0.003*v*v+0.3*v,xRange:[0,100],yRange:[0,8],xLabel:'v (km/h)',yLabel:'F (km/L)',
@@ -703,7 +703,12 @@ function buildTable(q){
   if(dp!==null)html+=`<div class="table-note" style="font-size:.78rem;color:var(--muted);margin-top:.35rem">Give each value to ${dp} decimal place${dp===1?'':'s'}.</div>`;
   html+='<div id="tableMsg" role="status" style="font-size:.78rem;color:var(--wrong);margin-top:.25rem"></div>';
   $('tableBox').innerHTML=html;
+  const cur=gsCur(q);
+  if(cur)$('tableBox').querySelectorAll('input').forEach(el=>MaffsAnswer.moneyInput(el,cur));   // MONEY-ANSWERS
 }
+// The table's typed values are the y column, so they are amounts of money when y is in pounds ('C (£)', 'A (£)'); a
+// '£k' axis is left as it is (MONEY-THOUSANDS). A typed question in pounds carries money:'£' (MONEY-ANSWERS, 11 Nov 2026).
+function gsCur(q){return /\(£\)$/.test(q.yLabel)?'£':null;}
 
 function fmtX(v){return Number.isInteger(v)?v:parseFloat(v.toPrecision(4));}
 function fmtV(v){
@@ -734,7 +739,7 @@ function checkCell(input){
   const raw=input.value;
   if(!raw.trim())return;
   const dp=tableDp(q);
-  const res=dp===null?MaffsAnswer.exact(raw,expected):MaffsAnswer.decimal(raw,expected.toFixed(dp),dp);
+  const res=dp===null?MaffsAnswer.exact(raw,expected,{currency:gsCur(q)}):MaffsAnswer.decimal(raw,expected.toFixed(dp),dp,{currency:gsCur(q)});
   const msg=$('tableMsg');
   if(res==='format'||res==='unreadable'){if(msg)msg.textContent=MaffsAnswer.message(res,raw,{dp:dp});return;}
   if(msg)msg.textContent='';
@@ -1083,14 +1088,17 @@ function loadIQ(q){
       </div>
       <button class="check-btn" onclick="checkTPIQ()">Check</button><div id="iqFb"></div>`;
   }
+  if(iq.money&&$('iqInput'))MaffsAnswer.moneyInput($('iqInput'),iq.money);   // a value in pounds: the £ inside its box
   MaffsLock.fresh(box);   // a new question: a double-click on Check cannot answer it
 }
+// A value in pounds is read by MaffsAnswer.parse(), which takes one leading £; the tolerance is unchanged.
+function iqValue(iq){const raw=$('iqInput').value;if(!iq.money)return parseFloat(raw);const v=MaffsAnswer.parse(raw);return v===null?NaN:v;}
 
 function _trackIQ(ok){G._qaIdx++;mfg('question_answered',{game_slug:'graph-sketcher',level:G.level,correct:ok,question_index:G._qaIdx});}
 
 function checkReadIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
-  const val=parseFloat($('iqInput').value);if(isNaN(val))return;
+  const val=iqValue(iq);if(isNaN(val))return;
   if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');
   const tol=iq.tol||Math.abs(iq.answer)*0.05;
@@ -1107,7 +1115,7 @@ function checkReadIQ(){
 
 function checkExtrapIQ(){
   const q=G.questions[G.qIdx],iq=q.iqs[G.iqIdx];
-  const val=parseFloat($('iqInput').value);const rel=$('iqReliable').value;
+  const val=iqValue(iq);const rel=$('iqReliable').value;
   if(isNaN(val)||!rel)return;
   if(!MaffsLock.lock($('qBox')))return;   // one mark per question (canon 7.6.0)
   G.totalIQs++;const fb=$('iqFb');

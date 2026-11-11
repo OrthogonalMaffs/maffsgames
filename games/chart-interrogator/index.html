@@ -151,6 +151,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. The game logs only right answers (a wrong reading gets a hint and another try), so mark_any: every answer is the right one. Phase 1 types the expected value (or picks the expected option); phase 2 sets every dropdown and box to its key and submits. repeat presses Check and the options of the answered question again.
 {
   "mark_any": true,
@@ -944,6 +945,7 @@ function showCurrentQuestion(){
     MaffsLock.fresh(aq);   // a new question: a double Enter or double-click on the last one cannot answer it
 
     var inp=document.getElementById('qInput');
+    if(inp&&moneyReading())MaffsAnswer.moneyInput(inp,'£');   // a reading in pounds: the £ inside its box (MONEY-ANSWERS)
     if(inp){inp.focus();inp.addEventListener('keydown',function(e){if(e.key==='Enter')submitPhase1();});}
   }
 }
@@ -951,7 +953,10 @@ function showCurrentQuestion(){
 function submitPhase1(){
   var q=phase1Questions[currentQIndex];
   var inp=document.getElementById('qInput');
-  var val=parseFloat(inp.value);
+  // A reading in pounds is read by MaffsAnswer.parse(), which takes one leading £ (MONEY-ANSWERS, 11 Nov 2026); the
+  // tolerance and the key are unchanged. Any other reading is read as before.
+  var val=moneyReading()?MaffsAnswer.parse(inp.value):parseFloat(inp.value);
+  if(val===null)val=NaN;
   var fb=document.getElementById('qFeedback');
 
   if(isNaN(val)){fb.textContent='Please enter a number.';fb.className='q-feedback wrong';return;}
@@ -1038,6 +1043,10 @@ function filled(val){return '<span class="filled">'+val+'</span>';}
 // variable" whenever group A had the larger one (5 of 20 scenarios), with no answer
 // at all for equal spreads (B7, B10).
 var EQUAL_SPREADS='neither, the spreads are equal';
+
+// Phase 1's typed readings are amounts of money when the scenario's unit is '£' (a stem-and-leaf, box plot or
+// cumulative frequency of pounds); a histogram's are counts and a percentage. '£k' is left as it is (MONEY-THOUSANDS).
+function moneyReading(){return selectedType!=='histogram'&&unitOf(currentScenario)==='£';}
 
 // Box-plot scenarios carry s.unit. Stem-and-leaf ones only state it in context, as
 // 'Heights of Year 10 students (cm)'; '(out of 60)' is a maximum, not a unit.

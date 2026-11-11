@@ -200,6 +200,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Every step is typed and locked, then Calculate Estimate marks the chain: i = 0 types each step's model value (on the accepted answer); i >= 1 types the first step 1000 times too big (out by a factor of 1000: wrong).
 {
   "start_sel": ".session-btn",
@@ -456,6 +457,10 @@ function formatNum(n) {
   return n.toExponential(2);
 }
 
+// A step whose unit is in pounds ("£/litre") is an amount of money (MONEY-ANSWERS, 11 Nov 2026): its box shows the £
+// and one leading £ is taken off before parseInput reads it. The traffic-light bands are unchanged.
+function moneyStep(step) { return /^£/.test(step.unit || ''); }
+
 function parseInput(val) {
   if (!val) return NaN;
   val = val.trim().replace(/,/g, '');
@@ -550,6 +555,9 @@ function loadQuestion() {
     html += '</div>';
   }
   container.innerHTML = html;
+  for (var m = 0; m < currentQ.chain.length; m++) {   // a step in pounds: the £ inside its box (MONEY-ANSWERS)
+    if (moneyStep(currentQ.chain[m])) MaffsAnswer.moneyInput(document.getElementById('input-' + m), '£');
+  }
 
   var submitBtn = document.getElementById('chainSubmitBtn');
   submitBtn.disabled = true;
@@ -576,7 +584,7 @@ function toggleHint(idx) {
 function submitStep(idx) {
   if (stepValues[idx] !== null) return;   // a step is locked once: Enter and a click on Lock no longer count it twice
   var input = document.getElementById('input-' + idx);
-  var val = parseInput(input.value);
+  var val = parseInput(moneyStep(currentQ.chain[idx]) ? input.value.trim().replace(/^£\s*/, '') : input.value);
   if (isNaN(val)) { input.style.borderColor = '#ef4444'; return; }
 
   var step = currentQ.chain[idx];
