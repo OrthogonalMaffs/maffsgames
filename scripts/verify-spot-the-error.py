@@ -2,7 +2,7 @@
 # ci-line: Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 110 played in Chromium) |
 """Spot the Error: every worked step, key, phrase and explanation checked, and every item played in Chromium.
 
-The game (110 items: ks3 35, gcse 45, level4 30) shows a word problem and some worked steps. Stage 1: the
+The game (125 items: ks3 40, gcse 45, level4 40) shows a word problem and some worked steps. Stage 1: the
 student taps the step that contains the error; Stage 2: the phrase in the problem that was misread. Its bank
 was written by hand and never verified; the tranche 1 audit of 6 Oct 2026 found a correct step keyed as the
 error (gcse_044), steps with no false maths keyed as the error (ks3_016, l4_023: SR-18, a strategy choice is
@@ -60,7 +60,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'spot-the-error'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-COUNTS = {'ks3': 35, 'gcse': 45, 'level4': 30}
+COUNTS = {'ks3': 40, 'gcse': 45, 'level4': 40}
 # Register entries (docs/audits/findings/spot-the-error.yml) by bank item, so a failure names the finding.
 AUDIT = {
     'ste_ks3_019': 't1-001', 'ste_ks3_024': 't1-002', 'ste_ks3_016': 't1-003', 'ste_gcse_044': 't1-004',
@@ -466,6 +466,30 @@ ITEMS = {
     'ste_l4_029': I(2, 'Cramer’s rule', '(7*4-3*9)/(2*4-3*1)', {1: '2*4-3*1', 2: '7*4-3*9'}),
     'ste_l4_030': I(1, 'implicitly', A('2xy + x²(dy/dx) = 0', lambda: True),
                     {1: R(False, 'the product rule on x²y gives a dy/dx term')}),
+    'ste_ks3_036': I(1, 'average speed', '150/2.5', {1: '150/2.5'}),
+    'ste_ks3_037': I(1, 'rises by 9 degrees', '-4+9', {1: '-4+9'}),
+    'ste_ks3_038': I(2, '8 equal sections', '3/8', {1: '8-3', 2: '3/8'}),
+    'ste_ks3_039': I(1, 'range of the scores', '15-3', {1: '15-3'}),
+    'ste_ks3_040': I(1, 'diameter of 10 cm', 'pi*(10/2)**2', {1: '10/2'}, extra=[5]),
+    'ste_l4_031': I(1, 'to radians', '150*pi/180', {1: '150*pi/180'}),
+    'ste_l4_032': I(3, 'quotient rule', A('(x·cos(x) − sin(x))/x²', lambda: same(sp.diff(sp.sin(x) / x, x),
+                                                                              (x * sp.cos(x) - sp.sin(x)) / x ** 2)),
+                    {1: R(True, 'u = sin(x), v = x'), 2: R(True, 'du/dx = cos(x), dv/dx = 1'),
+                     3: R(False, 'the quotient rule is (v·du/dx − u·dv/dx)/v²',
+                          lambda: same(sp.diff(sp.sin(x) / x, x), (sp.sin(x) - x * sp.cos(x)) / x ** 2))}),
+    'ste_l4_033': I(1, 'integrates', A('½e²ˣ + c', lambda: same(sp.integrate(sp.exp(2 * x), x), sp.exp(2 * x) / 2)),
+                    {1: R(False, '∫e²ˣ dx = ½e²ˣ + c', lambda: same(sp.integrate(sp.exp(2 * x), x), 2 * sp.exp(2 * x)))},
+                    extra=[2]),
+    'ste_l4_034': I(1, 'magnitude |F|', 'sqrt(2**2+3**2+6**2)', {1: 'sqrt(2**2+3**2+6**2)'}, extra=[49]),
+    'ste_l4_035': I(2, 'solves 2ˣ = 20', 'log(20)/log(2)', {1: R(True, 'logs of both sides'), 2: 'log(20)/log(2)'}),
+    'ste_l4_036': I(2, 'its frequency', '100*pi/(2*pi)', {1: R(True, 'ω = 100π, read from the equation'), 2: '100*pi/(2*pi)'}),
+    'ste_l4_037': I(2, 'Newton-Raphson method', '2-(2**2-5)/(2*2)', {1: R(True, 'f(2) = −1 and f′(2) = 4', lambda: (2 ** 2 - 5, 2 * 2) == (-1, 4)), 2: '2-(2**2-5)/(2*2)'}),
+    'ste_l4_038': I(2, 'substitution u = x² + 1', '2**4/4-1**4/4',
+                    {1: R(True, 'du = 2x dx', lambda: same(sp.diff(x ** 2 + 1, x), 2 * x)),
+                     2: R(False, 'the limits become u = 1 to u = 2', lambda: (0 ** 2 + 1, 1 ** 2 + 1) == (0, 1))}),
+    'ste_l4_039': I(2, 'area enclosed', '-(2**3/3-4*2)', {1: '2**3/3-4*2', 2: '-(2**3/3-4*2)'}),
+    'ste_l4_040': I(3, 'standard deviation', 'sqrt(8/3)', {1: '(2+4+6)/3', 2: '(2-4)**2+(4-4)**2+(6-4)**2', 3: 'sqrt(8/3)'},
+                    extra=[8]),
 }
 ALWAYS_GIVEN = {0, 1, 2, 3, 4, 10, 100, 180, 360, 1000}
 # The content hash (bank_common.content_hash, first 12) of each item as it was when its ITEMS entry was
@@ -582,6 +606,21 @@ REVIEWED = {
     'ste_l4_028': 'd48f0a70226e',
     'ste_l4_029': '6bc3f179ef71',
     'ste_l4_030': 'a4a86515295b',
+    'ste_ks3_036': '7afed3a52775',
+    'ste_ks3_037': '6dc77514ba8d',
+    'ste_ks3_038': '808ac6b55f89',
+    'ste_ks3_039': '86f430f3d984',
+    'ste_ks3_040': '4a7b3d618245',
+    'ste_l4_031': 'f9d156b76e26',
+    'ste_l4_032': '9990d8f316ae',
+    'ste_l4_033': 'da19409bfbec',
+    'ste_l4_034': 'e86b5ce972f4',
+    'ste_l4_035': 'f4efdbb1de50',
+    'ste_l4_036': '531cc6763fb1',
+    'ste_l4_037': 'b800c1172e8c',
+    'ste_l4_038': '5defeb6e5740',
+    'ste_l4_039': 'd0cc23f704f1',
+    'ste_l4_040': 'a080c09a9939',
 }
 
 
