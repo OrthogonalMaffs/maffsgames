@@ -469,12 +469,39 @@ def plant_list(q, exp):
             fnsets[g] = [Decimal(v) for v in other_rule(q['fn'], g, k, alpha, q['closed'], whole)]
     sgn = [Decimal(v) for v in sign_rule(q['fn'], k, q['closed'], whole)] if k != 0 else []
     taken = set(K)
+    # sin x = +-1 and cos x = +-1: the line only touches the curve (Jon, 10 Nov 2026). Every key typed and something more
+    # is 'touch'; with a key missing the usual order applies.
+    touch = q['fn'] in ('sin', 'cos') and abs(k) == 1
+    sgnset = set(sgn)
     for g, S in fnsets.items():
         for v in S:
             if v not in taken:
-                P.append(([F(x) for x in keys[:-1]] + [str(v)], False, 'fn'))
+                # CAST-AWAY-DIAGNOSE, ruling 1 (Jon, 10 Nov 2026): the student's own function first, so a value that also
+                # solves fn x = -k is named the sign mistake (this plant said 'fn' before).
+                P.append(([F(x) for x in keys[:-1]] + [str(v)], False, 'sign' if v in sgnset else 'fn'))
                 break
     allfn = set(x for S in fnsets.values() for x in S)
+    if k != 0:
+        # (i) the whole wrong-sign answer.
+        P.append(([str(v) for v in sgn], False, 'sign'))
+        # (ii) each other function's whole answer: 'sign' wherever it holds a wrong-sign value (ruling 1: every one does
+        # here, as every angle another function's rule gives is a key or a wrong-sign angle), 'touch' where it holds
+        # every key of a touching line.
+        for g, S in fnsets.items():
+            if set(S) == taken or not S:
+                continue
+            want = 'touch' if touch and taken <= set(S) else 'sign' if set(S) & sgnset else 'fn'
+            P.append(([str(v) for v in S], False, want))
+        # (iii) all keys but one, plus a value on both the wrong-sign list and another function's list: 'sign', with
+        # every choice of the key left out.
+        for v in sgn:
+            if v in allfn and v not in taken:
+                for drop in K:
+                    P.append(([str(x) for x in K if x != drop] + [str(v)], False, 'sign'))
+        # the touching line: every key and the second crossing a student expects, 180 degrees on -> 'touch'; the
+        # wrong-sign answer alone is (i).
+        if touch:
+            P.append(([str(x) for x in K] + [str((K[0] + 180) % 360)], False, 'touch'))
     for v in sgn:
         if v not in taken and v not in allfn:
             P.append(([F(x) for x in keys[:-1]] + [str(v)], False, 'sign'))
@@ -530,9 +557,12 @@ def check_feedback(page, n, pool, exps, out, info):
     info.setdefault('fired', {})
     for w, c in fired.items():
         info['fired'][w] = info['fired'].get(w, 0) + c
-    # 'period' is not required here: a typed value 180 degrees from a solution always solves another named mistake too
-    # (another function's rule or the wrong sign), which the game names first; Stage 1's options carry it (true_mistake).
-    for w in (['right', 'missed', 'fn', 'sign', 'neg', 'end360', 'range', 'notsol', 'nonebut', 'format', 'unreadable', 'twice', 'empty']
+    # 'period' is not required here: a typed value 180 degrees from a solution always solves another named mistake too,
+    # the wrong sign, which the game names before it; Stage 1's options carry it (true_mistake).
+    # 'fn' is not required either (CAST-AWAY-DIAGNOSE, ruling 1, Jon 10 Nov 2026): the student's own function comes
+    # first, and every angle another function's rule gives in Stages 3 and 4 is a key or a wrong-sign angle, so the
+    # sign is always the mistake named. Stage 1's and 2's options still name another function's rule (true_mistake).
+    for w in (['right', 'missed', 'sign', 'neg', 'end360', 'range', 'touch', 'notsol', 'nonebut', 'format', 'unreadable', 'twice', 'empty']
               + (['impossible'] if n == 4 else [])):
         if not fired.get(w):
             out.append('stage %d: the feedback rule %r never fired on a planted answer' % (n, w))
@@ -863,7 +893,16 @@ PLANTS = [
     ('keys rounded down, not half up', [("function r1(x) { var v = Math.round(x * 10) / 10;", "function r1(x) { var v = Math.floor(x * 10) / 10;")], 'engine', r'(keys|alpha) .*'),
     ('a distractor equal to the solutions', [("if (!m.set.length || id === kid || seen[id]) return false;", "if (!m.set.length || seen[id]) return false;")], 'engine', r'(equals the solutions|distinct options|among the options)'),
     ('a format answer marked right', [("else if (fmtHit) return { kind: 'format', msg: MaffsAnswer.message('format', raw, { dp: 1 }) };", "else if (fmtHit) matched.push(-1);")], 'engine', r'should say format'),
-    ("the calculator's negative angle not named", [("var order = ['neg', 'range', 'fn', 'sign', 'period'];", "var order = ['range', 'fn', 'sign', 'period'];")], 'engine', r'should say neg'),
+    ("the calculator's negative angle not named", [("var order = ['neg', 'range', 'touch', 'sign', 'fn', 'period'];", "var order = ['range', 'touch', 'sign', 'fn', 'period'];")], 'engine', r'should say neg'),
+    # CAST-AWAY-DIAGNOSE item 3: the old order, another function's rule before the sign, and no whole-answer match.
+    ('the old order: fn before sign, no whole-answer match',
+     [("var order = ['neg', 'range', 'touch', 'sign', 'fn', 'period'];", "var order = ['neg', 'range', 'fn', 'sign', 'period'];"),
+      ("if (whole(signSet)) return { kind: 'wrong', why: 'sign',", "if (false) return { kind: 'wrong', why: 'sign',"),
+      ("for (t = 0; t < fns.length; t++) if (whole(fns[t].set)) return", "for (t = 0; t < fns.length; t++) if (false) return")],
+     'engine', r'it should say sign'),
+    ("'touch' not named (Jon, 10 Nov 2026)",
+     [("if (q.m === 'one' && q.fn !== 'tan' && q.sign !== 0 && matched.length === q.keys.length) return { kind: 'wrong', why: 'touch', info: {} };", "")],
+     'engine', r'it should say touch'),
     ('a Stage 1 snap point off the curve', [("function snaps(q) { var s = q.sols.slice();", "function snaps(q) { var s = q.sols.map(function (x) { return x + 5; });")], 'engine', r'snap point'),
     ('a walkthrough number wrong (113.5)', [("'In S: \\\\(180^\\\\circ - 66.4^\\\\circ = 113.6^\\\\circ\\\\).'", "'In S: \\\\(180^\\\\circ - 66.4^\\\\circ = 113.5^\\\\circ\\\\).'")], 'walk', r'walkthrough cos step 3'),
     ('a walkthrough word changed', [("Not one. Not infinity. Two.", "Not one. Not infinite. Two.")], 'walk', r'walkthrough sin step 6'),
