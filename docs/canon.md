@@ -3358,6 +3358,12 @@ every cloud session had to re-learn it.
 
 Home lane: recorded in AGENTS.md by HOME-DOCS-1110.
 
+## RULES-EMULATOR-TEST: a rules change is proven in the emulator suite (Project Claude, 11 Nov 2026)
+
+Rule (AGENTS.md): a Firebase rules change adds its REFUSE/ACCEPT cases to `firebase/rules.test.mjs` and runs the emulator suite before Jon deploys; the console's Rules Playground is optional, never the proof.
+
+Reason: #728 (FIREBASE-ESCAPING) changed `recent_scores` `game` and `level` with no suite case; its only test was a Playground payload with `"timestamp": <now in ms>`. The rules accept a timestamp only within 60 s of the server's clock, so the "accepted" test failed unless the current millisecond was typed within a minute, and the "refused" test was refused by the timestamp rule whether or not the new rule worked. The suite builds a valid timestamp itself (`goodRecent()`). Contract RULES-EMULATOR-TEST added four cases (36 of 36 pass; the three refusals fail against the pre-#728 rules) and moved the deploy doc's tests to the suite.
+
 ## DASH-MINUS: a dash before a number reads as a minus (Jon, 3 Nov 2026)
 
 The reason for §7.1's "No dash before a number, a variable or a minus sign". An answer option in Terrible Advice read
