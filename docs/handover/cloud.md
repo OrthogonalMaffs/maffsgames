@@ -77,6 +77,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-11 (cloud): BANKS-40 PR 2, spot-the-error (`docs/handover/contracts/2026-11-11-banks-40.md`, Small)
+
+At the Gate, to merge on green. Branch `claude/practical-archimedes-3k6s2p` from main 2924e0b: #731 close-out c62fc09. Spot the Error ks3 40, gcse 45, level4 40 (15 items); `verify-spot-the-error.py` PASS on 125 with each new item's ITEMS entry and pin; check-banks --ci OK; claim released (cloud-remaining empty). The contract moves to docs/history/contracts/ in the lane's next close-out.
+
 ## 2026-11-11 (cloud): BANKS-40 PR 1, new-shapes (`docs/handover/contracts/2026-11-11-banks-40.md`, Small)
 
 DONE, merged and live: [#731](https://github.com/OrthogonalMaffs/maffsgames/pull/731) merged as ac03c83 on a green Gate under the standing authorisation, via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: `X Failed to log in to github.com using token (GH_TOKEN)` / `The token in GH_TOKEN is invalid.`), the message the PR title and body word for word (checked); Gate check-site 42995316333 green on 136b3c6 (87 passed, 2 main-only skipped). Main on ac03c83: check-site 43000500609 green (89 of 89), phone-fit-full 43000500525 green (5 of 5). **Flake (11 Nov):** before the merge, main's nightly phone-fit-full 42996752378 on 3a4971f was red only in aa mode, `take-a-walk` at 375x667 (651 / 627; the known take-a-walk flake in the Queue); failed jobs rerun once, attempt 2 green. Close-out carried by PR 2's first commit. Branch `claude/practical-archimedes-3k6s2p` from main 3a4971f: claim 29c5f0e; #730 close-out 039e70c. New Shapes 40/40/40 (70 items); `verify-new-shapes.py` PASS on 120; check-banks --ci OK. Sandbox: extract-banks and check-answer-lock need KaTeX routed from `scripts/fonts/katex/dist` (docs/sandbox-checks.md's wrapper).
