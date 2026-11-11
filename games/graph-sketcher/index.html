@@ -743,7 +743,7 @@ function checkCell(input){
   const msg=$('tableMsg');
   if(res==='format'||res==='unreadable'){if(msg)msg.textContent=MaffsAnswer.message(res,raw,{dp:dp});return;}
   if(msg)msg.textContent='';
-  const cell=input.parentElement;
+  const cell=input.closest('td');   // the table cell (a money box sits in span.maffs-money inside it)
   if(res==='correct'){
     cell.classList.add('correct-cell');cell.classList.remove('wrong-cell');
     input.value=fmtV(expected);input.disabled=true;
