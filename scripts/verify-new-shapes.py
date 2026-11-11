@@ -2,7 +2,7 @@
 # ci-line: New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium) |
 """New Shapes: area of a parallelogram and a trapezium, volume of a prism, from a formula, a diagram and values.
 
-Three static banks, read from the page as served: PARALLELOGRAM (15), TRAPEZIUM (20) and PRISM (15). Each item names a
+Three static banks, read from the page as served: PARALLELOGRAM (40), TRAPEZIUM (40) and PRISM (40). Each item names a
 formula, its variables and values, the variable asked for, the key and the working steps shown after a wrong answer
 (KaTeX). The student types a whole number on the numpad; the mark is an exact match.
 
