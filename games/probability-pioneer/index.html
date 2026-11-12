@@ -176,6 +176,21 @@ body.accessible .header::after{content:"";order:1;flex-basis:100%}
 body.accessible .header-right>:not(.a11y-toggle){order:2}
 body.accessible .header-right>.a11y-toggle+*{margin-left:auto}
 }
+/* PP-AA-STACK (Jon's ruling, 12 Nov 2026): in Aa mode on a phone the five scale labels are a column of full-width
+   buttons, Impossible at the top to Certain at the bottom, under the coloured scale; each label's value and name share
+   one line. Five across needed 388 px of OpenDyslexic in a 260 px row at 320, so stage 1 was 418 px wide at 320-390.
+   The DOM order is the order shown; the highlights (outlines) are untouched. Stage 1's own spacing is tightened in this
+   mode only (Amendment 1, Jon, 12 Nov 07:55), so Place on Scale stays above the fold at 375x667; no font size changes. */
+@media(max-width:480px){
+body.accessible #stage1Screen{padding-top:16px}
+body.accessible .scale-event-card{padding:20px;margin-bottom:16px}
+body.accessible .scale-track{margin-top:16px}
+body.accessible .scale-container{margin-bottom:16px}
+body.accessible .scale-labels{flex-direction:column;gap:4px}
+body.accessible .scale-label{flex:0 0 auto;width:100%;min-height:44px;display:flex;align-items:center;justify-content:center;padding:8px 12px;border:1px solid var(--border)}
+body.accessible .scale-label .label-val,body.accessible .scale-label .label-name{display:inline;margin-bottom:0}
+body.accessible .scale-label .label-val::after{content:'\00a0\00b7\00a0';color:var(--muted)}
+}
 
 /* === Accessibility === */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}

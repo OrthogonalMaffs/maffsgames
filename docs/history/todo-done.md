@@ -3102,3 +3102,11 @@ Moved word for word from `docs/todo.md`, each with its closing note (contract HO
 |---|---|---|
 | PACK-APPROVED | **Printable packs: the DRAFT badge shows only when a room's wording is not approved, and `--final` refuses an unapproved room.** Both rooms approved by Jon 7 Nov. Needed before the Christmas pack goes to Tes, about 23 Nov. **DONE 11 Nov 2026 (contract HOME-QUEUE-1111 PR 1, PR #737):** each pack config's `wording_approved` governs the badge; `--final` refuses an unapproved room; both packs build with `--final` with no DRAFT on any page. | done |
 | STAGE-EXIT-LABEL | **"← Back to Games" becomes "← Games" on every stage-exit game, at every width** (Jon, 7 Nov 2026). The wrapped link runs 3–9 px onto the next element at 320 in Aa (PHONE-FIT-RED). **DONE 11 Nov 2026 (contract HOME-QUEUE-1111 PR 2, PR #738):** `stage-exit.js` sets the link to "← Games" in the row and the HUD on all 10 stage-exit games; no overlap at any of four widths, normal or Aa. | done |
+
+## Closed by PP-AA-STACK (12 Nov 2026)
+
+Moved word for word from `docs/todo.md` §1, with its closing note (contract PP-AA-STACK, 12 Nov 2026; Jon's lane exception of 11 Nov).
+
+| # | Item | Owner |
+|---|---|---|
+| PP-AA-OVERFLOW | **`probability-pioneer` scrolls sideways in Aa mode**, from its probability-scale labels. Recorded 9 Nov 2026 (DOCS-BUNDLE). **DONE 12 Nov 2026 (contract PP-AA-STACK, Amendment 1):** in Aa mode on a phone (max-width 480px) the five scale labels are a column of full-width buttons, one line each, in DOM order, and stage 1's own spacing is tightened in that mode only. Document width 418 → the viewport at 320, 375 and 390; Place on Scale above the fold on all 10 stage-1 questions at 375x667 (565-636) and 390x844. Normal mode and desktop pixel-identical to main. | cloud lane |
