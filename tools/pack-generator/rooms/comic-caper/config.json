@@ -19,7 +19,7 @@
     {"file": "art/comic-08-open-textbook.webp", "role": "herring", "object": "textbook", "label_box": [150, 300, 555, 860], "font": "label",
      "text": "A dialogue about buying a cassette at the railway station."},
     {"file": "art/comic-09-hinge-dial.webp", "role": "answer", "lock": "chokey-factor-count", "label_box": [300, 1050, 1050, 1210]},
-    {"file": "art/comic-10-lock-dial.webp", "role": "answer", "lock": "chokey-prime-volumes", "label_box": [110, 1030, 420, 1215]},
+    {"file": "art/comic-10-lock-dial.webp", "role": "answer", "lock": "chokey-prime-volumes", "label_box": [215, 1030, 1040, 1190]},
     {"file": "art/comic-11-handle-slider.webp", "role": "answer", "lock": "chokey-hcf-bundles", "label_box": [200, 900, 1060, 1100]}
   ]
 }

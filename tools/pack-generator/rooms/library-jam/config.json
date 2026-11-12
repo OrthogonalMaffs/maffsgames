@@ -6,8 +6,8 @@
   "certificate_title": "Books returned",
   "wording_approved": null,
   "images": [
-    {"file": "art/lib-01-trolley.webp", "role": "clue", "object": "trolley", "label_box": [80, 300, 390, 605], "font": "label"},
-    {"file": "art/lib-02-jammed-book.webp", "role": "clue", "object": "jammed-book", "label_box": [200, 650, 280, 925], "font": "label"},
+    {"file": "art/lib-01-trolley.webp", "role": "clue", "object": "trolley", "label_box": [335, 285, 920, 848], "font": "label"},
+    {"file": "art/lib-02-jammed-book.webp", "role": "clue", "object": "jammed-book", "label_box": [156, 608, 1129, 718], "font": "label"},
     {"file": "art/lib-03-belt-plate.webp", "role": "clue", "object": "belt-plate", "label_box": [180, 250, 1075, 1035], "font": "label"},
     {"file": "art/lib-04-reset-card.webp", "role": "clue", "object": "reset-card", "label_box": [215, 270, 1040, 980], "font": "label"},
     {"file": "art/lib-05-fines-screen.webp", "role": "clue", "object": "fines-screen", "label_box": [280, 130, 1010, 805], "font": "label"},
