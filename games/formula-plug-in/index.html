@@ -58,8 +58,9 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .example-card .prompt{font-size:14px;color:var(--muted);text-align:center}
 .pb-display{text-align:center;margin-bottom:20px;font-size:14px;color:var(--muted)}
 .pb-display span{color:var(--accent);font-weight:700}
-.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
-.start-btn:hover{opacity:0.9}
+.start-btn,.reveal-continue{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.start-btn:hover,.reveal-continue:hover{opacity:0.9}
+.reveal-continue{max-width:320px;margin:32px auto 0}
 
 /* Game screen */
 .formula-card{background:var(--surface);border-radius:16px;padding:32px 24px;margin:20px 0;text-align:center}
@@ -265,6 +266,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     Every time you put a number where a letter was, that's called <strong>substitution</strong> — and it's one of the most used skills in maths, all the way to GCSE and A-Level.<br><br>
     You already know how to do it.
   </div>
+  <button class="reveal-continue" id="revealContinueBtn" style="display:none" onclick="continueFromReveal()">Continue</button>
 </div>
 
 <!-- RESULTS SCREEN -->
@@ -611,26 +613,20 @@ function showRevealScreen() {
   revealShown = true;
   showScreen('revealScreen');
   MaffsLock.screen(document.getElementById('revealScreen'));
-  // Auto-advance after 5 seconds minimum, but user can also click
-  const revealEl = document.getElementById('revealScreen');
-  revealEl.style.cursor = 'pointer';
-  let canAdvance = false;
-  MaffsLock.timer(() => { canAdvance = true; }, 5000);
-  const handler = function() {
-    if (canAdvance) {
-      revealEl.removeEventListener('click', handler);
-      revealEl.style.cursor = '';
-      MaffsLock.clearTimers();   // the 8 s auto-advance below must not end the game a second time
-      showResults();
-    }
-  };
-  revealEl.addEventListener('click', handler);
-  // Also auto-advance after 8 seconds
-  MaffsLock.timer(() => {
-    revealEl.removeEventListener('click', handler);
-    revealEl.style.cursor = '';
-    showResults();
-  }, 8000);
+  // The screen waits for Continue: no tap-anywhere, no auto-advance (Jon, 11 Nov 2026: it looked stuck). The button
+  // appears after MaffsNext's floor, as shape-shifter's and think-of-a-number's do.
+  var btn = document.getElementById('revealContinueBtn');
+  btn.style.display = 'none';
+  btn.disabled = false;
+  MaffsLock.timer(function() {
+    btn.style.display = '';
+    try { btn.focus({ preventScroll: true }); } catch (e) {}
+  }, MaffsNext.FLOOR_MS);
+}
+
+function continueFromReveal() {
+  document.getElementById('revealContinueBtn').disabled = true;
+  showResults();
 }
 
 // ============================================================

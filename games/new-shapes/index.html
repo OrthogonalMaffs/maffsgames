@@ -61,8 +61,9 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 
 .pb-display{text-align:center;margin-bottom:20px;font-size:14px;color:var(--muted)}
 .pb-display span{color:var(--accent);font-weight:700}
-.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
-.start-btn:hover{opacity:0.9}
+.start-btn,.reveal-continue{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.start-btn:hover,.reveal-continue:hover{opacity:0.9}
+.reveal-continue{max-width:320px;margin:32px auto 0}
 
 /* Game screen */
 .formula-card{background:var(--surface);border-radius:16px;padding:32px 24px;margin:20px 0;text-align:center}
@@ -334,6 +335,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     <strong>You now know two new area formulae and the volume of a prism.</strong><br><br>
     Trapezia and prisms come up in GCSE exam questions. You've got them now. That's a <strong>genuine advantage</strong>.
   </div>
+  <button class="reveal-continue" id="revealContinueBtn" style="display:none" onclick="continueFromReveal()">Continue</button>
 </div>
 
 <!-- RESULTS SCREEN -->
@@ -732,37 +734,58 @@ function renderPrism(container, A, l) {
   aText.textContent = 'A = ' + A;
   svg.appendChild(aText);
 
-  // Length arrow along bottom edge
+  // The length l: the distance between the two cross-section faces, so its arrow runs along the bottom-right
+  // receding edge (110,130)-(150,100), 10 px outside the solid (new-shapes-t3-005). Unit vectors: u along the edge
+  // (front face to back face), n its outward normal.
+  var u = [0.8, -0.6], n = [0.6, 0.8], OFF = 10, HEAD = 7, WING = 4;
+  var p0 = [110 + n[0] * OFF, 130 + n[1] * OFF], p1 = [150 + n[0] * OFF, 100 + n[1] * OFF];
   var lenLine = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  lenLine.setAttribute('x1', '22');
-  lenLine.setAttribute('y1', '145');
-  lenLine.setAttribute('x2', '148');
-  lenLine.setAttribute('y2', '145');
+  lenLine.setAttribute('x1', String(p0[0]));
+  lenLine.setAttribute('y1', String(p0[1]));
+  lenLine.setAttribute('x2', String(p1[0]));
+  lenLine.setAttribute('y2', String(p1[1]));
   lenLine.setAttribute('stroke', '#7a7f90');
   lenLine.setAttribute('stroke-width', '1.5');
+  lenLine.setAttribute('data-dim', 'l');
   svg.appendChild(lenLine);
 
-  // Arrow heads
-  [{ x: 22, dir: 1 }, { x: 148, dir: -1 }].forEach(function(arr) {
+  // Arrow heads, one at each face, pointing outwards along the edge
+  [{ p: p0, s: 1 }, { p: p1, s: -1 }].forEach(function(arr) {
+    var bx = arr.p[0] + arr.s * u[0] * HEAD, by = arr.p[1] + arr.s * u[1] * HEAD;
     var head = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-    head.setAttribute('points', (arr.x + arr.dir * 8) + ',140 ' + arr.x + ',145 ' + (arr.x + arr.dir * 8) + ',150');
+    head.setAttribute('points', (bx + n[0] * WING) + ',' + (by + n[1] * WING) + ' ' + arr.p[0] + ',' + arr.p[1] + ' ' +
+      (bx - n[0] * WING) + ',' + (by - n[1] * WING));
     head.setAttribute('fill', 'none');
     head.setAttribute('stroke', '#7a7f90');
     head.setAttribute('stroke-width', '1.5');
+    head.setAttribute('data-dim', 'l-head');
     svg.appendChild(head);
   });
 
+  // Everything drawn so far moves together when the drawing is centred below.
+  var g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+  while (svg.firstChild) g.appendChild(svg.firstChild);
+  svg.appendChild(g);
   wrap.appendChild(svg);
 
-  // Label: l below
+  // Label: l beside the arrow's lower half, below and right of it, clear of both heads. Its top-left corner is
+  // fixed, so on a phone (the drawing scaled down, the label kept at 13px) it grows away from the arrow.
+  var L_LEFT = 128, L_TOP = 133;
   var lLabel = document.createElement('div');
   lLabel.className = 'shape-label';
   lLabel.textContent = 'l = ' + l;
-  lLabel.style.bottom = '-4px';
-  lLabel.style.left = '85px';
+  lLabel.style.top = L_TOP + 'px';
   wrap.appendChild(lLabel);
 
   container.appendChild(wrap);
+
+  // Centre the whole drawing (solid, arrow and labels) in the 260 px panel. The label's width is read in the
+  // drawing's own pixels (offsetWidth is before the phone scale), or estimated if the screen is not shown yet.
+  var lw = lLabel.offsetWidth || (8 * lLabel.textContent.length + 8);
+  var left = 20 - 1.25, right = Math.max(150 + 0.75, p1[0], L_LEFT + lw);
+  var dx = Math.round(130 - (left + right) / 2);
+  g.setAttribute('transform', 'translate(' + dx + ',0)');
+  lLabel.style.left = (L_LEFT + dx) + 'px';
 }
 
 // ============================================================
@@ -997,24 +1020,20 @@ function showRevealScreen() {
   revealShown = true;
   showScreen('revealScreen');
   MaffsLock.screen(document.getElementById('revealScreen'));
-  var revealEl = document.getElementById('revealScreen');
-  revealEl.style.cursor = 'pointer';
-  var canAdvance = false;
-  MaffsLock.timer(function() { canAdvance = true; }, 5000);
-  var handler = function() {
-    if (canAdvance) {
-      revealEl.removeEventListener('click', handler);
-      revealEl.style.cursor = '';
-      MaffsLock.clearTimers();   // the 8 s auto-advance below must not end the game a second time
-      showResults();
-    }
-  };
-  revealEl.addEventListener('click', handler);
+  // The screen waits for Continue: no tap-anywhere, no auto-advance (Jon, 11 Nov 2026: it looked stuck). The button
+  // appears after MaffsNext's floor, as shape-shifter's and think-of-a-number's do.
+  var btn = document.getElementById('revealContinueBtn');
+  btn.style.display = 'none';
+  btn.disabled = false;
   MaffsLock.timer(function() {
-    revealEl.removeEventListener('click', handler);
-    revealEl.style.cursor = '';
-    showResults();
-  }, 8000);
+    btn.style.display = '';
+    try { btn.focus({ preventScroll: true }); } catch (e) {}
+  }, MaffsNext.FLOOR_MS);
+}
+
+function continueFromReveal() {
+  document.getElementById('revealContinueBtn').disabled = true;
+  showResults();
 }
 
 // ============================================================
