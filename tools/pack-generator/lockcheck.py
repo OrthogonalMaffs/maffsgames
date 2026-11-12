@@ -93,6 +93,96 @@ def _christmas_combined_ratios(v):
             "parts": r1 + r2 + r3, "each": common}
 
 
+def _divisors_by_pairs(N):
+    """Every divisor of N, by trial pairs i x N/i for i up to the square root; a square's root is counted once."""
+    found, i = set(), 1
+    while i * i <= N:
+        if N % i == 0:
+            found.add(i)
+            found.add(N // i)
+        i += 1
+    return sorted(found)
+
+
+def _chokey_factor_count(v):
+    """chokey-factor-count: the divisors of N by trial pairs up to its square root. The common wrong answer is one
+    pair missed, so two fewer; the worked line lists every factor."""
+    fac = _divisors_by_pairs(v["N"])
+    return {"answer": len(fac), "miss": len(fac) - 2, "facN": ", ".join(str(x) for x in fac)}
+
+
+def _chokey_prime_volumes(v):
+    """chokey-prime-volumes: the primes up to V by a sieve of Eratosthenes. The common wrong answer counts 1 as a
+    prime, so one more; the worked line lists the primes."""
+    V = v["V"]
+    alive = [False, False] + [True] * (V - 1)
+    for i in range(2, V + 1):
+        if alive[i]:
+            for m in range(i * i, V + 1, i):
+                alive[m] = False
+    primes = [i for i in range(V + 1) if alive[i]]
+    return {"answer": len(primes), "miss": len(primes) + 1, "primes": ", ".join(str(x) for x in primes)}
+
+
+def _chokey_hcf_bundles(v):
+    """chokey-hcf-bundles: the highest common factor by repeated subtraction (Euclid's first form, not math.gcd).
+    The common wrong answer is the lowest common multiple, found by listing multiples of the larger number until
+    one is a multiple of the smaller; the worked lines list each number's factors."""
+    a, b = v["a"], v["b"]
+    x, y = a, b
+    while x != y:
+        if x > y:
+            x -= y
+        else:
+            y -= x
+    big, small = max(a, b), min(a, b)
+    m = big
+    while m % small:
+        m += big
+    return {"answer": x, "miss": m,
+            "facA": ", ".join(str(d) for d in _divisors_by_pairs(a)),
+            "facB": ", ".join(str(d) for d in _divisors_by_pairs(b))}
+
+
+def _dewey_sort_arm(v):
+    """dewey-sort-arm: every book's decimal part as a whole number scaled to a common number of decimal places
+    (.4 and .07 become 40 and 7 in hundredths), so the order is integer order. The answer is the held book's
+    1-based slot, smallest first; the common wrong answer is its slot when the parts are read as whole numbers
+    (.07 as 7, .4 as 4). The worked lines rebuild the drop order and the sorted shelf."""
+    shelf, parts = v["shelf"], v["parts"]
+    held_shelf, _, held = v["book"].partition(".")
+    if held_shelf != shelf or held not in parts or parts.count(held) != 1:
+        raise ValueError("the held book %r is not one book on shelf %s" % (v["book"], shelf))
+    places = max(len(d) for d in parts)
+    scaled = {d: int(d) * 10 ** (places - len(d)) for d in parts}
+    if len(set(scaled.values())) != len(parts) or len({int(d) for d in parts}) != len(parts):
+        raise ValueError("two books on shelf %s are equal" % shelf)
+    by_value = sorted(parts, key=lambda d: scaled[d])
+    by_whole = sorted(parts, key=int)
+    return {"answer": by_value.index(held) + 1, "miss": by_whole.index(held) + 1,
+            "list": ", ".join("%s.%s" % (shelf, d) for d in parts),
+            "sorted": ", ".join("%s.%s" % (shelf, d) for d in by_value)}
+
+
+def _deflector_straight_line(v):
+    """deflector-straight-line: angles on a straight line make a half turn, 180 degrees, so the other angle is
+    180 - x. The common wrong answer takes them as a right angle, a quarter turn: 90 - x."""
+    half, quarter = 360 // 2, 360 // 4
+    return {"answer": half - v["x"], "miss": quarter - v["x"], "half": half, "quarter": quarter}
+
+
+def _fines_pence_to_pounds(v):
+    """fines-pence-to-pounds: p pence a day for d days is the fine for one book; times n books is the total in
+    pence; pounds by divmod by 100, which must leave no pence. The common wrong answer is the pence total typed
+    as pounds."""
+    each = v["p"] * v["d"]
+    total = each * v["n"]
+    pounds, pennies = divmod(total, 100)
+    if pennies:
+        raise ValueError("the fine %dp is not a whole number of pounds" % total)
+    return {"answer": pounds, "miss": total, "each": each, "hundred": 100}
+
+
 RECOMPUTE = {
     "kiln-sensor-limit": _sensor_limit,
     "kiln-fan-restart": _fan_restart,
@@ -100,6 +190,12 @@ RECOMPUTE = {
     "christmas-cold-store": _christmas_cold_store,
     "christmas-scale-clearance": _christmas_scale_clearance,
     "christmas-combined-ratios": _christmas_combined_ratios,
+    "chokey-factor-count": _chokey_factor_count,
+    "chokey-prime-volumes": _chokey_prime_volumes,
+    "chokey-hcf-bundles": _chokey_hcf_bundles,
+    "dewey-sort-arm": _dewey_sort_arm,
+    "deflector-straight-line": _deflector_straight_line,
+    "fines-pence-to-pounds": _fines_pence_to_pounds,
 }
 
 

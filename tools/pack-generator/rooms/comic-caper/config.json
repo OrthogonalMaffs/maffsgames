@@ -1,0 +1,25 @@
+{
+  "room": "comic-caper",
+  "pack_version": "1",
+  "sets": 6,
+  "seed": 1,
+  "certificate_title": "Chokey opened",
+  "wording_approved": null,
+  "images": [
+    {"file": "art/comic-01-asset-plate.webp", "role": "clue", "object": "asset-plate", "label_box": [235, 335, 1025, 895], "font": "label"},
+    {"file": "art/comic-02-series-label.webp", "role": "clue", "object": "series-label", "label_box": [190, 310, 1075, 1000], "font": "label"},
+    {"file": "art/comic-03-delivery-docket.webp", "role": "clue", "object": "delivery-docket", "label_box": [200, 260, 1030, 1030], "font": "label"},
+    {"file": "art/comic-04-stock-card.webp", "role": "clue", "object": "stock-card", "label_box": [325, 295, 925, 830], "font": "hand"},
+    {"file": "art/comic-05-itinerary.webp", "role": "herring", "object": "itinerary", "label_box": [680, 320, 1110, 950], "font": "hand",
+     "text": "Every port circled. Brest is underlined twice."},
+    {"file": "art/comic-06-feeding-chart.webp", "role": "herring", "object": "feeding-chart", "label_box": [230, 510, 1010, 1020], "font": "hand",
+     "text": "Dandelions Monday. No lettuce after Brest."},
+    {"file": "art/comic-07-estates-sticker.webp", "role": "herring", "object": "estates-sticker", "label_box": [255, 310, 1000, 915], "font": "label",
+     "text": "REMOVE AT END OF YEAR."},
+    {"file": "art/comic-08-open-textbook.webp", "role": "herring", "object": "textbook", "label_box": [150, 300, 555, 860], "font": "label",
+     "text": "A dialogue about buying a cassette at the railway station."},
+    {"file": "art/comic-09-hinge-dial.webp", "role": "answer", "lock": "chokey-factor-count", "label_box": [300, 1050, 1050, 1210]},
+    {"file": "art/comic-10-lock-dial.webp", "role": "answer", "lock": "chokey-prime-volumes", "label_box": [110, 1030, 420, 1215]},
+    {"file": "art/comic-11-handle-slider.webp", "role": "answer", "lock": "chokey-hcf-bundles", "label_box": [200, 900, 1060, 1100]}
+  ]
+}

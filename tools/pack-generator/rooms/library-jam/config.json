@@ -1,0 +1,23 @@
+{
+  "room": "library-jam",
+  "pack_version": "1",
+  "sets": 6,
+  "seed": 1,
+  "certificate_title": "Books returned",
+  "wording_approved": null,
+  "images": [
+    {"file": "art/lib-01-trolley.webp", "role": "clue", "object": "trolley", "label_box": [80, 300, 390, 605], "font": "label"},
+    {"file": "art/lib-02-jammed-book.webp", "role": "clue", "object": "jammed-book", "label_boxes": [[200, 650, 280, 925], [645, 235, 990, 340]], "font": "label"},
+    {"file": "art/lib-03-belt-plate.webp", "role": "clue", "object": "belt-plate", "label_box": [180, 250, 1075, 1035], "font": "label"},
+    {"file": "art/lib-04-reset-card.webp", "role": "clue", "object": "reset-card", "label_box": [215, 270, 1040, 980], "font": "label"},
+    {"file": "art/lib-05-fines-screen.webp", "role": "clue", "object": "fines-screen", "label_box": [280, 130, 1010, 805], "font": "label"},
+    {"file": "art/lib-06-drop-counter.webp", "role": "clue", "object": "drop-counter", "label_box": [235, 585, 935, 775], "font": "label"},
+    {"file": "art/lib-07-memo.webp", "role": "herring", "object": "memo", "label_box": [160, 270, 1095, 830], "font": "hand",
+     "text": "AGAIN"},
+    {"file": "art/lib-08-biography.webp", "role": "herring", "object": "biography", "label_box": [185, 995, 1065, 1060], "font": "label",
+     "text": "Lives of explorers, scientists and queens"},
+    {"file": "art/lib-09-slot-dial.webp", "role": "answer", "lock": "dewey-sort-arm", "label_box": [165, 880, 1080, 1030]},
+    {"file": "art/lib-10-angle-dial.webp", "role": "answer", "lock": "deflector-straight-line", "label_box": [160, 865, 1085, 1015]},
+    {"file": "art/lib-11-keypad.webp", "role": "answer", "lock": "fines-pence-to-pounds", "label_box": [295, 190, 950, 305]}
+  ]
+}
