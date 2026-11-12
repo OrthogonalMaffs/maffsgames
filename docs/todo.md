@@ -691,7 +691,7 @@ Only what needs Jon: a ruling, a content review, or a task only he can do. Build
 - None open (11 Nov 2026: matrix-crunch's fourth distractor, §1.4, ruled by Jon on 10 Nov and closed by CLOUD-QUEUE-1111 PR 1).
 
 **Content to review:**
-- **LOOP-CARDS-APPROVE** (12 Nov 2026): approve both loop-card packs' teacher wording (proofs `docs/screens/loop-cards/*-teacher1.png`) and the three layout calls in the LOOP-CARDS PR (page columns in "Which deck?", fold-over pages last, curly quotes). Approval goes in `tools/loop-cards/decks/<slug>/config.json` "wording_approved"; then `--final` builds go to Tes (Like Terms Collector £3; Six Sevens, Bruv free). Owner: Jon, then home lane.
+- **LOOP-CARDS-APPROVE** (12 Nov 2026): approve both loop-card packs' teacher wording (proofs `docs/screens/loop-cards/*-teacher1.png`) (the PR's three layout calls were approved by Jon on 12 Nov). Approval goes in `tools/loop-cards/decks/<slug>/config.json` "wording_approved"; then `--final` builds go to Tes (Like Terms Collector £3; Six Sevens, Bruv free). Owner: Jon, then home lane.
 - Spot the Error banks (§1.23): KS3 35, Level 4 30.
 - New Shapes banks (§1.27): 15 / 20 / 15.
 - Regression Rumble (§1.26): Jon's look at the rebuilt game before the holding page is replaced.
