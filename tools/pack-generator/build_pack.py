@@ -643,6 +643,33 @@ AUDIT_JS = """
 }
 """
 
+COVER_FLOOR = 0.6               # a cover's picture never prints below 60% of its full width (WARMUP-PACKS Ruling 3)
+COVER_FIT_JS = """
+([floor]) => {
+  // WARMUP-PACKS Ruling 3 (Jon, 12 Nov 2026): a cover whose story leaves too little room scales its picture down by
+  // exactly the overflow, never below `floor` of its full width; still over at the floor, the cover is left
+  // overflowing and the audit fails the build, as before. Covers that fit are not touched.
+  const out = [];
+  for (const page of document.querySelectorAll('.page[data-kind=cover]')) {
+    const m = page.querySelector('.main'), img = m.querySelector('.cover-art');
+    const used = () => Math.max(...[...m.children].map(c => c.getBoundingClientRect().bottom
+                                                       + parseFloat(getComputedStyle(c).marginBottom)))
+                       - m.getBoundingClientRect().top;
+    const full = img ? img.getBoundingClientRect().width : 0;
+    let scale = 1;
+    for (let i = 0; img && i < 4 && used() > m.clientHeight + 0.5 && scale > floor; i++) {
+      const h = img.getBoundingClientRect().height, over = used() - m.clientHeight;
+      scale = Math.max(floor, scale * (h - over) / h);
+      img.style.width = (full * scale) + 'px';
+    }
+    const box = img ? img.getBoundingClientRect() : {width: 0, height: 0};
+    out.push({set: page.dataset.set || '', scale, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96,
+              spareMm: (m.clientHeight - used()) * 25.4 / 96});
+  }
+  return out;
+}
+"""
+
 DOWNSCALE_RUN_WIN_JS = """
 async (imageData) => {
   const img = document.querySelector('.page[data-kind=run] .run-win');
@@ -1236,6 +1263,7 @@ def build(slug, n, seed, target=None, final=False):
                 for fam in ["Outfit"] + [f[0] for f in FONTS.values()]:
                     if fam not in fit["loaded"]:
                         raise BuildError("font %s did not load (loaded: %s)" % (fam, fit["loaded"]))
+                covers = pg.evaluate(COVER_FIT_JS, [COVER_FLOOR])
                 small = [l for l in fit["labels"] if not l["fits"]]
                 if small:
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
@@ -1276,6 +1304,13 @@ def build(slug, n, seed, target=None, final=False):
                                                    "one line" if all(x[1] == 1 for x in v) else "up to %d lines" % max(x[1] for x in v)))
                 print("set letter on all %d student pages; no digit on any red herring; no unfilled token"
                       % audit["studentPages"])
+                least = min(covers, key=lambda c: c["scale"])
+                print("cover picture: %s; least spare height %.1f mm (set %s)"
+                      % ("full size, %.0f x %.0f mm, on all %d covers" % (least["wMm"], least["hMm"], len(covers))
+                         if least["scale"] >= 1 else
+                         "scaled to fit, smallest %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%, set %s)"
+                         % (least["wMm"], least["hMm"], least["scale"] * 100, COVER_FLOOR * 100, least["set"]),
+                         min(c["spareMm"] for c in covers), min(covers, key=lambda c: c["spareMm"])["set"]))
                 OUT_DIR.mkdir(exist_ok=True)
                 pg.pdf(path=str(out), format="A4", print_background=True, prefer_css_page_size=True)
             print("page 1 win image embedded at %d x %d pixels (about 200 dpi at print size)"
@@ -1435,7 +1470,7 @@ def selftest():
         bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
-    def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None):
+    def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None, fit_covers=None):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
@@ -1452,6 +1487,8 @@ def selftest():
                     if overflow_run_image:
                         pg.locator('.page[data-kind=run] .run-win').evaluate(
                             "img => { img.style.minHeight = '400mm'; img.style.maxHeight = 'none'; }")
+                    if fit_covers is not None:
+                        fit_covers.extend(pg.evaluate(COVER_FIT_JS, [COVER_FLOOR]))
                     return pg.evaluate(AUDIT_JS)
             finally:
                 browser.close()
@@ -1549,6 +1586,18 @@ def selftest():
                                "<p>%s</p><p>%s</p>" % (f(room["brief"]), f(room["stakes"])),
                                name="stakes inside the start read-out")
         return [x for x in stakes_problems(st, text_of(start), [text_of(cover_story(room, f))]) if "start read-out" in x]
+
+    def plant_cover_below_floor():
+        """A cover story too long for the picture even at its floor (WARMUP-PACKS Ruling 3): the picture stops at 60%
+        of its width and the cover still overflows, so the build fails."""
+        marker = "<div class='team'>Team name: <span></span></div>"
+        filler_block = "<div style='height: 120mm'></div>" + marker
+        covers = []
+        audit = audit_planted_pack(locks, fit_covers=covers,
+                                   doc_plant=lambda d: pc.apply_plant(d, marker, filler_block, allow_multiple=True,
+                                                                      name="a cover below the picture's floor"))
+        at_floor = covers and all(abs(c["scale"] - COVER_FLOOR) < 1e-6 for c in covers)
+        return [x for x in audit["overflow"] if " cover " in x] if at_floor else []
 
     def plant_hook_on_cover():
         f = filler(locks, sets[0])
@@ -1685,6 +1734,7 @@ def selftest():
               ("stakes on a cover without its prefix", plant_unprefixed_stakes),
               ("stakes inside the start read-out", plant_stakes_in_start),
               ("a cover printing the hook", plant_hook_on_cover),
+              ("a cover too long even with its picture at the floor", plant_cover_below_floor),
               ("a start read-out without the hook", plant_start_without_hook),
               ("a hook with a token", plant_hook_token),
               ("page 1 over 150 words", plant_long_page_one),

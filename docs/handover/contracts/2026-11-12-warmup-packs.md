@@ -67,3 +67,6 @@ Class lessons for future pack prompts and contracts
 * Every answer instrument needs a blank write panel (Kiln's and Christmas's had one). Missing on comic-09/10/11, prom-11 (router dial), car-10/11.
 * A variant library is capped at 10 by SET_CODES.
 * Drawn slots, dividers, grids or rows near a lock about counting or position mislead: ask for none."
+
+AMENDMENT 3 (verbatim; Jon, 12 Nov 2026, 19:12):
+"Ruling 3 (Jon, 12 Nov 19:12): option 1. The cover picture scales to the space left, never below 60% of its full width; below the floor the build fails as now. Also approved: a brief with a {{token}} fails the build, as the start read-out reads both hook and brief. Add the below-the-floor plant, rebuild all four packs, report each cover's picture size and spare height, then open the PR and merge on green as the contract says. Thank you."
