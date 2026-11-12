@@ -13,7 +13,7 @@ none today). Checked in Chromium:
 
   Links     each first-set item is an <a> exactly where FEED expects, with FEED's href: ?level=<key> only when one of the slug's cards
             lists that key (gcse; alevel; core from the second card only), the bare games/<slug>/ for a board key (q20); a slug with no
-            card (whose-side-are-you-on, unlisted) and an entry with no slug stay a <span> with no cue.
+            card (not-a-real-game, a made-up slug) and an entry with no slug stay a <span> with no cue.
   Cue       a link ends "Play ->" in .play-cue, the arrow aria-hidden; not underlined at rest, underlined on hover; the accessible name
             reads "Play <game> (<level>): high score <score> by <initials>".
   Size      every link is at least 24 px tall (WCAG 2.5.8); the heights are printed.
@@ -51,7 +51,7 @@ FEED = [
     ('six-sevens-bruv', 'q20', '20 questions', 500, 'DEF', 'A', 'games/six-sevens-bruv/', 'weekly'),
     ('estimation-engine', 'core', 'Core Maths', 30, '', 'A', 'games/estimation-engine/?level=core', 'plain'),
     ('estimation-engine', 'gcse', 'GCSE', 31, 'GHI', 'A', 'games/estimation-engine/?level=gcse', 'plain'),
-    ('whose-side-are-you-on', 'stage-1', 'Stage 1', 40, 'JKL', 'SPAN', None, None),
+    ('not-a-real-game', 'stage-1', 'Stage 1', 40, 'JKL', 'SPAN', None, None),
     (None, None, 'GCSE', 41, 'MNO', 'SPAN', None, None),
     ('trig-wars', 'alevel', 'A-Level', 10, 'PQR', 'A', 'games/trig-wars/?level=alevel', 'plain'),
     # Hostile text (Amendment 2, ruling 5). The rules refuse such initials, but let `game` and `level` be any text; each must show as
@@ -69,7 +69,7 @@ BOARDS = {
 NAME0 = 'Play Trig Wars (GCSE): high score 900 by ABC'
 NAME8 = 'Play %s (%s): score 43 by STU' % (HOSTILE_GAME, HOSTILE_LEVEL)
 GAME = {'trig-wars': 'Trig Wars', 'six-sevens-bruv': 'Six Sevens, Bruv', 'estimation-engine': 'Estimation Engine',
-        'whose-side-are-you-on': 'whose-side-are-you-on'}
+        'not-a-real-game': 'not-a-real-game'}
 
 FAKE_SDK = r"""
 (function () {
@@ -281,7 +281,7 @@ PLANTS = [
      "(levelKey ? '?level=' + levelKey : '')", r"six-sevens-bruv, q20\) links to"),
     ('repeat-set links left focusable', """(dup ? ' tabindex="-1"' : '')""", "''", r'repeat sets are focusable|Tab reached a link in a repeat set'),
     ('a slug with no card linked', "if (!slug || !own.call(cardLevels, slug)) return '';",
-     "if (!slug) return '';\n    if (!own.call(cardLevels, slug)) return 'games/' + slug + '/';", r'whose-side-are-you-on, stage-1\) is a <a>'),
+     "if (!slug) return '';\n    if (!own.call(cardLevels, slug)) return 'games/' + slug + '/';", r'not-a-real-game, stage-1\) is a <a>'),
     ('a click that sends no event', "mfg('ticker_clicked', {", "String('ticker_clicked', {", r'a click on score \d \(high\) sent \[\]'),
     ('no underline on hover', 'a.score-ticker-item:hover .play-cue,', '', r'not underlined on hover'),
     ('initials rendered as markup', "esc(s.initials) + '</span> &mdash; '", "s.initials + '</span> &mdash; '", r'<img> element'),

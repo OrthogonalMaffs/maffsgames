@@ -56,7 +56,7 @@ SPEC_LINES = {
     'both': 'Use both: the side you know AND the side you want.',
 }
 # The start screen, verbatim from contract WHOSE-SIDE-BIOS (6 Nov 2026). Compared exactly, never read from the page.
-SUBTITLE = "One side never moves. The other two can't stop being polite about it."   # unchanged: Jon has not decided on it
+SUBTITLE = "One side never moves. The other two depend on θ."   # ruled by Jon, 6 Nov 2026, approved for listing 11 Nov 2026
 OPENING = 'Every side gets its name from the marked angle.'
 KEY = [
     ('HYP', 'H', 'HYP, the longest side, across from the right angle.'),
@@ -513,7 +513,7 @@ def check_feedback(page, it, ok, label, fails, tapped=None):
 
 
 # No character speaks: no quotation marks, none of the lines taken out, none of their old containers. On the start screen the
-# subtitle (#subtitle) is exempt (Jon has not decided on it) and the bios are the sides' own; `scope` is what is read.
+# subtitle (#subtitle) is exempt (ruled by Jon, 6 Nov 2026, approved for listing 11 Nov 2026) and the bios are the sides' own; `scope` is what is read.
 SPEECH_JS = """([scope, old]) => { const out = [], root = document.querySelector(scope); if (!root) return out;
   const c = root.cloneNode(true), sub = c.querySelector('#subtitle'); if (sub) sub.remove();
   c.querySelectorAll('.katex').forEach(k => { const h = k.querySelector('.katex-html'); k.replaceWith(document.createTextNode(h ? h.textContent : '')); });
@@ -1514,8 +1514,8 @@ PLANTS = [
     ('the clock runs during the hold', "    askedAt = now();\n    tick();\n", "    tick();\n", 'hold'),
     ('a changed colour', "--opp:#0072B2", "--opp:#0072C2"),
     ('a small coloured word', ".w{font-weight:700;font-size:19px;", ".w{font-weight:700;font-size:15px;"),
-    # contract WHOSE-SIDE-PERSONALITY's subtitle, kept (WHOSE-SIDE-BIOS: Jon has not decided on it); its other lines are retired with them
-    ('the subtitle reworded', "The other two can't stop being polite about it.", "The other two are polite about it."),
+    # the subtitle, ruled by Jon, 6 Nov 2026, approved for listing 11 Nov 2026; contract WHOSE-SIDE-PERSONALITY's other lines are retired
+    ('the subtitle reworded', "The other two depend on θ.", "The other two depend on x."),
     # the large screen
     ('a small triangle at 1920x1080', "var H = Math.max(240, Math.floor(window.innerHeight - below - top - pad));", "var H = 400;", 'big'),
     # contract WHOSE-SIDE-FIT (Amendment 1): each must be caught by the check named in its last field, not by another

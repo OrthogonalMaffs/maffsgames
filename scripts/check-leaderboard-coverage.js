@@ -165,8 +165,6 @@ const NOT_ON_HUB = {
   'hc-factor': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract Y-SO-STEEP, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'y-so-steep': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract WHOSE-SIDE, 5 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'whose-side-are-you-on': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract ITS-ON-SALE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'its-on-sale': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract AS-YOU-CAN-SEE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
