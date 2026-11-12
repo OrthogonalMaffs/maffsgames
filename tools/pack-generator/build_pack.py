@@ -924,9 +924,32 @@ def readouts(room, fill):
 
 
 def cover_story(room, fill):
-    """The cover's story: hook and brief, then `stakes` only as a warning, prefixed (Amendment 8)."""
+    """The cover's story: the brief, then `stakes` only as a warning, prefixed (Amendment 8). Never the hook (WARMUP-PACKS
+    Ruling 2, Jon, 12 Nov 2026): the teacher reads it aloud from page 2's start read-out, so a room's longer story still
+    leaves the cover room for its picture and the answer boxes."""
     warn = ("<p class='warn'><b>%s</b> %s</p>" % (STAKES_PREFIX, fill(room["stakes"]))) if room.get("stakes") else ""
-    return "<p>%s</p><p>%s</p>%s" % (fill(room["hook"]), fill(room["brief"]), warn)
+    return "<p>%s</p>%s" % (fill(room["brief"]), warn)
+
+
+def story_token_problems(room):
+    """A {{token}} in the hook or the brief (WARMUP-PACKS Ruling 2). The start read-out is printed once, filled from
+    set A, so a token there would read set A's figures to every team; the build fails instead (it used to tell the
+    teacher to read the hook and brief from a team's cover, which no longer prints the hook)."""
+    return ["the room's %s contains a {{token}}: the start read-out is filled once, from set A" % k
+            for k in ("hook", "brief") if "{{" in (room.get(k) or "")]
+
+
+def hook_problems(hook_text, start_text, cover_texts):
+    """The hook (WARMUP-PACKS Ruling 2) missing from the start read-out, or printed on a cover."""
+    norm = lambda t: " ".join((t or "").split())
+    hk, out = norm(hook_text), []
+    if not hk:
+        return out
+    if hk not in norm(start_text):
+        out.append("the start read-out does not contain the hook")
+    out += ["cover %d prints the hook (it is read aloud from page 2)" % (k + 1)
+            for k, text in enumerate(cover_texts) if hk in norm(text)]
+    return out
 
 
 def stakes_problems(stakes_text, start_text, cover_texts):
@@ -1000,8 +1023,9 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
               "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
               % (reads["start"], reads["finish"], reads["timeout"]))
     script += "<p class='online'><b>Play this room free online: %s</b></p>" % esc(url)
-    if any("{{" in (room.get(k) or "") for k in ("hook", "brief")):
-        script = "<p>At the start, read the hook and brief from any team&rsquo;s cover sheet.</p>" + script
+    tokens = story_token_problems(room)
+    if tokens:
+        raise BuildError("%s: %s" % (slug, "; ".join(tokens)))
     pages.append(page("readouts", script, "%s: read-outs" % title, "Each for its moment; the ending is yours to call",
                       badge=draft_badge(cfg, slug)))
 
@@ -1220,6 +1244,8 @@ def build(slug, n, seed, target=None, final=False):
                 printed = (check_printed_text([(k, t) for k, t in audit["text"]], url) + fixed_penalties(audit["text"])
                            + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))), text_of(start_html),
                                              [t for k, t in audit["text"] if k == "cover"])
+                           + hook_problems(text_of(room.get("hook")), text_of(start_html),
+                                           [t for k, t in audit["text"] if k == "cover"])
                            + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
                            + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug))
                 if printed:
@@ -1238,6 +1264,7 @@ def build(slug, n, seed, target=None, final=False):
                       % (len(next(t for k, t in audit["text"] if k == "run").split()), RUN_IT_WORDS))
                 print("the timeout outcome (stakes) only in its own read-out and, prefixed %r, on the covers"
                       % STAKES_PREFIX)
+                print("the hook only in the start read-out, never on a cover")
                 print("printed URL %s resolves to a live room page; on every cover and page 2; "
                       "logo and name in every footer (at most %.1f mm high)" % (url, audit["logoMm"]))
                 by_id = {}
@@ -1284,6 +1311,9 @@ def selftest():
                          + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))),
                                            text_of(readouts(room, filler(locks, sets[0]))["start"]),
                                            [text_of(cover_story(room, filler(locks, sets[0])))])
+                         + story_token_problems(room)
+                         + hook_problems(text_of(room.get("hook")), text_of(readouts(room, filler(locks, sets[0]))["start"]),
+                                         [text_of(cover_story(room, filler(locks, sets[0])))])
                          + student_page_final_problems([("locks", text_of(final_section(x["letter"], len(locks),
                                                                                        x["final"]["target"])))
                                                         for x in sets] + [("hints", FINAL_HINT)]))
@@ -1520,6 +1550,25 @@ def selftest():
                                name="stakes inside the start read-out")
         return [x for x in stakes_problems(st, text_of(start), [text_of(cover_story(room, f))]) if "start read-out" in x]
 
+    def plant_hook_on_cover():
+        f = filler(locks, sets[0])
+        cover = pc.apply_plant(cover_story(room, f), "<p>%s</p>" % f(room["brief"]),
+                               "<p>%s</p><p>%s</p>" % (f(room["hook"]), f(room["brief"])), name="the hook on a cover")
+        return [x for x in hook_problems(text_of(room["hook"]), text_of(readouts(room, f)["start"]), [text_of(cover)])
+                if "prints the hook" in x]
+
+    def plant_start_without_hook():
+        f = filler(locks, sets[0])
+        start = pc.apply_plant(readouts(room, f)["start"], "<p>%s</p>" % f(room["hook"]), "",
+                               name="a start read-out without the hook")
+        return [x for x in hook_problems(text_of(room["hook"]), text_of(start), [text_of(cover_story(room, f))])
+                if "does not contain the hook" in x]
+
+    def plant_hook_token():
+        bad = dict(room, hook=pc.apply_plant(room["hook"], room["hook"], room["hook"] + " {{%s.answer}}" % locks[0]["key"],
+                                             name="a hook with a token"))
+        return [x for x in story_token_problems(bad) if "hook" in x]
+
     def teacher_texts(run_html=None, about_html=None):
         letters = [x["letter"] for x in sets]
         return [("run", text_of(run_html or run_it(letters, room_url(slug0),
@@ -1635,6 +1684,9 @@ def selftest():
               ("a range and digit slots on answer boxes", plant_range_hint),
               ("stakes on a cover without its prefix", plant_unprefixed_stakes),
               ("stakes inside the start read-out", plant_stakes_in_start),
+              ("a cover printing the hook", plant_hook_on_cover),
+              ("a start read-out without the hook", plant_start_without_hook),
+              ("a hook with a token", plant_hook_token),
               ("page 1 over 150 words", plant_long_page_one),
               ("a rule stated on two teacher pages", plant_repeated_rule),
               ("the final padlock's shape on a student page", plant_shape_on_student_page),

@@ -35,7 +35,7 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    (the build counts them; it is exactly 150 for Kiln, so the play-online line is on page 2). Send your wording to Code Claude: it goes into `run_it()` in `build_pack.py`; your approval goes into
    the room's config, and the badge follows it.
 2. **Page 2, Read-outs (DRAFT badge until approved):** three boxed scripts, each for its moment: the start (hook, brief and one line to the
-   students), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
+   students; the hook is read aloud here and printed nowhere else, WARMUP-PACKS Ruling 2, 12 Nov 2026), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
    nowhere else and printed on the covers only as "If time runs out: ..."); then the play-online line.
 3. **Page 3, Score sheet (landscape):** two blanks you fill in first ("Each wrong answer adds ___ min", "Each hint
    adds ___ min"); one row per set; for each lock and for the final padlock an Opened box and five wrong-answer boxes;
@@ -53,8 +53,8 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    intended route (estimation) for the teacher. Option B (one + and one -) is `"final_shape": "plus-and-minus"`.
 5. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
-   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the cover's
-   answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
+   read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the cover
+   prints the room's picture, the brief and the "If time runs out:" warning, never the hook; the cover's answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
    ends with the final padlock's target, its rules, a working box and the expression line.
 6. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels). Measure each
@@ -93,17 +93,21 @@ Then, in order, any failure stopping the build:
    maximum; no `{{token}}` is left unfilled; every footer carries the logo and name under 12 mm high; the one URL
    printed (covers and page 2) resolves to the room's own live page in this repo (host from `CNAME`); the score sheet
    has one row per set and one column group per lock and for the final padlock; no fixed penalty figure is on the
-   score sheet or a student page; `stakes` is only in its read-out and, prefixed, on the covers; page 1 is at most
+   score sheet or a student page; `stakes` is only in its read-out and, prefixed, on the covers; the hook is in the
+   start read-out and on no cover, and a hook or brief with a `{{token}}` fails the build (the start read-out is
+   filled once, from set A); page 1 is at most
    150 words and no rule is stated on more than one teacher page; no student page prints the final padlock's
    shape or allows a calculator. The PDF's page count must equal the pages built.
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
-every room with a config and plants seventeen faults, each of which must be caught: a duplicate answer across sets,
+every room with a config and plants faults, each of which must be caught (the run prints how many), among them: a duplicate answer across sets,
 an invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, a final
 target two expressions reach and one no expression reaches, a fixed penalty figure, a pack whose sets use different
 final-padlock shapes, a range and digit slots on answer boxes, `stakes` unprefixed on a cover and inside the start
 read-out, page 1 over 150 words, a rule stated on two teacher pages, the final padlock's shape or a calculator allowance on
-a student page, and a set whose product has no factor a multiple of 5 or 12 or less. It builds no PDF.
+a student page, a set whose product has no factor a multiple of 5 or 12 or less, a wrong recomputed answer in each of The
+Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token. It
+builds no PDF.
 
 ## Adding a room
 

@@ -53,3 +53,17 @@ AMENDMENT 1 (verbatim; Jon, 12 Nov 2026, 18:30, answering the cloud lane's five 
 Also approved: squares placed after every non-square, so the old variants keep their indices.
 Also coming in rerolls.zip: comic-10-lock-dial with a blank brass plate under the lock; when it arrives, put comic-10's answer box on that plate.
 Until the art arrives, finish everything else (Dewey rows in docs/escape-puzzle-bank.md for the ten shelves, the /updates/ line, the WARMUP-PACKS-APPROVE row), push, and wait; do not open the PR until Library Jam builds at 6 sets. Thank you."
+
+AMENDMENT 2 (verbatim; Jon, 12 Nov 2026, 18:55, via Project Claude, answering the cloud lane's stop of 18:52):
+"Stop 2 (18:52): Library Jam covers overflow
+After the rerolls: Library Jam 6 sets, 72 values agree, every label fits (trolley and spine 20 pt, smallest belt plate 12.5 pt, "all in order." 12 pt). Every cover overflows: needs 1157 px against 953 (scene 309, story 416, answer row 263). Lane offered: drop the picture when it won't fit (recommended by lane), a pack-only short story, or two-page covers. Project Claude's count (hook + brief + stakes words): Kiln 114, Comic 125, Christmas 181, Library 325, Roll for Initiative 360, Car Trap 383, Prom Budget 593. A class: every ★★ room would stop; Prom wouldn't fit even without the picture.
+Ruling 2 (Jon, 18:55): hook off every cover
+1. Covers never print the hook: picture, brief and the prefixed "If time runs out:" warning. Hook read aloud from page 2's start read-out (build_pack.py:918–921). Change cover_story() (:926); build_pack.py change authorised.
+2. The build fails if a room's hook contains a {{token}} (none does today); the :1003 "read from any team's cover" fallback is replaced by that failure.
+3. Plants: a cover printing the hook; a start read-out without the hook; a hook with a token.
+4. Kiln's and Christmas's configs: "pack_version": "2" only (their covers change at next build; Tes copies unchanged until Jon rebuilds).
+5. README updated. Rebuild all four, report each cover's spare height, open the PR, merge on green. Expected: Library 215 words on the cover; Car Trap 248; Roll for Initiative 180; Prom Budget 297 (borderline, its stakes is 134 words: a question for its own pack build).
+Class lessons for future pack prompts and contracts
+* Every answer instrument needs a blank write panel (Kiln's and Christmas's had one). Missing on comic-09/10/11, prom-11 (router dial), car-10/11.
+* A variant library is capped at 10 by SET_CODES.
+* Drawn slots, dividers, grids or rows near a lock about counting or position mislead: ask for none."
