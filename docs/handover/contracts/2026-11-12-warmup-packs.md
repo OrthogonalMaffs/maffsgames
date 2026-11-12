@@ -43,3 +43,13 @@ SUCCESS CONDITION: variants.json differs from main only in dewey-sort-arm (12 sh
 STOP IF: either pack cannot make 6 sets (report how many and which rule blocks); any existing variant of any lock would change; a label cannot fit at 11 pt (report the image and the longest text: likeliest lib-01's seven-decimal list or lib-02's spine); a herring text above fails the pack's digit or fit checks; build_pack.py needs a change to serve these rooms; any check would have to be loosened to pass.
 
 FOLLOW-UP (Jon via Project Claude, 12 Nov 2026, for the close-out commit; verbatim): "Follow-up to WARMUP-PACKS, for the close-out commit: #743's figures are Gate 43271115975; main check-site 43273494357 and phone-fit-full 43273494038, both success on 231e597 (phone-fit-full measured every game, since check-site.py changed). Merged by the 10 Nov route. Thank you."
+
+AMENDMENT 1 (verbatim; Jon, 12 Nov 2026, 18:30, answering the cloud lane's five stops):
+"WARMUP-PACKS rulings (Jon, 12 Nov 18:30), answering your five stops:
+1. Ten shelves, not twelve: the original eight plus ("510", "mathematics", ["7","15","3","42","68"], "3") and ("636", "pets", ["2","45","9","13","6","71","38"], "9"). Drop 780 and 629. Answers 2–7, six sets; set codes stay A–K.
+2–3. New art is coming: lib-01-trolley (a much larger card) and lib-02-jammed-book (a wide horizontal spine label, one label box only; the sticker words go in the caption, no room.js change). Jon will upload them as rerolls.zip on origin/art/library-jam-pack. Replace those two images with them when they arrive.
+4. Approved: fines-screen's clue becomes one bold part split with " · ", as you tested.
+5. Biography herring text: "all in order."
+Also approved: squares placed after every non-square, so the old variants keep their indices.
+Also coming in rerolls.zip: comic-10-lock-dial with a blank brass plate under the lock; when it arrives, put comic-10's answer box on that plate.
+Until the art arrives, finish everything else (Dewey rows in docs/escape-puzzle-bank.md for the ten shelves, the /updates/ line, the WARMUP-PACKS-APPROVE row), push, and wait; do not open the PR until Library Jam builds at 6 sets. Thank you."

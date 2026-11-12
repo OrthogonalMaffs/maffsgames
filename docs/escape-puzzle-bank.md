@@ -521,6 +521,22 @@ rejected.
 - **Derived tokens** `mults`, `multA`, `multB` and `quot` carry the solve lines.
 - **No lock sets its own gap**; all three clear the shared spread rule.
 
+## The Library Jam's shelf library (batch 10), widened 12 Nov 2026
+
+| Lock | Instrument | Pool | Library |
+|---|---|---|---|
+| `dewey-sort-arm` | dial 1–8 | the draft's eight hand-written Dewey shelves of 5–6 books, then 510 mathematics (5 books) and 636 pets (7 books); 5 to 7 books a shelf (7 since 12 Nov 2026), at least two one-digit and two two-digit parts, none ending in 0, no two equal read as whole numbers, the drop order never already sorted, the held book's slot never 1 and never where the misconception lands | **10** |
+
+- **The shelf lock topped out at four slots; two shelves lifted it to six.** The draft's eight shelves give
+  slots 3 to 6 only, and a six-set print pack needs six different answers. Jon ruled "New shelves, 7 books
+  allowed" (12 Nov 2026, contract WARMUP-PACKS), then ten shelves, not twelve (Amendment 1): the room letters
+  its sets A to K, ten codes, so a library may not pass ten. 510 adds slot 2 (miss 1); 636 adds slot 7
+  (miss 3). Answers now 2 to 7.
+- **Why seven books.** Slot 1 sits at the dial's end of travel, which the set checks bar, so the sixth slot
+  has to be 7, and a book can only be seventh on a shelf of seven.
+- **Appended, not inserted.** The eight shelves keep their places: a room saves its draw by index.
+- **Derived tokens** `list` and `sorted` carry the trolley's drop order and the sorted shelf for the solve line.
+
 ## Cross-lock collisions — a rule for every room from here
 
 Each library is still verified lock by lock, but since `0907f6e` the engine draws a room jointly and

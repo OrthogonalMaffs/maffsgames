@@ -732,7 +732,7 @@ V["leak-audit-conditional"] = store
 # The Library Jam (contract LIBRARY-JAM-BUILD; bank batch 10). Five to seven books (seven since 12 Nov 2026)
 # on one Dewey shelf, in the order they were dropped in; the arm holds one and wants its slot, smallest first.
 # Misconception: the digits after the point read as a whole number (a longer decimal taken as bigger). The
-# library is the draft's eight shelves, in its order, then the four added 12 Nov 2026 (appended, so the eight
+# library is the draft's eight shelves, in its order, then the two added 12 Nov 2026 (appended, so the eight
 # keep their places); each still has to pass the draft's rules below and keep(). Spread is off for this lock
 # (minsep 1e-9): the slots repeat across shelves, one variant per shelf (the draft's rule).
 store = []
@@ -744,12 +744,11 @@ DEWEY = [("520", "stars and planets", ["35", "5", "15", "62", "4"], "4"),
          ("796", "sport", ["8", "2", "37", "61", "39"], "8"),
          ("598", "birds", ["1", "6", "8", "63", "58", "59"], "6"),
          ("821", "poetry", ["5", "7", "2", "8", "16", "53"], "5"),
-         # four more shelves (Jon, 12 Nov 2026, contract WARMUP-PACKS: "New shelves, 7 books allowed"), so the
-         # slots run 2 to 7 and a six-set print pack never repeats an answer
+         # two more shelves (Jon, 12 Nov 2026, contract WARMUP-PACKS: "New shelves, 7 books allowed"; Amendment 1:
+         # ten shelves, not twelve, so the set codes stay A to K), so the slots run 2 to 7 and a six-set print pack
+         # never repeats an answer
          ("510", "mathematics", ["7", "15", "3", "42", "68"], "3"),
-         ("780", "music", ["6", "31", "4", "57", "82", "9"], "4"),
-         ("636", "pets", ["2", "45", "9", "13", "6", "71", "38"], "9"),
-         ("629", "cars and engines", ["5", "17", "8", "64", "3", "29", "52"], "8")]
+         ("636", "pets", ["2", "45", "9", "13", "6", "71", "38"], "9")]
 for shelf, subject, parts, book in DEWEY:
     vals = [Fraction(int(d), 10 ** len(d)) for d in parts]
     reads = [int(d) for d in parts]                      # the misconception reads .07 as 7, .4 as 4
