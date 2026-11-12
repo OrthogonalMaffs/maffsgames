@@ -416,6 +416,9 @@ Each idea is one line here and nowhere else in the repo; detail goes in its spec
 - **Environmental Club**: Jon's; exponential growth and decay, ratios for ppm air quality; probably 3 stars.
 - **Pi Day**: idea only.
 
+**Printables:**
+- **PRINTABLES-PAGE** (Jon, 12 Nov 2026): the printables page and its "Printable games" section (Six Sevens, Bruv loop cards free; Like Terms Collector loop cards £3 on Tes) is a separate contract, waiting for the Tes links (after LOOP-CARDS-APPROVE, §6). Owner: Project Claude to write the contract; home lane.
+
 ## 4. Prevention and quality — after §1–3
 
 1. **Checker tier 4, layer C — the answer-key tier. STILL NOT BUILT.** Trig Worms, Modular
@@ -688,6 +691,7 @@ Only what needs Jon: a ruling, a content review, or a task only he can do. Build
 - None open (11 Nov 2026: matrix-crunch's fourth distractor, §1.4, ruled by Jon on 10 Nov and closed by CLOUD-QUEUE-1111 PR 1).
 
 **Content to review:**
+- **LOOP-CARDS-APPROVE** (12 Nov 2026): approve both loop-card packs' teacher wording (proofs `docs/screens/loop-cards/*-teacher1.png`) and the three layout calls in the LOOP-CARDS PR (page columns in "Which deck?", fold-over pages last, curly quotes). Approval goes in `tools/loop-cards/decks/<slug>/config.json` "wording_approved"; then `--final` builds go to Tes (Like Terms Collector £3; Six Sevens, Bruv free). Owner: Jon, then home lane.
 - Spot the Error banks (§1.23): KS3 35, Level 4 30.
 - New Shapes banks (§1.27): 15 / 20 / 15.
 - Regression Rumble (§1.26): Jon's look at the rebuilt game before the holding page is replaced.
