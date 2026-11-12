@@ -77,7 +77,8 @@ findings:
   where: games/new-shapes/index.html:650-675 (renderPrism)
   summary: The l arrow spans front width + depth, not the depth edge; label overlaps the arrowhead
   evidence: lenLine x1=22 to x2=148; front face x 20-110, depth offset +40; screenshot ns_v13
-  status: open
+  status: fixed
+  pr: 741
 - id: new-shapes-t3-006
   severity: MEDIUM
   jc: true
