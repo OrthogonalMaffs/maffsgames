@@ -112,6 +112,18 @@ window.ROOM = {
           "answer": 10,
           "miss": 8,
           "facN": "1, 2, 4, 5, 8, 10, 16, 20, 40, 80"
+        },
+        {
+          "N": 36,
+          "answer": 9,
+          "miss": 7,
+          "facN": "1, 2, 3, 4, 6, 9, 12, 18, 36"
+        },
+        {
+          "N": 64,
+          "answer": 7,
+          "miss": 5,
+          "facN": "1, 2, 4, 8, 16, 32, 64"
         }
       ],
       missTitle: 'Not every factor is there.',
@@ -119,7 +131,7 @@ window.ROOM = {
       hints: [
         'Factors come in pairs that multiply to make the number.',
         'Start at 1 &times; {{fc.N}} and work up. Stop when the pairs start repeating.',
-        'Write down every number in every pair, then count them.'
+        'Write down every number in every pair, then count them. If a pair is the same number twice, count it once.'
       ],
       solve: '{{fc.facN}} &rarr; <b>{{fc.answer}}</b> factors.',
       onOpen: 'The hinge-side dial clicks and stays put.'

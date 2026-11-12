@@ -488,13 +488,17 @@ rejected.
 
 | Lock | Instrument | Pool | Library |
 |---|---|---|---|
-| `chokey-factor-count` | dial 0–20 | N 20–99, not prime, not square, at least 6 factors | **4** |
+| `chokey-factor-count` | dial 0–20 | N 20–99, not prime, at least 6 factors (squares allowed since 12 Nov 2026) | **6** |
 | `chokey-prime-volumes` | dial 0–30 | V in 20, 25 … 60 | **9** |
 | `chokey-hcf-bundles` | slider 0–120 | a < b ≤ 60, HCF 5–15 and not a or b, LCM ≤ 120 | **10** |
 
-- **The factor lock tops out at four, and that is the maths.** A non-square number has an even count of
-  factors, so under 100 the answer can only be 6, 8, 10 or 12, and the spread rule rejects repeats.
-  Accepted by Jon.
+- **The factor lock topped out at four, and that was the maths; squares lifted it to six.** A non-square
+  number has an even count of factors, so under 100 the answer could only be 6, 8, 10 or 12, and the spread
+  rule rejects repeats (accepted by Jon). A six-set print pack needs six different answers, so squares are
+  allowed since 12 Nov 2026 (Jon, contract WARMUP-PACKS: "Allow square numbers"): 36 (9 factors) and 64 (7)
+  join, the answers become 6, 7, 8, 9, 10 and 12, and the miss is still one pair missed (count − 2). A square's
+  root pairs with itself and is counted once; the lock's third hint now says so. The squares are tried after
+  every non-square, so the first four variants keep their places (a room saves its draw by index).
 - **Two locks set their own minimum gap of 1.** On a 0–30 dial the default gap is 1.5, and the prime counts
   sit one apart; on a 0–120 slider the default is 6, which HCFs of 5–15 cannot meet. The shared spread
   rule is unchanged.
@@ -516,6 +520,22 @@ rejected.
   3/4 mental arithmetic whatever the quotient, so there is no ceiling on b ÷ c — variant 0 is itself 45 ÷ 3.
 - **Derived tokens** `mults`, `multA`, `multB` and `quot` carry the solve lines.
 - **No lock sets its own gap**; all three clear the shared spread rule.
+
+## The Library Jam's shelf library (batch 10), widened 12 Nov 2026
+
+| Lock | Instrument | Pool | Library |
+|---|---|---|---|
+| `dewey-sort-arm` | dial 1–8 | the draft's eight hand-written Dewey shelves of 5–6 books, then 510 mathematics (5 books) and 636 pets (7 books); 5 to 7 books a shelf (7 since 12 Nov 2026), at least two one-digit and two two-digit parts, none ending in 0, no two equal read as whole numbers, the drop order never already sorted, the held book's slot never 1 and never where the misconception lands | **10** |
+
+- **The shelf lock topped out at four slots; two shelves lifted it to six.** The draft's eight shelves give
+  slots 3 to 6 only, and a six-set print pack needs six different answers. Jon ruled "New shelves, 7 books
+  allowed" (12 Nov 2026, contract WARMUP-PACKS), then ten shelves, not twelve (Amendment 1): the room letters
+  its sets A to K, ten codes, so a library may not pass ten. 510 adds slot 2 (miss 1); 636 adds slot 7
+  (miss 3). Answers now 2 to 7.
+- **Why seven books.** Slot 1 sits at the dial's end of travel, which the set checks bar, so the sixth slot
+  has to be 7, and a book can only be seventh on a shelf of seven.
+- **Appended, not inserted.** The eight shelves keep their places: a room saves its draw by index.
+- **Derived tokens** `list` and `sorted` carry the trolley's drop order and the sorted shelf for the solve line.
 
 ## Cross-lock collisions — a rule for every room from here
 

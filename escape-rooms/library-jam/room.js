@@ -111,7 +111,7 @@ window.ROOM = {
       clue: '&ldquo;RESET: set the dial to the angle between the arm and the belt <b>on the other side of the ' +
             'arm</b>. The belt is straight.&rdquo;' },
     { id: 'fines-screen', name: 'The library system', where: 'on the screen on Bibby’s desk',
-      clue: 'LOST BOOKS. Fine: <b>{{fn.p}}p a day</b> for each book. Days overdue: <b>{{fn.d}}</b>.' },
+      clue: 'LOST BOOKS. <b>Fine: {{fn.p}}p a day for each book. · Days overdue: {{fn.d}}</b>' },
     { id: 'drop-counter', name: 'Drop-box counter', where: 'a little mechanical counter on the drop-box',
       clue: '<b>{{fn.n}}</b> books posted today, one from everyone in your class. The counter, at least, saw them ' +
             'go in.' },
@@ -265,6 +265,40 @@ window.ROOM = {
           "miss": 2,
           "list": "821.5, 821.7, 821.2, 821.8, 821.16, 821.53",
           "sorted": "821.16, 821.2, 821.5, 821.53, 821.7, 821.8"
+        },
+        {
+          "shelf": "510",
+          "subject": "mathematics",
+          "parts": [
+            "7",
+            "15",
+            "3",
+            "42",
+            "68"
+          ],
+          "book": "510.3",
+          "answer": 2,
+          "miss": 1,
+          "list": "510.7, 510.15, 510.3, 510.42, 510.68",
+          "sorted": "510.15, 510.3, 510.42, 510.68, 510.7"
+        },
+        {
+          "shelf": "636",
+          "subject": "pets",
+          "parts": [
+            "2",
+            "45",
+            "9",
+            "13",
+            "6",
+            "71",
+            "38"
+          ],
+          "book": "636.9",
+          "answer": 7,
+          "miss": 3,
+          "list": "636.2, 636.45, 636.9, 636.13, 636.6, 636.71, 636.38",
+          "sorted": "636.13, 636.2, 636.38, 636.45, 636.6, 636.71, 636.9"
         }
       ],
       missTitle: 'That reads the digits after the point as a whole number.',

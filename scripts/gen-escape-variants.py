@@ -555,12 +555,19 @@ for p, q, lim in cands:
 V["ev-charger-quadratic"] = store
 
 # ---------------------------------------------------- K1 factor count (dial 0-20)
-# Misconception: one factor pair missed. N is never square, so its factors pair
-# off exactly and the count is always even - under 100 that allows only 6, 8, 10
-# and 12, and the spread rule caps the library at four. Accepted.
+# Misconception: one factor pair missed. Until 12 Nov 2026 N was never square, so
+# its factors paired off exactly and the count was always even: under 100 only 6,
+# 8, 10 and 12, and the spread rule capped the library at four, too few for a
+# six-set print pack. Squares are allowed since then (Jon, 12 Nov 2026, contract
+# WARMUP-PACKS: "Allow square numbers"): 36 (9 factors) and 64 (7) join, a square's
+# root counted once (the room's third hint says so), and the miss stays one pair
+# missed, factor_count - 2. The squares are tried after every non-square, so the
+# four variants from before keep their places: a room saves its draw by index
+# (engine.js st.vars, and the set code), and a saved room must not change numbers.
 store = []
-for N in shuffled([24] + [n for n in range(20, 100) if n != 24]):
-    if is_prime(N) or math.isqrt(N) ** 2 == N or factor_count(N) < 6:
+cands = shuffled([24] + [n for n in range(20, 100) if n != 24])
+for N in sorted(cands, key=lambda n: math.isqrt(n) ** 2 == n):     # stable: the shuffle's order otherwise
+    if is_prime(N) or factor_count(N) < 6:
         continue
     keep(store, "chokey-factor-count",
          {"N": N, "answer": factor_count(N), "miss": factor_count(N) - 2})
@@ -722,11 +729,12 @@ for N, Vv, S, nb in cands:
 V["leak-audit-conditional"] = store
 
 # ---------------------------------------------------- N1 (2026-10) ordering decimals (dial 1-8)
-# The Library Jam (contract LIBRARY-JAM-BUILD; bank batch 10). Five or six books on one Dewey shelf, in the
-# order they were dropped in; the arm holds one and wants its slot, smallest first. Misconception: the digits
-# after the point read as a whole number (a longer decimal taken as bigger). The library is the draft's eight
-# shelves, in its order; each still has to pass the draft's rules below and keep(). Spread is off for this
-# lock (minsep 1e-9): the slots repeat across shelves, one variant per shelf (the draft's rule).
+# The Library Jam (contract LIBRARY-JAM-BUILD; bank batch 10). Five to seven books (seven since 12 Nov 2026)
+# on one Dewey shelf, in the order they were dropped in; the arm holds one and wants its slot, smallest first.
+# Misconception: the digits after the point read as a whole number (a longer decimal taken as bigger). The
+# library is the draft's eight shelves, in its order, then the two added 12 Nov 2026 (appended, so the eight
+# keep their places); each still has to pass the draft's rules below and keep(). Spread is off for this lock
+# (minsep 1e-9): the slots repeat across shelves, one variant per shelf (the draft's rule).
 store = []
 DEWEY = [("520", "stars and planets", ["35", "5", "15", "62", "4"], "4"),
          ("567", "dinosaurs", ["6", "4", "07", "13", "86", "65"], "6"),
@@ -735,12 +743,17 @@ DEWEY = [("520", "stars and planets", ["35", "5", "15", "62", "4"], "4"),
          ("942", "British history", ["4", "1", "8", "9", "63", "77"], "9"),
          ("796", "sport", ["8", "2", "37", "61", "39"], "8"),
          ("598", "birds", ["1", "6", "8", "63", "58", "59"], "6"),
-         ("821", "poetry", ["5", "7", "2", "8", "16", "53"], "5")]
+         ("821", "poetry", ["5", "7", "2", "8", "16", "53"], "5"),
+         # two more shelves (Jon, 12 Nov 2026, contract WARMUP-PACKS: "New shelves, 7 books allowed"; Amendment 1:
+         # ten shelves, not twelve, so the set codes stay A to K), so the slots run 2 to 7 and a six-set print pack
+         # never repeats an answer
+         ("510", "mathematics", ["7", "15", "3", "42", "68"], "3"),
+         ("636", "pets", ["2", "45", "9", "13", "6", "71", "38"], "9")]
 for shelf, subject, parts, book in DEWEY:
     vals = [Fraction(int(d), 10 ** len(d)) for d in parts]
     reads = [int(d) for d in parts]                      # the misconception reads .07 as 7, .4 as 4
     lens = [len(d) for d in parts]
-    if not (5 <= len(parts) <= 6 and lens.count(1) >= 2 and lens.count(2) >= 2):
+    if not (5 <= len(parts) <= 7 and lens.count(1) >= 2 and lens.count(2) >= 2):
         continue
     if any(d.endswith("0") for d in parts) or len(set(reads)) < len(reads) or len(book) != 1:
         continue
