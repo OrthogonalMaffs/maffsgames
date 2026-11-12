@@ -18,7 +18,7 @@
 
 ## 2026-11-12 (home): HOME-QUEUE-1111 close-out
 
-Claude Code (home lane), worktree `~/mg-home-queue-closeout`, branch `claude/home-queue-closeout`, PR #PRNUM; stand-down and close-out from Project Claude, 12 Nov 2026, 16:22. The queue is finished; its contract moves to `docs/history/contracts/2026-11-11-home-queue-1111.md` (the entries below name its old path).
+Claude Code (home lane), worktree `~/mg-home-queue-closeout`, branch `claude/home-queue-closeout`, PR #742; stand-down and close-out from Project Claude, 12 Nov 2026, 16:22. The queue is finished; its contract moves to `docs/history/contracts/2026-11-11-home-queue-1111.md` (the entries below name its old path).
 
 - PR 1 PACK-APPROVED #737, merge 7c73372: main's check-site run 43090717833 success, phone-fit-full 43090717891 success.
 - PR 2 STAGE-EXIT-LABEL #738, merge 84e8bc0: main's check-site run 43172855407 success, phone-fit-full 43172855534 success. Its PR runs sat queued for about 10 hours after the 11 Nov GitHub Actions outage; the token cannot cancel runs (HTTP 403), so the PR was closed and reopened at 06:52 on 12 Nov, which started a fresh run and superseded the stuck ones (one concurrency group per PR).
