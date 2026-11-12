@@ -25,10 +25,13 @@ Checks, independent of the game's code:
     forgetting the half, ...) reads "Not quite - the answer is [key]", is not counted, and shows the item's working.
 The h label (SWEEP-1 new-shapes-s1-001, Part 2 #1): on every parallelogram and trapezium it sits just to the left of the dashed height
   line and wholly inside the figure, so it cannot be read as the slant length; the outline is measured in Chromium.
+The prism's l arrow (new-shapes-t3-005, contract NEW-SHAPES-PRISM-REVEAL, 12 Nov 2026): on every prism the l arrow runs
+  along a receding edge (its vector, in the drawing's own units, is the back face's offset from the front face, and it
+  starts within 15 units of a front-face corner), and the "l = .." label's centre lies within the arrow's box (line and
+  both heads, in viewport pixels) grown by 12 px, its box overlapping neither arrowhead.
 Not asserted, because the findings are still open and the redraw is a design call for Jon: the diagram's PROPORTIONS
 (parallelogram always 180x100, trapezium top always half the base, prism cross-section always a square: t3-003,
-t3-004, r-001) and the prism's l arrow, which spans the front width plus the depth rather than the depth edge (r-001,
-t3-005). The numbers on the diagram are checked; its geometry is not.
+t3-004, r-001). The numbers on the diagram are checked; its proportions are not.
 The reveal screen (new-shapes-t3-007; Jon's ruling, 18 Oct 2026): it states what the bank teaches, the number of new
   area formulae (distinct "Area of ..." formulas) in words and the one volume formula, the prism's: "You now know two
   new area formulae and the volume of a prism." (It said "five area formulae and one volume formula".)
@@ -40,7 +43,8 @@ No analytics or leaderboard request leaves the stub server (every other request 
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (first parallelogram 25), a wrong answer
 marked right (within 1), a wrong working figure, a wrong formula text (prism V = A + l), a wrong number in the
-diagram's description, the reveal screen's old "five area formulae" and the header counting answers given as right, and the header's question number off by one (t3-008 follow-up).
+diagram's description, the reveal screen's old "five area formulae" and the header counting answers given as right, and the header's question number off by one (t3-008 follow-up),
+the prism's l arrow back to horizontal under the front face, and the l label over an arrowhead (t3-005).
 
     python scripts/verify-new-shapes.py [--no-selftest] [--against FILE]
 """
@@ -218,6 +222,20 @@ MARK_JS = r"""(args) => {
     return {corners: corners, poly: poly, scale: k, line: svg.querySelector('line').getBoundingClientRect().left, right: L.right};
   })();
   shown.geom = geom;
+  // The prism's l arrow and label (t3-005): the arrow's ends and the solid's faces in the drawing's own units, the
+  // label's and the arrow's boxes in viewport pixels.
+  shown.lgeom = (() => {
+    const line = sc.querySelector('[data-dim="l"]');
+    const lab = [...sc.querySelectorAll('.shape-label')].find(e => /^l = /.test(e.textContent));
+    if (!line || !lab) return null;
+    const num = (e, a) => parseFloat(e.getAttribute(a));
+    const box = r => ({l: r.left, t: r.top, r: r.right, b: r.bottom});
+    const rects = [...sc.querySelectorAll('svg rect')].map(r => [num(r, 'x'), num(r, 'y'), num(r, 'width'), num(r, 'height')]);
+    return {line: ['x1', 'y1', 'x2', 'y2'].map(a => num(line, a)), faces: rects,
+            arrow: [line, ...sc.querySelectorAll('[data-dim="l-head"]')].map(e => box(e.getBoundingClientRect())),
+            heads: [...sc.querySelectorAll('[data-dim="l-head"]')].map(e => box(e.getBoundingClientRect())),
+            label: box(lab.getBoundingClientRect())};
+  })();
   for (const ch of typed) numInput(ch);
   submitAnswer();
   MaffsLock.clearTimers();
@@ -269,6 +287,34 @@ def check_h_label(fails, where, q, geom):
         fails.append('%s: the h label is %.0f px from the dashed height line, not just to its left' % (where, gap))
 
 
+def check_l_arrow(fails, where, q, g):
+    """t3-005: the l arrow runs along a receding edge (the length between the faces), with its label beside it, clear
+    of both heads. It was a horizontal arrow under the front face, reading as a width of the cross-section."""
+    if q['section'] != 'prism':
+        return
+    if not g or len(g['faces']) < 2 or len(g['heads']) != 2:
+        fails.append('%s: no l arrow with two heads and its label to place (the prism\'s faces: %r)' % (where, g and g['faces']))
+        return
+    (fx, fy, fw, fh), (bx, by, _, _) = g['faces'][:2]
+    x1, y1, x2, y2 = g['line']
+    depth = (bx - fx, by - fy)
+    if abs(x2 - x1 - depth[0]) > 1 or abs(y2 - y1 - depth[1]) > 1:
+        fails.append('%s: the l arrow runs (%.0f, %.0f), not along a receding edge (%.0f, %.0f)' % (
+            where, x2 - x1, y2 - y1, depth[0], depth[1]))
+    corners = [(fx, fy), (fx + fw, fy), (fx + fw, fy + fh), (fx, fy + fh)]
+    if min(((x1 - cx) ** 2 + (y1 - cy) ** 2) ** 0.5 for cx, cy in corners) > 15:
+        fails.append('%s: the l arrow starts at (%.0f, %.0f), not at a corner of the front face' % (where, x1, y1))
+    A, L = g['arrow'], g['label']
+    box = (min(r['l'] for r in A) - 12, min(r['t'] for r in A) - 12, max(r['r'] for r in A) + 12, max(r['b'] for r in A) + 12)
+    cx, cy = (L['l'] + L['r']) / 2, (L['t'] + L['b']) / 2
+    if not (box[0] <= cx <= box[2] and box[1] <= cy <= box[3]):
+        fails.append('%s: the l label (centre %.0f, %.0f) is not beside the l arrow (its box grown by 12 px: %.0f-%.0f, %.0f-%.0f)'
+                     % (where, cx, cy, box[0], box[2], box[1], box[3]))
+    for h in g['heads']:
+        if L['l'] < h['r'] and h['l'] < L['r'] and L['t'] < h['b'] and h['t'] < L['b']:
+            fails.append('%s: the l label overlaps an arrowhead of the l arrow' % where)
+
+
 def mark_all(fails, page, bank):
     for q in bank:
         section, names, resvar, fn = FORMULAS[q['formulaName']]
@@ -282,6 +328,7 @@ def mark_all(fails, page, bank):
             sh = got['shown']
             if what == 'the key':
                 check_h_label(fails, where, q, sh.get('geom'))
+                check_l_arrow(fails, where, q, sh.get('lgeom'))
             wantvars = ', '.join('%s = %s' % (v['name'], v['value']) for v in q['variables'])
             if sh['formula'] != [q['formulaKatex']] or sh['vars'] != wantvars or sh['prompt'] != 'What is %s?' % q['resultVar'] \
                     or sh['name'] != q['formulaName']:
@@ -381,6 +428,11 @@ PLANTS = [
      [("hLabel.style.right = '126px';", "hLabel.style.left = '168px';")]),
     ('the trapezium h label back across the slanted side', 'h label',
      [("hLabel.style.right = '81px';", "hLabel.style.right = '20px';")]),
+    ('the prism\'s l arrow back to horizontal under the front face (t3-005)', 'l arrow',
+     [("var p0 = [110 + n[0] * OFF, 130 + n[1] * OFF], p1 = [150 + n[0] * OFF, 100 + n[1] * OFF];",
+       "var p0 = [22, 145], p1 = [148, 145]; u = [1, 0]; n = [0, 1];")]),
+    ('the prism\'s l label over the lower arrowhead (t3-005)', 'l label',
+     [("var L_LEFT = 128, L_TOP = 133;", "var L_LEFT = 112, L_TOP = 128;")]),
     ('a wrong number in the diagram description', 'the diagram says',
      [("' and height ' + h);", "' and height ' + b);")]),
     ('the reveal screen\'s old count (t3-007)', 'reveal:',
@@ -405,7 +457,8 @@ def main():
     print('%s: %d items recomputed (formula, key, substitution, every working step, the diagram\'s numbers); each answered '
           'right and wrong in Chromium; sessions of %s dealt %d times' % (
               SLUG, len(bank or []), '/'.join(map(str, SESSIONS)), DEALS))
-    print('  not asserted (open findings r-001, t3-003, t3-004, t3-005): the diagram\'s proportions and the prism\'s l arrow')
+    print('  the prism\'s l arrow along a receding edge, its label beside it and clear of both heads (t3-005)')
+    print('  not asserted (open findings r-001, t3-003, t3-004): the diagram\'s proportions')
     ok = True
     if not args.no_selftest and not args.against:
         for what, tag, edits in PLANTS:
