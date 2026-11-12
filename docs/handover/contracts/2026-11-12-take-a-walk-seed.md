@@ -25,3 +25,10 @@ DO NOT TOUCH: any question's wording, generator logic, keys or marking in any of
 SUCCESS CONDITION: no page's seed reads the clock and the new Gate check passes with its plant caught; the seed sweep reports no question's last option below the fold at 375x667 (normal and Aa) or 320x568 normal, and 320x568 Aa no worse than main, before/after figures in the PR body; verify-take-a-walk.py, verify-how-many-parts.py, verify-just-pythag-it-bruv.py and verify-squared-squirrel.py pass; Gate green; merged; main's check-site and phone-fit-full on the merge commit green and reported; committed, handover documented.
 
 STOP IF: a verifier depends on Date.now in a seed (report it; do not edit the verifier's logic); the layout fix needs question wording shortened (report the questions; Jon writes words); the fix makes any size-mode pair worse than main; the Gate check flags more than the four seed lines plus uses you can show are not seeds (report the list first).
+
+TAKE-A-WALK-SEED: option A APPROVED (Jon, Thu 12 Nov 2026, via Project Claude 15:37). Add verbatim to the PR body and cloud.md.
+Build the Gate check as you proposed: it fails any page under games/ or escape-rooms/ where Date.now(), new Date() or performance.now() reaches a value passed to a seeded generator or named *seed*, including through a variable or helper (as free-daily-pizza's ukDate → dailySet → seedOf → mulberry32 does). It allows only an explicit list in the check itself, each entry naming file, function and reason:
+- games/equatle/index.html dailyTarget: daily puzzle, the same for everyone all day by design.
+- games/free-daily-pizza/index.html dailySet/ukDate: daily pizza set, the same all day by design.
+Plants, each must fail the check: take-a-walk's old line restored; a new unlisted date-based seed in a scratch copy of a game. An allow-list entry whose function no longer exists must fail too (stale exception).
+Record in the PR body the full table of clock reads you surveyed (the 247 reads, the six that reach seeds, the confirmed non-seeds). Everything else in the contract stands. Thank you for surveying before building.
