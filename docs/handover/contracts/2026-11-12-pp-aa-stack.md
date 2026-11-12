@@ -23,3 +23,14 @@ EXACT CHANGE:
 DO NOT TOUCH: the label wording; the game's questions, keys, marking and JS; its storage key; the answer-lock hint (:200); stage 2 and 3; measure-phone-fit.py and every Gate file; shared assets; every file the home lane's PR 3 owns (above) except updates/index.html and docs/todo.md.
 SUCCESS CONDITION: no sideways scroll in Aa mode at 320/375/390; the five labels form a full-width column in Aa mode on phones, each on one line, in their original order; Confirm above the fold on every stage-1 question at 375x667 and 390x844 in Aa mode; normal mode and desktop pixel-identical to main; verify-probability-pioneer.py passes; Gate green; merged; main's check-site and phone-fit-full green and reported; committed, handover documented.
 STOP IF: any label still wraps to two lines at 320 in the column (report which; Jon writes words); the column pushes Confirm below the fold on any stage-1 question at 375x667 (report the question and its measured bottom; do not shrink fonts below the page's current Aa sizes); the overflow has a second source besides the scale labels; normal mode changes anywhere; main's newest full run is red or a non-"[skip ci]" commit has landed since it and not been run; the change would touch a file outside this list.
+
+PP-AA-STACK, AMENDMENT 1 (Jon, Thu 12 Nov 2026, 07:55: "yes please"). Resume on branch claude/eager-johnson-20shvx.
+The spacing you measured is approved and is added to EXACT CHANGE 1, inside the same media query (max-width:480px) and scoped to body.accessible only:
+- stage 1's top padding 32 → 16
+- the event card's padding 28 → 20, and its bottom margin 28 → 16
+- the space above the coloured scale 40 → 16
+- the space under the labels 32 → 16
+- the gap between the column's labels 4px
+No font size changes; no wording changes; normal mode and desktop stay pixel-identical to main (compare after the fade animations finish, as you did).
+Re-measure and report: Confirm's bottom at 375x667 on all 10 stage-1 questions (expected 565–636) and at 390x844; page width at 320/375/390. 320x568 is not required (main already fails there on Q3); report its figures only.
+Every other part of the contract stands, including its STOP IFs, except that the 375x667 fold condition is now judged with this spacing. Then finish as the contract says: close PP-AA-OVERFLOW, add AA-KEY-MISMATCH, the /updates/ line, the PR (with before/after tables and this amendment verbatim in its body and cloud.md), merge by the standing route of 10 Nov (gh auth still fails), report main's check-site and phone-fit-full, move the CLOUD-QUEUE-1111 contract to history, then delete claude/compassionate-sagan-9myj6x if it holds nothing beyond c31f4ac. Thank you for stopping and measuring first.
