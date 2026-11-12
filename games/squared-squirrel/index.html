@@ -300,7 +300,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     return a;
   };
-  H.newSeed = function () { return (Math.floor(Math.random() * 4294967296) ^ Date.now()) >>> 0; };
+  H.newSeed = function () { return (Math.floor(Math.random() * 4294967296)) >>> 0; };
 
   /* ---------- numbers ---------- */
   // Half up to dp places (never a float tie: the pools leave out anything within 1e-6 of one).

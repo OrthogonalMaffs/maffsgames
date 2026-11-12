@@ -502,6 +502,397 @@ def scan_source(src, relpath):
     return hits
 
 
+# ---------------------------------------------------------------------------
+# Tier 2 -- the clock-seed scan (contract TAKE-A-WALK-SEED, Jon's option A, 12 Nov 2026)
+# ---------------------------------------------------------------------------
+#
+# The Gate fixes Math.random (PHONE_SEED) so that every check sees the same session. A page that mixes
+# the clock into a seed escapes that: take-a-walk's newSeed was Math.random() ^ Date.now(), so each run
+# dealt different questions and main's phone-fit-full went red at random. This scan fails any page
+# under games/ or escape-rooms/ where Date.now(), a no-argument new Date() or performance.now() reaches
+# a value passed to a seeded generator or named *seed*, through any number of variables and helpers.
+#   Value taint: a variable (resolved to the function that declares it) or a property becomes tainted
+#   when it is assigned an expression holding a clock read, a tainted name, or a call to a function that
+#   returns one. Timers, elapsed time and timestamps are tainted too, and never matter unless they reach
+#   a sink.
+#   Sinks: a call to a seeded generator (GENERATOR_NAME) or to anything named *seed*; an assignment or
+#   object key named *seed*; a *seed* function returning a tainted value; and, to a fixed point, any
+#   function whose parameter reaches a sink (free-daily-pizza's dailySet(date) -> seedOf -> mulberry32).
+# A finding is allowed only by CLOCK_SEED_ALLOW, which names file, functions and reason; it is allowed
+# when one of the entry's functions lies on its chain (where the finding is, the sinks it reaches, the
+# helpers its value came through). An entry whose function no longer exists in its file fails (stale).
+
+CLOCK_READ = re.compile(r"\bDate\s*\.\s*now\s*\(|\bnew\s+Date\s*\(\s*\)|\bperformance\s*\.\s*now\s*\(")
+GENERATOR_NAME = re.compile(r"^(?:mulberry32|srng|seededRng|seededRandom|makeRng|rng|sfc32|xorshift\w*|splitmix\w*)$")
+SEED_NAME = re.compile(r"seed", re.IGNORECASE)
+CLOCK_SEED_ALLOW = [
+    {"file": "games/equatle/index.html", "functions": ["dailyTarget"],
+     "reason": "daily puzzle, the same for everyone all day by design (Jon, option A, 12 Nov 2026)"},
+    {"file": "games/free-daily-pizza/index.html", "functions": ["dailySet", "ukDate"],
+     "reason": "daily pizza set, the same all day by design (Jon, option A, 12 Nov 2026)"},
+]
+JS_WORDS = {"var", "let", "const", "function", "return", "if", "else", "for", "while", "do", "switch", "case",
+            "break", "continue", "new", "typeof", "instanceof", "in", "of", "this", "null", "true", "false",
+            "undefined", "void", "delete", "try", "catch", "finally", "throw", "async", "await", "yield",
+            "class", "extends", "super", "default", "with"}
+IDENT = r"[A-Za-z_$][\w$]*"
+
+
+def expr_end(src, i):
+    """End offset of the expression starting at i: the first ';' or ',' at depth 0, an unmatched closing
+    bracket, or a line break at depth 0 that does not continue the expression."""
+    depth, n = 0, len(src)
+    j = i
+    while j < n:
+        c = src[j]
+        if c in "([{":
+            depth += 1
+        elif c in ")]}":
+            if depth == 0:
+                return j
+            depth -= 1
+        elif depth == 0 and c in ";,":
+            return j
+        elif depth == 0 and c == "\n":
+            before = src[i:j].rstrip()
+            after = src[j:].lstrip()
+            if before and before[-1] not in "+-*/%&|^=<>?:,.(" and not (after[:1] and after[0] in "+-*/%&|^?:.)"):
+                return j
+        j += 1
+    return n
+
+
+def find_functions(src):
+    """[{name, params, start, end, block}] for every function and arrow function in src (comment- and
+    string-stripped). An anonymous one takes the name it is assigned to (H.newSeed = function () ...)."""
+    out = []
+
+    def name_before(k):
+        m = re.search(r"(" + IDENT + r")\s*[=:]\s*(?:async\s*)?$", src[max(0, k - 120):k])
+        return m.group(1) if m else None
+
+    def body(k):
+        k2 = k
+        while k2 < len(src) and src[k2].isspace():
+            k2 += 1
+        if k2 < len(src) and src[k2] == "{":
+            return k2, match_brace(src, k2), True
+        return k2, expr_end(src, k2), False
+
+    def params(text):
+        return [p.split("=")[0].strip().lstrip(".") for p in text.split(",")
+                if re.fullmatch(r"\s*\.{0,3}" + IDENT + r"\s*(?:=.*)?", p, re.S)]
+
+    for m in re.finditer(r"\bfunction\b\s*\*?\s*(" + IDENT + r")?\s*\(", src):
+        close = paren_span(src, m.end() - 1)
+        if close == -1:
+            continue
+        s, e, block = body(close + 1)
+        out.append({"name": m.group(1) or name_before(m.start()), "params": params(src[m.end():close]),
+                    "start": s, "end": e, "block": block})
+    for m in re.finditer(r"(?:\(([^()]*)\)|\b(" + IDENT + r"))\s*=>", src):
+        if m.group(2) in JS_WORDS:
+            continue
+        s, e, block = body(m.end())
+        out.append({"name": name_before(m.start()),
+                    "params": params(m.group(1) if m.group(1) is not None else m.group(2)),
+                    "start": s, "end": e, "block": block})
+    for m in re.finditer(r"(?:^|(?<=[{,;}\n]))\s*(?:async\s+)?(" + IDENT + r")\s*\(([^()]*)\)\s*\{", src):
+        if m.group(1) in JS_WORDS:
+            continue
+        brace = src.find("{", m.end() - 1)
+        out.append({"name": m.group(1), "params": params(m.group(2)), "start": brace,
+                    "end": match_brace(src, brace), "block": True})
+    for k, f in enumerate(out):
+        f["id"] = k
+    return out
+
+
+def clock_seed_scan(src, relpath):
+    """Findings [{file, line, function, detail, chain}] for one comment- and string-stripped source."""
+    funcs = find_functions(src)
+    by_size = sorted(funcs, key=lambda g: g["end"] - g["start"])
+    parent = {f["id"]: next((g for g in by_size if g is not f and g["start"] <= f["start"] and f["end"] <= g["end"]
+                             and g["end"] - g["start"] > f["end"] - f["start"]), None) for f in funcs}
+    memo = {}
+
+    def enclosing(pos):
+        if pos not in memo:
+            memo[pos] = next((f for f in by_size if f["start"] <= pos <= f["end"]), None)
+        return memo[pos]
+
+    def chain_of(pos):
+        out, f = [], enclosing(pos)
+        while f is not None:
+            out.append(f)
+            f = parent[f["id"]]
+        return out
+
+    # Declarations, each owned by the innermost function holding it; every assignment with its value.
+    decls = {}                                   # function id -> declared names
+    assigns = []                                 # (target, is_property, value_start, value_end, pos)
+    seen = set()
+    for m in re.finditer(r"\b(?:var|let|const)\s+", src):
+        k = m.end()
+        while True:
+            dm = re.compile(r"(" + IDENT + r")\s*").match(src, k)
+            if not dm:
+                break
+            f = enclosing(dm.start())
+            decls.setdefault(f["id"] if f else None, set()).add(dm.group(1))
+            k = dm.end()
+            if src[k:k + 1] == "=" and src[k:k + 2] not in ("==", "=>"):
+                e = expr_end(src, k + 1)
+                assigns.append((dm.group(1), False, k + 1, e, dm.start()))
+                seen.add(dm.start())
+                k = e
+            if src[k:k + 1] != ",":
+                break
+            k += 1
+    for m in re.finditer(r"(?<![\w$.])((?:" + IDENT + r"\s*\.\s*)*(" + IDENT + r"))\s*(?:[+\-*/%|&^]|<<|>>>?)?=(?![=>])", src):
+        if m.start(1) in seen or m.group(2) in JS_WORDS:
+            continue
+        e = expr_end(src, m.end())
+        assigns.append((m.group(2), "." in m.group(1), m.end(), e, m.start(1)))
+
+    def resolve(name, pos):
+        for f in chain_of(pos):
+            if name in f["params"] or name in decls.get(f["id"], ()):
+                return (f["id"], name)
+        return (None, name)
+
+    def is_fn_value(text):
+        t = text.lstrip()
+        return t.startswith("function") or t.startswith("async") or bool(
+            re.match(r"(?:\([^()]*\)|" + IDENT + r")\s*=>", t))
+
+    taint, clock_fns = {}, {}                   # key -> origin function names; function name -> origins
+
+    def tainted(a, b):
+        """The origins if src[a:b] carries a clock value, else None."""
+        text = src[a:b]
+        hit = bool(CLOCK_READ.search(text))
+        origins = set()
+        for t in re.finditer(r"(\.\s*)?(" + IDENT + r")(\s*\()?", text):
+            nm = t.group(2)
+            if nm in JS_WORDS:
+                continue
+            if t.group(3):
+                origins.add(nm)
+                if nm in clock_fns:
+                    hit = True
+                    origins |= clock_fns[nm]
+                    continue
+            key = (".", nm) if t.group(1) else resolve(nm, a + t.start(2))
+            if key in taint:
+                hit = True
+                origins |= taint[key]
+        if not hit:
+            return None
+        return origins | {f["name"] for f in chain_of(a) if f["name"]}
+
+    def returns(f):
+        if not f["block"]:
+            return [(f["start"], f["end"])]
+        out = []
+        for r in re.finditer(r"\breturn\b", src[f["start"]:f["end"]]):
+            p = f["start"] + r.end()
+            if enclosing(p) is f:
+                out.append((p, expr_end(src, p)))
+        return out
+
+    changed = True
+    while changed:
+        changed = False
+        for target, prop, a, b, pos in assigns:
+            if is_fn_value(src[a:b]):
+                continue
+            o = tainted(a, b)
+            key = (".", target) if prop else resolve(target, pos)
+            if o and not o <= taint.get(key, set()):
+                taint[key] = taint.get(key, set()) | o
+                changed = True
+        for f in funcs:
+            if not f["name"]:
+                continue
+            for a, b in returns(f):
+                o = tainted(a, b)
+                if o and not o <= clock_fns.get(f["name"], set()):
+                    clock_fns[f["name"]] = clock_fns.get(f["name"], set()) | o | {f["name"]}
+                    changed = True
+
+    # Sinks: generators and *seed* names, then every function a parameter of which reaches one.
+    sinks = {}                                    # function name -> the chain of sink names it reaches
+
+    def sink_name(nm):
+        if nm in sinks:
+            return sinks[nm]
+        if GENERATOR_NAME.match(nm) or SEED_NAME.search(nm):
+            return {nm}
+        return None
+
+    calls = []                                    # (callee, args_start, args_end, pos)
+    for m in re.finditer(r"(" + IDENT + r")\s*\(", src):
+        if m.group(1) in JS_WORDS or re.search(r"\bfunction\s*\*?\s*$", src[max(0, m.start() - 12):m.start()]):
+            continue
+        close = paren_span(src, m.end() - 1)
+        if close != -1:
+            calls.append((m.group(1), m.end(), close, m.start()))
+    changed = True
+    while changed:
+        changed = False
+        for f in funcs:
+            if not f["name"] or not f["params"] or f["name"] in sinks:
+                continue
+            ps = set(f["params"])
+            for target, prop, a, b, pos in assigns:          # locals carried from a parameter
+                if f["start"] <= pos <= f["end"] and not prop and re.search(
+                        r"(?<![\w$.])(?:" + "|".join(map(re.escape, ps)) + r")\b", src[a:b]):
+                    ps.add(target)
+            pat = re.compile(r"(?<![\w$.])(?:" + "|".join(map(re.escape, sorted(ps))) + r")\b")
+            hit = None
+            for callee, a, b, pos in calls:
+                if f["start"] <= pos <= f["end"] and callee != f["name"] and sink_name(callee) and pat.search(src[a:b]):
+                    hit = sink_name(callee)
+                    break
+            if hit is None:
+                for target, prop, a, b, pos in assigns:
+                    if f["start"] <= pos <= f["end"] and SEED_NAME.search(target) and pat.search(src[a:b]):
+                        hit = {target}
+                        break
+            if hit is not None:
+                sinks[f["name"]] = {f["name"]} | hit
+                changed = True
+
+    findings = []
+
+    def add(pos, detail, chain):
+        f = enclosing(pos)
+        findings.append({"file": relpath, "line": src.count("\n", 0, pos) + 1,
+                         "function": f["name"] if f and f["name"] else "(top level)",
+                         "detail": detail, "chain": sorted(c for c in chain if c)})
+
+    for callee, a, b, pos in calls:
+        s = sink_name(callee)
+        o = s and tainted(a, b)
+        if o:
+            add(pos, "a clock value is passed to %s(), which reaches %s" % (callee, " -> ".join(sorted(s))), s | o)
+    for target, prop, a, b, pos in assigns:
+        if SEED_NAME.search(target) and not is_fn_value(src[a:b]):
+            o = tainted(a, b)
+            if o:
+                add(pos, "%s is assigned a clock value" % target, o | {target})
+    for m in re.finditer(r"(?<![\w$.])(" + IDENT + r")\s*:(?!:)", src):
+        if SEED_NAME.search(m.group(1)):
+            e = expr_end(src, m.end())
+            o = tainted(m.end(), e)
+            if o:
+                add(m.start(), "the key %s holds a clock value" % m.group(1), o | {m.group(1)})
+    for f in funcs:
+        if f["name"] and SEED_NAME.search(f["name"]):
+            for a, b in returns(f):
+                o = tainted(a, b)
+                if o:
+                    add(a, "%s() returns a clock value" % f["name"], o | {f["name"]})
+    defined = {f["name"] for f in funcs if f["name"]}
+    return findings, defined
+
+
+def clock_seed_targets():
+    out = []
+    for top in ("games", "escape-rooms"):
+        for dirpath, _, files in os.walk(os.path.join(ROOT, top)):
+            for fn in files:
+                if fn.endswith((".html", ".js")):
+                    out.append(os.path.relpath(os.path.join(dirpath, fn), ROOT).replace(os.sep, "/"))
+    return sorted(out)
+
+
+def clock_seed_check(texts, allow):
+    """(failures, allowed) over {relpath: raw text}: findings no entry allows, and stale entries."""
+    failures, allowed, defined = [], [], {}
+    for rel, raw in sorted(texts.items()):
+        js = extract_inline_scripts(raw) if rel.endswith(".html") else raw
+        found, defined[rel] = clock_seed_scan(strip_js_noise(js), rel)
+        for h in found:
+            entry = next((e for e in allow if e["file"] == rel and set(e["functions"]) & set(h["chain"])), None)
+            if entry:
+                h["reason"] = entry["reason"]
+                allowed.append(h)
+            else:
+                failures.append(h)
+    for e in allow:
+        gone = [fn for fn in e["functions"] if fn not in defined.get(e["file"], set())]
+        if gone:
+            failures.append({"file": e["file"], "line": 0, "function": ", ".join(gone), "chain": [],
+                             "detail": "stale exception: CLOCK_SEED_ALLOW names %s, which %s no longer defines"
+                                       % (", ".join(gone), e["file"])})
+    return failures, allowed
+
+
+def read_texts(rels):
+    out = {}
+    for rel in rels:
+        with open(os.path.join(ROOT, rel.replace("/", os.sep)), "r", encoding="utf-8", errors="replace") as fh:
+            out[rel] = fh.read()
+    return out
+
+
+# Plants (Jon's option A): each must fail the check. Run with every scan, so a check that stops catching
+# them fails the Gate rather than passing quietly.
+CLOCK_SEED_PLANTS = [
+    ("take-a-walk's old newSeed restored", "games/take-a-walk/index.html", None,
+     [("H.newSeed = function () { return (Math.floor(Math.random() * 4294967296)) >>> 0; };",
+       "H.newSeed = function () { return (Math.floor(Math.random() * 4294967296) ^ Date.now()) >>> 0; };")]),
+    ("a new unlisted date seed, through a variable and a helper, in a scratch copy of cast-away",
+     "games/cast-away/index.html", None,
+     [("  function startStage(n) {",
+       "  function dayNumber(d) { return d.getFullYear() * 400 + d.getMonth() * 32 + d.getDate(); }\n"
+       "  function startStage(n) {"),
+      ("    qs = session(n, Math.floor(Math.random() * 4294967296));",
+       "    var today = new Date(); qs = session(n, dayNumber(today));")]),
+    ("an allow-list entry whose function no longer exists", "games/equatle/index.html",
+     {"file": "games/equatle/index.html", "functions": ["dailyTargetGone"], "reason": "plant"}, []),
+]
+
+
+def clock_seed_selftest(texts):
+    """[what] for each plant the check failed to catch."""
+    missed = []
+    for what, rel, extra, edits in CLOCK_SEED_PLANTS:
+        raw = texts.get(rel)
+        if raw is None or any(raw.count(o) != 1 for o, _ in edits):
+            missed.append(what + " (cannot plant: the page changed)")
+            continue
+        for o, n in edits:
+            raw = raw.replace(o, n)
+        fails, _ = clock_seed_check({rel: raw}, [e for e in CLOCK_SEED_ALLOW if e["file"] == rel] + ([extra] if extra else []))
+        if not fails:
+            missed.append(what)
+    return missed
+
+
+def clock_seed_report(verbose=True):
+    """Failures (findings no entry allows, stale entries, missed plants) over games/ and escape-rooms/."""
+    texts = read_texts(clock_seed_targets())
+    failures, allowed = clock_seed_check(texts, CLOCK_SEED_ALLOW)
+    missed = clock_seed_selftest(texts)
+    if verbose:
+        print("\n" + "=" * 78)
+        print("TIER 2 - clock-seed scan (no seed reads the clock; contract TAKE-A-WALK-SEED)")
+        print("=" * 78)
+        for h in allowed:
+            print("  ALLOWED  %s :: %s  (line %d): %s" % (h["file"], h["function"], h["line"], h["detail"]))
+            print("           reason: %s" % h["reason"])
+        for h in failures:
+            print("  FAIL     %s :: %s  (line %d): %s" % (h["file"], h["function"], h["line"], h["detail"]))
+        for what, *_ in CLOCK_SEED_PLANTS:
+            print("  self-test %-90s %s" % (what, "*** MISSED ***" if any(m.startswith(what) for m in missed) else "caught"))
+        if not failures and not missed:
+            print("  PASS - no seed reads the clock in %d files (%d allowed by CLOCK_SEED_ALLOW)." % (len(texts), len(allowed)))
+    return failures + [{"missed": m} for m in missed]
+
+
 def load_config():
     if not os.path.exists(ALLOWLIST_PATH):
         return {}
@@ -2547,6 +2938,7 @@ def main():
     if args.tier in ("2", "all") and not args.live and site_wide:
         flagged, _ = tier2(tier2_targets())
         fails += len(flagged)
+        fails += len(clock_seed_report())
 
     if args.tier == "3":
         pages = build_page_list(args.only)
