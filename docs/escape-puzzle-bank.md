@@ -488,13 +488,17 @@ rejected.
 
 | Lock | Instrument | Pool | Library |
 |---|---|---|---|
-| `chokey-factor-count` | dial 0–20 | N 20–99, not prime, not square, at least 6 factors | **4** |
+| `chokey-factor-count` | dial 0–20 | N 20–99, not prime, at least 6 factors (squares allowed since 12 Nov 2026) | **6** |
 | `chokey-prime-volumes` | dial 0–30 | V in 20, 25 … 60 | **9** |
 | `chokey-hcf-bundles` | slider 0–120 | a < b ≤ 60, HCF 5–15 and not a or b, LCM ≤ 120 | **10** |
 
-- **The factor lock tops out at four, and that is the maths.** A non-square number has an even count of
-  factors, so under 100 the answer can only be 6, 8, 10 or 12, and the spread rule rejects repeats.
-  Accepted by Jon.
+- **The factor lock topped out at four, and that was the maths; squares lifted it to six.** A non-square
+  number has an even count of factors, so under 100 the answer could only be 6, 8, 10 or 12, and the spread
+  rule rejects repeats (accepted by Jon). A six-set print pack needs six different answers, so squares are
+  allowed since 12 Nov 2026 (Jon, contract WARMUP-PACKS: "Allow square numbers"): 36 (9 factors) and 64 (7)
+  join, the answers become 6, 7, 8, 9, 10 and 12, and the miss is still one pair missed (count − 2). A square's
+  root pairs with itself and is counted once; the lock's third hint now says so. The squares are tried after
+  every non-square, so the first four variants keep their places (a room saves its draw by index).
 - **Two locks set their own minimum gap of 1.** On a 0–30 dial the default gap is 1.5, and the prime counts
   sit one apart; on a 0–120 slider the default is 6, which HCFs of 5–15 cannot meet. The shared spread
   rule is unchanged.

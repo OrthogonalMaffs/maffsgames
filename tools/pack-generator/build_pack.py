@@ -1273,7 +1273,7 @@ def selftest():
         browser = p.chromium.launch()
         try:
             pg = offline_context(browser).new_page()
-            first = None
+            first, per_room = None, {}
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
@@ -1298,6 +1298,7 @@ def selftest():
                 if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets)):
                     failures.append("answer key does not tell teachers about the red herrings")
                 first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug)
+                per_room[slug] = (locks, sets)
         finally:
             browser.close()
     checker, room_js, locks, sets, valid, shape, room, teach, slug0 = first
@@ -1324,6 +1325,21 @@ def selftest():
         s = copy.deepcopy(sets)
         s[2]["vars"][1]["answer"] = s[2]["vars"][1]["answer"] + 1
         return [x for x in verify_sets(locks, s)[0] if ": answer is " in x]
+
+    def wrong_answer_in(slug, lock_id):
+        """One room's own wrong recomputed answer (contract WARMUP-PACKS): set A's answer for lock_id, one too many,
+        must be caught by that room's own lockcheck entry."""
+        def plant():
+            if slug not in per_room:
+                raise pc.StalePlant("a wrong recomputed answer in %s" % slug, "%s has no pack config" % slug)
+            r_locks, r_sets = per_room[slug]
+            s = copy.deepcopy(r_sets)
+            i = next((k for k, l in enumerate(r_locks) if l["id"] == lock_id), None)
+            if i is None:
+                raise pc.StalePlant("a wrong recomputed answer in %s" % slug, "%s has no lock %s" % (slug, lock_id))
+            s[0]["vars"][i]["answer"] = s[0]["vars"][i]["answer"] + 1
+            return [x for x in verify_sets(r_locks, s)[0] if "%s: answer is " % lock_id in x]
+        return plant
 
     def plant_bad_url():
         url = room_url(rooms[0])
@@ -1594,6 +1610,10 @@ def selftest():
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
+              ("a wrong recomputed answer in The Comic Caper (factor count)",
+               wrong_answer_in("comic-caper", "chokey-factor-count")),
+              ("a wrong recomputed answer in The Library Jam (Dewey slot)",
+               wrong_answer_in("library-jam", "dewey-sort-arm")),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
               ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
