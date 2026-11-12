@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-12 (home): HOME-QUEUE-1111 close-out
+
+Claude Code (home lane), worktree `~/mg-home-queue-closeout`, branch `claude/home-queue-closeout`, PR #PRNUM; stand-down and close-out from Project Claude, 12 Nov 2026, 16:22. The queue is finished; its contract moves to `docs/history/contracts/2026-11-11-home-queue-1111.md` (the entries below name its old path).
+
+- PR 1 PACK-APPROVED #737, merge 7c73372: main's check-site run 43090717833 success, phone-fit-full 43090717891 success.
+- PR 2 STAGE-EXIT-LABEL #738, merge 84e8bc0: main's check-site run 43172855407 success, phone-fit-full 43172855534 success. Its PR runs sat queued for about 10 hours after the 11 Nov GitHub Actions outage; the token cannot cancel runs (HTTP 403), so the PR was closed and reopened at 06:52 on 12 Nov, which started a fresh run and superseded the stuck ones (one concurrency group per PR).
+- PR 3 WHOSE-SIDE-LISTING: stood down. The cloud lane did it as #740 (merged cddcdef, 12 Nov, a one-off lane exception, Jon 09:53). The home lane's prepared listing was never pushed; its local branch `claude/whose-side-listing` (commits 4777543a, 3402902e) and worktree were removed by hand, because end-task refused a branch with no PR.
+- Remote branch `claude/compassionate-sagan-9myj6x` deleted: its one commit c31f4ac was on main by content (cherry-picked in #739, now in `docs/history/handover-cloud-archive.md`); `git ls-remote` no longer lists it.
+
 ## 2026-11-11 (home): STAGE-EXIT-LABEL (HOME-QUEUE-1111, PR 2 of 3)
 
 Claude Code (home lane), worktree `~/mg-stage-exit-label`, branch `claude/stage-exit-label`, PR #738; contract `docs/handover/contracts/2026-11-11-home-queue-1111.md`. `schools/assets/stage-exit.js` build() sets the page's own `a.back-link` to "← Games" (or the script tag's `data-home-label`) before the HUD copy is made; no game page touched, and non-stage games keep "← Back to Games". Measured on all 10 stage-exit games at 1366x768, 390x844, 375x667 and 320x568, normal and Aa, row and HUD (160 measurements, a scratch probe on verify-stage-exit.py's own server and stage start): main's file has the HUD link's text overlapping `#calcBadge` by 6 px (its-on-sale) and `.hud-label` by 3 px (hc-factor) at 320 in Aa; with the change every one reads "← Games" with no overlap and no sideways scroll. `scripts/phone-fit-state.json` had no known-failure entry for any of the 10 games (PHONE-FIT-RED fixed the overflow in CSS), so nothing came off it. `measure-phone-fit.py --only <game>` in normal, `--aa` and `--laptop` for the 10: all 30 exit 0; the one FAIL row printed, `free-daily-pizza` in Aa (Next below the fold after a wrong answer), is identical with main's `stage-exit.js` and has no state entry, so it is not this change's. /updates/ line under November. No claim held.
