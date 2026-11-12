@@ -39,3 +39,8 @@ The lane exception gains one more file, for this PR only: scripts/verify-card-fi
 The card keeps data-calc="both". The verifier's existing plant ('the exception removed') must still be caught for i-found-a-mark; if the file's selftest needs a matching plant for the new entry to keep the same coverage, add one in the same style and report it.
 Your two other reports stand as you left them: no New badge on /essentials/ (none there carries one; you copied correctly), and the Level 4 LO2 row is reported only, not added.
 Then open the PR and merge on a green Gate as the contract says. The game's own verifier and check-answer-lock must be green in the Gate, since they could not run here; if either is red, STOP and report. Thank you for stopping on it.
+
+WHOSE-SIDE-LIST, AMENDMENT 3: APPROVED (Jon, Thu 12 Nov 2026, via Project Claude 13:42). Add verbatim to the PR body and cloud.md.
+1. The lane exception gains scripts/check-resit-page.py for this PR only: add "whose-side-are-you-on" to SUITE's geometry list (line 59) after "take-a-walk", and a one-line comment beside it in the file's existing style: "whose-side-are-you-on added 12 Nov 2026 (Jon approved its /essentials/ card, 11 Nov 18:23: 'it also sits in resit')". Nothing else in the file.
+2. The /updates/ line ends "For GCSE Foundation." instead of "For GCSE Foundation and resits." (public copy does not label students as resitters; Project Claude's wording error).
+Then push, and merge only when the whole Gate is green, including every check-answer-lock shard and the game's own verifier. If anything is red, STOP and report. Thank you.
