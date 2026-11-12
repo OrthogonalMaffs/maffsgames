@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 162 | 336 | 5 | 503 |
+| MEDIUM | 161 | 337 | 5 | 503 |
 | LOW | 100 | 243 | 1 | 344 |
-| **All** | 270 | 843 | 6 | 1119 |
+| **All** | 269 | 844 | 6 | 1119 |
 
 ### By class
 
@@ -39,7 +39,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | 3 | 5 | 86 |
 | NEW:convention-unstated | 7 | 78 |
 | NEW:wrong-explanation-text | 10 | 71 |
-| 6 | 20 | 56 |
+| 6 | 19 | 56 |
 | NEW:true-wrong-option | 2 | 51 |
 | NEW:verifier-gap | 49 | 49 |
 | 1 | 8 | 41 |
@@ -205,7 +205,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `modular-battle` | yes | verify-modular-battle.py | 0 | 0 | 4 | 2 | 3 | 2 | 1 |
 | `moments-master` | yes | verify-moments-master.py | 1 | 9 | 9 | 4 | 5 | 18 | 0 |
 | `negative-number-line` | yes | verify-negative-number-line.py | 0 | 1 | 1 | 0 | 0 | 2 | 0 |
-| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 3 | 8 | 4 | 0 |
+| `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 3 | 7 | 5 | 0 |
 | `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 5 | 6 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
 | `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
