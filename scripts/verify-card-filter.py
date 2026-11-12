@@ -47,7 +47,8 @@ ROW = re.compile(r'^\|\s*(?:\d+|\u2014)\s*\|[^|]*\|\s*`([a-z0-9-]+)`\s*\|.*\|\s*
 STAGES = re.compile(r'<script type="application/json" id="maffs-calc-stages">(.*?)</script>', re.S)
 
 
-CALC_ACROSS_PAPERS = {'i-found-a-mark': "exam technique (AO3): applies on every paper; roster Calculator field stays untagged (Jon, 30 Oct 2026)"}
+CALC_ACROSS_PAPERS = {'i-found-a-mark': "exam technique (AO3): applies on every paper; roster Calculator field stays untagged (Jon, 30 Oct 2026)",
+                      'whose-side-are-you-on': "labels sides and names the ratio only, with no calculation in any of its four stages; the skill is needed on both papers; roster Calculator field stays untagged until stage 5 (calculating) is built, when the game gets a real tag and this exception is removed (Jon, 12 Nov 2026)"}
 
 
 def expected_calc(slug, field=None, exceptions=CALC_ACROSS_PAPERS):

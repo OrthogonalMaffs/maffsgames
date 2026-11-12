@@ -3110,3 +3110,11 @@ Moved word for word from `docs/todo.md` §1, with its closing note (contract PP-
 | # | Item | Owner |
 |---|---|---|
 | PP-AA-OVERFLOW | **`probability-pioneer` scrolls sideways in Aa mode**, from its probability-scale labels. Recorded 9 Nov 2026 (DOCS-BUNDLE). **DONE 12 Nov 2026 (contract PP-AA-STACK, Amendment 1):** in Aa mode on a phone (max-width 480px) the five scale labels are a column of full-width buttons, one line each, in DOM order, and stage 1's own spacing is tightened in that mode only. Document width 418 → the viewport at 320, 375 and 390; Place on Scale above the fold on all 10 stage-1 questions at 375x667 (565-636) and 390x844. Normal mode and desktop pixel-identical to main. | cloud lane |
+
+## Closed by WHOSE-SIDE-LIST (12 Nov 2026)
+
+Moved word for word from `docs/todo.md` §3, with its closing note (contract WHOSE-SIDE-LIST, 12 Nov 2026; Jon's one-off cloud lane exception of 12 Nov, 09:53).
+
+| # | Item | Owner |
+|---|---|---|
+| WHOSE-SIDE-LISTING | **List "Whose Side Are You On?"**, after STAGE-EXIT-LABEL. Its subtitle becomes "One side never moves. The other two depend on θ." in the listing contract (Jon, 6 Nov; cloud.md). **DONE 12 Nov 2026 (contract WHOSE-SIDE-LIST, Amendment 1):** listed under GCSE Games #109, with a portal GCSE card, an /essentials/ card, the sitemap, the spec map's G20–G21 row, the hub's four stage boards and /updates/; the subtitle is the ruled "One side never moves. The other two depend on θ."; noindex removed. Listed by the cloud lane (the home lane's HOME-QUEUE-1111 PR 3 stopped before pushing). | decisions held by Project Claude; home lane lists |

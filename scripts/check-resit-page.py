@@ -56,7 +56,8 @@ SUITE = [
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",
         "better-value", "percentage-flip", "squared-squirrel"]),
-    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv", "take-a-walk"]),
+    ("geometry", "Geometry and measures", ["new-shapes", "angle-ace", "shape-shifter", "just-pythag-it-bruv", "take-a-walk",
+        "whose-side-are-you-on"]),  # whose-side-are-you-on added 12 Nov 2026 (Jon approved its /essentials/ card, 11 Nov 18:23: 'it also sits in resit')
     ("probability", "Probability", ["probability-pioneer", "expected-damage", "given-that"]),
     ("statistics", "Statistics", ["distinctly-average", "stat-attack", "chart-interrogator",
         "correlation-or-coincidence", "who-ate-all-the-pies"]),
