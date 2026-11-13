@@ -256,6 +256,7 @@ var LIFE_BONUS = 50;
 
 var score = 0, qNum = 0, questions = [], currentTarget = 1, product = 1, chosenFactors = [];
 var lives = 3;
+var wrongTaps = 0;   // wrong taps on the current number: question_answered's correct and attempts (ANSWER-LOGGING-WRONG)
 var primeEl = document.getElementById('primeBtns');   // MaffsLock's container (canon 7.6.0)
 var qStartTime = 0, timerInterval = null, elapsedSeconds = 0;
 
@@ -284,6 +285,7 @@ function loadQ() {
   currentTarget = questions[qNum];
   product = 1;
   chosenFactors = [];
+  wrongTaps = 0;
   MaffsLock.fresh(primeEl);   // a new number: a double-click on Start or Play again cannot tap a prime
 
   document.getElementById('targetNum').textContent = currentTarget;
@@ -338,6 +340,7 @@ function pressPrime(p) {
   if (remaining % p !== 0) {
     // Wrong tap — lose a life
     lives--;
+    wrongTaps++;
     updateLivesDisplay();
     shakeBtn(p);
 
@@ -346,6 +349,8 @@ function pressPrime(p) {
       // canon §7.6: the last life shows the whole factorisation and waits for Next before Game Over.
       MaffsLock.lock(primeEl);
       clearInterval(timerInterval);
+      // The number the game ends on is logged once, wrong (Jon, 13 Nov 2026: one event per question).
+      mfg('question_answered',{game_slug:'prime-factorisation',level:gameLevel,correct:false,attempts:wrongTaps,question_index:qNum+1});
       fb.textContent = p + " doesn't go into what's left (" + remaining + '). Out of lives: ' + currentTarget + ' = ' +
         primeFactors(currentTarget).join(' \u00d7 ');
       fb.className = 'feedback wrong';
@@ -384,7 +389,8 @@ var multiplier = 1;
     var fb = document.getElementById('feedback');
     fb.textContent = currentTarget + ' = ' + chosenFactors.join(' \u00d7 ') + '  (+' + qScore + ')';
     fb.className = 'feedback correct';
-    mfg('question_answered',{game_slug:'prime-factorisation',level:gameLevel,correct:true,question_index:qNum+1});
+    // One event per number: right first time only with no wrong tap on it; attempts = wrong taps + the finishing tap.
+    mfg('question_answered',{game_slug:'prime-factorisation',level:gameLevel,correct:wrongTaps===0,attempts:wrongTaps+1,question_index:qNum+1});
 
     MaffsLock.timer(function() {
       qNum++;

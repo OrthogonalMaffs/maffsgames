@@ -374,6 +374,7 @@ function nounSubject(s){
 // ===== STATE =====
 var selectedType=null,selectedLevel=null;
 var currentScenario=null,currentPhase=1,currentQIndex=0;
+var qWrongTries=0;   // wrong tries on the current Phase 1 question: question_answered's correct and attempts (ANSWER-LOGGING-WRONG)
 var phase1Questions=[],phase2Dropdowns=[];
 var sessionAnswers={};
 var timerInterval=null,startTime=0,elapsed=0;
@@ -900,6 +901,7 @@ function unique(v,i,a){return a.indexOf(v)===i;}
 
 // ===== SHOW QUESTIONS =====
 function showCurrentQuestion(){
+  qWrongTries=0;   // a new question (or Phase 2): no wrong try yet
   var cq=document.getElementById('completedQuestions');
   var aq=document.getElementById('activeQuestion');
 
@@ -966,10 +968,11 @@ function submitPhase1(){
 
   if(readingOk(val,q.expected,q.tolerance,q.alt)){
     sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;
-    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
+    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:qWrongTries===0,attempts:qWrongTries+1,question_index:currentQIndex+1});
     fb.textContent='Correct \u2014 '+(q.shown!==undefined?q.shown:q.expected)+(q.suffix||'');fb.className='q-feedback correct';
     MaffsLock.timer(function(){currentQIndex++;showCurrentQuestion();},600);
   }else{
+    qWrongTries++;
     var hint=q.hint||'Check your reading of the diagram.';
     fb.textContent=hint;fb.className='q-feedback wrong';
     MaffsLock.fresh(aq);   // another try (a wrong reading is not marked)
@@ -984,11 +987,12 @@ function submitMC(btn,answer){
   var fb=document.getElementById('qFeedback');
   if(answer===q.expected){
     sessionAnswers[q.key]=answer;window._ciQAnswered=(window._ciQAnswered||0)+1;
-    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:true,question_index:currentQIndex+1});
+    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:qWrongTries===0,attempts:qWrongTries+1,question_index:currentQIndex+1});
     btn.style.borderColor='var(--green)';btn.style.background='var(--green-dim)';btn.style.color='var(--green)';
     fb.textContent='Correct!';fb.className='q-feedback correct';
     MaffsLock.timer(function(){currentQIndex++;showCurrentQuestion();},600);
   }else{
+    qWrongTries++;
     btn.style.borderColor='var(--red)';btn.style.background='var(--red-dim)';btn.style.color='var(--red)';
     MaffsLock.fresh(aq);   // another try; the option just ruled out stays disabled
     btn.disabled=true;
