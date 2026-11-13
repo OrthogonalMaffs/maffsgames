@@ -162,9 +162,13 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   body.playing .header .a11y-toggle{position:absolute;margin-top:0;top:.1rem}
   body.playing .header h1{padding:0 2.7rem}
 }
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:620px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
 @media (max-height:600px){
   #feedback{display:flex;flex-direction:column}
   #feedback .array-wrap{order:1}
+  /* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+  .start-art{max-height:120px;object-fit:cover;object-position:center}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -204,6 +208,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   </div>
 
   <div id="menu" class="screen active">
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A wall of six black speaker cabinets with gold-rimmed cones in a dim room, three of the cones glowing gold">
     <p class="menu-info">
       Type the answer. Every fact you get right turns <strong>gold</strong> on your grid, both ways round:
       get 6 × 7 and 7 × 6 lights up too. Miss one and you will see how to work it out, then it comes back

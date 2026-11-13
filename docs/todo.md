@@ -698,6 +698,7 @@ Only what needs Jon: a ruling, a content review, or a task only he can do. Build
 - Regression Rumble (§1.26): Jon's look at the rebuilt game before the holding page is replaced.
 
 **Manual tasks:**
+- **LOOP-PAGE1-CHECK** (13 Nov 2026; owner Jon): look at the three new `--final` loop-card PDFs (Six Sevens, Bruv; Like Terms Collector; Free Daily Pizza) before the three-pack goes on Tes: page 1 of each (the game's art beside the diagram of one loop step) and Free Daily Pizza's six recurring cards and its answer sheets (the larger dot, "(recurring)" under the number). Build each with `python -X utf8 tools/loop-cards/build_deck.py <slug> --final`. Jon also plays both start screens (Six Sevens, Bruv; Like Terms Collector) to see the new art; on phones it sits above the first control, which is report-only for phone fit (his ruling, 13 Nov).
 - Spec-map spot-check (blocks §3.1): 10 of the 34 mixed statements in `data/dfe-gcse-parts.json` against the PDF.
 - Analytics checkpoint (overdue): re-answer the open questions in the project's `analytics-notes.md`. From 10 Nov 2026 GA4 excludes Jon's home IPv4 and IPv6 /56 (filter Version 3), so figures step down from that date: compare like with like.
 - Events sheet: confirm no `game_abandoned` against the homepage, 1–15 Sep.

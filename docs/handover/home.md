@@ -16,6 +16,14 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-13 (home): LOOP-PAGE1 (Amendment 1)
+
+Claude Code (home lane), worktree `~/mg-loop-page1`, branch `claude/loop-page1`; contract `docs/handover/contracts/2026-11-13-loop-page1.md`. Start art for Six Sevens, Bruv and Like Terms Collector (`games/<slug>/assets/start.webp`, 1600 × 873, 91,232 and 176,708 bytes; the ESSENTIALS-ART pattern in both pages). `build_deck.py` `run_page()`: every pack's page 1 opens with the game's art (`game_art()`, read from the game folder) beside `loop_diagram()`, one loop step drawn from the first deck; the check fails a missing diagram, a diagram whose back its front does not answer, and art that exists but is not printed. `free_pizza.py`: a recurring decimal carries "(recurring)" under it and a dot 0.28em across (was 0.13em); the parser requires the label. Two plants, two controls: selftest 3 packs, 25 plants.
+
+- Stopped once, ruled by Jon (13 Nov): the art moves the first control below the fold on phones (Six Sevens at 320 × 568 and 375 × 667; Like Terms at 375 × 667 and 390 × 844); accepted as it is, start screens being report-only for phone fit. The table is in the PR.
+- Also ruled: the sources were two files in Jon's Downloads, not in a checkout (he confirmed which); PNG proofs are allowed (the ban is for art sources); the diagram's caption is outside page 1's 120-word count; ANSWER-LOGGING-WRONG's contract file is left for the cloud lane.
+- Against main's `--final` builds: Six Sevens and Like Terms differ on page 1 only (pages 2 to 40 pixel-identical); Free Daily Pizza's six recurring cards and its answer sheets gain the label; all three still 40 pages. Todo LOOP-PAGE1-CHECK is Jon's look before Tes.
+
 ## 2026-11-13 (home): FDP-LOOP-CARDS (Amendment 1)
 
 Claude Code (home lane), worktree `~/mg-fdp-loop-cards`, branch `claude/fdp-loop-cards`; PR #752; contract `docs/history/contracts/2026-11-13-fdp-loop-cards.md` (Amendment 1's text; the 19:10 contract was stopped before any code, on its own STOP IF: `build_deck.py` had to change). New `tools/loop-cards/free_pizza.py` and `decks/free-daily-pizza/config.json`: the third pack, FP-16, FP-24 and FP-32. The values and every printed form come from the game page's own FDP code, run each build in a node subprocess (`vm`, no browser; node on PATH or Playwright's, as `scripts/test-ga4-country.py` finds it and as check-site.yml puts it on PATH for `verify-test-the-claim.py`). `build_deck.py`: `free_pizza` in `ADAPTERS`, five plants, the pack count computed, the third slug in `--help`; nothing else. First commit also moved four merged home contracts (#726, #727, #728, #736) to history.
