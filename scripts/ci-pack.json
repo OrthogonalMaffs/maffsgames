@@ -127,7 +127,7 @@
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "18",
   "New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; three plants caught)": "25",
   "Normal Navigator (independent recomputation + rendered labels)": "51",
-  "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; seventeen planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product); no PDF is ever built in CI)": "25",
+  "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; forty-two planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a print override on a red herring, an ungraded lock); no PDF is ever built in CI)": "38",
   "Parent guides (every stated figure recomputed from the page)": "61",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
@@ -229,7 +229,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
+   "how": "kept from the pack (6 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
