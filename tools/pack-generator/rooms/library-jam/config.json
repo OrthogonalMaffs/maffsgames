@@ -4,7 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Books returned",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-13"},
   "images": [
     {"file": "art/lib-01-trolley.webp", "role": "clue", "object": "trolley", "label_box": [335, 285, 920, 848], "font": "label"},
     {"file": "art/lib-02-jammed-book.webp", "role": "clue", "object": "jammed-book", "label_box": [156, 608, 1129, 718], "font": "label"},

@@ -3118,3 +3118,11 @@ Moved word for word from `docs/todo.md` §3, with its closing note (contract WHO
 | # | Item | Owner |
 |---|---|---|
 | WHOSE-SIDE-LISTING | **List "Whose Side Are You On?"**, after STAGE-EXIT-LABEL. Its subtitle becomes "One side never moves. The other two depend on θ." in the listing contract (Jon, 6 Nov; cloud.md). **DONE 12 Nov 2026 (contract WHOSE-SIDE-LIST, Amendment 1):** listed under GCSE Games #109, with a portal GCSE card, an /essentials/ card, the sitemap, the spec map's G20–G21 row, the hub's four stage boards and /updates/; the subtitle is the ruled "One side never moves. The other two depend on θ."; noindex removed. Listed by the cloud lane (the home lane's HOME-QUEUE-1111 PR 3 stopped before pushing). | decisions held by Project Claude; home lane lists |
+
+## Closed by the MULTI-PRINT close-out (13 Nov 2026)
+
+Moved word for word from `docs/todo.md` §3, with its closing note (Jon's instruction, 13 Nov 2026).
+
+| # | Item | Blocked on |
+|---|---|---|
+| WARMUP-PACKS-APPROVE | **The ★ Warm-up print packs: Jon proofreads The Comic Caper's and The Library Jam's PDFs and approves their wording** (contract WARMUP-PACKS, 12 Nov 2026). Each room's `tools/pack-generator/rooms/<slug>/config.json` has `wording_approved: null`, so pages 1 and 2 carry the DRAFT badge. Build each at home with `python -X utf8 tools/pack-generator/build_pack.py comic-caper` (and `library-jam`), proofread against the README's "What to proofread" 1-8, then record the approval in the config. Then the `--final` builds go to Tes, and the ★ Warm-up bundle of Kiln, Comic Caper and Library Jam can be listed. Caption gaps fixed by CAPTION-GAPS (13 Nov 2026). **DONE 13 Nov 2026 (MULTI-PRINT close-out, Jon's instruction):** Jon approved The Comic Caper's wording at 18:12 and The Library Jam's at 18:14 on 13 Nov 2026; both configs record `{"by": "Jon", "date": "2026-11-13"}`, and the `--final` PDFs were built for him at home. Listing the ★ Warm-up bundle waits for Kiln's re-approval (PACKS-REAPPROVE). | Jon's proofread |
