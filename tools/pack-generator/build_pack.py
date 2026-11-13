@@ -12,7 +12,8 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
     objects, locks, hints and worked-solution templates; and teacher.html's window.TEACH (topics, minutes);
   * escape-rooms/variants.json, the verified variant libraries (room.js must equal them, as check-escape-rooms.py holds);
   * tools/pack-generator/rooms/<slug>/config.json: the art, each image's role and label box in image pixels, the font
-    per card, the set count, seed and pack version, the words printed on red-herring objects, and whether Jon has
+    per card, the set count, seed and pack version, the words printed on red-herring objects, a clue card's optional
+    print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
     --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
 
@@ -118,9 +119,25 @@ def offline_context(browser):
     return ctx
 
 
+RATING_JS = ROOMS / "assets" / "rating.js"   # the one place the rating bands live; read in place, never copied
+
+
+def room_rating(page, room, slug):
+    """The room's rating, {stars, name, grades}, from escape-rooms/assets/rating.js's own MaffsEscapeRating.rating()
+    (contract CAPTION-GAPS): the bands are never retyped here. rating.js is one self-contained function; it is added
+    to the page as room.js is and loads nothing else. A null rating (a lock with no grade) stops the build."""
+    page.add_script_tag(content=RATING_JS.read_text(encoding="utf-8"))
+    rating = page.evaluate("room => window.MaffsEscapeRating.rating(room)", room)
+    if not rating:
+        raise BuildError("%s: a lock has no grade (1 to 9), so rating.js gives the room no rating and the answer key "
+                         "has no level to print" % slug)
+    return rating
+
+
 def read_room(page, slug):
-    """(ROOM, TEACH, room.js text): room.js and teacher.html's TEACH block evaluated in a blank page. The page itself is
-    never loaded, so neither analytics.js nor the engine runs."""
+    """(ROOM, TEACH, room.js text, rating): room.js and teacher.html's TEACH block evaluated in a blank page, and the
+    room's rating from rating.js (room_rating). The page itself is never loaded, so neither analytics.js nor the
+    engine runs."""
     room_dir = ROOMS / slug
     if not (room_dir / "room.js").is_file():
         raise BuildError("no escape-rooms/%s/room.js" % slug)
@@ -135,7 +152,20 @@ def read_room(page, slug):
         if m:
             page.add_script_tag(content=m.group(1))
             teach = page.evaluate("() => JSON.parse(JSON.stringify(window.TEACH || {}))")
-    return room, teach, js
+    return room, teach, js, room_rating(page, room, slug)
+
+
+OVERRIDES = ("printed", "caption")   # a clue image's print-only words (contract CAPTION-GAPS)
+
+
+def check_overrides(im):
+    """"printed" and "caption" belong to a clue image only, and each is a string ("" allowed)."""
+    for key in OVERRIDES:
+        if key in im and im.get("role") != "clue":
+            raise BuildError('%s: "%s" is for a clue image only, and this image is %r'
+                             % (im["file"], key, im.get("role")))
+        if key in im and not isinstance(im[key], str):
+            raise BuildError('%s: "%s" must be a string, not %r' % (im["file"], key, im[key]))
 
 
 def load_config(slug):
@@ -157,6 +187,7 @@ def load_config(slug):
         for box in boxes:
             if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
                 raise BuildError("%s: %r is not a label box" % (im["file"], box))
+        check_overrides(im)
     wording_approved(cfg, slug)
     return cfg
 
@@ -433,12 +464,45 @@ def filler(locks, s):
     return fill
 
 
-def split_clue(clue):
-    """(what is printed on the object: the clue's <b> part; the narration around it). One <b> part per clue."""
+def caption_problems(caption):
+    """What stops a card's caption reading as a sentence (contract CAPTION-GAPS): a space before . , ; : or a closing
+    quote, a lone punctuation mark left at its end after a space, or a lowercase first letter. Read as a reader sees
+    it: tags dropped, entities decoded. An empty caption has none."""
+    text = html.unescape(re.sub(r"<[^>]*>", "", caption))
+    out = []
+    gap = re.search(r"\s[.,;:\u201d\u2019]|\s[\"'](?=\s|$)", text)
+    if gap:
+        out.append("a space before %r" % gap.group().strip())
+    if re.search(r"\s[^\w\s]$", text):
+        out.append("a lone punctuation mark at its end")
+    if text[:1].islower():
+        out.append("a lowercase first letter")
+    return out
+
+
+def split_clue(clue, room="", ident="", printed=None, caption=None):
+    """(what is printed on the object: the clue's <b> part; the caption: the narration around it). One <b> part per
+    clue. The narration is the text before <b> and the text after </b>, tidied so that taking the <b> part out leaves
+    a sentence (contract CAPTION-GAPS): (a) a right part that starts with . , ; or : joins with no space; (b) after a
+    left part ending ":", a right part that is only punctuation is dropped; (c) with no left part, the right part's
+    first letter is capitalised. A config's "printed" and "caption" (already filled for the set) replace either
+    part. The caption, tidied or overridden, must pass caption_problems(), or the build stops, naming the room, the
+    object and the caption."""
     parts = re.findall(r"<b>(.*?)</b>", clue, re.S)
     if len(parts) != 1:
         raise BuildError("a clue needs exactly one <b>...</b> part (the words on the object): %r" % clue[:80])
-    return parts[0].strip(), re.sub(r"\s*<b>.*?</b>\s*", " ", clue, flags=re.S).strip()
+    if caption is None:
+        left, right = (x.strip() for x in re.split(r"<b>.*?</b>", clue, maxsplit=1, flags=re.S))
+        caption = left + right if right[:1] in tuple(".,;:") else (left + " " + right).strip()      # (a)
+        if left.endswith(":") and re.fullmatch(r"[^\w\s]+", html.unescape(right)):                  # (b)
+            caption = left
+        if not left:                                                                                # (c)
+            caption = caption[:1].upper() + caption[1:]
+    problems = caption_problems(caption)
+    if problems:
+        raise BuildError("%s, object %s: the caption under its picture has %s: %r"
+                         % (room or "?", ident or "?", " and ".join(problems), caption))
+    return (parts[0].strip() if printed is None else printed), caption
 
 
 def label_parts(text, boxes):
@@ -859,11 +923,12 @@ def lock_name_label(name):
     return name if name.rstrip().endswith(("?", "!")) else name + ":"
 
 
-def about_box(room, teach, locks, sets):
-    """The answer key's "About this room" box (Amendment 9): contents, each lock's topic and time, the grade, the final
-    padlock's shape and target range, and what the common wrong answers are for. It states no rule."""
+def about_box(room, teach, locks, sets, rating):
+    """The answer key's "About this room" box (Amendment 9): contents, each lock's topic and time, the level, the final
+    padlock's shape and target range, and what the common wrong answers are for. It states no rule. The level is the
+    room's rating as rating.js derives it from the lock grades (read_room; contract CAPTION-GAPS), in words, never
+    a line typed in teacher.html's notes."""
     meta = teach.get("lockMeta") or [{}] * len(locks)
-    first_note = re.search(r"<p[^>]*>(.*?)</p>", teach.get("notes", ""), re.S)
     letters = [st["letter"] for st in sets]
     topics = "; ".join("%s %s%s" % (lock_name_label(l["name"]), esc(m.get("topic", "")),
                                      (", about %d min" % m["minutes"]) if m.get("minutes") else "")
@@ -878,7 +943,8 @@ def about_box(room, teach, locks, sets):
             "<p>The common wrong answers below are for the debrief.</p>"
             "<p>Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p></div>"
             % (len(sets), letters[0], letters[-1], topics,
-               ("<p><b>Level (the locks):</b> %s</p>" % first_note.group(1)) if first_note else "",
+               "<p><b>Level:</b> %s (%d of 3 stars), grades %s, set by the hardest lock.</p>"
+               % (esc(rating["name"]), rating["stars"], esc(rating["grades"])),
                finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets)))
 
 
@@ -1005,7 +1071,7 @@ def win_image_path(slug, room):
     return ROOT / path
 
 
-def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
+def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
     rdir = HERE / "rooms" / slug
     images = cfg["images"]
     by_obj = {im["object"]: im for im in images if im["role"] in ("clue", "herring")}
@@ -1078,7 +1144,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
                   "up to the order of its parts; the worked solutions show its working.</p>")
     pages.append(page("key", "%s<table><tr><th></th>%s</tr>%s</table>"
                       "<h2>The common wrong answers (shown with Set A's figures)</h2><ul>%s</ul>%s"
-                      % (about_box(room, teach, locks, sets), head, rows, legend, final_note), "%s: answer key" % title, "One row per set"))
+                      % (about_box(room, teach, locks, sets, rating), head, rows, legend, final_note), "%s: answer key" % title, "One row per set"))
     sols = ""
     for s in sets:
         f = filler(locks, s)
@@ -1117,7 +1183,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url):
             im = by_obj[o["id"]]
             font = im.get("font", "label") + (" light" if im.get("ink") == "light" else "")
             if o.get("clue"):
-                printed, narration = split_clue(f(o["clue"]))
+                printed, narration = split_clue(f(o["clue"]), slug, o["id"],
+                                                *(f(im[key]) if key in im else None for key in OVERRIDES))
                 cls, extra = "card", narration
             else:
                 printed, cls, extra = esc(im.get("text", "")), "card herring", f(o.get("flavour"))
@@ -1194,7 +1261,7 @@ def ignored_by_git(path):
 def prepare(slug, n, seed, page, target=None):
     checker = load_checker()
     cfg = load_config(slug)
-    room, teach, room_js = read_room(page, slug)
+    room, teach, room_js, rating = read_room(page, slug)
     locks = room_locks(room, slug)
     n = n or cfg.get("sets", 7)
     seed = cfg.get("seed", 1) if seed is None else seed
@@ -1203,7 +1270,7 @@ def prepare(slug, n, seed, page, target=None):
     sets = choose(checker, valid, locks, n, seed,
                   final_ok=lambda pk: bool(finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)))
     add_finals(checker, locks, sets, seed, cfg.get("final_shape", finalpad.DEFAULT_SHAPE), target)
-    return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed
+    return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating
 
 
 def build(slug, n, seed, target=None, final=False):
@@ -1219,7 +1286,7 @@ def build(slug, n, seed, target=None, final=False):
         try:
             ctx = offline_context(browser)
             pg = ctx.new_page()
-            checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, n, seed, pg, target)
+            checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = prepare(slug, n, seed, pg, target)
             print("%s: %d of %d joint draws VALID; %d sets chosen (seed %s):" % (slug, len(valid), total, n, seed))
             for s in sets:
                 print("  Set %s  variants %s  answers %s" % (s["letter"], list(s["pick"]),
@@ -1243,7 +1310,7 @@ def build(slug, n, seed, target=None, final=False):
             url = room_url(slug)
             if not LOGO.is_file():
                 raise BuildError("the logo %s is missing" % LOGO.relative_to(ROOT).as_posix())
-            doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url)
+            doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating)
             hints = instrument_hints(box_texts)
             if hints:
                 raise BuildError("an answer box gives something away (Amendment 4):\n  " + "\n  ".join(hints))
@@ -1288,6 +1355,9 @@ def build(slug, n, seed, target=None, final=False):
                 print("wording approved by %s on %s: no page says DRAFT%s" % (appr["by"], appr["date"], " (--final)" if final else "")
                       if appr else "wording NOT approved: the DRAFT badge is on pages 1 and 2 (--final would refuse)")
                 print("no final-padlock shape or calculator allowance on any student page")
+                print("answer key level, from rating.js: %s (%d of 3 stars), grades %s"
+                      % (rating["name"], rating["stars"], rating["grades"]))
+                print("every evidence caption reads as a sentence (no orphan punctuation, no lowercase start)")
                 print("page 1 (run it) is %d words, at most %d; no rule stated on more than one teacher page"
                       % (len(next(t for k, t in audit["text"] if k == "run").split()), RUN_IT_WORDS))
                 print("the timeout outcome (stakes) only in its own read-out and, prefixed %r, on the covers"
@@ -1337,7 +1407,7 @@ def selftest():
             pg = offline_context(browser).new_page()
             first, per_room = None, {}
             for slug in rooms:
-                checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed = prepare(slug, None, None, pg)
+                checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
                          + check_score_sheet(score_sheet(locks, sets), locks, sets)
                          + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
@@ -1359,14 +1429,26 @@ def selftest():
                     [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
                                             set_pages_line([(x["letter"], list(range(5 + 4 * i, 9 + 4 * i)))
                                                             for i, x in enumerate(sets)])))),
-                     ("key", text_of(about_box(room, teach, locks, sets)))])
-                if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets)):
+                     ("key", text_of(about_box(room, teach, locks, sets, rating)))])
+                if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets, rating)):
                     failures.append("answer key does not tell teachers about the red herrings")
-                first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug)
+                # every caption of every set, as the build makes it (contract CAPTION-GAPS): a broken one raises
+                by_obj = {im.get("object"): im for im in cfg["images"]}
+                for x in sets:
+                    f = filler(locks, x)
+                    for o in room["objects"]:
+                        if o.get("clue"):
+                            im = by_obj.get(o["id"], {})
+                            try:
+                                split_clue(f(o["clue"]), slug, o["id"],
+                                           *(f(im[key]) if key in im else None for key in OVERRIDES))
+                            except BuildError as e:
+                                failures.append("set %s: %s" % (x["letter"], e))
+                first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug, rating)
                 per_room[slug] = (locks, sets)
         finally:
             browser.close()
-    checker, room_js, locks, sets, valid, shape, room, teach, slug0 = first
+    checker, room_js, locks, sets, valid, shape, room, teach, slug0, rating = first
 
     def plant_duplicate():
         s = copy.deepcopy(sets)
@@ -1477,7 +1559,7 @@ def selftest():
                 pg = offline_context(browser).new_page()
                 cfg = load_config(slug0) if cfg is None else cfg
                 doc, _, _, _ = build_html(slug0, room, teach, bad_locks, sets, cfg,
-                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0))
+                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0), rating)
                 if doc_plant:
                     doc = doc_plant(doc)
                 with tempfile.TemporaryDirectory() as tmp:
@@ -1513,7 +1595,7 @@ def selftest():
         cfg = load_config(slug0)
         try:
             build_html(slug0, bad, teach, locks, sets, cfg, cfg.get("seed", 1),
-                       datetime.date.today().isoformat(), room_url(slug0))
+                       datetime.date.today().isoformat(), room_url(slug0), rating)
         except BuildError as e:
             msg = str(e)
             return [msg] if slug0 in msg and "docs/art/missing-win-plant-win.webp" in msg else []
@@ -1623,7 +1705,7 @@ def selftest():
         return [("run", text_of(run_html or run_it(letters, room_url(slug0),
                                                    set_pages_line([(x, list(range(5 + 4 * i, 9 + 4 * i)))
                                                                    for i, x in enumerate(letters)])))),
-                ("key", text_of(about_html or about_box(room, teach, locks, sets)))]
+                ("key", text_of(about_html or about_box(room, teach, locks, sets, rating)))]
 
     def plant_long_page_one():
         run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0)), "<p><b>Final padlock:</b>",
@@ -1631,7 +1713,7 @@ def selftest():
         return [x for x in teacher_page_problems(teacher_texts(run_html=run)) if "words, over" in x]
 
     def plant_repeated_rule():
-        about = pc.apply_plant(about_box(room, teach, locks, sets), "<p>The common wrong answers below",
+        about = pc.apply_plant(about_box(room, teach, locks, sets, rating), "<p>The common wrong answers below",
                                "<p>Total time = finishing time + penalties.</p><p>The common wrong answers below",
                                name="a rule repeated in the About box")
         return [x for x in teacher_page_problems(teacher_texts(about_html=about)) if "more than one teacher page" in x]
@@ -1654,11 +1736,16 @@ def selftest():
             cfg["wording_approved"] = None
         return cfg
 
+    def approved_cfg():
+        cfg = copy.deepcopy(load_config(slug0))
+        cfg["wording_approved"] = {"by": "Jon", "date": "2026-11-07"}
+        return cfg
+
     def check_draft_controls():
-        # the real config (approved): no page says DRAFT; the same room unapproved: the badge on pages 1 and 2 only
+        # the room approved (a copy of its config): no page says DRAFT; unapproved: the badge on pages 1 and 2 only
         problems = []
-        appr = wording_approved(load_config(slug0), slug0)
-        drafts = audit_planted_pack(locks)["draft"]
+        appr = wording_approved(approved_cfg(), slug0)
+        drafts = audit_planted_pack(locks, cfg=approved_cfg())["draft"]
         if appr and drafts:
             problems.append("%s is approved, but these pages say DRAFT: %s" % (slug0, drafts))
         drafts = audit_planted_pack(locks, cfg=unapproved_cfg())["draft"]
@@ -1668,11 +1755,10 @@ def selftest():
 
     def plant_draft_on_approved():
         # the old generator's hard-coded badge, on page 1 of an approved room
-        if not wording_approved(load_config(slug0), slug0):
-            raise pc.StalePlant("DRAFT on an approved room", "%s is not approved in its config" % slug0)
         head = '%s: run it</h1><div class="sub">Group race pack, %d sets</div></div>' % (room["title"], len(sets))
-        audit = audit_planted_pack(locks, doc_plant=lambda d: pc.apply_plant(d, head, head + DRAFT_BADGE,
-                                                                             name="DRAFT on an approved room"))
+        audit = audit_planted_pack(locks, cfg=approved_cfg(),
+                                   doc_plant=lambda d: pc.apply_plant(d, head, head + DRAFT_BADGE,
+                                                                      name="DRAFT on an approved room"))
         return draft_problems(audit["draft"], True, slug0)
 
     def plant_unapproved_without_badge():
@@ -1704,6 +1790,61 @@ def selftest():
                         planted = {"target": int(v), "expr": finalpad.show(w[0])}
                         return [x for x in lockcheck.final_problems("A", nums, planted, shape) if "no factor" in x]
         raise pc.StalePlant("a set whose product is not friendly", "no unfriendly product found")
+
+    def plant_caption_gap():
+        # a <b> part in mid-sentence whose removal leaves a full stop on its own, and no override to replace it
+        good = "Dropped in today: <b>12 BOOKS</b>."
+        if split_clue(good, "plant", "trolley") != ("12 BOOKS", "Dropped in today:"):
+            return []
+        bad = pc.apply_plant(good, "today: <b>12 BOOKS</b>.", "<b>12 BOOKS</b> today .", name="a caption with an orphan full stop")
+        try:
+            split_clue(bad, "plant", "trolley")
+        except BuildError as e:
+            return [str(e)] if "plant, object trolley" in str(e) and "a space before '.'" in str(e) else []
+        return []
+
+    def plant_caption_override_gap():
+        clue = "Dropped in today: <b>12 BOOKS</b>."
+        if split_clue(clue, "plant", "trolley", caption="Dropped in.") != ("12 BOOKS", "Dropped in."):
+            return []
+        try:
+            split_clue(clue, "plant", "trolley", caption="Dropped in .")
+        except BuildError as e:
+            return [str(e)] if "plant, object trolley" in str(e) and "a space before '.'" in str(e) else []
+        return []
+
+    def plant_printed_on_herring():
+        cfg = load_config(slug0)
+        im = next((dict(x) for x in cfg["images"] if x["role"] == "herring"), None)
+        if im is None:
+            raise pc.StalePlant('a "printed" key on a red herring', "%s has no herring image" % slug0)
+        check_overrides(im)                 # as configured, it passes
+        im["printed"] = "NOT FOR A HERRING"
+        try:
+            check_overrides(im)
+        except BuildError as e:
+            return [str(e)] if "clue image only" in str(e) else []
+        return []
+
+    def plant_ungraded_lock():
+        bad = copy.deepcopy(room)
+        if "grade" not in bad["locks"][0]:
+            raise pc.StalePlant("a room with one ungraded lock", "%s's first lock has no grade already" % slug0)
+        del bad["locks"][0]["grade"]
+        with sync_playwright() as p:
+            browser = p.chromium.launch()
+            try:
+                pg = offline_context(browser).new_page()
+                pg.goto("about:blank")
+                if room_rating(pg, room, slug0) != rating:
+                    return []
+                try:
+                    room_rating(pg, bad, slug0)
+                except BuildError as e:
+                    return [str(e)] if slug0 in str(e) and "no grade" in str(e) else []
+            finally:
+                browser.close()
+        return []
 
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
@@ -1744,7 +1885,11 @@ def selftest():
               ("a set whose product is not friendly", plant_unfriendly_product),
               ("DRAFT on an approved room's page 1", plant_draft_on_approved),
               ("an unapproved room without its page 2 badge", plant_unapproved_without_badge),
-              ("--final on an unapproved room (null, and no key)", plant_final_unapproved))
+              ("--final on an unapproved room (null, and no key)", plant_final_unapproved),
+              ("a clue whose caption is left with an orphan full stop, and no override", plant_caption_gap),
+              ("a caption override with a space before its full stop", plant_caption_override_gap),
+              ('a "printed" key on a red-herring image', plant_printed_on_herring),
+              ("a room with one ungraded lock (no rating)", plant_ungraded_lock))
     try:
         dc = check_draft_controls()
     except Exception as e:              # an error is never a pass

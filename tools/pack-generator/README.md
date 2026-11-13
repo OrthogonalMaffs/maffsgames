@@ -69,13 +69,17 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
 `build_pack.py` holds no room's facts. For a room it reads:
 
 - `escape-rooms/<slug>/room.js`, evaluated in a blank Chromium page (as the room page evaluates it), and the `TEACH`
-  block of its `teacher.html` (topics, minutes, level). The pages themselves are never loaded, and the browser has no
+  block of its `teacher.html` (topics, minutes). The pages themselves are never loaded, and the browser has no
   network: fonts come from the repo's pinned copies.
+- `escape-rooms/assets/rating.js`, added to the same blank page: the answer key's level line is its own
+  `MaffsEscapeRating.rating(ROOM)`, the room's rating from its lock grades ("Level: Warm-up (1 of 3 stars), grades
+  1–3, set by the hardest lock."), never a line typed in the teacher notes. A lock with no grade stops the build.
 - `escape-rooms/variants.json`, the verified variant libraries (room.js must equal them).
 - `rooms/<slug>/config.json`: the art files and their roles (`clue`, `herring`, `answer`), each image's label box in
   image pixels, the font per card (`label`: Oswald; `hand`: Permanent Marker), the number of sets, the seed, the pack
-  version, the certificate title, the final padlock's shape (default one x and one + or -) and the words printed on
-  each red herring (which must come from that object's flavour text in room.js and contain no digit).
+  version, the certificate title, the final padlock's shape (default one x and one + or -), the words printed on
+  each red herring (which must come from that object's flavour text in room.js and contain no digit) and a clue
+  card's optional print-only `printed` and `caption` ("Adding a room", below).
 
 Then, in order, any failure stopping the build:
 
@@ -106,8 +110,9 @@ target two expressions reach and one no expression reaches, a fixed penalty figu
 final-padlock shapes, a range and digit slots on answer boxes, `stakes` unprefixed on a cover and inside the start
 read-out, page 1 over 150 words, a rule stated on two teacher pages, the final padlock's shape or a calculator allowance on
 a student page, a set whose product has no factor a multiple of 5 or 12 or less, a wrong recomputed answer in each of The
-Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token. It
-builds no PDF.
+Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token, a
+clue whose caption is left with an orphan full stop, a caption override with a space before its full stop, a
+`printed` key on a red-herring image and a room with an ungraded lock. It builds no PDF.
 
 ## Adding a room
 
@@ -115,6 +120,24 @@ builds no PDF.
 2. Each of the room's locks in `lockcheck.py`'s `RECOMPUTE`, by lock id, recomputed its own way. The build refuses a
    room with a lock missing there.
 3. Build, then proofread as above.
+
+**Captions and print-only words (contract CAPTION-GAPS, 13 Nov 2026).** A clue's `<b>` part is printed on the art
+and the rest of the clue is the caption under the picture: the text before `<b>` and the text after `</b>`, joined
+so that it still reads as a sentence. A right part that starts with `.` `,` `;` or `:` joins with no space ("Spine
+label. A sticker ..."); after a left part ending in a colon, a right part that is only punctuation is dropped
+("... dropped in:"); with no left part, the right part's first letter is capitalised ("Books posted today ...").
+Every caption is then checked, and the build fails naming the room, the object and the caption if it has a space
+before `.` `,` `;` `:` or a closing quote, ends with a lone punctuation mark after a space, or starts with a
+lowercase letter.
+
+When a clue cannot be tidied into a caption (its sentence runs through the `<b>` part), give its **clue** image in
+`config.json` print-only words instead of changing the live room:
+
+- `"printed"`: replaces the `<b>` part on the art;
+- `"caption"`: replaces the caption (`""` for none).
+
+Both are filled for each set with the same `{{token}}` filler as the clue, and the caption check applies to an
+override too. Either key on a `herring` or `answer` image fails the build. Library Jam's reset card uses both.
 
 ## Fonts
 
