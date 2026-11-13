@@ -7,6 +7,9 @@ The values and every printed form are the game's own, never copied: page_forms()
 games/free-daily-pizza/index.html that defines FDP (FDP.S1_VALUES, FDP.S2_VALUES and FDP.fmt's fracText, decText and
 pctText) in a node subprocess, in node's vm module with no browser, and returns what those helpers print. So a
 recurring decimal is the game's 0.3 with a dot over the 3 (the digit, then U+0307) and a third of a percent is 33⅓%.
+Every recurring decimal is then labelled: "(recurring)" is printed under the number, on cards and answer sheets
+alike, and its dot is drawn large (contract LOOP-PAGE1, Jon, 13 Nov 2026), because every deck also holds 0.6 and a
+missed dot breaks the loop. The parser refuses a recurring decimal without the label, and the label on anything else.
 
   Every deck: all 15 FDP.S1_VALUES (the benchmarks, 1/3 and 2/3 among them), plus n - 15 of FDP.S2_VALUES drawn
   uniformly. Every value is on exactly one card, so 0.25 and 25% never both appear. The six conversions (fraction to
@@ -64,14 +67,21 @@ CSS = ("@font-face { font-family: 'KaTeX_Main'; src: url('%sKaTeX_Main-Bold.woff
        # a recurring digit: the dot is drawn over it; its U+0307 stays in the text, undrawn, so no font can misplace it
        ".fp-rec { position: relative; display: inline-block; }"
        ".fp-rec .fp-dot { position: absolute; width: 0; height: 0; overflow: hidden; font-size: 0; }"
-       ".fp-rec::after { content: ''; position: absolute; left: 50%%; top: 0.06em; width: 0.13em; height: 0.13em; "
-       "margin-left: -0.065em; border-radius: 50%%; background: #000; }") % _K
+       # (LOOP-PAGE1: the dot is 0.28em across, over twice its first size of 0.13em)
+       ".fp-rec::after { content: ''; position: absolute; left: 50%%; top: -0.2em; width: 0.28em; height: 0.28em; "
+       "margin-left: -0.14em; border-radius: 50%%; background: #000; }"
+       # a recurring decimal with "(recurring)" centred under it, small; on the answer sheet too
+       ".fp-recnum { display: inline-flex; flex-direction: column; align-items: center; vertical-align: middle; "
+       "line-height: 1.15; padding-top: 0.26em; }"
+       ".fp-reclab { font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 0.8em; white-space: pre; }"
+       ".lc-txt .fp-reclab { font-size: 0.3em; line-height: 1.3; }") % _K
 # The contract's line is "Every card's value is different, so 0.25 and 25% never both appear." (12 words); page 1
 # allows 120 words outside its table and has 114 before this line, so only its last six words fit.
 TEACHER_EXTRA = ("0.25 and 25% never both appear.",)
 SHOUT = None
 
 DOT = "̇"                                # the game's recurring dot: a combining dot above, after its digit
+RECURRING = " (recurring)"                    # printed after (on the page: under) every recurring decimal
 THIRDS = {"⅓": Fraction(1, 3), "⅔": Fraction(2, 3)}
 
 # ---- the game's own values and printed forms, from the page, in node ---------------------------------------------
@@ -109,7 +119,7 @@ def find_node():
 @functools.lru_cache(maxsize=None)
 def page_forms():
     """(S1, S2): each a tuple of {"v": [n, d], "f": ..., "d": ..., "p": ...}, the page's values in the page's order
-    with the text its own helpers print for each form."""
+    with the text its own helpers print for each form; a recurring decimal then carries RECURRING."""
     r = subprocess.run([find_node(), "-e", NODE_DRIVER, str(SOURCE)], capture_output=True, text=True, encoding="utf-8")
     if r.returncode != 0:
         raise ValueError("node could not run %s's FDP code: %s" % (SOURCE.relative_to(ROOT), r.stderr.strip()[-300:]))
@@ -118,6 +128,8 @@ def page_forms():
         for e in data[name]:
             if not all(isinstance(e.get(k), str) and e[k] for k in "fdp"):
                 raise ValueError("the page prints no fraction, decimal or percentage for %s" % e.get("v"))
+            if DOT in e["d"]:
+                e["d"] += RECURRING
     return tuple(data["s1"]), tuple(data["s2"])
 
 
@@ -168,9 +180,15 @@ def _decimal(whole, tail):
 
 def read(text):
     """(exact value, form) of one printed value: "f" a fraction a/b in lowest terms, "d" a decimal, "p" a
-    percentage."""
-    if "̇" in text and not DECIMAL_RE.fullmatch(text):
+    percentage. A recurring decimal must end with " (recurring)", and nothing else may."""
+    labelled = text.endswith(RECURRING)
+    if labelled:
+        text = text[:-len(RECURRING)]
+    if DOT in text and not DECIMAL_RE.fullmatch(text):
         raise ValueError("cannot read %r: a recurring dot outside a decimal" % text)
+    if labelled != (DOT in text):
+        raise ValueError("the recurring decimal %r does not say (recurring)" % text if DOT in text
+                         else "%r says (recurring) but has no recurring dot" % text)
     m = FRACTION_RE.fullmatch(text)
     if m:
         a, b = int(m.group(1)), int(m.group(2))
@@ -255,8 +273,11 @@ def deck_problems(code, n, backs):
 # ---- typesetting ---------------------------------------------------------------------------------------------------
 
 def _value_html(text):
-    out = text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    label = text.endswith(RECURRING)
+    out = (text[:-len(RECURRING)] if label else text).replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
     out = re.sub(r"(\d)%s" % DOT, r'<span class="fp-rec">\1<span class="fp-dot">%s</span></span>' % DOT, out)
+    if label:
+        return '<span class="fp-recnum"><span>%s</span><span class="fp-reclab">%s</span></span>' % (out, RECURRING)
     return FRACTION_RE.sub(r'<span class="fp-frac"><span class="fp-n">\1</span><span class="fp-sl">/</span>'
                            r'<span class="fp-d">\2</span></span>', out)
 

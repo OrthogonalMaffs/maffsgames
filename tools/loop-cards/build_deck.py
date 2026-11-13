@@ -79,6 +79,8 @@ TIPS = (
     "Group race: print one deck per group. First table to close the loop wins.",
 )
 NEVER_REMOVE = "Use every card in the deck. Missing cards break the loop."
+LOOP_CAPTION = "Read your back. Whoever has that answer goes next."     # under page 1's diagram (contract LOOP-PAGE1)
+ART_MAX_MM = 99                     # page 1's game art: at most a third of the page's height
 PRINTING = (
     "Double-sided · flip on long edge · actual size (100%).",
     "Print one sheet first; hold it to the light to check.",
@@ -249,12 +251,41 @@ def pages_text(a, b):
     return "%d" % a if a == b else "%d–%d" % (a, b)
 
 
+def game_art(slug):
+    """The game's own start-screen picture, games/<pack slug>/assets/start.webp, or None. Read where it is; never
+    copied."""
+    p = ROOT / "games" / slug / "assets" / "start.webp"
+    return p if p.is_file() else None
+
+
+def loop_diagram(ad, deck):
+    """Page 1's picture of one step of the loop, drawn from the deck itself: card 1 showing its back, an arrow, and
+    the card that back leads to showing its front. A shouted pair is passed over for the next card ID, so the picture
+    is always the plain step. The text is the adapter's own html()."""
+    cards, n = deck["cards"], deck["n"]
+    by_id = sorted(range(n), key=lambda k: cards[k]["id"])
+    k = next(k for k in by_id if not cards[k]["back_wrap"] and not cards[(k + 1) % n]["front_shout"])
+    a, b = cards[k], cards[(k + 1) % n]
+
+    def mini(card, side, text):
+        return ('<div class="lc-dcard" data-side="%s"><div class="lc-dtag">%s</div><div class="lc-dbox">'
+                '<span class="lc-txt">%s</span></div><div class="lc-dcode">%s · %d</div></div>'
+                % (side, esc(card[side + "_label"]), text, esc(card["code"]), card["id"]))
+    return ('<figure class="lc-loop" data-deck="%s">%s<div class="lc-darrow">&rarr;</div>%s<figcaption>%s</figcaption>'
+            '</figure>' % (deck["code"], mini(a, "back", back_html(ad, a)), mini(b, "front", typeset(ad, b["front"])),
+                           esc(LOOP_CAPTION)))
+
+
 def run_page(ad, pack, ranges, fold_range, badge):
+    art = game_art(pack["slug"])
+    top = ('<div class="lc-top">%s%s</div>'
+           % ('<img class="lc-art" src="%s" alt="">' % art.as_uri() if art else "",
+              "" if pack.get("no_diagram") else loop_diagram(ad, pack["decks"][0])))
     rows = "".join("<tr><td>%s</td><td>%d deck</td><td>p. %s</td><td>p. %s</td></tr>"
                    % (who, n, pages_text(*ranges["%s-%d" % (ad.CODE, n)][0]), pages_text(*ranges["%s-%d" % (ad.CODE, n)][1]))
                    for who, n in WHICH_ROWS)
     rows += '<tr><td>%s</td><td colspan="3">%s</td></tr>' % WHICH_PAIRS
-    body = ('<ol class="lc-steps">%s</ol>' % "".join("<li>%s</li>" % esc(s) for s in pack["steps"])
+    body = (top + '<ol class="lc-steps">%s</ol>' % "".join("<li>%s</li>" % esc(s) for s in pack["steps"])
             + '<h2>%s</h2>' % esc(WHICH)
             + '<table class="lc-which"><thead><tr><th>Students</th><th>Deck</th><th>Double-sided</th><th>Fold-over</th>'
               '</tr></thead><tbody>%s</tbody></table>' % rows
@@ -301,6 +332,20 @@ body > section:last-child { break-after: auto; }
 .lc-cut.lc-v { top: 0; bottom: 0; width: 0; border-left: 0.6pt dashed #777; }
 .lc-cut.lc-h { left: 0; right: 0; height: 0; border-top: 0.6pt dashed #777; }
 .lc-fold { position: absolute; top: 0; bottom: 0; width: 0; border-left: 0.8pt dotted #444; }
+.lc-top { display: flex; align-items: center; justify-content: center; gap: 6mm; margin: 0 0 3mm; }
+.lc-top:empty { display: none; }
+.lc-art { display: block; flex: none; height: 38mm; width: auto; max-height: %(art)smm; border-radius: 2mm; }
+.lc-loop { flex: none; margin: 0; display: grid; grid-template-columns: auto auto auto; align-items: center;
+           justify-content: center; column-gap: 2.5mm; row-gap: 1.5mm; }
+.lc-dcard { width: 46mm; height: 32mm; box-sizing: border-box; border: 1pt solid #000; border-radius: 1.5mm;
+            padding: 1.5mm 2mm; display: flex; flex-direction: column; background: #fff; color: #000; }
+.lc-dtag { flex: none; font-size: 7pt; font-weight: 600; line-height: 1.2; }
+.lc-dbox { flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; }
+.lc-dcard .lc-txt { font-size: 12pt; }
+.lc-dcard[data-side=front] .lc-txt { font-size: 20pt; }
+.lc-dcode { flex: none; font-size: 6pt; font-weight: 600; line-height: 1.2; }
+.lc-darrow { font-size: 22pt; font-weight: 800; line-height: 1; }
+.lc-loop figcaption { grid-column: 1 / -1; text-align: center; font-size: 10.5pt; font-weight: 700; }
 .lc-steps { font-size: 13pt; line-height: 1.3; padding-left: 8mm; margin: 1mm 0 3mm; }
 .lc-steps li { margin-bottom: 2mm; }
 table.lc-which { font-size: 12pt; margin-bottom: 4mm; }
@@ -311,7 +356,7 @@ table.lc-which td, table.lc-which th { padding: 1.6mm 2.5mm; }
 .lc-printing h2 { margin: 0 0 1.5mm; }
 table.lc-key td, table.lc-key th { font-size: 10.5pt; line-height: 1.2; padding: 0.8mm 2.5mm; }
 table.lc-key td:first-child { width: 22mm; font-weight: 700; }
-""" % {"w": CARD_W, "h": CARD_H, "s": SAFE_MM, "sw": CARD_W - 2 * SAFE_MM, "sh": CARD_H - 2 * SAFE_MM}
+""" % {"w": CARD_W, "h": CARD_H, "s": SAFE_MM, "sw": CARD_W - 2 * SAFE_MM, "sh": CARD_H - 2 * SAFE_MM, "art": ART_MAX_MM}
 
 
 def render(ad, pack, built):
@@ -469,8 +514,19 @@ AUDIT_JS = """
       if (m.scrollHeight > m.clientHeight + 1 || m.scrollWidth > m.clientWidth + 1)
         out.overflow.push('page ' + (i + 1) + ' (' + kind + ') overflows');
       const tp = {page: i + 1, kind, words: 0, titleWords: words(s.querySelector('.head').innerText), steps: [],
-                  long: [], printingLines: 0};
-      for (const ch of m.children) if (ch.tagName !== 'TABLE') tp.words += words(ch.innerText);
+                  long: [], printingLines: 0, diagram: null, art: null};
+      for (const ch of m.children)
+        if (ch.tagName !== 'TABLE' && !ch.classList.contains('lc-top')) tp.words += words(ch.innerText);
+      const fig = m.querySelector('figure.lc-loop'), img = m.querySelector('img.lc-art');
+      if (fig) tp.diagram = {deck: fig.dataset.deck, back: txt(fig.querySelector('.lc-dcard[data-side=back] .lc-txt')),
+                             front: txt(fig.querySelector('.lc-dcard[data-side=front] .lc-txt')),
+                             backLabel: txt(fig.querySelector('.lc-dcard[data-side=back] .lc-dtag')),
+                             frontLabel: txt(fig.querySelector('.lc-dcard[data-side=front] .lc-dtag')),
+                             arrow: !!fig.querySelector('.lc-darrow'), caption: txt(fig.querySelector('figcaption')),
+                             spill: [...fig.querySelectorAll('.lc-dbox')].some(b => b.scrollWidth > b.clientWidth + 1
+                                                                                   || b.scrollHeight > b.clientHeight + 1)};
+      if (img) tp.art = {loaded: img.complete && img.naturalWidth > 0, hMm: mm(img.getBoundingClientRect().height),
+                         src: img.getAttribute('src')};
       for (const li of m.querySelectorAll('ol.lc-steps > li')) tp.steps.push([words(li.innerText), li.innerText]);
       for (const e of m.querySelectorAll('li, p, h2, .lc-line, td, th')) {
         const n = lines(e);
@@ -553,6 +609,30 @@ def check(ad, pack, plan, fit, audit):
                     add("page 1: a step is %d words (at most %d): %r" % (n, MAX_STEP_WORDS, text))
             if tp["printingLines"] > MAX_LINES:
                 add("page 1: the Printing box is %d lines (at most %d)" % (tp["printingLines"], MAX_LINES))
+            # the loop diagram and the game's art (contract LOOP-PAGE1)
+            dg = tp.get("diagram")
+            if not dg:
+                add("page 1 has no loop diagram")
+            else:
+                if (dg["backLabel"], dg["frontLabel"]) != ("Who has", "I have") or not dg["arrow"]:
+                    add("page 1's diagram is not a 'Who has' back, an arrow and an 'I have' front (%r, %r)"
+                        % (dg["backLabel"], dg["frontLabel"]))
+                if dg["caption"] != LOOP_CAPTION:
+                    add("page 1's diagram caption is %r, not %r" % (dg["caption"], LOOP_CAPTION))
+                if dg["spill"]:
+                    add("page 1's diagram: a card's text overflows its box (%r, %r)" % (dg["back"], dg["front"]))
+                try:
+                    if not (dg["back"] or "").endswith("?") or ad.value_q(dg["back"][:-1].strip()) != ad.value_a(dg["front"]):
+                        add("page 1's diagram: the back %r is not answered by the front %r" % (dg["back"], dg["front"]))
+                except ValueError as e:
+                    add("page 1's diagram: %s" % e)
+            art, want = tp.get("art"), game_art(pack["slug"])
+            if want and not (art and art["loaded"]):
+                add("page 1 does not show the game's art (%s)" % want.relative_to(ROOT))
+            if art and not want:
+                add("page 1 shows art %r, but games/%s/assets/start.webp does not exist" % (art["src"], pack["slug"]))
+            if art and art["hMm"] > ART_MAX_MM + 0.1:
+                add("page 1's art is %.1f mm tall (at most %d, a third of the page)" % (art["hMm"], ART_MAX_MM))
 
     faces = audit["faces"]
     for f in faces:
@@ -777,7 +857,7 @@ def built_today():
 
 def proofs(pg, ad, pack, doc):
     """PNGs at 100% (96 px per inch): each deck's first front, first back and first fold-over page; both shout cards
-    on their own; page 1."""
+    on their own; page 1 and the first answer sheet."""
     slug = pack["slug"]
     PROOF_DIR.mkdir(parents=True, exist_ok=True)
     written = []
@@ -793,6 +873,7 @@ def proofs(pg, ad, pack, doc):
             loc.screenshot(path=str(path))
             written.append(path)
         shot(secs.nth(0), "%s-teacher1.png" % slug)
+        shot(secs.nth(1), "%s-key1.png" % slug)
         for d in pack["decks"]:
             n = d["n"]
             for kind, tag in (("front", "front1"), ("back", "back1"), ("fold", "fallback1")):
@@ -991,6 +1072,21 @@ def plant_eight_others(ad, cfg, pack):
     _rebuild(ad, cfg, pack, 32, _swap_item(items, "54", ad.unused(items)))
 
 
+def plant_no_diagram(ad, cfg, pack):
+    pack["no_diagram"] = True
+
+
+def plant_fp_recurring_unlabelled(ad, cfg, pack):
+    """1/3 asked as a decimal, and the answering card prints the dotted 0.3 without "(recurring)" under it."""
+    d = _deck(pack, "FP-16")
+    third = _fp_forms(ad, 1, 3)
+    k = next(i for i, it in enumerate(d["items"]) if ad.value_a(it["a"])[0] == ad.value_a(third["f"])[0])
+    if not third["d"].endswith(" (recurring)"):
+        raise AssertionError("the page's 1/3 as a decimal carries no (recurring)")
+    d["cards"][k - 1]["back"] = "%s as %s?" % (third["f"], _fp_asked("d"))
+    d["cards"][k]["front"] = third["d"][:-len(" (recurring)")]
+
+
 def _fp_forms(ad, n, d):
     """The game page's printed forms of n/d: {"f": ..., "d": ..., "p": ...}."""
     return next(e for part in ad.page_forms() for e in part if e["v"] == [n, d])
@@ -1086,6 +1182,9 @@ PLANTS = (
      r"FP-32 card \d+: its back .* as a percentage\?' \(= .* as a percentage\) matches no front"),
     ("FP-24 missing one of the game's S1 values", "free-daily-pizza", plant_fp_missing_s1,
      r"FP-24: 1 of the game's 15 S1 values are on no back \(1/2\)"),
+    ("a recurring decimal printed without (recurring)", "free-daily-pizza", plant_fp_recurring_unlabelled,
+     r"FP-16 card \d+ front: the recurring decimal .* does not say \(recurring\)"),
+    ("a page 1 without the loop diagram", "like-terms-collector", plant_no_diagram, r"page 1 has no loop diagram"),
     ("a recurring decimal printed truncated (0.33 for 1/3)", "free-daily-pizza", plant_fp_truncated_third,
      r"FP-16 card \d+: its back '1/3 as a decimal\?' \(= 1/3 as a decimal\) matches no front"),
 )
@@ -1119,6 +1218,22 @@ def selftest():
                     if pr2:
                         failures.append("%s with wording_approved %s fails:\n    %s"
                                         % (slug, c2["wording_approved"], "\n    ".join(pr2)))
+            # page 1's art slot (contract LOOP-PAGE1): a pack whose game has no start.webp prints no art and still
+            # passes every check; Free Daily Pizza's page 1 prints its game's art
+            cfg, ad, pack = packs["free-daily-pizza"]
+            for name, p3, want_art in (("a pack slug with no start.webp", dict(pack, slug="no-such-game"), False),
+                                       ("Free Daily Pizza with its art", pack, True)):
+                doc3, plan3 = render(ad, p3, built_today())
+                fit3, audit3 = measure(pg, doc3)
+                pr3, _ = check(ad, p3, plan3, fit3, audit3)
+                run3 = next(t for t in audit3["teacher"] if t["kind"] == "run")
+                got_art = bool(run3["art"] and run3["art"]["loaded"])
+                if pr3 or got_art != want_art or not run3["diagram"]:
+                    failures.append("control, page 1 for %s: art %s (wanted %s), diagram %s, problems %s"
+                                    % (name, got_art, want_art, bool(run3["diagram"]), pr3 or "none"))
+                else:
+                    print("ok    control, page 1 for %s: %s, the diagram drawn, every check passes"
+                          % (name, "its art printed" if want_art else "no art"))
             for name, slug, fn, expect in PLANTS:
                 cfg, ad, pack = packs[slug]
                 planted = copy.deepcopy(pack)
