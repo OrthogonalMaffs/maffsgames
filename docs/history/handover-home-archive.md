@@ -2,6 +2,24 @@
 
 ## Moved 2026-11-13 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-11 (home): RULES-EMULATOR-TEST
+
+Claude Code (home lane), worktree `~/mg-rules-emulator-test`, branch `claude/rules-emulator-test`, PR #736; contract `docs/history/contracts/2026-11-11-rules-emulator-test.md` (unnamed in the paste; named here). `firebase/rules.test.mjs` gains four cases for the 10 Nov `recent_scores` change: game `"<b>x</b>"`, game `"a<b"` and level `"GCSE > Higher"` refused, "Factor Race"/"GCSE" accepted. The emulator suite passes 36 of 36 against main's rules; against the pre-#728 rules the three refusals fail. `docs/firebase-rules-deploy.md`: the 10 Nov section's Playground test (hand-typed timestamp) is replaced by the suite result; the deploy section and AGENTS.md carry the rule (canon §12, RULES-EMULATOR-TEST). `database.rules.json` untouched. Tooling: no Java was on this machine; a user-local Temurin JDK 21 is in WSL `~/.local/jdk/jdk-21.0.13+9` (set `JAVA_HOME` to it and put its `bin` on `PATH` before the run); `firebase/package-lock.json` from `npm install` is not committed. Todo row FIREBASE-ESCAPING closed and moved to `docs/history/todo-done.md`. No claim held. The rules were already deployed by Jon 08:12 11 Nov 2026 (a real score reached its board); this PR changes tests and docs only, so no deploy follows it.
+
+## 2026-11-10 (home): FIREBASE-ESCAPING
+
+Claude Code (home lane), worktree `~/mg-firebase-escaping`, branch `claude/firebase-escaping`, PR #728; contract `docs/history/contracts/2026-11-10-firebase-escaping.md`. The hub escapes every Firebase value it renders (board initials, score and timestamp; the all-time high's score and date) through one esc(); the '&mdash;' fallback stays markup. The rules file refuses `<` and `>` in `recent_scores` `game` and `level`, written, NOT deployed: Jon deploys (`docs/firebase-rules-deploy.md`, "10 Nov 2026 change"). Plant in `scripts/test-scores-offline.py`: markup initials on a fake board; the unescaped hub is caught. STOP IF checks: no other page or shared asset renders Firebase data unescaped (the ticker escapes; Free Daily Pizza's target is a number checked with typeof); no game name or level label holds `<` or `>`; the rules are tested in the console's Rules Playground, no write. No claim held. Todo row FIREBASE-ESCAPING stays open for the deploy only.
+
+## 2026-11-10 (home): HUB-ALL-BOARDS
+
+Claude Code (home lane), worktree `~/mg-hub-all-boards`, branch `claude/hub-all-boards`, PR #727; contract `docs/history/contracts/2026-11-10-hub-all-boards.md` (preamble, contract and Jon's ruling). The hub lists year6 and all for Fraction Snap, Percentage Flip and Prime Sprint; the 'all' pill reads "All levels" (levelLabel('all') is '' by design, so the hub page labels its own pill; no shared asset touched). check-leaderboard-coverage.js reads a level variable's literal or ternary-of-literal assignments, else the roster's tiers; a selftest runs on every invocation. STOP IF hit: correlation-or-coincidence and the-perfect-prank also changed derivation; on Jon's ruling both now-stale LEVEL_OVERRIDES entries were removed, the correlation reason kept as a comment. Row 1.35: hub part fixed, extract-banks part left open. No claim held. Next: FIREBASE-ESCAPING from the new main.
+
+## 2026-11-10 (home): HOME-DOCS-1110
+
+Claude Code (home lane), worktree `~/mg-home-docs-1110`, branch `claude/home-docs-1110`; contract `docs/history/contracts/2026-11-10-home-docs-1110.md`. R1 and R2 match cloud.md's standing rules line for line. Canon §12 gains "MERGE-ROUTE and CLOSE-OUTS"; AGENTS.md's merge bullet gains the CLOUD-MERGE-TOKEN exception (151 bytes) and a close-outs bullet (245 bytes); todo rows added; PLAYTEST-S1 closed to todo-done.md. Cloud close-outs carried: none (#725's rides on CAST-AWAY-DIAGNOSE, the lane's next task). Item 5 stopped on its STOP IF (row 1.25 also held the untracked `previous_score` dead-column finding); Jon's ruling (10 Nov evening, option 1) added row PREVIOUS-SCORE-COLUMN (§4 item 43), so eight rows in all, then 1.25 closed to todo-done.md and the backfill note added to `docs/sheets-falsy-backfill.md` §7. Next step: Gate green, then Project Claude's review and Jon's "merge".
+
+## Moved 2026-11-13 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-10 (home): PHONE-SCROLL
 
 Ran in a cloud container on branch claude/amazing-goldberg-2eiqbm, committed as Claude, as the only running lane (Amendment 1, item 4). PR #721.
