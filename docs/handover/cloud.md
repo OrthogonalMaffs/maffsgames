@@ -77,6 +77,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-13 (cloud): ANSWER-LOGGING-WRONG (`docs/handover/contracts/2026-11-13-answer-logging-wrong.md`, Jon's ruling (a), 19:29)
+
+PR OPEN, merging on green. Agent Claude Code (cloud), branch `claude/blissful-hypatia-rn43pq` from main 7768d1e; first commit 25a1ab7 (the contract; no close-outs owed). No claim commit: the contract names none, and `scripts/answer-lock-state.json` (the claim list) is outside EXACT CHANGE.
+Done: Prime Sprint and Chart Interrogator send one `question_answered` per question, `correct` = right first time, `attempts` = tries. Prime Sprint: `wrongTaps` reset in loadQ; the number a game ends on is sent once at the last life, `correct:false`, `attempts` = its wrong taps, before Game Over. Chart Interrogator: `qWrongTries` reset in showCurrentQuestion (called only at the start and after a right answer), counted on wrong readings and wrong options; "Please enter a number." is not a try. Phase 2 (submitPhase2) is marked but sends no `question_answered`: reported, unchanged by contract.
+Check: `scripts/check-answer-logging.py` (ci-line; ci-groups --check PASS, 120 s tier default until a main run times it). Reads any call whose first argument is the literal 'question_answered' (mfg or a page's wrapper: 15 resit-strand pages log through `ev(...)`, which `mfg(` alone missed); 108 of 109 roster pages read, matching check-answer-lock's count. Fails both pages on main, passes them fixed, no third page fails. Selftest: 6 plants caught, 3 controls pass.
+Browser run (scratch script, stub server, `window.mfg` replaced by a recorder; real clicks, waiting out MaffsLock's 300 ms fresh window): Prime Sprint 8 events for 8 numbers (attempts 1, 2, 2, 1, 1, 1, 1, 1 for 0, 1, 1 then no wrong taps), game over on number 2 sends `correct:false attempts:3` once, nothing more on later taps or Next; Chart Interrogator cumfreq, stemleaf, histogram GCSE and A-Level: one event per Phase 1 question, `correct:false attempts:4` after three wrong options, `attempts:3` after two wrong readings.
+Container: playwright 1.63.0; esprima 4.0.1 on PYTHONPATH for check-question-id (PASS).
+
 ## 2026-11-13 (cloud): SIX-SEVENS-WEIGHTING close-out (carried by the home lane's MULTI-PRINT PR, as the close-out rule allows)
 
 DONE, merged and live: #748 squash-merged as 28f6750 (13 Nov). Route: the GitHub connection, under Jon's standing ruling of 10 Nov. Main on 28f6750: check-site 43394783506 GREEN, phone-fit-full 43394783396 GREEN (read through the REST API by the home lane, 13 Nov). Contract moved to `docs/history/contracts/2026-11-13-six-sevens-weighting.md`. The entry below is as the PR left it.
