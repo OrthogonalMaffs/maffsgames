@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Answer logging (no roster game logs only right answers: a page whose every question_answered call passes a literal correct:true fails; escape rooms out of scope; three plants and a control) | --selftest && --check
+# ci-line: Answer logging (no roster game logs only right answers: a page whose every question_answered call passes a literal correct:true fails; escape rooms out of scope; four plants caught and five controls pass) | --selftest && --check
 # ci-deps: games/ .claude/rules/game-roster.md scripts/bank_common.py scripts/check-level-logged.py
 """Does every game that logs question_answered also log its wrong answers?
 (contract ANSWER-LOGGING-WRONG, Jon's ruling 13 Nov 2026 19:29.)
