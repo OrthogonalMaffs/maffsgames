@@ -106,7 +106,8 @@ version. The adapter (`six_sevens.py`, `like_terms.py`, `free_pizza.py`) gives:
   one card only, asked as "Who has 3/4 as a decimal?" with the six conversions between fraction, decimal and
   percentage spread evenly. The values and every printed form come from the page's own FDP code, run each build in
   a node subprocess (node's `vm`, no browser; `node` on PATH, else the one the Playwright package ships), so a
-  recurring decimal has the game's dot and a third of a percent is 33⅓%. Its `deck_problems()` holds each deck to
+  recurring decimal has the game's dot, drawn large with "(recurring)" under the number on cards and answer sheets
+  (LOOP-PAGE1; the parser refuses one without the label), and a third of a percent is 33⅓%. Its `deck_problems()` holds each deck to
   that mix from the printed backs.
 - `value_q()` and `value_a()`: the independent recomputation of a printed question and answer. Free Daily Pizza's
   return (value, form) from its own Fraction parser, so a front in the wrong form answers no back.
@@ -118,6 +119,16 @@ version. The adapter (`six_sevens.py`, `like_terms.py`, `free_pizza.py`) gives:
 Approval, the DRAFT badge, `--final`, the offline browser, `page()` and the gitignore and page-count helpers are
 imported from `tools/pack-generator/build_pack.py`, not copied. The footer string follows `build_pack.py`'s
 `build_html()`, which builds it inline (there is no public function to import).
+
+**Page 1's picture and art (contract LOOP-PAGE1, 13 Nov 2026).** `run_page()` opens page 1 with a row of two things,
+for every pack and with no per-pack code. The diagram is one step of the loop drawn from the pack's first deck:
+card 1 showing its back ("Who has ...?"), an arrow, and the card that back leads to showing its front ("I have
+..."), over the caption "Read your back. Whoever has that answer goes next." (a shouted pair is passed over for the
+next card ID). The art is the game's own start-screen picture, `games/<pack slug>/assets/start.webp`, read where it
+is and never copied; a pack whose game has none prints no art and changes nothing else. The row is outside page
+1's 120-word count, as its table is. The build fails if the diagram is missing, if its back is not answered by its
+front (recomputed by the adapter's parser), or if the art exists and is not printed or is taller than a third of
+the page.
 
 A new game needs one adapter, one config and its adapter's name added to `ADAPTERS` in `build_deck.py`, which is
 also where its selftest plants go; the layout and loop code do not change.

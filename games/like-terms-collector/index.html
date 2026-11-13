@@ -127,6 +127,10 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .question-card{transition:none}
 .reveal-card{transition:none !important}
 }
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:620px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
 @media(max-width:480px){
 .question-text{font-size:1.1rem}
 .mcq-grid{grid-template-columns:1fr}
@@ -180,6 +184,7 @@ body.accessible p,body.accessible .question-text,body.accessible .feedback-detai
 
 <!-- START SCREEN -->
 <div class="screen active" id="startScreen">
+  <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A market fruit stall with separate crates of apples, pears and oranges, and one of each fruit together on the counter">
   <div class="start-title">Like Terms Collector</div>
   <div class="start-sub">Collecting like terms is one of the first things anyone learns in algebra. By the end of this game, you'll be doing real GCSE algebra. Let's go.</div>
   <div class="stage-preview" style="border-left:3px solid var(--indigo)">
