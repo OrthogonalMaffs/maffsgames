@@ -16,6 +16,14 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-13 (home): CAPTION-GAPS
+
+Claude Code (home lane), worktree `~/mg-caption-gaps`, branch `claude/caption-gaps`; contract `docs/handover/contracts/2026-11-13-caption-gaps.md`. `tools/pack-generator/build_pack.py`: `split_clue()` tidies the caption left when a clue's `<b>` part is taken out (three rules) and `caption_problems()` fails a broken one, naming room, object and caption; a clue image's config may carry print-only `printed` and `caption` (`check_overrides()` refuses them elsewhere), used once, on Library Jam's reset card (fits at 20 pt, six lines). The key's level line is `MaffsEscapeRating.rating()` from `rating.js`, loaded into `read_room()`'s blank page (`room_rating()`; no other asset); a lock with no grade stops the build. `read_room()`, `prepare()`, `build_html()` and `about_box()` each gained the rating; the four functions `tools/loop-cards` imports are untouched. Kiln's and Comic Caper's teacher notes open "A Warm-up room:". Kiln and Christmas are unapproved again (todo PACKS-REAPPROVE).
+
+- Proof (scratch `~/cg/cg_check.py`, pypdfium2 at 150 dpi against main's build of the same day): Kiln 35, Comic Caper 24 and Christmas 36 clue captions come out word for word as main's; their 14, 12 and 12 evidence pages are pixel-identical; Library Jam's 24 of 36 captions change (trolley, jammed book, reset card, drop counter, in all six sets). The only other pages that differ are each key (page 4) and, for Kiln and Christmas, pages 1 and 2 (the DRAFT badge). Each key prints its derived level and no "Built for" line. Selftest 42/42.
+- Deviation: with no room approved, the selftest's DRAFT control and its "DRAFT on an approved room" plant had nothing to run on (the plant went stale), so both now use an approved copy of the config.
+- Open: a clue with no left part whose right part starts with a full stop would give a caption that starts with punctuation, which the contract's three checks do not name; no room has one.
+
 ## 2026-11-12 (home): LOOP-CARDS
 
 Claude Code (home lane), worktree `~/mg-loop-cards`, branch `claude/loop-cards`; contract `docs/handover/contracts/2026-11-12-loop-cards.md`. New `tools/loop-cards/`: `build_deck.py` (layout, loop, checks), adapters `six_sevens.py` and `like_terms.py`, configs in `decks/<slug>/`, README. Both packs build (40 pages each: page 1, three answer sheets, double-sided pages 5–22, fold-over pages 23–40), DRAFT badge on until Jon approves (todo §6 LOOP-CARDS-APPROVE); `--selftest` passes both packs and catches all 15 plants. Six Sevens page 1 is exactly 120 words. Shout card: 42 at 23 pt under the shout line at 27 pt (shout = answer + 4 pt). Like Terms backs fit at 24 pt.
