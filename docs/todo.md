@@ -419,7 +419,7 @@ Each idea is one line here and nowhere else in the repo; detail goes in its spec
 - **Pi Day**: idea only.
 
 **Printables:**
-- **PRINTABLES-PAGE** (Jon, 12 Nov 2026): the printables page and its "Printable games" section (Six Sevens, Bruv loop cards free; Like Terms Collector loop cards £3 on Tes) is a separate contract, waiting for the Tes links (after LOOP-CARDS-APPROVE, §6). Owner: Project Claude to write the contract; home lane.
+- **PRINTABLES-PAGE** (Jon, 12 Nov 2026): the printables page and its "Printable games" section (Jon's ruling, 13 Nov 2026, 18:42: Six Sevens, Bruv loop cards free on its own; one £5 Tes item of all three loop-card packs, Six Sevens, Bruv, Like Terms Collector and Free Daily Pizza, not sold individually) is a separate contract, waiting for the Tes links (after FDP-LOOP-CARDS-APPROVE, §6; LOOP-CARDS-APPROVE closed 13 Nov). Owner: Project Claude to write the contract; home lane.
 
 ## 4. Prevention and quality — after §1–3
 
@@ -698,6 +698,7 @@ Only what needs Jon: a ruling, a content review, or a task only he can do. Build
 - Regression Rumble (§1.26): Jon's look at the rebuilt game before the holding page is replaced.
 
 **Manual tasks:**
+- **FDP-LOOP-CARDS-APPROVE** (13 Nov 2026): proofread the Free Daily Pizza loop-card pack (`python -X utf8 tools/loop-cards/build_deck.py free-daily-pizza`; proofs `docs/screens/loop-cards/free-daily-pizza-*.png`) and approve its teacher wording. Page 1's extra line is "0.25 and 25% never both appear.": the contract's full sentence ("Every card's value is different, so ...") took page 1 to 126 words against its 120 limit, so say if another wording is wanted. Approval goes in `tools/loop-cards/decks/free-daily-pizza/config.json` "wording_approved"; then the `--final` build joins the £5 three-pack on Tes (PRINTABLES-PAGE). Owner: Jon, then home lane.
 - Spec-map spot-check (blocks §3.1): 10 of the 34 mixed statements in `data/dfe-gcse-parts.json` against the PDF.
 - Analytics checkpoint (overdue): re-answer the open questions in the project's `analytics-notes.md`. From 10 Nov 2026 GA4 excludes Jon's home IPv4 and IPv6 /56 (filter Version 3), so figures step down from that date: compare like with like.
 - Events sheet: confirm no `game_abandoned` against the homepage, 1–15 Sep.

@@ -1,8 +1,8 @@
 # Printable loop cards
 
 A loop-card pack is an A4 PDF of "I have … / Who has …?" cards made from a game's own question bank, for a whole
-class to play on paper (contract LOOP-CARDS, 12 Nov 2026). Two packs exist: **Six Sevens, Bruv** (free) and **Like
-Terms Collector** (paid, £3 on Tes). **The PDF is the product: never commit it, upload it or attach it anywhere.**
+class to play on paper (contract LOOP-CARDS, 12 Nov 2026). Three packs exist: **Six Sevens, Bruv**, **Like Terms Collector**
+and **Free Daily Pizza** (Jon, 13 Nov 2026: Six Sevens, Bruv is free on its own; the three together are one £5 item on Tes, not sold separately). **The PDF is the product: never commit it, upload it or attach it anywhere.**
 `dist-packs/` is gitignored, and the build refuses to write anywhere git would track. `tools/` is excluded from the
 website (`_config.yml`).
 
@@ -13,7 +13,7 @@ website (`_config.yml`).
   card's answer, so the questions go round every card once and come back to the start. Nobody is left out.
 - Only the person holding the answer turns their card over, so the class has to listen.
 - Taking cards out breaks the loop, so smaller classes get their own complete deck: each pack has a 16, a 24 and a 32
-  deck. Each deck is its own loop with its own code (SS-16, SS-24, SS-32; LT-16, LT-24, LT-32), printed on every card
+  deck. Each deck is its own loop with its own code (SS-16, SS-24, SS-32; LT-16, LT-24, LT-32; FP-16, FP-24, FP-32), printed on every card
   with the card's ID. The IDs are shuffled, so they don't give the order away.
 - Six Sevens, Bruv only: the card that asks for 42 says "WHO HAS SIX SEVENS?" (in words), and the card with 42 on it
   says "SHOUT: I'VE GOT SIX SEVENS, BRUV!" under the 42. No other card shouts.
@@ -25,6 +25,7 @@ From the repo root, in the WSL venv (it needs only Playwright and its Chromium, 
 ```sh
 python -X utf8 tools/loop-cards/build_deck.py six-sevens-bruv
 python -X utf8 tools/loop-cards/build_deck.py like-terms-collector
+python -X utf8 tools/loop-cards/build_deck.py free-daily-pizza
 ```
 
 Each writes `dist-packs/<slug>-loop-cards.pdf` (40 pages) and prints what it checked. The same seed gives the same
@@ -92,7 +93,7 @@ unless, for every deck:
 ## How it works
 
 `build_deck.py` holds no game's facts. A pack's `decks/<slug>/config.json` names its adapter, title, seed and pack
-version. The adapter (`six_sevens.py`, `like_terms.py`) gives:
+version. The adapter (`six_sevens.py`, `like_terms.py`, `free_pizza.py`) gives:
 
 - `choose(n, rng)`: the deck's questions and answers. Six Sevens: facts a × b, 3 ≤ a ≤ b ≤ 12 without ×10, every
   product distinct, 6 × 7 always in, by a rule, not a probability (SIX-SEVENS-WEIGHTING, Jon, 13 Nov 2026): the 16
@@ -100,13 +101,23 @@ version. The adapter (`six_sevens.py`, `like_terms.py`) gives:
   them plus 7 from the 3, 4, 5 and 11 tables. Its optional `deck_problems()` holds every deck to that rule from the
   printed backs' factors, and the build fails on any breach. Like Terms: the 30 STAGE3
   items and the first 2 STAGE2 items of `games/like-terms-collector/index.html`, read from the page each build (never
-  copied); the 32 deck is all of them, the 16 and 24 decks seeded subsets.
-- `value_q()` and `value_a()`: the independent recomputation of a printed question and answer.
-- `html()`: the typesetting (Like Terms: KaTeX's fonts, letters italic, true minus).
+  copied); the 32 deck is all of them, the 16 and 24 decks seeded subsets. Free Daily Pizza (FDP-LOOP-CARDS, 13 Nov
+  2026): every deck holds all 15 of the game's `FDP.S1_VALUES` plus n − 15 of its `FDP.S2_VALUES`, each value on
+  one card only, asked as "Who has 3/4 as a decimal?" with the six conversions between fraction, decimal and
+  percentage spread evenly. The values and every printed form come from the page's own FDP code, run each build in
+  a node subprocess (node's `vm`, no browser; `node` on PATH, else the one the Playwright package ships), so a
+  recurring decimal has the game's dot and a third of a percent is 33⅓%. Its `deck_problems()` holds each deck to
+  that mix from the printed backs.
+- `value_q()` and `value_a()`: the independent recomputation of a printed question and answer. Free Daily Pizza's
+  return (value, form) from its own Fraction parser, so a front in the wrong form answers no back.
+- `html()`: the typesetting (Like Terms: KaTeX's fonts, letters italic, true minus; Free Daily Pizza: fractions
+  stacked on a card, with the "/" kept in the page's text but not drawn, so the check reads "3/4" back; the
+  recurring dot drawn over its digit).
 - `SHOUT` and `TEACHER_EXTRA`: the special cards and the teacher-page line, or none.
 
 Approval, the DRAFT badge, `--final`, the offline browser, `page()` and the gitignore and page-count helpers are
 imported from `tools/pack-generator/build_pack.py`, not copied. The footer string follows `build_pack.py`'s
 `build_html()`, which builds it inline (there is no public function to import).
 
-A new game needs one adapter and one config; the layout and loop code do not change.
+A new game needs one adapter, one config and its adapter's name added to `ADAPTERS` in `build_deck.py`, which is
+also where its selftest plants go; the layout and loop code do not change.
