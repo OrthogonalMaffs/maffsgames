@@ -47,6 +47,7 @@ import re
 import subprocess
 import sys
 import tempfile
+import unicodedata
 
 HERE = pathlib.Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -466,8 +467,9 @@ def filler(locks, s):
 
 def caption_problems(caption):
     """What stops a card's caption reading as a sentence (contract CAPTION-GAPS): a space before . , ; : or a closing
-    quote, a lone punctuation mark left at its end after a space, or a lowercase first letter. Read as a reader sees
-    it: tags dropped, entities decoded. An empty caption has none."""
+    quote, a lone punctuation mark left at its end after a space, a lowercase first letter, or (contract MULTI-PRINT)
+    punctuation at its start other than an opening quote or bracket. Read as a reader sees it: tags dropped, entities
+    decoded. An empty caption has none."""
     text = html.unescape(re.sub(r"<[^>]*>", "", caption))
     out = []
     gap = re.search(r"\s[.,;:\u201d\u2019]|\s[\"'](?=\s|$)", text)
@@ -477,32 +479,43 @@ def caption_problems(caption):
         out.append("a lone punctuation mark at its end")
     if text[:1].islower():
         out.append("a lowercase first letter")
+    first = text[:1]
+    if (first and unicodedata.category(first).startswith("P") and first not in "\"'"
+            and unicodedata.category(first) not in ("Ps", "Pi")):
+        out.append("punctuation at its start (%r)" % first)
     return out
 
 
 def split_clue(clue, room="", ident="", printed=None, caption=None):
-    """(what is printed on the object: the clue's <b> part; the caption: the narration around it). One <b> part per
-    clue. The narration is the text before <b> and the text after </b>, tidied so that taking the <b> part out leaves
-    a sentence (contract CAPTION-GAPS): (a) a right part that starts with . , ; or : joins with no space; (b) after a
-    left part ending ":", a right part that is only punctuation is dropped; (c) with no left part, the right part's
-    first letter is capitalised. A config's "printed" and "caption" (already filled for the set) replace either
-    part. The caption, tidied or overridden, must pass caption_problems(), or the build stops, naming the room, the
-    object and the caption."""
+    """(what is printed on the object: the clue's <b> parts; the caption: the narration around them). A clue has one
+    or more <b> parts (contract MULTI-PRINT); none is a BuildError. Printed: the parts, stripped, joined with " · ",
+    which label_parts() places (one part per box when the image has label_boxes, else one line each in one box). The
+    narration is the text outside every <b> part, its segments joined gap by gap and tidied so that taking the <b>
+    parts out leaves a sentence (contract CAPTION-GAPS): (a) a segment that starts with . , ; or : joins with no
+    space; (b) after a segment ending ":", a segment that is only punctuation is dropped; (c) if the first segment is
+    empty, the caption's first letter is capitalised; an empty segment (two <b> parts side by side, or a <b> part at
+    the clue's end) adds nothing. A config's "printed" and "caption" (already filled for the set) replace either
+    part, after the parts are counted. The caption, tidied or overridden, must pass caption_problems(), or the build
+    stops, naming the room, the object and the caption."""
     parts = re.findall(r"<b>(.*?)</b>", clue, re.S)
-    if len(parts) != 1:
-        raise BuildError("a clue needs exactly one <b>...</b> part (the words on the object): %r" % clue[:80])
+    if not parts:
+        raise BuildError("a clue needs at least one <b>...</b> part (the words on the object): %r" % clue[:80])
     if caption is None:
-        left, right = (x.strip() for x in re.split(r"<b>.*?</b>", clue, maxsplit=1, flags=re.S))
-        caption = left + right if right[:1] in tuple(".,;:") else (left + " " + right).strip()      # (a)
-        if left.endswith(":") and re.fullmatch(r"[^\w\s]+", html.unescape(right)):                  # (b)
-            caption = left
-        if not left:                                                                                # (c)
+        segments = [x.strip() for x in re.split(r"<b>.*?</b>", clue, flags=re.S)]
+        caption = segments[0]
+        for seg in segments[1:]:
+            if not seg:
+                continue
+            if caption.endswith(":") and re.fullmatch(r"[^\w\s]+", html.unescape(seg)):            # (b)
+                continue
+            caption = caption + seg if seg[:1] in tuple(".,;:") else (caption + " " + seg).strip()  # (a)
+        if not segments[0]:                                                                         # (c)
             caption = caption[:1].upper() + caption[1:]
     problems = caption_problems(caption)
     if problems:
         raise BuildError("%s, object %s: the caption under its picture has %s: %r"
                          % (room or "?", ident or "?", " and ".join(problems), caption))
-    return (parts[0].strip() if printed is None else printed), caption
+    return (" · ".join(x.strip() for x in parts) if printed is None else printed), caption
 
 
 def label_parts(text, boxes):
@@ -1813,6 +1826,52 @@ def selftest():
             return [str(e)] if "plant, object trolley" in str(e) and "a space before '.'" in str(e) else []
         return []
 
+    TWO_PART = "The counter read <b>12 BOOKS</b> this morning and <b>15 BOOKS</b> tonight."
+
+    def check_multi_part_controls():
+        """Contract MULTI-PRINT's two controls: both must pass."""
+        probs = []
+        got = split_clue("The plate is stamped <b>A</b> <b>B</b> <b>C</b> in a row.", "control", "plate")
+        if got != ("A · B · C", "The plate is stamped in a row."):
+            probs.append("a three-part clue gave %r, not ('A · B · C', 'The plate is stamped in a row.')" % (got,))
+        printed, cap = split_clue(TWO_PART, "control", "counter")
+        placed = label_parts(printed, [[0, 0, 1, 0.5], [0, 0.5, 1, 0.5]])
+        if placed != ["12 BOOKS", "15 BOOKS"] or cap != "The counter read this morning and tonight.":
+            probs.append("a two-part clue over two label boxes gave %r with the caption %r" % (placed, cap))
+        return probs
+
+    def plant_multi_caption_gap():
+        # two <b> parts, and a full stop left on its own after the second; no override to replace the caption
+        if split_clue(TWO_PART, "plant", "counter") != ("12 BOOKS · 15 BOOKS", "The counter read this morning and tonight."):
+            return []
+        bad = pc.apply_plant(TWO_PART, "tonight.", "tonight .", name="a two-part clue with an orphan full stop")
+        try:
+            split_clue(bad, "plant", "counter")
+        except BuildError as e:
+            return [str(e)] if "plant, object counter" in str(e) and "a space before '.'" in str(e) else []
+        return []
+
+    def plant_no_bold_part():
+        bad = pc.apply_plant(TWO_PART, "<b>12 BOOKS</b> this morning and <b>15 BOOKS</b>",
+                             "12 BOOKS this morning and 15 BOOKS", name="a clue with no <b> part")
+        try:
+            split_clue(bad, "plant", "counter")
+        except BuildError as e:
+            return [str(e)] if "at least one <b>" in str(e) else []
+        return []
+
+    def plant_caption_leading_stop():
+        good = "Dropped in today: <b>12 BOOKS</b>."
+        if split_clue(good, "plant", "trolley") != ("12 BOOKS", "Dropped in today:"):
+            return []
+        bad = pc.apply_plant(good, "Dropped in today: <b>12 BOOKS</b>.", "<b>12 BOOKS</b>. Dropped in today.",
+                             name="a caption starting with a full stop")
+        try:
+            split_clue(bad, "plant", "trolley")
+        except BuildError as e:
+            return [str(e)] if "plant, object trolley" in str(e) and "punctuation at its start ('.')" in str(e) else []
+        return []
+
     def plant_printed_on_herring():
         cfg = load_config(slug0)
         im = next((dict(x) for x in cfg["images"] if x["role"] == "herring"), None)
@@ -1888,6 +1947,9 @@ def selftest():
               ("--final on an unapproved room (null, and no key)", plant_final_unapproved),
               ("a clue whose caption is left with an orphan full stop, and no override", plant_caption_gap),
               ("a caption override with a space before its full stop", plant_caption_override_gap),
+              ("a two-part clue whose caption is left with an orphan full stop, and no override", plant_multi_caption_gap),
+              ("a clue with no <b> part", plant_no_bold_part),
+              ("a caption starting with a full stop", plant_caption_leading_stop),
               ('a "printed" key on a red-herring image', plant_printed_on_herring),
               ("a room with one ungraded lock (no rating)", plant_ungraded_lock))
     try:
@@ -1897,6 +1959,13 @@ def selftest():
     failures += dc
     print("DRAFT controls: %s" % ("OK (approved: no page says DRAFT; unapproved: the badge on pages 1 and 2)"
                                   if not dc else dc))
+    try:
+        mc = check_multi_part_controls()
+    except Exception as e:              # an error is never a pass
+        mc = ["the multi-part controls raised %r" % e]
+    failures += mc
+    print("multi-part controls: %s" % ("OK (three parts print as 'A · B · C' over a tidy caption; two parts go one to "
+                                       "each of two label boxes)" if not mc else mc))
     for name, fn in plants:
         found, err = [], None
         try:
