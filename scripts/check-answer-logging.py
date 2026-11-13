@@ -217,9 +217,9 @@ def main():
     if a.selftest:
         print('self-test:')
         if not selftest():
-            print('FAIL: a planted fault was not caught, or the control failed')
+            print('FAIL: a planted fault was not caught, or a control failed')
             return 1
-        print('PASS: planted faults caught, control passes')
+        print('PASS: planted faults caught, controls pass')
     if a.check:
         pages = roster_pages(ROOT)
         errors, n = scan(pages)
