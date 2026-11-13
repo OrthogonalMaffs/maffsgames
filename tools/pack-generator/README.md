@@ -112,7 +112,9 @@ read-out, page 1 over 150 words, a rule stated on two teacher pages, the final p
 a student page, a set whose product has no factor a multiple of 5 or 12 or less, a wrong recomputed answer in each of The
 Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token, a
 clue whose caption is left with an orphan full stop, a caption override with a space before its full stop, a
-`printed` key on a red-herring image and a room with an ungraded lock. It builds no PDF.
+two-part clue left with an orphan full stop, a clue with no `<b>` part, a caption starting with a full stop, a
+`printed` key on a red-herring image and a room with an ungraded lock; two multi-part controls must pass. It
+builds no PDF.
 
 ## Adding a room
 
@@ -127,8 +129,17 @@ so that it still reads as a sentence. A right part that starts with `.` `,` `;` 
 label. A sticker ..."); after a left part ending in a colon, a right part that is only punctuation is dropped
 ("... dropped in:"); with no left part, the right part's first letter is capitalised ("Books posted today ...").
 Every caption is then checked, and the build fails naming the room, the object and the caption if it has a space
-before `.` `,` `;` `:` or a closing quote, ends with a lone punctuation mark after a space, or starts with a
-lowercase letter.
+before `.` `,` `;` `:` or a closing quote, ends with a lone punctuation mark after a space, starts with a
+lowercase letter, or starts with punctuation other than an opening quote or bracket.
+
+**Clues with more than one `<b>` part (contract MULTI-PRINT, 13 Nov 2026).** A clue may have several `<b>` parts
+(none stops the build). All of them are printed on the art, in the clue's order, and where they go depends on the
+image's config: with `label_boxes` (a list of boxes) there must be exactly one box per part, and the first part
+goes in the first box, the second in the second, and so on (a different count stops the build); with one
+`label_box`, the parts are printed in that box, one line each. The caption is the text outside every `<b>` part,
+joined gap by gap with the same three rules, so "The plate is stamped `<b>A</b> <b>B</b> <b>C</b>` in a row."
+prints A, B and C over the caption "The plate is stamped in a row." Printed parts that only make sense with the
+words between them need a `"printed"` override, below; so does a caption the rules cannot tidy.
 
 When a clue cannot be tidied into a caption (its sentence runs through the `<b>` part), give its **clue** image in
 `config.json` print-only words instead of changing the live room:

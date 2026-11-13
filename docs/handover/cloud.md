@@ -77,7 +77,11 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-13 (cloud): SIX-SEVENS-WEIGHTING (`docs/handover/contracts/2026-11-13-six-sevens-weighting.md`, lane exception, Jon 07:58)
+## 2026-11-13 (cloud): SIX-SEVENS-WEIGHTING close-out (carried by the home lane's MULTI-PRINT PR, as the close-out rule allows)
+
+DONE, merged and live: #748 squash-merged as 28f6750 (13 Nov). Route: the GitHub connection, under Jon's standing ruling of 10 Nov. Main on 28f6750: check-site 43394783506 GREEN, phone-fit-full 43394783396 GREEN (read through the REST API by the home lane, 13 Nov). Contract moved to `docs/history/contracts/2026-11-13-six-sevens-weighting.md`. The entry below is as the PR left it.
+
+## 2026-11-13 (cloud): SIX-SEVENS-WEIGHTING (`docs/history/contracts/2026-11-13-six-sevens-weighting.md`, lane exception, Jon 07:58)
 
 PR OPEN, merging on green. Agent Claude Code (cloud), branch `claude/optimistic-goodall-q87dul` from main 89a5946. First commit bdc773d: this contract, and WARMUP-PACKS' close-out (below). Core set checked before any edit: 25 products, 42 among them (18 21 24 27 28 30 32 35 36 40 42 45 48 49 54 56 60 63 64 72 81 84 96 108 144); OTHER 15 (9 12 15 16 20 25 33 44 55 66 77 88 99 121 132).
 Done: six_sevens.py draws by rule (16/24: 42 + core; 32: all 25 core + 7 other) and deck_problems() reads the printed backs' factors; build_deck.py check_deck() calls an adapter's deck_problems if it has one (generic); three plants; selftest 18/18 caught (was 15). scripts/test-loop-cards.py (ci-line, ci-deps from a traced selftest run) packs alone into Content verifiers 50; ci-groups --check PASS. Six Sevens pack built (DRAFT, 40 pages, same page ranges and font sizes as main's); SS-16/24 all core, SS-32 25 core + 7 others, no factor below 3. Like Terms' printed faces, sizes and answer sheets byte-identical to main's build. Proofs regenerated for six-sevens-bruv only: same layout, the build date and the container's font smoothing differ.
