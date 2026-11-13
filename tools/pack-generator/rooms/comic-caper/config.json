@@ -4,7 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Chokey opened",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-13"},
   "images": [
     {"file": "art/comic-01-asset-plate.webp", "role": "clue", "object": "asset-plate", "label_box": [235, 335, 1025, 895], "font": "label"},
     {"file": "art/comic-02-series-label.webp", "role": "clue", "object": "series-label", "label_box": [190, 310, 1075, 1000], "font": "label"},
