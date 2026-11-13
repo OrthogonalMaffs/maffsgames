@@ -118,7 +118,7 @@
   "Log Laws Solve (layers C + D, SymPy) and the Laws bank's keys and options (two faults planted)": "47",
   "Logo copies (every copy of the M+ mark, translated and scaled into the master's coordinates, has the master's M, plus and bars; bars #0d9488; no unregistered copy; planted faults caught)": "38",
   "Look sign-off (listed games require Jon's approval; shrink-only warnings; planted faults)": "13",
-  "Loop cards (tools/loop-cards/build_deck.py --selftest: both loop-card packs, Six Sevens, Bruv and Like Terms Collector, pass every check as built, with the DRAFT badge following approval both ways; eighteen planted faults caught (a duplicated answer, a back with no front, two loops in one deck, a card asking its own answer, a back not mirrored, text past the safe zone, a string-similar answer, a card from another deck, a long teacher step, no 6 × 7, a shout on the wrong card or back, a shout in Like Terms, a face without the web address, an 11-table card in SS-24, a 2-times card in SS-16, SS-32 with 8 cards off the core tables, an unapproved --final); no PDF is ever built in CI)": "30",
+  "Loop cards (tools/loop-cards/build_deck.py --selftest: all three loop-card packs, Six Sevens, Bruv, Like Terms Collector and Free Daily Pizza, pass every check as built, with the DRAFT badge following approval both ways; twenty-three planted faults caught (a duplicated answer, a back with no front, two loops in one deck, a card asking its own answer, a back not mirrored, text past the safe zone, a string-similar answer, a card from another deck, a long teacher step, no 6 × 7, a shout on the wrong card or back, a shout in Like Terms, a face without the web address, an 11-table card in SS-24, a 2-times card in SS-16, SS-32 with 8 cards off the core tables, a Free Daily Pizza value on two cards, a back asking for the form it gives, a front in the wrong form, FP-24 missing an S1 value, 0.33 printed for 1/3, an unapproved --final); no PDF is ever built in CI)": "22",
   "Maths Court (independent recomputation + rendered page)": "69",
   "Matrix Crunch (one answer per question, an option or the singular flag: Enter and Tab+Enter never mark again; both levels; Chromium)": "10",
   "Merge guard (scripts/merge-pr.py: green Gate and green main or no merge; override only for main; recorded API fixtures)": "4",
@@ -230,7 +230,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (6 needed)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
