@@ -52,7 +52,7 @@ import build_pack as bp      # noqa: E402  approval, DRAFT badge, --final, offli
 BuildError = bp.BuildError
 OUT_DIR = bp.OUT_DIR
 PROOF_DIR = ROOT / "docs" / "screens" / "loop-cards"
-ADAPTERS = ("six_sevens", "like_terms")
+ADAPTERS = ("six_sevens", "like_terms", "free_pizza")
 
 CARD_W, CARD_H = 105.0, 74.25       # A7, mm: A4 portrait is exactly 2 x 4 of them
 COLS, ROWS = 2, 4
@@ -991,6 +991,69 @@ def plant_eight_others(ad, cfg, pack):
     _rebuild(ad, cfg, pack, 32, _swap_item(items, "54", ad.unused(items)))
 
 
+def _fp_forms(ad, n, d):
+    """The game page's printed forms of n/d: {"f": ..., "d": ..., "p": ...}."""
+    return next(e for part in ad.page_forms() for e in part if e["v"] == [n, d])
+
+
+def _fp_item(e, given, asked):
+    return {"q": "%s as %s" % (e[given], _fp_asked(asked)), "a": e[asked]}
+
+
+def _fp_asked(form):
+    return {"f": "a fraction", "d": "a decimal", "p": "a percentage"}[form]
+
+
+def plant_fp_same_value_twice(ad, cfg, pack):
+    """FP-16 with 1/4 on two cards, answered 0.25 on one and 25% on the other (its one S2 card makes room)."""
+    items = list(_deck(pack, "FP-16")["items"])
+    quarter = _fp_forms(ad, 1, 4)
+    k = next(i for i, it in enumerate(items) if ad.value_a(it["a"])[0] == ad.value_a(quarter["f"])[0])
+    s1 = {ad.value_a(e["f"])[0] for e in ad.page_forms()[0]}
+    j = next(i for i, it in enumerate(items) if ad.value_a(it["a"])[0] not in s1)
+    items[k], items[j] = _fp_item(quarter, "f", "d"), _fp_item(quarter, "f", "p")
+    _rebuild(ad, cfg, pack, 16, items)
+
+
+def plant_fp_same_form(ad, cfg, pack):
+    d = _deck(pack, "FP-24")
+    half = _fp_forms(ad, 1, 2)
+    k = next(i for i, it in enumerate(d["items"]) if ad.value_a(it["a"])[0] == ad.value_a(half["f"])[0])
+    d["cards"][k - 1]["back"] = "%s as %s?" % (half["d"], _fp_asked("d"))
+
+
+def plant_fp_wrong_form_front(ad, cfg, pack):
+    """The card answering an "... as a percentage?" back says its value as a decimal instead."""
+    d = _deck(pack, "FP-32")
+    for k, it in enumerate(d["items"]):
+        value, asked = ad.value_q(it["q"])
+        if asked == "p":
+            d["cards"][k]["front"] = _fp_forms(ad, value.numerator, value.denominator)["d"]
+            return
+    raise AssertionError("no back asks for a percentage")
+
+
+def plant_fp_missing_s1(ad, cfg, pack):
+    """FP-24 with an S2 value it does not hold in place of one of the game's S1 values."""
+    items = list(_deck(pack, "FP-24")["items"])
+    have = {ad.value_a(it["a"])[0] for it in items}
+    s1, s2 = ad.page_forms()
+    k = next(i for i, it in enumerate(items) if ad.value_a(it["a"])[0] == ad.value_a(s1[0]["f"])[0])
+    new = next(e for e in s2 if ad.value_a(e["f"])[0] not in have)
+    given = ad.value_a(items[k]["q"].split(" as ")[0])[1]
+    items[k] = _fp_item(new, given, ad.value_a(items[k]["a"])[1])
+    _rebuild(ad, cfg, pack, 24, items)
+
+
+def plant_fp_truncated_third(ad, cfg, pack):
+    """1/3 asked as a decimal, and the answering card prints 0.33, not the recurring 0.3 with its dot."""
+    d = _deck(pack, "FP-16")
+    third = _fp_forms(ad, 1, 3)
+    k = next(i for i, it in enumerate(d["items"]) if ad.value_a(it["a"])[0] == ad.value_a(third["f"])[0])
+    d["cards"][k - 1]["back"] = "%s as %s?" % (third["f"], _fp_asked("d"))
+    d["cards"][k]["front"] = "0.33"
+
+
 PLANTS = (
     ("a duplicated answer", "like-terms-collector", plant_dup, r"is on 2 cards"),
     ("a back with no matching front", "like-terms-collector", plant_no_front, r"matches no front"),
@@ -1015,6 +1078,16 @@ PLANTS = (
     ("a 2-times card (2 × 9) in SS-16", "six-sevens-bruv", plant_two, r"SS-16: the back '2 × 9' has a factor below 3"),
     ("SS-32 with 8 cards off the core tables", "six-sevens-bruv", plant_eight_others,
      r"SS-32: 24 cards on the 6, 7, 8, 9 and 12 tables without an 11 and 8 others"),
+    ("a Free Daily Pizza deck where 0.25 and 25% both appear", "free-daily-pizza", plant_fp_same_value_twice,
+     r"FP-16: the value 1/4 is on 2 backs"),
+    ("a back asking for the form it gives", "free-daily-pizza", plant_fp_same_form,
+     r"FP-24: the back '0\.5 as a decimal' asks for the form it gives"),
+    ("a front in the wrong form for the back before it", "free-daily-pizza", plant_fp_wrong_form_front,
+     r"FP-32 card \d+: its back .* as a percentage\?' \(= .* as a percentage\) matches no front"),
+    ("FP-24 missing one of the game's S1 values", "free-daily-pizza", plant_fp_missing_s1,
+     r"FP-24: 1 of the game's 15 S1 values are on no back \(1/2\)"),
+    ("a recurring decimal printed truncated (0.33 for 1/3)", "free-daily-pizza", plant_fp_truncated_third,
+     r"FP-16 card \d+: its back '1/3 as a decimal\?' \(= 1/3 as a decimal\) matches no front"),
 )
 
 
@@ -1071,13 +1144,13 @@ def selftest():
     if failures:
         print("SELFTEST FAILED:\n  " + "\n  ".join(failures))
         return 1
-    print("selftest: both packs pass; all %d planted faults caught" % (len(PLANTS) + 1))
+    print("selftest: all %d packs pass; all %d planted faults caught" % (len(slugs), len(PLANTS) + 1))
     return 0
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
-    ap.add_argument("pack", nargs="?", help="the pack's slug: six-sevens-bruv or like-terms-collector")
+    ap.add_argument("pack", nargs="?", help="the pack's slug: six-sevens-bruv, like-terms-collector or free-daily-pizza")
     ap.add_argument("--final", action="store_true",
                     help="the copy for Tes: refuse a pack whose teacher wording is not approved (its config's wording_approved)")
     ap.add_argument("--proofs", action="store_true", help="also write the PNG proofs to docs/screens/loop-cards/")
