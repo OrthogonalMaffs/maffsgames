@@ -94,8 +94,11 @@ unless, for every deck:
 `build_deck.py` holds no game's facts. A pack's `decks/<slug>/config.json` names its adapter, title, seed and pack
 version. The adapter (`six_sevens.py`, `like_terms.py`) gives:
 
-- `choose(n, rng)`: the deck's questions and answers. Six Sevens: facts a × b, 2 ≤ a ≤ b ≤ 12 without ×10, every
-  product distinct, weighted 3 to 1 towards the 6, 7, 8, 9 and 12 tables, 6 × 7 always in. Like Terms: the 30 STAGE3
+- `choose(n, rng)`: the deck's questions and answers. Six Sevens: facts a × b, 3 ≤ a ≤ b ≤ 12 without ×10, every
+  product distinct, 6 × 7 always in, by a rule, not a probability (SIX-SEVENS-WEIGHTING, Jon, 13 Nov 2026): the 16
+  and 24 decks are only facts on the 6, 7, 8, 9 and 12 tables with no 11 (25 such products); the 32 deck is all 25 of
+  them plus 7 from the 3, 4, 5 and 11 tables. Its optional `deck_problems()` holds every deck to that rule from the
+  printed backs' factors, and the build fails on any breach. Like Terms: the 30 STAGE3
   items and the first 2 STAGE2 items of `games/like-terms-collector/index.html`, read from the page each build (never
   copied); the 32 deck is all of them, the 16 and 24 decks seeded subsets.
 - `value_q()` and `value_a()`: the independent recomputation of a printed question and answer.

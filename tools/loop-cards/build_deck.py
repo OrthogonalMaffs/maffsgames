@@ -632,6 +632,10 @@ def check_deck(ad, code, faces, tables, add):
             Q[i] = ad.value_q(b["main"][:-1].strip())
         except ValueError as e:
             add("%s card %s back: %s" % (code, i, e))
+    if hasattr(ad, "deck_problems"):      # an adapter's own rule for a deck's mix, read from the printed backs
+        for msg in ad.deck_problems(code, n, [b["main"][:-1].strip() for _, b in sorted(back.items())
+                                              if (b["main"] or "").endswith("?")]):
+            add(msg)
     owners = {}
     for i, v in A.items():
         owners.setdefault(v, []).append(i)
@@ -960,6 +964,33 @@ def plant_no_web(ad, cfg, pack):
     _deck(pack, "SS-16")["cards"][1]["no_web"] = ("fold", "back")
 
 
+def _rebuild(ad, cfg, pack, n, items):
+    """Deck n rebuilt from these items, so the loop stays whole and only the planted card is wrong."""
+    pack["decks"][SIZES.index(n)] = make_deck(ad, cfg, n, items)
+
+
+def _swap_item(items, product, new):
+    """items with new in place of the card answering product, or, if none does, of the first card not answering 42."""
+    k = next((i for i, it in enumerate(items) if it["a"] == product), None)
+    if k is None:
+        k = next(i for i, it in enumerate(items) if it["a"] != "42")
+    return items[:k] + [new] + items[k + 1:]
+
+
+def plant_eleven(ad, cfg, pack):
+    _rebuild(ad, cfg, pack, 24, _swap_item(_deck(pack, "SS-24")["items"], "66", {"q": "6 × 11", "a": "66"}))
+
+
+def plant_two(ad, cfg, pack):
+    _rebuild(ad, cfg, pack, 16, _swap_item(_deck(pack, "SS-16")["items"], "18", {"q": "2 × 9", "a": "18"}))
+
+
+def plant_eight_others(ad, cfg, pack):
+    """SS-32 holds every core product, 54 (6 × 9) among them: an unused non-core product takes its place."""
+    items = _deck(pack, "SS-32")["items"]
+    _rebuild(ad, cfg, pack, 32, _swap_item(items, "54", ad.unused(items)))
+
+
 PLANTS = (
     ("a duplicated answer", "like-terms-collector", plant_dup, r"is on 2 cards"),
     ("a back with no matching front", "like-terms-collector", plant_no_front, r"matches no front"),
@@ -979,6 +1010,11 @@ PLANTS = (
      r"the SHOUT IT back asks"),
     ("a shout in the Like Terms pack", "like-terms-collector", plant_lt_shout, r"in a pack without shouts"),
     ("a card face without the web address", "six-sevens-bruv", plant_no_web, r"no maffsgames\.co\.uk on this face"),
+    ("an 11-table card (6 × 11) in SS-24", "six-sevens-bruv", plant_eleven,
+     r"SS-24: the back '6 × 11' is not on the 6, 7, 8, 9 or 12 table"),
+    ("a 2-times card (2 × 9) in SS-16", "six-sevens-bruv", plant_two, r"SS-16: the back '2 × 9' has a factor below 3"),
+    ("SS-32 with 8 cards off the core tables", "six-sevens-bruv", plant_eight_others,
+     r"SS-32: 24 cards on the 6, 7, 8, 9 and 12 tables without an 11 and 8 others"),
 )
 
 
