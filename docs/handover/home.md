@@ -18,10 +18,14 @@
 
 ## 2026-11-13 (home): FDP-LOOP-CARDS (Amendment 1)
 
-Claude Code (home lane), worktree `~/mg-fdp-loop-cards`, branch `claude/fdp-loop-cards`; contract `docs/handover/contracts/2026-11-13-fdp-loop-cards.md` (Amendment 1's text; the 19:10 contract was stopped before any code, on its own STOP IF: `build_deck.py` had to change). New `tools/loop-cards/free_pizza.py` and `decks/free-daily-pizza/config.json`: the third pack, FP-16, FP-24 and FP-32. The values and every printed form come from the game page's own FDP code, run each build in a node subprocess (`vm`, no browser; node on PATH or Playwright's, as `scripts/test-ga4-country.py` finds it and as check-site.yml puts it on PATH for `verify-test-the-claim.py`). `build_deck.py`: `free_pizza` in `ADAPTERS`, five plants, the pack count computed, the third slug in `--help`; nothing else. First commit also moved four merged home contracts (#726, #727, #728, #736) to history.
+Claude Code (home lane), worktree `~/mg-fdp-loop-cards`, branch `claude/fdp-loop-cards`; PR #752; contract `docs/history/contracts/2026-11-13-fdp-loop-cards.md` (Amendment 1's text; the 19:10 contract was stopped before any code, on its own STOP IF: `build_deck.py` had to change). New `tools/loop-cards/free_pizza.py` and `decks/free-daily-pizza/config.json`: the third pack, FP-16, FP-24 and FP-32. The values and every printed form come from the game page's own FDP code, run each build in a node subprocess (`vm`, no browser; node on PATH or Playwright's, as `scripts/test-ga4-country.py` finds it and as check-site.yml puts it on PATH for `verify-test-the-claim.py`). `build_deck.py`: `free_pizza` in `ADAPTERS`, five plants, the pack count computed, the third slug in `--help`; nothing else. First commit also moved four merged home contracts (#726, #727, #728, #736) to history.
 
 - Built (DRAFT, 40 pages): each deck one closed loop, every value once, all 15 S1 values in, pairs 2-2-3-3-3-3 (16), 4 each (24), 6-5-5-6-5-5 (32); fronts 57 pt, backs 30.5 pt with the value at 1.4 times that. The "/" of a stacked fraction is in the page's text and not in the PDF's (checked by extraction and by eye). Selftest: 3 packs, 23 plants. Six Sevens and Like Terms: all 80 pages pixel-identical to main's build, same page text.
-- Deviation: page 1's extra line is "0.25 and 25% never both appear." The contract's sentence made page 1 126 words; the limit is 120 and was not loosened (todo FDP-LOOP-CARDS-APPROVE says so).
+- Deviation: page 1's extra line is "0.25 and 25% never both appear." The contract's sentence made page 1 126 words; the limit is 120 and was not loosened (todo FDP-LOOP-CARDS-APPROVE said so).
+- Merged as 69a2a1a (#752) by merge-pr.py on a green Gate, 13 Nov: main's check-site run 43497247741 success, phone-fit-full 43497247777 success. check-changed.py before the push: 43 checks, all passed. Cleanup: end-task.py removed the branch and worktree.
+- Close-out PR, Jon's instruction of 13 Nov: he approved Free Daily Pizza's loop-card wording, so its config's `wording_approved` is `{"by": "Jon", "date": "2026-11-13"}` and FDP-LOOP-CARDS-APPROVE is closed (moved to `docs/history/todo-done.md`). All three loop-card packs are approved; the `--final` PDF was built for him.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-13 (home): MULTI-PRINT
 
