@@ -29,11 +29,12 @@ Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-12 (home): LOOP-CARDS
 
-Claude Code (home lane), worktree `~/mg-loop-cards`, branch `claude/loop-cards`; contract `docs/handover/contracts/2026-11-12-loop-cards.md`. New `tools/loop-cards/`: `build_deck.py` (layout, loop, checks), adapters `six_sevens.py` and `like_terms.py`, configs in `decks/<slug>/`, README. Both packs build (40 pages each: page 1, three answer sheets, double-sided pages 5–22, fold-over pages 23–40), DRAFT badge on until Jon approves (todo §6 LOOP-CARDS-APPROVE); `--selftest` passes both packs and catches all 15 plants. Six Sevens page 1 is exactly 120 words. Shout card: 42 at 23 pt under the shout line at 27 pt (shout = answer + 4 pt). Like Terms backs fit at 24 pt.
+Claude Code (home lane), worktree `~/mg-loop-cards`, branch `claude/loop-cards`; PR #745; contract `docs/history/contracts/2026-11-12-loop-cards.md`. New `tools/loop-cards/`: `build_deck.py` (layout, loop, checks), adapters `six_sevens.py` and `like_terms.py`, configs in `decks/<slug>/`, README. Both packs build (40 pages each: page 1, three answer sheets, double-sided pages 5–22, fold-over pages 23–40), DRAFT badge on until Jon approves (todo §6 LOOP-CARDS-APPROVE); `--selftest` passes both packs and catches all 15 plants. Six Sevens page 1 is exactly 120 words. Shout card: 42 at 23 pt under the shout line at 27 pt (shout = answer + 4 pt). Like Terms backs fit at 24 pt.
 
 - Layout calls (SR-31), approved by Jon 12 Nov: "Which deck?" gained Double-sided and Fold-over page columns, so step 1's "Print it" can be followed; all fold-over pages come after all double-sided ones, so "(p. N)" is one range (p. 23–40); curly quotes.
 - Imports from build_pack.py: offline_context, wording_approved, draft_badge, check_final, page, CSS, LOGO, esc, ignored_by_git, pdf_page_count. The footer string follows its build_html() (no public function); check_final's message names the pack-generator path, so build_deck.py re-raises it with its own.
 - Found by the proofs, not the first check: the cut lines had zero length (a `height: 0` beat `top/bottom: 0`); the check now measures each line's drawn length.
+- Merged as 74444a9 (#745), 12 Nov: main's check-site run 43295807424 success, phone-fit-full 43295807406 success. Done: merged and live (closed out by MULTI-PRINT, 13 Nov).
 
 ## 2026-11-12 (home): HOME-QUEUE-1111 close-out
 
