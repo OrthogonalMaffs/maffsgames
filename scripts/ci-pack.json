@@ -47,7 +47,7 @@
   "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test), part 1 of 3": "8",
   "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test), part 2 of 3": "36",
   "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test), part 3 of 3": "77",
-  "Equatle (every bank equation recomputed exactly; every valid 8-character equation accepted; the colour rule, hard mode and the daily pick checked against independent versions; played in Chromium)": "30",
+  "Equatle (every bank equation recomputed exactly; every valid 8-character equation accepted; the colour rule, hard mode and the daily pick checked against independent versions; played in Chromium)": "59",
   "Escape rooms (every set of every live room re-checked by escape_set_checks.py: one solution, answer and misconception settable and different, answer not in its clue, off the end of the travel, broken sets planted; every lock against the audited bank and variants.json; tokens; VALID draws; maxDigits answers settable; difficulty stars from lock grades matched on every hub and front-page card and the star key, three faults planted)": "27",
   "Escape-room art (engine.js: a room with no art field requests no picture, in a fixture room; every live room's scene, win and fail pictures load as before; the old always-request engine planted and caught)": "61",
   "Escape-room credits (every credited room's start screen and teacher page show its room.js credit and the one invitation exactly once, linked to /feedback/; uncredited rooms show none; at 320, 390 and 1280 px no note leaves its container or truncates a title, on the room pages, the hub and the front page)": "27",
@@ -126,7 +126,7 @@
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "18",
   "New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; three plants caught)": "25",
   "Normal Navigator (independent recomputation + rendered labels)": "51",
-  "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; fifty-five planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a certificate or read-outs too long at their floors; multi-part and long-story controls pass); no PDF is ever built in CI)": "59",
+  "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-two planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page; multi-part, long-story and longest-story controls pass); no PDF is ever built in CI)": "38",
   "Parent guides (every stated figure recomputed from the page)": "61",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
   "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
@@ -308,7 +308,7 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "chosen from 34 timed unit(s)",
+   "how": "kept from the pack (5 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
@@ -350,7 +350,7 @@
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 2,
    "tier": "content"
