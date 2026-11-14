@@ -9,9 +9,13 @@ formula is not independent).
 Each function takes one variant (its givens and its stored values) and returns the values it expects, by key. The
 generator compares each returned key with the variant's own; any difference fails the build. A room's pack builds only
 when every lock in it has an entry here: a new room's locks are added here, by lock id, with their own method.
+
+A lock whose pack asks for its answer in another unit than the room's (a config's "answer_units", contract
+CAR-TRAP-PACK) also returns, under the key PRINTED, {"unit", "answer", "miss"}: its answer and common wrong answer
+worked in that unit here, which the generator compares with the figures it prints. It is not a stored key.
 """
 from fractions import Fraction
-from math import gcd
+from math import gcd, isqrt
 
 
 def _sensor_limit(v):
@@ -183,7 +187,77 @@ def _fines_pence_to_pounds(v):
     return {"answer": pounds, "miss": total, "each": each, "hundred": 100}
 
 
+PRINTED = "printed"   # a function's optional extra key: its answer and common wrong answer in a pack's printed unit
+
+
+def _metres(cm):
+    """A whole number of centimetres written in metres to two decimal places: 235 is "2.35"."""
+    return "%d.%02d" % divmod(cm, 100)
+
+
+def _head_bay_lower_bound(v):
+    """head-bay-lower-bound: the smallest width that is written down as W m to the nearest ten centimetres, worked
+    in whole centimetres so that no decimal is ever subtracted. W is a whole number of tens of centimetres; half of
+    ten centimetres is 5 cm; the bounds are W x 100 - 5 and W x 100 + 5. The common wrong answer is W itself, the
+    width on the sheet taken as exact. The stored figures are in metres: each is rebuilt from its centimetres, the
+    numbers by reading their two-decimal text. The pack asks for this lock in centimetres, so the function also
+    gives its own centimetre figures (PRINTED), which the generator compares with what it prints."""
+    w_cm = Fraction(str(v["W"])) * 100
+    if w_cm.denominator != 1 or w_cm % 10:
+        raise ValueError("the width %r m is not a whole number of tens of centimetres" % v["W"])
+    w_cm, step_cm = int(w_cm), 10
+    half_cm = step_cm // 2
+    low_cm, high_cm = w_cm - half_cm, w_cm + half_cm
+    return {"answer": float(_metres(low_cm)), "miss": float(_metres(w_cm)),
+            "half": _metres(half_cm), "lb": _metres(low_cm), "ub": _metres(high_cm),
+            "aTxt": _metres(low_cm), "mTxt": _metres(w_cm),
+            PRINTED: {"unit": "cm", "answer": low_cm, "miss": w_cm}}
+
+
+def _boom_gate_sector(v):
+    """boom-gate-sector: the tip travels an arc of k pi metres on a circle of radius r, whose circumference is
+    2 pi r = (2r) pi metres. The pi is in both, so the fraction of a full turn is k / (2r), exactly, and the angle
+    is 360 x k / (2r). k is read from the arc as the clue prints it ("0.75&pi;"; "&pi;" alone is 1 pi), never from
+    the stored angle. The common wrong answer, by the room's rule (its missSays): the circle worked out as pi x r,
+    half the circumference, which gives 360 x k / r, twice the angle. The worked line's figures are the
+    circumference's multiple of pi and how many of the arc make a full turn."""
+    arc = v["kpi"]
+    if not arc.endswith("&pi;"):
+        raise ValueError("the arc %r is not a multiple of pi" % arc)
+    k = Fraction(arc[:-len("&pi;")] or "1")
+    r = v["r"]
+    circ = 2 * r                                  # the circumference is circ x pi
+    angle = 360 * k / circ
+    half_circle = 360 * k / r                     # the same arc against pi x r
+    turns = Fraction(circ) / k                    # arcs in a full turn
+    for name, x in (("angle", angle), ("common wrong angle", half_circle), ("arcs in a full turn", turns)):
+        if x.denominator != 1:
+            raise ValueError("the %s, %s, is not a whole number" % (name, x))
+    return {"answer": int(angle), "miss": int(half_circle), "th": int(angle), "circ": circ, "turns": int(turns)}
+
+
+def _ev_charger_quadratic(v):
+    """ev-charger-quadratic: the currents at which x^2 - bx + c is zero, found by trying every whole current the
+    dial has, 0 to 15. There must be exactly two, one at or under the alarm limit and one over it: the answer is the
+    one not above the limit, the common wrong answer the other. The two are then confirmed a second way that tries
+    nothing: the quadratic formula in whole numbers, (b -/+ root(b^2 - 4c)) / 2, the discriminant a perfect square."""
+    b, c, lim = v["b"], v["c"], v["lim"]
+    zeros = [x for x in range(0, 16) if x * x - b * x + c == 0]
+    inside = [x for x in zeros if x <= lim]
+    outside = [x for x in zeros if x > lim]
+    if len(zeros) != 2 or len(inside) != 1 or len(outside) != 1:
+        raise ValueError("x^2 - %dx + %d has zeros %s on the dial, not one each side of %d A" % (b, c, zeros, lim))
+    disc = b * b - 4 * c
+    root = isqrt(disc) if disc >= 0 else -1
+    if root * root != disc or (b - root) % 2 or [(b - root) // 2, (b + root) // 2] != zeros:
+        raise ValueError("the quadratic formula does not give the zeros %s of x^2 - %dx + %d" % (zeros, b, c))
+    return {"answer": inside[0], "miss": outside[0]}
+
+
 RECOMPUTE = {
+    "head-bay-lower-bound": _head_bay_lower_bound,
+    "boom-gate-sector": _boom_gate_sector,
+    "ev-charger-quadratic": _ev_charger_quadratic,
     "kiln-sensor-limit": _sensor_limit,
     "kiln-fan-restart": _fan_restart,
     "kiln-cancel-check": _cancel_check,
