@@ -77,6 +77,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-14 (cloud): ANSWER-BOX-ART-SWAP (`docs/handover/contracts/2026-11-14-answer-box-art-swap.md`; Jon's rulings 14 Nov 16:40 to 21:45)
+
+PR #769 OPEN, merging on green (Medium). Agent Claude Code (cloud), a fresh session, branch `claude/gallant-curie-0j690i` from main 8f2b84f; first commit 5003a17 (this contract; #767's close-out, in its entry below). No claim commit: no game is touched.
+Done: Jon's two redrawn pictures (`origin/art/answer-box-redraws`, 799748c) replace Roll's `rfi-10-plans-keypad.webp` and Prom's `prom-11-router-dial.webp` (Pillow WEBP, quality 90, method 6; 139 and 112 KB). `label_box`: Roll `fortress-plan-scale` [262, 312, 991, 439], 34.1 × 5.9 mm on the cover, grey 225.2; Prom `wifi-venn-router` [98, 633, 863, 932], 35.8 × 14.0 mm, grey 235.2; neither filled. Both packs build as DRAFT with no box under the floor and no DRAFT notes.
+Proof: all seven packs built on main and the branch, compared page by page (text, and pixels at 100 dpi): 238 of 252 identical. Changed: page 1 and the six covers of Roll (6, 10, 14, 18, 22, 26) and of Prom (7, 11, 15, 19, 23, 27). Selftest 67/67, unchanged.
+Next: merge on a green Gate (gh auth fails: the 10 Nov route), report main's two runs, delete `art/answer-box-redraws`. Open for Jon: todo ROLL-PROM-PACKS-APPROVE (proofread, wording).
+
+Record: agent Claude Code; wall 0:13 from the contract's stamp (21:50) to the PR opened for its Gate (22:03 by the container's clock); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-14 (cloud): ANSWER-BOX-CHECK (`docs/history/contracts/2026-11-14-answer-box-check.md`; Jon's rulings 14 Nov 16:33 and 16:40)
 
 MERGED: #767 squash-merged as 3db30f1. Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed). Main on 3db30f1: check-site 43623614027 GREEN and phone-fit-full 43623613951 GREEN, both on the first attempt (close-out carried by ANSWER-BOX-ART-SWAP's first commit, from its contract and read again through the GitHub connection). Agent Claude Code (cloud), a fresh session, branch `claude/inspiring-heisenberg-hfukwn` from main 22e1e16; first commit c433225 (this contract; #764's close-out, in its entry below). No claim commit: no game is touched.
