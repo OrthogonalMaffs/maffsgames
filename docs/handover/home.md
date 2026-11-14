@@ -16,6 +16,14 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): BACK-LINK-START
+
+Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-link-start`; contract `docs/handover/contracts/2026-11-14-back-link-start.md`. Nineteen games showed no link back to the games list on their start screen (the only ones were in a header hidden until Start, or on the results screen). Each now has `<a href="../../" class="back-link">← Back to Games</a>` as the first element of `#startScreen`, on the page's own `.back-link` rule; nothing else on any page changed. New gate `scripts/check-start-back-link.py` (ci-line, `--selftest && --check`): every `games/<slug>/index.html`, loaded at 390 × 844, must show a visible link to the site root or `/games/`; 7 plants fail, 4 controls pass.
+
+- A standalone script, not a second gate in `measure-phone-fit.py` (the contract allowed either): that script runs only in `phone-fit-full.yml` (nightly, and after a push to main that changes a shared path), never on a pull request, and loads the 109 roster games, not all 111 pages. The ci-line runs in the Gate whenever a game or a shared asset changes.
+- On main before the edits the gate failed exactly the contract's 19 and passed the other 92; after, 111 pass.
+- On four pages (better-value, expected-damage, formula-plug-in, new-shapes) the page's own phone rule for `.back-link` draws the new link 20 px and 44 px tall, centred; on the other 15 it is 13 px, left. Style is todo 3.20's.
+
 ## 2026-11-13 (home): LOOP-PAGE1 (Amendment 1)
 
 Claude Code (home lane), worktree `~/mg-loop-page1`, branch `claude/loop-page1`; PR #754; contract `docs/history/contracts/2026-11-13-loop-page1.md`. Start art for Six Sevens, Bruv and Like Terms Collector (`games/<slug>/assets/start.webp`, 1600 × 873, 91,232 and 176,708 bytes; the ESSENTIALS-ART pattern in both pages). `build_deck.py` `run_page()`: every pack's page 1 opens with the game's art (`game_art()`, read from the game folder) beside `loop_diagram()`, one loop step drawn from the first deck; the check fails a missing diagram, a diagram whose back its front does not answer, and art that exists but is not printed. `free_pizza.py`: a recurring decimal carries "(recurring)" under it and a dot 0.28em across (was 0.13em); the parser requires the label. Two plants, two controls: selftest 3 packs, 25 plants.
