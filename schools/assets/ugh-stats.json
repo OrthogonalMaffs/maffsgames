@@ -1,0 +1,283 @@
+{
+ "as_of": "2026-11-14T12:29:49Z",
+ "countries": [
+  {
+   "country": "United Kingdom",
+   "sessions": 1243
+  },
+  {
+   "country": "Spain",
+   "sessions": 157
+  },
+  {
+   "country": "United States",
+   "sessions": 148
+  },
+  {
+   "country": "Singapore",
+   "sessions": 80
+  },
+  {
+   "country": "Ireland",
+   "sessions": 34
+  },
+  {
+   "country": "Malaysia",
+   "sessions": 30
+  },
+  {
+   "country": "Uruguay",
+   "sessions": 27
+  },
+  {
+   "country": "China",
+   "sessions": 19
+  },
+  {
+   "country": "Australia",
+   "sessions": 17
+  },
+  {
+   "country": "Slovakia",
+   "sessions": 15
+  },
+  {
+   "country": "Germany",
+   "sessions": 11
+  },
+  {
+   "country": "Netherlands",
+   "sessions": 11
+  },
+  {
+   "country": "New Zealand",
+   "sessions": 11
+  },
+  {
+   "country": "France",
+   "sessions": 10
+  },
+  {
+   "country": "Other countries",
+   "sessions": 117
+  }
+ ],
+ "daily": [
+  {
+   "date": "2026-10-15",
+   "starts": 98
+  },
+  {
+   "date": "2026-10-16",
+   "starts": 88
+  },
+  {
+   "date": "2026-10-17",
+   "starts": 28
+  },
+  {
+   "date": "2026-10-18",
+   "starts": 31
+  },
+  {
+   "date": "2026-10-19",
+   "starts": 35
+  },
+  {
+   "date": "2026-10-20",
+   "starts": 38
+  },
+  {
+   "date": "2026-10-21",
+   "starts": 41
+  },
+  {
+   "date": "2026-10-22",
+   "starts": 86
+  },
+  {
+   "date": "2026-10-23",
+   "starts": 195
+  },
+  {
+   "date": "2026-10-24",
+   "starts": 16
+  },
+  {
+   "date": "2026-10-25",
+   "starts": 37
+  },
+  {
+   "date": "2026-10-26",
+   "starts": 61
+  },
+  {
+   "date": "2026-10-27",
+   "starts": 33
+  },
+  {
+   "date": "2026-10-28",
+   "starts": 122
+  },
+  {
+   "date": "2026-10-29",
+   "starts": 22
+  },
+  {
+   "date": "2026-10-30",
+   "starts": 11
+  },
+  {
+   "date": "2026-10-31",
+   "starts": 11
+  },
+  {
+   "date": "2026-11-01",
+   "starts": 24
+  },
+  {
+   "date": "2026-11-02",
+   "starts": 28
+  },
+  {
+   "date": "2026-11-03",
+   "starts": 375
+  },
+  {
+   "date": "2026-11-04",
+   "starts": 58
+  },
+  {
+   "date": "2026-11-05",
+   "starts": 54
+  },
+  {
+   "date": "2026-11-06",
+   "starts": 100
+  },
+  {
+   "date": "2026-11-07",
+   "starts": 48
+  },
+  {
+   "date": "2026-11-08",
+   "starts": 34
+  },
+  {
+   "date": "2026-11-09",
+   "starts": 70
+  },
+  {
+   "date": "2026-11-10",
+   "starts": 82
+  },
+  {
+   "date": "2026-11-11",
+   "starts": 55
+  },
+  {
+   "date": "2026-11-12",
+   "starts": 144
+  },
+  {
+   "date": "2026-11-13",
+   "starts": 105
+  }
+ ],
+ "hours": {
+  "weekday": [
+   18,
+   29,
+   "<10",
+   "<10",
+   "<10",
+   "<10",
+   11,
+   35,
+   128,
+   281,
+   123,
+   134,
+   131,
+   97,
+   164,
+   208,
+   28,
+   47,
+   60,
+   85,
+   51,
+   34,
+   21,
+   17
+  ],
+  "weekend": [
+   "<10",
+   "<10",
+   "<10",
+   0,
+   13,
+   "<10",
+   "<10",
+   0,
+   "<10",
+   14,
+   19,
+   "<10",
+   "<10",
+   "<10",
+   22,
+   10,
+   14,
+   12,
+   16,
+   12,
+   "<10",
+   28,
+   "<10",
+   11
+  ]
+ },
+ "levels": [
+  {
+   "level": "gcse",
+   "starts": 177
+  },
+  {
+   "level": "ks3",
+   "starts": 97
+  },
+  {
+   "level": "year6",
+   "starts": 90
+  },
+  {
+   "level": "all",
+   "starts": 62
+  },
+  {
+   "level": "core",
+   "starts": 45
+  },
+  {
+   "level": "alevel",
+   "starts": 23
+  },
+  {
+   "level": "level3",
+   "starts": 19
+  },
+  {
+   "level": "higher",
+   "starts": 13
+  },
+  {
+   "level": "further",
+   "starts": "<10"
+  },
+  {
+   "level": "level4",
+   "starts": "<10"
+  }
+ ]
+}

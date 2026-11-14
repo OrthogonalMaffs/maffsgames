@@ -76,7 +76,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-14-a';
+const SCRIPT_VERSION = '2026-11-14-b';
 
 function doGet(e) {
   return jsonResponse({
@@ -391,7 +391,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   topSlugs.forEach(function(slug) {
     var comp = rptGet(cc, slug, 0);
     var frac = gc[slug]>0 ? comp/gc[slug] : 0;
-    dash.getRange(r, 1, 1, 4).setValues([[slug, gc[slug], comp, frac]]);
+    dash.getRange(r, 1, 1, 4).setValues([[slug, gc[slug], comp, frac].map(cellValue)]);
     r++;
   });
   formatPercentColumn(dash, t1Start+2, topSlugs.length);
@@ -425,7 +425,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   r++;
   var levels = Object.keys(lc).sort();
   levels.forEach(function(lv) {
-    dash.getRange(r, 1, 1, 2).setValues([[lv, lc[lv]]]);
+    dash.getRange(r, 1, 1, 2).setValues([[lv, lc[lv]].map(cellValue)]);
     r++;
   });
   r++;
@@ -455,7 +455,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   dash.getRange(r, 1, 1, 4).setValues([['Game', 'Answers', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   rep.games.forEach(function(g) {
-    dash.getRange(r, 1, 1, 4).setValues([[g.slug, g.total, g.correct, g.correct/g.total]]);
+    dash.getRange(r, 1, 1, 4).setValues([[g.slug, g.total, g.correct, g.correct/g.total].map(cellValue)]);
     r++;
   });
   formatPercentColumn(dash, t3Start+2, rep.games.length);
@@ -489,7 +489,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   dash.getRange(r, 1, 1, 6).setValues([['Game', 'Level', 'Question id', 'Attempts', 'Correct', 'Accuracy %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   rep.hardest.forEach(function(q) {
-    dash.getRange(r, 1, 1, 6).setValues([[q.slug, q.level, q.qid, q.total, q.correct, q.correct/q.total]]);
+    dash.getRange(r, 1, 1, 6).setValues([[q.slug, q.level, q.qid, q.total, q.correct, q.correct/q.total].map(cellValue)]);
     r++;
   });
   if (rep.hardest.length > 0) dash.getRange(t4Start+2, 6, rep.hardest.length, 1).setNumberFormat('0%');
@@ -506,7 +506,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   r++;
   rep.rooms.forEach(function(rm) {
     dash.getRange(r, 1, 1, 6).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate, rm.timedOut,
-      rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10]]);
+      rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10].map(cellValue)]);
     r++;
   });
   formatPercentColumn(dash, t4bStart+2, rep.rooms.length);
@@ -528,7 +528,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   dash.getRange(r, 1, 1, 2).setValues([['Date', 'Games Started']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   days.forEach(function(d) {
-    dash.getRange(r, 1, 1, 2).setValues([[d, dailyCounts[d]]]);
+    dash.getRange(r, 1, 1, 2).setValues([[d, dailyCounts[d]].map(cellValue)]);
     r++;
   });
 
@@ -639,6 +639,19 @@ function jsonResponse(obj) {
 // silently blanked every wrong answer's `correct: false` and any
 // `question_index: 0` / `score: 0` row. See docs/todo.md 1.25 and
 // docs/sheets-falsy-backfill.md.
+//
+// A posted value is data, never a formula (contract SHEET-FORMULA-CELLS, 14 Nov 2026). appendRow and setValues read
+// a string as if a person had typed it, so one beginning "=" became a live formula, placed by anyone who posted an
+// event; IMAGE or IMPORTDATA in one can send the Sheet's contents to an outside address. A string whose first
+// character is =, +, @, a tab or a carriage return, or "-" not followed by a plain number, is written behind a
+// leading apostrophe: Sheets keeps it as text, and the apostrophe is not part of the value read back. Numbers,
+// booleans and every other string are written as they were. An array or object (no page sends one) is written as
+// its JSON text, which begins "[" or "{", rather than left to whatever Sheets makes of it.
+// Every cell of posted text goes through here: doPost's row, and the Dashboard's rows, which write slugs, levels
+// and question ids read back from the Sheet.
 function cellValue(v) {
-  return (v === undefined || v === null) ? '' : v;
+  if (v === undefined || v === null) return '';
+  if (typeof v === 'object') v = JSON.stringify(v);
+  if (typeof v === 'string' && (/^[=+@\t\r]/.test(v) || (v.charAt(0) === '-' && !/^-\d+(\.\d+)?$/.test(v)))) return "'" + v;
+  return v;
 }
