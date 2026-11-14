@@ -87,6 +87,8 @@ Open: the two layers are redundant by design, so no test can catch the loss of t
 Next (Jon): two redeploys, counts first (`docs/apps-script-counts.md`, "14 Nov 2026: safe tallies"), then analytics (`docs/apps-script-redeploy.md`, same heading). No reset, no backfill.
 Container: playwright 1.63.0 (`gh auth status`: "The token in GH_TOKEN is invalid.", so the merge route is the 10 Nov ruling).
 
+Record: agent Claude Code; wall 0:12 to the push (container clock, 11:10 to 11:22; the first reading is the baseline test run, the contract's receipt was not timed); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-14 (cloud): UGH-STATS-DATA (`docs/history/contracts/2026-11-14-ugh-stats-data.md`, Jon's rulings 14 Nov 09:20 and 09:32)
 
 DONE, merged and live: #759 squash-merged as 29794e0 (14 Nov). Route: the GitHub connection, under Jon's standing merge-route ruling of 10 Nov (the merging session's `gh auth status` output is not in this lane's record; the route is as COUNTS-SAFE-TALLY's contract states it). Main on 29794e0: check-site 43584242903 GREEN, phone-fit-full 43584242879 GREEN (both read through the GitHub connection, 14 Nov). Jon redeployed the counts script on 14 Nov: Version 2 = `2026-11-14-a`; resetCounts and backfill caught up at 10:46; previewStats correct (as COUNTS-SAFE-TALLY's contract records). Closed out by COUNTS-SAFE-TALLY's first commit, 14 Nov.
