@@ -36,6 +36,7 @@ _LINKS = [
     ('/spec-map/', 'Spec Map'),
     ('/parents/', 'Parent guides'),
     ('/updates/', "What's changed"),
+    ('/ugh-stats/', 'Ugh, stats'),
     ('mailto:contact@maffsgames.co.uk', 'Contact'),
     ('/privacy/', 'Privacy'),
     ('/feedback/', 'Feedback'),

@@ -16,6 +16,14 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): UGH-STATS-PAGES
+
+Claude Code (home lane), worktree `~/mg-ugh-stats`, branch `claude/ugh-stats-pages`; contract `docs/handover/contracts/2026-11-14-ugh-stats-pages.md`. Four new pages under `/ugh-stats/` (landing, `half-our-games/`, `charts/`, `whos-playing/`), one loader and chart drawer `schools/assets/ugh-stats.js`, shared look `ugh-stats/ugh-stats.css`, gate `scripts/check-ugh-stats.py` (ci-line), sitemap, /updates/ entry, one canon line (section 3).
+
+- Case 1's ten groups cut at floor(n i / 10): that, not "remainder from the top", reproduces the 12 November figures from that day's file (commit 0e426612). Quartiles are the exclusive method.
+- The loader uses XMLHttpRequest: `serve-stubbed.py` replaces `window.fetch` with a stub that refuses.
+- Jon's rulings, 14 Nov: "Ugh, stats" joins the one canonical footer on every page (`check-footer.py` `_LINKS`, `apply-footer.py`), overriding the contract; the landing page's "Figures below 10 are hidden" sentence is deleted and Case 2's can't-tell box gains "Figures below 10 are shown as <10: too small to mean anything."; the deviations are accepted; `ci-deps.py` is todo CI-DEPS-UGH-STATS, not changed.
+
 ## 2026-11-14 (home): BACK-LINK-START
 
 Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-link-start`; PR #757; contract `docs/history/contracts/2026-11-14-back-link-start.md`. Nineteen games showed no link back to the games list on their start screen (the only ones were in a header hidden until Start, or on the results screen). Each now has `<a href="../../" class="back-link">← Back to Games</a>` as the first element of `#startScreen`, on the page's own `.back-link` rule; nothing else on any page changed. New gate `scripts/check-start-back-link.py` (ci-line, `--selftest && --check`): every `games/<slug>/index.html`, loaded at 390 × 844, must show a visible link to the site root or `/games/`; 7 plants fail, 4 controls pass.

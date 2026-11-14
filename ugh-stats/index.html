@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-PAGES, 14 Nov 2026). Every live figure on this page is drawn by
+     /schools/assets/ugh-stats.js from a committed same-origin file; scripts/check-ugh-stats.py holds the page to it. -->
+<meta name="description" content="Real data from MaffsGames and the decisions we made with it: case studies with the working shown, the raw data as a CSV and questions for your class.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/">
+<meta property="og:title" content="Ugh, stats | MaffsGames">
+<meta property="og:description" content="Real data from MaffsGames and the decisions we made with it: case studies with the working shown, the raw data as a CSV and questions for your class.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Ugh, stats | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="kicker">Real data. Real decisions.</p>
+<h1>Ugh, stats.</h1>
+<p class="lead">We know. But every answer you give on this site lands in a spreadsheet, and we use it to decide what to fix, what to build and what to bin. Here's how, with the working shown.</p>
+
+<section class="live-box" aria-labelledby="answersLabel">
+  <h2 class="live-label" id="answersLabel">Answers given since 1 September</h2>
+  <div data-ugh-live="counts" id="answers"></div>
+</section>
+
+<ol class="strip">
+  <li><span class="n">1</span><strong>Ask</strong><span class="what">A real question we needed answering.</span></li>
+  <li><span class="n">2</span><strong>Collect</strong><span class="what">What the site recorded, and what it didn't.</span></li>
+  <li><span class="n">3</span><strong>Picture it</strong><span class="what">The chart that made it obvious.</span></li>
+  <li><span class="n">4</span><strong>Decide</strong><span class="what">What we did, and what the data can't tell us.</span></li>
+</ol>
+
+<h2>Decisions we made with the data</h2>
+<div class="cards">
+  <article class="card">
+    <p class="kicker">Skewed data &middot; median v mean</p>
+    <h3>Half our games get 4% of the answers</h3>
+    <p>Should we build more games, or help people find the ones we've got?</p>
+    <p><a class="go" href="/ugh-stats/half-our-games/">Read the case</a></p>
+  </article>
+  <article class="card">
+    <p class="kicker">Inference from limited data &middot; Core Maths</p>
+    <h3>Who's actually playing?</h3>
+    <p>Our most-answered game is a times-tables game. Is that classes, or a few keen players at home? We never know who you are. We do know the game, the time and roughly which country. Can you work it out from that?</p>
+    <p><a class="go" href="/ugh-stats/whos-playing/">Read the case</a></p>
+  </article>
+</div>
+<p class="soon">More coming soon.</p>
+<p><a class="more-link" href="/ugh-stats/charts/">The charts we check every day</a></p>
+
+<section class="panel">
+  <h2>For teachers</h2>
+  <p>Every case comes with the raw data as a CSV and questions for your class, from Year 9 to Core Maths.</p>
+</section>
+<section class="panel">
+  <h2>What we collect</h2>
+  <p>Counts only: which game, right or wrong, when. Never names, never accounts.</p>
+  <p><a href="/privacy/">Read the privacy page</a></p>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+  U.run({
+    counts: function (d) {
+      // the label above says "since 1 September": a file counted from another day must not sit under it
+      if (d.since !== '2026-09-01') throw new Error('since');
+      var mount = document.getElementById('answers');
+      var n = Object.keys(d.games).filter(function (k) { return d.games[k] >= 1; }).length;
+      mount.textContent = '';
+      mount.appendChild(U.el('p', 'ugh-big', U.format(d.total)));
+      mount.appendChild(U.el('p', 'ugh-sub', 'Across ' + U.format(n) + ' games and rooms. Updated daily; last ' + U.asOfDate(d.as_of) + '.'));
+    }
+  });
+})();
+</script>
+</body>
+</html>
