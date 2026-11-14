@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-13T22:51:03Z",
+ "as_of": "2026-11-14T10:27:03Z",
  "games": {
   "52dle": 14,
   "angle-ace": 5,
@@ -44,7 +44,7 @@
   "escape-roll-for-initiative": 9,
   "escape-rugby-mud": 242,
   "estimation-engine": 47,
-  "estimation-golf": 530,
+  "estimation-golf": 537,
   "expected-damage": 20,
   "factor-race": 1901,
   "factor-theorem": 9,
@@ -120,5 +120,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 25917
+ "total": 25924
 }
