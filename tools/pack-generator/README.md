@@ -65,11 +65,29 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    prints no picture (CORE-PACKS-ROLL-PROM Amendment 1; Prom Budget's covers), and the build fails only if it is
    too long even then; the cover's answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
    ends with the final padlock's target, its rules, a working box and the expression line.
+   **The answer boxes (contract ANSWER-BOX-CHECK, Jon, 14 Nov 2026).** Each is the dashed box on its instrument's
+   picture (the answer image's `label_box`), and a student writes in it on a black-and-white print. Two rules, both
+   the build's, never a room's:
+   - *White only where dark.* The build measures the picture under each box (the mean grey of its own pixels inside
+     the `label_box`, 0 black to 255 white). Under 180, the box prints with a solid white fill inside its dashed
+     outline; at 180 or more it prints as it always has. The build prints each box's grey and whether it is filled,
+     then checks every cover: a dark box with no fill, or a light box that is filled, stops it.
+   - *No box under 20 × 4.5 mm.* Every answer box on every cover is measured as it prints. A smaller one **stops
+     the build of a room whose wording is approved, and any `--final` build**, naming the room, set, lock and size.
+     For a DRAFT room (`wording_approved` null) the build goes on so that you can proofread: it prints each small
+     box, and page 1 carries them as **DRAFT notes** under its heading (a dashed block, not part of page 1's 150
+     words). The fix is a larger `label_box` on a plain surface of the picture (item 6), or new art.
 6. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels). Measure each
    `label_box` inside the object's printable surface, never to its edge, with a margin of at least 2% of the art's
    width on any side that meets an edge of the paper, card or screen.
 7. **Hint cards and certificate (last two pages):** the locks' three hints each, then the final padlock's card.
+   A figure never parts from its unit at a line's end, here or anywhere the pack prints a room's words (captions,
+   the cover story, read-outs, worked solutions, the key's notes, the certificate): "2 m", "16 °C" and "1 : 500"
+   stay whole and a negative number carries a true minus, the rule the labels on the art already had
+   (`bind_figures()`, ANSWER-BOX-CHECK). It is applied twice: to a room's words as they are filled, and to every
+   finished page whole, which also covers the generator's own lines (page 1's "1 minute", the key's "about 4 min")
+   and a room's names. A figure left unbound anywhere stops the build.
    A certificate whose text is too long for the page prints its picture smaller, by exactly the overflow and never
    below 60% of its width (the covers' rule; CAR-TRAP-PACK Amendment 1). Still too long at 60%, its story's type
    steps down from 14 pt in half points, never below 11 pt (CORE-PACKS-ROLL-PROM Amendment 1); the build prints
@@ -115,7 +133,13 @@ Then, in order, any failure stopping the build:
    start read-out and on no cover, and a hook or brief with a `{{token}}` fails the build (the start read-out is
    filled once, from set A); page 1 is at most
    150 words and no rule is stated on more than one teacher page; no student page prints the final padlock's
-   shape or allows a calculator. The PDF's page count must equal the pages built.
+   shape or allows a calculator; every answer box over dark art is filled white and no other is, and none is under
+   20 × 4.5 mm on an approved or `--final` build (item 5, above); every figure on every page is bound to its
+   unit. The PDF's page count must equal the pages built.
+
+The grey under an answer box is measured without a new dependency: the build's own Chromium decodes the picture
+and returns the red, green and blue sums of the pixels inside the `label_box`, and Python works the standard luma
+from them (0.299 R + 0.587 G + 0.114 B).
 
 `python -X utf8 tools/pack-generator/build_pack.py --selftest` (in CI as `scripts/test-pack-generator.py`) checks
 every room with a config and plants faults, each of which must be caught (the run prints how many), among them: a duplicate answer across sets,
@@ -133,13 +157,20 @@ wrong but still whole, an answer box left in the room's unit, a hint that gives 
 room's unit only, words that name it with no unit after it; a wrong recomputed answer for each of Roll for
 Initiative's and The Prom Budget Embezzlement's six locks; a cover too long even without its picture, a certificate
 too long even with its picture at the floor and its story at 11 pt, read-outs too long even on two pages, and
-read-outs too long for one page that are left on it. Two multi-part controls, the long-story control (the first
-room) and the longest-story control (the room with the most words, fitted as the build fits it) must pass. It
-builds no PDF.
+read-outs too long for one page that are left on it; a dark answer box built without its white fill, an answer box
+under 20 mm wide and one under 4.5 mm high (each stopping an approved room's build), a DRAFT pack with a small
+answer box built with `--final`, and a hint card whose "2 m" is not bound. Two multi-part controls, the long-story
+control (the first room), the longest-story control (the room with the most words, fitted as the build fits it),
+the answer-box controls (every room's covers, as the build judges them, and page 1 with its DRAFT notes) and the
+binding controls (what `bind_figures()` binds, and that it leaves tags, attributes and line breaks alone) must
+pass. It builds no PDF.
 
 ## Adding a room
 
-1. `rooms/<slug>/config.json` with its art in `rooms/<slug>/art/` (each image at most 250 KB).
+1. `rooms/<slug>/config.json` with its art in `rooms/<slug>/art/` (each image at most 250 KB). An answer image's
+   `label_box` must print at 20 × 4.5 mm or more on the cover: on the usual 1254 px square art that is at least
+   428 × 97 px, so ask for instruments with a blank display or plate about 480 × 150 px or larger (the box sits
+   2% inside its edges).
 2. Each of the room's locks in `lockcheck.py`'s `RECOMPUTE`, by lock id, recomputed its own way. The build refuses a
    room with a lock missing there.
 3. Build, then proofread as above.
