@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): UGH-STATS-QUESTIONS
+
+Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/handover/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
+
+- Launch dates: 108 of 126 came from the archive's history, read from the local clone `E:\jon\maffsgames` (remote `maffsgames-archive`; `gh` cannot see that repo from WSL) through a saved `git log` (`--archive-log`). None was left at 2026-10-02. A new game adds its own line; `check-ugh-stats.py` LAUNCH fails without it.
+- Answers send `stats_question_answered` (level case1 to case4). `doPost` stores any event name and `mfg()` passes it unchanged, so no Apps Script change.
+- Case 1 Q2's game 2 is Factor Theorem only when it has 10 or more answers; on 14 Nov it had 9, so the page asks about the lowest-answered game with 10 or more that has a launch date (It's on Sale!), named from its page's `<h1>`.
+- Typed answers are worked in whole numbers (`UghStats.divide`); the working shows more decimal places when 1 place would read as a half that rounds the other way, so the working never disagrees with the answer.
+- `.btn[hidden]` added: `.btn`'s `display` had overridden `hidden`, so a hidden button still showed.
+- todo CONTENT-SAFETY-UGH-STATS: the SR-14 scan does not read `ugh-stats/`.
+
 ## 2026-11-14 (home): UGH-STATS-PAGES
 
 Claude Code (home lane), worktree `~/mg-ugh-stats`, branch `claude/ugh-stats-pages`; contract `docs/history/contracts/2026-11-14-ugh-stats-pages.md`. Four new pages under `/ugh-stats/` (landing, `half-our-games/`, `charts/`, `whos-playing/`), one loader and chart drawer `schools/assets/ugh-stats.js`, shared look `ugh-stats/ugh-stats.css`, gate `scripts/check-ugh-stats.py` (ci-line), sitemap, /updates/ entry, one canon line (section 3).

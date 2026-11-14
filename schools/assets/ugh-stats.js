@@ -7,6 +7,9 @@
      counts   /schools/assets/answer-counts.json   {as_of, since, total, games:{slug: answers}}
      stats    /schools/assets/ugh-stats.json       {as_of, daily, levels, hours:{weekday, weekend}, countries}
 
+   The questions (quiz(), below) also read /schools/assets/launch-dates.json {slug: 'YYYY-MM-DD'}, each game's and
+   room's launch date (written once by scripts/build-launch-dates.py; a new game adds its own line at launch).
+
    THE RULE (answer-count.js's): a source that is missing, is not the shape above, or whose as_of is more than 7 days
    old is not used at all. Every mount that reads it ([data-ugh-live="counts"] or [data-ugh-live="stats"]) then shows
    "Figures unavailable right now" and nothing else: never a stale number, and never half a page of numbers (a render
@@ -247,11 +250,12 @@
     t.appendChild(tb); d.appendChild(t); mount.appendChild(d);
   }
 
+  // entries: [label, colour] or [label, colour, 'ring'] (a hollow point's key).
   function legend(mount, entries) {
     var p = htmlEl('p', 'ugh-legend');
     entries.forEach(function (e) {
-      var s = htmlEl('span', 'ugh-key'), sw = htmlEl('span', 'ugh-swatch');
-      sw.style.background = e[1];
+      var s = htmlEl('span', 'ugh-key'), sw = htmlEl('span', 'ugh-swatch' + (e[2] === 'ring' ? ' ring' : ''));
+      if (e[2] === 'ring') sw.style.borderColor = e[1]; else sw.style.background = e[1];
       s.appendChild(sw); s.appendChild(document.createTextNode(e[0]));
       p.appendChild(s);
     });
@@ -292,11 +296,244 @@
     setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
   }
 
+  // Points lying in a plane, one per item {name, x, y, hollow}. o: {title, xLabel, yLabel, xMin, xMax, xStep, yMax}.
+  // A hollow point is drawn as a ring; the page's key says what hollow means. (Contract UGH-STATS-QUESTIONS.)
+  function scatter(mount, points, o) {
+    var box = chartBox(mount, o.title);
+    later(function () {
+      var W = width(box), H = o.height || 270, m = { l: 60, r: 12, t: 12, b: 42 };
+      var pw = W - m.l - m.r, ph = H - m.t - m.b;
+      var yMax = o.yMax || niceMax(Math.max.apply(null, points.map(function (p) { return p.y; })));
+      var X = function (x) { return m.l + pw * (x - o.xMin) / (o.xMax - o.xMin); };
+      var Y = function (y) { return m.t + ph - ph * y / yMax; };
+      var svg = svgEl('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H, 'aria-hidden': 'true', focusable: 'false' });
+      [0, yMax / 2, yMax].forEach(function (t) {
+        svg.appendChild(svgEl('line', { x1: m.l, x2: W - m.r, y1: Y(t), y2: Y(t), stroke: t ? GRID : MUTED, 'stroke-width': 1 }));
+        svg.appendChild(svgEl('text', { x: m.l - 6, y: Y(t) + 3.5, 'text-anchor': 'end', 'font-size': 10, 'font-family': MONO, fill: MUTED }, format(t)));
+      });
+      for (var t = o.xMin; t <= o.xMax + 1e-9; t += o.xStep) {
+        svg.appendChild(svgEl('line', { x1: X(t), x2: X(t), y1: m.t, y2: m.t + ph, stroke: GRID, 'stroke-width': 1 }));
+        svg.appendChild(svgEl('text', { x: X(t), y: m.t + ph + 14, 'text-anchor': 'middle', 'font-size': 10, 'font-family': MONO, fill: MUTED }, String(t)));
+      }
+      svg.appendChild(svgEl('text', { x: m.l + pw / 2, y: H - 6, 'text-anchor': 'middle', 'font-size': 11, 'font-family': SANS, fill: NAVY }, o.xLabel));
+      var yl = 14, ym = m.t + ph / 2;
+      svg.appendChild(svgEl('text', { x: yl, y: ym, 'text-anchor': 'middle', 'font-size': 11, 'font-family': SANS, fill: NAVY,
+        transform: 'rotate(-90 ' + yl + ' ' + ym + ')' }, o.yLabel));
+      points.forEach(function (p) {
+        var c = svgEl('circle', { cx: X(p.x).toFixed(1), cy: Y(p.y).toFixed(1), r: 5.5, fill: p.hollow ? '#ffffff' : NAVY, stroke: NAVY,
+          'stroke-width': 2, 'data-x': String(p.x), 'data-y': String(p.y), 'data-hollow': p.hollow ? '1' : '0' });
+        c.appendChild(svgEl('title', {}, p.name));
+        svg.appendChild(c);
+      });
+      box.textContent = '';
+      box.appendChild(svg);
+    });
+  }
+
+  // ---------------------------------------------------------------------------------------------- questions
+  /* The question widget, one copy for every case (contract UGH-STATS-QUESTIONS, 14 Nov 2026). A page hands quiz() its
+     questions as data, in order; each is an object, or a function that builds one from the page's live figures and
+     returns null (or throws) when it cannot. A question that cannot be built is skipped and keeps its number, so
+     question_index is always the question's place in the case's list.
+
+       typed   {type: 'typed', stem, answer, working}: a whole number, to the nearest whole number. Only the exact
+               answer is accepted; three tries, then the working. Commas and spaces in what is typed are ignored.
+       choice  {type: 'choice', stem, options: [{text, why, right}] x 4, exactly one right}: shuffled once per page
+               load, one try, then the chosen option's explanation and, if it was wrong, the right one with its own.
+
+     Every answer sends one event under its own name (never the event that counts game answers, so nothing that counts
+     those has to filter these out):
+     {game_slug: 'ugh-stats', level: 'case1'..'case4', question_index, correct (right first time), attempts}.
+     No score is kept. */
+  var EVENT = 'stats_question_answered';
+  var TRIES = 3;
+  var SINCE = '2026-09-01';
+  var FULL_MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
+    'November', 'December'];
+
+  function getText(url) {
+    return new Promise(function (resolve, reject) {
+      var x = new XMLHttpRequest();
+      x.open('GET', url);
+      x.timeout = 8000;
+      x.onload = function () { if (x.status === 200) resolve(x.responseText); else reject(new Error('status ' + x.status)); };
+      x.onerror = x.ontimeout = function () { reject(new Error('network')); };
+      x.send();
+    });
+  }
+  // launch-dates.json {slug: 'YYYY-MM-DD'}, or null when it is missing or not that shape.
+  function launchDates() {
+    return get('/schools/assets/launch-dates.json').then(function (o) {
+      var ok = o && typeof o === 'object' && !Array.isArray(o) && Object.keys(o).length > 0 &&
+        Object.keys(o).every(function (k) { return isDate(o[k]); });
+      return ok ? o : null;
+    }).catch(function () { return null; });
+  }
+  // A game's own name, from the <h1> of its page; null when it has none.
+  function gameName(slug) {
+    return getText('/games/' + encodeURIComponent(slug) + '/').then(function (html) {
+      var h1 = new DOMParser().parseFromString(html, 'text/html').querySelector('h1');
+      var name = h1 ? h1.textContent.replace(/\s+/g, ' ').trim() : '';
+      return name || null;
+    }).catch(function () { return null; });
+  }
+  function ukDate(asOf) {
+    var parts = {};
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: '2-digit', month: '2-digit', year: 'numeric' })
+      .formatToParts(new Date(asOf)).forEach(function (p) { parts[p.type] = p.value; });
+    return parts.year + '-' + parts.month + '-' + parts.day;
+  }
+  // The number of calendar dates from a to b, both counted.
+  function days(a, b) { return Math.round((Date.parse(b + 'T00:00:00Z') - Date.parse(a + 'T00:00:00Z')) / 864e5) + 1; }
+  function longDate(date) { return Number(date.slice(8, 10)) + ' ' + FULL_MONTHS[Number(date.slice(5, 7)) - 1] + ' ' + date.slice(0, 4); }
+
+  // n ÷ d for whole numbers (d at least 1), worked in whole numbers so the working cannot disagree with the answer:
+  // the answer to the nearest whole number (a half goes up), and the working "n ÷ d = q ≈ answer." with q to 1 decimal
+  // place, or to more places when 1 place would read as a half that rounds the other way.
+  function divide(n, d) {
+    var answer = Math.floor((2 * n + d) / (2 * d)), k = 1, p = 10, scaled = 0;
+    for (; k <= 6; k++, p *= 10) {
+      scaled = Math.floor((2 * p * n + d) / (2 * d));
+      if (Math.floor((2 * scaled + p) / (2 * p)) === answer) break;
+    }
+    var s = String(scaled);
+    while (s.length <= k) s = '0' + s;
+    var shown = format(Number(s.slice(0, s.length - k))) + '.' + s.slice(s.length - k);
+    return { answer: answer, shown: shown, working: format(n) + ' ÷ ' + format(d) + ' = ' + shown + ' ≈ ' + format(answer) + '.' };
+  }
+
+  function validQuestion(q) {
+    if (!q || typeof q !== 'object' || typeof q.stem !== 'string' || !q.stem) return false;
+    if (q.type === 'typed') return whole(q.answer) && typeof q.working === 'string' && !!q.working;
+    if (q.type !== 'choice' || !Array.isArray(q.options) || q.options.length !== 4) return false;
+    return q.options.every(function (o) { return o && typeof o.text === 'string' && typeof o.why === 'string'; }) &&
+      q.options.filter(function (o) { return o.right === true; }).length === 1;
+  }
+  function shuffle(list) {
+    for (var i = list.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = list[i];
+      list[i] = list[j]; list[j] = t;
+    }
+    return list;
+  }
+  function send(level, q, correct, attempts) {
+    if (typeof window.mfg !== 'function') return;
+    try {
+      window.mfg(EVENT, { game_slug: 'ugh-stats', level: level, question_index: q.index, correct: correct, attempts: attempts });
+    } catch (e) { /* analytics never breaks the page */ }
+  }
+
+  function quiz(mount, level, list) {
+    var qs = [];
+    list.forEach(function (item, i) {
+      var q = null;
+      try { q = typeof item === 'function' ? item() : item; } catch (e) { q = null; }
+      if (!validQuestion(q)) return;
+      q = Object.assign({}, q, { index: i + 1 });
+      if (q.type === 'choice') q.options = shuffle(q.options.slice());
+      qs.push(q);
+    });
+    mount.textContent = '';
+    var box = htmlEl('div', 'ugh-quiz');
+    mount.appendChild(box);
+
+    function render(pos) {
+      var q = qs[pos];
+      box.textContent = '';
+      box.removeAttribute('data-q-state');
+      box.setAttribute('data-q-index', String(q.index));
+      box.setAttribute('data-q-type', q.type);
+      var head = htmlEl('p', 'ugh-q-count', 'Question ' + (pos + 1) + ' of ' + qs.length);
+      head.tabIndex = -1;
+      box.appendChild(head);
+      box.appendChild(htmlEl('p', 'ugh-q-stem', q.stem));
+      var fb = htmlEl('div', 'ugh-q-feedback');
+      fb.setAttribute('aria-live', 'polite');
+      var next = htmlEl('button', 'btn ugh-q-next', 'Next');
+      next.type = 'button';
+      next.hidden = true;
+      next.addEventListener('click', function () { render(pos + 1); box.querySelector('.ugh-q-count').focus(); });
+      var line = function (cls, text) { fb.appendChild(htmlEl('p', cls, text)); };
+      var done = function () {
+        if (pos < qs.length - 1) next.hidden = false;
+        else line('ugh-q-end', 'That was the last question.');
+        box.setAttribute('data-q-state', 'answered');
+      };
+
+      if (q.type === 'typed') {
+        var form = htmlEl('form', 'ugh-q-form'), id = 'ugh-q-' + level + '-' + q.index;
+        var label = htmlEl('label', 'ugh-q-label', 'Your answer');
+        label.htmlFor = id;
+        var input = htmlEl('input', 'ugh-q-input');
+        input.id = id; input.type = 'text'; input.inputMode = 'numeric'; input.autocomplete = 'off';
+        input.setAttribute('enterkeyhint', 'done');
+        var check = htmlEl('button', 'btn ugh-q-check', 'Check');
+        check.type = 'submit';
+        form.appendChild(label); form.appendChild(input); form.appendChild(check);
+        box.appendChild(form);
+        var tries = 0;
+        form.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (input.disabled) return;
+          var raw = input.value.replace(/[\s,]/g, '');
+          fb.textContent = '';
+          if (!/^\d+$/.test(raw)) { line('ugh-q-try', 'Type a whole number.'); return; }
+          tries += 1;
+          var right = Number(raw) === q.answer;
+          if (!right && tries < TRIES) {
+            var left = TRIES - tries;
+            line('ugh-q-try', 'Not quite. Try again: ' + left + (left === 1 ? ' try' : ' tries') + ' left.');
+            input.select();
+            return;
+          }
+          input.disabled = true; check.disabled = true;
+          line('ugh-q-verdict', right ? 'Right.' : 'Not this time. The answer is ' + format(q.answer) + '.');
+          line('ugh-q-working', 'Working: ' + q.working);
+          send(level, q, right && tries === 1, tries);
+          done();
+        });
+      } else {
+        var group = htmlEl('div', 'ugh-q-options');
+        group.setAttribute('role', 'group');
+        group.setAttribute('aria-label', 'Choose one answer');
+        var buttons = q.options.map(function (o) {
+          var b = htmlEl('button', 'ugh-q-option', o.text);
+          b.type = 'button';
+          b.addEventListener('click', function () {
+            if (b.disabled) return;
+            buttons.forEach(function (x) { x.disabled = true; });
+            b.classList.add('chosen');
+            var rightOne = q.options.filter(function (x) { return x.right; })[0];
+            buttons[q.options.indexOf(rightOne)].classList.add('right');
+            line('ugh-q-verdict', o.right ? 'Right.' : 'Not quite.');
+            line('ugh-q-why', o.why);
+            if (!o.right) {
+              line('ugh-q-answer', 'The answer: ' + rightOne.text);
+              line('ugh-q-why', rightOne.why);
+            }
+            send(level, q, o.right === true, 1);
+            done();
+          });
+          group.appendChild(b);
+          return b;
+        });
+        box.appendChild(group);
+      }
+      box.appendChild(fb);
+      box.appendChild(next);
+    }
+
+    if (qs.length) render(0);
+    else box.appendChild(htmlEl('p', 'ugh-note', UNAVAILABLE));
+    mount.setAttribute('data-ugh-quiz', 'ready');
+  }
+
   window.UghStats = {
-    UNAVAILABLE: UNAVAILABLE, HIDDEN: HIDDEN, NAVY: NAVY, TEAL: TEAL,
-    run: run, format: format, show: show, hidden: hidden, drawn: drawn, niceMax: niceMax, tally: tally,
-    dMon: dMon, asOfDate: asOfDate, weekend: weekend,
-    vbars: vbars, hbars: hbars, table: table, legend: legend, hiddenNote: hiddenNote, daily: daily,
-    el: htmlEl, csvText: csvText, download: download
+    UNAVAILABLE: UNAVAILABLE, HIDDEN: HIDDEN, NAVY: NAVY, TEAL: TEAL, SINCE: SINCE,
+    run: run, format: format, show: show, hidden: hidden, drawn: drawn, whole: whole, niceMax: niceMax, tally: tally,
+    dMon: dMon, asOfDate: asOfDate, weekend: weekend, ukDate: ukDate, days: days, longDate: longDate,
+    vbars: vbars, hbars: hbars, scatter: scatter, table: table, legend: legend, hiddenNote: hiddenNote, daily: daily,
+    el: htmlEl, csvText: csvText, download: download,
+    launchDates: launchDates, gameName: gameName, divide: divide, quiz: quiz
   };
 })();

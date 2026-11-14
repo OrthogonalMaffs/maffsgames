@@ -122,11 +122,7 @@
 
 <section class="box turn">
   <h2>Your turn</h2>
-  <ol>
-    <li>Draw a box plot from the five-number summary. Where would you draw the line for an outlier?</li>
-    <li>Remove the top four games. What happens to the mean? To the median? Why the difference?</li>
-    <li>Which "can't tell us" point worries you most? What extra data would fix it?</li>
-  </ol>
+  <div id="questions"></div>
   <button type="button" class="btn" id="csv" data-ugh-needs="counts" hidden>Download today's data (CSV)</button>
 </section>
 </main>
@@ -188,7 +184,7 @@
     };
   }
 
-  var rowsForCsv = null;
+  var rowsForCsv = null, counts = null;
   U.run({
     counts: function (d) {
       var s = summary(d.games), mount = document.getElementById('today');
@@ -212,8 +208,72 @@
       mount.appendChild(dl);
       rowsForCsv = { date: d.as_of.slice(0, 10), rows: Object.keys(d.games).map(function (k) { return [k, d.games[k]]; })
         .sort(function (a, b) { return b[1] - a[1] || (a[0] < b[0] ? -1 : 1); }) };
+      counts = d;
     }
+  }).then(function () { return U.launchDates(); }).then(function (ld) {
+    return second(ld).then(function (g2) { U.quiz(document.getElementById('questions'), 'case1', questions(ld, g2)); });
   });
+
+  /* THE QUESTIONS (contract UGH-STATS-QUESTIONS, Appendix B). Q1 to Q3 are worked here from today's answer-counts.json
+     and launch-dates.json, the same figures the question shows; one whose figures are missing is skipped.
+       D, a game's days   the UK dates from 1 September or its launch date, whichever is later, to the counts file's
+                          as-of date, both counted.
+       answer             its answers / D to the nearest whole number, a half going up (UghStats.divide).
+       game 2             Factor Theorem; when it has fewer than 10 answers, the lowest-answered game with at least 10
+                          that has a launch date (fewest first, then by slug), named from its own page's heading. */
+  var SIX = 'six-sevens-bruv', FT = 'factor-theorem';
+  function perDay(slug, name, ld) {
+    if (!counts || !ld || counts.since !== U.SINCE) return null;
+    var n = counts.games[slug], launch = ld[slug];
+    if (!U.whole(n) || !launch) return null;
+    var from = launch > U.SINCE ? launch : U.SINCE, d = U.days(from, U.ukDate(counts.as_of));
+    if (!(d >= 1)) return null;
+    var w = U.divide(n, d);
+    return { type: 'typed', answer: w.answer, working: w.working,
+      stem: name + ' went on the site on ' + U.longDate(launch) + '. Since 1 September it has been available for ' + d +
+        ' days and has ' + U.format(n) + ' answers. What is its mean number of answers per day, to the nearest whole number?' };
+  }
+  function second(ld) {
+    if (!counts || !ld) return Promise.resolve(null);
+    var g = counts.games;
+    if (U.whole(g[FT]) && g[FT] >= 10 && ld[FT]) return Promise.resolve({ slug: FT, name: 'Factor Theorem', ft: true });
+    var list = Object.keys(g).filter(function (k) { return k !== SIX && U.whole(g[k]) && g[k] >= 10 && ld[k]; })
+      .sort(function (a, b) { return g[a] - g[b] || (a < b ? -1 : 1); }).slice(0, 5);
+    var tryAt = function (i) {
+      if (i >= list.length) return Promise.resolve(null);
+      return U.gameName(list[i]).then(function (name) { return name ? { slug: list[i], name: name, ft: false } : tryAt(i + 1); });
+    };
+    return tryAt(0);
+  }
+  function questions(ld, g2) {
+    var q1 = perDay(SIX, 'Six Sevens, Bruv', ld), q2 = g2 ? perDay(g2.slug, g2.name, ld) : null;
+    var careful = "Answers per day already allows for when each game launched, but not for how many people could ever play it. A fair comparison would need the size of each audience.";
+    var mean = "The mean adds every value, so one huge value pulls it a long way. 25,438 ÷ 116 ≈ 219; without Six Sevens, 21,257 ÷ 115 ≈ 185. The median only moves by one place in the queue.";
+    return [q1, q2, function () {
+      if (!q1 || !q2) return null;
+      return { type: 'choice',
+        stem: 'Six Sevens gets about ' + U.format(q1.answer) + ' answers a day; ' + g2.name + ' about ' + U.format(q2.answer) +
+          '. Which is the best reason to be careful comparing these two numbers?',
+        options: [
+          { right: true, why: careful, text: g2.ft
+            ? "They're aimed at very different numbers of students: times tables are for almost everyone, factor theorem is for A level students only."
+            : g2.name + ' is for a much smaller group of students.' },
+          { text: "You can't work out a mean for a game with so few answers.",
+            why: "You can always work out a mean. The problem with few answers is that the mean can swing a lot with a single class, so it's less reliable, not impossible." },
+          { text: "Dividing by the number of days already makes the comparison fair.",
+            why: "It makes it fairer, because it removes the launch-date difference. It doesn't remove the difference in who the games are for." },
+          { text: "The bigger number must include a mistake.",
+            why: "Big differences are normal in skewed data like this. A surprising number is a reason to check, not proof of a mistake." }
+        ] };
+    }, { type: 'choice',
+      stem: "If we removed Six Sevens (4,181 answers) from the 116 games, which would change more?",
+      options: [
+        { right: true, text: "The mean", why: mean },
+        { text: "The median", why: "The median only looks at the middle of the queue. Removing the top game shifts it by half a place, so it barely moves." },
+        { text: "Both by the same amount", why: mean },
+        { text: "Neither", why: mean }
+      ] }];
+  }
   document.getElementById('csv').addEventListener('click', function () {
     if (rowsForCsv) U.download('maffsgames-answers-' + rowsForCsv.date + '.csv', ['slug', 'answers'], rowsForCsv.rows);
   });

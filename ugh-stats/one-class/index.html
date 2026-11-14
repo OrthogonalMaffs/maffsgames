@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-QUESTIONS, 14 Nov 2026). Frozen figures: the table on this page is the
+     record, the chart is drawn from it by /schools/assets/ugh-stats.js, and scripts/check-ugh-stats.py holds the table to
+     this folder's data.csv. -->
+<meta name="description" content="Our busiest month looked like growth. Was it? A case study in outliers and mean v median, from MaffsGames' own figures, with a CSV and questions.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/one-class/">
+<meta property="og:title" content="One class, 3,667 answers | MaffsGames">
+<meta property="og:description" content="Our busiest month looked like growth. Was it? A case study in outliers and mean v median, from MaffsGames' own figures, with a CSV and questions.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/one-class/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>One class, 3,667 answers | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="crumb"><a href="/ugh-stats/">&larr; Ugh, stats</a></p>
+<p class="kicker">Case 3 &middot; outliers &middot; mean v median</p>
+<h1>One class, 3,667 answers</h1>
+
+<section class="step">
+  <h2><span class="step-n">1</span>Ask</h2>
+  <p>On 12 November I looked at the last four weeks: 13,664 answers in 28 days, a mean of 488 a day. I was pleased. That looked like growth. Was it?</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">2</span>Collect</h2>
+  <p>Then I looked at the days. On Tuesday 3 November a single class in Malaysia answered 3,667 questions. On 23 October a class in Wales answered 3,099. Take those two days out and the other 26 days average 265. Two classes, on two days, had nearly doubled my "typical" day.</p>
+  <table class="week-table" id="week">
+    <caption>The week of 2 November</caption>
+    <thead><tr><th scope="col">Mon 2</th><th scope="col">Tue 3</th><th scope="col">Wed 4</th><th scope="col">Thu 5</th><th scope="col">Fri 6</th></tr></thead>
+    <tbody><tr><td>108</td><td>3,667</td><td>402</td><td>228</td><td>578</td></tr></tbody>
+  </table>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">3</span>Picture it</h2>
+  <p class="chart-title">Answers each day, 15 October to 11 November 2026</p>
+  <div id="dailyChart"></div>
+  <p class="ugh-axis">The two tall bars are single classes.</p>
+  <details class="ugh-table">
+    <summary>Show the figures as a table</summary>
+    <table id="days">
+      <caption>Answers each day, 15 October to 11 November 2026</caption>
+      <thead><tr><th scope="col">Day</th><th scope="col">Answers</th><th scope="col">Whole-class day</th></tr></thead>
+      <tbody>
+        <tr data-date="2026-10-15"><th scope="row">Thu 15 Oct</th><td>513</td><td>no</td></tr>
+        <tr data-date="2026-10-16"><th scope="row">Fri 16 Oct</th><td>451</td><td>no</td></tr>
+        <tr data-date="2026-10-17"><th scope="row">Sat 17 Oct</th><td>71</td><td>no</td></tr>
+        <tr data-date="2026-10-18"><th scope="row">Sun 18 Oct</th><td>140</td><td>no</td></tr>
+        <tr data-date="2026-10-19"><th scope="row">Mon 19 Oct</th><td>214</td><td>no</td></tr>
+        <tr data-date="2026-10-20"><th scope="row">Tue 20 Oct</th><td>142</td><td>no</td></tr>
+        <tr data-date="2026-10-21"><th scope="row">Wed 21 Oct</th><td>118</td><td>no</td></tr>
+        <tr data-date="2026-10-22"><th scope="row">Thu 22 Oct</th><td>586</td><td>no</td></tr>
+        <tr data-date="2026-10-23"><th scope="row">Fri 23 Oct</th><td>3,099</td><td>yes</td></tr>
+        <tr data-date="2026-10-24"><th scope="row">Sat 24 Oct</th><td>85</td><td>no</td></tr>
+        <tr data-date="2026-10-25"><th scope="row">Sun 25 Oct</th><td>124</td><td>no</td></tr>
+        <tr data-date="2026-10-26"><th scope="row">Mon 26 Oct</th><td>732</td><td>no</td></tr>
+        <tr data-date="2026-10-27"><th scope="row">Tue 27 Oct</th><td>172</td><td>no</td></tr>
+        <tr data-date="2026-10-28"><th scope="row">Wed 28 Oct</th><td>735</td><td>no</td></tr>
+        <tr data-date="2026-10-29"><th scope="row">Thu 29 Oct</th><td>80</td><td>no</td></tr>
+        <tr data-date="2026-10-30"><th scope="row">Fri 30 Oct</th><td>27</td><td>no</td></tr>
+        <tr data-date="2026-10-31"><th scope="row">Sat 31 Oct</th><td>51</td><td>no</td></tr>
+        <tr data-date="2026-11-01"><th scope="row">Sun 1 Nov</th><td>93</td><td>no</td></tr>
+        <tr data-date="2026-11-02"><th scope="row">Mon 2 Nov</th><td>108</td><td>no</td></tr>
+        <tr data-date="2026-11-03"><th scope="row">Tue 3 Nov</th><td>3,667</td><td>yes</td></tr>
+        <tr data-date="2026-11-04"><th scope="row">Wed 4 Nov</th><td>402</td><td>no</td></tr>
+        <tr data-date="2026-11-05"><th scope="row">Thu 5 Nov</th><td>228</td><td>no</td></tr>
+        <tr data-date="2026-11-06"><th scope="row">Fri 6 Nov</th><td>578</td><td>no</td></tr>
+        <tr data-date="2026-11-07"><th scope="row">Sat 7 Nov</th><td>228</td><td>no</td></tr>
+        <tr data-date="2026-11-08"><th scope="row">Sun 8 Nov</th><td>115</td><td>no</td></tr>
+        <tr data-date="2026-11-09"><th scope="row">Mon 9 Nov</th><td>310</td><td>no</td></tr>
+        <tr data-date="2026-11-10"><th scope="row">Tue 10 Nov</th><td>357</td><td>no</td></tr>
+        <tr data-date="2026-11-11"><th scope="row">Wed 11 Nov</th><td>238</td><td>no</td></tr>
+      </tbody>
+    </table>
+  </details>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">4</span>Decide</h2>
+  <p>A value that sits far away from the rest is an outlier. The mean adds every value, so one outlier drags it a long way. The median only looks at the middle value, so it barely notices. This is why the Office for National Statistics reports the median wage as its headline figure for pay. A few very high earners pull the mean up, so the mean describes nobody's pay packet. The median is what the person in the middle earns. So when we talk about a typical day now, we use the median, and we report big class days on their own.</p>
+</section>
+
+<section class="box cant">
+  <h2>What this data can't tell us</h2>
+  <ul>
+    <li>We can't be certain a big day is one class: we see a burst of answers from one country in a short time, not who sent them.</li>
+    <li>Answers aren't students.</li>
+    <li>Our own testing is in the numbers.</li>
+  </ul>
+</section>
+
+<section class="box turn">
+  <h2>Your turn</h2>
+  <div id="questions"></div>
+  <a class="btn" id="csv" href="/ugh-stats/one-class/data.csv" download="maffsgames-one-class.csv">Download the data (CSV)</a>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+
+  // Frozen figures: the chart is drawn from the table on this page (scripts/check-ugh-stats.py holds it to data.csv).
+  var rows = [].map.call(document.querySelectorAll('#days tbody tr'), function (tr) {
+    return { date: tr.getAttribute('data-date'), value: Number(tr.children[1].textContent.replace(/,/g, '')),
+      cls: tr.children[2].textContent.trim() === 'yes' };
+  });
+  var mount = document.getElementById('dailyChart');
+  U.legend(mount, [['Other days', U.NAVY], ['A whole-class day', U.TEAL]]);
+  U.vbars(mount, rows.map(function (r) {
+    var mon = new Date(r.date + 'T00:00:00Z').getUTCDay() === 1;
+    return { name: U.dMon(r.date), tick: mon ? U.dMon(r.date) : '', value: r.value, fill: r.cls ? U.TEAL : U.NAVY };
+  }), { title: 'Answers each day, 15 October to 11 November 2026', height: 230 });
+
+  U.run({}).then(function () {
+    U.quiz(document.getElementById('questions'), 'case3', [
+      { type: 'typed', answer: 997,
+        stem: "Find the mean number of answers per day for Monday 2 to Friday 6 November, to the nearest whole number.",
+        working: "108 + 3,667 + 402 + 228 + 578 = 4,983. 4,983 ÷ 5 = 996.6 ≈ 997." },
+      { type: 'typed', answer: 402,
+        stem: "Find the median number of answers per day for the same five days.",
+        working: "In order: 108, 228, 402, 578, 3,667. The middle value is 402." },
+      { type: 'choice', stem: "Which number best describes a typical weekday that week?",
+        options: [
+          { right: true, text: "The median, 402.",
+            why: "Only one day got anywhere near 997. Four of the five days were between 108 and 578, and the median sits among them. Without Tuesday, the mean would be 329 and the median 315: the median hardly moved, the mean fell by two-thirds." },
+          { text: "The mean, 997.", why: "Four of the five days were under 600. A 'typical' value that is higher than almost every day isn't typical." },
+          { text: "The biggest value, 3,667.", why: "That's the outlier itself: one class on one day." },
+          { text: "The range, 3,559.", why: "The range measures how spread out the values are, not what a typical day looks like." }
+        ] },
+      { type: 'choice', stem: "Should we delete 3 November from our data?",
+        options: [
+          { right: true, text: "No. It's real, so keep it, but use the median for a typical day and report the class separately.",
+            why: "The class really did answer 3,667 questions. Deleting it would hide something true. Choose the average that answers your question, and say what you did." },
+          { text: "Yes, outliers are always mistakes.", why: "Some outliers are mistakes: always check. This one isn't: we know it was one class." },
+          { text: "Yes, it makes the site look busier than it is.", why: "That's a reason to describe it carefully, not to delete it." },
+          { text: "No, and the mean is the right average to report.", why: "Keeping it is right. But the mean of 997 still misdescribes a typical day." }
+        ] }
+    ]);
+  });
+})();
+</script>
+</body>
+</html>
