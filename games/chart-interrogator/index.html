@@ -374,7 +374,8 @@ function nounSubject(s){
 // ===== STATE =====
 var selectedType=null,selectedLevel=null;
 var currentScenario=null,currentPhase=1,currentQIndex=0;
-var qWrongTries=0;   // wrong tries on the current Phase 1 question: question_answered's correct and attempts (ANSWER-LOGGING-WRONG)
+var qWrongTries=0;   // wrong tries on the current Phase 1 question, or wrong submissions of the Phase 2 comparison: question_answered's correct and attempts (ANSWER-LOGGING-WRONG, CI-PHASE2-LOGGING)
+var qFirstTry=0;     // Phase 1 questions right first time this game: game_completed's accuracy (CI-PHASE2-LOGGING)
 var phase1Questions=[],phase2Dropdowns=[];
 var sessionAnswers={};
 var timerInterval=null,startTime=0,elapsed=0;
@@ -432,7 +433,7 @@ function beginGame(){
 
   document.getElementById('selector').style.display='none';
   document.getElementById('gameContainer').style.display='block';
-  window._ggAbandoned=true;window._ciQAnswered=0;
+  window._ggAbandoned=true;window._ciQAnswered=0;qFirstTry=0;
   mfg('game_started',{game_slug:'chart-interrogator',level:selectedLevel});
   if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'chart-interrogator',level:selectedLevel,questions_answered:window._ciQAnswered||0})});}
 
@@ -901,7 +902,7 @@ function unique(v,i,a){return a.indexOf(v)===i;}
 
 // ===== SHOW QUESTIONS =====
 function showCurrentQuestion(){
-  qWrongTries=0;   // a new question (or Phase 2): no wrong try yet
+  qWrongTries=0;   // a new question, or Phase 2's comparison (showPhase2 is called from here): no wrong try yet
   var cq=document.getElementById('completedQuestions');
   var aq=document.getElementById('activeQuestion');
 
@@ -967,7 +968,7 @@ function submitPhase1(){
   if(!MaffsLock.lock(aq))return;
 
   if(readingOk(val,q.expected,q.tolerance,q.alt)){
-    sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;
+    sessionAnswers[q.key]=q.expected;window._ciQAnswered=(window._ciQAnswered||0)+1;if(qWrongTries===0)qFirstTry++;
     mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:qWrongTries===0,attempts:qWrongTries+1,question_index:currentQIndex+1});
     fb.textContent='Correct \u2014 '+(q.shown!==undefined?q.shown:q.expected)+(q.suffix||'');fb.className='q-feedback correct';
     MaffsLock.timer(function(){currentQIndex++;showCurrentQuestion();},600);
@@ -986,7 +987,7 @@ function submitMC(btn,answer){
   var q=phase1Questions[currentQIndex];
   var fb=document.getElementById('qFeedback');
   if(answer===q.expected){
-    sessionAnswers[q.key]=answer;window._ciQAnswered=(window._ciQAnswered||0)+1;
+    sessionAnswers[q.key]=answer;window._ciQAnswered=(window._ciQAnswered||0)+1;if(qWrongTries===0)qFirstTry++;
     mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:qWrongTries===0,attempts:qWrongTries+1,question_index:currentQIndex+1});
     btn.style.borderColor='var(--green)';btn.style.background='var(--green-dim)';btn.style.color='var(--green)';
     fb.textContent='Correct!';fb.className='q-feedback correct';
@@ -1221,6 +1222,9 @@ function submitPhase2(){
     clearInterval(timerInterval);
     fb.textContent='All correct! See the model answer below.';fb.className='q-feedback correct';
     showModelAnswer();
+    // The comparison is one question (Jon, 13 Nov 2026): right first time = every part right on the first submission.
+    // Sent once: the lock taken above is never reopened on this branch. _ciQAnswered stays the Phase 1 count.
+    mfg('question_answered',{game_slug:'chart-interrogator',level:selectedLevel,correct:qWrongTries===0,attempts:qWrongTries+1,question_index:phase1Questions.length+1});
     showScore();
   }else{
     // The right conclusion reached by the misconception (histograms): say so, with the reason
@@ -1228,6 +1232,7 @@ function submitPhase2(){
     fb.textContent=near?'Right answer, wrong reason. '+near.dataset.why
       :'Some answers are incorrect \u2014 check the highlighted '+(inputs.length?'answers':'dropdowns')+'.';
     fb.className='q-feedback wrong';
+    qWrongTries++;
     MaffsLock.fresh(aq);   // another try
   }
 }
@@ -1266,7 +1271,7 @@ var multiplier = 1;
   var score=Math.max(1,Math.round(BASE*multiplier));
 
   window._ggAbandoned=false;
-  mfg('game_completed',{game_slug:'chart-interrogator',level:selectedLevel,score:score,questions_answered:window._ciQAnswered||0,accuracy:100});
+  mfg('game_completed',{game_slug:'chart-interrogator',level:selectedLevel,score:score,questions_answered:window._ciQAnswered||0,accuracy:window._ciQAnswered?Math.round(qFirstTry/window._ciQAnswered*100):0});
   if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('chart-interrogator',selectedLevel,score,window._ciQAnswered||0).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('chart-interrogator',selectedLevel,score);}}
 
   var pbKey='ci_pb_'+selectedType+'_'+selectedLevel;
