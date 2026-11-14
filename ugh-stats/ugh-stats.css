@@ -97,6 +97,7 @@ h3 { color: var(--navy); font-size: 1.1rem; line-height: 1.3; margin: 0 0 0.4rem
   border: 0; border-radius: 8px; padding: 0.65rem 1.1rem; margin: 0.2rem 0 0.8rem; cursor: pointer; min-height: 44px;
 }
 .btn:hover { background: var(--navy); }
+.btn[hidden] { display: none; }   /* .btn's display would otherwise override the hidden attribute */
 
 /* charts */
 .chart-title { font-weight: 600; color: var(--navy); margin-bottom: 0.4rem; }
@@ -113,6 +114,44 @@ h3 { color: var(--navy); font-size: 1.1rem; line-height: 1.3; margin: 0 0 0.4rem
 .ugh-table th, .ugh-table td { text-align: left; padding: 0.25rem 0.75rem 0.25rem 0; border-bottom: 1px solid var(--border); font-weight: 400; }
 .ugh-table thead th { font-weight: 600; color: var(--navy); }
 .ugh-table td { font-family: var(--mono); }
+
+.ugh-swatch.ring { background: #fff; border: 2px solid; border-radius: 50%; }
+
+/* the questions (contract UGH-STATS-QUESTIONS): one widget, drawn by ugh-stats.js */
+.ugh-quiz { margin-bottom: 0.8rem; }
+.ugh-q-count { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--teal-dark); margin-bottom: 0.3rem; }
+.ugh-q-count:focus { outline: none; }
+.ugh-q-stem { font-weight: 600; color: var(--navy); }
+.ugh-q-form { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+.ugh-q-label { flex-basis: 100%; font-size: 0.9rem; color: var(--muted); }
+.ugh-q-input {
+  font-family: var(--mono); font-size: 1.15rem; width: 8.5rem; min-height: 44px; padding: 0.4rem 0.6rem;
+  border: 2px solid var(--border); border-radius: 8px; background: #fff; color: var(--navy);
+}
+.ugh-q-input:focus { border-color: var(--teal); outline: none; }
+.ugh-q-form .btn { margin: 0; }
+.ugh-q-options { display: grid; gap: 0.5rem; margin-bottom: 0.7rem; }
+.ugh-q-option {
+  font-family: inherit; font-size: 0.98rem; text-align: left; color: var(--text); background: #fff; line-height: 1.45;
+  border: 2px solid var(--border); border-radius: 10px; padding: 0.6rem 0.8rem; min-height: 44px; cursor: pointer;
+}
+.ugh-q-option:hover:not(:disabled) { border-color: var(--teal); }
+.ugh-q-option:disabled { cursor: default; color: var(--text); }
+.ugh-q-option.chosen { border-color: var(--navy); }
+.ugh-q-option.right { border-color: var(--teal); background: var(--accent-light); }
+.ugh-q-verdict { font-weight: 700; color: var(--navy); margin-bottom: 0.3rem; }
+.ugh-q-answer { font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; }
+.ugh-q-working { font-family: var(--mono); font-size: 0.92rem; color: var(--navy); }
+.ugh-q-try, .ugh-q-end { color: var(--muted); }
+
+/* Case 3's week and the foreword */
+.week-table { border-collapse: collapse; width: 100%; margin: 0.4rem 0 1rem; font-size: 0.9rem; }
+.week-table caption { text-align: left; font-weight: 600; color: var(--navy); padding-bottom: 0.3rem; }
+.week-table th, .week-table td { text-align: center; padding: 0.3rem 0.2rem; border-bottom: 1px solid var(--border); }
+.week-table th { font-weight: 600; color: var(--navy); }
+.week-table td { font-family: var(--mono); }
+.foreword { border-left: 4px solid var(--navy); border-radius: 0 12px 12px 0; }
+.foreword .signoff { font-weight: 700; color: var(--navy); }
 
 @media (max-width: 480px) {
   .nav { padding: 0.85rem 1rem; }

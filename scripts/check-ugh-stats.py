@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ci-line: Ugh, stats pages (the four /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows "Figures unavailable right now" and no number; "<10" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; three planted faults caught) | --selftest && --check
-# ci-deps: ugh-stats/ schools/assets/ugh-stats.js schools/assets/answer-counts.json schools/assets/ugh-stats.json
-"""Do the "Ugh, stats" pages show the figures the site's own files hold, and nothing when they cannot? (contract
-UGH-STATS-PAGES, 14 Nov 2026)
+# ci-line: Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows "Figures unavailable right now" and no number; "<10" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or "<10" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; nine planted faults caught) | --selftest && --check
+# ci-deps: ugh-stats/ schools/assets/ugh-stats.js schools/assets/answer-counts.json schools/assets/ugh-stats.json schools/assets/launch-dates.json games/ escape-rooms/
+"""Do the "Ugh, stats" pages show the figures the site's own files hold, and nothing when they cannot? (contracts
+UGH-STATS-PAGES and UGH-STATS-QUESTIONS, 14 Nov 2026)
 
     python scripts/check-ugh-stats.py --check                 # the four pages, in Chromium, on the repo's files and on plants
     python scripts/check-ugh-stats.py --selftest              # three planted faults must each be caught
@@ -21,6 +21,15 @@ figure from two committed files through one loader, schools/assets/ugh-stats.js.
   CASE 1   a planted answer-counts.json of 13 games (HAND below) gives the hand-worked figures; the CSV lists every
            slug, most answers first.
   FROZEN   Case 1's 12 November figures and sentences are exactly the contract's (Jon's decision record).
+  QUIZ     every case's questions, played in the page: each typed answer is worked here from the numbers its question
+           shows, and those numbers from the files the page reads (Case 1's days per game from launch-dates.json);
+           one too high is refused, the exact answer is accepted, the working matches; each multiple-choice question
+           offers four options with the contract's right one; every answer sends exactly one stats_question_answered.
+  SKIP     a question whose figures are missing or include "<10" is skipped, and only that question.
+  LAUNCH   every games/<slug>/ and escape-rooms/<slug>/ page has a real date in launch-dates.json.
+  NOQA     no ugh-stats page or the loader names question_answered (the event that counts game answers).
+  CASE34   Cases 3 and 4 (frozen): the tables on the page are their data.csv, every figure the text states is worked
+           from it, every r is the Pearson r of data.csv's columns to 2 places, and the charts draw the tables.
   FIT      no page scrolls sideways at 375 px, in any of the states above.
   OUTSIDE  no page requests any URL off the site except Google Fonts (served here from the pinned copies).
 
@@ -54,9 +63,11 @@ STALE = dt.timedelta(days=7)
 COUNTS = "/schools/assets/answer-counts.json"
 STATS = "/schools/assets/ugh-stats.json"
 LOADER = "/schools/assets/ugh-stats.js"
+LAUNCH = "/schools/assets/launch-dates.json"
 PAGES = {"landing": "ugh-stats/index.html", "case1": "ugh-stats/half-our-games/index.html",
-         "charts": "ugh-stats/charts/index.html", "case2": "ugh-stats/whos-playing/index.html"}
-READS = {"landing": ("counts",), "case1": ("counts",), "charts": ("stats",), "case2": ("stats",)}
+         "charts": "ugh-stats/charts/index.html", "case2": "ugh-stats/whos-playing/index.html",
+         "case3": "ugh-stats/one-class/index.html", "case4": "ugh-stats/flu-and-answers/index.html"}
+READS = {"landing": ("counts",), "case1": ("counts",), "charts": ("stats",), "case2": ("stats",), "case3": (), "case4": ()}
 MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
 LEVELS = {"year6": "Year 6", "ks3": "KS3", "gcse": "GCSE", "higher": "GCSE Higher", "core": "Core Maths", "alevel": "A level",
           "further": "Further Maths", "level3": "Level 3", "level4": "Level 4", "all": "All levels", "none": "No level", "other": "Other"}
@@ -282,6 +293,8 @@ class Site:
         page.route("**/*", handle)
         page.goto("%s/%s" % (self.base, rel), wait_until="domcontentloaded", timeout=30000)
         page.wait_for_function("document.documentElement.getAttribute('data-ugh-ready') === '1'", timeout=30000)
+        page.wait_for_function("[...document.querySelectorAll('#questions')].every(m => m.getAttribute('data-ugh-quiz') === 'ready')",
+                               timeout=30000)
         page.evaluate("document.fonts.ready.then(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))))")
         page.evaluate("window.dispatchEvent(new Event('resize'))")
         page.wait_for_timeout(250)
@@ -464,7 +477,9 @@ def examine(site, base_plants=None, only=None):
             got, rec, extra = look(key, {}, csv_of if key in ("case1", "case2") else None)
             name = "%s (the repo's files)" % key
             common(name, got, rec, faults)
-            if "counts" in READS[key]:
+            if not READS[key]:
+                pass
+            elif "counts" in READS[key]:
                 if usable(counts):
                     expect_counts(name, key, got, counts, faults, "REAL", extra)
                 else:
@@ -482,6 +497,8 @@ def examine(site, base_plants=None, only=None):
                  ("the wrong shape", {COUNTS: misshapen_counts(), STATS: misshapen_stats()})]
         for label, plants in cases:
             for key in PAGES:
+                if not READS[key]:
+                    continue
                 got, rec, _ = look(key, plants)
                 name = "%s (%s)" % (key, label)
                 common(name, got, rec, faults)
@@ -509,13 +526,483 @@ def examine(site, base_plants=None, only=None):
                 expect_stats(name, key, got, st, faults, "SMALL", extra)
         assert uk_share(planted_stats()["countries"]) == "at least 92.8%"       # 900 / (900 + 60 + 9) = 92.87...
         assert uk_share(planted_stats(small=False)["countries"]) == "90.0%"      # 900 / 1000
+    if want("QUIZ"):
+        for key in ("case1", "case2", "case3", "case4"):
+            check_quiz(site, key, dict(base_plants), "the repo's files", faults)
+        # Factor Theorem as game 2: a counts file where it has 10 or more answers
+        c = planted_counts()
+        c["games"].update({SIX: 900, FT: 40})
+        p = dict(base_plants)
+        p[COUNTS] = c
+        check_quiz(site, "case1", p, "Factor Theorem with 40 answers", faults)
+    if want("SKIP"):
+        none_small = planted_counts()          # Factor Theorem under 10 and no A level / Further / Level 4 game at 10 or more
+        none_small["games"].update({SIX: 900, FT: 5, "its-on-sale": 50})
+        for label, extra in (("answer-counts.json missing", {COUNTS: None}), ("launch-dates.json missing", {LAUNCH: None}),
+                             ("no game 2 qualifies", {COUNTS: none_small})):
+            p = dict(base_plants)
+            p.update(extra)
+            check_quiz(site, "case1", p, label, faults)
+        st = planted_stats(small=False)
+        first_weekend = next(r for r in st["daily"] if dt.date.fromisoformat(r["date"]).weekday() >= 5)
+        first_weekend["starts"] = HIDDEN
+        st2 = planted_stats(small=False)
+        first_weekday = next(r for r in st2["daily"] if dt.date.fromisoformat(r["date"]).weekday() < 5)
+        first_weekday["starts"] = HIDDEN
+        for label, s in (('a weekend day "<10"', st), ('a weekday "<10"', st2), ("ugh-stats.json missing", None)):
+            p = dict(base_plants)
+            p[STATS] = s
+            check_quiz(site, "case2", p, label, faults)
+    if want("LAUNCH"):
+        check_launch(base_plants, faults)
+    if want("NOQA"):
+        check_no_game_event(base_plants, faults)
+    if want("CASE34"):
+        check_frozen_cases(site, base_plants, faults)
     return faults
+
+
+# ------------------------------------------------------------------------------------------------ the questions
+# (contract UGH-STATS-QUESTIONS, 14 Nov 2026). Every typed answer is worked here from the numbers the question shows,
+# and those numbers are worked here from the files the page reads; every multiple-choice question's right option is the
+# contract's. Each page is played through in Chromium: typed answers are tried one too high first (it must be refused)
+# on alternate questions, multiple choice is answered wrongly on alternate questions, and every answer must send
+# exactly one stats_question_answered event and never question_answered.
+FULL_MONTHS = "January February March April May June July August September October November December".split()
+SINCE = "2026-09-01"
+SIX, FT = "six-sevens-bruv", "factor-theorem"
+CSV3, CSV4 = "/ugh-stats/one-class/data.csv", "/ugh-stats/flu-and-answers/data.csv"
+QUIZ_LEVEL = {"case1": "case1", "case2": "case2", "case3": "case3", "case4": "case4"}
+RIGHT = {
+    ("case1", 4): "The mean",
+    ("case2", 3): "Most play happens on school days, which fits classroom use, but doesn't prove it.",
+    ("case2", 4): "Whether play drops during school holidays, like half-term.",
+    ("case3", 3): "The median, 402.",
+    ("case3", 4): "No. It's real, so keep it, but use the median for a typical day and report the class separately.",
+    ("case4", 1): "Weeks with more flu tended to have more answers: a fairly strong positive correlation.",
+    ("case4", 2): "Something else drives both: the school term.",
+    ("case4", 3): "They all follow the time of year.",
+    ("case4", 4): "A few extreme values can make a correlation look much stronger than it is.",
+}
+FT_RIGHT = ("They're aimed at very different numbers of students: times tables are for almost everyone, factor theorem is "
+            "for A level students only.")
+
+
+class Wrong(Exception):
+    pass
+
+
+def source(path, plants):
+    """A served file's text: the plant when there is one, else the repo's (None when absent)."""
+    if path in plants:
+        body = plants[path]
+        return None if body is None else (json.dumps(body) if isinstance(body, dict) else body)
+    try:
+        return repo_text(path)
+    except OSError:
+        return None
+
+
+def source_json(path, plants):
+    text = source(path, plants)
+    try:
+        return json.loads(text) if text is not None else None
+    except ValueError:
+        return None
+
+
+def long_date(iso):
+    d = dt.date.fromisoformat(iso)
+    return "%d %s %d" % (d.day, FULL_MONTHS[d.month - 1], d.year)
+
+
+def divide(n, d):
+    """n / d to the nearest whole number (a half up), and the working, by Decimal (not the page's whole-number method)."""
+    from decimal import Decimal, ROUND_HALF_UP
+    exact = Decimal(n) / Decimal(d)
+    ans = int(exact.quantize(Decimal(1), rounding=ROUND_HALF_UP))
+    for k in range(1, 7):
+        shown = exact.quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP)
+        if int(shown.quantize(Decimal(1), rounding=ROUND_HALF_UP)) == ans:
+            break
+    whole_part, frac = str(shown).split(".")
+    return ans, "%s ÷ %s = %s.%s ≈ %s." % (fmt(n), fmt(d), fmt(int(whole_part)), frac, fmt(ans))
+
+
+def page_h1(slug):
+    try:
+        text = repo_text("games/%s/index.html" % slug)
+    except OSError:
+        return None
+    m = re.search(r"<h1[^>]*>(.*?)</h1>", text, re.S)
+    if not m:
+        return None
+    import html as _html
+    return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))).strip() or None
+
+
+SMALL_LEVELS = {"alevel", "further", "level4"}
+LEVEL_WORDS = [("alevel", "A level"), ("further", "Further Maths"), ("level4", "Level 4")]
+CARD = re.compile(r'''<a\s+[^>]*href="([^"]*)"[^>]*class="game-card"[^>]*data-levels="([^"]*)"''')
+
+
+def home_levels(plants):
+    """{slug: {levels}} from every portal card on the home page (Level 4's two spellings as one key)."""
+    out = {}
+    for href, levels in CARD.findall(source("/index.html", plants) or ""):
+        m = re.match(r"/?games/([^/?#]+)/", href)
+        if m:
+            out.setdefault(m.group(1), set()).update("level4" if x == "l4" else x for x in levels.split())
+    return out
+
+
+def level_words(levels):
+    w = [word for key, word in LEVEL_WORDS if key in levels]
+    return " and ".join([", ".join(w[:-1]), w[-1]]) if len(w) > 1 else w[0]
+
+
+def quiz_context(key, plants):
+    """What the page's questions should be, from the files it is served: {'expect': [indexes], ...}."""
+    ctx = {"expect": []}
+    if key == "case1":
+        counts, ld = source_json(COUNTS, plants), source_json(LAUNCH, plants)
+        ok = usable(counts) and isinstance(counts.get("games"), dict) and counts.get("since") == SINCE and isinstance(ld, dict)
+        ctx.update(counts=counts if ok else None, ld=ld if ok else None, g2=None)
+        if ok:
+            g = counts["games"]
+            if isinstance(g.get(FT), int) and g[FT] >= 10 and ld.get(FT):
+                ctx["g2"] = (FT, "Factor Theorem", True, {"alevel"})
+            else:
+                levels = home_levels(plants)
+                small = lambda k: bool(levels.get(k)) and levels[k] <= SMALL_LEVELS
+                cands = sorted((v, k) for k, v in g.items() if k != SIX and isinstance(v, int) and v >= 10 and ld.get(k) and small(k))[:5]
+                for _, slug in cands:
+                    if page_h1(slug):
+                        ctx["g2"] = (slug, page_h1(slug), False, levels[slug])
+                        break
+        q1 = ok and isinstance(counts["games"].get(SIX), int) and bool(ld.get(SIX))
+        q2 = ok and ctx["g2"] is not None
+        ctx["expect"] = [i for i, on in ((1, q1), (2, q2), (3, q1 and q2), (4, True)) if on]
+    elif key == "case2":
+        stats = source_json(STATS, plants)
+        ok = usable(stats) and isinstance(stats.get("daily"), list) and len(stats["daily"]) == 30
+        ctx["stats"] = stats if ok else None
+        part = lambda wkend: [r["starts"] for r in stats["daily"] if (dt.date.fromisoformat(r["date"]).weekday() >= 5) == wkend]
+        wd = ok and HIDDEN not in part(False) and bool(part(False))
+        we = ok and HIDDEN not in part(True) and bool(part(True))
+        ctx["expect"] = [i for i, on in ((1, wd), (2, we), (3, wd and we), (4, True)) if on]
+    elif key == "case3":
+        html = source("/" + PAGES["case3"], plants) or ""
+        m = re.search(r'<table class="week-table" id="week">.*?<tbody>(.*?)</tbody>', html, re.S)
+        ctx["week"] = [int(x.replace(",", "")) for x in re.findall(r"<td>([\d,]+)</td>", m.group(1))] if m else []
+        ctx["expect"] = [1, 2, 3, 4]
+    else:
+        ctx["expect"] = [1, 2, 3, 4]
+    return ctx
+
+
+def per_day(ctx, slug, name, stem):
+    counts, ld = ctx["counts"], ctx["ld"]
+    n, launch = counts["games"][slug], ld[slug]
+    to = as_of_time(counts).astimezone(zoneinfo.ZoneInfo("Europe/London")).date()
+    days = (to - dt.date.fromisoformat(max(launch, SINCE))).days + 1
+    want = ("%s went on the site on %s. Since 1 September it has been available for %d days and has %s answers. What is "
+            "its mean number of answers per day, to the nearest whole number?" % (name, long_date(launch), days, fmt(n)))
+    if stem != want:
+        raise Wrong("the stem reads %r, want %r" % (stem, want))
+    return divide(n, days)
+
+
+def expected(key, ctx, s):
+    """A typed question -> (answer, working); a multiple-choice one -> its right option's text. Wrong if the stem is off."""
+    i, stem = s["index"], s["stem"]
+    if key == "case1":
+        if i == 1:
+            return per_day(ctx, SIX, "Six Sevens, Bruv", stem)
+        if i in (2, 3):
+            if not ctx["g2"]:
+                raise Wrong("question %d shows, but there is no game 2 to ask about" % i)
+            slug, name, is_ft, levels = ctx["g2"]
+        if i == 2:
+            try:
+                return per_day(ctx, slug, name, stem)
+            except Wrong as e:
+                raise Wrong("game 2 must be %s (levels %s: only A level, Further Maths and/or Level 4): %s"
+                            % (slug, sorted(levels), e))
+        if i == 3:
+            a = per_day(ctx, SIX, "Six Sevens, Bruv", ctx["stem1"])[0]
+            b = per_day(ctx, slug, name, ctx["stem2"])[0]
+            want = ("Six Sevens gets about %s answers a day; %s about %s. Which is the best reason to be careful comparing "
+                    "these two numbers?" % (fmt(a), name, fmt(b)))
+            if stem != want:
+                raise Wrong("the stem reads %r, want %r (its numbers are Q1's and Q2's answers)" % (stem, want))
+            return FT_RIGHT if is_ft else "%s is for %s students only, a much smaller group." % (name, level_words(levels))
+    if key == "case2" and i in (1, 2, 3):
+        rows = ctx["stats"]["daily"]
+        part = lambda wkend: [r["starts"] for r in rows if (dt.date.fromisoformat(r["date"]).weekday() >= 5) == wkend]
+        wd, we = part(False), part(True)
+        if i == 1:
+            want = ("Over the last 30 days, %d weekdays had %s games started in total. What is the mean number of games "
+                    "started per weekday, to the nearest whole number?" % (len(wd), fmt(sum(wd))))
+            if stem != want:
+                raise Wrong("the stem reads %r, want %r" % (stem, want))
+            return divide(sum(wd), len(wd))
+        if i == 2:
+            want = ("The other %d days were weekends, with %s games started. What is the mean per weekend day, to the "
+                    "nearest whole number?" % (len(we), fmt(sum(we))))
+            if stem != want:
+                raise Wrong("the stem reads %r, want %r" % (stem, want))
+            return divide(sum(we), len(we))
+        want = ("Weekdays average about %s games started; weekend days about %s. Which conclusion does this best support?"
+                % (fmt(divide(sum(wd), len(wd))[0]), fmt(divide(sum(we), len(we))[0])))
+        if stem != want:
+            raise Wrong("the stem reads %r, want %r (its numbers are Q1's and Q2's answers)" % (stem, want))
+    if key == "case3" and i in (1, 2):
+        v = ctx["week"]
+        if len(v) != 5:
+            raise Wrong("the week table has %d figures, want 5" % len(v))
+        if i == 1:
+            ans = divide(sum(v), 5)[0]
+            from decimal import Decimal
+            return ans, "%s = %s. %s ÷ 5 = %s ≈ %s." % (" + ".join(fmt(x) for x in v), fmt(sum(v)), fmt(sum(v)),
+                                                        Decimal(sum(v)) / 5, fmt(ans))
+        srt = sorted(v)
+        return srt[2], "In order: %s. The middle value is %s." % (", ".join(fmt(x) for x in srt), fmt(srt[2]))
+    return RIGHT[(key, i)]
+
+
+STATE = r"""() => {
+  const box = document.querySelector('#questions .ugh-quiz');
+  if (!box) return null;
+  const t = s => (s || '').replace(/\s+/g, ' ').trim();
+  const next = box.querySelector('.ugh-q-next'), input = box.querySelector('.ugh-q-input');
+  return { index: Number(box.getAttribute('data-q-index')), type: box.getAttribute('data-q-type'),
+    stem: t((box.querySelector('.ugh-q-stem') || {}).textContent),
+    options: [...box.querySelectorAll('.ugh-q-option')].map(b => t(b.textContent)),
+    feedback: [...box.querySelectorAll('.ugh-q-feedback p')].map(p => t(p.textContent)),
+    answered: box.getAttribute('data-q-state') === 'answered', next: !!next && getComputedStyle(next).display !== 'none',
+    inputDisabled: !!(input && input.disabled), events: window.__ev ? window.__ev.length : -1 };
+}"""
+RECORD = "window.__ev = []; window.mfg = (n, p) => { window.__ev.push([n, JSON.parse(JSON.stringify(p || {}))]); };"
+CLICK_OPTION = """t => { const b = [...document.querySelectorAll('#questions .ugh-q-option')]
+  .find(b => b.textContent.replace(/\\s+/g, ' ').trim() === t); if (b) b.click(); return !!b; }"""
+
+
+def play(page, key, ctx, name, faults):
+    """Answer every question on the page; return the question numbers seen, in order."""
+    page.evaluate(RECORD)
+    seen = []
+    for _ in range(8):
+        s = page.evaluate(STATE)
+        if not s:
+            faults.append("%s: QUIZ, no questions on the page" % name)
+            break
+        if s["index"] in seen:
+            break
+        seen.append(s["index"])
+        pos, q = len(seen), "%s Q%d" % (name, s["index"])
+        if s["next"]:
+            faults.append("%s: QUIZ, Next is on screen before the question is answered" % q)
+        if key == "case1" and s["index"] in (1, 2):
+            ctx["stem%d" % s["index"]] = s["stem"]
+        try:
+            want = expected(key, ctx, s)
+        except (Wrong, KeyError, TypeError) as e:
+            faults.append("%s: QUIZ, %s" % (q, e))
+            want = None
+        before = len(page.evaluate("window.__ev"))
+        if s["type"] == "typed":
+            if want is None:
+                break
+            ans, working = want
+            first_wrong = pos % 2 == 1
+            if first_wrong:
+                page.fill("#questions .ugh-q-input", str(ans + 1))
+                page.click("#questions .ugh-q-check")
+                s2 = page.evaluate(STATE)
+                if s2["answered"] or "Right." in s2["feedback"]:
+                    faults.append("%s: QUIZ, %d was accepted, want only the exact %d" % (q, ans + 1, ans))
+            s2 = page.evaluate(STATE)
+            if not s2["inputDisabled"]:
+                page.fill("#questions .ugh-q-input", str(ans))
+                page.click("#questions .ugh-q-check")
+            s3 = page.evaluate(STATE)
+            if not first_wrong or not s2["inputDisabled"]:
+                if "Right." not in s3["feedback"]:
+                    faults.append("%s: QUIZ, the exact answer %d was not accepted: %r" % (q, ans, s3["feedback"]))
+                if "Working: " + working not in s3["feedback"]:
+                    faults.append("%s: QUIZ, the working reads %r, want %r" % (q, s3["feedback"], "Working: " + working))
+            want_ev = (not first_wrong, 2 if first_wrong else 1)
+        else:
+            if len(s["options"]) != 4 or (want and want not in s["options"]):
+                faults.append("%s: QUIZ, the options are %r, want four with %r right" % (q, s["options"], want))
+            right = want if want in s["options"] else s["options"][0]
+            pick = right if pos % 2 == 0 else [o for o in s["options"] if o != right][0]
+            page.evaluate(CLICK_OPTION, pick)
+            s3 = page.evaluate(STATE)
+            verdict = "Right." if pick == right else "Not quite."
+            if not s3["feedback"] or s3["feedback"][0] != verdict:
+                faults.append("%s: QUIZ, choosing %r shows %r, want %r first" % (q, pick[:40], s3["feedback"][:1], verdict))
+            if pick != right and "The answer: " + right not in s3["feedback"]:
+                faults.append("%s: QUIZ, a wrong choice does not show the right answer %r" % (q, right[:50]))
+            want_ev = (pick == right, 1)
+        ev = page.evaluate("window.__ev")[before:]
+        want_params = {"game_slug": "ugh-stats", "level": QUIZ_LEVEL[key], "question_index": s["index"],
+                       "correct": want_ev[0], "attempts": want_ev[1]}
+        names = [e[0] for e in ev]
+        if "question_answered" in names:
+            faults.append("%s: QUIZ, the answer sent question_answered (the game-answer event)" % q)
+        if ev != [["stats_question_answered", want_params]]:
+            faults.append("%s: QUIZ, the answer sent %r, want exactly one stats_question_answered %r" % (q, ev, want_params))
+        if s3["next"]:
+            page.click("#questions .ugh-q-next")
+        else:
+            break
+    return seen
+
+
+def check_quiz(site, key, plants, label, faults):
+    ctx = quiz_context(key, plants)
+    name = "%s (%s)" % (key, label)
+    page, rec = site.open(PAGES[key], plants)
+    try:
+        got = page.evaluate(PROBE)
+        common(name, got, rec, faults)
+        seen = play(page, key, ctx, name, faults)
+    finally:
+        page.close()
+    if seen != ctx["expect"]:
+        faults.append("%s: SKIP, the questions shown are %r, want %r (a question whose figures are missing or \"<10\" is skipped)"
+                      % (name, seen, ctx["expect"]))
+
+
+def check_launch(plants, faults):
+    """Every game and room directory with a page has a launch date, and every date is a real one."""
+    ld = source_json(LAUNCH, plants)
+    if not isinstance(ld, dict):
+        faults.append("LAUNCH: schools/assets/launch-dates.json is missing or not {slug: date}")
+        return
+    import glob
+    for pattern in ("games/*/index.html", "escape-rooms/*/index.html"):
+        for path in sorted(glob.glob(os.path.join(ROOT, pattern))):
+            slug = os.path.basename(os.path.dirname(path))
+            if slug not in ld:
+                faults.append("LAUNCH: %s has no line in launch-dates.json (a new game adds its own at launch)"
+                              % os.path.relpath(path, ROOT).replace(os.sep, "/"))
+    for slug, d in ld.items():
+        try:
+            ok = dt.date(2026, 1, 1) <= dt.date.fromisoformat(d) <= dt.date.today() and len(d) == 10
+        except (TypeError, ValueError):
+            ok = False
+        if not ok:
+            faults.append("LAUNCH: launch-dates.json gives %s the date %r, want a real YYYY-MM-DD" % (slug, d))
+
+
+def check_no_game_event(plants, faults):
+    for path in [LOADER] + ["/" + p for p in PAGES.values()]:
+        text = source(path, plants) or ""
+        if re.search(r"(?<!stats_)question_answered", text):
+            faults.append("NOQA: %s names question_answered; the questions send stats_question_answered only" % path.lstrip("/"))
+
+
+def pearson(x, y):
+    n = len(x)
+    mx, my = sum(x) / n, sum(y) / n
+    sxy = sum((a - mx) * (b - my) for a, b in zip(x, y))
+    return sxy / (sum((a - mx) ** 2 for a in x) * sum((b - my) ** 2 for b in y)) ** 0.5
+
+
+def r2(v):
+    s = "%.2f" % v
+    return s.replace("-", "−")
+
+
+def check_frozen_cases(site, plants, faults):
+    """Cases 3 and 4: the tables on the page are their data.csv, every stated figure and r is worked from it, and the
+    charts draw it."""
+    import csv as _csv
+    import io
+    rows3 = list(_csv.DictReader(io.StringIO(source(CSV3, plants) or "")))
+    rows4 = list(_csv.DictReader(io.StringIO(source(CSV4, plants) or "")))
+    html3, html4 = source("/" + PAGES["case3"], plants) or "", source("/" + PAGES["case4"], plants) or ""
+    # Case 3
+    table = re.findall(r'<tr data-date="([\d-]+)"><th scope="row">([^<]+)</th><td>([\d,]+)</td><td>(yes|no)</td></tr>', html3)
+    want = [(r["date"], "%s %d %s" % (r["day"], int(r["date"][8:]), dt.date.fromisoformat(r["date"]).strftime("%b")),
+             fmt(int(r["answers"])), r["whole_class_day"]) for r in rows3]
+    if table != want or len(rows3) != 28:
+        faults.append("case3: CSV, the 28-day table on the page is not data.csv (%d rows on the page, %d in the CSV)" % (len(table), len(rows3)))
+    a = [int(r["answers"]) for r in rows3] or [0]
+    rest = [int(r["answers"]) for r in rows3 if r["whole_class_day"] == "no"] or [0]
+    week = [int(r["answers"]) for r in rows3 if "2026-11-02" <= r["date"] <= "2026-11-06"]
+    wk_page = re.search(r'id="week">.*?<tbody>(.*?)</tbody>', html3, re.S)
+    if not wk_page or [int(x.replace(",", "")) for x in re.findall(r"<td>([\d,]+)</td>", wk_page.group(1))] != week:
+        faults.append("case3: CSV, the week of 2 November on the page is not data.csv's 2 to 6 November %r" % week)
+    srt = sorted(week) if len(week) == 5 else [0] * 5
+    no_tue = sorted(week[:1] + week[2:]) if len(week) == 5 else [0] * 4
+    from decimal import Decimal, ROUND_HALF_UP
+    rnd = lambda v: int(Decimal(v).quantize(Decimal(1), rounding=ROUND_HALF_UP))
+    stated = [
+        "%s answers in %d days, a mean of %s a day" % (fmt(sum(a)), len(a), fmt(rnd(Decimal(sum(a)) / len(a)))),
+        "the other %d days average %s" % (len(rest), fmt(rnd(Decimal(sum(rest)) / len(rest)))),
+        "The median, %s." % fmt(srt[2]),
+        "The mean, %s." % fmt(rnd(Decimal(sum(week)) / 5)),
+        "The biggest value, %s." % fmt(max(week or [0])),
+        "The range, %s." % fmt(max(week or [0]) - min(week or [0])),
+        "Without Tuesday, the mean would be %s and the median %s" % (fmt(rnd(Decimal(sum(no_tue)) / 4)), fmt(rnd(Decimal(no_tue[1] + no_tue[2]) / 2))),
+    ]
+    for s in stated:
+        if s not in html3:
+            faults.append("case3: CSV, the page should say %r, worked from data.csv" % s)
+    # Case 4
+    table = re.findall(r'<tr( data-class-day="yes")?><th scope="row">([^<]+)</th><td>([\d,]+)</td><td>([\d.]+)</td></tr>', html4)
+    want = [(' data-class-day="yes"' if r["answers"] != r["answers_without_class_days"] else "",
+             "%d %s" % (int(r["week_beginning"][8:]), dt.date.fromisoformat(r["week_beginning"]).strftime("%b")),
+             fmt(int(r["answers"])), r["flu_tests_positive_pct"]) for r in rows4]
+    if table != want or len(rows4) != 9:
+        faults.append("case4: CSV, the week table on the page is not data.csv (%d rows on the page, %d in the CSV)" % (len(table), len(rows4)))
+    if len(rows4) >= 3:
+        col = lambda k: [float(r[k]) for r in rows4]
+        flu, ans, dl = col("flu_tests_positive_pct"), col("answers"), col("daylight_hours")
+        r_main, r_wo = pearson(flu, ans), pearson(flu, col("answers_without_class_days"))
+        r_dl, r_dlf = pearson(dl, ans), pearson(dl, flu)
+        for s in ("For these two, r = %s." % r2(r_main), "What does r = %s tell you?" % r2(r_main),
+                  "correlates with our answers: r = %s." % r2(r_dl), "correlate with each other: r = %s." % r2(r_dlf),
+                  "falls from %s to %s." % (r2(r_main), r2(r_wo))):
+            if s not in html4:
+                faults.append("case4: r = values must be worked from data.csv: the page should say %r" % s)
+    # the charts draw the tables
+    for key, sel in (("case3", "#dailyChart rect"), ("case4", "#scatterChart circle")):
+        page, rec = site.open(PAGES[key], plants)
+        try:
+            got = page.evaluate(PROBE)
+            common(key + " (frozen)", got, rec, faults)
+            marks = page.evaluate("s => [...document.querySelectorAll(s)].map(e => [e.getAttribute('data-value') || e.getAttribute('data-x'), e.getAttribute('fill'), e.getAttribute('data-y'), e.getAttribute('data-hollow')])", sel)
+        finally:
+            page.close()
+        if key == "case3":
+            want = [[r["answers"], "#0d9488" if r["whole_class_day"] == "yes" else "#1a2744", None, None] for r in rows3]
+        else:
+            want = [[_num(r["flu_tests_positive_pct"]), "#ffffff" if r["answers"] != r["answers_without_class_days"] else "#1a2744", r["answers"],
+                     "1" if r["answers"] != r["answers_without_class_days"] else "0"] for r in rows4]
+        if marks != want:
+            faults.append("%s: the chart draws %r, want %r (from data.csv)" % (key, marks[:4], want[:4]))
+
+
+def _num(s):
+    """A CSV figure as JavaScript's String(Number(s)) writes it."""
+    v = float(s)
+    return str(int(v)) if v == int(v) else repr(v)
 
 
 # ------------------------------------------------------------------------------------------------ self-test
 def selftest():
     loader = repo_text(LOADER)
     case1_html = repo_text(PAGES["case1"])
+    case2_html = repo_text(PAGES["case2"])
+    case4_html = repo_text(PAGES["case4"])
+    launch = json.loads(repo_text(LAUNCH))
+    launch.pop(SIX)
+    csv3 = repo_text(CSV3)
 
     def swap(text, old, new):
         assert text.count(old) == 1, "the selftest's plant no longer finds %r" % old
@@ -525,6 +1012,17 @@ def selftest():
          ("ABSENT",), "ABSENT"),
         ('"<10" summed', {LOADER: swap(loader, "if (hidden(v)) hid += 1; else sum += v;", "sum += drawn(v);")}, ("SMALL",), "never added in"),
         ("a frozen figure changed", {"/" + PAGES["case1"]: swap(case1_html, "<td>4,181</td>", "<td>4,182</td>")}, ("REAL",), "FROZEN"),
+        ("a typed answer not exact", {LOADER: swap(loader, "var right = Number(raw) === q.answer;",
+                                                   "var right = Math.abs(Number(raw) - q.answer) <= 1;")}, ("QUIZ",), "was accepted"),
+        ('a "<10" question not skipped', {"/" + PAGES["case2"]: swap(case2_html, "if (!v.length || v.some(U.hidden)) return null;",
+                                                                    "if (!v.length) return null;")}, ("SKIP",), "SKIP"),
+        ("a game with no launch date", {LAUNCH: launch}, ("LAUNCH",), "LAUNCH"),
+        ("question_answered sent", {LOADER: swap(loader, "var EVENT = 'stats_question_answered';", "var EVENT = 'question_answered';")},
+         ("QUIZ", "NOQA"), "question_answered"),
+        ("a CSV figure changed", {CSV3: swap(csv3, "2026-10-15,Thu,513,", "2026-10-15,Thu,514,")}, ("CASE34",), "CSV"),
+        ("an r changed", {"/" + PAGES["case4"]: swap(case4_html, "For these two, r = 0.70.", "For these two, r = 0.80.")}, ("CASE34",), "r = "),
+        ("a GCSE game as game 2", {"/" + PAGES["case1"]: swap(case1_html, "g[k] >= 10 && ld[k] && small(k);", "g[k] >= 10 && ld[k];")},
+         ("QUIZ",), "game 2"),
     ]
     bad = []
     site = Site()
@@ -585,8 +1083,9 @@ def main():
     if faults:
         print("ugh stats pages: FAIL, %d fault(s)" % len(faults))
         return 1
-    print("ugh stats pages: PASS (4 pages: the repo's files, 3 unusable-file cases, the hand-worked Case 1 file, "
-          "planted \"<10\" figures, the 12 November record, 375 px, nothing from outside the site)")
+    print("ugh stats pages: PASS (6 pages: the repo's files, 3 unusable-file cases, the hand-worked Case 1 file, "
+          "planted \"<10\" figures, the 12 November record, every case's questions and skips, launch dates, Cases 3 "
+          "and 4 against their CSVs, 375 px, nothing from outside the site)")
     return 0
 
 

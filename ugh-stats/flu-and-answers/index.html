@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-QUESTIONS, 14 Nov 2026). Frozen figures: the table on this page is the
+     record, the chart is drawn from it by /schools/assets/ugh-stats.js, and scripts/check-ugh-stats.py holds the table to
+     this folder's data.csv. -->
+<meta name="description" content="Our weekly answers rise with the share of positive flu tests in England. Does one cause the other? A Core Maths case study in correlation and lurking variables.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/flu-and-answers/">
+<meta property="og:title" content="Flu tests and maths answers | MaffsGames">
+<meta property="og:description" content="Our weekly answers rise with the share of positive flu tests in England. Does one cause the other? A Core Maths case study in correlation and lurking variables.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/flu-and-answers/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Flu tests and maths answers | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="crumb"><a href="/ugh-stats/">&larr; Ugh, stats</a></p>
+<p class="kicker">Case 4 &middot; correlation &middot; lurking variables &middot; Core Maths</p>
+<h1>Flu tests and maths answers</h1>
+
+<section class="step">
+  <h2><span class="step-n">1</span>Ask</h2>
+  <p>Every week the UK Health Security Agency publishes the percentage of flu tests in England that come back positive. This autumn it rose almost every week. So did the number of questions answered on MaffsGames. Do they move together, and if they do, why?</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">2</span>Collect</h2>
+  <table class="week-table" id="weeks">
+    <caption>Week by week, autumn 2026</caption>
+    <thead><tr><th scope="col">Week beginning</th><th scope="col">Answers</th><th scope="col">Flu tests positive (%)</th></tr></thead>
+    <tbody>
+      <tr><th scope="row">7 Sep</th><td>1,141</td><td>3.4</td></tr>
+      <tr><th scope="row">14 Sep</th><td>875</td><td>3.8</td></tr>
+      <tr><th scope="row">21 Sep</th><td>2,291</td><td>5.0</td></tr>
+      <tr data-class-day="yes"><th scope="row">28 Sep</th><td>2,846</td><td>6.5</td></tr>
+      <tr><th scope="row">5 Oct</th><td>2,169</td><td>6.2</td></tr>
+      <tr><th scope="row">12 Oct</th><td>1,887</td><td>6.4</td></tr>
+      <tr data-class-day="yes"><th scope="row">19 Oct</th><td>4,368</td><td>6.6</td></tr>
+      <tr><th scope="row">26 Oct</th><td>1,890</td><td>7.8</td></tr>
+      <tr data-class-day="yes"><th scope="row">2 Nov</th><td>5,326</td><td>8.1</td></tr>
+    </tbody>
+  </table>
+  <p class="note">Flu: UK Health Security Agency, national flu and COVID-19 surveillance reports, 2026 to 2027 season (laboratory flu positivity, England, the 7 days to each Sunday, latest published figure). Answers: our own anonymous log.</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">3</span>Picture it</h2>
+  <p class="chart-title">Answers in a week against flu tests positive</p>
+  <div id="scatterChart"></div>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">4</span>Decide</h2>
+  <p>The correlation coefficient, r, measures how closely two sets of numbers follow a straight line. It runs from −1 (a perfect line going down) through 0 (no straight-line pattern) to +1 (a perfect line going up). For these two, r = 0.70. Does one cause the other? Neither: both follow the school term. So we don't read a rising line as growth until we can compare the same weeks next year.</p>
+</section>
+
+<section class="box cant">
+  <h2>What this data can't tell us</h2>
+  <ul>
+    <li>Nine weeks is very few points.</li>
+    <li>Flu positivity is the share of tests that are positive, not the number of people with flu.</li>
+    <li>Our own testing is in the numbers.</li>
+  </ul>
+</section>
+
+<section class="box turn">
+  <h2>Your turn</h2>
+  <div id="questions"></div>
+  <a class="btn" id="csv" href="/ugh-stats/flu-and-answers/data.csv" download="maffsgames-flu-and-answers.csv">Download the data (CSV)</a>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+
+  // Frozen figures: the chart is drawn from the table on this page (scripts/check-ugh-stats.py holds it to data.csv,
+  // and works every r on this page out from data.csv's columns).
+  var title = 'Answers in a week against the share of flu tests positive, autumn 2026';
+  var rows = [].map.call(document.querySelectorAll('#weeks tbody tr'), function (tr) {
+    var c = tr.children;
+    return { week: c[0].textContent.trim(), answers: Number(c[1].textContent.replace(/,/g, '')), flu: Number(c[2].textContent),
+      hollow: tr.getAttribute('data-class-day') === 'yes' };
+  });
+  var mount = document.getElementById('scatterChart');
+  U.legend(mount, [['Hollow: a week with one whole-class day.', U.NAVY, 'ring']]);
+  U.scatter(mount, rows.map(function (r) {
+    return { name: 'Week beginning ' + r.week + ': ' + r.flu + '% positive, ' + U.format(r.answers) + ' answers', x: r.flu, y: r.answers, hollow: r.hollow };
+  }), { title: title, xLabel: 'Flu tests positive (%)', yLabel: 'Answers in the week', xMin: 3, xMax: 9, xStep: 1, yMax: 6000 });
+  U.table(mount, title, ['Week beginning', 'Flu tests positive (%)', 'Answers'], rows.map(function (r) {
+    return [r.week + (r.hollow ? ' (a whole-class day)' : ''), r.flu.toFixed(1), U.format(r.answers)];
+  }));
+
+  U.run({}).then(function () {
+    U.quiz(document.getElementById('questions'), 'case4', [
+      { type: 'choice', stem: "What does r = 0.70 tell you?",
+        options: [
+          { right: true, text: "Weeks with more flu tended to have more answers: a fairly strong positive correlation.",
+            why: "That's all r tells you: how closely the points follow a rising straight line. It says nothing about why." },
+          { text: "70% of the answers were caused by flu.", why: "r isn't a percentage, and it can't tell you about causes." },
+          { text: "Weeks with more flu caused more answers.", why: "r can't show what causes what. Keep going." },
+          { text: "70% of the points lie on the line.", why: "r measures how close the points are to a line overall, not how many sit exactly on it." }
+        ] },
+      { type: 'choice', stem: "What is the most likely explanation?",
+        options: [
+          { right: true, text: "Something else drives both: the school term.",
+            why: "In September schools go back. Classes start playing MaffsGames, and children mixing in classrooms spread flu. Both rise through the term, and neither causes the other. A hidden cause like this is called a lurking variable." },
+          { text: "More flu makes students practise more maths.",
+            why: "Then the extra answers would come from students off sick. Case 3 showed the biggest weeks came from whole classes in school." },
+          { text: "It proves the site is getting more popular.",
+            why: "The site may well be growing, but a correlation with flu can't show that. Growth would need its own evidence." },
+          { text: "It's just a coincidence.",
+            why: "With only 9 weeks, chance can't be ruled out. But we already know a shared cause that explains both, so 'coincidence' isn't the best explanation." }
+        ] },
+      { type: 'choice',
+        stem: "The number of hours of daylight in the south-west of England also correlates with our answers: r = −0.72. Daylight and flu correlate with each other: r = −0.96. What do all three have in common?",
+        options: [
+          { right: true, text: "They all follow the time of year.",
+            why: "Daylight shrinks every week of autumn whatever we do; flu and term-time play both grow. Anything that changes steadily through autumn will correlate with our numbers. That's why 'it correlates' is the start of an argument, never the end." },
+          { text: "Each one causes the next.",
+            why: "Three causes in a chain, with no evidence for any of them. The time of year explains all three at once." },
+          { text: "Daylight is the real cause of our answers.",
+            why: "Daylight correlates just as strongly as flu, for the same reason. Swapping one non-cause for another doesn't help." },
+          { text: "Nothing: three strong correlations must be proof.",
+            why: "Three correlations that share one hidden cause are really one pattern, seen three times." }
+        ] },
+      { type: 'choice',
+        stem: "Three of those weeks contained a single class that answered thousands of questions in one day (28 Sep, 23 Oct, 3 Nov). Take those three days out and r between flu and answers falls from 0.70 to 0.43. What does this show?",
+        options: [
+          { right: true, text: "A few extreme values can make a correlation look much stronger than it is.",
+            why: "Like the mean in Case 3, r uses every value, so outliers pull it. Two of the three classes came late in term, when flu was highest, and that alone made the pattern look much tighter." },
+          { text: "There was never any link.",
+            why: "0.43 is still a weak positive correlation: the term effect is still there, just smaller." },
+          { text: "You should always remove outliers before working out r.",
+            why: "Not always. Check them, understand them, and report r with and without them, as we've done here." },
+          { text: "Nine weeks is plenty to be sure.",
+            why: "Nine points is very few. Three days cut r by more than a third. Treat any r from a small sample with care." }
+        ] }
+    ]);
+  });
+})();
+</script>
+</body>
+</html>

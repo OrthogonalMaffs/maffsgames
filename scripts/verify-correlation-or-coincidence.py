@@ -46,7 +46,7 @@ BUTTONS = {"cause": "One causes the other", "both": "Something else causes both"
 BANDS = {"very strong": (0.94, 1.0), "strong": (0.80, 0.94), "moderate": (0.50, 0.80)}
 # Pairs with a direct causal link, never a 'both' item (replaced 13 Oct 2026: B25, B27, B22).
 DIRECT_LINK = [("tickets", "t-shirts"), ("pancakes", "lemons"), ("miles", "scratches")]
-MIN_BANK = 84
+MIN_BANK = 85
 PHONES = [(320, 568), (375, 667), (390, 844)]
 PORT = None
 _FAILURES = []

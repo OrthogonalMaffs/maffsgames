@@ -78,11 +78,7 @@
 
 <section class="box turn">
   <h2>Your turn</h2>
-  <ol>
-    <li>Sketch what the weekday chart would look like if no one played in school.</li>
-    <li>What share of all starts happen 9:00 to 15:30 on weekdays? If play were spread evenly across the week, you'd expect about 19% (5 &times; 6.5 = 32.5 of the week's 168 hours). Is ours more?</li>
-    <li>Write one sentence a teacher could check against their own timetable.</li>
-  </ol>
+  <div id="questions"></div>
   <button type="button" class="btn" id="csv" data-ugh-needs="stats" hidden>Download the data (CSV)</button>
 </section>
 </main>
@@ -94,7 +90,7 @@
   'use strict';
   var U = window.UghStats;
   var UK = 'United Kingdom';
-  var csv = null;
+  var csv = null, stats = null;
   U.run({
     stats: function (d) {
       // Chart A: the two series on one scale, one panel each so a phone can show 24 bars a series.
@@ -135,8 +131,52 @@
       }
 
       csv = { date: d.as_of.slice(0, 10), rows: d.hours.weekday.map(function (v, h) { return [h, v, d.hours.weekend[h]]; }) };
+      stats = d;
     }
-  });
+  }).then(function () { U.quiz(document.getElementById('questions'), 'case2', questions()); });
+
+  /* THE QUESTIONS (contract UGH-STATS-QUESTIONS, Appendix B), worked here from the same 30 days the daily chart draws.
+     A question whose days include a "<10" is skipped: a hidden figure is never added in. */
+  function days(weekendDays) {
+    if (!stats || stats.daily.length !== 30) return null;
+    var v = stats.daily.filter(function (r) { return U.weekend(r.date) === weekendDays; }).map(function (r) { return r.starts; });
+    if (!v.length || v.some(U.hidden)) return null;
+    var sum = v.reduce(function (a, b) { return a + b; }, 0);
+    return { n: v.length, sum: sum, w: U.divide(sum, v.length) };
+  }
+  function questions() {
+    var wd = days(false), we = days(true);
+    return [
+      wd && { type: 'typed', answer: wd.w.answer, working: wd.w.working,
+        stem: 'Over the last 30 days, ' + wd.n + ' weekdays had ' + U.format(wd.sum) +
+          ' games started in total. What is the mean number of games started per weekday, to the nearest whole number?' },
+      we && { type: 'typed', answer: we.w.answer, working: we.w.working,
+        stem: 'The other ' + we.n + ' days were weekends, with ' + U.format(we.sum) +
+          ' games started. What is the mean per weekend day, to the nearest whole number?' },
+      wd && we && { type: 'choice',
+        stem: 'Weekdays average about ' + U.format(wd.w.answer) + ' games started; weekend days about ' + U.format(we.w.answer) +
+          '. Which conclusion does this best support?',
+        options: [
+          { right: true, text: "Most play happens on school days, which fits classroom use, but doesn't prove it.",
+            why: "Homework is set on school days too, and plenty of students play at home in the evening. The pattern supports classroom use; it can't prove it on its own." },
+          { text: "It proves students play MaffsGames in lessons.",
+            why: "A pattern that fits an explanation isn't proof of it. What else happens on weekdays and not at weekends?" },
+          { text: "Weekend play is low because the site doesn't work at weekends.",
+            why: "Nothing about the site changes at weekends. Look for a reason in how people's weeks work." },
+          { text: "There's no real difference.",
+            why: U.format(wd.w.answer) + ' against ' + U.format(we.w.answer) + " is a big gap, and it repeats every week in the chart. That's a pattern, not noise." }
+        ] },
+      { type: 'choice',
+        stem: "Which extra evidence would best tell classroom play apart from play at home, without knowing who anyone is?",
+        options: [
+          { right: true, text: "Whether play drops during school holidays, like half-term.",
+            why: "Classes stop in the holidays and homework mostly does too. A dip at half-term is evidence we already have: look at the daily chart for the last week of October." },
+          { text: "Students' names and schools.", why: "That would settle it, but we never collect them, and we never will." },
+          { text: "Which browser each player uses.", why: "Schools and homes use the same browsers, so it wouldn't separate them." },
+          { text: "The total number of answers since September.", why: "A bigger total doesn't say where or when anyone played." }
+        ] }
+    ];
+  }
   document.getElementById('csv').addEventListener('click', function () {
     if (csv) U.download('maffsgames-starts-by-hour-' + csv.date + '.csv', ['hour', 'weekday', 'weekend'], csv.rows);
   });
