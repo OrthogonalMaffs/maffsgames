@@ -139,9 +139,18 @@ V["finance-reverse-percentage"] = store
 
 # ---------------------------------------------------- D2 compound growth (slider 1-20)
 # Misconception: read the interest as a flat amount each year.
+# Widened to six answers, 2 to 7 years, for the print pack's six sets (Jon, 13 Nov 2026, "Extend banks to 6
+# sets"; contract CORE-PACKS-ROLL-PROM). The search below finds four (3, 4, 5, 6) and can find no more: a
+# whole-pence balance after y years needs the deposit, in pence, to hold the rate's denominator y times over, and
+# the common wrong answer for 2 years is 2 + rate/100, rounded, which is 2 (the answer) unless the rate is over
+# 50%. Searched over every whole-pound deposit from 500 to 5000 and every whole rate to 200%, the rules allow the
+# answers 2 to 7 and nothing else, and 7 years only as 3125 at 20% or 4096 at 25%. So two sets are added after
+# the search, which leaves its four as they were: 3125 at 20% for 7 years (the rate the library already uses), and
+# 500 at 60% for 2 years (60 is the lowest rate in steps of ten that makes the common wrong answer 3, not 2).
 store = []
 cands = shuffled([(1000, 10, 5)] + [(d, r, y) for d in (500, 600, 800, 1000, 1200, 1500, 2000, 2500)
                            for r in (5, 10, 15, 20, 25) for y in range(2, 13)])
+cands += [(3125, 20, 7), (500, 60, 2)]
 for dep, rate, yrs in cands:
     bal = Fraction(dep) * Fraction(100 + rate, 100) ** yrs
     if (bal * 100).denominator != 1:          # must land on whole pence
@@ -829,10 +838,13 @@ V["gate-modifiers-probability"] = store
 # club's square is fixed at 2 m (it is the same square lock 3 uses), so answer = L x S / 200 squares.
 # miss = L x S / 2, the centimetres taken straight into squares (100 times the answer, so a four-digit keypad).
 # The draft's rules: S in 100, 200, 250, 500; L a whole 2-9 cm; answer a whole number 4-30 and never L (which
-# excludes every 1 : 200 plan, where 1 cm is exactly one square). The library is the draft's seven sets.
+# excludes every 1 : 200 plan, where 1 cm is exactly one square). The library is the draft's seven sets, then
+# two on a 1 : 1000 plan, L 5 and 6 only (answers 25 and 30; their misses 2500 and 3000 fit the keypad): the
+# draft's scales make only five different answers, and a print pack's six sets need six (Jon, 13 Nov 2026,
+# "Extend banks to 6 sets"; contract CORE-PACKS-ROLL-PROM). S may now be 1000; every other rule is unchanged.
 store = []
-for S, L in [(500, 4), (100, 8), (250, 4), (250, 8), (500, 2), (500, 6), (500, 8)]:
-    if S not in (100, 200, 250, 500) or not 2 <= L <= 9 or (L * S) % 200:
+for S, L in [(500, 4), (100, 8), (250, 4), (250, 8), (500, 2), (500, 6), (500, 8), (1000, 5), (1000, 6)]:
+    if S not in (100, 200, 250, 500, 1000) or not 2 <= L <= 9 or (L * S) % 200:
         continue
     ans = L * S // 200
     if not 4 <= ans <= 30 or ans == L:
@@ -841,14 +853,17 @@ for S, L in [(500, 4), (100, 8), (250, 4), (250, 8), (500, 2), (500, 6), (500, 8
 V["fortress-plan-scale"] = store
 
 # ---------------------------------------------------- N6 (2026-10) area of a circle (keypad, 3 digits)
-# Roll for Initiative, the fireball. A blast of radius r (a whole even number of metres, 4-12, so whole squares at
+# Roll for Initiative, the fireball. A blast of radius r (a whole even number of metres, 4-16, so whole squares at
 # 2 m) covers pi x r squared, to the nearest square metre. The rule (Jon, 15 Oct 2026): the whole number must be the
 # SAME whether pi or 3.14 is used, and a radius where the two round differently is rejected here (and by the
-# solver in escape_set_checks.py). miss = the circumference 2 x pi x r, rounded. The library is the draft's five.
+# solver in escape_set_checks.py). miss = the circumference 2 x pi x r, rounded. The library is the draft's five,
+# then the range's two new radii: the draft stopped at 12 m, five answers, and a print pack's six sets need six
+# (Jon, 13 Nov 2026, "Extend banks to 6 sets"; contract CORE-PACKS-ROLL-PROM). 14 is rejected by the rule (616
+# with pi, 615 with 3.14); 16 is admitted (804 either way, miss 101).
 store = []
-for r in [6, 4, 8, 10, 12]:
+for r in [6, 4, 8, 10, 12, 14, 16]:
     a_pi, a_314 = math.floor(math.pi * r * r + 0.5), math.floor(3.14 * r * r + 0.5)
-    if r % 2 or not 4 <= r <= 12 or a_pi != a_314:
+    if r % 2 or not 4 <= r <= 16 or a_pi != a_314:
         rejected.append(("fireball-circle-area", {"r": r}, "pi and 3.14 round differently")); continue
     keep(store, "fireball-circle-area", {"r": r, "answer": a_pi, "miss": math.floor(2 * math.pi * r + 0.5)}, minsep=1e-9)
 V["fireball-circle-area"] = store
