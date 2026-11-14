@@ -16,9 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): UGH-STATS-CASE1-1DP
+
+Claude Code (home lane), worktree `~/mg-ugh-1dp`, branch `claude/ugh-stats-case1-1dp`; contract `docs/handover/contracts/2026-11-14-ugh-stats-case1-1dp.md`. Case 1 Q1 and Q2 ask answers per day to 1 decimal place (working to 3), and Q3 quotes those values. A typed question may set `dp: 1` in `UghStats.quiz`: the decimal keypad, and only the 1 dp value accepted ("90.9" or "90.90", never "91" or "90.8"). Cases 2 and 3 keep dp 0 and their unchanged code path. Game 2 must also show at least 0.1 a day.
+
+- The 0.1 rule cannot bite before about 20 March 2027: 10 or more answers in at most 200 days is always 0.05 a day or more. Its plant therefore lets a game with 1 answer through.
+
 ## 2026-11-14 (home): UGH-STATS-QUESTIONS
 
-Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/handover/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
+Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/history/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
 
 - Launch dates: 108 of 126 came from the archive's history, read from the local clone `E:\jon\maffsgames` (remote `maffsgames-archive`; `gh` cannot see that repo from WSL) through a saved `git log` (`--archive-log`). None was left at 2026-10-02. A new game adds its own line; `check-ugh-stats.py` LAUNCH fails without it.
 - Answers send `stats_question_answered` (level case1 to case4). `doPost` stores any event name and `mfg()` passes it unchanged, so no Apps Script change.
@@ -26,6 +32,7 @@ Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questio
 - Typed answers are worked in whole numbers (`UghStats.divide`); the working shows more decimal places when 1 place would read as a half that rounds the other way, so the working never disagrees with the answer.
 - `.btn[hidden]` added: `.btn`'s `display` had overridden `hidden`, so a hidden button still showed.
 - todo CONTENT-SAFETY-UGH-STATS: the SR-14 scan does not read `ugh-stats/`.
+- MERGED 14 Nov as 8f2b84f (#766), after Project Claude's 21:25 follow-up (game 2 only an A level / Further Maths / Level 4 game, levels read from the home page's cards; Q3 names them) and Jon's ruling on the Case 4 place name ("Generalise it": the south-west of England, CSV column `daylight_hours`). Main on the merge commit: check-site 43644118236 and phone-fit-full 43644118171, both success.
 
 ## 2026-11-14 (home): UGH-STATS-PAGES
 
@@ -92,21 +99,3 @@ Claude Code (home lane), worktree `~/mg-caption-gaps`, branch `claude/caption-ga
 - Merged as 1583a51 (#746) by merge-pr.py on a green Gate, 13 Nov: main's check-site run 43350581797 success, phone-fit-full 43350581730 success. check-changed.py before the push: 55 checks, all passed. Done: merged and live; Project Claude's review follows. Cleanup: end-task.py removed the branch and worktree.
 
 Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-12 (home): LOOP-CARDS
-
-Claude Code (home lane), worktree `~/mg-loop-cards`, branch `claude/loop-cards`; PR #745; contract `docs/history/contracts/2026-11-12-loop-cards.md`. New `tools/loop-cards/`: `build_deck.py` (layout, loop, checks), adapters `six_sevens.py` and `like_terms.py`, configs in `decks/<slug>/`, README. Both packs build (40 pages each: page 1, three answer sheets, double-sided pages 5–22, fold-over pages 23–40), DRAFT badge on until Jon approves (todo §6 LOOP-CARDS-APPROVE); `--selftest` passes both packs and catches all 15 plants. Six Sevens page 1 is exactly 120 words. Shout card: 42 at 23 pt under the shout line at 27 pt (shout = answer + 4 pt). Like Terms backs fit at 24 pt.
-
-- Layout calls (SR-31), approved by Jon 12 Nov: "Which deck?" gained Double-sided and Fold-over page columns, so step 1's "Print it" can be followed; all fold-over pages come after all double-sided ones, so "(p. N)" is one range (p. 23–40); curly quotes.
-- Imports from build_pack.py: offline_context, wording_approved, draft_badge, check_final, page, CSS, LOGO, esc, ignored_by_git, pdf_page_count. The footer string follows its build_html() (no public function); check_final's message names the pack-generator path, so build_deck.py re-raises it with its own.
-- Found by the proofs, not the first check: the cut lines had zero length (a `height: 0` beat `top/bottom: 0`); the check now measures each line's drawn length.
-- Merged as 74444a9 (#745), 12 Nov: main's check-site run 43295807424 success, phone-fit-full 43295807406 success. Done: merged and live (closed out by MULTI-PRINT, 13 Nov).
-
-## 2026-11-12 (home): HOME-QUEUE-1111 close-out
-
-Claude Code (home lane), worktree `~/mg-home-queue-closeout`, branch `claude/home-queue-closeout`, PR #742; stand-down and close-out from Project Claude, 12 Nov 2026, 16:22. The queue is finished; its contract moves to `docs/history/contracts/2026-11-11-home-queue-1111.md` (the entries below name its old path).
-
-- PR 1 PACK-APPROVED #737, merge 7c73372: main's check-site run 43090717833 success, phone-fit-full 43090717891 success.
-- PR 2 STAGE-EXIT-LABEL #738, merge 84e8bc0: main's check-site run 43172855407 success, phone-fit-full 43172855534 success. Its PR runs sat queued for about 10 hours after the 11 Nov GitHub Actions outage; the token cannot cancel runs (HTTP 403), so the PR was closed and reopened at 06:52 on 12 Nov, which started a fresh run and superseded the stuck ones (one concurrency group per PR).
-- PR 3 WHOSE-SIDE-LISTING: stood down. The cloud lane did it as #740 (merged cddcdef, 12 Nov, a one-off lane exception, Jon 09:53). The home lane's prepared listing was never pushed; its local branch `claude/whose-side-listing` (commits 4777543a, 3402902e) and worktree were removed by hand, because end-task refused a branch with no PR.
-- Remote branch `claude/compassionate-sagan-9myj6x` deleted: its one commit c31f4ac was on main by content (cherry-picked in #739, now in `docs/history/handover-cloud-archive.md`); `git ls-remote` no longer lists it.

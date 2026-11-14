@@ -338,6 +338,8 @@
 
        typed   {type: 'typed', stem, answer, working}: a whole number, to the nearest whole number. Only the exact
                answer is accepted; three tries, then the working. Commas and spaces in what is typed are ignored.
+               With dp: 1 (UGH-STATS-CASE1-1DP) the answer is to 1 decimal place, the keypad offers a decimal point,
+               and only that value is accepted ("90.9" or "90.90"; never "91" or "90.8"). dp 0 is the default.
        choice  {type: 'choice', stem, options: [{text, why, right}] x 4, exactly one right}: shuffled once per page
                load, one try, then the chosen option's explanation and, if it was wrong, the right one with its own.
 
@@ -416,21 +418,44 @@
   // n ÷ d for whole numbers (d at least 1), worked in whole numbers so the working cannot disagree with the answer:
   // the answer to the nearest whole number (a half goes up), and the working "n ÷ d = q ≈ answer." with q to 1 decimal
   // place, or to more places when 1 place would read as a half that rounds the other way.
-  function divide(n, d) {
-    var answer = Math.floor((2 * n + d) / (2 * d)), k = 1, p = 10, scaled = 0;
-    for (; k <= 6; k++, p *= 10) {
+  // dp 1 (contract UGH-STATS-CASE1-1DP): the answer to 1 decimal place, the working to 3 places (or more, by the same
+  // rule). answer is a number (90.9), text the answer as written ("90.9").
+  function divide(n, d, dp) {
+    var one = dp === 1 ? 10 : 1;
+    var answer = Math.floor((2 * one * n + d) / (2 * d));          // in units of 1/one, a half going up
+    var k = dp === 1 ? 3 : 1, p = Math.pow(10, k), scaled = 0;
+    for (; k <= 7; k++, p *= 10) {
       scaled = Math.floor((2 * p * n + d) / (2 * d));
-      if (Math.floor((2 * scaled + p) / (2 * p)) === answer) break;
+      var r = p / one;
+      if (Math.floor((2 * scaled + r) / (2 * r)) === answer) break;
     }
+    var shown = fixed(scaled, k), text = fixed(answer, dp === 1 ? 1 : 0);
+    return { answer: answer / one, text: text, shown: shown, working: format(n) + ' ÷ ' + format(d) + ' = ' + shown + ' ≈ ' + text + '.' };
+  }
+  // A whole number of 10^-k units, written with k decimal places and thousands commas.
+  function fixed(scaled, k) {
+    if (!k) return format(scaled);
     var s = String(scaled);
     while (s.length <= k) s = '0' + s;
-    var shown = format(Number(s.slice(0, s.length - k))) + '.' + s.slice(s.length - k);
-    return { answer: answer, shown: shown, working: format(n) + ' ÷ ' + format(d) + ' = ' + shown + ' ≈ ' + format(answer) + '.' };
+    return format(Number(s.slice(0, s.length - k))) + '.' + s.slice(s.length - k);
+  }
+  // What was typed, in tenths, for a 1 dp question: "90.9" and "90.90" are 909; "90.95" is not a 1 dp value (NaN).
+  function tenths(raw) {
+    var m = /^(\d*)(?:\.(\d*))?$/.exec(raw);
+    if (!m || !(m[1] + (m[2] || ''))) return NaN;
+    var frac = m[2] || '';
+    if (/[^0]/.test(frac.slice(1))) return NaN;
+    return Number(m[1] || '0') * 10 + Number(frac.charAt(0) || '0');
   }
 
   function validQuestion(q) {
     if (!q || typeof q !== 'object' || typeof q.stem !== 'string' || !q.stem) return false;
-    if (q.type === 'typed') return whole(q.answer) && typeof q.working === 'string' && !!q.working;
+    if (q.type === 'typed') {
+      var dp = q.dp === undefined ? 0 : q.dp;
+      var ok = dp === 0 ? whole(q.answer)
+        : dp === 1 && typeof q.answer === 'number' && q.answer >= 0 && Math.abs(q.answer * 10 - Math.round(q.answer * 10)) < 1e-9;
+      return ok && typeof q.working === 'string' && !!q.working;
+    }
     if (q.type !== 'choice' || !Array.isArray(q.options) || q.options.length !== 4) return false;
     return q.options.every(function (o) { return o && typeof o.text === 'string' && typeof o.why === 'string'; }) &&
       q.options.filter(function (o) { return o.right === true; }).length === 1;
@@ -491,7 +516,8 @@
         var label = htmlEl('label', 'ugh-q-label', 'Your answer');
         label.htmlFor = id;
         var input = htmlEl('input', 'ugh-q-input');
-        input.id = id; input.type = 'text'; input.inputMode = 'numeric'; input.autocomplete = 'off';
+        var dp = q.dp === 1 ? 1 : 0;
+        input.id = id; input.type = 'text'; input.inputMode = dp ? 'decimal' : 'numeric'; input.autocomplete = 'off';
         input.setAttribute('enterkeyhint', 'done');
         var check = htmlEl('button', 'btn ugh-q-check', 'Check');
         check.type = 'submit';
@@ -503,9 +529,10 @@
           if (input.disabled) return;
           var raw = input.value.replace(/[\s,]/g, '');
           fb.textContent = '';
-          if (!/^\d+$/.test(raw)) { line('ugh-q-try', 'Type a whole number.'); return; }
+          if (dp === 0 && !/^\d+$/.test(raw)) { line('ugh-q-try', 'Type a whole number.'); return; }
+          if (dp === 1 && !/^\d*\.?\d+$|^\d+\.$/.test(raw)) { line('ugh-q-try', 'Type a number.'); return; }
           tries += 1;
-          var right = Number(raw) === q.answer;
+          var right = dp === 1 ? tenths(raw) === Math.round(q.answer * 10) : Number(raw) === q.answer;
           if (!right && tries < TRIES) {
             var left = TRIES - tries;
             line('ugh-q-try', 'Not quite. Try again: ' + left + (left === 1 ? ' try' : ' tries') + ' left.');
@@ -513,7 +540,7 @@
             return;
           }
           input.disabled = true; check.disabled = true;
-          line('ugh-q-verdict', right ? 'Right.' : 'Not this time. The answer is ' + format(q.answer) + '.');
+          line('ugh-q-verdict', right ? 'Right.' : 'Not this time. The answer is ' + (dp === 1 ? fixed(Math.round(q.answer * 10), 1) : format(q.answer)) + '.');
           line('ugh-q-working', 'Working: ' + q.working);
           send(level, q, right && tries === 1, tries);
           done();
