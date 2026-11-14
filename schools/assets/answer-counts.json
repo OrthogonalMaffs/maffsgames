@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-14T12:29:47Z",
+ "as_of": "2026-11-14T21:40:19Z",
  "games": {
   "52dle": 14,
   "angle-ace": 5,
@@ -14,7 +14,7 @@
   "complex-converter": 14,
   "component-crusher": 1,
   "coordinate-geometry-dash": 8,
-  "core-maths-paper1": 164,
+  "core-maths-paper1": 166,
   "core-maths-paper2a": 13,
   "core-maths-paper2b": 37,
   "core-maths-paper2c": 4,
@@ -28,7 +28,7 @@
   "eigenvector-engine": 21,
   "equation-builder": 5,
   "equatle": 22,
-  "escape-big-school-begins": 464,
+  "escape-big-school-begins": 465,
   "escape-canteen-hack": 169,
   "escape-car-trap": 147,
   "escape-christmas-tree-fiasco": 5,
@@ -88,7 +88,7 @@
   "quadratic-factoriser": 98,
   "scale-factor-scaling": 1,
   "screening-room": 5,
-  "sequence-solver": 387,
+  "sequence-solver": 407,
   "seven-bridges": 311,
   "shape-shifter": 12,
   "simultaneous-solver": 59,
@@ -120,5 +120,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 25939
+ "total": 25962
 }
