@@ -76,7 +76,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-07-a';
+const SCRIPT_VERSION = '2026-11-14-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -106,11 +106,21 @@ const RPT_MIN_QUESTION_ATTEMPTS = 10; // hardest questions
 const RPT_BLANK_WAS_WRONG_UNTIL = new Date('2026-09-29T20:00:00Z');
 var rptKindsCache = null;
 
+// SAFE TALLIES (contract COUNTS-SAFE-TALLY, 14 Nov 2026). A game_slug, level or question_id is whatever was posted,
+// by anyone, and the report uses it as a key. In a plain object a key such as "constructor" or "__proto__" reads a
+// built-in member, so a tally started from a function and became text, or wrote into the built-in itself. Every
+// report-side object keyed by event data is therefore a map with no prototype (rptMap), read through
+// hasOwnProperty (rptHas, rptGet) and counted with rptAdd. doPost uses none of this: it writes cells, not keys.
+function rptMap() { return Object.create(null); }
+function rptHas(m, k) { return Object.prototype.hasOwnProperty.call(m, k); }
+function rptGet(m, k, otherwise) { return rptHas(m, k) ? m[k] : otherwise; }
+function rptAdd(m, k) { m[k] = rptGet(m, k, 0) + 1; }
+
 // games.json, fetched once per run. If the fetch fails, every game is treated as a question game and the report
 // says so in one line (Jon's contract): the report still goes out.
 function rptLoadKinds() {
   if (rptKindsCache) return rptKindsCache;
-  var kinds = {}, ok = false;
+  var kinds = rptMap(), ok = false;
   try {
     var res = UrlFetchApp.fetch(GAMES_JSON_URL, {muteHttpExceptions: true});
     if (res.getResponseCode() === 200) {
@@ -122,13 +132,13 @@ function rptLoadKinds() {
   } catch (err) {
     console.error('games.json could not be read: ' + err);
   }
-  rptKindsCache = {ok: ok, kinds: ok ? kinds : {}};
+  rptKindsCache = {ok: ok, kinds: ok ? kinds : rptMap()};
   return rptKindsCache;
 }
 
 function rptKind(slug, kinds) {
   if (String(slug).indexOf('escape-') === 0) return 'room';
-  return kinds.kinds[slug] === 'shot' ? 'shot' : 'question';
+  return rptGet(kinds.kinds, slug, '') === 'shot' ? 'shot' : 'question';
 }
 
 // true, false, or null when the row cannot be marked (see RPT_BLANK_WAS_WRONG_UNTIL).
@@ -150,11 +160,12 @@ function rptEscaped(x, col) {
 
 // Everything the email and the Dashboard say about answers, from one set of rows.
 function rptBuild(rows, col, kinds) {
-  var games = {}, qs = {}, rooms = {}, shots = {}, idGames = {}, overall = {total: 0, correct: 0};
+  var games = rptMap(), qs = rptMap(), rooms = rptMap(), shots = rptMap(), idGames = rptMap(), overall = {total: 0, correct: 0};
   rows.forEach(function(x) {
     var ev = x[col['event']], slug = String(x[col['game_slug']]), kind = rptKind(slug, kinds);
     if (kind === 'room') {
-      var rm = rooms[slug] || (rooms[slug] = {slug: slug, starts: 0, escaped: 0, timedOut: 0, marked: 0, correct: 0});
+      if (!rptHas(rooms, slug)) rooms[slug] = {slug: slug, starts: 0, escaped: 0, timedOut: 0, marked: 0, correct: 0};
+      var rm = rooms[slug];
       if (ev === 'game_started') rm.starts++;
       else if (ev === 'game_completed') { if (rptEscaped(x, col)) rm.escaped++; else rm.timedOut++; }
       else if (ev === 'question_answered') {
@@ -167,14 +178,16 @@ function rptBuild(rows, col, kinds) {
     if (kind === 'shot') { shots[slug] = true; return; }
     var m = rptMarked(x, col);
     if (m === null) return;
-    var g = games[slug] || (games[slug] = {slug: slug, total: 0, correct: 0});
+    if (!rptHas(games, slug)) games[slug] = {slug: slug, total: 0, correct: 0};
+    var g = games[slug];
     g.total++; overall.total++;
     if (m) { g.correct++; overall.correct++; }
     var qid = col['question_id'] === undefined ? '' : String(x[col['question_id']]);
     if (!qid) return;
     idGames[slug] = true;
     var level = String(x[col['level']]), key = slug + '|' + level + '|' + qid;
-    var q = qs[key] || (qs[key] = {slug: slug, level: level, qid: qid, total: 0, correct: 0});
+    if (!rptHas(qs, key)) qs[key] = {slug: slug, level: level, qid: qid, total: 0, correct: 0};
+    var q = qs[key];
     q.total++;
     if (m) q.correct++;
   });
@@ -276,13 +289,13 @@ function sendDailyReport() {
   var pbs = yesterdayRows.filter(function(r) { return r[col['event']] === 'personal_best_set'; });
   var rep = rptBuild(yesterdayRows, col, kinds);
 
-  var gameCounts = {}; var compCounts = {};
-  starts.forEach(function(r) { var s = r[col['game_slug']]; gameCounts[s] = (gameCounts[s]||0)+1; });
-  completions.forEach(function(r) { var s = r[col['game_slug']]; compCounts[s] = (compCounts[s]||0)+1; });
+  var gameCounts = rptMap(); var compCounts = rptMap();
+  starts.forEach(function(r) { rptAdd(gameCounts, r[col['game_slug']]); });
+  completions.forEach(function(r) { rptAdd(compCounts, r[col['game_slug']]); });
   var topGames = Object.keys(gameCounts).sort(function(a,b){return gameCounts[b]-gameCounts[a];}).slice(0,10);
 
-  var levelCounts = {};
-  starts.forEach(function(r) { var lv = r[col['level']]||'unknown'; levelCounts[lv]=(levelCounts[lv]||0)+1; });
+  var levelCounts = rptMap();
+  starts.forEach(function(r) { rptAdd(levelCounts, r[col['level']]||'unknown'); });
 
   var dateStr = Utilities.formatDate(yesterday, TIMEZONE, 'dd MMM yyyy');
   var subject = 'MaffsGames Daily Report — ' + dateStr;
@@ -302,7 +315,7 @@ function sendDailyReport() {
   body += '  Personal bests:     ' + pbs.length + '\n\n';
   body += 'TOP GAMES (by starts)\n';
   topGames.forEach(function(slug, i) {
-    var comp = compCounts[slug]||0;
+    var comp = rptGet(compCounts, slug, 0);
     body += '  '+(i+1)+'. '+slug+' — '+gameCounts[slug]+' starts, '+comp+' completed ('+
       (gameCounts[slug]>0?Math.round(100*comp/gameCounts[slug]):0)+'%)\n';
   });
@@ -365,9 +378,9 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   // ══════════════════════════════════════
   var weekStarts = weekRows.filter(function(x){return x[col['event']]==='game_started';});
   var weekComp = weekRows.filter(function(x){return x[col['event']]==='game_completed';});
-  var gc = {}, cc = {};
-  weekStarts.forEach(function(x){ var s=x[col['game_slug']]; gc[s]=(gc[s]||0)+1; });
-  weekComp.forEach(function(x){ var s=x[col['game_slug']]; cc[s]=(cc[s]||0)+1; });
+  var gc = rptMap(), cc = rptMap();
+  weekStarts.forEach(function(x){ rptAdd(gc, x[col['game_slug']]); });
+  weekComp.forEach(function(x){ rptAdd(cc, x[col['game_slug']]); });
   var topSlugs = Object.keys(gc).sort(function(a,b){return gc[b]-gc[a];}).slice(0,15);
 
   var t1Start = r;
@@ -376,7 +389,7 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   dash.getRange(r, 1, 1, 4).setValues([['Game', 'Starts', 'Completed', 'Completion %']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   topSlugs.forEach(function(slug) {
-    var comp = cc[slug]||0;
+    var comp = rptGet(cc, slug, 0);
     var frac = gc[slug]>0 ? comp/gc[slug] : 0;
     dash.getRange(r, 1, 1, 4).setValues([[slug, gc[slug], comp, frac]]);
     r++;
@@ -404,8 +417,8 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   //  TABLE 2: Level Breakdown (7 days)
   // ══════════════════════════════════════
   var t2Start = r;
-  var lc = {};
-  weekStarts.forEach(function(x){ var lv=x[col['level']]||'unknown'; lc[lv]=(lc[lv]||0)+1; });
+  var lc = rptMap();
+  weekStarts.forEach(function(x){ rptAdd(lc, x[col['level']]||'unknown'); });
   dash.getRange(r, 1).setValue('Level Breakdown — Last 7 Days').setFontWeight('bold').setFontSize(11);
   r++;
   dash.getRange(r, 1, 1, 2).setValues([['Level', 'Starts']]).setFontWeight('bold').setBackground('#f0f0f0');
@@ -503,10 +516,9 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   //  TABLE 5: Daily Activity (30 days)
   // ══════════════════════════════════════
   var monthStarts = monthRows.filter(function(x){return x[col['event']]==='game_started';});
-  var dailyCounts = {};
+  var dailyCounts = rptMap();
   monthStarts.forEach(function(x) {
-    var d = Utilities.formatDate(new Date(x[col['timestamp']]), TIMEZONE, 'yyyy-MM-dd');
-    dailyCounts[d] = (dailyCounts[d]||0)+1;
+    rptAdd(dailyCounts, Utilities.formatDate(new Date(x[col['timestamp']]), TIMEZONE, 'yyyy-MM-dd'));
   });
   var days = Object.keys(dailyCounts).sort();
 
