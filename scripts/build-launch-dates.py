@@ -84,7 +84,7 @@ def main():
                     missing.append(rel)
             dates[slug] = d
 
-    with open(OUT, "w", encoding="utf-8") as f:
+    with open(OUT, "w", encoding="utf-8", newline="") as f:
         json.dump(dict(sorted(dates.items())), f, indent=1)
         f.write("\n")
     print("wrote %s: %d entries, %d dated from the archive, %d kept at %s"
