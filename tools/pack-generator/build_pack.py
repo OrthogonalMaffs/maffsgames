@@ -30,7 +30,10 @@ The build, in order; any failure stops it before a PDF exists:
      checked for overflow, every student page for its set letter, every red herring for digits, everything for an
      unfilled {{token}}; the PDF's page count must equal the pages built. A room with a long story is fitted first
      (CAR-TRAP-PACK Amendment 1): only on a page that overflows, a cover's or the certificate's picture scales down,
-     never below 60% of its width, and the read-outs' type steps down, never below 9.5 pt.
+     never below 60% of its width, and the read-outs' type steps down, never below 9.5 pt. Every cover's answer
+     boxes are measured (contract ANSWER-BOX-CHECK, 14 Nov 2026): a box over dark art carries a white fill, and a
+     box under 20 x 4.5 mm stops an approved room's build and any --final build (a DRAFT build goes on and lists
+     it on page 1). Every figure in the words filled for print is bound to its unit (bind_figures).
 
 The PDF goes to dist-packs/ (gitignored) and nowhere else. It is the product: never commit it, never upload it.
 """
@@ -68,6 +71,12 @@ from escape_set_checks import format_token   # noqa: E402  tokens as students re
 
 MIN_PT = 11                     # no printed label smaller than this (contract STOP IF)
 MAX_PT = 20                     # a label is fitted downward from here
+# The answer boxes on a cover (contract ANSWER-BOX-CHECK, 14 Nov 2026): the pack prints in black and white, and a
+# student writes an answer in each box.
+WRITE_FILL_BELOW = 180          # the art under a box, as a mean grey from 0 (black) to 255 (white): below this the
+                                # box prints with a white fill (Jon, 14 Nov 2026, 16:40: "White only where dark")
+WRITE_MIN_W_MM = 20             # no answer box prints narrower than this, or
+WRITE_MIN_H_MM = 4.5            # lower than this (Jon, 14 Nov 2026, 16:40: "20 x 4.5 mm (Recommended)")
 FONTS = {                       # the faces a config's "font" may name: tools/pack-generator/fonts/, with their licences
     "label": ("PackLabel", "Oswald-Variable.ttf", "200 700", 600),
     "hand": ("PackHand", "PermanentMarker-Regular.ttf", "400", 400),
@@ -492,6 +501,166 @@ def text_of(s):
     return html.unescape(re.sub(r"<[^>]*>", " ", s or ""))
 
 
+# ---- the answer boxes on a cover (contract ANSWER-BOX-CHECK, 14 Nov 2026) ------------------------------------------
+#
+# A cover prints each lock's instrument with a dashed box laid over it (the image's "label_box"), and the student
+# writes the answer in it. Two things can make the box useless on a black-and-white print, and neither is a room's to
+# fix: the art under it is dark, so pencil does not show (the box then prints with a white fill, WRITE_FILL_BELOW),
+# or the box is too small to write in (WRITE_MIN_W_MM, WRITE_MIN_H_MM).
+
+GREY_JS = """
+async ([src, box]) => {
+  // The channel sums of an image's pixels inside a box given in the image's own pixels. The image arrives as a data:
+  // URL, so the canvas is not tainted and its pixels can be read (a file: image's cannot).
+  const img = new Image();
+  img.src = src;
+  await img.decode();
+  const [x0, y0, x1, y1] = box, w = x1 - x0, h = y1 - y0;
+  if (x1 > img.naturalWidth || y1 > img.naturalHeight) throw new Error('label box outside its image');
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const g = canvas.getContext('2d');
+  g.drawImage(img, x0, y0, w, h, 0, 0, w, h);
+  const d = g.getImageData(0, 0, w, h).data;
+  let r = 0, gr = 0, b = 0, a = 0;
+  for (let i = 0; i < d.length; i += 4) { r += d[i]; gr += d[i + 1]; b += d[i + 2]; a += d[i + 3]; }
+  return {r, g: gr, b, a, n: d.length / 4};
+}
+"""
+
+
+def answer_box_greys(page, cfg, slug):
+    """{lock id: the mean grey of the answer picture's own pixels inside its label_box, 0 (black) to 255 (white)}.
+    The build's Chromium decodes the source image (the generator has no other image decoder, and adds none) and
+    returns the red, green and blue sums of the pixels in the box; the grey is their standard luma, 0.299 R +
+    0.587 G + 0.114 B, worked here from those sums (luma is linear, so the mean of the lumas is the luma of the
+    means). The art is opaque; a picture with any transparency in the box stops the build, since what is under it
+    would then depend on the page."""
+    out = {}
+    for im in cfg["images"]:
+        if im.get("role") != "answer":
+            continue
+        f = HERE / "rooms" / slug / im["file"]
+        src = "data:image/%s;base64,%s" % (f.suffix.lstrip(".").lower(), base64.b64encode(f.read_bytes()).decode("ascii"))
+        s = page.evaluate(GREY_JS, [src, im["label_box"]])
+        if s["a"] != 255 * s["n"]:
+            raise BuildError("%s: %s is not opaque inside its label_box, so the grey under its answer box cannot be "
+                             "measured" % (slug, im["file"]))
+        out[im["lock"]] = (0.299 * s["r"] + 0.587 * s["g"] + 0.114 * s["b"]) / s["n"]
+    return out
+
+
+def write_filled(greys, lock_id):
+    """Whether a lock's answer box prints with a white fill: only where the art under it is dark (WRITE_FILL_BELOW).
+    A lock whose picture was not measured stops the build: a box is never drawn on a guess."""
+    if lock_id not in greys:
+        raise BuildError("%s: the art under its answer box was not measured (answer_box_greys)" % lock_id)
+    return greys[lock_id] < WRITE_FILL_BELOW
+
+
+WRITE_WHITE, WRITE_CLEAR = "rgb(255, 255, 255)", "rgba(0, 0, 0, 0)"   # a box's computed background: filled, or not
+
+
+def write_fill_problems(writes, greys, locks, sets):
+    """The fill check, on the answer boxes as the page drew them (FIT_JS's `writes`), against the grey measured from
+    each picture: a box over dark art with no white fill, a box over light art that is filled (it prints as it always
+    has), a box whose picture was not measured, and a cover without exactly one box for each lock."""
+    out = []
+    for w in writes:
+        grey = greys.get(w["lock"])
+        where = "set %s, %s" % (w["set"] or "?", w["lock"] or "an answer box with no lock")
+        if grey is None:
+            out.append("%s: the art under its answer box was not measured" % where)
+        elif grey < WRITE_FILL_BELOW and w["background"] != WRITE_WHITE:
+            out.append("%s: the art under its answer box is dark (mean grey %.0f, under %d), but the box has no "
+                       "white fill (its background is %s)" % (where, grey, WRITE_FILL_BELOW, w["background"]))
+        elif grey >= WRITE_FILL_BELOW and w["background"] != WRITE_CLEAR:
+            out.append("%s: the art under its answer box is light (mean grey %.0f, not under %d), but the box is "
+                       "filled (its background is %s)" % (where, grey, WRITE_FILL_BELOW, w["background"]))
+    for s in sets:
+        for l in locks:
+            n = sum(1 for w in writes if w["kind"] == "cover" and w["set"] == s["letter"] and w["lock"] == l["id"])
+            if n != 1:
+                out.append("set %s, %s: its cover has %d answer boxes, not one" % (s["letter"], l["id"], n))
+    return out
+
+
+def write_size_failures(writes):
+    """The answer boxes under the floor, as the page drew them: [{set, lock, wMm, hMm}], in page order."""
+    return [w for w in writes if w["wMm"] < WRITE_MIN_W_MM - 1e-6 or w["hMm"] < WRITE_MIN_H_MM - 1e-6]
+
+
+def write_size_lines(failures, slug):
+    """Each answer box under the floor, by room, set, lock and size."""
+    return ["%s, set %s, %s: the answer box is %.1f x %.1f mm, under the %g x %g mm minimum (%s)"
+            % (slug, w["set"], w["lock"], w["wMm"], w["hMm"], WRITE_MIN_W_MM, WRITE_MIN_H_MM,
+               " and ".join(x for x, short in (("too narrow", w["wMm"] < WRITE_MIN_W_MM - 1e-6),
+                                               ("too low", w["hMm"] < WRITE_MIN_H_MM - 1e-6)) if short))
+            for w in failures]
+
+
+def write_size_notes(failures, locks):
+    """Page 1's DRAFT notes for the answer boxes under the floor: one line a lock, naming its sets (every set's cover
+    carries the same picture, so the sizes agree; a lock whose sizes differ gets a line a size)."""
+    names = {l["id"]: "Lock %d: %s" % (i + 1, l["name"]) for i, l in enumerate(locks)}
+    groups = {}
+    for w in failures:
+        groups.setdefault((w["lock"], "%.1f × %.1f mm" % (w["wMm"], w["hMm"])), []).append(w["set"])
+    return ["%s. Its answer box is %s on the cover%s of set%s %s."
+            % (names.get(lock, lock), size, "" if len(letters) == 1 else "s", "" if len(letters) == 1 else "s",
+               ", ".join(letters))
+            for (lock, size), letters in groups.items()]
+
+
+def write_size_gate(failures, slug, locks, approved, final):
+    """What an answer box under the floor does to the build (Jon, 14 Nov 2026): it stops a room whose wording is
+    approved, and any --final build, naming every box; a DRAFT build goes on, so Jon can still proofread, and the
+    lines come back for page 1's DRAFT notes ([] when every box is big enough)."""
+    if failures and (approved or final):
+        raise BuildError("an answer box is too small to write in (%s):\n  %s"
+                         % ("--final" if final else "the room's wording is approved, so this is a copy for sale",
+                            "\n  ".join(write_size_lines(failures, slug))))
+    return write_size_notes(failures, locks)
+
+
+def draft_notes_problems(printed, notes):
+    """Page 1's DRAFT notes as printed ([page number, text] for each, AUDIT_JS) against the notes the build made:
+    every note once, on page 1, and no other."""
+    norm = lambda s: " ".join(text_of(s).split())
+    want, got = [norm(n) for n in notes], [norm(text) for _, text in printed]
+    out = ["a DRAFT note is on page %d, not page 1: %r" % (n, text) for n, text in printed if n != 1]
+    if sorted(want) != sorted(got):
+        out.append("page 1's DRAFT notes are %r, not %r" % (got, want))
+    return out
+
+
+def answer_box_lines(writes, greys, locks, sets):
+    """What the build prints about the answer boxes: each lock's grey, whether it is filled, and its size."""
+    covers = len({w["set"] for w in writes if w["kind"] == "cover"})
+    out = ["answer boxes: %d on %d covers, each measured as it prints; white fill where the art under a box is darker "
+           "than grey %d; floor %g x %g mm:" % (len(writes), covers, WRITE_FILL_BELOW, WRITE_MIN_W_MM, WRITE_MIN_H_MM)]
+    for l in locks:
+        mine = [w for w in writes if w["lock"] == l["id"]]
+        if not mine:
+            continue
+        w, h = min(x["wMm"] for x in mine), min(x["hMm"] for x in mine)
+        out.append("  %-28s grey %5.1f  %-10s  %4.1f x %4.1f mm%s"
+                   % (l["id"], greys[l["id"]], "white fill" if write_filled(greys, l["id"]) else "as drawn", w, h,
+                      "" if not write_size_failures(mine) else "  UNDER THE FLOOR"))
+    return out
+
+
+def draft_notes_block(notes):
+    """Page 1's DRAFT notes, between its heading and its text: what must change before the copy for sale. Nothing for
+    a pack with no notes, so an approved pack's page 1 is as it was."""
+    if not notes:
+        return ""
+    return ("<div class='draftnotes'><b>DRAFT notes.</b> Too small to write in: an answer box must be at least "
+            "%s. The copy for sale cannot be built until each is larger.<ul>%s</ul></div>"
+            % (bind_figures("%g × %g mm" % (WRITE_MIN_W_MM, WRITE_MIN_H_MM)),
+               "".join("<li>%s</li>" % bind_figures(n) for n in notes)))
+
+
 # ---- selection -----------------------------------------------------------------------------------------------------
 
 def valid_picks(checker, room_js, locks):
@@ -689,7 +858,8 @@ def filler(locks, s):
         text = str(text)
         for l, v in in_both:                     # CAR-TRAP-PACK Amendment 2: the answer in both units, everywhere
             text = both_units(l, v, text)
-        return re.sub(r"\{\{([\w.-]+)\}\}", lambda m: t.get(m.group(1), m.group(0)), text)
+        # ANSWER-BOX-CHECK: every figure in the filled words is bound to its unit, or the build stops (bound())
+        return bound(re.sub(r"\{\{([\w.-]+)\}\}", lambda m: t.get(m.group(1), m.group(0)), text))
     return fill
 
 
@@ -755,21 +925,93 @@ def label_parts(text, boxes):
         raise BuildError("label has %d printed parts for %d boxes: %r" % (len(parts), count, text))
     out = []
     for part in parts:
-        part = re.sub(r"(?<!\w)-(?=\d)", "\u2212", part)
-        part = re.sub(r"(\d)\s+:\s+([\u2212-]?\d)", lambda m: m[1] + "\u00a0:\u00a0" + m[2], part)
-        part = re.sub(r"(\d)\s+(?=(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w))",
-                      lambda m: m[1] + "\u00a0", part, flags=re.I)
+        part = bind_figures(part)
         if label_text_problems(part):
             raise BuildError("label figure has a broken binding or hyphen-minus: %r" % part)
         out.append(part)
     return out
 
 
+# ---- figures and their units (contract ANSWER-BOX-CHECK, 14 Nov 2026) ----------------------------------------------
+#
+# One rule for every word the pack prints: a figure stays on the line with its unit ("2 m"), a ratio stays whole
+# ("1 : 500"), and a negative number carries a true minus. The three substitutions were label_parts()'s own; they
+# are bind_figures() now, which label_parts() calls and so does everything filled for print (filler()).
+
+UNITS = r"(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)"   # the units a figure is bound to
+UNITS_HTML = UNITS.replace("°", "(?:°|&deg;|&#176;|&#[xX][bB]0;)")   # and as a room's HTML may spell the degree sign
+FIGURE_RULES = (r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d", r"\d[ \t\n]+" + UNITS + r"(?!\w)")
+TAG_RE = re.compile(r"<[A-Za-z/!][^<>]*>")                  # an HTML tag; "x < 3" is not one
+INLINE_TAG_RE = re.compile(r"</?(?:b|i|em|strong|span|u|sup|sub|small|a)\b[^<>]*>", re.I)
+IN_GAP, NOT_IN_GAP = "\ue000", "\ue001"                     # a tag's stand-in: inside a line of text, or not
+GAP = "((?:%s*\\s)+%s*)" % (IN_GAP, IN_GAP)                 # the space between a figure and its unit, tags and all
+
+
+def _shield(text):
+    """(text with every HTML tag replaced by a one-character stand-in, the tags in order). An inline tag (<b>, <i>)
+    sits inside a line of text, so a figure and its unit may have one between them: IN_GAP. Any other tag (<br>,
+    <p>) ends the line: NOT_IN_GAP, which nothing binds or reads across."""
+    if IN_GAP in text or NOT_IN_GAP in text:
+        raise BuildError("printed words contain a reserved character (U+E000 or U+E001): %r" % text[:80])
+    tags = TAG_RE.findall(text)
+    return TAG_RE.sub(lambda m: IN_GAP if INLINE_TAG_RE.fullmatch(m.group()) else NOT_IN_GAP, text), tags
+
+
+def _joined(gap):
+    """A figure's gap, bound: its white space becomes one no-break space, where the first was; its tags stay."""
+    first = re.search(r"\s+", gap)
+    return gap[:first.start()] + "\u00a0" + re.sub(r"\s+", "", gap[first.end():])
+
+
+def bind_figures(text):
+    """`text` (plain words or HTML) with its figures bound: a hyphen before a digit becomes a true minus; the spaces
+    round a ratio's colon ("1 : 500") and the space between a figure and its unit ("2 m") become no-break spaces.
+    Only the words change. Every tag is taken out first and put back as it was, so nothing inside a tag or an
+    attribute is read or altered, and the function checks that before it returns (BuildError otherwise). Binding
+    twice changes nothing more."""
+    shielded, tags = _shield(text)
+    out = re.sub(r"(?<!\w)-(?=\d)", "\u2212", shielded)
+    # the ratio's second figure is looked at, not taken, so "10 : 2 : 3" binds at both colons
+    out = re.sub(r"(\d)%s:%s(?=[\u2212-]?\d)" % (GAP, GAP), lambda m: m[1] + _joined(m[2]) + ":" + _joined(m[3]), out)
+    out = re.sub(r"(\d)%s(?=%s(?!\w))" % (GAP, UNITS_HTML), lambda m: m[1] + _joined(m[2]), out, flags=re.I)
+    stand_ins = [c for c in out if c in (IN_GAP, NOT_IN_GAP)]
+    if stand_ins != [c for c in shielded if c in (IN_GAP, NOT_IN_GAP)]:
+        raise BuildError("binding a figure moved or lost an HTML tag: %r" % text[:120])
+    back = iter(tags)
+    out = re.sub("[%s%s]" % (IN_GAP, NOT_IN_GAP), lambda m: next(back), out)
+    if TAG_RE.findall(out) != tags:
+        raise BuildError("binding a figure changed an HTML tag: %r" % text[:120])
+    return out
+
+
+def figure_problems(text):
+    """A hyphen-minus before a digit, a ratio split round its colon, or a figure parted from its unit by an ordinary
+    space, in plain words (no tags)."""
+    return [m.group() for pattern in FIGURE_RULES for m in re.finditer(pattern, text, re.I)]
+
+
+def unbound_figures(text):
+    """figure_problems() on printed HTML as its reader sees it: inline tags dropped (a figure and its unit may sit
+    either side of one), every other tag kept as a break nothing is read across, entities decoded."""
+    shielded, _ = _shield(text)
+    return figure_problems(html.unescape(shielded.replace(IN_GAP, "")))
+
+
+def bound(text):
+    """Words filled for print, with their figures bound, or BuildError if one still is not: the three figure rules a
+    label is held to, on everything the pack prints from a room's words."""
+    out = bind_figures(text)
+    left = unbound_figures(out)
+    if left:
+        raise BuildError("printed words have a figure that is not bound to its unit, or a hyphen-minus (%s): %r"
+                         % (", ".join(repr(x) for x in left), text[:160]))
+    return out
+
+
 def label_text_problems(text):
-    """Figure spacing and TRUE-MINUS checks on the words that enter a fitted label."""
-    return [m.group() for pattern in (r" · ", r"(?<!\w)-\d", r"\d[ \t\n]+:[ \t\n]+[\u2212-]?\d",
-                                     r"\d[ \t\n]+(?:°C|cm|mm|km|m|%|kg|g|hours?|mins?|minutes?)(?!\w)")
-            for m in re.finditer(pattern, text, re.I)]
+    """Figure spacing and TRUE-MINUS checks on the words that enter a fitted label: an unsplit " · " (the separator
+    between a label's parts), then the three figure rules every printed word is held to (figure_problems)."""
+    return [m.group() for m in re.finditer(r" · ", text, re.I)] + figure_problems(text)
 
 
 # ---- the pages -----------------------------------------------------------------------------------------------------
@@ -824,6 +1066,8 @@ td.boxes { text-align: center; white-space: nowrap; padding: 1mm 0.5mm; }
 .setbox { border: 2.2pt solid #000; border-radius: 2mm; padding: 1mm 4mm; font-size: 26pt; font-weight: 800;
           line-height: 1.1; white-space: nowrap; }
 .draft { border: 1.4pt dashed #000; padding: 1mm 3mm; font-weight: 800; font-size: 11pt; white-space: nowrap; }
+.draftnotes { flex: none; border: 1.4pt dashed #000; padding: 1.5mm 3mm; margin-bottom: 3mm; font-size: 9.5pt; }
+.draftnotes ul { margin: 1mm 0 0; }
 h2 { font-size: 12.5pt; margin: 3.5mm 0 1.2mm; font-weight: 700; }
 p { margin: 0 0 2mm; }
 ol, ul { margin: 0 0 2mm; padding-left: 6mm; }
@@ -837,6 +1081,7 @@ blockquote { margin: 0 0 2mm; padding: 2mm 4mm; border-left: 2pt solid #000; }
 .lbl.hand > div { font-family: 'PackHand'; }
 .lbl.light > div { color: #fff; }
 .write { position: absolute; border: 0.8pt dashed #000; box-sizing: border-box; }
+.write.fill { background: #fff; }
 .cover-art { width: 150mm; margin: 0 auto 3mm; display: block; }
 .run-win { display: block; width: 100%; height: auto; max-height: 105mm; object-fit: contain; margin-bottom: 3mm; }
 .team { margin: 3mm 0 2mm; font-size: 12pt; font-weight: 600; }
@@ -886,7 +1131,7 @@ async ([minPt]) => {
   }
   await document.fonts.ready;
   const loaded = [...document.fonts].filter(f => f.status === 'loaded').map(f => f.family.replace(/"/g, ''));
-  const out = {labels: [], loaded: [...new Set(loaded)]};
+  const out = {labels: [], writes: [], loaded: [...new Set(loaded)]};
   for (const el of document.querySelectorAll('.lbl, .write')) {
     const img = el.parentElement.querySelector('img');
     const [x0, y0, x1, y1] = JSON.parse(el.dataset.box);
@@ -894,7 +1139,14 @@ async ([minPt]) => {
     if (x1 > W || y1 > H) throw new Error('label box outside its image: ' + img.src);
     el.style.left = (x0 / W * 100) + '%'; el.style.top = (y0 / H * 100) + '%';
     el.style.width = ((x1 - x0) / W * 100) + '%'; el.style.height = ((y1 - y0) / H * 100) + '%';
-    if (!el.classList.contains('lbl')) continue;
+    if (!el.classList.contains('lbl')) {
+      // an answer box (ANSWER-BOX-CHECK): its size as it prints (CSS px x 25.4 / 96) and whether it is filled
+      const r = el.getBoundingClientRect(), page = el.closest('.page');
+      out.writes.push({kind: page ? page.dataset.kind : '', set: page ? page.dataset.set || '' : '',
+                       lock: el.dataset.lock || '', wMm: r.width * 25.4 / 96, hMm: r.height * 25.4 / 96,
+                       background: getComputedStyle(el).backgroundColor});
+      continue;
+    }
     const inner = el.firstElementChild;
     let pt, fits = false, lines = 1;
     for (const mode of ['nowrap', 'balance']) {         // one line if it fits at the minimum; else balanced lines
@@ -916,7 +1168,7 @@ async ([minPt]) => {
 AUDIT_JS = """
 () => {
   const pages = [...document.querySelectorAll('.page')];
-  const out = {pages: pages.length, studentPages: 0, overflow: [], setLetters: [], herringDigits: [], tokens: [], logo: [], logoMm: 0, text: [], draft: []};
+  const out = {pages: pages.length, studentPages: 0, overflow: [], setLetters: [], herringDigits: [], tokens: [], logo: [], logoMm: 0, text: [], draft: [], notes: []};
   const mm = px => px * 25.4 / 96;
   pages.forEach((p, i) => {
     out.text.push([p.dataset.kind, p.querySelector('.main').innerText]);
@@ -939,6 +1191,9 @@ AUDIT_JS = """
       if (!box || box.textContent.trim() !== 'Set ' + p.dataset.set)
         out.setLetters.push((i + 1) + ' ' + p.dataset.kind + ' ' + p.dataset.set);
     }
+  });
+  document.querySelectorAll('.draftnotes li').forEach(li => {
+    out.notes.push([[...document.querySelectorAll('.page')].indexOf(li.closest('.page')) + 1, li.innerText]);
   });
   document.querySelectorAll('.card.herring').forEach(c => {
     if (/[0-9]/.test(c.textContent)) out.herringDigits.push(c.dataset.id + ' in set ' + c.dataset.set + ': ' + c.textContent.trim());
@@ -1091,10 +1346,13 @@ def esc(s):
     return html.escape(str(s), quote=True)
 
 
-def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX_PT):
-    """An image with its label box laid over it (positions are set in the page from the image's natural size)."""
+def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX_PT, fill=False):
+    """An image with its label box laid over it (positions are set in the page from the image's natural size). An
+    answer box ("write") is the dashed outline a student writes in; `fill` gives it a solid white fill inside that
+    outline, for art too dark to write on (write_filled), and `ident` is its lock, which the page reports it by."""
     if cls == "write":
-        inner = '<div class="write" data-box="%s"></div>' % esc(json.dumps(box))
+        inner = ('<div class="write%s" data-box="%s" data-lock="%s"></div>'
+                 % (" fill" if fill else "", esc(json.dumps(box)), esc(ident)))
     else:
         boxes = box if isinstance(box[0], list) else [box]
         inner = "".join('<div class="lbl %s" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
@@ -1103,12 +1361,15 @@ def art_block(img_path, box, cls, text=None, ident="", set_letter="", max_pt=MAX
     return '<div class="art"><img src="%s" alt="">%s</div>' % (img_path.as_uri(), inner)
 
 
-def page(kind, body, title, sub="", set_letter=None, badge="", landscape=False):
+def page(kind, body, title, sub="", set_letter=None, badge="", landscape=False, notes=""):
+    """`notes`: a block between the heading and the page's text (page 1's DRAFT notes, draft_notes_block); it is not
+    part of the text the page's checks read (.main), as the badge beside the heading is not."""
     attrs = 'data-kind="%s"' % kind + (' data-set="%s"' % set_letter if set_letter else "")
     right = ('<div class="setbox">Set %s</div>' % set_letter) if set_letter else badge
-    return ('<section class="page%s" %s><div class="head"><div><h1>%s</h1>%s</div>%s</div>'
+    return ('<section class="page%s" %s><div class="head"><div><h1>%s</h1>%s</div>%s</div>%s'
             '<div class="main">%s</div><div class="foot">{{FOOT}}</div></section>'
-            % (" landscape" if landscape else "", attrs, title, ('<div class="sub">%s</div>' % sub) if sub else "", right, body))
+            % (" landscape" if landscape else "", attrs, title, ('<div class="sub">%s</div>' % sub) if sub else "", right,
+               notes, body))
 
 
 WRONG_BOXES = 5           # wrong-answer boxes per lock on the score sheet (Amendment 3)
@@ -1266,7 +1527,7 @@ def about_box(room, teach, locks, sets, rating):
     meta = teach.get("lockMeta") or [{}] * len(locks)
     letters = [st["letter"] for st in sets]
     topics = "; ".join("%s %s%s" % (lock_name_label(l["name"]), esc(m.get("topic", "")),
-                                     (", about %d min" % m["minutes"]) if m.get("minutes") else "")
+                                     bind_figures(", about %d min" % m["minutes"]) if m.get("minutes") else "")
                        for l, m in zip(locks, meta))
     targets = [st["final"]["target"] for st in sets]
     return ("<div class='about'><h2>About this room</h2>"
@@ -1424,10 +1685,13 @@ def both_units_everywhere(locks, sets):
     return out
 
 
-def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, readout_pages=1):
+def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, readout_pages=1, greys=None,
+               draft_notes=()):
     """readout_pages: 1, or 2 when the room's story is too long for one page of read-outs at their smallest type
     (CORE-PACKS-ROLL-PROM Amendment 1): the start read-out then has page 2 to itself, the two endings are on page 3,
-    and both carry the badge and the play-online line."""
+    and both carry the badge and the play-online line. greys: answer_box_greys(), which decides each answer box's
+    white fill (ANSWER-BOX-CHECK); without it no cover is built. draft_notes: page 1's DRAFT notes
+    (write_size_gate), for a DRAFT pack only."""
     unit_gaps = both_units_everywhere(locks, sets)
     if unit_gaps:
         raise BuildError("%s: a lock asked for in a printed unit is given in the room's unit only:\n  %s"
@@ -1467,9 +1731,11 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     # a. page 1, "Run it", and page 2, the read-outs (Amendments 8 and 9); the DRAFT badge only while the room's
     #    wording is not approved (PACK-APPROVED)
     shape = sets[0]["final"]["shape"]
+    if draft_notes and wording_approved(cfg, slug):
+        raise BuildError("%s: the wording is approved, so page 1 carries no DRAFT notes: %r" % (slug, list(draft_notes)))
     pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
                       "%s: run it" % title, "Group race pack, %d sets" % len(sets),
-                      badge=draft_badge(cfg, slug)))
+                      badge=draft_badge(cfg, slug), notes=draft_notes_block(draft_notes)))
     reads = readouts(room, fill_a)
     scripts = ["<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>" % reads["start"],
                "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
@@ -1535,7 +1801,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
             im = by_lock[l["id"]]
             box_texts.append(answer_caption(l))
             answers += ("<div><div class='cap'><b>%s</b></div>%s</div>"
-                        % (esc(answer_caption(l)), art_block(rdir / im["file"], im["label_box"], "write")))
+                        % (esc(answer_caption(l)), art_block(rdir / im["file"], im["label_box"], "write", ident=l["id"],
+                                                             fill=write_filled(greys or {}, l["id"]))))
         cover = ("%s%s"
                  "<div class='team'>Team name: <span></span></div>"
                  "<h2>Your codes: write each in its box</h2>"
@@ -1678,7 +1945,9 @@ def build(slug, n, seed, target=None, final=False):
             url = room_url(slug)
             if not LOGO.is_file():
                 raise BuildError("the logo %s is missing" % LOGO.relative_to(ROOT).as_posix())
-            doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating)
+            greys = answer_box_greys(pg, cfg, slug)
+            doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating,
+                                                            greys=greys)
             hints = instrument_hints(box_texts)
             if hints:
                 raise BuildError("an answer box gives something away (Amendment 4):\n  " + "\n  ".join(hints))
@@ -1706,8 +1975,25 @@ def build(slug, n, seed, target=None, final=False):
                 if readouts_need_two_pages(squeezed):      # CORE-PACKS-ROLL-PROM Amendment 1: the pages are built again
                     readout_pages = 2
                     doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url,
-                                                                    rating, readout_pages=readout_pages)
+                                                                    rating, readout_pages=readout_pages, greys=greys)
                     embedded_win, fit, covers, squeezed = load_and_fit(doc)
+                # ANSWER-BOX-CHECK: every cover's answer boxes, as the page drew them
+                approved = bool(wording_approved(cfg, slug))
+
+                def box_failures(fit):
+                    fills = write_fill_problems(fit["writes"], greys, locks, sets)
+                    if fills:
+                        raise BuildError("an answer box fails its fill check:\n  " + "\n  ".join(fills))
+                    return write_size_failures(fit["writes"])
+                too_small = box_failures(fit)
+                notes = write_size_gate(too_small, slug, locks, approved, final)    # stops an approved or --final build
+                if notes:                                  # a DRAFT build goes on: page 1 is built again with the notes
+                    doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url,
+                                                                    rating, readout_pages=readout_pages, greys=greys,
+                                                                    draft_notes=notes)
+                    embedded_win, fit, covers, squeezed = load_and_fit(doc)
+                    if write_size_lines(box_failures(fit), slug) != write_size_lines(too_small, slug):
+                        raise BuildError("%s: the answer boxes changed when page 1's DRAFT notes were added" % slug)
                 small = [l for l in fit["labels"] if not l["fits"]]
                 if small:
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
@@ -1720,7 +2006,8 @@ def build(slug, n, seed, target=None, final=False):
                                            [t for k, t in audit["text"] if k == "cover"])
                            + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
                            + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug, readout_pages)
-                           + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"]))
+                           + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"])
+                           + draft_notes_problems(audit["notes"], notes))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -1729,6 +2016,16 @@ def build(slug, n, seed, target=None, final=False):
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
                 print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
+                for line in answer_box_lines(fit["writes"], greys, locks, sets):
+                    print(line)
+                if too_small:
+                    print("DRAFT: %d answer box(es) under the %g x %g mm minimum; the build goes on and page 1's DRAFT "
+                          "notes list them (an approved room, or --final, would stop here):"
+                          % (len(too_small), WRITE_MIN_W_MM, WRITE_MIN_H_MM))
+                    for line in write_size_lines(too_small, slug):
+                        print("  " + line)
+                print("every figure in the words filled for print is bound to its unit (no break in \"2 m\" or "
+                      "\"1 : 500\", true minus)")
                 for l in locks:
                     if l.get("answer_unit"):
                         print("printed unit: %s is asked for in %s (x %d): every figure whole, and every cover's "
@@ -1790,9 +2087,10 @@ def selftest():
         browser = p.chromium.launch()
         try:
             pg = offline_context(browser).new_page()
-            first, per_room, full = None, {}, {}
+            first, per_room, full, greys_of = None, {}, {}, {}
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = prepare(slug, None, None, pg)
+                greys_of[slug] = answer_box_greys(pg, cfg, slug)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
                          + check_score_sheet(score_sheet(locks, sets), locks, sets)
                          + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
@@ -2016,23 +2314,30 @@ def selftest():
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
     def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None, fit_covers=None,
-                           fit_long=None, readout_pages=1, of=None):
-        """of: another room's (slug, room, teach, locks, sets, rating) from `full`; the first room's by default."""
+                           fit_long=None, readout_pages=1, of=None, boxes=None, greys=None, draft_notes=()):
+        """of: another room's (slug, room, teach, locks, sets, rating) from `full`; the first room's by default.
+        boxes: a list that takes the answer boxes as the page draws them (FIT_JS, run as the build runs it); greys:
+        a dict that takes the grey measured under each, from the config the pack is built with."""
         a_slug, a_room, a_teach, _, a_sets, a_rating = of or (slug0, room, teach, locks, sets, rating)
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
                 pg = offline_context(browser).new_page()
                 cfg = load_config(a_slug) if cfg is None else cfg
+                measured = answer_box_greys(pg, cfg, a_slug)
+                if greys is not None:
+                    greys.update(measured)
                 doc, _, _, _ = build_html(a_slug, a_room, a_teach, bad_locks, a_sets, cfg,
                                           cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(a_slug),
-                                          a_rating, readout_pages=readout_pages)
+                                          a_rating, readout_pages=readout_pages, greys=measured, draft_notes=draft_notes)
                 if doc_plant:
                     doc = doc_plant(doc)
                 with tempfile.TemporaryDirectory() as tmp:
                     src = pathlib.Path(tmp) / "planted-pack.html"
                     src.write_text(doc, encoding="utf-8")
                     pg.goto(src.as_uri())
+                    if boxes is not None:
+                        boxes.extend(pg.evaluate(FIT_JS, [MIN_PT])["writes"])
                     if overflow_run_image:
                         pg.locator('.page[data-kind=run] .run-win').evaluate(
                             "img => { img.style.minHeight = '400mm'; img.style.maxHeight = 'none'; }")
@@ -2440,6 +2745,168 @@ def selftest():
                 browser.close()
         return []
 
+    # ---- the answer boxes and the binding (contract ANSWER-BOX-CHECK, 14 Nov 2026) ----
+
+    boxes_of = {}           # each room's answer boxes as its covers draw them (check_answer_box_controls)
+
+    def check_answer_box_controls():
+        """Every configured room, as the build judges it: each answer box over dark art is filled and no other is;
+        no box of a room whose wording is approved is under the floor (a DRAFT room's small boxes are listed, as
+        its build lists them). Then page 1 of a DRAFT pack with a small box: it carries the note, still fits, and
+        its text is the same 150 words or fewer."""
+        probs, lines = [], []
+        for r_slug in rooms:
+            of, boxes, greys = full[r_slug], [], {}
+            audit_planted_pack(of[3], of=of, boxes=boxes, greys=greys)
+            boxes_of[r_slug] = boxes
+            if greys != greys_of[r_slug]:
+                probs.append("%s: the greys measured twice differ: %r and %r" % (r_slug, greys, greys_of[r_slug]))
+            probs += ["%s: %s" % (r_slug, x) for x in write_fill_problems(boxes, greys, of[3], of[4])]
+            small = write_size_failures(boxes)
+            try:
+                write_size_gate(small, r_slug, of[3], bool(wording_approved(load_config(r_slug), r_slug)), False)
+            except BuildError as e:
+                probs.append(str(e))
+            filled = sorted(k for k, g in greys.items() if g < WRITE_FILL_BELOW)
+            lines.append("%s: %d filled%s" % (r_slug, len(filled), ", %d small (DRAFT)" % len({w["lock"] for w in small})
+                                              if small else ""))
+        cfg, small = shrunk_box_cfg(unapproved_cfg(), "width"), shrunk_box("width")
+        notes = write_size_gate(small, slug0, locks, False, False)
+        audit = audit_planted_pack(locks, cfg=cfg, draft_notes=notes)
+        if not notes:
+            probs.append("%s, a DRAFT copy with a small box: the build makes no DRAFT note" % slug0)
+        probs += draft_notes_problems(audit["notes"], notes)
+        probs += ["%s: page 1 with its DRAFT notes overflows: %s" % (slug0, x) for x in audit["overflow"] if " run " in x]
+        probs += [x for x in teacher_page_problems(audit["text"]) if "words, over" in x]
+        probs += draft_problems(audit["draft"], False, slug0)
+        return probs, "; ".join(lines)
+
+    def shrunk_box_cfg(cfg, side):
+        """A copy of the first room's config whose first answer box is cut to 70% of the floor on one side ("width"
+        or "height"), by the scale its cover draws it at; the other side is left."""
+        im = next((x for x in cfg["images"] if x.get("role") == "answer"), None)
+        mine = [w for w in boxes_of.get(slug0, []) if im and w["lock"] == im["lock"]]
+        if not mine or write_size_failures(mine):
+            raise pc.StalePlant("an answer box cut under the floor", "%s's first answer box is not drawn, or is "
+                                "already under the floor" % slug0)
+        x0, y0, x1, y1 = im["label_box"]
+        if side == "width":
+            im["label_box"] = [x0, y0, x0 + max(1, int((x1 - x0) * 0.7 * WRITE_MIN_W_MM / mine[0]["wMm"])), y1]
+        else:
+            im["label_box"] = [x0, y0, x1, y0 + max(1, int((y1 - y0) * 0.7 * WRITE_MIN_H_MM / mine[0]["hMm"]))]
+        return cfg
+
+    shrunk = {}
+
+    def shrunk_box(side):
+        """The size failures of the first room's pack built with shrunk_box_cfg(side), measured once."""
+        if side not in shrunk:
+            boxes = []
+            audit_planted_pack(locks, cfg=shrunk_box_cfg(copy.deepcopy(load_config(slug0)), side), boxes=boxes)
+            shrunk[side] = write_size_failures(boxes)
+        return shrunk[side]
+
+    def stops_an_approved_build(side, words):
+        # the box, measured on the cover, is under the floor on that side only, and an approved room's build stops
+        small = shrunk_box(side)
+        lines = write_size_lines(small, slug0)
+        if not small or not all(x.endswith("(%s)" % words) for x in lines):
+            return []
+        try:
+            write_size_gate(small, slug0, locks, True, False)
+        except BuildError as e:
+            return [lines[0]] if lines[0] in str(e) else []
+        return []
+
+    def plant_narrow_answer_box():
+        return stops_an_approved_build("width", "too narrow")
+
+    def plant_low_answer_box():
+        return stops_an_approved_build("height", "too low")
+
+    def plant_draft_small_box_final():
+        # a DRAFT pack with a small box: its build goes on, with a note for page 1; --final refuses
+        small = shrunk_box("width")
+        if not small or not write_size_gate(small, slug0, locks, False, False):
+            return []
+        try:
+            write_size_gate(small, slug0, locks, False, True)
+        except BuildError as e:
+            return [str(e).splitlines()[0]] if "--final" in str(e) and "too small to write in" in str(e) else []
+        return []
+
+    def plant_dark_box_without_fill():
+        # the first room with an answer box over dark art, built with that box's fill left off on every cover
+        of, im = next(((full[r], im) for r in rooms for im in load_config(r)["images"]
+                       if im.get("role") == "answer" and greys_of[r][im["lock"]] < WRITE_FILL_BELOW), (None, None))
+        if of is None:
+            raise pc.StalePlant("a dark answer box without its fill", "no room has an answer box over dark art")
+        if write_fill_problems(boxes_of.get(of[0], []), greys_of[of[0]], of[3], of[4]):
+            return []                                    # the control: as configured, the room's boxes pass
+        good = ('<div class="write fill" data-box="%s" data-lock="%s"></div>'
+                % (esc(json.dumps(im["label_box"])), esc(im["lock"])))
+        boxes, greys = [], {}
+        audit_planted_pack(of[3], of=of, boxes=boxes, greys=greys,
+                           doc_plant=lambda d: pc.apply_plant(d, good, good.replace('"write fill"', '"write"'),
+                                                              allow_multiple=True, name="a dark answer box without its fill"))
+        return [x for x in write_fill_problems(boxes, greys, of[3], of[4]) if "has no white fill" in x]
+
+    NB = chr(160)
+
+    def plant_unbound_hint():
+        # a hint card whose "2 m" is left with an ordinary space, as every hint was before bind_figures
+        two_m = "2%sm" % NB
+        for r_slug in rooms:
+            r_locks, r_sets = per_room[r_slug]
+            f = filler(r_locks, r_sets[0])
+            for l in r_locks:
+                for h in l.get("hints", []):
+                    good = f(h)
+                    if re.search(r"(?<![\d.])" + two_m + r"(?!\w)", good):
+                        if unbound_figures(good):
+                            return []                    # the control: as the pack fills it, the hint is bound
+                        bad = pc.apply_plant(good, two_m, "2 m", allow_multiple=True, name='a hint card with "2 m" unbound')
+                        return unbound_figures(bad)
+        raise pc.StalePlant('a hint card with "2 m" unbound', 'no room has a hint that says "2 m"')
+
+    def check_binding_controls():
+        """bind_figures() on words and on HTML: what it must bind, and what it must leave exactly as it was."""
+        minus = chr(0x2212)
+        cases = (("AT 16 °C", "AT 16%s°C" % NB),
+                 ("= 5 : 1", "= 5%s:%s1" % (NB, NB)),
+                 ("10 : 2 : 3, 15 parts", "10%s:%s2%s:%s3, 15 parts" % (NB, NB, NB, NB)),
+                 ("CHILLER -8 °C", "CHILLER %s8%s°C" % (minus, NB)),
+                 ("One square on the mat is 2 m.", "One square on the mat is 2%sm." % NB),
+                 ("pages 6-9, on 2026-11-14", "pages 6-9, on 2026-11-14"),
+                 # nothing inside a tag or an attribute is read or changed
+                 ('<span class="k-2" data-len="2 m" title="1 : 500" style="margin:-2px 0">is 2 m</span>',
+                  '<span class="k-2" data-len="2 m" title="1 : 500" style="margin:-2px 0">is 2%sm</span>' % NB),
+                 # a figure and its unit either side of an inline tag are bound; either side of a line break, not
+                 ("<b>12</b> cm wide", "<b>12</b>%scm wide" % NB),
+                 ("<b>12 </b>cm wide", "<b>12%s</b>cm wide" % NB),
+                 ("12 <br> cm", "12 <br> cm"),
+                 ("<p>Row 12</p> <p>m is the unit</p>", "<p>Row 12</p> <p>m is the unit</p>"),
+                 ("width < 3 m and height > 2 m", "width < 3%sm and height > 2%sm" % (NB, NB)),
+                 ("16 &deg;C", "16%s&deg;C" % NB))
+        probs = []
+        for text, want in cases:
+            got = bind_figures(text)
+            if got != want:
+                probs.append("bind_figures(%r) gave %r, not %r" % (text, got, want))
+            if bind_figures(got) != got:
+                probs.append("binding %r twice changed it again" % text)
+            if TAG_RE.findall(got) != TAG_RE.findall(text):
+                probs.append("bind_figures(%r) changed a tag" % text)
+            if unbound_figures(got):
+                probs.append("%r still has an unbound figure after binding: %r" % (text, unbound_figures(got)))
+        for text, part in (("is 2 m wide", "2 m"), ("<b>12</b> cm", "2 cm"), ("scale 1 : 500", "1 : 5"), ("at -8", "-8")):
+            if unbound_figures(text) != [part]:
+                probs.append("unbound_figures(%r) gave %r, not [%r]" % (text, unbound_figures(text), part))
+        # a label is bound as it always was: the function label_parts() calls is this one
+        if label_parts("AT 16 °C · = 5 : 1", [0, 0, 1, 1]) != ["AT 16%s°C<br>= 5%s:%s1" % (NB, NB, NB)]:
+            probs.append("label_parts() no longer binds a label's figures")
+        return probs
+
     plants = (("a duplicate answer across sets", plant_duplicate),
               ("an invalid joint draw", plant_invalid),
               ("a wrong recomputed answer", plant_wrong_answer),
@@ -2513,7 +2980,12 @@ def selftest():
               ("a clue with no <b> part", plant_no_bold_part),
               ("a caption starting with a full stop", plant_caption_leading_stop),
               ('a "printed" key on a red-herring image', plant_printed_on_herring),
-              ("a room with one ungraded lock (no rating)", plant_ungraded_lock))
+              ("a room with one ungraded lock (no rating)", plant_ungraded_lock),
+              ("a dark answer box built without its white fill", plant_dark_box_without_fill),
+              ("an answer box under 20 mm wide", plant_narrow_answer_box),
+              ("an answer box under 4.5 mm high", plant_low_answer_box),
+              ("a DRAFT pack with a small answer box, built with --final", plant_draft_small_box_final),
+              ('a hint card with "2 m" unbound', plant_unbound_hint))
     try:
         dc = check_draft_controls()
     except Exception as e:              # an error is never a pass
@@ -2542,6 +3014,21 @@ def selftest():
         sc, longest = ["the longest-story control raised %r" % e], ""
     failures += sc
     print("longest-story control: %s" % ("OK (%s)" % longest if not sc else sc))
+    try:
+        ac, box_summary = check_answer_box_controls()
+    except Exception as e:              # an error is never a pass
+        ac, box_summary = ["the answer-box controls raised %r" % e], ""
+    failures += ac
+    print("answer-box controls: %s" % ("OK (every room's dark boxes filled and no other, no approved room's box under "
+                                       "%g x %g mm: %s; a DRAFT pack's small box is noted on page 1, which still fits "
+                                       "in its words)" % (WRITE_MIN_W_MM, WRITE_MIN_H_MM, box_summary) if not ac else ac))
+    try:
+        bc_ = check_binding_controls()
+    except Exception as e:              # an error is never a pass
+        bc_ = ["the binding controls raised %r" % e]
+    failures += bc_
+    print("binding controls: %s" % ("OK (figures bound in words and across inline tags; tags, attributes and line "
+                                    "breaks left as they were; binding twice changes nothing)" if not bc_ else bc_))
     for name, fn in plants:
         found, err = [], None
         try:
