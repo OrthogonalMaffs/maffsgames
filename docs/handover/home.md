@@ -32,7 +32,7 @@ Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questio
 - Typed answers are worked in whole numbers (`UghStats.divide`); the working shows more decimal places when 1 place would read as a half that rounds the other way, so the working never disagrees with the answer.
 - `.btn[hidden]` added: `.btn`'s `display` had overridden `hidden`, so a hidden button still showed.
 - todo CONTENT-SAFETY-UGH-STATS: the SR-14 scan does not read `ugh-stats/`.
-- MERGED 14 Nov as 8f2b84f (#766), after Project Claude's 21:25 follow-up (game 2 only an A level / Further Maths / Level 4 game, levels read from the home page's cards; Q3 names them) and Jon's ruling on the Case 4 place name ("Generalise it": the south-west of England, CSV column `daylight_hours`). Main on the merge commit: check-site 43644118236 and phone-fit-full 43644118171, RESULTS.
+- MERGED 14 Nov as 8f2b84f (#766), after Project Claude's 21:25 follow-up (game 2 only an A level / Further Maths / Level 4 game, levels read from the home page's cards; Q3 names them) and Jon's ruling on the Case 4 place name ("Generalise it": the south-west of England, CSV column `daylight_hours`). Main on the merge commit: check-site 43644118236 and phone-fit-full 43644118171, both success.
 
 ## 2026-11-14 (home): UGH-STATS-PAGES
 
