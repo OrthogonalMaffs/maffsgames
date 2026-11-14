@@ -536,7 +536,10 @@ def examine(site, base_plants=None, only=None):
         p[COUNTS] = c
         check_quiz(site, "case1", p, "Factor Theorem with 40 answers", faults)
     if want("SKIP"):
-        for label, extra in (("answer-counts.json missing", {COUNTS: None}), ("launch-dates.json missing", {LAUNCH: None})):
+        none_small = planted_counts()          # Factor Theorem under 10 and no A level / Further / Level 4 game at 10 or more
+        none_small["games"].update({SIX: 900, FT: 5, "its-on-sale": 50})
+        for label, extra in (("answer-counts.json missing", {COUNTS: None}), ("launch-dates.json missing", {LAUNCH: None}),
+                             ("no game 2 qualifies", {COUNTS: none_small})):
             p = dict(base_plants)
             p.update(extra)
             check_quiz(site, "case1", p, label, faults)
@@ -638,6 +641,26 @@ def page_h1(slug):
     return re.sub(r"\s+", " ", _html.unescape(re.sub(r"<[^>]+>", "", m.group(1)))).strip() or None
 
 
+SMALL_LEVELS = {"alevel", "further", "level4"}
+LEVEL_WORDS = [("alevel", "A level"), ("further", "Further Maths"), ("level4", "Level 4")]
+CARD = re.compile(r'''<a\s+[^>]*href="([^"]*)"[^>]*class="game-card"[^>]*data-levels="([^"]*)"''')
+
+
+def home_levels(plants):
+    """{slug: {levels}} from every portal card on the home page (Level 4's two spellings as one key)."""
+    out = {}
+    for href, levels in CARD.findall(source("/index.html", plants) or ""):
+        m = re.match(r"/?games/([^/?#]+)/", href)
+        if m:
+            out.setdefault(m.group(1), set()).update("level4" if x == "l4" else x for x in levels.split())
+    return out
+
+
+def level_words(levels):
+    w = [word for key, word in LEVEL_WORDS if key in levels]
+    return " and ".join([", ".join(w[:-1]), w[-1]]) if len(w) > 1 else w[0]
+
+
 def quiz_context(key, plants):
     """What the page's questions should be, from the files it is served: {'expect': [indexes], ...}."""
     ctx = {"expect": []}
@@ -648,12 +671,14 @@ def quiz_context(key, plants):
         if ok:
             g = counts["games"]
             if isinstance(g.get(FT), int) and g[FT] >= 10 and ld.get(FT):
-                ctx["g2"] = (FT, "Factor Theorem", True)
+                ctx["g2"] = (FT, "Factor Theorem", True, {"alevel"})
             else:
-                cands = sorted((v, k) for k, v in g.items() if k != SIX and isinstance(v, int) and v >= 10 and ld.get(k))[:5]
+                levels = home_levels(plants)
+                small = lambda k: bool(levels.get(k)) and levels[k] <= SMALL_LEVELS
+                cands = sorted((v, k) for k, v in g.items() if k != SIX and isinstance(v, int) and v >= 10 and ld.get(k) and small(k))[:5]
                 for _, slug in cands:
                     if page_h1(slug):
-                        ctx["g2"] = (slug, page_h1(slug), False)
+                        ctx["g2"] = (slug, page_h1(slug), False, levels[slug])
                         break
         q1 = ok and isinstance(counts["games"].get(SIX), int) and bool(ld.get(SIX))
         q2 = ok and ctx["g2"] is not None
@@ -697,9 +722,13 @@ def expected(key, ctx, s):
         if i in (2, 3):
             if not ctx["g2"]:
                 raise Wrong("question %d shows, but there is no game 2 to ask about" % i)
-            slug, name, is_ft = ctx["g2"]
+            slug, name, is_ft, levels = ctx["g2"]
         if i == 2:
-            return per_day(ctx, slug, name, stem)
+            try:
+                return per_day(ctx, slug, name, stem)
+            except Wrong as e:
+                raise Wrong("game 2 must be %s (levels %s: only A level, Further Maths and/or Level 4): %s"
+                            % (slug, sorted(levels), e))
         if i == 3:
             a = per_day(ctx, SIX, "Six Sevens, Bruv", ctx["stem1"])[0]
             b = per_day(ctx, slug, name, ctx["stem2"])[0]
@@ -707,7 +736,7 @@ def expected(key, ctx, s):
                     "these two numbers?" % (fmt(a), name, fmt(b)))
             if stem != want:
                 raise Wrong("the stem reads %r, want %r (its numbers are Q1's and Q2's answers)" % (stem, want))
-            return FT_RIGHT if is_ft else "%s is for a much smaller group of students." % name
+            return FT_RIGHT if is_ft else "%s is for %s students only, a much smaller group." % (name, level_words(levels))
     if key == "case2" and i in (1, 2, 3):
         rows = ctx["stats"]["daily"]
         part = lambda wkend: [r["starts"] for r in rows if (dt.date.fromisoformat(r["date"]).weekday() >= 5) == wkend]
@@ -992,6 +1021,8 @@ def selftest():
          ("QUIZ", "NOQA"), "question_answered"),
         ("a CSV figure changed", {CSV3: swap(csv3, "2026-10-15,Thu,513,", "2026-10-15,Thu,514,")}, ("CASE34",), "CSV"),
         ("an r changed", {"/" + PAGES["case4"]: swap(case4_html, "For these two, r = 0.70.", "For these two, r = 0.80.")}, ("CASE34",), "r = "),
+        ("a GCSE game as game 2", {"/" + PAGES["case1"]: swap(case1_html, "g[k] >= 10 && ld[k] && small(k);", "g[k] >= 10 && ld[k];")},
+         ("QUIZ",), "game 2"),
     ]
     bad = []
     site = Site()

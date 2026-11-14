@@ -377,6 +377,32 @@
       return name || null;
     }).catch(function () { return null; });
   }
+  // Each game's levels, as the portal lists them: the union of the data-levels of every card on the home page that
+  // links to it ({slug: ['alevel', 'level4', ...]}; Level 4's two spellings are one key). null when the page cannot be read.
+  // (games.json holds no levels; the cards' data-levels are the roster's, held to it by scripts/check-levels.py.)
+  function homeLevels() {
+    return getText('/').then(function (html) {
+      var out = {};
+      new DOMParser().parseFromString(html, 'text/html').querySelectorAll('a.game-card[data-levels]').forEach(function (a) {
+        var m = /^\/?games\/([^\/?#]+)\//.exec(a.getAttribute('href') || '');
+        if (!m) return;
+        var set = out[m[1]] || (out[m[1]] = []);
+        a.getAttribute('data-levels').split(/\s+/).forEach(function (l) {
+          if (l === 'l4') l = 'level4';
+          if (l && set.indexOf(l) < 0) set.push(l);
+        });
+      });
+      return out;
+    }).catch(function () { return null; });
+  }
+  var LEVEL_WORDS = { alevel: 'A level', further: 'Further Maths', level4: 'Level 4' };
+  // ['further', 'level4'] -> 'Further Maths and Level 4' (in the order A level, Further Maths, Level 4).
+  function levelWords(levels) {
+    var w = ['alevel', 'further', 'level4'].filter(function (l) { return levels.indexOf(l) >= 0; })
+      .map(function (l) { return LEVEL_WORDS[l]; });
+    return w.length > 1 ? w.slice(0, -1).join(', ') + ' and ' + w[w.length - 1] : w[0];
+  }
+
   function ukDate(asOf) {
     var parts = {};
     new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', day: '2-digit', month: '2-digit', year: 'numeric' })
@@ -534,6 +560,6 @@
     dMon: dMon, asOfDate: asOfDate, weekend: weekend, ukDate: ukDate, days: days, longDate: longDate,
     vbars: vbars, hbars: hbars, scatter: scatter, table: table, legend: legend, hiddenNote: hiddenNote, daily: daily,
     el: htmlEl, csvText: csvText, download: download,
-    launchDates: launchDates, gameName: gameName, divide: divide, quiz: quiz
+    launchDates: launchDates, gameName: gameName, homeLevels: homeLevels, levelWords: levelWords, divide: divide, quiz: quiz
   };
 })();

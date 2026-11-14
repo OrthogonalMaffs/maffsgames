@@ -220,7 +220,10 @@
                           as-of date, both counted.
        answer             its answers / D to the nearest whole number, a half going up (UghStats.divide).
        game 2             Factor Theorem; when it has fewer than 10 answers, the lowest-answered game with at least 10
-                          that has a launch date (fewest first, then by slug), named from its own page's heading. */
+                          that has a launch date and whose levels on the portal are only A level, Further Maths and/or
+                          Level 4 (none of KS3, GCSE, Core Maths or any other), fewest first, then by slug, named from its
+                          own page's heading; Q3's right answer then names those levels. No such game: Q2 and Q3 are
+                          skipped. (Project Claude, 14 Nov 21:25: a GCSE game would make Q3's answer false.) */
   var SIX = 'six-sevens-bruv', FT = 'factor-theorem';
   function perDay(slug, name, ld) {
     if (!counts || !ld || counts.since !== U.SINCE) return null;
@@ -233,17 +236,27 @@
       stem: name + ' went on the site on ' + U.longDate(launch) + '. Since 1 September it has been available for ' + d +
         ' days and has ' + U.format(n) + ' answers. What is its mean number of answers per day, to the nearest whole number?' };
   }
+  var SMALL_LEVELS = ['alevel', 'further', 'level4'];
   function second(ld) {
     if (!counts || !ld) return Promise.resolve(null);
     var g = counts.games;
     if (U.whole(g[FT]) && g[FT] >= 10 && ld[FT]) return Promise.resolve({ slug: FT, name: 'Factor Theorem', ft: true });
-    var list = Object.keys(g).filter(function (k) { return k !== SIX && U.whole(g[k]) && g[k] >= 10 && ld[k]; })
-      .sort(function (a, b) { return g[a] - g[b] || (a < b ? -1 : 1); }).slice(0, 5);
-    var tryAt = function (i) {
-      if (i >= list.length) return Promise.resolve(null);
-      return U.gameName(list[i]).then(function (name) { return name ? { slug: list[i], name: name, ft: false } : tryAt(i + 1); });
-    };
-    return tryAt(0);
+    return U.homeLevels().then(function (levels) {
+      if (!levels) return null;
+      var small = function (k) {
+        var l = levels[k];
+        return !!l && l.length > 0 && l.every(function (x) { return SMALL_LEVELS.indexOf(x) >= 0; });
+      };
+      var list = Object.keys(g).filter(function (k) { return k !== SIX && U.whole(g[k]) && g[k] >= 10 && ld[k] && small(k); })
+        .sort(function (a, b) { return g[a] - g[b] || (a < b ? -1 : 1); }).slice(0, 5);
+      var tryAt = function (i) {
+        if (i >= list.length) return Promise.resolve(null);
+        return U.gameName(list[i]).then(function (name) {
+          return name ? { slug: list[i], name: name, ft: false, levels: levels[list[i]] } : tryAt(i + 1);
+        });
+      };
+      return tryAt(0);
+    });
   }
   function questions(ld, g2) {
     var q1 = perDay(SIX, 'Six Sevens, Bruv', ld), q2 = g2 ? perDay(g2.slug, g2.name, ld) : null;
@@ -257,7 +270,7 @@
         options: [
           { right: true, why: careful, text: g2.ft
             ? "They're aimed at very different numbers of students: times tables are for almost everyone, factor theorem is for A level students only."
-            : g2.name + ' is for a much smaller group of students.' },
+            : g2.name + ' is for ' + U.levelWords(g2.levels) + ' students only, a much smaller group.' },
           { text: "You can't work out a mean for a game with so few answers.",
             why: "You can always work out a mean. The problem with few answers is that the mean can swing a lot with a single class, so it's less reliable, not impossible." },
           { text: "Dividing by the number of days already makes the comparison fair.",
