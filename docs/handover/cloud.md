@@ -77,9 +77,9 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-14 (cloud): ANSWER-BOX-CHECK (`docs/handover/contracts/2026-11-14-answer-box-check.md`; Jon's rulings 14 Nov 16:33 and 16:40)
+## 2026-11-14 (cloud): ANSWER-BOX-CHECK (`docs/history/contracts/2026-11-14-answer-box-check.md`; Jon's rulings 14 Nov 16:33 and 16:40)
 
-PR #767 OPEN, merging on green (Medium). Agent Claude Code (cloud), a fresh session, branch `claude/inspiring-heisenberg-hfukwn` from main 22e1e16; first commit c433225 (this contract; #764's close-out, in its entry below). No claim commit: no game is touched.
+MERGED: #767 squash-merged as 3db30f1. Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed). Main on 3db30f1: check-site 43623614027 GREEN and phone-fit-full 43623613951 GREEN, both on the first attempt (close-out carried by ANSWER-BOX-ART-SWAP's first commit, from its contract and read again through the GitHub connection). Agent Claude Code (cloud), a fresh session, branch `claude/inspiring-heisenberg-hfukwn` from main 22e1e16; first commit c433225 (this contract; #764's close-out, in its entry below). No claim commit: no game is touched.
 Done, all in `tools/pack-generator/build_pack.py` (no room's words, numbers or art):
 - **Fill.** `answer_box_greys()`: the build's Chromium decodes each answer picture (no Pillow in CI or the venv, and none added) and returns the channel sums inside its `label_box`; Python works the luma. Under `WRITE_FILL_BELOW = 180` the box gets `.write.fill` (white inside the same dashed outline). Eight filled, exactly the contract's list: Comic Caper 78, 145, 78; Car Trap 107, 107; Prom 31, 98; Roll 34. `write_fill_problems()` checks every cover as drawn.
 - **Size.** `FIT_JS` measures every `.write`; `write_size_gate()` stops an approved room and any `--final` under `WRITE_MIN_W_MM = 20` or `WRITE_MIN_H_MM = 4.5`; a DRAFT build goes on, prints each, and page 1 carries DRAFT notes (a dashed block between heading and text, outside `.main`, so page 1's 150 words are not touched). The five other packs pass (narrowest 23.0 mm, lowest 4.9 mm).
