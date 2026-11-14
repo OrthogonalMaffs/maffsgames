@@ -23,7 +23,7 @@
     {"file": "art/rfi-08-notice-board.webp", "role": "herring", "object": "sign", "label_box": [847, 980, 973, 1077], "font": "label",
      "text": ""},
     {"file": "art/rfi-09-gate-keypad.webp", "role": "answer", "lock": "gate-modifiers-probability", "label_box": [384, 177, 866, 291]},
-    {"file": "art/rfi-10-plans-keypad.webp", "role": "answer", "lock": "fortress-plan-scale", "label_box": [466, 321, 783, 391]},
+    {"file": "art/rfi-10-plans-keypad.webp", "role": "answer", "lock": "fortress-plan-scale", "label_box": [262, 312, 991, 439]},
     {"file": "art/rfi-11-spell-keypad.webp", "role": "answer", "lock": "fireball-circle-area", "label_box": [376, 175, 875, 275]}
   ]
 }

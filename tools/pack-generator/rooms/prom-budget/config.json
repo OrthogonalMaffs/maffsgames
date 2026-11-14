@@ -29,6 +29,6 @@
      "text": "The practice version."},
     {"file": "art/prom-09-portal-keypad.webp", "role": "answer", "lock": "finance-reverse-percentage", "label_box": [380, 133, 866, 270]},
     {"file": "art/prom-10-age-slider.webp", "role": "answer", "lock": "dj-deposit-compound", "label_box": [132, 782, 1120, 891]},
-    {"file": "art/prom-11-router-dial.webp", "role": "answer", "lock": "wifi-venn-router", "label_box": [175, 515, 315, 1026]}
+    {"file": "art/prom-11-router-dial.webp", "role": "answer", "lock": "wifi-venn-router", "label_box": [98, 633, 863, 932]}
   ]
 }
