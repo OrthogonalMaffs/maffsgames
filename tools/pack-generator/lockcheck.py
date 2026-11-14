@@ -254,7 +254,191 @@ def _ev_charger_quadratic(v):
     return {"answer": inside[0], "miss": outside[0]}
 
 
+# ---- Roll for Initiative and The Prom Budget Embezzlement (contract CORE-PACKS-ROLL-PROM, 14 Nov 2026) --------------
+
+def _half_up(x):
+    """A Fraction to the nearest whole number, halves up, with no float anywhere."""
+    return (2 * x.numerator + x.denominator) // (2 * x.denominator)
+
+
+def _pounds(pence):
+    """A whole number of pence written in pounds to two decimal places: 161051 is "1610.51"."""
+    return "%d.%02d" % divmod(pence, 100)
+
+
+def _trimmed(hundredths):
+    """A whole number of hundredths written as the shortest decimal: 110 is "1.1", 4256 is "42.56", 1800 is "18"."""
+    units, rest = divmod(hundredths, 100)
+    return str(units) if not rest else ("%d.%02d" % (units, rest)).rstrip("0")
+
+
+def _gate_modifiers_probability(v):
+    """gate-modifiers-probability: every face of the twenty-sided die is listed, 1 to 20, and each path's winning
+    faces are counted. A check is the face plus the bonus, meet or beat the DC. The climb takes the wet-weather
+    penalty off; the talk does not. Each chance is its count out of the faces, as a percentage, which must be whole.
+    The answer is the better path's chance. The common wrong answer, by the room's rule (its missSays): the climb
+    with the penalty forgotten, "the climb on a dry day". The room's worked line says persuasion is the better
+    path, so a set where it is not is refused. The worked line's figures: the lowest face that wins on each path
+    and how many faces win."""
+    faces = list(range(1, 21))
+    climb = [f for f in faces if f + v["str"] - v["wet"] >= v["dcc"]]
+    talk = [f for f in faces if f + v["cha"] >= v["dcp"]]
+    dry = [f for f in faces if f + v["str"] >= v["dcc"]]
+    if not climb or not talk or not dry:
+        raise ValueError("a path cannot succeed on any face")
+
+    def percent(wins):
+        p = Fraction(100 * len(wins), len(faces))
+        if p.denominator != 1:
+            raise ValueError("%d faces of %d is not a whole percentage" % (len(wins), len(faces)))
+        return int(p)
+    pc, pp, p_dry = percent(climb), percent(talk), percent(dry)
+    if pp <= pc:
+        raise ValueError("persuasion (%d%%) is not the better path (climb %d%%)" % (pp, pc))
+    return {"answer": max(pc, pp), "miss": p_dry, "pc": pc, "pp": pp, "die": len(faces),
+            "needC": climb[0], "needP": talk[0], "chC": len(climb), "chP": len(talk)}
+
+
+def _fortress_plan_scale(v):
+    """fortress-plan-scale: the corridor's centimetres on the plan times the scale are its real centimetres; a
+    metre is a hundred of them, by divmod, which must leave none over; the squares are then counted by laying
+    squares of sq metres end to end until they reach the corridor, which they must reach exactly. The common wrong
+    answer, by the room's rule (its missTitle, "squares counted straight off the centimetres"): the real
+    centimetres shared out in squares with no change to metres, again by laying them end to end."""
+    cm_in_a_metre = 100
+    real_cm = v["L"] * v["S"]
+    metres, over = divmod(real_cm, cm_in_a_metre)
+    if over:
+        raise ValueError("%d cm is not a whole number of metres" % real_cm)
+
+    def laid(length, square):
+        n = 0
+        while n * square < length:
+            n += 1
+        if n * square != length:
+            raise ValueError("squares of %d do not fit %d exactly" % (square, length))
+        return n
+    return {"answer": laid(metres, v["sq"]), "miss": laid(real_cm, v["sq"]),
+            "cm": real_cm, "real": metres, "cmperm": cm_in_a_metre}
+
+
+def _arctan_inverse(x, terms):
+    """(below, above): arctan(1/x) by its alternating series 1/x - 1/(3x^3) + 1/(5x^5) - ..., in exact fractions.
+    The terms shrink and alternate in sign, so the true value lies between any two partial sums next to each other."""
+    total, sums = Fraction(0), []
+    for k in range(terms):
+        total += Fraction((-1) ** k, (2 * k + 1) * x ** (2 * k + 1))
+        sums.append(total)
+    return min(sums[-2:]), max(sums[-2:])
+
+
+def _pi_bounds():
+    """(below, above): pi by Machin's formula, pi = 16 arctan(1/5) - 4 arctan(1/239), each arctan bracketed by its
+    own series, so pi is bracketed too. No float and no stored digits of pi; the gap is under 10 to the -20."""
+    a_low, a_high = _arctan_inverse(5, 16)
+    b_low, b_high = _arctan_inverse(239, 6)
+    return 16 * a_low - 4 * b_high, 16 * a_high - 4 * b_low
+
+
+def _fireball_circle_area(v):
+    """fireball-circle-area: pi x r squared to the nearest square metre, with pi held between two exact fractions
+    (_pi_bounds), so the rounding is decided without a float: both ends of the bracket must round to the same whole
+    number. The room's rule is then checked: 3.14 x r squared, as the exact fraction 314/100, must round to that
+    same number, or the set is refused. The common wrong answer, by the room's rule (its missTitle, "the distance
+    round the edge"): the circumference 2 x pi x r, rounded the same way. The worked line's figures: the area to
+    two decimal places, and the radius in the club's squares. The square is 2 m: it is the plans lock's own figure
+    (its sq, the same in every set of that lock), which this lock's worked line prints beside the count."""
+    r = v["r"]
+    low, high = _pi_bounds()
+
+    def settled(scale, what):
+        a, b = _half_up(low * scale), _half_up(high * scale)
+        if a != b:
+            raise ValueError("%s cannot be rounded: pi's bracket straddles a half" % what)
+        return a
+    area = settled(r * r, "the area")
+    if _half_up(Fraction(314, 100) * r * r) != area:
+        raise ValueError("radius %d: pi and 3.14 round to different whole numbers" % r)
+    square_m = 2
+    squares, over = divmod(r, square_m)
+    if over:
+        raise ValueError("radius %d m is not a whole number of %d m squares" % (r, square_m))
+    return {"answer": area, "miss": settled(2 * r, "the circumference"),
+            "rsq": squares, "exact": _pounds(settled(100 * r * r, "the area to two decimal places"))}
+
+
+def _finance_reverse_percentage(v):
+    """finance-reverse-percentage: the quote is found by trying whole pounds upward from 1 until the quote with its
+    levy added, quote x (100 + pct) / 100, is the total charged; nothing is divided to find it. There must be one
+    such quote. The common wrong answer, by the room's rule (its missSays, "taking pct% off the total"): the total
+    less pct% of the total, which must be a whole number of pounds. The worked line's figures: the total as a
+    percentage of the quote, and 1% of the quote, which is the quote's pounds read as pence."""
+    total, pct = v["total"], v["pct"]
+    whole = 100 + pct
+    quotes = [q for q in range(1, total + 1) if Fraction(q * whole, 100) == total]
+    if len(quotes) != 1:
+        raise ValueError("%d whole-pound quotes come to %d with %d%% added" % (len(quotes), total, pct))
+    off = Fraction(total * pct, 100)
+    if off.denominator != 1:
+        raise ValueError("%d%% of %d is not a whole number of pounds" % (pct, total))
+    return {"answer": quotes[0], "miss": total - int(off), "whole": whole, "onepct": _trimmed(quotes[0])}
+
+
+def _dj_deposit_compound(v):
+    """dj-deposit-compound: the balance is grown a year at a time, in pence, as an exact fraction: each year
+    multiplies it by (100 + rate) / 100. The answer is the one year, 1 to 20 (the slider), at which it is the
+    statement's balance to the penny. The common wrong answer, by the room's rule (its missSays, the interest
+    "divided by rate% of the opening deposit"): the interest over one year's flat interest, to the nearest whole
+    number; an exact half is refused, not rounded. The worked line's figures: the yearly multiplier as a decimal,
+    and the interest in pounds and pence."""
+    dep, rate = v["dep"], v["rate"]
+    pounds, _, pennies = v["bal"].partition(".")
+    if len(pennies) != 2 or not (pounds + pennies).isdigit():
+        raise ValueError("the balance %r is not pounds and two digits of pence" % v["bal"])
+    target = int(pounds) * 100 + int(pennies)
+    balance, years = Fraction(dep * 100), []
+    for year in range(1, 21):
+        balance = balance * (100 + rate) / 100
+        if balance == target:
+            years.append(year)
+    if len(years) != 1:
+        raise ValueError("the balance %s is reached in %d of the years 1 to 20" % (v["bal"], len(years)))
+    interest = target - dep * 100
+    flat_years = Fraction(interest, dep * rate)      # pence of interest over pence of one year's flat interest
+    if (2 * flat_years).denominator == 1 and flat_years.denominator != 1:
+        raise ValueError("the flat-interest years, %s, sit on a half" % flat_years)
+    return {"answer": years[0], "miss": _half_up(flat_years),
+            "mult": _trimmed(100 + rate), "interest": _pounds(interest)}
+
+
+def _wifi_venn_router(v):
+    """wifi-venn-router: the Venn diagram's four regions, by a two-way table. Of the devices not asking for the
+    first service, some ask for neither and the rest ask for the second only; the second service's other devices
+    ask for both; the first service's other devices ask for it only. No region may be below zero and the four must
+    make the total. Inclusion-exclusion is then held as a check, not used as the method: the devices asking for at
+    least one service are the two lists added, less the overlap. The common wrong answer, by the room's rule (its
+    missTitle, "Zero says nobody is doing both at once"): the two services taken as separate, an overlap of 0.
+    The worked line's figures: the devices asking for at least one service, and the two lists added."""
+    total, a, b, neither = v["total"], v["A"], v["B"], v["neither"]
+    second_only = (total - a) - neither
+    both = b - second_only
+    first_only = a - both
+    regions = (first_only, both, second_only, neither)
+    if min(regions) < 0 or sum(regions) != total:
+        raise ValueError("the Venn regions %s do not make %d devices" % (regions, total))
+    at_least_one = first_only + both + second_only
+    if at_least_one != a + b - both:
+        raise ValueError("inclusion-exclusion fails: %d is not %d + %d - %d" % (at_least_one, a, b, both))
+    return {"answer": both, "miss": 0, "atleast": at_least_one, "sum": a + b}
+
+
 RECOMPUTE = {
+    "gate-modifiers-probability": _gate_modifiers_probability,
+    "fortress-plan-scale": _fortress_plan_scale,
+    "fireball-circle-area": _fireball_circle_area,
+    "finance-reverse-percentage": _finance_reverse_percentage,
+    "dj-deposit-compound": _dj_deposit_compound,
+    "wifi-venn-router": _wifi_venn_router,
     "head-bay-lower-bound": _head_bay_lower_bound,
     "boom-gate-sector": _boom_gate_sector,
     "ev-charger-quadratic": _ev_charger_quadratic,

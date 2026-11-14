@@ -336,6 +336,24 @@ window.ROOM = {
           "miss": 10,
           "mult": "1.2",
           "interest": "4964.96"
+        },
+        {
+          "dep": 3125,
+          "rate": 20,
+          "bal": "11197.44",
+          "answer": 7,
+          "miss": 13,
+          "mult": "1.2",
+          "interest": "8072.44"
+        },
+        {
+          "dep": 500,
+          "rate": 60,
+          "bal": "1280.00",
+          "answer": 2,
+          "miss": 3,
+          "mult": "1.6",
+          "interest": "780.00"
         }
       ],
       missTitle: '{{acct.miss}} years — you have treated the interest as flat.',
