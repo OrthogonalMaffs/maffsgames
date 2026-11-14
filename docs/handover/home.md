@@ -18,11 +18,15 @@
 
 ## 2026-11-14 (home): BACK-LINK-START
 
-Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-link-start`; contract `docs/handover/contracts/2026-11-14-back-link-start.md`. Nineteen games showed no link back to the games list on their start screen (the only ones were in a header hidden until Start, or on the results screen). Each now has `<a href="../../" class="back-link">← Back to Games</a>` as the first element of `#startScreen`, on the page's own `.back-link` rule; nothing else on any page changed. New gate `scripts/check-start-back-link.py` (ci-line, `--selftest && --check`): every `games/<slug>/index.html`, loaded at 390 × 844, must show a visible link to the site root or `/games/`; 7 plants fail, 4 controls pass.
+Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-link-start`; PR #757; contract `docs/history/contracts/2026-11-14-back-link-start.md`. Nineteen games showed no link back to the games list on their start screen (the only ones were in a header hidden until Start, or on the results screen). Each now has `<a href="../../" class="back-link">← Back to Games</a>` as the first element of `#startScreen`, on the page's own `.back-link` rule; nothing else on any page changed. New gate `scripts/check-start-back-link.py` (ci-line, `--selftest && --check`): every `games/<slug>/index.html`, loaded at 390 × 844, must show a visible link to the site root or `/games/`; 7 plants fail, 4 controls pass.
 
 - A standalone script, not a second gate in `measure-phone-fit.py` (the contract allowed either): that script runs only in `phone-fit-full.yml` (nightly, and after a push to main that changes a shared path), never on a pull request, and loads the 109 roster games, not all 111 pages. The ci-line runs in the Gate whenever a game or a shared asset changes.
 - On main before the edits the gate failed exactly the contract's 19 and passed the other 92; after, 111 pass.
 - On four pages (better-value, expected-damage, formula-plug-in, new-shapes) the page's own phone rule for `.back-link` draws the new link 20 px and 44 px tall, centred; on the other 15 it is 13 px, left. Style is todo 3.20's.
+- Phone fit for the 19, main against the branch, three modes: every asking screen identical; Next after a wrong answer matched on quiet reruns (the driver's reading moves between runs of one tree). Start screens (report only): two first controls moved below the fold (expectation-station at 390 × 844, spot-the-muppet at 375 × 667); the table is in the PR.
+- Merged as c6c9385 (#757) by merge-pr.py on a green Gate, 14 Nov: main's check-site run 43575260622 success; phone-fit-full 43575260595 success, its measure jobs skipped because no shared path changed (the nightly run measures every game). check-changed.py before the push: 90 checks, 88 passed; verify-negative-number-line.py and verify-decimal-detective.py failed locally and fail the same way on clean main (todo LOCAL-CHECKS); the Gate passed both. Done: merged and live; Project Claude's review and Jon's sample play follow. Cleanup: end-task.py removed the branch and worktree.
+
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-13 (home): LOOP-PAGE1 (Amendment 1)
 
