@@ -121,7 +121,8 @@ clue whose caption is left with an orphan full stop, a caption override with a s
 two-part clue left with an orphan full stop, a clue with no `<b>` part, a caption starting with a full stop, a
 `printed` key on a red-herring image and a room with an ungraded lock; a wrong recomputed answer for each of The
 Headteacher's Car Trap's three locks, a printed unit whose scale gives a value that is not whole, one whose scale is
-wrong but still whole, an answer box left in the room's unit, and a certificate and read-outs too long even at
+wrong but still whole, an answer box left in the room's unit, a hint that gives a scaled lock's answer in the
+room's unit only, words that name it with no unit after it, and a certificate and read-outs too long even at
 their floors; two multi-part controls and the long-story control must pass. It builds no PDF.
 
 ## Adding a room
@@ -166,8 +167,12 @@ answer and its common wrong answer, each with the unit), at the end of the worke
 235 cm.") and as the final padlock's number. The scaling is exact (Decimal on the number's text in `variants.json`,
 never float arithmetic), and a value that is not whole stops the build. The lock's function in `lockcheck.py` must
 also return its own figures in that unit under the key `PRINTED`, worked in that unit; the build compares them with
-what it prints, so a wrong scale cannot print. The room, its clues, hints and common-wrong-answer notes keep the
-room's own unit: only the four places above change. A lock with no entry is not touched.
+what it prints, so a wrong scale cannot print. Everywhere else the room's words give that answer or its common wrong
+answer (a hint card, the key's common-wrong-answer note, the worked solution), the pack gives both units
+(Amendment 2, Jon, 14 Nov 2026): "2.45 m = 245 cm", and the wrong answer "2.50 m = 250 cm". The rule follows the
+room's own tokens for them (`answer`, `aTxt`, `miss`, `mTxt`), each of which must be followed by the room's unit, or
+the build stops; a bound that happens to equal the answer ("2.45 m ≤ width") and the clue's given width stay as
+the room wrote them. The live room is not changed, and a lock with no entry is not touched.
 
 ## Fonts
 

@@ -77,15 +77,16 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-14 (cloud): CAR-TRAP-PACK and Amendment 1 (`docs/handover/contracts/2026-11-14-car-trap-pack.md`; Jon's rulings 13 Nov, 14 Nov 13:20 and 13:48)
+## 2026-11-14 (cloud): CAR-TRAP-PACK and Amendments 1-2 (`docs/handover/contracts/2026-11-14-car-trap-pack.md`; Jon's rulings 13 Nov, 14 Nov 13:20, 13:48 and 14:07)
 
 PR OPEN, merging on green. Agent Claude Code (cloud), a fresh session, branch `claude/intelligent-thompson-i9pj1r` from main 31c8dc1; first commit 8af65a3 (the contract; #761's close-out, in its entry below). No claim commit: no game is touched.
 Done. `build_pack.py`: a config's `"answer_units": {lock id: {unit, scale}}`; that lock's answer × scale (Decimal on the number's text, checked against `variants.json`; not whole stops the build) prints on the answer box, in the key with its unit, at the end of the worked solution and as the final padlock's number. `lockcheck.py`: the room's three locks, and for a lock with a printed unit its own figures in that unit (key `PRINTED`), which the build compares with what it prints, so a wrong scale cannot print. `rooms/car-trap/`: config (6 sets, seed 1, DRAFT) and 11 pictures (WebP, 63 to 216 KB). The pack: 36 pages; answers A 215 cm, 10, 3; B 275, 40, 8; C 285, 45, 4; D 225, 20, 10; E 265, 15, 6; F 245, 90, 9; targets 185, 45, 1185, 2270, 355, 2115; 96 values recomputed, all agree.
 Stopped once and asked (Amendment 1, Jon's three answers): (1) the room's story is long, so page 2 was 11 mm and the certificate 26 mm too long: only on a page that overflows, the certificate's picture scales down (floor 60%) and the read-outs' type steps down (floor 9.5 pt); here 72% and 10 pt; (2) car-05's sticker cannot hold the formula at 11 pt: it says LOAD LIMITER, the formula is in the caption; (3) car-07's sign cannot hold the herring text: nothing is printed on it.
-Proof: Kiln, Christmas, Comic Caper and Library Jam built on main's code and on the branch: the same console output, the same page text, all 143 pages pixel-identical at 100 dpi. Selftest 53/53 (eight new plants, one new control), 5 rooms.
-Open (todo CAR-TRAP-PACK-APPROVE, Jon): the line marker's third hint and the key's wrong-answer note stay in metres; the hatchback is purple on its card, pale blue in the scene; new art would put the formula and the herring text on their pictures. The first room in the selftest is now car-trap (alphabetical), so the generic plants run on it.
+Amendment 2 (Jon, 14:07, before merging): wherever the room's words give a scaled lock's answer or wrong answer (hint cards, the key's note, the worked solution) the pack gives both units, "2.45 m = 245 cm"; `filler()` does it from the room's tokens `answer`, `aTxt`, `miss`, `mTxt`, each of which must be followed by the room's unit or the build stops. The bounds and the specification's width stay in metres (not the answer's tokens).
+Proof: Kiln, Christmas, Comic Caper and Library Jam built on main's code and on the branch: the same console output, the same page text, all 143 pages pixel-identical at 100 dpi. Selftest 55/55 (ten new plants, one new control), 5 rooms.
+Open (todo CAR-TRAP-PACK-APPROVE, Jon): the hatchback is purple on its card, pale blue in the scene (Jon: leave it); new art would put the formula and the herring text on their pictures. The selftest's first room is now car-trap.
 
-Record: agent Claude Code; wall not measured (the container's clock read 13:48 when the contract's stamp of 13:35 was already long past); review cycles 0; amendments 1; usage n/a.
+Record: agent Claude Code; wall not measured (the container's clock read 13:48 when the contract's stamp of 13:35 was already long past); review cycles 0; amendments 2; usage n/a.
 
 ## 2026-11-14 (cloud): SHEET-FORMULA-CELLS (`docs/history/contracts/2026-11-14-sheet-formula-cells.md`, Jon's ruling 14 Nov 12:30)
 

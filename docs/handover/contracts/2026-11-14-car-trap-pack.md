@@ -41,3 +41,9 @@ The session stopped on three points and asked. The questions and Jon's answers, 
 3. Question: "The contract's hatchback text cannot be printed on car-07: at 11 pt it needs 2,193 px of line, and the windscreen sign is 250 x 134 px (the number plate is 89 px high). It is also not a run of the room's flavour text (the room says '...headlights and a fluffy cover...'), which the generator requires. As a default I print nothing on the picture; the caption under it already carries the full flavour. Keep that?"
    Jon chose: "Print nothing (Recommended)": "The sign and plate stay blank; the picture shows the eyelashes and fluffy wheel cover, and the caption says so in the room's own words."
    So car-07's herring text in EXACT CHANGE 2 is replaced by no text.
+
+---
+
+AMENDMENT 2 (Jon, Sat 14 Nov 2026, 14:07 by the cloud container's clock; given to the cloud session directly while the PR's Gate ran; word for word)
+
+Before merging (Jon, 14 Nov): the hint cards and the key's common-wrong-answer note are the same class as the four places in item 1. For a lock with answer_units, every printed appearance of its answer or wrong answer (hint cards included) shows the scaled form: in this pack "2.45 m = 245 cm" where a hint or note gives the value, and the wrong answer as "2.50 m = 250 cm". Add a selftest plant: a scaled lock whose hint still gives only metres. Other packs must stay pixel-identical. Leave the hatchback colour as it is. Then merge on green as planned.

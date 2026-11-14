@@ -257,6 +257,15 @@ def with_answer_units(cfg, locks, slug):
                 if v.get(k) is not None and text_decimal(v[k]) != tv[k]:
                     raise BuildError("%s/%s: %s is written %s in variants.json, but reads as %s"
                                      % (slug, l["id"], k, tv[k], text_decimal(v[k])))
+        if not text_of((l.get("instrument") or {}).get("unit", "")).strip():
+            raise BuildError("%s/%s: its instrument has no unit in the room, so its answer cannot be given in the "
+                             "room's unit and in %s" % (slug, l["id"], units[l["id"]]["unit"]))
+        for v in l["variants"]:                  # the answer's fixed-decimal text is the answer (Amendment 2)
+            for which, names in ANSWER_TOKENS.items():
+                for name in names[1:]:
+                    if name in v and (v.get(which) is None or decimal.Decimal(str(v[name])) != text_decimal(v[which])):
+                        raise BuildError("%s/%s: %s is %r, which is not its %s, %r"
+                                         % (slug, l["id"], name, v[name], which, v.get(which)))
         out.append(dict(l, answer_unit=dict(units[l["id"]])))
     return out
 
@@ -284,14 +293,70 @@ def printed_figure(lock, value):
     return "%s&nbsp;%s" % (format_token(printed_number(lock, value)), esc(au["unit"]))
 
 
+# The bank's names for a lock's answer and its common wrong answer in a room's words: the number itself and, where
+# the room prints it to a fixed number of decimal places, its text (scripts/gen-escape-variants.py's aTxt and mTxt).
+ANSWER_TOKENS = {"answer": ("answer", "aTxt"), "miss": ("miss", "mTxt")}
+
+
+def both_units(lock, v, text):
+    """CAR-TRAP-PACK Amendment 2 (Jon, 14 Nov 2026): wherever a room's words give a scaled lock's answer or common
+    wrong answer (a hint card, the key's common-wrong-answer note, the worked solution, anything filled for print),
+    the pack gives it in both units: "{{bay.aTxt}} m" prints as "2.45 m = 245 cm". `text` is a room string before
+    its tokens are filled; the answer's token, followed by the room's unit, gains " = <scaled> <printed unit>". A
+    token that names the answer without the room's unit after it stops the build: the pack cannot say what the
+    figure is in, so it cannot convert it for the reader."""
+    au = lock["answer_unit"]
+    own = text_of((lock.get("instrument") or {}).get("unit", "")).strip()
+    for which, names in ANSWER_TOKENS.items():
+        if v.get(which) is None:
+            continue
+        for name in names:
+            token = "{{%s.%s}}" % (lock["key"], name)
+            if token not in text:
+                continue
+            with_unit = re.compile(re.escape(token) + r"(\s|&nbsp;)" + re.escape(own) + r"(?!\w)")
+            if not own or len(with_unit.findall(text)) != text.count(token):
+                raise BuildError("%s: these words give its %s (%s) without the room's unit %r after it, so the pack "
+                                 "cannot show it in %s as well: %r"
+                                 % (lock["id"], "answer" if which == "answer" else "common wrong answer", token, own,
+                                    au["unit"], text[:120]))
+            text = with_unit.sub(lambda m: "%s = %s" % (m.group(0), printed_figure(lock, v[which])), text)
+    return text
+
+
+def both_units_problems(lock, v, template, filled, where):
+    """A scaled lock's words, as filled for a set, that give its answer or common wrong answer fewer times in the
+    printed unit than the room's words name it (Amendment 2): a hint that still gives only metres. `template` is
+    the room's string, `filled` what the pack prints for it."""
+    au = lock.get("answer_unit")
+    if not au:
+        return []
+    shown = " ".join(text_of(filled).replace(chr(160), " ").split())
+    out = []
+    for which, names in ANSWER_TOKENS.items():
+        named = sum(template.count("{{%s.%s}}" % (lock["key"], name)) for name in names)
+        if not named or v.get(which) is None:
+            continue
+        form = "= %s %s" % (format_token(printed_number(lock, v[which])), au["unit"])
+        if shown.count(form) < named:
+            out.append("%s, %s: its words give the %s %d time(s), but %r is printed %d time(s): %r"
+                       % (lock["id"], where, "answer" if which == "answer" else "common wrong answer", named, form,
+                          shown.count(form), shown[:140]))
+    return out
+
+
 def solution_line(lock, v, solved):
-    """A lock's worked solution, already filled. A lock with a printed unit ends with its answer in that unit:
-    "... is <b>2.35 m</b>." becomes "... is <b>2.35 m</b> = <b>235 cm</b>." """
+    """A lock's worked solution, already filled. A lock with a printed unit must end up giving its answer in that
+    unit: the room's words normally name the answer, so both_units() has already written "<b>2.35 m = 235 cm</b>";
+    a solution that does not name it has " = <b>235 cm</b>." added at its end."""
     au = lock.get("answer_unit")
     if not au:
         return solved
+    figure = printed_figure(lock, v["answer"])
+    if "= " + figure in solved:
+        return solved
     body = solved.rstrip()
-    return "%s = <b>%s</b>." % (body[:-1] if body.endswith(".") else body, printed_figure(lock, v["answer"]))
+    return "%s = <b>%s</b>." % (body[:-1] if body.endswith(".") else body, figure)
 
 
 def answer_unit_problems(locks, cover_texts):
@@ -614,11 +679,15 @@ def verify_sets(locks, sets):
 
 def filler(locks, s):
     t = {"%s.%s" % (l["key"], k): format_token(val) for l, v in zip(locks, s["vars"]) for k, val in v.items()}
+    in_both = [(l, v) for l, v in zip(locks, s["vars"]) if l.get("answer_unit")]   # none, for most rooms
 
     def fill(text):
         if text is None:
             return ""
-        return re.sub(r"\{\{([\w.-]+)\}\}", lambda m: t.get(m.group(1), m.group(0)), str(text))
+        text = str(text)
+        for l, v in in_both:                     # CAR-TRAP-PACK Amendment 2: the answer in both units, everywhere
+            text = both_units(l, v, text)
+        return re.sub(r"\{\{([\w.-]+)\}\}", lambda m: t.get(m.group(1), m.group(0)), text)
     return fill
 
 
@@ -1290,7 +1359,29 @@ def win_image_path(slug, room):
     return ROOT / path
 
 
+def both_units_everywhere(locks, sets):
+    """Amendment 2's check on the words build_html prints for every scaled lock: each hint card and worked solution,
+    for every set, and the key's common-wrong-answer note (shown with set A's figures)."""
+    out = []
+    for n, s in enumerate(sets):
+        f = filler(locks, s)
+        for l, v in zip(locks, s["vars"]):
+            if not l.get("answer_unit"):
+                continue
+            texts = [("hint %d" % (k + 1), h) for k, h in enumerate(l.get("hints", []))]
+            texts.append(("worked solution", l.get("solve", "")))
+            if n == 0:
+                texts += [("common wrong answer", l.get("missTitle", "")), ("common-wrong-answer note", l.get("missSays", ""))]
+            for where, template in texts:
+                out += both_units_problems(l, v, template, f(template), "set %s, %s" % (s["letter"], where))
+    return out
+
+
 def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
+    unit_gaps = both_units_everywhere(locks, sets)
+    if unit_gaps:
+        raise BuildError("%s: a lock asked for in a printed unit is given in the room's unit only:\n  %s"
+                         % (slug, "\n  ".join(unit_gaps)))
     rdir = HERE / "rooms" / slug
     images = cfg["images"]
     by_obj = {im["object"]: im for im in images if im["role"] in ("clue", "herring")}
@@ -1769,6 +1860,32 @@ def selftest():
                              name="an answer box left in the room's unit")
         return [x for x in answer_unit_problems(r_locks, [bad]) if "still says" in x]
 
+    def plant_hint_in_room_unit_only():
+        # Amendment 2: a hint card that gives a scaled lock's answer in the room's unit only
+        r_locks, r_sets, i = scaled_lock()
+        l, v = r_locks[i], r_sets[0]["vars"][i]
+        names = ["{{%s.%s}}" % (l["key"], name) for name in ANSWER_TOKENS["answer"]]
+        k, hint = next(((k, h) for k, h in enumerate(l.get("hints", [])) if any(x in h for x in names)), (None, None))
+        if hint is None:
+            raise pc.StalePlant("a hint that gives the answer in the room's unit only", "no hint of %s names its answer" % l["id"])
+        good = filler(r_locks, r_sets[0])(hint)
+        if both_units_problems(l, v, hint, good, "set A, hint %d" % (k + 1)):
+            return []                                    # the control: the pack's own hint gives both units
+        bad = pc.apply_plant(good, " = " + printed_figure(l, v["answer"]), "",
+                             name="a hint that gives the answer in the room's unit only")
+        return both_units_problems(l, v, hint, bad, "set A, hint %d" % (k + 1))
+
+    def plant_answer_without_room_unit():
+        # Amendment 2: words that name a scaled lock's answer with no unit after it cannot be converted: the build stops
+        r_locks, r_sets, i = scaled_lock()
+        l = r_locks[i]
+        token = "{{%s.%s}}" % (l["key"], ANSWER_TOKENS["answer"][0])
+        try:
+            filler(r_locks, r_sets[0])("Set it to %s and no more." % token)
+        except BuildError as e:
+            return [str(e)] if "without the room's unit" in str(e) else []
+        return []
+
     def plant_bad_url():
         url = room_url(rooms[0])
         bad = pc.apply_plant(url, "/escape-rooms/%s/" % rooms[0], "/escape-rooms/no-such-room/", name="a dead room URL")
@@ -2228,6 +2345,8 @@ def selftest():
               ("a printed unit whose scale gives a value that is not whole", plant_fractional_scale),
               ("a printed unit whose scale is wrong but still gives whole numbers", plant_wrong_scale),
               ("an answer box left in the room's unit when the pack asks for another", plant_room_unit_on_box),
+              ("a hint that gives a scaled lock's answer in the room's unit only", plant_hint_in_room_unit_only),
+              ("words that name a scaled lock's answer with no unit after it", plant_answer_without_room_unit),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
               ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
