@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-PAGES, 14 Nov 2026). Every live figure on this page is drawn by
+     /schools/assets/ugh-stats.js from a committed same-origin file; scripts/check-ugh-stats.py holds the page to it. -->
+<meta name="description" content="Build more games, or help people find the ones we've got? A case study in skewed data and median v mean, from MaffsGames' own figures, with a CSV and questions.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/half-our-games/">
+<meta property="og:title" content="Half our games get 4% of the answers | MaffsGames">
+<meta property="og:description" content="Build more games, or help people find the ones we've got? A case study in skewed data and median v mean, from MaffsGames' own figures, with a CSV and questions.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/half-our-games/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Half our games get 4% of the answers | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="crumb"><a href="/ugh-stats/">&larr; Ugh, stats</a></p>
+<p class="kicker">Case 1 &middot; skewed data &middot; median v mean</p>
+<h1>Half our games get 4% of the answers</h1>
+
+<div class="decided" id="decided">
+<p class="when">When we decided (12 November 2026)</p>
+
+<section class="step">
+  <h2><span class="step-n">1</span>Ask</h2>
+  <p>We had time for one big job before Christmas: build new games, or help people find the 116 we've already got. Which one would get more students answering questions?</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">2</span>Collect</h2>
+  <p>Every game counts the answers given in it. From 1 September to 12 November: 25,438 answers across 116 games and rooms.</p>
+  <p class="chart-title">The six with the most answers</p>
+  <div id="topSixChart"></div>
+  <details class="ugh-table">
+    <summary>Show the figures as a table</summary>
+    <table id="topSix">
+      <caption>The six with the most answers, 1 September to 12 November 2026</caption>
+      <thead><tr><th scope="col">Game or room</th><th scope="col">Answers</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Six Sevens, Bruv</th><td>4,181</td></tr>
+        <tr><th scope="row">Like Terms Collector</th><td>2,475</td></tr>
+        <tr><th scope="row">Prime or Composite</th><td>1,930</td></tr>
+        <tr><th scope="row">Factor Race</th><td>1,882</td></tr>
+        <tr><th scope="row">The Kiln Disaster (room)</th><td>775</td></tr>
+        <tr><th scope="row">Negative Number Line</th><td>729</td></tr>
+      </tbody>
+    </table>
+  </details>
+  <p>&hellip; and 110 more. The bottom 58 have 987 answers between them.</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">3</span>Picture it</h2>
+  <p>Line all 116 up from most played to least, cut the queue into ten equal groups, and see what share of the answers each group gets.</p>
+  <p class="chart-title">Share of all answers, by tenth of the games</p>
+  <div id="decilesChart"></div>
+  <details class="ugh-table">
+    <summary>Show the figures as a table</summary>
+    <table id="deciles">
+      <caption>Share of all answers by tenth of the games, 12 November 2026</caption>
+      <thead><tr><th scope="col">Group</th><th scope="col">Share of answers</th></tr></thead>
+      <tbody>
+        <tr><th scope="row">Top tenth</th><td>59.9%</td></tr>
+        <tr><th scope="row">2nd</th><td>18.9%</td></tr>
+        <tr><th scope="row">3rd</th><td>9.2%</td></tr>
+        <tr><th scope="row">4th</th><td>5.1%</td></tr>
+        <tr><th scope="row">5th</th><td>3.1%</td></tr>
+        <tr><th scope="row">6th</th><td>1.7%</td></tr>
+        <tr><th scope="row">7th</th><td>1.1%</td></tr>
+        <tr><th scope="row">8th</th><td>0.6%</td></tr>
+        <tr><th scope="row">9th</th><td>0.3%</td></tr>
+        <tr><th scope="row">Bottom</th><td>0.1%</td></tr>
+      </tbody>
+    </table>
+  </details>
+  <p>The top tenth of games (11 of them) get 59.9% of all answers. The bottom half get 3.9%.</p>
+  <dl class="stats three" id="decidedStats">
+    <div><dt>Mean answers per game</dt><dd>219</dd></div>
+    <div><dt>Median</dt><dd>52</dd></div>
+    <div><dt>Interquartile range</dt><dd>13 to 192</dd></div>
+  </dl>
+  <p>Which average tells the truth about a "typical" game? A handful of huge games drag the mean up to 219, but only 28 of the 116 games actually reach it. The median, 52, is what most games really look like. When data is this lopsided, the mean tells you about the giants, not the typical game.</p>
+</section>
+</div>
+
+<section class="live-box today" aria-labelledby="todayLabel">
+  <h2 id="todayLabel">Today</h2>
+  <div data-ugh-live="counts" id="today"></div>
+  <p>Has the bottom half moved since we decided?</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">4</span>Decide</h2>
+  <p>Both, but finding came first. Building another game would add one more to the bottom half. So in November we made the games we already had easier to find: every escape room got its own web address and a title that says what maths it covers, the site map was fixed so search engines can see every game, and every game's start screen now has a way back to the rest. We're still building, but new games now have to earn their place. We'll run these numbers again in January: if the bottom half is still getting 4%, we were wrong about why.</p>
+</section>
+
+<section class="box cant">
+  <h2>What this data can't tell us</h2>
+  <ul>
+    <li>Answers aren't students. One keen class can give a game 500 answers in an afternoon.</li>
+    <li>Not every game had the same time. A game launched in October had weeks less than one live in September.</li>
+    <li>Some answers are ours. We test games by playing them, and those answers are in the count.</li>
+    <li>Popular isn't the same as good. A game might be quiet because nobody needs that topic yet this term.</li>
+  </ul>
+</section>
+
+<section class="box turn">
+  <h2>Your turn</h2>
+  <ol>
+    <li>Draw a box plot from the five-number summary. Where would you draw the line for an outlier?</li>
+    <li>Remove the top four games. What happens to the mean? To the median? Why the difference?</li>
+    <li>Which "can't tell us" point worries you most? What extra data would fix it?</li>
+  </ol>
+  <button type="button" class="btn" id="csv" data-ugh-needs="counts" hidden>Download today's data (CSV)</button>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+
+  // The 12 November figures are Jon's decision record. They are written once, in the two tables above, and the
+  // charts are drawn from those tables: nothing here recomputes or restates them.
+  function fromTable(tableId, mountId, title) {
+    var items = [].map.call(document.querySelectorAll('#' + tableId + ' tbody tr'), function (tr) {
+      var text = tr.querySelector('td').textContent.trim();
+      return { name: tr.querySelector('th').textContent.trim(), value: parseFloat(text.replace(/,/g, '')), text: text };
+    });
+    U.hbars(document.getElementById(mountId), items, { title: title });
+  }
+  fromTable('topSix', 'topSixChart', 'The six games and rooms with the most answers on 12 November 2026');
+  fromTable('deciles', 'decilesChart', 'Share of all answers by tenth of the games on 12 November 2026');
+
+  /* TODAY: the same method that gave the 12 November figures, on today's answer-counts.json.
+     (scripts/check-ugh-stats.py works it by hand on a planted file and holds this code to the result.)
+       games       every slug with at least 1 answer, sorted from most answers to fewest; n of them.
+       ten groups  by position in that queue: group i (0 is the top tenth) is the games from position floor(n*i/10) up to,
+                   but not including, floor(n*(i+1)/10). When n is not a multiple of 10 the groups differ by one game
+                   (116 games: 11, 12, 11, 12, 12, 11, 12, 11, 12, 12).
+       share       a group's answers / all answers, as a percentage to 1 decimal place. The bottom half is the last five
+                   groups taken together (its own sum, not the five rounded shares added up).
+       mean        all answers / n.   median: the middle value, or the mean of the middle two when n is even.
+       quartiles   the values at positions (n+1)/4 and 3(n+1)/4, counting from the smallest as position 1 and going
+                   in proportion between two neighbours (the "exclusive" method; 116 games: positions 29.25 and
+                   87.75). Shown to the nearest whole number, as 13 to 192 was.
+       at or above the mean   how many games have at least the mean number of answers. */
+  function summary(games) {
+    var v = Object.keys(games).map(function (k) { return games[k]; }).filter(function (x) { return x >= 1; })
+      .sort(function (a, b) { return b - a; });
+    var n = v.length, total = v.reduce(function (a, b) { return a + b; }, 0);
+    if (n < 10) throw new Error('too few games for ten groups');
+    var sumFrom = function (lo, hi) { var s = 0; for (var i = lo; i < hi; i++) s += v[i]; return s; };
+    var bound = function (i) { return Math.floor(n * i / 10); };
+    var pct = function (part) { return (100 * part / total).toFixed(1) + '%'; };
+    var asc = v.slice().reverse();
+    var at = function (pos) {                       // position counted from 1
+      var lo = Math.floor(pos), frac = pos - lo;
+      var a = asc[Math.min(Math.max(lo, 1), n) - 1], b = asc[Math.min(Math.max(lo + 1, 1), n) - 1];
+      return a + (b - a) * frac;
+    };
+    var mean = total / n;
+    var median = n % 2 ? asc[(n - 1) / 2] : (asc[n / 2 - 1] + asc[n / 2]) / 2;
+    return {
+      n: n, total: total, mean: mean, median: median,
+      top: pct(sumFrom(0, bound(1))), topGames: bound(1),
+      bottom: pct(sumFrom(bound(5), n)),
+      q1: at((n + 1) / 4), q3: at(3 * (n + 1) / 4),
+      reach: v.filter(function (x) { return x >= mean; }).length
+    };
+  }
+
+  var rowsForCsv = null;
+  U.run({
+    counts: function (d) {
+      var s = summary(d.games), mount = document.getElementById('today');
+      var dl = U.el('dl', 'stats');
+      var add = function (label, figure) {
+        var div = U.el('div');
+        div.appendChild(U.el('dt', '', label));
+        div.appendChild(U.el('dd', '', figure));
+        dl.appendChild(div);
+      };
+      add('Answers', U.format(s.total));
+      add('Games and rooms', U.format(s.n));
+      add('Top tenth\'s share of answers', s.top);
+      add('Bottom half\'s share of answers', s.bottom);
+      add('Mean answers per game', U.format(s.mean));
+      add('Median', s.median % 1 ? s.median.toFixed(1) : U.format(s.median));
+      add('Interquartile range', U.format(s.q1) + ' to ' + U.format(s.q3));
+      add('Games at or above the mean', U.format(s.reach) + ' of ' + U.format(s.n));
+      mount.textContent = '';
+      mount.appendChild(U.el('p', 'when now', 'Figures from ' + U.asOfDate(d.as_of)));
+      mount.appendChild(dl);
+      rowsForCsv = { date: d.as_of.slice(0, 10), rows: Object.keys(d.games).map(function (k) { return [k, d.games[k]]; })
+        .sort(function (a, b) { return b[1] - a[1] || (a[0] < b[0] ? -1 : 1); }) };
+    }
+  });
+  document.getElementById('csv').addEventListener('click', function () {
+    if (rowsForCsv) U.download('maffsgames-answers-' + rowsForCsv.date + '.csv', ['slug', 'answers'], rowsForCsv.rows);
+  });
+})();
+</script>
+</body>
+</html>

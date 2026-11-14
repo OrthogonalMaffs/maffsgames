@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-PAGES, 14 Nov 2026). Every live figure on this page is drawn by
+     /schools/assets/ugh-stats.js from a committed same-origin file; scripts/check-ugh-stats.py holds the page to it. -->
+<meta name="description" content="Is MaffsGames used in classrooms, or at home? A Core Maths case study in inference from limited data, with real charts, a CSV and questions for your class.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/whos-playing/">
+<meta property="og:title" content="Who's actually playing? | MaffsGames">
+<meta property="og:description" content="Is MaffsGames used in classrooms, or at home? A Core Maths case study in inference from limited data, with real charts, a CSV and questions for your class.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/whos-playing/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Who's actually playing? | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="crumb"><a href="/ugh-stats/">&larr; Ugh, stats</a></p>
+<p class="kicker">Case 2 &middot; inference from limited data &middot; Core Maths</p>
+<h1>Who's actually playing?</h1>
+
+<section class="step">
+  <h2><span class="step-n">1</span>Ask</h2>
+  <p>Is MaffsGames used in classrooms, or at home? It matters: a teacher needs games that work on a projector in 15 minutes; a student at home needs ones that explain themselves. We never know who you are, so we have to work it out from clues.</p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">2</span>Collect</h2>
+  <p>We record what happened, never who: which game, right or wrong, and when. Google Analytics adds roughly which country. No names, no accounts, no school. That's all the evidence we have.</p>
+  <p><a href="/privacy/">Read the privacy page</a></p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">3</span>Picture it</h2>
+  <p class="chart-title">Games started by hour, UK time, last 4 weeks</p>
+  <div data-ugh-live="stats" id="hours"></div>
+  <p class="chart-title">Games started each day, last 30 days</p>
+  <div data-ugh-live="stats" id="daily"></div>
+  <p class="figure-line" data-ugh-live="stats" id="uk"></p>
+</section>
+
+<section class="step">
+  <h2><span class="step-n">4</span>You decide</h2>
+  <p>What does the evidence say? Before you answer, think about:</p>
+  <ul>
+    <li>If this were classrooms, what would the weekday hours look like? What would half-term do to it?</li>
+    <li>What else would produce the same pattern? (Homework set in class. A teacher testing games at lunch. Us.)</li>
+    <li>One class of 30 can start 30 games in a minute. One student can start 30 games in an evening. Can our data tell those apart?</li>
+    <li>What one extra piece of data would settle it, and could we collect it without knowing who you are?</li>
+  </ul>
+</section>
+
+<section class="box cant">
+  <h2>What this data can't tell us</h2>
+  <ul>
+    <li>Starts aren't people.</li>
+    <li>Countries come from Google and are rough.</li>
+    <li>Our own testing is in the numbers.</li>
+    <li>School holidays differ between England, Wales, Scotland and Northern Ireland.</li>
+    <li>Figures below 10 are shown as &lt;10: too small to mean anything.</li>
+  </ul>
+</section>
+
+<section class="box turn">
+  <h2>Your turn</h2>
+  <ol>
+    <li>Sketch what the weekday chart would look like if no one played in school.</li>
+    <li>What share of all starts happen 9:00 to 15:30 on weekdays? If play were spread evenly across the week, you'd expect about 19% (5 &times; 6.5 = 32.5 of the week's 168 hours). Is ours more?</li>
+    <li>Write one sentence a teacher could check against their own timetable.</li>
+  </ol>
+  <button type="button" class="btn" id="csv" data-ugh-needs="stats" hidden>Download the data (CSV)</button>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+  var UK = 'United Kingdom';
+  var csv = null;
+  U.run({
+    stats: function (d) {
+      // Chart A: the two series on one scale, one panel each so a phone can show 24 bars a series.
+      var mount = document.getElementById('hours'), title = 'Games started by hour, UK time, last 4 weeks';
+      var both = d.hours.weekday.concat(d.hours.weekend);
+      var max = U.niceMax(Math.max.apply(null, both.map(U.drawn)));
+      var series = function (values, fill, name) {
+        return values.map(function (v, h) { return { name: name + ', ' + h + ':00 to ' + h + ':59', tick: h % 3 ? '' : String(h), value: v, fill: fill }; });
+      };
+      mount.textContent = '';
+      U.legend(mount, [['Weekdays (Monday to Friday)', U.NAVY], ['Weekends', U.TEAL]]);
+      mount.appendChild(U.el('p', 'ugh-axis', 'Weekdays'));
+      U.vbars(mount, series(d.hours.weekday, U.NAVY, 'Weekdays'), { title: title + ': weekdays', max: max, height: 180 });
+      mount.appendChild(U.el('p', 'ugh-axis', 'Weekends'));
+      U.vbars(mount, series(d.hours.weekend, U.TEAL, 'Weekends'), { title: title + ': weekends', max: max, height: 180 });
+      mount.appendChild(U.el('p', 'ugh-axis', 'Along the bottom: the hour of the day, UK time (0 is midnight, 12 is midday). Four weeks hold 20 weekdays and 8 weekend days, so compare the shapes, not the heights.'));
+      U.hiddenNote(mount, both);
+      U.table(mount, title, ['Hour starting', 'Weekdays', 'Weekends'], d.hours.weekday.map(function (v, h) {
+        return [h + ':00', U.show(v), U.show(d.hours.weekend[h])];
+      }));
+
+      // Chart B: the same 30-day chart as the charts page.
+      U.daily(document.getElementById('daily'), d);
+
+      // The UK's share of sessions. A "<10" entry is never added in as if it were a number: when one is there the
+      // exact share cannot be known, so the page gives the lowest it could be (each hidden entry at 9, its most).
+      var uk = document.getElementById('uk');
+      var row = d.countries.filter(function (c) { return c.country === UK; })[0];
+      if (!row || U.hidden(row.sessions) || !row.sessions) throw new Error('no UK figure');
+      var t = U.tally(d.countries.map(function (c) { return c.sessions; }));
+      var label = 'Share of sessions from the UK, last 4 weeks: ';
+      if (!t.hidden) {
+        uk.textContent = label + (100 * row.sessions / t.sum).toFixed(1) + '%';
+      } else {
+        var least = Math.floor(1000 * row.sessions / (t.sum + 9 * t.hidden)) / 10;
+        uk.textContent = label + 'at least ' + least.toFixed(1) + '%';
+        uk.parentNode.insertBefore(U.el('p', 'ugh-note', 'Why "at least": one group of countries had fewer than 10 sessions, so its exact figure is hidden. Even if it had 9, the most it could have, the UK\'s share would be this big.'), uk.nextSibling);
+      }
+
+      csv = { date: d.as_of.slice(0, 10), rows: d.hours.weekday.map(function (v, h) { return [h, v, d.hours.weekend[h]]; }) };
+    }
+  });
+  document.getElementById('csv').addEventListener('click', function () {
+    if (csv) U.download('maffsgames-starts-by-hour-' + csv.date + '.csv', ['hour', 'weekday', 'weekend'], csv.rows);
+  });
+})();
+</script>
+</body>
+</html>

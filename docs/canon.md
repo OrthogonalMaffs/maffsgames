@@ -386,6 +386,8 @@ games.json entry in the PR that adds it, or `check-meta.py` fails.
 
 # 3. Portal Structure
 
+`/ugh-stats/` ("Ugh, stats", 14 Nov 2026, contract UGH-STATS-PAGES) is the section that shows the site's own data and the decisions made from it: a landing page, `half-our-games/`, `whos-playing/` and `charts/`, every live figure drawn by `schools/assets/ugh-stats.js` from `answer-counts.json` and `ugh-stats.json` and held by `scripts/check-ugh-stats.py`.
+
 ## 3.1 Level Filter System
 
 | **Filter** | **Colour** | **CSS Variable** | **Audience** |

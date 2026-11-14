@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Ugh, stats" (contract UGH-STATS-PAGES, 14 Nov 2026). Every live figure on this page is drawn by
+     /schools/assets/ugh-stats.js from a committed same-origin file; scripts/check-ugh-stats.py holds the page to it. -->
+<meta name="description" content="The charts MaffsGames checks every day: games started each day and games started by level, drawn from the site's own data.">
+<link rel="canonical" href="https://maffsgames.co.uk/ugh-stats/charts/">
+<meta property="og:title" content="The charts we check | MaffsGames">
+<meta property="og:description" content="The charts MaffsGames checks every day: games started each day and games started by level, drawn from the site's own data.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/ugh-stats/charts/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>The charts we check | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<link rel="stylesheet" href="/ugh-stats/ugh-stats.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<p class="crumb"><a href="/ugh-stats/">&larr; Ugh, stats</a></p>
+<h1>The charts we check</h1>
+
+<section class="step">
+  <h2>Daily Activity</h2>
+  <p class="chart-title">Games started each day, last 30 days</p>
+  <div data-ugh-live="stats" id="daily"></div>
+  <p class="note">Look for the weekends and half-term.</p>
+</section>
+
+<section class="step">
+  <h2>Level Split</h2>
+  <p class="chart-title">Games started by level, last 7 days</p>
+  <div data-ugh-live="stats" id="levels"></div>
+  <p class="note">Games that serve several levels count under the level picked.</p>
+</section>
+
+<p class="ugh-sub" data-ugh-live="stats" id="updated"></p>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep">&middot;</span><a href="/leaderboards/">Leaderboards</a><span class="sep">&middot;</span><a href="/spec-map/">Spec Map</a><span class="sep">&middot;</span><a href="/parents/">Parent guides</a><span class="sep">&middot;</span><a href="/updates/">What's changed</a><span class="sep">&middot;</span><a href="/ugh-stats/">Ugh, stats</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a><span class="sep">&middot;</span><a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">&#9749; Support<span class="sf-long"> MaffsGames</span></a></footer>
+<script src="/schools/assets/ugh-stats.js"></script>
+<script>
+(function () {
+  'use strict';
+  var U = window.UghStats;
+  var LEVELS = { year6: 'Year 6', ks3: 'KS3', gcse: 'GCSE', higher: 'GCSE Higher', core: 'Core Maths', alevel: 'A level',
+    further: 'Further Maths', level3: 'Level 3', level4: 'Level 4', all: 'All levels', none: 'No level', other: 'Other' };
+  U.run({
+    stats: function (d) {
+      U.daily(document.getElementById('daily'), d);
+
+      var mount = document.getElementById('levels'), title = 'Games started by level, last 7 days';
+      var items = d.levels.map(function (r) {
+        return { name: Object.prototype.hasOwnProperty.call(LEVELS, r.level) ? LEVELS[r.level] : r.level, value: r.starts };
+      });
+      mount.textContent = '';
+      U.hbars(mount, items, { title: title });
+      U.hiddenNote(mount, items.map(function (it) { return it.value; }));
+      U.table(mount, title, ['Level', 'Games started'], items.map(function (it) { return [it.name, U.show(it.value)]; }));
+
+      document.getElementById('updated').textContent = 'Updated daily; last ' + U.asOfDate(d.as_of) + '.';
+    }
+  });
+})();
+</script>
+</body>
+</html>
