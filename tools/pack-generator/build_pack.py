@@ -413,13 +413,15 @@ def check_final(cfg, slug):
                          "tools/pack-generator/rooms/%s/config.json)" % (slug, slug))
 
 
-def draft_problems(draft_pages, approved, slug):
+def draft_problems(draft_pages, approved, slug, readout_pages=1):
     """draft_pages: [page number, kind] for every page whose printed text says DRAFT (AUDIT_JS). An approved room
-    prints DRAFT nowhere; an unapproved one carries the badge on pages 1 and 2."""
+    prints DRAFT nowhere; an unapproved one carries the badge on page 1 and on its read-outs: page 2, and page 3 too
+    when they take two pages."""
     if approved:
         return ["%s: the wording is approved, but page %d (%s) says DRAFT" % (slug, n, k) for n, k in draft_pages]
     on = {n for n, _ in draft_pages}
-    return ["%s: the wording is not approved, but page %d has no DRAFT badge" % (slug, n) for n in (1, 2) if n not in on]
+    return ["%s: the wording is not approved, but page %d has no DRAFT badge" % (slug, n)
+            for n in range(1, 2 + readout_pages) if n not in on]
 
 
 def room_locks(room, slug):
@@ -950,7 +952,8 @@ COVER_FLOOR = 0.6               # a cover's picture never prints below 60% of it
 COVER_FIT_JS = """
 ([floor]) => {
   // WARMUP-PACKS Ruling 3 (Jon, 12 Nov 2026): a cover whose story leaves too little room scales its picture down by
-  // exactly the overflow, never below `floor` of its full width; still over at the floor, the cover is left
+  // exactly the overflow, never below `floor` of its full width. Still over at the floor, the cover prints without
+  // its picture (CORE-PACKS-ROLL-PROM Amendment 1, Jon, 14 Nov 2026); still over without it, the cover is left
   // overflowing and the audit fails the build, as before. Covers that fit are not touched.
   const out = [];
   for (const page of document.querySelectorAll('.page[data-kind=cover]')) {
@@ -965,8 +968,10 @@ COVER_FIT_JS = """
       scale = Math.max(floor, scale * (h - over) / h);
       img.style.width = (full * scale) + 'px';
     }
+    let dropped = false;
+    if (img && scale <= floor && used() > m.clientHeight + 0.5) { img.style.display = 'none'; dropped = true; }
     const box = img ? img.getBoundingClientRect() : {width: 0, height: 0};
-    out.push({set: page.dataset.set || '', scale, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96,
+    out.push({set: page.dataset.set || '', scale, dropped, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96,
               spareMm: (m.clientHeight - used()) * 25.4 / 96});
   }
   return out;
@@ -975,12 +980,17 @@ COVER_FIT_JS = """
 
 READOUT_MIN_PT = 9.5            # the read-outs' type never prints below this, the size captions print at
 READOUT_STEP_PT = 0.25
+CERT_MIN_PT = 11                # a certificate's story never prints below this (CORE-PACKS-ROLL-PROM Amendment 1)
+CERT_STEP_PT = 0.5
 LONG_STORY_FIT_JS = """
-([floor, minPt, stepPt]) => {
+([floor, minPt, stepPt, certMinPt, certStepPt]) => {
   // CAR-TRAP-PACK Amendment 1 (Jon, 14 Nov 2026): a room whose story is long. Only a page that overflows is touched.
   // The certificate's picture scales down by exactly the overflow, never below `floor` of its full width (the covers'
-  // rule and the covers' floor). The read-outs' type steps down by `stepPt` to no less than `minPt`. Still over at
-  // its floor, the page is left overflowing and the audit fails the build, as before.
+  // rule and the covers' floor). The read-outs' type steps down by `stepPt` to no less than `minPt`.
+  // CORE-PACKS-ROLL-PROM Amendment 1 (Jon, 14 Nov 2026): a certificate still over with its picture at the floor steps
+  // its story's type down by `certStepPt` to no less than `certMinPt`. Read-outs still over at their smallest type are
+  // reported (`over`): the build then prints them on two pages and fits each. Still over after that, the page is left
+  // overflowing and the audit fails the build, as before.
   const out = [];
   const over = m => m.scrollHeight - m.clientHeight;
   for (const page of document.querySelectorAll('.page[data-kind=certificate]')) {
@@ -993,20 +1003,53 @@ LONG_STORY_FIT_JS = """
       scale = Math.max(floor, scale * (h - over(m)) / h);
       img.style.width = (full * scale) + 'px';
     }
+    const story = m.querySelector('.line');
+    let textPt = null, textFrom = null;
+    if (story && scale <= floor && over(m) > 1) {
+      textFrom = Math.round(parseFloat(getComputedStyle(story).fontSize) * 72 / 96 * 4) / 4;   // 18.6667px is 14 pt
+      textPt = textFrom;
+      while (over(m) > 1 && textPt - certStepPt >= certMinPt - 1e-9) { textPt -= certStepPt; story.style.fontSize = textPt + 'pt'; }
+    }
     const box = img.getBoundingClientRect();
-    out.push({page: 'certificate', scale, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96});
+    out.push({page: 'certificate', scale, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96, textPt, textFrom});
   }
-  for (const page of document.querySelectorAll('.page[data-kind=readouts]')) {
+  const readouts = [...document.querySelectorAll('.page[data-kind=readouts]')];
+  readouts.forEach((page, i) => {
     const m = page.querySelector('.main');
-    if (over(m) <= 1) continue;
+    if (over(m) <= 1) return;
     const from = parseFloat(getComputedStyle(m).fontSize) * 72 / 96;
     let pt = from;
     while (over(m) > 1 && pt - stepPt >= minPt - 1e-9) { pt -= stepPt; m.style.fontSize = pt + 'pt'; }
-    out.push({page: 'readouts', pt, from});
-  }
+    out.push({page: 'readouts', pt, from, over: over(m) > 1, part: i + 1, parts: readouts.length});
+  });
   return out;
 }
 """
+LONG_STORY_ARGS = [COVER_FLOOR, READOUT_MIN_PT, READOUT_STEP_PT, CERT_MIN_PT, CERT_STEP_PT]
+
+
+def readouts_need_two_pages(squeezed):
+    """The read-outs, printed on one page, are still too long at their smallest type (LONG_STORY_FIT_JS): the build
+    then prints them on two pages (CORE-PACKS-ROLL-PROM Amendment 1)."""
+    return any(s["page"] == "readouts" and s["over"] and s["parts"] == 1 for s in squeezed)
+
+
+def cover_picture_line(covers):
+    """What COVER_FIT_JS did to the covers' picture, in words."""
+    spare = "least spare height %.1f mm (set %s)" % (min(c["spareMm"] for c in covers),
+                                                     min(covers, key=lambda c: c["spareMm"])["set"])
+    dropped = [c["set"] for c in covers if c.get("dropped")]
+    if dropped:
+        return ("cover picture: not printed on %d of %d covers (set%s %s): the story is too long even with the "
+                "picture at its floor, %.0f%% of full width; %s"
+                % (len(dropped), len(covers), "" if len(dropped) == 1 else "s", ", ".join(dropped),
+                   COVER_FLOOR * 100, spare))
+    least = min(covers, key=lambda c: c["scale"])
+    return ("cover picture: %s; %s"
+            % ("full size, %.0f x %.0f mm, on all %d covers" % (least["wMm"], least["hMm"], len(covers))
+               if least["scale"] >= 1 else
+               "scaled to fit, smallest %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%, set %s)"
+               % (least["wMm"], least["hMm"], least["scale"] * 100, COVER_FLOOR * 100, least["set"]), spare))
 
 
 def long_story_lines(squeezed):
@@ -1016,9 +1059,13 @@ def long_story_lines(squeezed):
         if s["page"] == "certificate":
             out.append("certificate: its picture scaled to fit, %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%)"
                        % (s["wMm"], s["hMm"], s["scale"] * 100, COVER_FLOOR * 100))
+            if s.get("textPt") is not None:
+                out.append("certificate: its story's type stepped down to fit, %g pt (from %g pt, floor %g pt)"
+                           % (round(s["textPt"], 2), round(s["textFrom"], 2), CERT_MIN_PT))
         else:
-            out.append("read-outs: type stepped down to fit, %g pt (from %g pt, floor %g pt)"
-                       % (round(s["pt"], 2), round(s["from"], 2), READOUT_MIN_PT))
+            out.append("read-outs%s: type stepped down to fit, %g pt (from %g pt, floor %g pt)"
+                       % (", page %d of %d" % (s["part"], s["parts"]) if s.get("parts", 1) > 1 else "",
+                          round(s["pt"], 2), round(s["from"], 2), READOUT_MIN_PT))
     return out
 
 
@@ -1377,7 +1424,10 @@ def both_units_everywhere(locks, sets):
     return out
 
 
-def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
+def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, readout_pages=1):
+    """readout_pages: 1, or 2 when the room's story is too long for one page of read-outs at their smallest type
+    (CORE-PACKS-ROLL-PROM Amendment 1): the start read-out then has page 2 to itself, the two endings are on page 3,
+    and both carry the badge and the play-online line."""
     unit_gaps = both_units_everywhere(locks, sets)
     if unit_gaps:
         raise BuildError("%s: a lock asked for in a printed unit is given in the room's unit only:\n  %s"
@@ -1421,16 +1471,22 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
                       "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge=draft_badge(cfg, slug)))
     reads = readouts(room, fill_a)
-    script = ("<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>"
-              "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
-              "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
-              % (reads["start"], reads["finish"], reads["timeout"]))
-    script += "<p class='online'><b>Play this room free online: %s</b></p>" % esc(url)
+    scripts = ["<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>" % reads["start"],
+               "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
+               "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
+               % (reads["finish"], reads["timeout"])]
+    online = "<p class='online'><b>Play this room free online: %s</b></p>" % esc(url)
     tokens = story_token_problems(room)
     if tokens:
         raise BuildError("%s: %s" % (slug, "; ".join(tokens)))
-    pages.append(page("readouts", script, "%s: read-outs" % title, "Each for its moment; the ending is yours to call",
-                      badge=draft_badge(cfg, slug)))
+    if readout_pages == 1:
+        pages.append(page("readouts", "".join(scripts) + online, "%s: read-outs" % title,
+                          "Each for its moment; the ending is yours to call", badge=draft_badge(cfg, slug)))
+    else:
+        for k, script in enumerate(scripts):
+            pages.append(page("readouts", script + online, "%s: read-outs" % title,
+                              "Each for its moment; the ending is yours to call, page %d of %d" % (k + 1, len(scripts)),
+                              badge=draft_badge(cfg, slug)))
 
     # a2. score sheet (Amendment 3): landscape, one row per set, a column group per lock
     tables = score_sheet(locks, sets)
@@ -1634,16 +1690,24 @@ def build(slug, n, seed, target=None, final=False):
             print("score sheet: one row per set (%d), one column group per lock (%d)" % (len(sets), len(locks)))
             with tempfile.TemporaryDirectory() as tmp:
                 src = pathlib.Path(tmp) / ("%s-pack.html" % slug)
-                src.write_text(doc, encoding="utf-8")
-                pg.goto(src.as_uri())
                 image_data = "data:image/webp;base64," + base64.b64encode(win_image_path(slug, room).read_bytes()).decode("ascii")
-                embedded_win = pg.evaluate(DOWNSCALE_RUN_WIN_JS, image_data)
-                fit = pg.evaluate(FIT_JS, [MIN_PT])
-                for fam in ["Outfit"] + [f[0] for f in FONTS.values()]:
-                    if fam not in fit["loaded"]:
-                        raise BuildError("font %s did not load (loaded: %s)" % (fam, fit["loaded"]))
-                covers = pg.evaluate(COVER_FIT_JS, [COVER_FLOOR])
-                squeezed = pg.evaluate(LONG_STORY_FIT_JS, [COVER_FLOOR, READOUT_MIN_PT, READOUT_STEP_PT])
+
+                def load_and_fit(doc):
+                    src.write_text(doc, encoding="utf-8")
+                    pg.goto(src.as_uri())
+                    embedded_win = pg.evaluate(DOWNSCALE_RUN_WIN_JS, image_data)
+                    fit = pg.evaluate(FIT_JS, [MIN_PT])
+                    for fam in ["Outfit"] + [f[0] for f in FONTS.values()]:
+                        if fam not in fit["loaded"]:
+                            raise BuildError("font %s did not load (loaded: %s)" % (fam, fit["loaded"]))
+                    return embedded_win, fit, pg.evaluate(COVER_FIT_JS, [COVER_FLOOR]), pg.evaluate(LONG_STORY_FIT_JS, LONG_STORY_ARGS)
+                embedded_win, fit, covers, squeezed = load_and_fit(doc)
+                readout_pages = 1
+                if readouts_need_two_pages(squeezed):      # CORE-PACKS-ROLL-PROM Amendment 1: the pages are built again
+                    readout_pages = 2
+                    doc, npages, box_texts, start_html = build_html(slug, room, teach, locks, sets, cfg, seed, built, url,
+                                                                    rating, readout_pages=readout_pages)
+                    embedded_win, fit, covers, squeezed = load_and_fit(doc)
                 small = [l for l in fit["labels"] if not l["fits"]]
                 if small:
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
@@ -1655,7 +1719,7 @@ def build(slug, n, seed, target=None, final=False):
                            + hook_problems(text_of(room.get("hook")), text_of(start_html),
                                            [t for k, t in audit["text"] if k == "cover"])
                            + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
-                           + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug)
+                           + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug, readout_pages)
                            + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"]))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
@@ -1671,8 +1735,10 @@ def build(slug, n, seed, target=None, final=False):
                               "answer box says %r" % (l["id"], l["answer_unit"]["unit"], l["answer_unit"]["scale"],
                                                       answer_caption(l)))
                 appr = wording_approved(cfg, slug)
+                two = readout_pages == 2
                 print("wording approved by %s on %s: no page says DRAFT%s" % (appr["by"], appr["date"], " (--final)" if final else "")
-                      if appr else "wording NOT approved: the DRAFT badge is on pages 1 and 2 (--final would refuse)")
+                      if appr else "wording NOT approved: the DRAFT badge is on pages %s (--final would refuse)"
+                      % ("1, 2 and 3" if two else "1 and 2"))
                 print("no final-padlock shape or calculator allowance on any student page")
                 print("answer key level, from rating.js: %s (%d of 3 stars), grades %s"
                       % (rating["name"], rating["stars"], rating["grades"]))
@@ -1682,8 +1748,9 @@ def build(slug, n, seed, target=None, final=False):
                 print("the timeout outcome (stakes) only in its own read-out and, prefixed %r, on the covers"
                       % STAKES_PREFIX)
                 print("the hook only in the start read-out, never on a cover")
-                print("printed URL %s resolves to a live room page; on every cover and page 2; "
-                      "logo and name in every footer (at most %.1f mm high)" % (url, audit["logoMm"]))
+                print("printed URL %s resolves to a live room page; on every cover and page%s; "
+                      "logo and name in every footer (at most %.1f mm high)"
+                      % (url, "s 2 and 3" if two else " 2", audit["logoMm"]))
                 by_id = {}
                 for l in fit["labels"]:
                     by_id.setdefault(l["id"], []).append((l["pt"], l["lines"]))
@@ -1693,13 +1760,10 @@ def build(slug, n, seed, target=None, final=False):
                                                    "one line" if all(x[1] == 1 for x in v) else "up to %d lines" % max(x[1] for x in v)))
                 print("set letter on all %d student pages; no digit on any red herring; no unfilled token"
                       % audit["studentPages"])
-                least = min(covers, key=lambda c: c["scale"])
-                print("cover picture: %s; least spare height %.1f mm (set %s)"
-                      % ("full size, %.0f x %.0f mm, on all %d covers" % (least["wMm"], least["hMm"], len(covers))
-                         if least["scale"] >= 1 else
-                         "scaled to fit, smallest %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%, set %s)"
-                         % (least["wMm"], least["hMm"], least["scale"] * 100, COVER_FLOOR * 100, least["set"]),
-                         min(c["spareMm"] for c in covers), min(covers, key=lambda c: c["spareMm"])["set"]))
+                print(cover_picture_line(covers))
+                if two:
+                    print("read-outs: on two pages (2: the start; 3: the two endings): too long for one page at %g pt"
+                          % READOUT_MIN_PT)
                 for line in long_story_lines(squeezed):
                     print(line)
                 OUT_DIR.mkdir(exist_ok=True)
@@ -1726,7 +1790,7 @@ def selftest():
         browser = p.chromium.launch()
         try:
             pg = offline_context(browser).new_page()
-            first, per_room = None, {}
+            first, per_room, full = None, {}, {}
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = prepare(slug, None, None, pg)
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
@@ -1768,6 +1832,7 @@ def selftest():
                                 failures.append("set %s: %s" % (x["letter"], e))
                 first = first or (checker, room_js, locks, sets, valid, shape0, room, teach, slug, rating)
                 per_room[slug] = (locks, sets)
+                full[slug] = (slug, room, teach, locks, sets, rating)
         finally:
             browser.close()
     checker, room_js, locks, sets, valid, shape, room, teach, slug0, rating = first
@@ -1951,14 +2016,17 @@ def selftest():
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
     def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None, fit_covers=None,
-                           fit_long=None):
+                           fit_long=None, readout_pages=1, of=None):
+        """of: another room's (slug, room, teach, locks, sets, rating) from `full`; the first room's by default."""
+        a_slug, a_room, a_teach, _, a_sets, a_rating = of or (slug0, room, teach, locks, sets, rating)
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
                 pg = offline_context(browser).new_page()
-                cfg = load_config(slug0) if cfg is None else cfg
-                doc, _, _, _ = build_html(slug0, room, teach, bad_locks, sets, cfg,
-                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(slug0), rating)
+                cfg = load_config(a_slug) if cfg is None else cfg
+                doc, _, _, _ = build_html(a_slug, a_room, a_teach, bad_locks, a_sets, cfg,
+                                          cfg.get("seed", 1), datetime.date.today().isoformat(), room_url(a_slug),
+                                          a_rating, readout_pages=readout_pages)
                 if doc_plant:
                     doc = doc_plant(doc)
                 with tempfile.TemporaryDirectory() as tmp:
@@ -1971,7 +2039,7 @@ def selftest():
                     if fit_covers is not None:
                         fit_covers.extend(pg.evaluate(COVER_FIT_JS, [COVER_FLOOR]))
                     if fit_long is not None:
-                        fit_long.extend(pg.evaluate(LONG_STORY_FIT_JS, [COVER_FLOOR, READOUT_MIN_PT, READOUT_STEP_PT]))
+                        fit_long.extend(pg.evaluate(LONG_STORY_FIT_JS, LONG_STORY_ARGS))
                     return pg.evaluate(AUDIT_JS)
             finally:
                 browser.close()
@@ -2071,15 +2139,16 @@ def selftest():
         return [x for x in stakes_problems(st, text_of(start), [text_of(cover_story(room, f))]) if "start read-out" in x]
 
     def plant_cover_below_floor():
-        """A cover story too long for the picture even at its floor (WARMUP-PACKS Ruling 3): the picture stops at 60%
-        of its width and the cover still overflows, so the build fails."""
+        """A cover story too long even without its picture (WARMUP-PACKS Ruling 3; CORE-PACKS-ROLL-PROM Amendment 1):
+        the picture stops at 60% of its width, is then left out, and the cover still overflows, so the build fails.
+        The filler is taller than the whole picture, so leaving the picture out cannot make room for it."""
         marker = "<div class='team'>Team name: <span></span></div>"
         filler_block = "<div style='height: 120mm'></div>" + marker
         covers = []
         audit = audit_planted_pack(locks, fit_covers=covers,
                                    doc_plant=lambda d: pc.apply_plant(d, marker, filler_block, allow_multiple=True,
-                                                                      name="a cover below the picture's floor"))
-        at_floor = covers and all(abs(c["scale"] - COVER_FLOOR) < 1e-6 for c in covers)
+                                                                      name="a cover too long even without its picture"))
+        at_floor = covers and all(abs(c["scale"] - COVER_FLOOR) < 1e-6 and c["dropped"] for c in covers)
         return [x for x in audit["overflow"] if " cover " in x] if at_floor else []
 
     def check_long_story_control():
@@ -2097,26 +2166,68 @@ def selftest():
         return probs, long_story_lines(squeezed)
 
     def plant_certificate_below_floor():
-        """A certificate too long even with its picture at the floor (CAR-TRAP-PACK Amendment 1): the picture stops
-        at 60% of its width and the page still overflows, so the build fails."""
+        """A certificate too long even with its picture at the floor and its story at its smallest type (CAR-TRAP-PACK
+        Amendment 1; CORE-PACKS-ROLL-PROM Amendment 1): the picture stops at 60% of its width, the story's type at
+        11 pt, and the page still overflows, so the build fails."""
         marker = "<p class='line'>Team <span></span></p>"
         squeezed = []
         audit = audit_planted_pack(locks, fit_long=squeezed,
                                    doc_plant=lambda d: pc.apply_plant(d, marker, "<div style='height: 200mm'></div>" + marker,
                                                                       name="a certificate below the picture's floor"))
-        at_floor = any(s["page"] == "certificate" and abs(s["scale"] - COVER_FLOOR) < 1e-6 for s in squeezed)
+        at_floor = any(s["page"] == "certificate" and abs(s["scale"] - COVER_FLOOR) < 1e-6
+                       and s["textPt"] is not None and abs(s["textPt"] - CERT_MIN_PT) < 1e-6 for s in squeezed)
         return [x for x in audit["overflow"] if " certificate " in x] if at_floor else []
 
     def plant_readouts_below_floor():
-        """Read-outs too long even at their smallest type (CAR-TRAP-PACK Amendment 1): the type stops at 9.5 pt and
-        the page still overflows, so the build fails."""
+        """Read-outs too long even on two pages at their smallest type (CAR-TRAP-PACK Amendment 1; CORE-PACKS-ROLL-PROM
+        Amendment 1): built on two pages, as the build does for a story too long for one, each with a filler taller
+        than a page; the type stops at 9.5 pt on both and both still overflow, so the build fails."""
+        marker = "<p class='online'><b>Play this room free online:"
+        squeezed = []
+        audit = audit_planted_pack(locks, fit_long=squeezed, readout_pages=2,
+                                   doc_plant=lambda d: pc.apply_plant(d, marker, "<div style='height: 300mm'></div>" + marker,
+                                                                      allow_multiple=True,
+                                                                      name="read-outs too long even on two pages"))
+        pages = [s for s in squeezed if s["page"] == "readouts"]
+        at_floor = len(pages) == 2 and all(abs(s["pt"] - READOUT_MIN_PT) < 1e-6 and s["over"] and s["parts"] == 2
+                                           for s in pages)
+        return [x for x in audit["overflow"] if " readouts " in x] if at_floor else []
+
+    def plant_readouts_left_on_one_page():
+        """Read-outs too long for one page at their smallest type that are NOT moved to two pages (CORE-PACKS-ROLL-PROM
+        Amendment 1): the fit must report them, which is what makes the build print two pages, and left on one page
+        they overflow, so a build that ignored the report fails."""
         marker = "<p class='online'><b>Play this room free online:"
         squeezed = []
         audit = audit_planted_pack(locks, fit_long=squeezed,
                                    doc_plant=lambda d: pc.apply_plant(d, marker, "<div style='height: 200mm'></div>" + marker,
-                                                                      name="read-outs below their smallest type"))
-        at_floor = any(s["page"] == "readouts" and abs(s["pt"] - READOUT_MIN_PT) < 1e-6 for s in squeezed)
-        return [x for x in audit["overflow"] if " readouts " in x] if at_floor else []
+                                                                      name="read-outs left on one page"))
+        return [x for x in audit["overflow"] if " readouts " in x] if readouts_need_two_pages(squeezed) else []
+
+    def check_longest_story_control():
+        """CORE-PACKS-ROLL-PROM Amendment 1's control: the configured room with the longest story (hook, brief, win
+        and stakes, in words), fitted as the build fits it, read-outs moved to two pages if one is too long at their
+        smallest type. No page overflows and nothing is under its floor."""
+        words = lambda r: sum(len(text_of(r.get(k)).split()) for k in ("hook", "brief", "win", "stakes"))
+        of = max(full.values(), key=lambda x: words(x[1]))
+        pages, squeezed, covers = 1, [], []
+        audit = audit_planted_pack(of[3], fit_long=squeezed, fit_covers=covers, of=of)
+        if readouts_need_two_pages(squeezed):
+            pages, squeezed, covers = 2, [], []
+            audit = audit_planted_pack(of[3], fit_long=squeezed, fit_covers=covers, of=of, readout_pages=2)
+        probs = ["%s: page %s still overflows after the long-story fit" % (of[0], x) for x in audit["overflow"]]
+        for s in squeezed:
+            if s["page"] == "certificate" and (s["scale"] < COVER_FLOOR - 1e-6
+                                               or (s["textPt"] is not None and s["textPt"] < CERT_MIN_PT - 1e-6)):
+                probs.append("%s: the certificate is under a floor (picture %.0f%%, story %s pt)"
+                             % (of[0], s["scale"] * 100, s["textPt"]))
+            if s["page"] == "readouts" and s["pt"] < READOUT_MIN_PT - 1e-6:
+                probs.append("%s: the read-outs print at %g pt, under their floor" % (of[0], s["pt"]))
+        if any(c["scale"] < COVER_FLOOR - 1e-6 for c in covers):
+            probs.append("%s: a cover's picture is under its floor" % of[0])
+        lines = ([cover_picture_line(covers).split(";")[0]] + (["read-outs on two pages"] if pages == 2 else [])
+                 + long_story_lines(squeezed))
+        return probs, "%s, %d words: %s" % (of[0], words(of[1]), "; ".join(lines))
 
     def plant_hook_on_cover():
         f = filler(locks, sets[0])
@@ -2342,6 +2453,18 @@ def selftest():
                wrong_answer_in("car-trap", "boom-gate-sector")),
               ("a wrong recomputed answer in The Headteacher's Car Trap (charging current)",
                wrong_answer_in("car-trap", "ev-charger-quadratic")),
+              ("a wrong recomputed answer in Roll for Initiative (the gate's chance)",
+               wrong_answer_in("roll-for-initiative", "gate-modifiers-probability")),
+              ("a wrong recomputed answer in Roll for Initiative (squares to move)",
+               wrong_answer_in("roll-for-initiative", "fortress-plan-scale")),
+              ("a wrong recomputed answer in Roll for Initiative (the fireball's area)",
+               wrong_answer_in("roll-for-initiative", "fireball-circle-area")),
+              ("a wrong recomputed answer in The Prom Budget Embezzlement (the quote)",
+               wrong_answer_in("prom-budget", "finance-reverse-percentage")),
+              ("a wrong recomputed answer in The Prom Budget Embezzlement (the account's age)",
+               wrong_answer_in("prom-budget", "dj-deposit-compound")),
+              ("a wrong recomputed answer in The Prom Budget Embezzlement (both services)",
+               wrong_answer_in("prom-budget", "wifi-venn-router")),
               ("a printed unit whose scale gives a value that is not whole", plant_fractional_scale),
               ("a printed unit whose scale is wrong but still gives whole numbers", plant_wrong_scale),
               ("an answer box left in the room's unit when the pack asks for another", plant_room_unit_on_box),
@@ -2369,9 +2492,11 @@ def selftest():
               ("stakes on a cover without its prefix", plant_unprefixed_stakes),
               ("stakes inside the start read-out", plant_stakes_in_start),
               ("a cover printing the hook", plant_hook_on_cover),
-              ("a cover too long even with its picture at the floor", plant_cover_below_floor),
-              ("a certificate too long even with its picture at the floor", plant_certificate_below_floor),
-              ("read-outs too long even at their smallest type", plant_readouts_below_floor),
+              ("a cover too long even without its picture", plant_cover_below_floor),
+              ("a certificate too long even with its picture at the floor and its story at its smallest type",
+               plant_certificate_below_floor),
+              ("read-outs too long even on two pages at their smallest type", plant_readouts_below_floor),
+              ("read-outs too long for one page and left on it", plant_readouts_left_on_one_page),
               ("a start read-out without the hook", plant_start_without_hook),
               ("a hook with a token", plant_hook_token),
               ("page 1 over 150 words", plant_long_page_one),
@@ -2411,6 +2536,12 @@ def selftest():
     print("long-story control: %s" % ("OK (%s: its read-outs and certificate fit; %s)"
                                       % (slug0, "; ".join(squeezed_lines) or "nothing needed squeezing")
                                       if not lc else lc))
+    try:
+        sc, longest = check_longest_story_control()
+    except Exception as e:              # an error is never a pass
+        sc, longest = ["the longest-story control raised %r" % e], ""
+    failures += sc
+    print("longest-story control: %s" % ("OK (%s)" % longest if not sc else sc))
     for name, fn in plants:
         found, err = [], None
         try:

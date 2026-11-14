@@ -398,6 +398,26 @@ window.ROOM = {
           "cm": 4000,
           "real": 40,
           "cmperm": 100
+        },
+        {
+          "S": 1000,
+          "L": 5,
+          "sq": 2,
+          "answer": 25,
+          "miss": 2500,
+          "cm": 5000,
+          "real": 50,
+          "cmperm": 100
+        },
+        {
+          "S": 1000,
+          "L": 6,
+          "sq": 2,
+          "answer": 30,
+          "miss": 3000,
+          "cm": 6000,
+          "real": 60,
+          "cmperm": 100
         }
       ],
       missTitle: '{{plan.miss}} comes from squares counted straight off the centimetres.',
@@ -460,6 +480,13 @@ window.ROOM = {
           "miss": 75,
           "rsq": 6,
           "exact": "452.39"
+        },
+        {
+          "r": 16,
+          "answer": 804,
+          "miss": 101,
+          "rsq": 8,
+          "exact": "804.25"
         }
       ],
       missTitle: '{{fb.miss}} is the distance round the edge.',

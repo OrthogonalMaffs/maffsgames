@@ -537,6 +537,35 @@ rejected.
 - **Appended, not inserted.** The eight shelves keep their places: a room saves its draw by index.
 - **Derived tokens** `list` and `sorted` carry the trolley's drop order and the sorted shelf for the solve line.
 
+## Three libraries widened for six-set packs, 14 Nov 2026 (Roll for Initiative, batch 11; Prom Budget, batch 4)
+
+| Lock | Instrument | Pool | Library |
+|---|---|---|---|
+| `fortress-plan-scale` | keypad, up to four digits | scale 1 : S, S in 100, 200, 250, 500 or 1000 (1000 since 14 Nov 2026); L a whole 2–9 cm on the plan; answer L × S ÷ 200 a whole number 4–30 and never L; the draft's seven sets, then 1 : 1000 with L 5 and 6 only | **9** |
+| `fireball-circle-area` | keypad, up to three digits | radius a whole even number of metres, 4–16 (4–12 until 14 Nov 2026); the area to the nearest square metre must be the same with π and with 3.14 | **6** |
+| `dj-deposit-compound` | slider 1–20 | searched: deposits £500–£2500 at 5–25% for 2–12 years; then £3125 at 20% and £500 at 60%; a whole-pence balance with no rounding; miss = interest ÷ one year's flat interest, rounded, 1–20 and never the answer | **6** |
+
+- **Why.** A print pack's six sets may not repeat a lock's answer, and these three libraries had 5, 5 and 4
+  different answers. Jon ruled "Extend banks to 6 sets" (13 Nov 2026; contract CORE-PACKS-ROLL-PROM).
+- **The plans.** The draft's scales make only 4, 5, 10, 15 and 20 squares. A 1 : 1000 plan with a 5 cm and a 6 cm
+  corridor adds 25 and 30; their misses, 2500 and 3000, still fit the four-digit keypad. Every other rule is
+  unchanged. Answers now 4, 5, 10, 15, 20, 25, 30 (5 and 10 each still come from two plans).
+- **The fireball.** Radius 14 is refused by the lock's own rule (615.75 with π rounds to 616; 615.44 with 3.14
+  rounds to 615). Radius 16 is admitted: 804.25 and 803.84 both round to 804; the miss, the circumference, is 101.
+  Answers now 50, 113, 201, 314, 452, 804.
+- **The reserve topped out at four, and that was the maths; two sets lifted it to six, and six is the ceiling.**
+  A balance that lands on whole pence after y years needs the deposit, in pence, to contain the rate's
+  denominator y times over (10% is 11/10: £1000 lasts five years, no deposit under £10,000 lasts six). And for
+  2 years the flat-interest miss is 2 + rate ÷ 100, which rounds to 2, the answer itself, unless the rate is over
+  50%. Searched over every whole-pound deposit from £500 to £5000 and every whole rate up to 200%, the rules
+  allow the answers 2 to 7 and no others, and 7 years only as £3125 at 20% (£11197.44) or £4096 at 25%
+  (£19531.25). So the two added sets are forced in kind: **£3125 at 20% for 7 years** (miss 13; the rate the
+  library already uses three times) and **£500 at 60% for 2 years** (£1280.00, miss 3; 60 is the lowest rate in
+  steps of ten that makes the miss 3 and not 2). Answers now 2 to 7. A seventh answer does not exist.
+- **Appended, not inserted.** Every existing set keeps its place: a room saves its draw by index.
+- **VALID combinations after the change:** Roll for Initiative 295 of 486, Prom Budget 523 of 600; variant 0
+  VALID in both.
+
 ## Cross-lock collisions — a rule for every room from here
 
 Each library is still verified lock by lock, but since `0907f6e` the engine draws a room jointly and

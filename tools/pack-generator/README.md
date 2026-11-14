@@ -38,8 +38,11 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    students; the hook is read aloud here and printed nowhere else, WARMUP-PACKS Ruling 2, 12 Nov 2026), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
    nowhere else and printed on the covers only as "If time runs out: ..."); then the play-online line. If a room's
    story is too long for the page, its type steps down from 10.5 pt in quarter points until it fits, never below
-   9.5 pt (CAR-TRAP-PACK Amendment 1, Jon, 14 Nov 2026); the build prints the size it used, and fails if 9.5 pt is
-   still too long. Car Trap's prints at 10 pt.
+   9.5 pt (CAR-TRAP-PACK Amendment 1, Jon, 14 Nov 2026); the build prints the size it used. Still too long at
+   9.5 pt, the read-outs take two pages (CORE-PACKS-ROLL-PROM Amendment 1, Jon, 14 Nov 2026): page 2 is the start,
+   page 3 the two endings, each with the badge and the play-online line and each fitted the same way, and every
+   later page moves down one (page 1's list of set pages is generated, so it follows). The build fails only if a
+   page is still too long then. Car Trap's prints at 10 pt on one page; Prom Budget's (798 words) on two at 10.5 pt.
 3. **Page 3, Score sheet (landscape):** two blanks you fill in first ("Each wrong answer adds ___ min", "Each hint
    adds ___ min"); one row per set; for each lock and for the final padlock an Opened box and five wrong-answer boxes;
    finishing time, the counts of wrong answers and hints, penalty (min) and total time; the rule in two lines under it.
@@ -57,7 +60,10 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
 5. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
    read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the cover
-   prints the room's picture, the brief and the "If time runs out:" warning, never the hook; the cover's answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
+   prints the room's picture, the brief and the "If time runs out:" warning, never the hook. A cover whose story
+   leaves too little room prints its picture smaller, never below 60% of its width; still too long at 60%, it
+   prints no picture (CORE-PACKS-ROLL-PROM Amendment 1; Prom Budget's covers), and the build fails only if it is
+   too long even then; the cover's answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
    ends with the final padlock's target, its rules, a working box and the expression line.
 6. **The look of the labels on the art:** each label is fitted to its box at 11 pt or larger. If one sits badly on
    its picture, its box is `label_box` in `rooms/kiln-disaster/config.json` (in the image's own pixels). Measure each
@@ -65,8 +71,10 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    width on any side that meets an edge of the paper, card or screen.
 7. **Hint cards and certificate (last two pages):** the locks' three hints each, then the final padlock's card.
    A certificate whose text is too long for the page prints its picture smaller, by exactly the overflow and never
-   below 60% of its width (the covers' rule; CAR-TRAP-PACK Amendment 1); the build prints the size, and fails if 60%
-   is still too long. Car Trap's picture prints at 72%.
+   below 60% of its width (the covers' rule; CAR-TRAP-PACK Amendment 1). Still too long at 60%, its story's type
+   steps down from 14 pt in half points, never below 11 pt (CORE-PACKS-ROLL-PROM Amendment 1); the build prints
+   the sizes, and fails if 11 pt is still too long. Car Trap's picture prints at 72%; Prom Budget's at 60% with its
+   story at 12.5 pt.
 8. **Footer:** the MaffsGames logo and name, the room, pack version, seed and build date on every page. Give a
    buyer's question the version and seed from the footer and the pack can be rebuilt exactly.
 
@@ -122,8 +130,12 @@ two-part clue left with an orphan full stop, a clue with no `<b>` part, a captio
 `printed` key on a red-herring image and a room with an ungraded lock; a wrong recomputed answer for each of The
 Headteacher's Car Trap's three locks, a printed unit whose scale gives a value that is not whole, one whose scale is
 wrong but still whole, an answer box left in the room's unit, a hint that gives a scaled lock's answer in the
-room's unit only, words that name it with no unit after it, and a certificate and read-outs too long even at
-their floors; two multi-part controls and the long-story control must pass. It builds no PDF.
+room's unit only, words that name it with no unit after it; a wrong recomputed answer for each of Roll for
+Initiative's and The Prom Budget Embezzlement's six locks; a cover too long even without its picture, a certificate
+too long even with its picture at the floor and its story at 11 pt, read-outs too long even on two pages, and
+read-outs too long for one page that are left on it. Two multi-part controls, the long-story control (the first
+room) and the longest-story control (the room with the most words, fitted as the build fits it) must pass. It
+builds no PDF.
 
 ## Adding a room
 

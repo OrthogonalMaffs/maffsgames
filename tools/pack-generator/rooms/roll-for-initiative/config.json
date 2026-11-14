@@ -1,0 +1,29 @@
+{
+  "room": "roll-for-initiative",
+  "pack_version": "1",
+  "sets": 6,
+  "seed": 1,
+  "certificate_title": "Party escaped",
+  "wording_approved": null,
+  "images": [
+    {"file": "art/rfi-01-character-sheet.webp", "role": "clue", "object": "charsheet", "label_box": [178, 172, 976, 1069], "font": "label"},
+    {"file": "art/rfi-02-dm-screen.webp", "role": "clue", "object": "dmscreen", "label_box": [369, 406, 882, 922], "font": "label",
+     "printed": "THE GATE. · <i>Climb the wall</i>: Strength (Athletics), DC {{gate.dcc}}. · <i>Talk to the guard</i>: Charisma (Persuasion), DC {{gate.dcp}}. · Meet or beat the DC.",
+     "caption": "The guard wants Form G in triplicate. <i>(DC means difficulty class: the number the roll has to reach.)</i> To make a check, roll the twenty-sided die, add your bonus, and meet or beat the DC. Every face is equally likely."},
+    {"file": "art/rfi-03-window-card.webp", "role": "clue", "object": "window", "label_box": [258, 408, 992, 802], "font": "hand"},
+    {"file": "art/rfi-04-plans.webp", "role": "clue", "object": "plans", "label_box": [232, 130, 990, 1121], "font": "label",
+     "printed": "DRAWN TO REGULATION. · Scale 1 : {{plan.S}}. · Main corridor on the plan: {{plan.L}} cm. · COMMANDANT STRICTMANE.",
+     "caption": "Signed, in very straight capitals."},
+    {"file": "art/rfi-05-battle-mat-corner.webp", "role": "clue", "object": "mat", "label_box": [182, 984, 1227, 1103], "font": "label"},
+    {"file": "art/rfi-06-spell-card.webp", "role": "clue", "object": "dice", "label_box": [133, 396, 1017, 950], "font": "label",
+     "printed": "FIREBALL. · The blast is a circle, radius {{fb.r}} m, centred on the target.",
+     "caption": "<i>AoE: area of effect, everything inside the blast.</i>"},
+    {"file": "art/rfi-07-tea-mug.webp", "role": "herring", "object": "mug", "label_box": [434, 431, 792, 792], "font": "hand",
+     "text": "Her tea, gone lukewarm."},
+    {"file": "art/rfi-08-notice-board.webp", "role": "herring", "object": "sign", "label_box": [847, 980, 973, 1077], "font": "label",
+     "text": ""},
+    {"file": "art/rfi-09-gate-keypad.webp", "role": "answer", "lock": "gate-modifiers-probability", "label_box": [384, 177, 866, 291]},
+    {"file": "art/rfi-10-plans-keypad.webp", "role": "answer", "lock": "fortress-plan-scale", "label_box": [466, 321, 783, 391]},
+    {"file": "art/rfi-11-spell-keypad.webp", "role": "answer", "lock": "fireball-circle-area", "label_box": [397, 185, 854, 274]}
+  ]
+}
