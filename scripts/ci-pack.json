@@ -202,7 +202,7 @@
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "33",
   "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "38",
   "UK rates module (unit tests against the gov.uk 2025/26 figures)": "16",
-  "Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows \"Figures unavailable right now\" and no number; \"<10\" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or \"<10\" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; nine planted faults caught)": "57",
+  "Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows \"Figures unavailable right now\" and no number; \"<10\" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or \"<10\" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; twelve planted faults caught; Case 1 per day to 1 decimal place)": "57",
   "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "26",
   "Weekly facts \"Monty Hall\" (both Monty Hall cards show their summary and expanded text exactly, with the button and Share, at 320, 390 and 1280 px, with no overflow)": "47",
   "Weekly facts (every figure pinned by its words and recomputed or sourced; rotation has no literal modulus)": "25",
@@ -231,7 +231,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (6 needed)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
