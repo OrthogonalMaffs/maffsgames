@@ -79,7 +79,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 ## 2026-11-14 (cloud): ANSWER-BOX-CHECK (`docs/handover/contracts/2026-11-14-answer-box-check.md`; Jon's rulings 14 Nov 16:33 and 16:40)
 
-PR OPEN, merging on green (Medium). Agent Claude Code (cloud), a fresh session, branch `claude/inspiring-heisenberg-hfukwn` from main 22e1e16; first commit c433225 (this contract; #764's close-out, in its entry below). No claim commit: no game is touched.
+PR #767 OPEN, merging on green (Medium). Agent Claude Code (cloud), a fresh session, branch `claude/inspiring-heisenberg-hfukwn` from main 22e1e16; first commit c433225 (this contract; #764's close-out, in its entry below). No claim commit: no game is touched.
 Done, all in `tools/pack-generator/build_pack.py` (no room's words, numbers or art):
 - **Fill.** `answer_box_greys()`: the build's Chromium decodes each answer picture (no Pillow in CI or the venv, and none added) and returns the channel sums inside its `label_box`; Python works the luma. Under `WRITE_FILL_BELOW = 180` the box gets `.write.fill` (white inside the same dashed outline). Eight filled, exactly the contract's list: Comic Caper 78, 145, 78; Car Trap 107, 107; Prom 31, 98; Roll 34. `write_fill_problems()` checks every cover as drawn.
 - **Size.** `FIT_JS` measures every `.write`; `write_size_gate()` stops an approved room and any `--final` under `WRITE_MIN_W_MM = 20` or `WRITE_MIN_H_MM = 4.5`; a DRAFT build goes on, prints each, and page 1 carries DRAFT notes (a dashed block between heading and text, outside `.main`, so page 1's 150 words are not touched). The five other packs pass (narrowest 23.0 mm, lowest 4.9 mm).
@@ -89,6 +89,8 @@ Done, all in `tools/pack-generator/build_pack.py` (no room's words, numbers or a
 Proof: all seven packs built on main's generator and the branch's, compared page by page (text, and pixels at 100 dpi). Kiln and Library Jam identical. Changed: Comic Caper, Car Trap, Roll and Prom covers (fills; Roll's spell box); Christmas hint cards 30 to 35 ("50 cm" no longer split) and Roll's 30 to 35 ("2 m"); Prom's key, page 5 ("about 4 min"); page 1 of Roll and Prom (DRAFT notes). Same words on every changed page but page 1.
 Discoveries: (1) the contract's "label_text_problems() runs on all of them" cannot be literal: its " · " rule is the label separator, and Christmas's and Library Jam's clues contain it by design, so the three figure rules (`figure_problems()`) run on all filled text and the separator rule stays with labels; (2) three-part ratios ("10 : 2 : 3") needed the binding's second figure looked at, not taken; (3) `tools/loop-cards/build_deck.py` imports `page()` and `CSS` from here: both stay compatible, its selftest passes; (4) a scan of every pack's whole printed HTML found one figure the filler does not reach, page 1's "1 minute": hence the net.
 Open for Jon (todo): COMIC-CAPER-REUPLOAD, CHRISTMAS-LIBRARY-KILN-REUPLOAD (Christmas only), ROLL-PROM-PACKS-APPROVE item 2 (two boxes need new art).
+
+Record: agent Claude Code; wall 0:55 from the contract's stamp (16:45) to the PR opened for its Gate (17:40 by the container's clock); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-14 (cloud): CORE-PACKS-ROLL-PROM and Amendment 1 (`docs/history/contracts/2026-11-14-core-packs-roll-prom.md`; Jon's rulings 13 Nov, 14 Nov 14:46 and 15:19)
 
