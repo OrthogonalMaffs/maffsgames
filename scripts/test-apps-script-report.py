@@ -32,6 +32,13 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     "__proto__", "toString" and "hasOwnProperty" are reported like any other game, in the model, the email and the
     Dashboard (figures written by hand), every other line is unchanged, and no tally lands on a built-in object.
     Its planted fault: the tally maps given a prototype again.
+  - h. posted values are data, never formulas (SHEET-FORMULA-CELLS, 14 Nov 2026): doPost hands the Sheet a leading
+    apostrophe before any string beginning =, +, @, a tab, a carriage return, or "-" that is not a plain number
+    (detail "=1+1", game_slug =IMAGE("x"), level "+1", question_id "@a", detail "-x"); -3, "-3", "2026-11-14",
+    "true", false, 0 and a whole ordinary event are written exactly as sent; the Dashboard, which writes slugs,
+    levels and question ids read back from the Sheet, does the same and writes no cell that could be a formula.
+    What Sheets does with the apostrophe is modelled here (it is not part of the value read back), not run.
+    Two planted faults: cellValue passing the string through, and a Dashboard row written without it.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -231,6 +238,73 @@ HARNESS = r"""
       ok('fetch ' + mode + ': one line in the email and one on the Dashboard', m2.split(line).length === 2 && d2.split(line).length === 2, m2.slice(0, 300));
     }
 
+    // ---- h. a posted value is data, never a formula (SHEET-FORMULA-CELLS, 14 Nov 2026). appendRow and setValues
+    // read a string as if it were typed, so "=..." became a formula. What these checks read is the value the script
+    // HANDS to the Sheet (the fake stores it as given): a leading apostrophe there is what makes Sheets keep text.
+    {
+      ({ api, env } = load('ok', HEAD.slice()));          // an events tab holding only its header row
+      const at = h => HEAD.indexOf(h);
+      const post = fields => {
+        api.doPost({ postData: { contents: JSON.stringify(Object.assign({ event: 'question_answered' }, fields)) } });
+        return env.events.getDataRange().getValues().slice(-1)[0];
+      };
+      const wrote = (name, fields, header, want) => {
+        const row = post(fields), got = row[at(header)];
+        ok('h. doPost: ' + name, got === want && row.length === HEAD.length, typeof got + ' ' + JSON.stringify(got));
+      };
+      wrote('detail "=1+1" is written behind an apostrophe', { detail: '=1+1' }, 'detail', "'=1+1");
+      wrote('game_slug =IMAGE("x") is written behind an apostrophe', { game_slug: '=IMAGE("x")' }, 'game_slug', '\'=IMAGE("x")');
+      wrote('level "+1" is written behind an apostrophe', { level: '+1' }, 'level', "'+1");
+      wrote('question_id "@a" is written behind an apostrophe', { question_id: '@a' }, 'question_id', "'@a");
+      wrote('detail "-x" is written behind an apostrophe', { detail: '-x' }, 'detail', "'-x");
+      wrote('a leading tab or carriage return is written behind an apostrophe',
+            { detail: '\t=1+1', mode: '\r=1+1' }, 'detail', "'\t=1+1");
+      ok('h. doPost: the carriage return too', env.events.getDataRange().getValues().slice(-1)[0][at('mode')] === "'\r=1+1");
+      wrote('"-" alone and "-3x" are not plain numbers: behind an apostrophe', { detail: '-3x', mode: '-' }, 'detail', "'-3x");
+      wrote('an array is written as its JSON text, not left to the Sheet', { detail: ['=1+1'] }, 'detail', '["=1+1"]');
+      // controls: none of these may change
+      wrote('question_index -3 (a number) is unchanged', { question_index: -3 }, 'question_index', -3);
+      wrote('"-3" (a string) is unchanged', { question_index: '-3' }, 'question_index', '-3');
+      wrote('"-3.5" (a string) is unchanged', { score: '-3.5' }, 'score', '-3.5');
+      wrote('"2026-11-14" is unchanged', { detail: '2026-11-14' }, 'detail', '2026-11-14');
+      wrote('"true" (a string) is unchanged', { correct: 'true' }, 'correct', 'true');
+      wrote('false and 0 are still written, not blanked', { correct: false, score: 0 }, 'correct', false);
+      const real = { event: 'game_completed', game_slug: 'six-sevens-bruv', level: 'ks3', mode: 'practice-q20', question_index: 7,
+        correct: true, attempts: 2, score: 1480, questions_answered: 20, questions_correct: 17, previous_score: 1210,
+        difficulty: 'mixed', filter_type: 'search', filter_value: 'v1|level=gcse;topic=all;fresh=0;su=1;sl=5;q=ratio;n=12',
+        client_ts: '2026-11-14T11:00:00.000Z', seq: 41, question_id: 'h1a2b3c4d',
+        detail: 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567' };
+      const realRow = post(real);
+      ok('h. doPost: an ordinary event is written exactly as it was sent, field for field',
+         HEAD.every((h, i) => h === 'timestamp' || realRow[i] === real[h]), JSON.stringify(realRow));
+
+      // the Dashboard writes slugs, levels and question ids read back from the Sheet: the same rule there.
+      // asRead models what Sheets hands back (the apostrophe is not part of a cell's value); it is a model, not Google.
+      const asRead = v => typeof v === 'string' && v.charAt(0) === "'" ? v.slice(1) : v;
+      const evil = { game_slug: '=IMAGE("x")', level: '+1', question_id: '@a' }, back = [];
+      const keep = row => { const r = row.map(asRead); r[0] = Y; back.push(r); };
+      for (let k = 0; k < 30; k++) keep(post(Object.assign({ correct: k < 12 }, evil)));
+      keep(post(Object.assign({}, evil, { event: 'game_started' }))); keep(post(Object.assign({}, evil, { event: 'game_started' })));
+      keep(post(Object.assign({}, evil, { event: 'game_completed' })));
+      ok('h. read back (model): the cell is the posted text, without the apostrophe',
+         back[0][at('game_slug')] === '=IMAGE("x")' && back[0][at('level')] === '+1' && back[0][at('question_id')] === '@a', JSON.stringify(back[0]));
+      ({ api, env } = load('ok', null, rows.concat(back)));
+      const rh = api.rptBuild(rows.concat(back), col, api.rptLoadKinds());
+      const gh = rh.games.find(g => g.slug === '=IMAGE("x")') || {}, qh = rh.hardest.find(q => q.qid === '@a') || {};
+      ok('h. the report reads it as an ordinary game: 12 of 30, keyed by its own level and question_id',
+         gh.total === 30 && gh.correct === 12 && qh.slug === '=IMAGE("x")' && qh.level === '+1' && qh.total === 30, JSON.stringify([gh, qh]));
+      api.sendDailyReport();
+      const dh = env.sheets['Dashboard'], th = dh ? dashText(dh) : '';
+      ok('h. the Dashboard writes the slug, level and question id behind an apostrophe',
+         th.indexOf('\'=IMAGE("x") | 2 | 1 | 50%') >= 0 && th.indexOf("\n'+1 | 2\n") >= 0 && th.indexOf('\'=IMAGE("x") | 30 | 12 | 40%') >= 0 &&
+         th.indexOf('\'=IMAGE("x") | \'+1 | \'@a | 30 | 12 | 40%') >= 0, th);
+      const formulas = dh ? Object.keys(dh.cells).filter(k => { const v = dh.cells[k];
+        return typeof v === 'string' && (/^[=+@\t\r]/.test(v) || (v.charAt(0) === '-' && !/^-\d+(\.\d+)?$/.test(v))); }) : ['no Dashboard'];
+      ok('h. no cell the Dashboard writes could be read as a formula', formulas.length === 0, formulas.map(k => k + ' ' + dh.cells[k]).join('; '));
+      ok('h. the email names the game by its text (plain text: nothing to run)',
+         (env.mails[0] || { body: '' }).body.indexOf('=IMAGE("x") — 2 starts, 1 completed (50%)') >= 0, (env.mails[0] || { body: '' }).body);
+    }
+
     // ---- g. safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026). A game_slug, level or question_id is whatever anyone
     // posted. Four games whose slug and level are each the name of a built-in object member, added to the rows
     // above: each must be reported like any other game, and nothing already reported may move. Kept last, and on
@@ -298,6 +372,9 @@ PLANTS = [
      "      cellValue(data.question_id)\n"),
     ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail)\n",
      "      cellValue(data.detail), cellValue(data.question_id)\n"),
+    ("cellValue writes a posted formula as it came", "))) return \"'\" + v;\n", "))) return v;\n"),
+    ("the Dashboard writes a posted slug without cellValue", "setValues([[slug, gc[slug], comp, frac].map(cellValue)]);",
+     "setValues([[slug, gc[slug], comp, frac]]);"),
     # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
     ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
      "function rptMap() { return {}; }"),
