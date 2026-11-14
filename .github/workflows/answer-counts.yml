@@ -10,6 +10,11 @@
 # judges check-site.yml only) and a failure here fails only this job: the file on main stays as it was, and the site
 # hides any figure whose source is more than 7 days old.
 #
+# Two files (contract UGH-STATS-DATA, 14 Nov 2026): the same run also fetches the "Ugh, stats" figures (<exec URL>?stats=1) and commits
+# schools/assets/ugh-stats.json beside the counts, in the one commit. Each file is fetched, validated and written on its own: whatever was
+# written is committed, and the run then fails if either was refused. Until the counts script is redeployed with the stats, ?stats=1 answers
+# the counts payload: the script says "stats endpoint not deployed yet", writes no ugh-stats.json and fails nothing.
+#
 # Retry (Jon, 28 Oct 2026): the fetch is retried three times, after 1, 5 and 15 minutes, on a network error, an HTTP error or a reply that is
 # not JSON. A reply that parses but fails validation is not retried. Either way a failure writes nothing, fails the run, and GitHub e-mails the
 # account that last edited the cron line (Vector52F, Jon's). Slots start 2 to 6 hours late; that is accepted (see CLAUDE.md), no second schedule.
@@ -58,19 +63,27 @@ jobs:
             git fetch -q origin main && git reset -q --hard origin/main
             PLANT=""
             if [ "${{ inputs.planted_failure }}" = "true" ]; then PLANT="--url http://127.0.0.1:9/ --pauses 5,5,5"; fi
+            # The script's own exit status is kept, not acted on yet: a file it did write is committed first, then a refused file fails the run.
+            set +e
             python scripts/fetch-answer-counts.py $PLANT | tee -a "$GITHUB_STEP_SUMMARY"
-            if git diff --quiet -- schools/assets/answer-counts.json; then
-              echo "answer-counts.json unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
-              exit 0
-            fi
+            status=${PIPESTATUS[0]}
+            set -e
             git add schools/assets/answer-counts.json
+            if [ -f schools/assets/ugh-stats.json ]; then git add schools/assets/ugh-stats.json; fi
+            if git diff --cached --quiet; then
+              echo "answer-counts.json and ugh-stats.json unchanged at $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
+              if [ "$status" -ne 0 ]; then echo "::error::a file was not written: see FAIL above (fetch-answer-counts.py exit $status)"; fi
+              exit "$status"
+            fi
+            changed=$(git diff --cached --name-only | tr '\n' ' ')
             git commit -q -m "Record the answer counts [skip ci]"
             if git push -q origin HEAD:main; then
-              echo "answer-counts.json committed: $(git rev-parse --short HEAD)" | tee -a "$GITHUB_STEP_SUMMARY"
-              exit 0
+              echo "committed $(git rev-parse --short HEAD): $changed" | tee -a "$GITHUB_STEP_SUMMARY"
+              if [ "$status" -ne 0 ]; then echo "::error::a file was not written: see FAIL above (fetch-answer-counts.py exit $status)"; fi
+              exit "$status"
             fi
             echo "main moved during attempt $attempt; fetching again"
             sleep 5
           done
-          echo "::error::could not push schools/assets/answer-counts.json after 3 attempts"
+          echo "::error::could not push schools/assets/answer-counts.json or ugh-stats.json after 3 attempts"
           exit 1
