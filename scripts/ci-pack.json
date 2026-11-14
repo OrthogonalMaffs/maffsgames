@@ -202,7 +202,7 @@
   "Trig Worms (every generator outcome recomputed exactly, its diagram measured from the canvas, every option marked in Chromium)": "33",
   "Truth Buster (every key reviewed against its statement's own words, SR-18; every reveal figure recomputed; all 60 played in Chromium)": "38",
   "UK rates module (unit tests against the gov.uk 2025/26 figures)": "16",
-  "Ugh, stats pages (the four /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows \"Figures unavailable right now\" and no number; \"<10\" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; three planted faults caught)": "57",
+  "Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows \"Figures unavailable right now\" and no number; \"<10\" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or \"<10\" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; nine planted faults caught)": "57",
   "Unit Converter (every key recomputed from its prompt, exact pi; precision stated; displayed numbers comma-grouped, marking unchanged; answer once; level key; score by correct answers only; calculator on a phone)": "26",
   "Weekly facts \"Monty Hall\" (both Monty Hall cards show their summary and expanded text exactly, with the button and Share, at 320, 390 and 1280 px, with no overflow)": "47",
   "Weekly facts (every figure pinned by its words and recomputed or sourced; rotation has no literal modulus)": "25",
@@ -273,7 +273,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -351,7 +351,7 @@
    "tier": "content"
   },
   "verify-stage-exit.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 2,
    "tier": "content"
