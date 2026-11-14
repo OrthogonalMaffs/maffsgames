@@ -1,4 +1,5 @@
 UGH-STATS-QUESTIONS (Project Claude, Sat 14 Nov 2026 17:10; Jon's rulings 14 Nov 14:36–16:49)
+(Saved copy: the one place name in Case 4 is generalised to "the south-west of England" and its CSV column to daylight_hours, Jon, 14 Nov 2026, at the pre-push personal-details scan. Nothing else differs from the contract as given.)
 Recommended: Opus, effort high: student-facing maths on a live page, every answer computed from the numbers shown, and one change to a listed game's bank.
 LANE: home. TIER: Medium (merge on green; Project Claude reviews after merge; Jon reads the live pages after). START: now. One PR. Branch from current origin/main (22e1e16 or newer).
 PARALLEL LANE: cloud is running ANSWER-BOX-CHECK in tools/pack-generator/. Touch nothing there; if docs/todo.md conflicts, merge main in and keep both sides.
@@ -142,7 +143,7 @@ Q2. "What is the most likely explanation?"
  B "More flu makes students practise more maths." → "Then the extra answers would come from students off sick. Case 3 showed the biggest weeks came from whole classes in school."
  C "It proves the site is getting more popular." → "The site may well be growing, but a correlation with flu can't show that. Growth would need its own evidence."
  D "It's just a coincidence." → "With only 9 weeks, chance can't be ruled out. But we already know a shared cause that explains both, so 'coincidence' isn't the best explanation."
-Q3. "The number of hours of daylight in Plymouth also correlates with our answers: r = −0.72. Daylight and flu correlate with each other: r = −0.96. What do all three have in common?"
+Q3. "The number of hours of daylight in the south-west of England also correlates with our answers: r = −0.72. Daylight and flu correlate with each other: r = −0.96. What do all three have in common?"
  A ✓ "They all follow the time of year." → "Daylight shrinks every week of autumn whatever we do; flu and term-time play both grow. Anything that changes steadily through autumn will correlate with our numbers. That's why 'it correlates' is the start of an argument, never the end."
  B "Each one causes the next." → "Three causes in a chain, with no evidence for any of them. The time of year explains all three at once."
  C "Daylight is the real cause of our answers." → "Daylight correlates just as strongly as flu, for the same reason. Swapping one non-cause for another doesn't help."
@@ -153,7 +154,7 @@ Q4. "Three of those weeks contained a single class that answered thousands of qu
  C "You should always remove outliers before working out r." → "Not always. Check them, understand them, and report r with and without them, as we've done here."
  D "Nine weeks is plenty to be sure." → "Nine points is very few. Three days cut r by more than a third. Treat any r from a small sample with care."
 data.csv (verbatim):
-week_beginning,answers,answers_without_class_days,games_started,flu_tests_positive_pct,daylight_hours_plymouth
+week_beginning,answers,answers_without_class_days,games_started,flu_tests_positive_pct,daylight_hours
 2026-09-07,1141,1141,198,3.4,12.86
 2026-09-14,875,875,176,3.8,12.40
 2026-09-21,2291,2291,309,5.0,11.95

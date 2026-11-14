@@ -933,7 +933,7 @@ def check_frozen_cases(site, plants, faults):
         faults.append("case4: CSV, the week table on the page is not data.csv (%d rows on the page, %d in the CSV)" % (len(table), len(rows4)))
     if len(rows4) >= 3:
         col = lambda k: [float(r[k]) for r in rows4]
-        flu, ans, dl = col("flu_tests_positive_pct"), col("answers"), col("daylight_hours_plymouth")
+        flu, ans, dl = col("flu_tests_positive_pct"), col("answers"), col("daylight_hours")
         r_main, r_wo = pearson(flu, ans), pearson(flu, col("answers_without_class_days"))
         r_dl, r_dlf = pearson(dl, ans), pearson(dl, flu)
         for s in ("For these two, r = %s." % r2(r_main), "What does r = %s tell you?" % r2(r_main),
