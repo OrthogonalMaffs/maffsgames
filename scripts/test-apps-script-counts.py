@@ -18,11 +18,22 @@ spreadsheets.readonly granted), so any call to it, or to DriveApp, ScriptApp or 
   - chunked and time-boxed: a run cut off loses nothing, resumes, and as_of stays null until every row is read;
   - a new school year, or rows deleted from under the stored place, starts the count again;
   - a held lock skips the run; doGet serves the 60-second cache and ?version=1;
-  - the payload is {as_of, since, total, games} with total = the sum of games.
+  - the payload is {as_of, since, total, games} with total = the sum of games;
+  - safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026): rows whose game_slug and level are "constructor", "__proto__",
+    "toString" and "hasOwnProperty" are counted as ordinary keys, before and after the state is read back from the
+    properties; every count and the total stay whole numbers; one planted fault (maps with a prototype) is caught.
+
+THE CLOCK: the script only ever sees a fixed clock (env.now, 23 Oct 2026 12:00 UTC unless a check moves it): the
+harness hands it a Date whose no-argument form and now() read env.now. Nothing compares the fixture rows with the
+real clock, which this test proves on every run by repeating the whole harness with the browser's own clock set to
+each of FAR_CLOCKS (before 14 Nov 2026 the script read the real clock, so the test would have failed from 1 Sep 2027).
 
     python scripts/test-apps-script-counts.py
 """
 import asyncio, json, pathlib, sys
+
+# The browser's clock is set to each of these and the whole harness is run again: it must not notice.
+FAR_CLOCKS = ["2027-09-10T12:00:00Z", "2030-01-01T12:00:00Z"]
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 SRC = BASE / "docs" / "apps-script-counts.js"
@@ -63,8 +74,17 @@ HARNESS = r"""
   const colNum = s => s.split('').reduce((n, ch) => n * 26 + ch.charCodeAt(0) - 64, 0);
   const trap = what => new Proxy({}, { get(_, k) { throw new Error(what + '.' + String(k) + ' called: it needs a wider scope than read-only'); } });
 
+  // ---- the clock the script sees: fixed at env.now, never the real one. `new Date()` and Date.now() read env.now;
+  // every other use of Date (a value parsed, Date.UTC) is the real thing.
+  const FIXED_NOW = Date.parse('2026-10-23T12:00:00Z');
+  const RealDate = Date;
+  const fakeDate = env => class FakeDate extends RealDate {
+    constructor(...a) { if (a.length === 0) super(env.now); else super(...a); }
+    static now() { return env.now; }
+  };
+
   function makeEnv(rows, extraBlankRows = 50) {
-    const env = { rows: [HEAD].concat(rows), reads: [], props: {}, cache: {}, locked: false, clock: 0, extra: extraBlankRows, calls: [] };
+    const env = { rows: [HEAD].concat(rows), reads: [], props: {}, cache: {}, locked: false, clock: 0, extra: extraBlankRows, calls: [], now: FIXED_NOW };
     const grid = () => env.rows.length + env.extra;                   // the grid is taller than the data
     const get = (id, range, opts) => {
       env.calls.push('values.get ' + range);
@@ -107,9 +127,9 @@ HARNESS = r"""
     if (patch) s = patch(s);
     s = s.replace(/Date\.now\(\)/g, '__clock()');
     const names = Object.keys(env.services);
-    const f = new Function(...names, 'console', '__clock',
+    const f = new Function(...names, 'console', '__clock', 'Date',
       s + '\nreturn {updateCounts_, tally_, eventTime_, sinceString_, startRow_, columns_, doGet, payload_, loadState_, resetCounts, updateCounts, backfill};');
-    return f(...names.map(n => env.services[n]), { log() {}, error() {} }, () => (env.clock += 100));
+    return f(...names.map(n => env.services[n]), { log() {}, error() {} }, () => (env.clock += 100), fakeDate(env));
   }
   const row = (arrival, event, slug, clientTs) => {
     const r = new Array(HEAD.length).fill('');
@@ -202,7 +222,8 @@ HARNESS = r"""
     const g = load(env);
     g.updateCounts_(1e9, 0);
     ok('year: the count for 2026-09-01', g.loadState_().since === '2026-09-01' && g.loadState_().counts.x === 1, JSON.stringify(g.loadState_()));
-    const g2 = load(env, s => s.replace('new Date();\n    var sinceStr', 'new Date("2027-09-10T12:00:00Z");\n    var sinceStr'));
+    env.now = Date.parse('2027-09-10T12:00:00Z');          // the script's clock moves into the next school year
+    const g2 = load(env);
     g2.updateCounts_(1e9, 0);
     const st = g2.loadState_();
     ok('year: on 1 September the counts restart', st.since === '2027-09-01' && JSON.stringify(st.counts) === '{"y":1}', JSON.stringify(st));
@@ -231,6 +252,62 @@ HARNESS = r"""
     ok('doGet: serves the cached payload for 60 s', second.total === 1, JSON.stringify(second));
     ok('doGet: ?version=1 says which code is live', /^\d{4}-\d\d-\d\d-[a-z]$/.test(JSON.parse(g.doGet({ parameter: { version: '1' } }).text).version));
   }
+
+  // ---- safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026): a game_slug or level is whatever anyone posted. One that is
+  // the name of a built-in object member must be counted like any other. Expected values are written as JSON text:
+  // an object literal with a __proto__ key would set the literal's prototype instead of a key.
+  {
+    const NAMES = ['constructor', '__proto__', 'toString', 'hasOwnProperty'];
+    const named = (arrival, event, name) => { const r = row(arrival, event, name); r[3] = name; return r; };   // slug and level
+    const wholes = o => Object.keys(o).every(k => Number.isInteger(o[k]));
+    const rows = [row('2026-10-20T09:00:00Z', QA, 'a'), row('2026-10-20T09:00:01Z', QA, 'a'), row('2026-10-20T09:00:02Z', QA, 'a')];
+    NAMES.forEach((n, i) => rows.push(named('2026-10-20T10:0' + i + ':00Z', QA, n), named('2026-10-20T10:0' + i + ':30Z', QA, n),
+                                      named('2026-10-20T11:0' + i + ':00Z', 'game_started', n)));
+    const env = makeEnv(rows);
+    const g = load(env);
+    g.updateCounts_(1e9, 0);
+    let st = g.loadState_();
+    ok('safe tallies: constructor, __proto__, toString and hasOwnProperty are counted as ordinary game_slugs',
+       JSON.stringify(st.counts) === '{"a":3,"constructor":2,"__proto__":2,"toString":2,"hasOwnProperty":2}', JSON.stringify(st.counts));
+    ok('safe tallies: every count is a whole number', Object.keys(st.counts).length === 5 && wholes(st.counts), JSON.stringify(st.counts));
+    const p = g.payload_(st, NOW_OCT);
+    ok('safe tallies: the payload lists them, sorted, and its total is the number 11',
+       p.total === 11 && JSON.stringify(p.games) === '{"__proto__":2,"a":3,"constructor":2,"hasOwnProperty":2,"toString":2}', JSON.stringify(p));
+    const text = g.doGet({ parameter: {} }).text;
+    let served = null; try { served = JSON.parse(text); } catch (e) {}
+    ok('safe tallies: doGet serves valid JSON, whole numbers only, total = the sum of games',
+       served && JSON.stringify(Object.keys(served).sort()) === '["as_of","games","since","total"]' && served.total === 11 &&
+       Object.keys(served.games).length === 5 && wholes(served.games) && Object.keys(served.games).reduce((s, k) => s + served.games[k], 0) === 11, text);
+    // the next run is a new execution: the counts come back from the properties, and are added to
+    NAMES.forEach((n, i) => env.rows.push(named('2026-10-21T10:0' + i + ':00Z', QA, n)));
+    env.rows.push(row('2026-10-21T10:10:00Z', QA, 'a'), named('2026-10-21T11:00:00Z', 'game_started', 'constructor'));
+    const g2 = load(env);
+    g2.updateCounts_(1e9, 0);
+    st = g2.loadState_();
+    const p2 = g2.payload_(st, NOW_OCT);
+    ok('safe tallies: counts read back from the properties are added to, not restarted or turned into text',
+       JSON.stringify(st.counts) === '{"a":4,"constructor":3,"__proto__":3,"toString":3,"hasOwnProperty":3}' && p2.total === 16, JSON.stringify(st.counts) + ' total ' + p2.total);
+    const stored = JSON.parse(env.props.counts || '{}');
+    ok('safe tallies: the stored counts property holds whole numbers only', Object.keys(stored).length === 5 && wholes(stored), env.props.counts);
+    // the start tallies were already safe (hasOwn_, and a level that is not a plain label is "other"): kept so
+    const d20 = env.props['d:2026-10-20'] || '', d21 = env.props['d:2026-10-21'] || '';
+    ok('safe tallies: the start tallies count the same names as levels ("__proto__" is not a plain label: other), and survive a reload',
+       d20 === '{"n":4,"l":{"constructor":1,"other":1,"toString":1,"hasOwnProperty":1},"h":[0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0]}' &&
+       d21 === '{"n":1,"l":{"constructor":1},"h":[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0]}', d20 + ' ' + d21);
+    // planted fault: the maps given a prototype again. "__proto__" is then never stored, so the checks above can fail.
+    try {
+      const gp = load(makeEnv(rows), s => {
+        const t = s.replace('function map_() { return Object.create(null); }', 'function map_() { return {}; }');
+        if (t === s) throw new Error('stale plant: map_ is not written as the plant expects');
+        return t;
+      });
+      gp.updateCounts_(1e9, 0);
+      const got = JSON.stringify(gp.loadState_().counts);
+      ok('plant: maps with a prototype are caught (the "__proto__" count is lost)', got === '{"a":3,"constructor":2,"toString":2,"hasOwnProperty":2}', got);
+    } catch (e) {
+      ok('plant: maps with a prototype are caught (the "__proto__" count is lost)', false, e.message);
+    }
+  }
   return out;
 }
 """
@@ -251,15 +328,32 @@ async def main():
                 str(manifest.get("webapp"))),
                ("source: no SpreadsheetApp, DriveApp, ScriptApp or UrlFetchApp outside comments",
                 not any(w in code for w in ("SpreadsheetApp", "DriveApp", "ScriptApp", "UrlFetchApp")), "")]
+    async def harness(browser, clock=None):
+        """The harness's results in a fresh page; with `clock`, the browser's own clock reads that instant."""
+        page = await browser.new_page()
+        if clock:
+            await page.clock.set_fixed_time(clock)
+            reads = await page.evaluate("() => new Date().toISOString()")
+            if not reads.startswith(clock[:10]):
+                return [["the browser's clock was set to " + clock, False, "it reads " + reads]]
+        try:
+            return await page.evaluate(HARNESS, src)
+        except Exception as exc:     # a trapped service call, or a crash in the script, ends the run
+            return [["the script runs to the end under the fakes", False, str(exc).splitlines()[0][:200]]]
+        finally:
+            await page.close()
+
     async with async_playwright() as pw:
         browser = await pw.chromium.launch()
-        page = await browser.new_page()
-        try:
-            got = await page.evaluate(HARNESS, src)
-        except Exception as exc:     # a trapped service call, or a crash in the script, ends the run
-            got = [["the script runs to the end under the fakes", False, str(exc).splitlines()[0][:200]]]
+        got = await harness(browser)
+        far = []
+        for clock in FAR_CLOCKS:
+            again = await harness(browser, clock)
+            failed = [r[0] for r in again if not r[1]]
+            far.append(("any date: all %d checks pass with the browser's clock at %s" % (len(again), clock[:10]),
+                        len(again) == len(got) and not failed, "; ".join(failed) or "%d checks, not %d" % (len(again), len(got))))
         await browser.close()
-    results += [tuple(r) for r in got]
+    results += [tuple(r) for r in got] + far
     bad = 0
     for name, ok, detail in results:
         print("  %s  %s%s" % ("PASS" if ok else "FAIL", name, "" if ok else "  <- " + detail))

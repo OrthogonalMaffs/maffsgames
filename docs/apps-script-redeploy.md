@@ -136,6 +136,35 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
 
 ---
 
+## 14 Nov 2026: safe tallies
+
+Version `2026-11-14-a` (contract COUNTS-SAFE-TALLY). **`doPost` is unchanged**: events are recorded exactly as before,
+the columns and the `/exec` address stay as they are, and no new permission is asked for. Only the report changed.
+Anyone can post an event, and its `game_slug`, `level` and `question_id` are used as keys when the daily email and the
+Dashboard are added up. A slug such as `constructor` or `__proto__` used to turn that game's figures into text
+("function Object() { [native code] }11 starts") or drop the game. Those names are now counted like any other.
+
+The deploy is a **New version of the existing deployment**, never a new deployment.
+
+1. Open https://script.google.com/home. Open **Maffsgames Analytics** (green icon, bound to MaffsGames Events). Check the title at the top says **Maffsgames Analytics** before doing anything else.
+2. Open `Code.gs` and find the line that starts `const REPORT_EMAIL =`. Copy that whole line somewhere safe: it holds your address, which the repo's copy does not.
+3. Select everything in `Code.gs` and delete it.
+4. Paste the whole of `docs/apps-script-endpoint.js` from the repo.
+5. Replace the pasted `const REPORT_EMAIL = 'OWNER_EMAIL_HERE';` line with the line you copied in step 2.
+6. Click **Save** (the disk icon).
+7. Click **Deploy** → **Manage deployments**.
+8. Click the pencil on the existing deployment.
+9. Set **Version** to **New version**.
+10. Click **Deploy**. Do not use *New deployment*: it would change the address and every game would stop logging.
+11. Check the Web app URL it shows still ends with the string in "The one thing that breaks everything" above.
+12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-14-a"`.
+13. Back in the editor, choose **testDashboard** in the function drop-down and click **Run**. It rebuilds the Dashboard tab with the new code. If Google asks for a permission, stop and tell Claude which one it named.
+14. Open the **MaffsGames Events** Sheet, play a few questions of any game, and check a new row appears as usual.
+
+Do not run `setupTrigger`: the 7am trigger is not touched by this. Tomorrow's email is the first sent by the new code.
+
+---
+
 ## If you still get two emails after this
 
 `setupTrigger` can only see triggers **in this project, owned by you**

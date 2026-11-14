@@ -158,3 +158,29 @@ and commits the counts alone.
   the hidden ones come after the published ones, in name order, so their order says nothing about their size.
 - A fault in the stats never touches the answer counts: the two are fetched, checked and committed each on its own
   (`scripts/fetch-answer-counts.py`).
+
+## 14 Nov 2026: safe tallies
+
+Version `2026-11-14-b` (contract COUNTS-SAFE-TALLY). The same project, the same web address, the same read-only
+permission. Anyone can post an event, and its `game_slug` becomes a key in the counts. A slug such as `constructor`
+used to turn that count, and the total, into text, so the daily job refused the figures and every game's answer count
+stopped moving until the row was deleted from the Sheet by hand; `__proto__` was silently never counted. Those names
+are now counted like any other slug. For ordinary slugs the figures are unchanged, and so are `?stats=1`'s.
+
+No reset and no backfill: the stored counts are read as they are, and the next run carries on from them.
+
+1. Open https://script.google.com/home. Open **MaffsGames Answer Counts** (blue icon, standalone). Check the title at the top says **MaffsGames Answer Counts** before doing anything else.
+2. Open `Code.gs` and find the line that starts `const SHEET_ID =`. Copy that whole line somewhere safe (and the `const SHEET_NAME =` line under it, if yours is not `Sheet1`).
+3. Select everything in `Code.gs` and delete it.
+4. Paste the whole of `docs/apps-script-counts.js` from the repo.
+5. Replace the pasted `const SHEET_ID = 'PASTE_THE_SHEET_ID_HERE';` line with the line you copied in step 2 (and `SHEET_NAME`, if you copied it).
+6. Click **Save** (the disk icon).
+7. Click **Deploy** → **Manage deployments**.
+8. Click the pencil on the existing deployment.
+9. Set **Version** to **New version**.
+10. Click **Deploy**. Do not use *New deployment*: the address must not change. If Google asks for any permission, stop and tell Claude which one it named.
+11. In a private window open `<exec URL>?version=1`. It must show `{"version":"2026-11-14-b"}`.
+12. Open `<exec URL>`. It shows the counts as before: `{"as_of":"…","since":"2026-09-01","total":…,"games":{…}}`, with `total` a number.
+13. Open `<exec URL>?stats=1`. It shows the stats as before, beginning `{"as_of":"…","daily":[`.
+
+The "Stats" section's check above names the earlier version, `2026-11-14-a`; after this redeploy the live one is `-b`.

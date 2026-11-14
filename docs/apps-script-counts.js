@@ -31,6 +31,11 @@
 //  What the tallies leave out: rows whose game_slug or level is "test" or "terminal-test"; a level that is not a
 //  short plain label is counted as "other" (the Sheet's endpoint accepts any text from anyone, and these labels are
 //  published). The answer counts are not touched by any of this.
+//
+//  SAFE TALLIES (contract COUNTS-SAFE-TALLY, 14 Nov 2026): a game_slug or level is whatever was posted, by anyone, and
+//  it becomes a key. In a plain object a key such as "constructor" or "__proto__" reads a built-in member, so a count
+//  started from a function and became text, or was dropped. Every object keyed by event data is therefore a map with
+//  no prototype (map_, mapFrom_ for state read back from the properties) and is read through hasOwn_ (count_).
 
 const SHEET_ID = 'PASTE_THE_SHEET_ID_HERE';   // the long id in the Sheet's address: /spreadsheets/d/<ID>/edit
 const SHEET_NAME = 'Sheet1';                  // the TAB's name (the file is called MaffsGames Events)
@@ -60,7 +65,7 @@ const STATS_GA4_LAG_DAYS = 3;                 // the tab's newest date may be th
 const DAY_PREFIX = 'd:';                      // one property per UK date: d:2026-11-13 -> {n, l:{level: n}, h:[24]}
 
 // Bump when this file is redeployed; <exec URL>?version=1 then says which code is live.
-const SCRIPT_VERSION = '2026-11-14-a';
+const SCRIPT_VERSION = '2026-11-14-b';
 
 // ============================================================
 //  GET — the figures, from a 60-second cache
@@ -161,7 +166,7 @@ function updateCounts_(budgetMs, lockWaitMs) {
       // Read from whichever is earlier, the school year or the oldest date kept for the stats (they differ only in
       // September and early October). The answer counts still take nothing from before 1 September: tally_ checks.
       var readFrom = keepFromDate < sinceDate ? keepFromDate : sinceDate;
-      st = { since: sinceStr, lastRow: startRow_(cols, readFrom, meta) - 1, lastTs: '', counts: {}, starts: {},
+      st = { since: sinceStr, lastRow: startRow_(cols, readFrom, meta) - 1, lastTs: '', counts: map_(), starts: map_(),
              stored: st.stored, asOf: null };
       console.log('period start ' + sinceStr + ': reading from row ' + (st.lastRow + 1));
     }
@@ -194,7 +199,8 @@ function updateCounts_(budgetMs, lockWaitMs) {
   }
 }
 
-// Adds the counted rows of one chunk into `counts` (pure: no Sheet, no clock).
+// Adds the counted rows of one chunk into `counts` (pure: no Sheet, no clock). `counts` is a map_(): the slug is
+// whatever was posted, so it is never read as a member of a plain object.
 function tally_(vals, cols, sinceDate, tz, counts) {
   for (var i = 0; i < vals.length; i++) {
     var r = vals[i];
@@ -203,7 +209,7 @@ function tally_(vals, cols, sinceDate, tz, counts) {
     if (!slug) continue;
     var t = eventTime_(r[cols.arrival], r[cols.clientTs], tz);
     if (!t || t < sinceDate) continue;
-    counts[slug] = (counts[slug] || 0) + 1;
+    counts[slug] = count_(counts, slug) + 1;
   }
 }
 
@@ -222,7 +228,7 @@ function tallyStarts_(vals, cols, fromDate, tz, starts) {
     if (!t || t < fromDate) continue;
     var stamp = Utilities.formatDate(t, TIMEZONE, 'yyyy-MM-dd HH:mm:ss');   // the event on the UK clock
     var date = stamp.slice(0, 10), hour = Number(stamp.slice(11, 13));
-    if (!hasOwn_(starts, date)) starts[date] = { n: 0, l: {}, h: zeros_(24) };
+    if (!hasOwn_(starts, date)) starts[date] = { n: 0, l: map_(), h: zeros_(24) };
     var d = starts[date];
     d.n += 1;
     d.h[hour] += 1;
@@ -238,7 +244,21 @@ function levelKey_(v) {
   return STATS_LEVEL_LABEL.test(s) ? s : 'other';
 }
 
+// ---- safe maps: every object keyed by event data (a game_slug, a level, an event's date) is one of these
+// A map with no prototype: "constructor", "__proto__", "toString" and "hasOwnProperty" are ordinary keys in it.
+function map_() { return Object.create(null); }
+
+// The own keys of `o` (parsed JSON, or nothing) copied into a map_(), in the same order.
+function mapFrom_(o) {
+  var m = map_();
+  if (o) Object.keys(o).forEach(function (k) { m[k] = o[k]; });
+  return m;
+}
+
 function hasOwn_(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+
+// The count stored under `k`, or 0 when the map has no such key of its own.
+function count_(m, k) { return hasOwn_(m, k) ? m[k] : 0; }
 
 function zeros_(n) { var a = []; while (a.length < n) a.push(0); return a; }
 
@@ -355,15 +375,18 @@ function londonMidnight_(dateStr) {
 
 function loadState_() {
   var p = PropertiesService.getScriptProperties().getProperties();
-  var starts = {};
+  var starts = map_();
   Object.keys(p).forEach(function (k) {
-    if (k.indexOf(DAY_PREFIX) === 0) starts[k.slice(DAY_PREFIX.length)] = JSON.parse(p[k]);
+    if (k.indexOf(DAY_PREFIX) !== 0) return;
+    var day = JSON.parse(p[k]);
+    day.l = mapFrom_(day.l);                                      // keyed by level: a map again, as tallyStarts_ made it
+    starts[k.slice(DAY_PREFIX.length)] = day;
   });
   return {
     since: p.since || '',
     lastRow: p.lastRow ? Number(p.lastRow) : 0,
     lastTs: p.lastTs || '',
-    counts: p.counts ? JSON.parse(p.counts) : {},
+    counts: p.counts ? mapFrom_(JSON.parse(p.counts)) : map_(),
     starts: starts,
     stored: Object.keys(starts),                                  // the dates that have a property now
     statsRow: p.statsRow === undefined ? -1 : Number(p.statsRow), // the last row the start tallies cover
@@ -402,7 +425,7 @@ function pruneStarts_(starts, keepFrom) {
 // {as_of, since, total, games}. as_of is null until a run has read every row (the first full count in progress),
 // which the site treats as "not available": it shows nothing rather than a part-count.
 function payload_(st, now) {
-  var games = {};
+  var games = map_();
   var total = 0;
   Object.keys(st.counts).sort().forEach(function (k) { games[k] = st.counts[k]; total += st.counts[k]; });
   return { as_of: st.asOf, since: st.since || sinceString_(now), total: total, games: games };
