@@ -179,6 +179,7 @@
   "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 2": "25",
   "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 2 of 2": "59",
   "Standard Form Blitz (all 100 keys recomputed exactly from the question's own TeX; every option classified; every option pressed in Chromium)": "70",
+  "Start-screen back link (every game page, as loaded at 390x844, shows a visible link back to the games list; planted faults caught: a link only in a hidden header, only on a hidden results screen, invisible, see-through, to another page; four controls pass)": "22",
   "Stat Attack (keys recomputed from each question's table)": "27",
   "Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium)": "70",
   "Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught), part 1 of 2": "85",
@@ -231,7 +232,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
+   "how": "kept from the pack (6 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
@@ -273,7 +274,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
