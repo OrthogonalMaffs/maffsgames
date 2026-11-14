@@ -101,3 +101,60 @@ The address stays the same. Bump `SCRIPT_VERSION` when you do, so `?version=1` s
 - The Sheet is read through the Sheets API, so a timestamp cell Sheets has turned into a date is read on the spreadsheet's
   own time zone, and a cell left as text is read as the ISO time it holds. Both give the same instant.
 - Reset (only if the numbers ever look wrong): run **resetCounts**, then **backfill** until it says `caught up: true`.
+
+## Stats (14 Nov 2026)
+
+For the "Ugh, stats" pages (contract UGH-STATS-DATA). The same project, the same web address and the same read-only
+permission; nothing new is collected. The script's one pass over the Sheet now also tallies `game_started` rows, and
+`<exec URL>?stats=1` answers the figures the pages chart. Without `?stats=1` the address answers exactly as before.
+
+### Redeploy (about ten minutes, in one sitting)
+
+1. In the Apps Script editor, open `Code.gs` and **copy your `SHEET_ID` line** somewhere (and the `SHEET_NAME` line, if you changed it).
+2. Select everything in `Code.gs`, delete it, and paste the whole of `docs/apps-script-counts.js` from the repo.
+3. Put your `SHEET_ID` back in the `const SHEET_ID = '…';` line (and `SHEET_NAME`, if yours is not `Sheet1`). Click **Save**.
+4. **Deploy** → **Manage deployments** → the pencil on the existing deployment → **Version: New version** → **Deploy**.
+   Do not make a new deployment: the address must not change. It asks for no new permission (the GA4 tab is in the same
+   spreadsheet). **If Google asks for any other permission, stop and tell Claude which one it named.**
+5. In the function drop-down choose **resetCounts** and click **Run**. Then choose **backfill** and click **Run**, again
+   if needed, until the log's last line says `caught up: true`. The stored counts were made before the script tallied
+   starts, so everything is counted again from the start. (The script also does this by itself the first time it runs and
+   finds counts with no start tallies beside them; running the two by hand makes it happen now, while you are watching.)
+6. **Until backfill says `caught up: true`, the answer counts on the site are hidden**: the address answers
+   `"as_of": null` meanwhile, and the site shows nothing rather than a part-count. That is typically a few minutes. The
+   file on the site is not touched by this; only the homepage's live figure waits.
+7. Check it, in a private window:
+   - `<exec URL>?version=1` shows `{"version":"2026-11-14-a"}`.
+   - `<exec URL>` shows the counts as before: `{"as_of":"…","since":"2026-09-01","total":…,"games":{…}}`.
+   - `<exec URL>?stats=1` shows `{"as_of":"…","daily":[…30 dates…],"levels":[…],"hours":{"weekday":[…],"weekend":[…]},"countries":[…]}`.
+     If it shows `{"error":"…"}` instead, send Claude the text: it names the fault (the usual one is the
+     **GA4 country daily** tab missing or days behind; `docs/ga4-country-setup.md`). The answer counts are not affected by it.
+   - Or, in the editor, run **previewStats**: the log shows the same figures without the 60-second cache.
+
+The next run of the `answer-counts` workflow (05:40, 11:40 and 17:40 UTC, or **Run workflow** by hand) then commits
+`schools/assets/ugh-stats.json` beside `answer-counts.json`. Until step 4 is done it says "stats endpoint not deployed yet"
+and commits the counts alone.
+
+### What the stats count (so the pages' claims are true)
+
+- **Starts:** rows whose `event` is `game_started` and whose `game_slug` is not empty, by the event's time (the same rule
+  as the answer counts: the browser's clock when it is within a day of arrival, else arrival), on the UK clock.
+  Tallied per UK date, per date and level (a blank level is `none`) and per date and hour, and kept for the last 35 UK
+  dates, one script property per date.
+- **Left out:** `test_ping` rows (they are not `game_started`), and any row whose `game_slug` or level is `test` or
+  `terminal-test`. Your own play on the live site is counted, as in the answer counts.
+- **Levels are published as text, so they are kept plain:** a level that is not a short label of letters, digits,
+  spaces and `_ . + -` (24 characters at most) is counted as `other`, and so is any level beyond the first 40 on one
+  date. The Sheet's endpoint accepts any text from anyone; this stops a made-up "level" reaching a page.
+- **Complete days only.** Every window ends on the day before `as_of`: today is still being played, and a part-day at
+  the end of a chart reads as a fall. `daily` is the last 30 dates, oldest first, every date present; `levels` the last
+  7; `hours` the last 28 (four whole weeks), Saturday and Sunday as `weekend`.
+- **Countries** are GA4's `sessions` from the **GA4 country daily** tab, over 28 dates ending on the newest date the tab
+  holds (GA4's figures arrive a day or so late). Blank and `(not set)` are `Unknown`. A country under 10 sessions is
+  summed into `Other countries`, listed last. GA4 runs cookieless, so sessions are visits, not people (canon 1.2.1).
+  If the tab's newest date is more than 3 days behind, or its columns are not date, country, activeUsers, sessions,
+  engagedSessions, eventCount, `?stats=1` answers `{"error":…}` and the daily job fails rather than publish old figures.
+- **Figures below 10 are hidden.** Every count from 1 to 9 is published as the text `"<10"`; 0 stays 0. In `levels`
+  the hidden ones come after the published ones, in name order, so their order says nothing about their size.
+- A fault in the stats never touches the answer counts: the two are fetched, checked and committed each on its own
+  (`scripts/fetch-answer-counts.py`).
