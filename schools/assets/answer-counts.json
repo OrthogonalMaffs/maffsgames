@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-14T10:27:03Z",
+ "as_of": "2026-11-14T12:29:21Z",
  "games": {
   "52dle": 14,
   "angle-ace": 5,
@@ -101,7 +101,7 @@
   "surd-simplifier": 246,
   "suvat": 19,
   "take-a-walk": 18,
-  "tax-theft": 408,
+  "tax-theft": 423,
   "terrible-advice": 140,
   "test-the-claim": 3,
   "the-6-ps": 67,
@@ -120,5 +120,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 25924
+ "total": 25939
 }
