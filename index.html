@@ -117,6 +117,13 @@
     font-size:0.8rem;
     color:rgba(255,255,255,0.7);
   }
+  /* The total links to /ugh-stats/ (UGH-STATS-HOME, 14 Nov 2026) and keeps the total's look. While answer-count.js
+     leaves the total hidden, the link is display:none as well, so it takes no space and is never focused. */
+  .answer-total-link{display:block;color:inherit;text-decoration:none;border-radius:4px;}
+  .answer-total-link:has(> .answer-total[hidden]){display:none;}
+  .answer-total-link:hover .ac-num,.answer-total-link:hover .ac-label,.answer-total-link:hover .answer-updated,
+  .answer-total-link:focus .ac-num,.answer-total-link:focus .ac-label,.answer-total-link:focus .answer-updated{text-decoration:underline;}
+  .answer-total-link:focus-visible{outline:2px solid #ffffff;outline-offset:4px;}
 
   .header-badges{
     display:flex;
@@ -592,6 +599,11 @@
   .fact-share-btn{display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);color:var(--text-muted);font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;cursor:pointer}
   .fact-share-btn:hover{border-color:#7c3aed;color:#7c3aed}
   .fact-share-btn.copied{border-color:var(--teal);color:var(--teal)}
+  /* The Ugh, stats card (UGH-STATS-HOME): the fact card's look, shown only with the Statistics topic. */
+  .topic-card[hidden]{display:none}
+  .topic-card .fact-accent{background:var(--teal)}
+  .topic-card .fact-title{margin:0 0 6px}
+  .topic-card .fact-hook{margin:0 0 12px}
 
   /* ---------- Escape Rooms feature band ---------- */
   .esc-band{max-width:1140px;margin:0 auto 32px;padding:26px 26px 24px;border-radius:16px;color:#e2e8f0;
@@ -745,7 +757,11 @@
       MaffsGames
     </h1>
     <div class="header-sub">Free curriculum-aligned maths games for UK schools, KS3 to Further Maths</div>
+    <div data-mfg-section="answer-total" style="display:contents">
+    <a href="/ugh-stats/" class="answer-total-link" data-mfg-item="answer-total-ugh-stats" title="How we use these numbers">
     <div class="answer-total" data-maffs-answer-total hidden></div>
+    </a>
+    </div>
   </div>
   <div class="header-badges">
     <span data-mfg-section="essentials-link" style="display:contents">
@@ -779,6 +795,11 @@
     <a href="/leaderboards/" class="badge" style="background:rgba(13,148,136,0.12);color:#0d9488;border:1px solid rgba(13,148,136,0.3);text-decoration:none;font-weight:600">
       &#127942; Leaderboards
     </a>
+    <span data-mfg-section="ugh-stats-link" style="display:contents">
+    <a href="/ugh-stats/" class="badge" data-mfg-item="open-ugh-stats" style="text-decoration:none;color:rgba(255,255,255,0.9)">
+      Ugh, stats &rarr;
+    </a>
+    </span>
   </div>
 </div>
 
@@ -1014,6 +1035,17 @@
     </div>
   </div>
   <a class="par-btn" href="parents/" data-mfg-item="open-guides">Open the Parent Guides</a>
+</div>
+
+<!-- UGH, STATS CARD: shown only while the Statistics topic is chosen (applyFilters). Deliberately not a .game-card,
+     so the game count, search and the New badges never see it. -->
+<div class="fact-card topic-card" id="ughStatsCard" data-mfg-section="ugh-stats-topic" hidden>
+  <div class="fact-accent"></div>
+  <div class="fact-body">
+    <h2 class="fact-title">Ugh, stats.</h2>
+    <p class="fact-hook">Real numbers from this site, the decisions we made with them, and questions for your class.</p>
+    <a class="fact-game-btn" href="/ugh-stats/" data-mfg-item="topic-ugh-stats">Read the cases &rarr;</a>
+  </div>
 </div>
 
 <!-- NEW AND UPDATED SECTION -->
@@ -3439,6 +3471,11 @@ function applyFilters() {
   document.getElementById('gameCount').textContent = visible + ' game' + (visible !== 1 ? 's' : '');
   document.getElementById('noResults').classList.toggle('visible', visible === 0);
 
+  // The Ugh, stats card: shown with the Statistics topic, whatever the level, search or New filter; hidden
+  // for every other topic and for All. It is not a .game-card, so nothing above counts, searches or badges it.
+  var ughCard = document.getElementById('ughStatsCard');
+  if (ughCard) ughCard.hidden = activeTopic !== 'statistics';
+
   // Hide section headings if all cards in section are hidden
   document.querySelectorAll('.games-grid').forEach(function(grid) {
     var heading = grid.previousElementSibling;
@@ -3609,6 +3646,8 @@ function cmpShowResults() {
   document.querySelectorAll('.game-card:not(.hidden)').forEach(function(c) {
     if (!first && c.getClientRects().length) first = c;
   });
+  var ughCard = document.getElementById('ughStatsCard');
+  if (ughCard && ughCard.getClientRects().length) first = ughCard;   // the Statistics card sits above the games
   var target = first || document.getElementById('noResults');
   if (!target) return;
   var bar = document.querySelector('.filter-bar').getBoundingClientRect().height;

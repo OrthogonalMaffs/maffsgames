@@ -16,6 +16,16 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): UGH-STATS-HOME
+
+Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/handover/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
+
+- The total link: `.answer-total-link:has(> .answer-total[hidden])` is `display:none`, so while the total is hidden the link takes no space and is never focused. answer-count.js puts "Updated every 5 minutes" inside the link, so it is linked too.
+- Each link has its own `data-mfg-section` (`answer-total`, `ugh-stats-link`, `ugh-stats-topic`). analytics.js counts an item only inside a section, and test-section-clicks.py reads the sections from the page.
+- On a phone, choosing a topic scrolls to the first result; with Statistics chosen, that is the card. The card ignores the level, search and New filters.
+- Laptop: at 1280 px the new badge wraps onto a second row and the header grows from 240 to 282 px. It fits on one row at 1440 px. From 600 px down the badge row scrolls sideways inside itself, as before, so the header height on phones is unchanged and the row never wraps.
+- **Not done: the art/answer-box-redraws branch is NOT deleted.** The STOP IF fired, so the branch is parked. It holds one commit, 799748c "Add files via upload", made against merge base da84b07. That commit adds `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`, and `git diff 799748c c0cec86 --` on those two files is not empty: neither file is on main. #769 landed only WebP conversions, under `tools/pack-generator/rooms/*/art/`. The original PNGs exist only on that branch, so the next cloud close-out must not record the branch as deleted. Jon's question is in `docs/todo.md` row ANSWER-BOX-REDRAWS-BRANCH (§7).
+
 ## 2026-11-14 (home): UGH-STATS-CASE1-1DP
 
 Claude Code (home lane), worktree `~/mg-ugh-1dp`, branch `claude/ugh-stats-case1-1dp`; contract `docs/history/contracts/2026-11-14-ugh-stats-case1-1dp.md`. Case 1 Q1 and Q2 ask answers per day to 1 decimal place (working to 3), and Q3 quotes those values. A typed question may set `dp: 1` in `UghStats.quiz`: the decimal keypad, and only the 1 dp value accepted ("90.9" or "90.90", never "91" or "90.8"). Cases 2 and 3 keep dp 0 and their unchanged code path. Game 2 must also show at least 0.1 a day.
