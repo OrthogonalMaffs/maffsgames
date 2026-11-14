@@ -13,7 +13,8 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
   * escape-rooms/variants.json, the verified variant libraries (room.js must equal them, as check-escape-rooms.py holds);
   * tools/pack-generator/rooms/<slug>/config.json: the art, each image's role and label box in image pixels, the font
     per card, the set count, seed and pack version, the words printed on red-herring objects, a clue card's optional
-    print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), and whether Jon has
+    print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), a lock's optional print-only answer
+    unit ("answer_units", contract CAR-TRAP-PACK, 14 Nov 2026), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
     --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
 
@@ -27,7 +28,9 @@ The build, in order; any failure stops it before a PDF exists:
   4. Render: one HTML page per A4 page, printed to PDF by Playwright's Chromium with the network shut (fonts from the
      repo's pinned copies). In the page, every printed label is fitted to its box at no less than 11 pt, every page is
      checked for overflow, every student page for its set letter, every red herring for digits, everything for an
-     unfilled {{token}}; the PDF's page count must equal the pages built.
+     unfilled {{token}}; the PDF's page count must equal the pages built. A room with a long story is fitted first
+     (CAR-TRAP-PACK Amendment 1): only on a page that overflows, a cover's or the certificate's picture scales down,
+     never below 60% of its width, and the read-outs' type steps down, never below 9.5 pt.
 
 The PDF goes to dist-packs/ (gitignored) and nowhere else. It is the product: never commit it, never upload it.
 """
@@ -36,6 +39,7 @@ import base64
 import contextlib
 import copy
 import datetime
+import decimal
 import html
 import importlib.util
 import io
@@ -190,7 +194,125 @@ def load_config(slug):
                 raise BuildError("%s: %r is not a label box" % (im["file"], box))
         check_overrides(im)
     wording_approved(cfg, slug)
+    answer_units(cfg, slug)
     return cfg
+
+
+# ---- a lock's print-only answer unit (contract CAR-TRAP-PACK, 14 Nov 2026) -----------------------------------------
+#
+# The live room may ask for an answer in a unit the paper race cannot use: a width in metres is a decimal, and the
+# final padlock needs whole numbers. A room's config may then declare, per lock,
+#     "answer_units": {"<lock id>": {"unit": "<printed unit>", "scale": <integer>}}
+# and the pack asks for that lock's answer in the printed unit: answer x scale, on the answer box (the instrument's
+# label with the printed unit), in the key (the answer and its common wrong answer), at the end of the worked solution
+# ("= <value> <unit>") and as the final padlock's number. The room and its variants are not changed, and a lock with
+# no entry takes none of these paths.
+
+def answer_units(cfg, slug):
+    """The config's "answer_units", {lock id: {"unit", "scale"}} ({} when it has none), or BuildError if an entry is
+    not a printed unit (a non-empty string with no digit) and a whole-number scale of 1 or more."""
+    units = cfg.get("answer_units")
+    if units is None:
+        return {}
+    if not isinstance(units, dict):
+        raise BuildError('%s: "answer_units" must be {"<lock id>": {"unit": ..., "scale": ...}}, not %r' % (slug, units))
+    for lid, u in units.items():
+        ok = (isinstance(u, dict) and set(u) == {"unit", "scale"} and isinstance(u["unit"], str)
+              and u["unit"] and u["unit"] == u["unit"].strip() and not re.search(r"\d", u["unit"])
+              and isinstance(u["scale"], int) and not isinstance(u["scale"], bool) and u["scale"] >= 1)
+        if not ok:
+            raise BuildError('%s: "answer_units" for %s must be {"unit": "<printed unit>", "scale": <whole number>}, '
+                             'not %r' % (slug, lid, u))
+    return units
+
+
+def text_decimal(value):
+    """A stored number as the exact decimal its text says: 2.35 is 2.35, never the binary fraction nearest to it.
+    Python's repr of a float is the shortest text that reads back as that float, which is the text variants.json
+    holds for it (with_answer_units() checks that against the file itself)."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise BuildError("an answer in a printed unit must be one number, and this is %r" % (value,))
+    return decimal.Decimal(repr(value))
+
+
+def with_answer_units(cfg, locks, slug):
+    """The room's locks, each lock the config names in "answer_units" carrying its entry as "answer_unit" (a copy:
+    the room's data is not touched). With no entries the locks come back as they are. An entry for a lock the room
+    does not have stops the build, and so does a scaled lock whose stored answer or common wrong answer does not
+    read, as text in variants.json, as the decimal the pack will scale."""
+    units = answer_units(cfg, slug)
+    if not units:
+        return locks
+    unknown = sorted(set(units) - {l["id"] for l in locks})
+    if unknown:
+        raise BuildError('%s: "answer_units" names %s, which is not a lock of this room' % (slug, ", ".join(unknown)))
+    as_text = json.loads((ROOMS / "variants.json").read_text(encoding="utf-8"), parse_float=decimal.Decimal)
+    out = []
+    for l in locks:
+        if l["id"] not in units:
+            out.append(l)
+            continue
+        for v, tv in zip(l["variants"], as_text[l["id"]]):
+            for k in ("answer", "miss"):
+                if v.get(k) is not None and text_decimal(v[k]) != tv[k]:
+                    raise BuildError("%s/%s: %s is written %s in variants.json, but reads as %s"
+                                     % (slug, l["id"], k, tv[k], text_decimal(v[k])))
+        out.append(dict(l, answer_unit=dict(units[l["id"]])))
+    return out
+
+
+def printed_number(lock, value):
+    """A lock's answer, or its common wrong answer, as the pack prints it. A lock with no printed unit: the value as
+    it is. With one: value x scale, exactly (Decimal on the number's text, never float arithmetic), which must be a
+    whole number or the build stops."""
+    au = lock.get("answer_unit")
+    if not au:
+        return value
+    scaled = text_decimal(value) * au["scale"]
+    if scaled != scaled.to_integral_value():
+        raise BuildError("%s: %s x %d = %s %s is not a whole number, so it cannot be asked for in %s"
+                         % (lock["id"], format_token(value), au["scale"], scaled.normalize(), au["unit"], au["unit"]))
+    return int(scaled)
+
+
+def printed_figure(lock, value):
+    """The key's figure for a lock's answer or common wrong answer: the token as students read it, and for a lock
+    with a printed unit the scaled value with that unit, since the room's own words beside it use the room's unit."""
+    au = lock.get("answer_unit")
+    if not au:
+        return format_token(value)
+    return "%s&nbsp;%s" % (format_token(printed_number(lock, value)), esc(au["unit"]))
+
+
+def solution_line(lock, v, solved):
+    """A lock's worked solution, already filled. A lock with a printed unit ends with its answer in that unit:
+    "... is <b>2.35 m</b>." becomes "... is <b>2.35 m</b> = <b>235 cm</b>." """
+    au = lock.get("answer_unit")
+    if not au:
+        return solved
+    body = solved.rstrip()
+    return "%s = <b>%s</b>." % (body[:-1] if body.endswith(".") else body, printed_figure(lock, v["answer"]))
+
+
+def answer_unit_problems(locks, cover_texts):
+    """A lock with a printed unit whose answer box, on any cover, does not ask for that unit or still asks for the
+    room's own. cover_texts: each cover's printed text, an answer box's caption on a line of its own."""
+    out = []
+    for l in locks:
+        au = l.get("answer_unit")
+        if not au:
+            continue
+        ins = l.get("instrument") or {}
+        label, own = (text_of(ins.get(k, "")).strip() for k in ("label", "unit"))
+        want = answer_caption(l)
+        for k, text in enumerate(cover_texts):
+            lines = [" ".join(x.split()) for x in text.splitlines()]
+            if want not in lines:
+                out.append("cover %d: the answer box for %s does not say %r" % (k + 1, l["id"], want))
+            if own and own != au["unit"] and "%s %s" % (label, own) in lines:
+                out.append("cover %d: the answer box for %s still says %r, the room's unit, not %r"
+                           % (k + 1, l["id"], "%s %s" % (label, own), au["unit"]))
+    return out
 
 
 DRAFT_BADGE = '<div class="draft">DRAFT: Jon&rsquo;s wording</div>'
@@ -360,12 +482,16 @@ def choose(checker, valid, locks, n, seed, final_ok=None):
 
 def answers_of(checker, locks, s):
     """The set's lock answers as numbers, in lock order: the final padlock's numbers. A lock with several accepted
-    answers cannot take part, so it stops the build."""
+    answers cannot take part, so it stops the build. A lock with a printed unit gives the number the pack asks for
+    (printed_number)."""
     out = []
     for l, v in zip(locks, s["vars"]):
         a = v["answer"]
         if isinstance(a, list) or isinstance(a, bool) or not isinstance(a, (int, float)):
             raise BuildError("%s: the final padlock needs one number per lock, and this answer is %r" % (l["id"], a))
+        if l.get("answer_unit"):                 # the number the pack asks for (contract CAR-TRAP-PACK)
+            out.append(printed_number(l, a))
+            continue
         out.append(int(a) if float(a).is_integer() else a)
     return tuple(out)
 
@@ -402,13 +528,22 @@ def instrument_hints(texts):
 
 
 def answer_caption(lock):
-    """An answer box's words: the instrument's label and its unit, if it has one; nothing else (Amendment 4)."""
+    """An answer box's words: the instrument's label and its unit, if it has one; nothing else (Amendment 4). A lock
+    with a printed unit (contract CAR-TRAP-PACK) shows that unit in place of the room's own; its label must not name
+    the room's unit, or the box would ask for both."""
     ins = lock.get("instrument") or {}
     label, unit = (text_of(ins.get(k, "")).strip() for k in ("label", "unit"))
+    shown = unit
+    au = lock.get("answer_unit")
+    if au:
+        if unit and unit != au["unit"] and re.search(r"(?<!\w)%s(?!\w)" % re.escape(unit), label, re.I):
+            raise BuildError("%s: the instrument's label %r names the room's unit %r, so its answer box cannot ask "
+                             "for %s" % (lock["id"], label, unit, au["unit"]))
+        shown = unit = au["unit"]
     if unit and re.search(r"(?<!\w)%s(?!\w)" % re.escape(unit), label, re.I):
         unit = ""
     caption = " ".join(x for x in (label, unit) if x)
-    if caption_unit_problems(caption, text_of(ins.get("unit", "")).strip()):
+    if caption_unit_problems(caption, shown):
         raise BuildError("answer caption repeats its unit: %r" % caption)
     return caption
 
@@ -435,7 +570,8 @@ def check_sets(checker, room_js, locks, sets):
 
 def verify_sets(locks, sets):
     """(problems, number of values checked, number of answers checked): every value lockcheck recomputes, compared
-    with the variant's own."""
+    with the variant's own. For a lock with a printed unit, the answer and common wrong answer the pack prints
+    (value x scale) are also compared with lockcheck's own figures in that unit, so a wrong scale cannot print."""
     out, checked, answers = [], 0, 0
     for l in locks:
         if l["id"] not in lockcheck.RECOMPUTE:
@@ -445,11 +581,32 @@ def verify_sets(locks, sets):
             fn = lockcheck.RECOMPUTE.get(l["id"])
             if not fn:
                 continue
-            for k, want in fn(v).items():
+            got = fn(v)
+            in_unit = got.pop(lockcheck.PRINTED, None)
+            for k, want in got.items():
                 checked += 1
                 answers += k == "answer"
                 if v.get(k) != want:
                     out.append("set %s, %s: %s is %r, recomputed %r" % (s["letter"], l["id"], k, v.get(k), want))
+            au = l.get("answer_unit")
+            if not au:
+                continue
+            # the figures the pack prints in its own unit, against lockcheck's own working in that unit
+            if not in_unit or in_unit.get("unit") != au["unit"]:
+                out.append("%s: no independent recomputation in %s in tools/pack-generator/lockcheck.py"
+                           % (l["id"], au["unit"]))
+                continue
+            for k in ("answer", "miss"):
+                if v.get(k) is None and k not in in_unit:
+                    continue
+                checked += 1
+                try:
+                    printed = printed_number(l, v.get(k))
+                except BuildError as e:
+                    printed = str(e)
+                if printed != in_unit.get(k):
+                    out.append("set %s, %s: %s prints as %r %s, recomputed %r %s"
+                               % (s["letter"], l["id"], k, printed, au["unit"], in_unit.get(k), au["unit"]))
     return out, checked, answers
 
 
@@ -746,6 +903,55 @@ COVER_FIT_JS = """
   return out;
 }
 """
+
+READOUT_MIN_PT = 9.5            # the read-outs' type never prints below this, the size captions print at
+READOUT_STEP_PT = 0.25
+LONG_STORY_FIT_JS = """
+([floor, minPt, stepPt]) => {
+  // CAR-TRAP-PACK Amendment 1 (Jon, 14 Nov 2026): a room whose story is long. Only a page that overflows is touched.
+  // The certificate's picture scales down by exactly the overflow, never below `floor` of its full width (the covers'
+  // rule and the covers' floor). The read-outs' type steps down by `stepPt` to no less than `minPt`. Still over at
+  // its floor, the page is left overflowing and the audit fails the build, as before.
+  const out = [];
+  const over = m => m.scrollHeight - m.clientHeight;
+  for (const page of document.querySelectorAll('.page[data-kind=certificate]')) {
+    const m = page.querySelector('.main'), img = m.querySelector('img');
+    if (!img || over(m) <= 1) continue;
+    const full = img.getBoundingClientRect().width;
+    let scale = 1;
+    for (let i = 0; i < 6 && over(m) > 1 && scale > floor; i++) {
+      const h = img.getBoundingClientRect().height;
+      scale = Math.max(floor, scale * (h - over(m)) / h);
+      img.style.width = (full * scale) + 'px';
+    }
+    const box = img.getBoundingClientRect();
+    out.push({page: 'certificate', scale, wMm: box.width * 25.4 / 96, hMm: box.height * 25.4 / 96});
+  }
+  for (const page of document.querySelectorAll('.page[data-kind=readouts]')) {
+    const m = page.querySelector('.main');
+    if (over(m) <= 1) continue;
+    const from = parseFloat(getComputedStyle(m).fontSize) * 72 / 96;
+    let pt = from;
+    while (over(m) > 1 && pt - stepPt >= minPt - 1e-9) { pt -= stepPt; m.style.fontSize = pt + 'pt'; }
+    out.push({page: 'readouts', pt, from});
+  }
+  return out;
+}
+"""
+
+
+def long_story_lines(squeezed):
+    """What LONG_STORY_FIT_JS changed, in words; nothing for a pack whose pages fit."""
+    out = []
+    for s in squeezed:
+        if s["page"] == "certificate":
+            out.append("certificate: its picture scaled to fit, %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%)"
+                       % (s["wMm"], s["hMm"], s["scale"] * 100, COVER_FLOOR * 100))
+        else:
+            out.append("read-outs: type stepped down to fit, %g pt (from %g pt, floor %g pt)"
+                       % (round(s["pt"], 2), round(s["from"], 2), READOUT_MIN_PT))
+    return out
+
 
 DOWNSCALE_RUN_WIN_JS = """
 async (imageData) => {
@@ -1148,8 +1354,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
                    for l, m in zip(locks, meta)) + "<th>Final padlock<br><span class='wrong'>target: its one expression</span></th>"
     rows = "".join("<tr><th style='white-space:nowrap'>Set %s</th>%s<td class='n'>%s <span class='wrong'>= %s</span></td></tr>" % (s["letter"], "".join(
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
-        % (format_token(v["answer"]), format_token(v["miss"]) if v.get("miss") is not None else "none")
-        for v in s["vars"]), s["final"]["target"], s["final"]["expr"]) for s in sets)
+        % (printed_figure(l, v["answer"]), printed_figure(l, v["miss"]) if v.get("miss") is not None else "none")
+        for l, v in zip(locks, s["vars"])), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s</b> %s %s</li>" % (lock_name_label(l["name"]), fill_a(l.get("missTitle", "")),
                                                      fill_a(l.get("missSays", "")))
                      for l in locks)
@@ -1168,7 +1374,8 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating):
         work = ("%s first: %s; then + and &minus;: %s" % (first, "; ".join(md), "; ".join(pm)) if md
                 else "+ and &minus; from left to right: %s" % "; ".join(pm))
         sols += "<div class='solution'><b class='set'>Set %s</b><br>%s<br><b>Final padlock:</b> %s = %s. %s.</div>" % (
-            s["letter"], "<br>".join("<b>%s</b> %s" % (lock_name_label(l["name"]), f(l["solve"])) for l in locks),
+            s["letter"], "<br>".join("<b>%s</b> %s" % (lock_name_label(l["name"]), solution_line(l, v, f(l["solve"])))
+                                     for l, v in zip(locks, s["vars"])),
             fin["expr"], fin["target"], work)
     pages.append(page("solutions", sols, "%s: worked solutions" % title, "One line per lock and the final padlock, for each set"))
 
@@ -1275,7 +1482,7 @@ def prepare(slug, n, seed, page, target=None):
     checker = load_checker()
     cfg = load_config(slug)
     room, teach, room_js, rating = read_room(page, slug)
-    locks = room_locks(room, slug)
+    locks = with_answer_units(cfg, room_locks(room, slug), slug)
     n = n or cfg.get("sets", 7)
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)
@@ -1303,7 +1510,8 @@ def build(slug, n, seed, target=None, final=False):
             print("%s: %d of %d joint draws VALID; %d sets chosen (seed %s):" % (slug, len(valid), total, n, seed))
             for s in sets:
                 print("  Set %s  variants %s  answers %s" % (s["letter"], list(s["pick"]),
-                                                          [format_token(v["answer"]) for v in s["vars"]]))
+                                                          [text_of(printed_figure(l, v["answer"])).replace(chr(160), " ")
+                                                           for l, v in zip(locks, s["vars"])]))
             problems = check_sets(checker, room_js, locks, sets)
             vp, checked, answers = verify_sets(locks, sets)
             if problems or vp:
@@ -1344,6 +1552,7 @@ def build(slug, n, seed, target=None, final=False):
                     if fam not in fit["loaded"]:
                         raise BuildError("font %s did not load (loaded: %s)" % (fam, fit["loaded"]))
                 covers = pg.evaluate(COVER_FIT_JS, [COVER_FLOOR])
+                squeezed = pg.evaluate(LONG_STORY_FIT_JS, [COVER_FLOOR, READOUT_MIN_PT, READOUT_STEP_PT])
                 small = [l for l in fit["labels"] if not l["fits"]]
                 if small:
                     raise BuildError("label text does not fit its box at %d pt:\n  " % MIN_PT + "\n  ".join(
@@ -1355,7 +1564,8 @@ def build(slug, n, seed, target=None, final=False):
                            + hook_problems(text_of(room.get("hook")), text_of(start_html),
                                            [t for k, t in audit["text"] if k == "cover"])
                            + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
-                           + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug))
+                           + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug)
+                           + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"]))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -1364,6 +1574,11 @@ def build(slug, n, seed, target=None, final=False):
                                      "herring: %s\n  logo: %s\n  %s" % (audit["overflow"], audit["setLetters"],
                                                                         audit["herringDigits"], audit["logo"], audit["tokens"]))
                 print("no fixed penalty figure on the score sheet or any student page (the teacher sets them)")
+                for l in locks:
+                    if l.get("answer_unit"):
+                        print("printed unit: %s is asked for in %s (x %d): every figure whole, and every cover's "
+                              "answer box says %r" % (l["id"], l["answer_unit"]["unit"], l["answer_unit"]["scale"],
+                                                      answer_caption(l)))
                 appr = wording_approved(cfg, slug)
                 print("wording approved by %s on %s: no page says DRAFT%s" % (appr["by"], appr["date"], " (--final)" if final else "")
                       if appr else "wording NOT approved: the DRAFT badge is on pages 1 and 2 (--final would refuse)")
@@ -1394,6 +1609,8 @@ def build(slug, n, seed, target=None, final=False):
                          "scaled to fit, smallest %.0f x %.0f mm (%.0f%% of full width, floor %.0f%%, set %s)"
                          % (least["wMm"], least["hMm"], least["scale"] * 100, COVER_FLOOR * 100, least["set"]),
                          min(c["spareMm"] for c in covers), min(covers, key=lambda c: c["spareMm"])["set"]))
+                for line in long_story_lines(squeezed):
+                    print(line)
                 OUT_DIR.mkdir(exist_ok=True)
                 pg.pdf(path=str(out), format="A4", print_background=True, prefer_css_page_size=True)
             print("page 1 win image embedded at %d x %d pixels (about 200 dpi at print size)"
@@ -1425,6 +1642,7 @@ def selftest():
                          + check_score_sheet(score_sheet(locks, sets), locks, sets)
                          + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
                          + instrument_hints([answer_caption(l) for l in locks])
+                         + answer_unit_problems(locks, ["\n".join(answer_caption(l) for l in locks)])
                          + fixed_penalties([("score", text_of("".join(score_extras())))])
                          + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))),
                                            text_of(readouts(room, filler(locks, sets[0]))["start"]),
@@ -1501,6 +1719,56 @@ def selftest():
             return [x for x in verify_sets(r_locks, s)[0] if "%s: answer is " % lock_id in x]
         return plant
 
+    def scaled_lock():
+        """The first room with a lock its pack asks for in a printed unit (contract CAR-TRAP-PACK): (its locks, its
+        sets, the lock's index)."""
+        for r_slug in rooms:
+            r_locks, r_sets = per_room[r_slug]
+            for i, l in enumerate(r_locks):
+                if l.get("answer_unit"):
+                    return r_locks, r_sets, i
+        raise pc.StalePlant("a lock with a printed unit", 'no room\'s config has "answer_units"')
+
+    def rescaled(r_locks, i, scale):
+        return [dict(l, answer_unit=dict(l["answer_unit"], scale=scale)) if j == i else l for j, l in enumerate(r_locks)]
+
+    def plant_fractional_scale():
+        # a scale that leaves set A's answer with a fraction: the build must stop, never round
+        r_locks, r_sets, i = scaled_lock()
+        if not isinstance(answers_of(checker, r_locks, r_sets[0])[i], int):
+            return []                                    # the control: as configured, the printed answer is whole
+        value = text_decimal(r_sets[0]["vars"][i]["answer"])
+        scale = next((k for k in (10, 1, 2, 5, 3, 7) if (value * k) % 1), None)
+        if scale is None:
+            raise pc.StalePlant("a scale that gives a non-whole value", "set A's answer %s is whole at every scale tried" % value)
+        try:
+            answers_of(checker, rescaled(r_locks, i, scale), r_sets[0])
+        except BuildError as e:
+            return [str(e)] if "is not a whole number" in str(e) else []
+        return []
+
+    def plant_wrong_scale():
+        # ten times the scale still prints whole numbers; lockcheck's own figures in the printed unit must disagree
+        r_locks, r_sets, i = scaled_lock()
+        if verify_sets(r_locks, r_sets)[0]:
+            return []                                    # the control: as configured, every figure agrees
+        bad = rescaled(r_locks, i, r_locks[i]["answer_unit"]["scale"] * 10)
+        return [x for x in verify_sets(bad, r_sets)[0] if "answer prints as" in x]
+
+    def plant_room_unit_on_box():
+        # the answer box of a lock asked for in a printed unit, left in the room's own unit
+        r_locks, _, i = scaled_lock()
+        ins = r_locks[i].get("instrument") or {}
+        label, own = (text_of(ins.get(k, "")).strip() for k in ("label", "unit"))
+        if not own or own == r_locks[i]["answer_unit"]["unit"]:
+            raise pc.StalePlant("an answer box left in the room's unit", "%s has no other unit in the room" % r_locks[i]["id"])
+        cover = "\n".join(answer_caption(l) for l in r_locks)
+        if answer_unit_problems(r_locks, [cover]):
+            return []                                    # the control: the pack's own answer boxes pass
+        bad = pc.apply_plant(cover, answer_caption(r_locks[i]), "%s %s" % (label, own),
+                             name="an answer box left in the room's unit")
+        return [x for x in answer_unit_problems(r_locks, [bad]) if "still says" in x]
+
     def plant_bad_url():
         url = room_url(rooms[0])
         bad = pc.apply_plant(url, "/escape-rooms/%s/" % rooms[0], "/escape-rooms/no-such-room/", name="a dead room URL")
@@ -1565,7 +1833,8 @@ def selftest():
         bad = pc.apply_plant(good, good, good + " unicorns", name="a repeated caption unit")
         return [bad] if caption_unit_problems(bad, "unicorns") else []
 
-    def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None, fit_covers=None):
+    def audit_planted_pack(bad_locks, overflow_run_image=False, cfg=None, doc_plant=None, fit_covers=None,
+                           fit_long=None):
         with sync_playwright() as p:
             browser = p.chromium.launch()
             try:
@@ -1584,6 +1853,8 @@ def selftest():
                             "img => { img.style.minHeight = '400mm'; img.style.maxHeight = 'none'; }")
                     if fit_covers is not None:
                         fit_covers.extend(pg.evaluate(COVER_FIT_JS, [COVER_FLOOR]))
+                    if fit_long is not None:
+                        fit_long.extend(pg.evaluate(LONG_STORY_FIT_JS, [COVER_FLOOR, READOUT_MIN_PT, READOUT_STEP_PT]))
                     return pg.evaluate(AUDIT_JS)
             finally:
                 browser.close()
@@ -1693,6 +1964,42 @@ def selftest():
                                                                       name="a cover below the picture's floor"))
         at_floor = covers and all(abs(c["scale"] - COVER_FLOOR) < 1e-6 for c in covers)
         return [x for x in audit["overflow"] if " cover " in x] if at_floor else []
+
+    def check_long_story_control():
+        """CAR-TRAP-PACK Amendment 1's control: with the long-story fit applied as the build applies it, the first
+        room's read-outs and certificate do not overflow, and nothing is squeezed past its floor."""
+        squeezed = []
+        audit = audit_planted_pack(locks, fit_long=squeezed)
+        probs = ["%s: page %s still overflows after the long-story fit" % (slug0, x) for x in audit["overflow"]
+                 if " readouts " in x or " certificate " in x]
+        for s in squeezed:
+            if s["page"] == "certificate" and s["scale"] < COVER_FLOOR - 1e-6:
+                probs.append("%s: the certificate's picture is at %.0f%%, under its floor" % (slug0, s["scale"] * 100))
+            if s["page"] == "readouts" and s["pt"] < READOUT_MIN_PT - 1e-6:
+                probs.append("%s: the read-outs print at %g pt, under their floor" % (slug0, s["pt"]))
+        return probs, long_story_lines(squeezed)
+
+    def plant_certificate_below_floor():
+        """A certificate too long even with its picture at the floor (CAR-TRAP-PACK Amendment 1): the picture stops
+        at 60% of its width and the page still overflows, so the build fails."""
+        marker = "<p class='line'>Team <span></span></p>"
+        squeezed = []
+        audit = audit_planted_pack(locks, fit_long=squeezed,
+                                   doc_plant=lambda d: pc.apply_plant(d, marker, "<div style='height: 200mm'></div>" + marker,
+                                                                      name="a certificate below the picture's floor"))
+        at_floor = any(s["page"] == "certificate" and abs(s["scale"] - COVER_FLOOR) < 1e-6 for s in squeezed)
+        return [x for x in audit["overflow"] if " certificate " in x] if at_floor else []
+
+    def plant_readouts_below_floor():
+        """Read-outs too long even at their smallest type (CAR-TRAP-PACK Amendment 1): the type stops at 9.5 pt and
+        the page still overflows, so the build fails."""
+        marker = "<p class='online'><b>Play this room free online:"
+        squeezed = []
+        audit = audit_planted_pack(locks, fit_long=squeezed,
+                                   doc_plant=lambda d: pc.apply_plant(d, marker, "<div style='height: 200mm'></div>" + marker,
+                                                                      name="read-outs below their smallest type"))
+        at_floor = any(s["page"] == "readouts" and abs(s["pt"] - READOUT_MIN_PT) < 1e-6 for s in squeezed)
+        return [x for x in audit["overflow"] if " readouts " in x] if at_floor else []
 
     def plant_hook_on_cover():
         f = filler(locks, sets[0])
@@ -1912,6 +2219,15 @@ def selftest():
                wrong_answer_in("comic-caper", "chokey-factor-count")),
               ("a wrong recomputed answer in The Library Jam (Dewey slot)",
                wrong_answer_in("library-jam", "dewey-sort-arm")),
+              ("a wrong recomputed answer in The Headteacher's Car Trap (bay width)",
+               wrong_answer_in("car-trap", "head-bay-lower-bound")),
+              ("a wrong recomputed answer in The Headteacher's Car Trap (barrier angle)",
+               wrong_answer_in("car-trap", "boom-gate-sector")),
+              ("a wrong recomputed answer in The Headteacher's Car Trap (charging current)",
+               wrong_answer_in("car-trap", "ev-charger-quadratic")),
+              ("a printed unit whose scale gives a value that is not whole", plant_fractional_scale),
+              ("a printed unit whose scale is wrong but still gives whole numbers", plant_wrong_scale),
+              ("an answer box left in the room's unit when the pack asks for another", plant_room_unit_on_box),
               ("a printed URL with no room page", plant_bad_url),
               ("a missing score-sheet row", plant_missing_row),
               ("a per-set hint page counted inside a set's range", plant_hint_inside_set_range),
@@ -1935,6 +2251,8 @@ def selftest():
               ("stakes inside the start read-out", plant_stakes_in_start),
               ("a cover printing the hook", plant_hook_on_cover),
               ("a cover too long even with its picture at the floor", plant_cover_below_floor),
+              ("a certificate too long even with its picture at the floor", plant_certificate_below_floor),
+              ("read-outs too long even at their smallest type", plant_readouts_below_floor),
               ("a start read-out without the hook", plant_start_without_hook),
               ("a hook with a token", plant_hook_token),
               ("page 1 over 150 words", plant_long_page_one),
@@ -1966,6 +2284,14 @@ def selftest():
     failures += mc
     print("multi-part controls: %s" % ("OK (three parts print as 'A · B · C' over a tidy caption; two parts go one to "
                                        "each of two label boxes)" if not mc else mc))
+    try:
+        lc, squeezed_lines = check_long_story_control()
+    except Exception as e:              # an error is never a pass
+        lc, squeezed_lines = ["the long-story control raised %r" % e], []
+    failures += lc
+    print("long-story control: %s" % ("OK (%s: its read-outs and certificate fit; %s)"
+                                      % (slug0, "; ".join(squeezed_lines) or "nothing needed squeezing")
+                                      if not lc else lc))
     for name, fn in plants:
         found, err = [], None
         try:

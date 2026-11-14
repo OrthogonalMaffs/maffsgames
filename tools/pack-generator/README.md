@@ -36,7 +36,10 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    the room's config, and the badge follows it.
 2. **Page 2, Read-outs (DRAFT badge until approved):** three boxed scripts, each for its moment: the start (hook, brief and one line to the
    students; the hook is read aloud here and printed nowhere else, WARMUP-PACKS Ruling 2, 12 Nov 2026), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
-   nowhere else and printed on the covers only as "If time runs out: ..."); then the play-online line.
+   nowhere else and printed on the covers only as "If time runs out: ..."); then the play-online line. If a room's
+   story is too long for the page, its type steps down from 10.5 pt in quarter points until it fits, never below
+   9.5 pt (CAR-TRAP-PACK Amendment 1, Jon, 14 Nov 2026); the build prints the size it used, and fails if 9.5 pt is
+   still too long. Car Trap's prints at 10 pt.
 3. **Page 3, Score sheet (landscape):** two blanks you fill in first ("Each wrong answer adds ___ min", "Each hint
    adds ___ min"); one row per set; for each lock and for the final padlock an Opened box and five wrong-answer boxes;
    finishing time, the counts of wrong answers and hints, penalty (min) and total time; the rule in two lines under it.
@@ -61,6 +64,9 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    `label_box` inside the object's printable surface, never to its edge, with a margin of at least 2% of the art's
    width on any side that meets an edge of the paper, card or screen.
 7. **Hint cards and certificate (last two pages):** the locks' three hints each, then the final padlock's card.
+   A certificate whose text is too long for the page prints its picture smaller, by exactly the overflow and never
+   below 60% of its width (the covers' rule; CAR-TRAP-PACK Amendment 1); the build prints the size, and fails if 60%
+   is still too long. Car Trap's picture prints at 72%.
 8. **Footer:** the MaffsGames logo and name, the room, pack version, seed and build date on every page. Give a
    buyer's question the version and seed from the footer and the pack can be rebuilt exactly.
 
@@ -113,8 +119,10 @@ a student page, a set whose product has no factor a multiple of 5 or 12 or less,
 Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token, a
 clue whose caption is left with an orphan full stop, a caption override with a space before its full stop, a
 two-part clue left with an orphan full stop, a clue with no `<b>` part, a caption starting with a full stop, a
-`printed` key on a red-herring image and a room with an ungraded lock; two multi-part controls must pass. It
-builds no PDF.
+`printed` key on a red-herring image and a room with an ungraded lock; a wrong recomputed answer for each of The
+Headteacher's Car Trap's three locks, a printed unit whose scale gives a value that is not whole, one whose scale is
+wrong but still whole, an answer box left in the room's unit, and a certificate and read-outs too long even at
+their floors; two multi-part controls and the long-story control must pass. It builds no PDF.
 
 ## Adding a room
 
@@ -149,6 +157,17 @@ When a clue cannot be tidied into a caption (its sentence runs through the `<b>`
 
 Both are filled for each set with the same `{{token}}` filler as the clue, and the caption check applies to an
 override too. Either key on a `herring` or `answer` image fails the build. Library Jam's reset card uses both.
+
+**An answer asked for in another unit (contract CAR-TRAP-PACK, 14 Nov 2026).** The final padlock needs whole
+numbers, and a live room may ask for a decimal (Car Trap's bay width, 2.35 m). A room's config may then declare
+`"answer_units": {"<lock id>": {"unit": "cm", "scale": 100}}`, and the pack asks for that lock in the printed unit:
+answer × scale on the answer box (the instrument's label with the printed unit, "Bay width cm"), in the key (the
+answer and its common wrong answer, each with the unit), at the end of the worked solution ("... is 2.35 m =
+235 cm.") and as the final padlock's number. The scaling is exact (Decimal on the number's text in `variants.json`,
+never float arithmetic), and a value that is not whole stops the build. The lock's function in `lockcheck.py` must
+also return its own figures in that unit under the key `PRINTED`, worked in that unit; the build compares them with
+what it prints, so a wrong scale cannot print. The room, its clues, hints and common-wrong-answer notes keep the
+room's own unit: only the four places above change. A lock with no entry is not touched.
 
 ## Fonts
 

@@ -24,3 +24,20 @@ EXACT CHANGE:
 DO NOT TOUCH: escape-rooms/ (room.js, variants.json, every page: the live room keeps metres); scripts/gen-escape-variants.py; final.py's rules; every other room's config and art; build_pack.py beyond the answer_units feature (offline_context, wording_approved, draft_badge, check_final and their signatures unchanged); tools/loop-cards/; home's files above; the art branch; canon, AGENTS.md. Never commit a PDF.
 SUCCESS CONDITION: the pack builds at 6 sets with every answer recomputed and matched; the bay answer prints as whole centimetres (e.g. 235 cm) on the answer box, key and final padlock; each set's final padlock passes final.py; the other four packs' text is unchanged; every label at 11 pt or more; DRAFT badge on pages 1–2; selftest passes with the new plants caught; the PR body gives the PDF's page count, the smallest label sizes, each set's answers and final target, every layout call made, and the one command Jon or the home lane runs to build the PDF; Gate green; merged; main's check-site and phone-fit-full on the merge commit green and reported; committed, handover documented.
 STOP IF: 6 sets cannot be made (say which rule blocks); a scaled value is not whole; the feature would change any other pack's output; a label cannot fit at 11 pt (name the image and text); a herring text fails the digit or fit checks; any page or live room file would need to change; any check would have to be loosened to pass.
+
+---
+
+AMENDMENT 1 (Jon, Sat 14 Nov 2026, 13:48 by the cloud container's clock; three rulings given to the cloud session directly, each on a question that set out the measurements; recorded here by the session, not written by Project Claude)
+
+The session stopped on three points and asked. The questions and Jon's answers, word for word:
+
+1. Question: "Car Trap's pack cannot build inside the contract as written. Page 2 (read-outs: this room's hook, brief, win and stakes are 611 words) is 11 mm too long, and the certificate (199-word win text) is 26 mm too long. DO NOT TOUCH bars any generator layout change outside answer_units, and the live room's text is also off limits. How should I proceed?"
+   Jon chose: "Shrink-to-fit (Recommended)": "Amendment 1: only when a page overflows, the certificate's picture scales down by exactly the overflow (here 170 to 120 mm wide; floor 60%, as covers already do) and the read-outs' type steps down in 0.25 pt steps (here 10.5 to 10 pt; floor 9.5 pt, the caption size). Pages that fit are never touched; I will prove the four existing packs stay pixel-identical."
+   So build_pack.py may also change for this one rule; everything else in DO NOT TOUCH stands.
+
+2. Question: "car-05's white sticker is 342 px wide (289 px inside the 2% margins). At 11 pt the formula 'L(x) = x² − 22x + 120' needs 448 px, so it cannot go on the sticker at any margin. As a default I printed LOAD LIMITER on the sticker and put the formula, in bold, at the start of the caption under the picture. Keep that?"
+   Jon chose: "Keep the default (Recommended)": "Sticker: LOAD LIMITER. Caption: 'L(x) = x² − 12x + 27, for a charging current of x amps. Commissioning completes at zero load.' You judge it when you proofread the DRAFT PDF."
+
+3. Question: "The contract's hatchback text cannot be printed on car-07: at 11 pt it needs 2,193 px of line, and the windscreen sign is 250 x 134 px (the number plate is 89 px high). It is also not a run of the room's flavour text (the room says '...headlights and a fluffy cover...'), which the generator requires. As a default I print nothing on the picture; the caption under it already carries the full flavour. Keep that?"
+   Jon chose: "Print nothing (Recommended)": "The sign and plate stay blank; the picture shows the eyelashes and fluffy wheel cover, and the caption says so in the room's own words."
+   So car-07's herring text in EXACT CHANGE 2 is replaced by no text.
