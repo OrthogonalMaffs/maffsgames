@@ -657,8 +657,7 @@ def draft_notes_block(notes):
         return ""
     return ("<div class='draftnotes'><b>DRAFT notes.</b> Too small to write in: an answer box must be at least "
             "%s. The copy for sale cannot be built until each is larger.<ul>%s</ul></div>"
-            % (bind_figures("%g × %g mm" % (WRITE_MIN_W_MM, WRITE_MIN_H_MM)),
-               "".join("<li>%s</li>" % bind_figures(n) for n in notes)))
+            % ("%g × %g mm" % (WRITE_MIN_W_MM, WRITE_MIN_H_MM), "".join("<li>%s</li>" % n for n in notes)))
 
 
 # ---- selection -----------------------------------------------------------------------------------------------------
@@ -1527,7 +1526,7 @@ def about_box(room, teach, locks, sets, rating):
     meta = teach.get("lockMeta") or [{}] * len(locks)
     letters = [st["letter"] for st in sets]
     topics = "; ".join("%s %s%s" % (lock_name_label(l["name"]), esc(m.get("topic", "")),
-                                     bind_figures(", about %d min" % m["minutes"]) if m.get("minutes") else "")
+                                     (", about %d min" % m["minutes"]) if m.get("minutes") else "")
                        for l, m in zip(locks, meta))
     targets = [st["final"]["target"] for st in sets]
     return ("<div class='about'><h2>About this room</h2>"
@@ -1874,8 +1873,16 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     foot = ('<span class="brand"><span class="logo"><img src="%s" alt=""></span><b>MaffsGames</b>'
             '<span>%s &middot; pack v%s &middot; seed %s &middot; built %s</span></span>'
             % (LOGO.as_uri(), slug, esc(cfg.get("pack_version", "?")), seed, built))
-    doc = "".join(p.replace("{{FOOT}}", "%s<span>page %d of %d</span>" % (foot, i + 1, len(pages)))
-                  for i, p in enumerate(pages))
+    pages = [p.replace("{{FOOT}}", "%s<span>page %d of %d</span>" % (foot, i + 1, len(pages))) for i, p in enumerate(pages)]
+    # ANSWER-BOX-CHECK, the binding's net. A room's words are bound as they are filled (filler()); here every finished
+    # page is bound whole, so the generator's own lines ("1 minute", "about 4 min") and a room's names are held to
+    # the same rule, and a figure still parted from its unit anywhere on a page stops the build.
+    pages = [bind_figures(p) for p in pages]
+    unbound = ["page %d: %s" % (i + 1, ", ".join(repr(x) for x in unbound_figures(p)))
+               for i, p in enumerate(pages) if unbound_figures(p)]
+    if unbound:
+        raise BuildError("%s: a figure is not bound to its unit, or has a hyphen-minus:\n  %s" % (slug, "\n  ".join(unbound)))
+    doc = "".join(pages)
     return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><title>%s pack</title>"
             "<link rel='stylesheet' href='%s'><style>%s%s</style></head><body>%s</body></html>"
             % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts, reads["start"]
@@ -2024,8 +2031,7 @@ def build(slug, n, seed, target=None, final=False):
                           % (len(too_small), WRITE_MIN_W_MM, WRITE_MIN_H_MM))
                     for line in write_size_lines(too_small, slug):
                         print("  " + line)
-                print("every figure in the words filled for print is bound to its unit (no break in \"2 m\" or "
-                      "\"1 : 500\", true minus)")
+                print("every figure on every page is bound to its unit (no break in \"2 m\" or \"1 : 500\", true minus)")
                 for l in locks:
                     if l.get("answer_unit"):
                         print("printed unit: %s is asked for in %s (x %d): every figure whole, and every cover's "
@@ -2782,13 +2788,16 @@ def selftest():
         return probs, "; ".join(lines)
 
     def shrunk_box_cfg(cfg, side):
-        """A copy of the first room's config whose first answer box is cut to 70% of the floor on one side ("width"
-        or "height"), by the scale its cover draws it at; the other side is left."""
-        im = next((x for x in cfg["images"] if x.get("role") == "answer"), None)
-        mine = [w for w in boxes_of.get(slug0, []) if im and w["lock"] == im["lock"]]
-        if not mine or write_size_failures(mine):
-            raise pc.StalePlant("an answer box cut under the floor", "%s's first answer box is not drawn, or is "
-                                "already under the floor" % slug0)
+        """A copy of the first room's config with one answer box cut to 70% of the floor on one side ("width" or
+        "height"), by the scale its cover draws it at; the other side is left. The box is the room's first that is
+        big enough as configured, so the cut is the only thing under the floor."""
+        drawn = lambda x: [w for w in boxes_of.get(slug0, []) if w["lock"] == x.get("lock")]
+        im = next((x for x in cfg["images"] if x.get("role") == "answer" and drawn(x)
+                   and not write_size_failures(drawn(x))), None)
+        if im is None:
+            raise pc.StalePlant("an answer box cut under the floor", "%s has no answer box that is big enough as "
+                                "configured" % slug0)
+        mine = drawn(im)
         x0, y0, x1, y1 = im["label_box"]
         if side == "width":
             im["label_box"] = [x0, y0, x0 + max(1, int((x1 - x0) * 0.7 * WRITE_MIN_W_MM / mine[0]["wMm"])), y1]
@@ -2902,6 +2911,15 @@ def selftest():
         for text, part in (("is 2 m wide", "2 m"), ("<b>12</b> cm", "2 cm"), ("scale 1 : 500", "1 : 5"), ("at -8", "-8")):
             if unbound_figures(text) != [part]:
                 probs.append("unbound_figures(%r) gave %r, not [%r]" % (text, unbound_figures(text), part))
+        # a built pack, whole: no figure is left unbound on any page, and page 1's own "1 minute" is bound
+        of = full[slug0]
+        doc = build_html(of[0], of[1], of[2], of[3], of[4], load_config(slug0), 1, datetime.date.today().isoformat(),
+                         room_url(slug0), of[5], greys=greys_of[slug0])[0]
+        body = doc[doc.index("<body>"):]
+        if unbound_figures(body):
+            probs.append("%s's built pages still have unbound figures: %r" % (slug0, unbound_figures(body)[:5]))
+        if "suggest 1%sminute per wrong answer" % NB not in body:
+            probs.append("page 1's own line, \"1 minute per wrong answer\", is not bound")
         # a label is bound as it always was: the function label_parts() calls is this one
         if label_parts("AT 16 °C · = 5 : 1", [0, 0, 1, 1]) != ["AT 16%s°C<br>= 5%s:%s1" % (NB, NB, NB)]:
             probs.append("label_parts() no longer binds a label's figures")
@@ -3028,7 +3046,8 @@ def selftest():
         bc_ = ["the binding controls raised %r" % e]
     failures += bc_
     print("binding controls: %s" % ("OK (figures bound in words and across inline tags; tags, attributes and line "
-                                    "breaks left as they were; binding twice changes nothing)" if not bc_ else bc_))
+                                    "breaks left as they were; binding twice changes nothing; no figure unbound on "
+                                    "any page of %s's pack)" % slug0 if not bc_ else bc_))
     for name, fn in plants:
         found, err = [], None
         try:
