@@ -77,6 +77,17 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-14 (cloud): UGH-STATS-DATA (`docs/handover/contracts/2026-11-14-ugh-stats-data.md`, Jon's rulings 14 Nov 09:20 and 09:32)
+
+PR OPEN, merging on green. Agent Claude Code (cloud), branch `claude/wizardly-volta-kt4j5q` from main 78fc16c; first commit ede7a74 (the contract; #756's close-out, in its entry below).
+Done: `docs/apps-script-counts.js` (version `2026-11-14-a`): the one pass also tallies `game_started` per UK date, level and hour (`tallyStarts_`, pure), 35 dates, one script property per date (`d:<date>`, worst case 1,634 characters of 8,500); `?stats=1` answers `{as_of, daily, levels, hours, countries}`, complete UK days only, 1 to 9 as `"<10"`; without it the address answers as before. `scripts/fetch-answer-counts.py`: `validate_stats`, `run()` (each file fetched, validated, written on its own; one shared retry sequence), `--check` reads both, selftest 96 cases. `answer-counts.yml`: commits both, then fails if either was refused. Setup guide "Stats (14 Nov 2026)"; canon 7.5.5 one line.
+Proof: node harness (scratch, not in the repo) 35 checks, the expected daily, level, hour and country figures written by hand; the counts payload byte for byte main's script's on the same rows, September included. The workflow step run as written against a fake endpoint and scratch origin: 6 of 6. `test-apps-script-counts.py` unchanged, 28 checks PASS.
+Decided for Jon (in the PR): windows end on the day before `as_of`; test slugs and levels left out; a level that is not a plain label is `other`; the country window follows the tab's newest date and fails if over 3 days behind; state without start tallies restarts itself (`statsRow`).
+Open: the stats path has no CI test (`test-apps-script-counts.py` is outside EXACT CHANGE; it also fails from 1 Sep 2027, real clock); main's `tally_` breaks on a `game_slug` named like an Object member (`constructor`): the total becomes text and every run fails until the row is deleted; a hidden `<10` can be worked out by subtraction where the totals overlap; the live address is not reachable from this container, so `?stats=1` on the old deployment was not probed.
+Next (Jon): redeploy per `docs/apps-script-counts.md`, "Stats", then resetCounts and backfill.
+
+Record: agent Claude Code; wall 0:22 to the push (container clock, 09:33 to 09:55); review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-14 (cloud): CI-PHASE2-LOGGING (`docs/history/contracts/2026-11-14-ci-phase2-logging.md`, Jon's rulings 13 Nov 21:51 and 14 Nov 06:58)
 
 DONE, merged and live: #756 squash-merged as 022b8f8 (14 Nov). Route: the GitHub connection, under Jon's standing merge-route ruling of 10 Nov (gh auth failed: "X Failed to log in to github.com using token (GH_TOKEN)", "The token in GH_TOKEN is invalid."). Main on 022b8f8: check-site 43571030151 GREEN, phone-fit-full 43571030111 GREEN (both read through the GitHub connection, 14 Nov). Closed out by UGH-STATS-DATA's first commit, 14 Nov.
