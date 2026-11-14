@@ -28,6 +28,10 @@ with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank
 room game_completed counted as escaped, doPost leaving detail out of the row, doPost writing detail before question_id.
   - f. doPost (ROOM-TIMES): EXPECTED_HEADERS is the 18 earlier columns in order then detail; each posted field lands
     under its own header, detail last; an old 18-header row 1 gains "detail" in S1; no detail leaves it blank.
+  - g. safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026): four games whose game_slug and level are "constructor",
+    "__proto__", "toString" and "hasOwnProperty" are reported like any other game, in the model, the email and the
+    Dashboard (figures written by hand), every other line is unchanged, and no tally lands on a built-in object.
+    Its planted fault: the tally maps given a prototype again.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -88,7 +92,7 @@ HARNESS = r"""
   rows.push(row('2026-09-29T19:59:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // a minute before: wrong
   rows.push(row('2026-09-29T20:01:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // after: not marked
 
-  function load(fetchMode, eventsHead) {
+  function load(fetchMode, eventsHead, dataRows) {
     const env = { fetches: 0, mails: [], cells: {}, sheets: {} };
     const UrlFetchApp = { fetch(url) {
       env.fetches++; env.url = url;
@@ -113,7 +117,7 @@ HARNESS = r"""
         } };
       return sh;
     }
-    const events = sheetFake('events', [eventsHead || HEAD].concat(eventsHead ? [] : rows));
+    const events = sheetFake('events', [eventsHead || HEAD].concat(eventsHead ? [] : (dataRows || rows)));
     env.events = events;
     const ss = { getActiveSheet: () => events, getSheetByName: n => env.sheets[n] || null,
       insertSheet: n => (env.sheets[n] = sheetFake(n, [])) };
@@ -226,6 +230,51 @@ HARNESS = r"""
       const line = 'games.json could not be read, so every game is counted as a question game today.';
       ok('fetch ' + mode + ': one line in the email and one on the Dashboard', m2.split(line).length === 2 && d2.split(line).length === 2, m2.slice(0, 300));
     }
+
+    // ---- g. safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026). A game_slug, level or question_id is whatever anyone
+    // posted. Four games whose slug and level are each the name of a built-in object member, added to the rows
+    // above: each must be reported like any other game, and nothing already reported may move. Kept last, and on
+    // its own rows, so every check above reads the same fixture as before.
+    {
+      const NAMES = ['constructor', '__proto__', 'toString', 'hasOwnProperty'];
+      const extra = [];
+      NAMES.forEach((n, i) => {
+        for (let k = 0; k < 30; k++) extra.push(row(Y, 'question_answered', n, n, k < 6 + i, 'h0000000b'));   // 6, 7, 8, 9 right of 30
+        extra.push(row(Y, 'game_started', n, n), row(Y, 'game_started', n, n), row(Y, 'game_completed', n, n));
+      });
+      const named = rows.concat(extra);
+      ({ api, env } = load('ok', null, named));
+      const kn = api.rptLoadKinds();
+      ok('g. kinds: a slug named like a built-in member is a question game',
+         NAMES.every(n => api.rptKind(n, kn) === 'question') && api.rptKind('trig-wars', kn) === 'shot', NAMES.map(n => api.rptKind(n, kn)));
+      const base = api.rptBuild(rows, col, kn), rn = api.rptBuild(named, col, kn);
+      const line = g => g.slug + ' ' + g.correct + '/' + g.total;
+      ok('g. accuracy: each is listed with its own figures, lowest first',
+         JSON.stringify(rn.games.map(line)) === JSON.stringify(['constructor 6/30', '__proto__ 7/30', 'delta-q 10/41', 'toString 8/30',
+           'hasOwnProperty 9/30', 'beta-q 14/35', 'alpha-q 21/41', 'thirty-q 21/30']), JSON.stringify(rn.games.map(line)));
+      ok('g. overall: 120 more marked answers, 30 more right, both numbers',
+         rn.overall.total === 296 && rn.overall.correct === 97, JSON.stringify(rn.overall));
+      ok('g. hardest: keyed game + level + question_id as for any game',
+         JSON.stringify(rn.hardest.map(q => q.slug + '|' + q.level + '|' + q.qid + ' ' + q.correct + '/' + q.total)) === JSON.stringify([
+           'constructor|constructor|h0000000b 6/30', '__proto__|__proto__|h0000000b 7/30', 'alpha-q|gcse|h00000001 3/12',
+           'toString|toString|h0000000b 8/30', 'hasOwnProperty|hasOwnProperty|h0000000b 9/30', 'alpha-q|gcse|h00000002 18/20']), JSON.stringify(rn.hardest));
+      ok('g. the count of games sending question_id is 5', rn.idGames === 5, rn.idGames);
+      const others = r => JSON.stringify([r.games.filter(g => NAMES.indexOf(g.slug) < 0), r.hardest.filter(q => NAMES.indexOf(q.slug) < 0), r.rooms, r.shots]);
+      ok('g. every other game, question, room and shot line is unchanged by them', others(rn) === others(base), others(rn));
+      api.sendDailyReport();
+      const mn = (env.mails[0] || { body: '' }).body, dn = env.sheets['Dashboard'] ? dashText(env.sheets['Dashboard']) : '';
+      const clean = t => !/function|native code|\[object|NaN|undefined/.test(t);
+      ok('g. the email: each is in top games and the level breakdown, with numbers',
+         env.mails.length === 1 && NAMES.every(n => mn.indexOf('. ' + n + ' — 2 starts, 1 completed (50%)') >= 0 && mn.indexOf('\n  ' + n + ': 2 starts\n') >= 0) &&
+         /Games started: +14\n/.test(mn) && /Overall accuracy: +34% \(question games, 255 marked answers\)/.test(mn) && clean(mn), mn);
+      ok('g. the Dashboard: each is in top games, the level breakdown and accuracy, with numbers',
+         NAMES.every((n, i) => dn.indexOf(n + ' | 2 | 1 | 50%') >= 0 && dn.indexOf('\n' + n + ' | 2\n') >= 0 && dn.indexOf(n + ' | 30 | ' + (6 + i) + ' | ') >= 0) &&
+         dn.indexOf('2026-11-03 | 14') >= 0 && clean(dn), dn);
+      // before the fix a tally for "__proto__", "constructor" or "toString" was kept ON the built-in it named
+      const builtins = { 'Object.prototype': Object.prototype, 'Object': Object, 'toString': Object.prototype.toString, 'hasOwnProperty': Object.prototype.hasOwnProperty };
+      const stray = Object.keys(builtins).filter(b => ['total', 'correct', 'starts'].some(k => Object.prototype.hasOwnProperty.call(builtins[b], k)));
+      ok('g. no tally was written onto a built-in object', stray.length === 0, stray.join(', '));
+    }
   } catch (e) {
     ok('the harness ran', false, e.stack || e);
   }
@@ -249,6 +298,9 @@ PLANTS = [
      "      cellValue(data.question_id)\n"),
     ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail)\n",
      "      cellValue(data.detail), cellValue(data.question_id)\n"),
+    # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
+    ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
+     "function rptMap() { return {}; }"),
 ]
 
 
