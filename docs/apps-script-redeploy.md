@@ -138,8 +138,14 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
 
 ## 14 Nov 2026: safe tallies
 
-Version `2026-11-14-a` (contract COUNTS-SAFE-TALLY). **`doPost` is unchanged**: events are recorded exactly as before,
-the columns and the `/exec` address stay as they are, and no new permission is asked for. Only the report changed.
+**This redeploy also carries SHEET-FORMULA-CELLS (version `2026-11-14-b`): one analytics redeploy covers both.**
+Anyone can post an event, and Sheets reads a posted value beginning `=` as a formula, which could break the Dashboard
+or send the Sheet's contents elsewhere. The script now writes any posted text beginning `=`, `+`, `@`, a tab, a
+carriage return, or `-` (unless it is a plain negative number) behind a leading apostrophe, so Sheets keeps it as
+text; the Dashboard's own rows do the same. Every other value is written exactly as before.
+
+Version `2026-11-14-a` (contract COUNTS-SAFE-TALLY, never deployed on its own). **`doPost` is unchanged**: the columns,
+their order and the `/exec` address stay as they are, and no new permission is asked for.
 Anyone can post an event, and its `game_slug`, `level` and `question_id` are used as keys when the daily email and the
 Dashboard are added up. A slug such as `constructor` or `__proto__` used to turn that game's figures into text
 ("function Object() { [native code] }11 starts") or drop the game. Those names are now counted like any other.
@@ -157,11 +163,18 @@ The deploy is a **New version of the existing deployment**, never a new deployme
 9. Set **Version** to **New version**.
 10. Click **Deploy**. Do not use *New deployment*: it would change the address and every game would stop logging.
 11. Check the Web app URL it shows still ends with the string in "The one thing that breaks everything" above.
-12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-14-a"`.
+12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-14-b"`.
 13. Back in the editor, choose **testDashboard** in the function drop-down and click **Run**. It rebuilds the Dashboard tab with the new code. If Google asks for a permission, stop and tell Claude which one it named.
 14. Open the **MaffsGames Events** Sheet, play a few questions of any game, and check a new row appears as usual.
+15. Prove the formula fix is live: in the `maffs` WSL terminal run the command below. It posts one test row whose `detail` is `=1+1`, and should print `{"ok":true}`.
+16. Look at the newest row of the Sheet (event `test_ping`). Column **S** must show the text `=1+1`. If it shows `2`, the old code is still live: tell Claude. If it shows `'=1+1` with the apostrophe visible, it is stored safely but tell Claude, because the reports would then show the apostrophe.
+
+```bash
+curl -sL -d '{"event":"test_ping","game_slug":"test","level":"test","detail":"=1+1"}' "$(grep -o "https://script.google.com/macros/s/[^'\"]*" ~/maffsgames/schools/assets/analytics.js | head -1)"
+```
 
 Do not run `setupTrigger`: the 7am trigger is not touched by this. Tomorrow's email is the first sent by the new code.
+The test row is counted nowhere: answer counts take only `question_answered`, and the stats leave out the `test` slug.
 
 ---
 
