@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows "Figures unavailable right now" and no number; "<10" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or "<10" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; nine planted faults caught) | --selftest && --check
+# ci-line: Ugh, stats pages (the six /ugh-stats/ pages in Chromium: live figures match the repo's two JSON files; a missing, stale or misshapen file shows "Figures unavailable right now" and no number; "<10" drawn as a bar of 5, labelled, never summed; Case 1's live box against a hand-worked file; its 12 November figures unchanged; every case's questions played: each answer worked from the numbers shown, only the exact typed answer accepted, a question with a missing or "<10" figure skipped, one stats_question_answered per answer and never question_answered; Cases 3 and 4 against their CSVs and r values; every game and room has a launch date; no sideways scroll at 375 px; nothing loaded from outside the site but Google Fonts; twelve planted faults caught; Case 1 per day to 1 decimal place) | --selftest && --check
 # ci-deps: ugh-stats/ schools/assets/ugh-stats.js schools/assets/answer-counts.json schools/assets/ugh-stats.json schools/assets/launch-dates.json games/ escape-rooms/
 """Do the "Ugh, stats" pages show the figures the site's own files hold, and nothing when they cannot? (contracts
 UGH-STATS-PAGES and UGH-STATS-QUESTIONS, 14 Nov 2026)
@@ -51,6 +51,7 @@ import re
 import sys
 import urllib.parse
 import zoneinfo
+from decimal import Decimal
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
@@ -616,17 +617,25 @@ def long_date(iso):
     return "%d %s %d" % (d.day, FULL_MONTHS[d.month - 1], d.year)
 
 
-def divide(n, d):
-    """n / d to the nearest whole number (a half up), and the working, by Decimal (not the page's whole-number method)."""
+def divide(n, d, dp=0):
+    """n / d to the nearest whole number (dp 0, an int) or to 1 decimal place (dp 1, a Decimal), a half up, and the
+    working (to 1 place for dp 0, 3 for dp 1, more when those would round the other way), by Decimal: not the page's
+    whole-number method."""
     from decimal import Decimal, ROUND_HALF_UP
     exact = Decimal(n) / Decimal(d)
-    ans = int(exact.quantize(Decimal(1), rounding=ROUND_HALF_UP))
-    for k in range(1, 7):
+    unit = Decimal(1).scaleb(-dp)
+    ans = exact.quantize(unit, rounding=ROUND_HALF_UP)
+    for k in range(1 + 2 * dp, 8):
         shown = exact.quantize(Decimal(1).scaleb(-k), rounding=ROUND_HALF_UP)
-        if int(shown.quantize(Decimal(1), rounding=ROUND_HALF_UP)) == ans:
+        if shown.quantize(unit, rounding=ROUND_HALF_UP) == ans:
             break
     whole_part, frac = str(shown).split(".")
-    return ans, "%s ÷ %s = %s.%s ≈ %s." % (fmt(n), fmt(d), fmt(int(whole_part)), frac, fmt(ans))
+    text = ("%s.%s" % (fmt(int(ans)), str(ans).split(".")[1])) if dp else fmt(int(ans))
+    return (ans if dp else int(ans)), "%s ÷ %s = %s.%s ≈ %s." % (fmt(n), fmt(d), fmt(int(whole_part)), frac, text)
+
+
+def dp1_text(v):
+    return "%s.%s" % (fmt(int(v)), str(v).split(".")[1])
 
 
 def page_h1(slug):
@@ -670,12 +679,15 @@ def quiz_context(key, plants):
         ctx.update(counts=counts if ok else None, ld=ld if ok else None, g2=None)
         if ok:
             g = counts["games"]
-            if isinstance(g.get(FT), int) and g[FT] >= 10 and ld.get(FT):
+            # at least 0.1 answers a day to 1 decimal place (UGH-STATS-CASE1-1DP)
+            visible = lambda k: divide(g[k], case1_days(counts, ld[k]), 1)[0] >= Decimal("0.1")
+            if isinstance(g.get(FT), int) and g[FT] >= 10 and ld.get(FT) and visible(FT):
                 ctx["g2"] = (FT, "Factor Theorem", True, {"alevel"})
             else:
                 levels = home_levels(plants)
                 small = lambda k: bool(levels.get(k)) and levels[k] <= SMALL_LEVELS
-                cands = sorted((v, k) for k, v in g.items() if k != SIX and isinstance(v, int) and v >= 10 and ld.get(k) and small(k))[:5]
+                cands = sorted((v, k) for k, v in g.items()
+                               if k != SIX and isinstance(v, int) and v >= 10 and ld.get(k) and small(k) and visible(k))[:5]
                 for _, slug in cands:
                     if page_h1(slug):
                         ctx["g2"] = (slug, page_h1(slug), False, levels[slug])
@@ -707,10 +719,15 @@ def per_day(ctx, slug, name, stem):
     to = as_of_time(counts).astimezone(zoneinfo.ZoneInfo("Europe/London")).date()
     days = (to - dt.date.fromisoformat(max(launch, SINCE))).days + 1
     want = ("%s went on the site on %s. Since 1 September it has been available for %d days and has %s answers. What is "
-            "its mean number of answers per day, to the nearest whole number?" % (name, long_date(launch), days, fmt(n)))
+            "its mean number of answers per day, to 1 decimal place?" % (name, long_date(launch), days, fmt(n)))
     if stem != want:
         raise Wrong("the stem reads %r, want %r" % (stem, want))
-    return divide(n, days)
+    return divide(n, days, 1)
+
+
+def case1_days(counts, launch):
+    to = as_of_time(counts).astimezone(zoneinfo.ZoneInfo("Europe/London")).date()
+    return (to - dt.date.fromisoformat(max(launch, SINCE))).days + 1
 
 
 def expected(key, ctx, s):
@@ -724,6 +741,10 @@ def expected(key, ctx, s):
                 raise Wrong("question %d shows, but there is no game 2 to ask about" % i)
             slug, name, is_ft, levels = ctx["g2"]
         if i == 2:
+            m = re.search(r"available for (\d+) days and has ([\d,]+) answers", stem)
+            if m and divide(int(m.group(2).replace(",", "")), int(m.group(1)), 1)[0] == 0:
+                raise Wrong("game 2 is shown at 0.0 answers a day (%s answers in %s days); it must be at least 0.1"
+                            % (m.group(2), m.group(1)))
             try:
                 return per_day(ctx, slug, name, stem)
             except Wrong as e:
@@ -733,7 +754,7 @@ def expected(key, ctx, s):
             a = per_day(ctx, SIX, "Six Sevens, Bruv", ctx["stem1"])[0]
             b = per_day(ctx, slug, name, ctx["stem2"])[0]
             want = ("Six Sevens gets about %s answers a day; %s about %s. Which is the best reason to be careful comparing "
-                    "these two numbers?" % (fmt(a), name, fmt(b)))
+                    "these two numbers?" % (dp1_text(a), name, dp1_text(b)))
             if stem != want:
                 raise Wrong("the stem reads %r, want %r (its numbers are Q1's and Q2's answers)" % (stem, want))
             return FT_RIGHT if is_ft else "%s is for %s students only, a much smaller group." % (name, level_words(levels))
@@ -815,21 +836,32 @@ def play(page, key, ctx, name, faults):
             if want is None:
                 break
             ans, working = want
-            first_wrong = pos % 2 == 1
+            dp1 = isinstance(ans, Decimal)
+            if dp1:
+                # a 1 dp answer: the whole number nearest it must be refused (or, for a whole value, one tenth more),
+                # and the value is typed with a trailing zero on alternate questions ("90.90")
+                first_wrong = True
+                whole_try = str(int(ans.quantize(Decimal(1), rounding="ROUND_HALF_UP")))
+                wrong = whole_try if Decimal(whole_try) != ans else str(ans + Decimal("0.1"))
+                right = str(ans) + ("0" if pos % 2 else "")
+            else:
+                first_wrong = pos % 2 == 1
+                wrong, right = str(ans + 1), str(ans)
             if first_wrong:
-                page.fill("#questions .ugh-q-input", str(ans + 1))
+                page.fill("#questions .ugh-q-input", wrong)
                 page.click("#questions .ugh-q-check")
                 s2 = page.evaluate(STATE)
                 if s2["answered"] or "Right." in s2["feedback"]:
-                    faults.append("%s: QUIZ, %d was accepted, want only the exact %d" % (q, ans + 1, ans))
+                    faults.append("%s: QUIZ, %s was accepted, want only the exact %s%s" % (
+                        q, wrong, ans, " (a whole number was accepted for a 1 dp question)" if dp1 else ""))
             s2 = page.evaluate(STATE)
             if not s2["inputDisabled"]:
-                page.fill("#questions .ugh-q-input", str(ans))
+                page.fill("#questions .ugh-q-input", right)
                 page.click("#questions .ugh-q-check")
             s3 = page.evaluate(STATE)
             if not first_wrong or not s2["inputDisabled"]:
                 if "Right." not in s3["feedback"]:
-                    faults.append("%s: QUIZ, the exact answer %d was not accepted: %r" % (q, ans, s3["feedback"]))
+                    faults.append("%s: QUIZ, the exact answer %s was not accepted: %r" % (q, right, s3["feedback"]))
                 if "Working: " + working not in s3["feedback"]:
                     faults.append("%s: QUIZ, the working reads %r, want %r" % (q, s3["feedback"], "Working: " + working))
             want_ev = (not first_wrong, 2 if first_wrong else 1)
@@ -1012,8 +1044,13 @@ def selftest():
          ("ABSENT",), "ABSENT"),
         ('"<10" summed', {LOADER: swap(loader, "if (hidden(v)) hid += 1; else sum += v;", "sum += drawn(v);")}, ("SMALL",), "never added in"),
         ("a frozen figure changed", {"/" + PAGES["case1"]: swap(case1_html, "<td>4,181</td>", "<td>4,182</td>")}, ("REAL",), "FROZEN"),
-        ("a typed answer not exact", {LOADER: swap(loader, "var right = Number(raw) === q.answer;",
-                                                   "var right = Math.abs(Number(raw) - q.answer) <= 1;")}, ("QUIZ",), "was accepted"),
+        ("a typed answer not exact", {LOADER: swap(loader, ": Number(raw) === q.answer;",
+                                                   ": Math.abs(Number(raw) - q.answer) <= 1;")}, ("QUIZ",), "was accepted"),
+        ("a whole number accepted at 1 dp", {LOADER: swap(loader, "tenths(raw) === Math.round(q.answer * 10)",
+                                                          "Math.round(Number(raw)) === Math.round(q.answer)")},
+         ("QUIZ",), "a whole number was accepted for a 1 dp question"),
+        ("a game 2 at 0.0", {"/" + PAGES["case1"]: swap(case1_html, "g[k] >= 10 && ld[k] && small(k) && visible(k, ld); })",
+                                                        "g[k] >= 1 && ld[k] && small(k); })")}, ("QUIZ",), "0.0 answers a day"),
         ('a "<10" question not skipped', {"/" + PAGES["case2"]: swap(case2_html, "if (!v.length || v.some(U.hidden)) return null;",
                                                                     "if (!v.length) return null;")}, ("SKIP",), "SKIP"),
         ("a game with no launch date", {LAUNCH: launch}, ("LAUNCH",), "LAUNCH"),
@@ -1021,7 +1058,8 @@ def selftest():
          ("QUIZ", "NOQA"), "question_answered"),
         ("a CSV figure changed", {CSV3: swap(csv3, "2026-10-15,Thu,513,", "2026-10-15,Thu,514,")}, ("CASE34",), "CSV"),
         ("an r changed", {"/" + PAGES["case4"]: swap(case4_html, "For these two, r = 0.70.", "For these two, r = 0.80.")}, ("CASE34",), "r = "),
-        ("a GCSE game as game 2", {"/" + PAGES["case1"]: swap(case1_html, "g[k] >= 10 && ld[k] && small(k);", "g[k] >= 10 && ld[k];")},
+        ("a GCSE game as game 2", {"/" + PAGES["case1"]: swap(case1_html, "g[k] >= 10 && ld[k] && small(k) && visible(k, ld); })",
+                                                                 "g[k] >= 10 && ld[k] && visible(k, ld); })")},
          ("QUIZ",), "game 2"),
     ]
     bad = []

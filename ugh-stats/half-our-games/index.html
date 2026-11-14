@@ -218,36 +218,44 @@
      and launch-dates.json, the same figures the question shows; one whose figures are missing is skipped.
        D, a game's days   the UK dates from 1 September or its launch date, whichever is later, to the counts file's
                           as-of date, both counted.
-       answer             its answers / D to the nearest whole number, a half going up (UghStats.divide).
+       answer             its answers / D to 1 decimal place, a half going up (UghStats.divide, dp 1; the working to 3
+                          places). (UGH-STATS-CASE1-1DP: to the nearest whole number every A level game read 0.)
        game 2             Factor Theorem; when it has fewer than 10 answers, the lowest-answered game with at least 10
                           that has a launch date and whose levels on the portal are only A level, Further Maths and/or
                           Level 4 (none of KS3, GCSE, Core Maths or any other), fewest first, then by slug, named from its
-                          own page's heading; Q3's right answer then names those levels. No such game: Q2 and Q3 are
+                          own page's heading, and whose answers per day are at least 0.1 to 1 decimal place (Factor
+                          Theorem too); Q3's right answer then names those levels. No such game: Q2 and Q3 are
                           skipped. (Project Claude, 14 Nov 21:25: a GCSE game would make Q3's answer false.) */
   var SIX = 'six-sevens-bruv', FT = 'factor-theorem';
+  function daysFor(launch) {
+    var from = launch > U.SINCE ? launch : U.SINCE;
+    return U.days(from, U.ukDate(counts.as_of));
+  }
   function perDay(slug, name, ld) {
     if (!counts || !ld || counts.since !== U.SINCE) return null;
     var n = counts.games[slug], launch = ld[slug];
     if (!U.whole(n) || !launch) return null;
-    var from = launch > U.SINCE ? launch : U.SINCE, d = U.days(from, U.ukDate(counts.as_of));
+    var d = daysFor(launch);
     if (!(d >= 1)) return null;
-    var w = U.divide(n, d);
-    return { type: 'typed', answer: w.answer, working: w.working,
+    var w = U.divide(n, d, 1);
+    return { type: 'typed', dp: 1, answer: w.answer, text: w.text, working: w.working,
       stem: name + ' went on the site on ' + U.longDate(launch) + '. Since 1 September it has been available for ' + d +
-        ' days and has ' + U.format(n) + ' answers. What is its mean number of answers per day, to the nearest whole number?' };
+        ' days and has ' + U.format(n) + ' answers. What is its mean number of answers per day, to 1 decimal place?' };
   }
+  // At least 0.1 a day to 1 decimal place: a game 2 shown as 0.0 would contradict its having answers.
+  function visible(k, ld) { var d = daysFor(ld[k]); return d >= 1 && U.divide(counts.games[k], d, 1).answer >= 0.1; }
   var SMALL_LEVELS = ['alevel', 'further', 'level4'];
   function second(ld) {
     if (!counts || !ld) return Promise.resolve(null);
     var g = counts.games;
-    if (U.whole(g[FT]) && g[FT] >= 10 && ld[FT]) return Promise.resolve({ slug: FT, name: 'Factor Theorem', ft: true });
+    if (U.whole(g[FT]) && g[FT] >= 10 && ld[FT] && visible(FT, ld)) return Promise.resolve({ slug: FT, name: 'Factor Theorem', ft: true });
     return U.homeLevels().then(function (levels) {
       if (!levels) return null;
       var small = function (k) {
         var l = levels[k];
         return !!l && l.length > 0 && l.every(function (x) { return SMALL_LEVELS.indexOf(x) >= 0; });
       };
-      var list = Object.keys(g).filter(function (k) { return k !== SIX && U.whole(g[k]) && g[k] >= 10 && ld[k] && small(k); })
+      var list = Object.keys(g).filter(function (k) { return k !== SIX && U.whole(g[k]) && g[k] >= 10 && ld[k] && small(k) && visible(k, ld); })
         .sort(function (a, b) { return g[a] - g[b] || (a < b ? -1 : 1); }).slice(0, 5);
       var tryAt = function (i) {
         if (i >= list.length) return Promise.resolve(null);
@@ -265,7 +273,7 @@
     return [q1, q2, function () {
       if (!q1 || !q2) return null;
       return { type: 'choice',
-        stem: 'Six Sevens gets about ' + U.format(q1.answer) + ' answers a day; ' + g2.name + ' about ' + U.format(q2.answer) +
+        stem: 'Six Sevens gets about ' + q1.text + ' answers a day; ' + g2.name + ' about ' + q2.text +
           '. Which is the best reason to be careful comparing these two numbers?',
         options: [
           { right: true, why: careful, text: g2.ft

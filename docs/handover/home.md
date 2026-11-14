@@ -16,6 +16,12 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-14 (home): UGH-STATS-CASE1-1DP
+
+Claude Code (home lane), worktree `~/mg-ugh-1dp`, branch `claude/ugh-stats-case1-1dp`; contract `docs/handover/contracts/2026-11-14-ugh-stats-case1-1dp.md`. Case 1 Q1 and Q2 ask answers per day to 1 decimal place (working to 3), and Q3 quotes those values. A typed question may set `dp: 1` in `UghStats.quiz`: the decimal keypad, and only the 1 dp value accepted ("90.9" or "90.90", never "91" or "90.8"). Cases 2 and 3 keep dp 0 and their unchanged code path. Game 2 must also show at least 0.1 a day.
+
+- The 0.1 rule cannot bite before about 20 March 2027: 10 or more answers in at most 200 days is always 0.05 a day or more. Its plant therefore lets a game with 1 answer through.
+
 ## 2026-11-14 (home): UGH-STATS-QUESTIONS
 
 Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/history/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
