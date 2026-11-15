@@ -56,3 +56,9 @@ Do, in the same worktree and PR (#791):
 4. Do not add graph-sketcher to UNLISTED_NOT_BY_AUDIT; do not change audit-register.py.
 Then: re-run the Gate, merge on green as the contract says, report main's check-site and phone-fit-full on the merge commit, and update home.md (the stop entry closed with this follow-up).
 STOP IF: the Findings register step or any other check still fails after 1-3 (report the message; do not loosen anything); the notice changes the page's phone fit as above.
+
+
+---
+
+UNLIST-GRAPH-SKETCHER: second follow-up from Project Claude, 15 Nov 2026 20:50. Jon's ruling: option 1. Move the correction notice (marker and div together) to just after the Start button on the start screen; no change to its text, style or the rest of 449905c6. Start's bottom edge must be unchanged from main at 320x568, 375x667, 390x844 and 1280x720 (526, 469, 469, 434); report the notice's top and bottom edges at each. Then push, Gate, merge as the contract says, report main's check-site and phone-fit-full on the merge commit, and close the stop in home.md.
+STOP IF: the Findings register check requires the marker in a particular place on the page (report its rule); Start moves at any measured width.
