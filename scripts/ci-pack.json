@@ -233,7 +233,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (6 needed)",
+   "how": "kept from the pack (7 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
@@ -341,7 +341,7 @@
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "chosen from 27 timed unit(s)",
+   "how": "kept from the pack (6 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation (90° each way and 180°, about (0,0) and other points) and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 6,
    "tier": "content"
