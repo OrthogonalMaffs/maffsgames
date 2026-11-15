@@ -77,12 +77,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-15 (cloud): QF-K-FIRST (`docs/handover/contracts/2026-11-15-qf-k-first.md`; Jon's follow-up to #780 and Amendment 1, 15 Nov)
+## 2026-11-15 (cloud): QF-K-FIRST (`docs/history/contracts/2026-11-15-qf-k-first.md`; Jon's follow-up to #780 and Amendment 1, 15 Nov)
 
 Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` restarted from main d59aeca. Claim commit d876f44; close-out of QF-PICKER (#780) 836f527. One small PR, merging on green.
 Done on the branch: on Higher HCF questions the pad fills k first, then p, q, r, s, as k(px + q)(rx + s) is drawn (`hfSlotOrder`); base items unchanged; marking unchanged (by position). The verifier mirrors the order and expects the start line "Tap a number for" the item's first slot (p, or k on HCF); the p/q swap plant rewritten for the new line, still caught on both items. Comments at the game's `hfSlotOrder` and the verifier's docstring and flow updated, wording only. /updates/: one sentence on today's line.
 Checked here: verifier PASS (40 s); self-test PASS, 17 of 17 (79 s).
-Next: the Gate, merge, main's two runs; the next cloud task's first commit closes this out.
+MERGED: #782 as ac77a02 (head 8bcf31d; Gate run 43722933616, success), via the GitHub connection under the standing ruling of 10 Nov 2026, as its PR stated (gh auth fails in the cloud lane: "Failed to log in to github.com using token (GH_TOKEN)", re-read in QF-HCF-FIRST's session); the merge commit's message is the PR body. Main on ac77a02: check-site 43724240176 and phone-fit-full 43724240205, both success, first attempt. Closed out in QF-HCF-FIRST's first commit after its claim.
+Done: merged and live. Review: Project Claude after the merge; Jon plays it.
 
 ## 2026-11-15 (cloud): QF-PICKER (`docs/history/contracts/2026-11-15-qf-picker.md`; Jon's rulings 15 Nov 10:21, 10:22, 10:23; Amendment 1, ~13:30)
 
