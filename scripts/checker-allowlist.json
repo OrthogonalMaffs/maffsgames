@@ -1659,13 +1659,6 @@
   ],
   "tier1_phone_overflow": [
     {
-      "path": "games/better-value/index.html",
-      "at": "load",
-      "width": 339,
-      "todo": "§3.9 batch 1 follow-up: its start screen's session-length buttons",
-      "where": "button.session-btn"
-    },
-    {
       "path": "games/chart-interrogator/index.html",
       "at": "start",
       "width": 392,

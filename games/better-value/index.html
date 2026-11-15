@@ -121,12 +121,24 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 @media(prefers-reduced-motion:reduce){
 .explanation-panel{transition:none}
 }
-/* A laptop or projector (canon 7.6.1, ruling R2): tighter spacing, so the last conclusion ends above the fold. */
+/* A laptop or projector (canon 7.6.1, ruling R2): tighter spacing, so the last conclusion ends above the fold.
+   After a wrong answer the reason and Next must fit too, on all 70 questions at 1280 x 720: a wider column so the
+   scenario and the working take fewer lines, and the two conclusions that were neither picked nor right fold away
+   (they cannot be used during the feedback, canon 7.6.1). The scenario and both deals stay on screen. */
 @media(min-width:601px) and (max-height:800px){
-#gameScreen{padding-top:12px}
-.scenario-card{padding:16px 24px;margin-bottom:12px}
+#gameScreen{padding-top:12px;max-width:1180px}
+.scenario-card{padding:12px 20px;margin-bottom:12px}
+.scenario-text{font-size:1rem;line-height:1.55}
 .options-row{margin-bottom:12px}
-.option-card{padding:14px 20px}
+.option-card{padding:10px 18px}
+.option-label{margin-bottom:4px}
+.detail-row{padding:3px 0}
+.conclusions-grid{gap:8px;margin-bottom:12px}
+.conclusion-card{padding:10px 14px;line-height:1.45;min-height:44px}
+.explanation-panel{padding:12px 18px;margin-bottom:10px}
+.explanation-label{margin-bottom:4px}
+.explanation-text{line-height:1.5}
+#gameScreen.show-working .conclusion-card.locked:not(.incorrect-pick):not(.correct-reveal){display:none}
 }
 @media(max-width:600px){
 .options-row{grid-template-columns:1fr}

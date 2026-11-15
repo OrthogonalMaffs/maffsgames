@@ -77,6 +77,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-15 (cloud): ESSENTIALS-PHONE-FIT-PAIR (`docs/handover/contracts/2026-11-15-essentials-phone-fit-pair.md`; Jon's rulings 14 Nov 22:46 and 22:54, 15 Nov 18:46)
+
+Agent Claude Code (cloud), branch `claude/tender-meitner-t6gc5f` from main 7aeefca. Close-out of PACK-WORDING-1511 (#785) 2ab5608. Two PRs in order, Medium, each merging on green; lane exception for `schools/assets/session-length.js` (Jon, 14 Nov 22:54).
+PR 1 done on the branch: `render()` sets the mount's `flex-wrap: wrap` (all 12 session-length games); Better Value's start screen is 320 wide at 320 (was 340). STOP IF hit and ruled: Expectation Station at 320 x 568 now wraps "All (40)" onto a second row (36 px taller), where main squeezed the four buttons and broke the label inside its button; Jon, 15 Nov 18:46, "Accept the change". The other 10 games pixel-identical at 320 and 1366 (375 and 390 also compared: only anti-aliasing noise, page size and button boxes identical). Better Value's laptop Next: its laptop media block only (1,180 px column, tighter spacing, the two unused conclusions fold away after a wrong answer); all 70 questions fit at 1366 x 768, 1280 x 720 and 1024 x 768. Entries removed: tier1_phone_overflow better-value, phone-fit laptop better-value. Todo: BETTER-VALUE-NEXT closed, 1.34's Better Value part closed, new row BETTER-VALUE-AA-SIDEWAYS (found, not traced). Screens in `docs/screens/essentials-phone-fit-pair/`.
+Checked here: phone-fit better-value normal, Aa and laptop exit 0 (laptop PASS, Next 612 / 680); tier 1 phone width on the four flex-row games, 0 overflows (their console errors are this sandbox's refused CDN tunnel); verify-better-value, -claims and -tax PASS.
+Next: PR 1's Gate and merge; then PR 2, Chart Interrogator, branched from the new main.
+
 ## 2026-11-15 (cloud): PACK-WORDING-1511 (`docs/history/contracts/2026-11-15-pack-wording-1511.md`; Jon's rulings 15 Nov 09:18, 09:28, 09:29, 09:31)
 
 Agent Claude Code (cloud), branch `claude/eloquent-pasteur-7bc0qn` from main a892547. Close-out of QF-HCF-FIRST (#783) f97653e. One PR, Medium, merging on green.
