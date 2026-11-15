@@ -1644,8 +1644,8 @@ function hfBuildIndepGrid() {
   qfBuildPad(document.getElementById('hfIndepGrid'), 9, 9, hfIndepSelect);
   hfShowTarget();
 }
-// The slots fill in the order of (px + q)(rx + s), then k when the question has one: the order the answer is read in.
-function hfSlotOrder() { return currentQ.stage === 'hcf' ? ['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's']; }
+// The slots fill in the order they are drawn, k first when the question has one: k(px + q)(rx + s).
+function hfSlotOrder() { return currentQ.stage === 'hcf' ? ['k', 'p', 'q', 'r', 's'] : ['p', 'q', 'r', 's']; }
 function hfShowTarget() {
   const target = qfTargetSlot(hfSlotOrder(), slot => hfIndependentPicks[slot], hfEditingSlot);
   hfPanel().querySelectorAll('.hf-slot').forEach(el => el.classList.toggle('active', el.dataset.slot === target));

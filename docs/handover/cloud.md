@@ -77,6 +77,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-15 (cloud): QF-K-FIRST (`docs/handover/contracts/2026-11-15-qf-k-first.md`; Jon's follow-up to #780 and Amendment 1, 15 Nov)
+
+Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` restarted from main d59aeca. Claim commit d876f44; close-out of QF-PICKER (#780) 836f527. One small PR, merging on green.
+Done on the branch: on Higher HCF questions the pad fills k first, then p, q, r, s, as k(px + q)(rx + s) is drawn (`hfSlotOrder`); base items unchanged; marking unchanged (by position). The verifier mirrors the order and expects the start line "Tap a number for" the item's first slot (p, or k on HCF); the p/q swap plant rewritten for the new line, still caught on both items. Comments at the game's `hfSlotOrder` and the verifier's docstring and flow updated, wording only. /updates/: one sentence on today's line.
+Checked here: verifier PASS (40 s); self-test PASS, 17 of 17 (79 s).
+Next: the Gate, merge, main's two runs; the next cloud task's first commit closes this out.
+
 ## 2026-11-15 (cloud): QF-PICKER (`docs/history/contracts/2026-11-15-qf-picker.md`; Jon's rulings 15 Nov 10:21, 10:22, 10:23; Amendment 1, ~13:30)
 
 Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` from main 595b3af. Claim commit 9ed73f2; close-out of ESSENTIALS-AUDIT-LEFTOVERS (#778) 9ec09d9. One PR, Medium, merging on green.
