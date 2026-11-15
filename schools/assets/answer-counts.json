@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-15T12:56:50Z",
+ "as_of": "2026-11-15T22:03:49Z",
  "games": {
   "52dle": 14,
   "angle-ace": 5,
@@ -28,7 +28,7 @@
   "eigenvector-engine": 21,
   "equation-builder": 5,
   "equatle": 22,
-  "escape-big-school-begins": 465,
+  "escape-big-school-begins": 480,
   "escape-canteen-hack": 169,
   "escape-car-trap": 147,
   "escape-christmas-tree-fiasco": 5,
@@ -36,7 +36,7 @@
   "escape-hamster-heist": 687,
   "escape-heatwave-mutiny": 184,
   "escape-it-vengeance": 23,
-  "escape-kiln-disaster": 775,
+  "escape-kiln-disaster": 783,
   "escape-library-jam": 72,
   "escape-pe-shed-rebellion": 270,
   "escape-prom-budget": 168,
@@ -90,7 +90,7 @@
   "screening-room": 5,
   "sequence-solver": 407,
   "seven-bridges": 311,
-  "shape-shifter": 29,
+  "shape-shifter": 30,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4181,
   "split-it": 748,
@@ -120,5 +120,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 26018
+ "total": 26042
 }
