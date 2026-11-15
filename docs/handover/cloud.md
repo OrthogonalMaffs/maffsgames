@@ -77,12 +77,18 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-14 (cloud): ANSWER-BOX-ART-SWAP (`docs/handover/contracts/2026-11-14-answer-box-art-swap.md`; Jon's rulings 14 Nov 16:40 to 21:45)
+## 2026-11-15 (cloud): ESSENTIALS-AUDIT-LEFTOVERS (`docs/handover/contracts/2026-11-14-essentials-audit-leftovers.md`; Jon's rulings 14 Nov 22:46 and 22:49)
 
-PR #769 OPEN, merging on green (Medium). Agent Claude Code (cloud), a fresh session, branch `claude/gallant-curie-0j690i` from main 8f2b84f; first commit 5003a17 (this contract; #767's close-out, in its entry below). No claim commit: no game is touched.
+Agent Claude Code (cloud), branch `claude/keen-curie-uk4uep` from main a43c595. Three PRs in order, each merged before the next opens, each from current origin/main: 1 Negative Number Line, 2 Decimal Detective, 3 Shape Shifter. Each game is claimed in its PR's first commit and released in that PR.
+PR 1 (Negative Number Line): in progress. Claim commit 3921550; second commit carries #769's close-out (its entry below).
+Next: PR 1's page and verifier, its Gate, merge by the 10 Nov route (gh auth fails: "The token in GH_TOKEN is invalid"), main's two runs; then PR 2, then PR 3.
+
+## 2026-11-14 (cloud): ANSWER-BOX-ART-SWAP (`docs/history/contracts/2026-11-14-answer-box-art-swap.md`; Jon's rulings 14 Nov 16:40 to 21:45)
+
+MERGED: #769 as c0cec86, via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: "The token in GH_TOKEN is invalid"). Main on c0cec86: check-site 43648315721 and phone-fit-full 43648315724, both success on the first attempt. `art/answer-box-redraws`: deleted by the home lane (ANSWER-LOCK-FLAKE PR 1, Jon 15 Nov 08:37). Closed out in ESSENTIALS-AUDIT-LEFTOVERS PR 1. Agent Claude Code (cloud), a fresh session, branch `claude/gallant-curie-0j690i` from main 8f2b84f; first commit 5003a17 (this contract; #767's close-out, in its entry below). No claim commit: no game is touched.
 Done: Jon's two redrawn pictures (`origin/art/answer-box-redraws`, 799748c) replace Roll's `rfi-10-plans-keypad.webp` and Prom's `prom-11-router-dial.webp` (Pillow WEBP, quality 90, method 6; 139 and 112 KB). `label_box`: Roll `fortress-plan-scale` [262, 312, 991, 439], 34.1 × 5.9 mm on the cover, grey 225.2; Prom `wifi-venn-router` [98, 633, 863, 932], 35.8 × 14.0 mm, grey 235.2; neither filled. Both packs build as DRAFT with no box under the floor and no DRAFT notes.
 Proof: all seven packs built on main and the branch, compared page by page (text, and pixels at 100 dpi): 238 of 252 identical. Changed: page 1 and the six covers of Roll (6, 10, 14, 18, 22, 26) and of Prom (7, 11, 15, 19, 23, 27). Selftest 67/67, unchanged.
-Next: merge on a green Gate (gh auth fails: the 10 Nov route), report main's two runs, delete `art/answer-box-redraws`. Open for Jon: todo ROLL-PROM-PACKS-APPROVE (proofread, wording).
+Open for Jon: todo ROLL-PROM-PACKS-APPROVE (proofread, wording).
 
 Record: agent Claude Code; wall 0:13 from the contract's stamp (21:50) to the PR opened for its Gate (22:03 by the container's clock); review cycles 0; amendments 0; usage n/a.
 
