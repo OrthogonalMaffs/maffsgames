@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps, seven with the HCF step, played in Chromium, each HCF, split, factor and line recomputed; Formula roots on the keypad with a minus key) |
-# ci-line: Quadratic Factoriser self-test (the old HCF flow and ten other faults planted in the guided steps and the keypad; each must fail) | --selftest
+# ci-line: Quadratic Factoriser self-test (the old HCF flow and eleven other faults planted in the guided steps and the keypad; each must fail) | --selftest
 """Layers C + D verification for quadratic-factoriser (docs/quadratic-factoriser-spec.md,
 item 5). Grows with each build phase; this version covers Phase 1 ('gcse'), Phase 2
 ('higher') and Phase 3 ('formula').
@@ -44,9 +44,10 @@ THE HCF STEP (QF-HCF-FIRST, Jon 15 Nov 2026)
 An HCF item, k(px + q)(rx + s), is played through seven steps: first "Take out the highest common factor", whose
 one accepted option is gcd(a, b, c), recomputed here and required to equal the item's k, with the two wrong options
 and their retry messages recomputed too; then the six AC steps on the quadratic left in the bracket (a/k, b/k, c/k),
-shown on screen as "= k(...)", the split ps and qr; step 6's answer keeps k in front. On every Higher item the ac
-step 2 asks for and every step 3 option's product are at most 72 in size, the base pool's |ac| bound: no step needs
-a calculator. The Formula level's root boxes are on the shared
+shown on screen as "= k(...)", the split ps and qr; step 6's answer keeps k in front. On every Higher item the
+accepted step 2 value and the accepted step 3 pair's product are at most 72 in size, the base pool's |ac| bound: no
+value the student must work out needs a calculator (Jon, 15 Nov 15:15: step 2's a x b and b x c distractors are
+deliberate and not guarded). The Formula level's root boxes are on the shared
 phone keypad (MaffsKeypad) with a minus key: roots can be negative and a phone's decimal
 pad (iOS) has none.
 
@@ -593,7 +594,7 @@ def verify_guided(guided, n_pool, every=1):
         # Step 1: a, b and c.
         one_accepted(1, lambda o: args_of(o["call"]) == [a, b, c])
         # Step 2: a x c.
-        one_accepted(2, lambda o: args_of(o["call"]) == [a * c])
+        acc2 = one_accepted(2, lambda o: args_of(o["call"]) == [a * c])
         # Step 3: the pair that multiplies to ac and adds to b; each option's own sums shown right.
         for o in steps[2]["opts"]:
             m, n = args_of(o["call"])
@@ -608,10 +609,11 @@ def verify_guided(guided, n_pool, every=1):
                 if m * n != c or [int(v) for v in mt[:1]] != [c] or str(a * c) not in mt:
                     note(rec, "step 3's misconception for %r states %r" % (o["call"], o["mis"]["text"]))
         acc3 = one_accepted(3, lambda o: (lambda m, n: m * n == a * c and m + n == b)(*args_of(o["call"])))
-        # The class guard (QF-HCF-FIRST): the ac step 2 asks for, and every step 3 option's product, within the base
-        # pool's |ac| <= 72 on every Higher item: no step needs a calculator.
-        big = [v for v in [abs(a * c)] + [abs(args_of(o["call"])[0] * args_of(o["call"])[1]) for o in steps[2]["opts"]]
-               if v > 72]
+        # The class guard (QF-HCF-FIRST; narrowed by Jon, 15 Nov 15:15): the values the student must work out, the
+        # accepted step 2 value and the accepted step 3 pair's product, within the base pool's |ac| <= 72 on every
+        # Higher item, so no step needs a calculator. Step 2's a x b and b x c distractors are deliberate, not guarded.
+        big = [abs(v) for v in ([args_of(acc2["call"])[0]] if acc2 else []) +
+               ([args_of(acc3["call"])[0] * args_of(acc3["call"])[1]] if acc3 else []) if abs(v) > 72]
         if big:
             note(rec, "a step needs a number over 72: %r" % big)
         if rec["mode"] == "tutorial":
@@ -965,6 +967,10 @@ PLANTS = [
     ("step 3 on an HCF item with kps, kqr after the HCF step",
      "function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }",
      "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }"),
+    ("step 2 accepting the unreduced ac on an HCF item",
+     ("  const correct = a * c;\n", "  if (v === w.a * w.c) hfStepCorrectAdvance(3);"),
+     ("  const correct = a * c * hfK(currentQ) * hfK(currentQ);\n",
+      "  if (v === currentQ.a * currentQ.c) hfStepCorrectAdvance(3);")),
     ("step 5's first-pair factor with k on the bracket's quadratic",
      "const factor = `${p === 1 ? '' : p}x`;", "const factor = `${hfK(currentQ) * p === 1 ? '' : hfK(currentQ) * p}x`;"),
     ("step 5 accepting kq, not q",
@@ -1021,11 +1027,16 @@ def selftest():
     if clean:
         bad.append("the page as served fails (%d)" % len(clean))
     for name, old, new, *part in PLANTS:
-        if src.count(old) != 1:
+        # A plant is one find-and-replace, or a tuple of them applied together.
+        olds, news = (old, new) if isinstance(old, tuple) else ((old,), (new,))
+        if any(src.count(o) != 1 for o in olds):
             bad.append(name + " (the plant no longer matches the page)")
             continue
+        planted = src
+        for o, n in zip(olds, news):
+            planted = planted.replace(o, n)
         print("\nselftest plant: " + name)
-        if not run(src.replace(old, new), SAMPLE, pools_too=False, parts=part[0] if part else ("guided",)):
+        if not run(planted, SAMPLE, pools_too=False, parts=part[0] if part else ("guided",)):
             bad.append(name + " (passed)")
     print()
     print("selftest: %s" % ("FAILED: " + "; ".join(bad) if bad else "PASS (%d plants fail)" % len(PLANTS)))
