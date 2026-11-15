@@ -76,6 +76,7 @@ import bank_common as bc  # noqa: E402  (start_stub_server: checked start, free 
 SLUG = "log-laws"
 PORT = None  # set by main() to the free port the stub server got
 KATEX_PREFIX = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/"
+PINNED_KATEX = os.path.join(ROOT, "scripts", "fonts", "katex", "dist")   # the default KaTeX: no network
 MIN_POOL = 40
 TOL = 1e-9
 
@@ -135,12 +136,15 @@ async def fetch(katex_dir):
 
         async def route(r):
             u = r.request.url
-            if katex_dir and u.startswith(KATEX_PREFIX):
-                p = os.path.join(katex_dir, u[len(KATEX_PREFIX):].split("?")[0])
+            # Nothing leaves the machine (contract ANSWER-LOCK-FLAKE, 15 Nov 2026): KaTeX comes from --katex-dir, or
+            # else from the pinned copy in scripts/fonts/ (the bytes the CDN serves), never from the CDN, whose stall
+            # holds the page short of 'load' (bank_common.offline, the same rule for every check).
+            if u.startswith(KATEX_PREFIX):
+                p = os.path.join(katex_dir or PINNED_KATEX, u[len(KATEX_PREFIX):].split("?")[0])
                 if os.path.isfile(p):
                     return await r.fulfill(path=p)
-            # Nothing a check needs leaves the machine except KaTeX itself.
-            if u.startswith(base) or u.startswith(KATEX_PREFIX):
+                return await r.abort()
+            if u.startswith(base):
                 return await r.continue_()
             return await r.abort()
 

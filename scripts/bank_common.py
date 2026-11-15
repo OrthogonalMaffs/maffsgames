@@ -321,9 +321,10 @@ async def serve_real_font_async(route):
 # ---------------------------------------------------------------------------------------------------------------
 # Nothing a check loads comes from the network (contract ANSWER-LOCK-FLAKE, 15 Nov 2026). A page's 'load' event waits
 # for every stylesheet and script the page names, wherever it lives, so a check that lets one request through to a
-# third party waits on that third party. 18 scripts carried the same route, copied from one to the next:
+# third party waits on that third party. 30 scripts carried the same route, copied from one to the next:
 #     ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
-# It aborts everything off the stub server EXCEPT KaTeX, which went to cdn.jsdelivr.net on every page load. When one of
+# It aborts everything off the stub server EXCEPT KaTeX. In 12 of them a later route answered KaTeX from the pinned
+# copy; in the other 18 KaTeX went to cdn.jsdelivr.net on every page load. When one of
 # those responses stalled, the page never reached 'load' and the check failed on a fault no game had (main run
 # 43590939932, "Page.goto: Timeout 20000ms exceeded", on a game whose only off-machine requests were KaTeX's
 # stylesheet and script); when one failed outright, the page drew unstyled maths (docs/handover/mm-overflow-diag.md).
