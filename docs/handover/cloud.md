@@ -77,7 +77,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
-## 2026-11-15 (cloud): QF-PICKER (`docs/handover/contracts/2026-11-15-qf-picker.md`; Jon's rulings 15 Nov 10:21, 10:22, 10:23)
+## 2026-11-15 (cloud): QF-PICKER (`docs/handover/contracts/2026-11-15-qf-picker.md`; Jon's rulings 15 Nov 10:21, 10:22, 10:23; Amendment 1, ~13:30)
 
 Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` from main 595b3af. Claim commit 9ed73f2; close-out of ESSENTIALS-AUDIT-LEFTOVERS (#778) 9ec09d9. One PR, Medium, merging on green.
 Done on the branch: Quadratic Factoriser's two number pads share one tap rule (`qfTargetSlot`: the tapped slot, else the first empty one; GCSE brackets 1 then 2, Higher p, q, r, s, then k) and one layout (`qfBuildPad`: negatives then positives, each its own block). GCSE is 6 a row on phones and 12 where a block fits on one line (laptops, 616 px), so the laptop keeps main's two rows. Keys stay 44 px on phones (were 40, under canon 7.6.1); `.num-btn.neg`'s muted colour is gone; `#gcsePanel` is full width (it had been only because the old one-line keypad overflowed). Marking, pools and the Formula level are untouched.
