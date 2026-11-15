@@ -83,7 +83,10 @@
   var timers = {};          // id -> true, for every live timer()
   var session = 0;
 
-  function now() { return Date.now(); }
+  // The windows are timed on a clock that never jumps (performance.now()), never the wall clock, which the
+  // device can correct mid-game by seconds either way (MONOTONIC-CLOCK). Date only where performance is missing.
+  var clock = (typeof performance !== 'undefined' && performance && typeof performance.now === 'function') ? performance : Date;
+  function now() { return clock.now(); }
   function freshMs() {
     var v = api && api.FRESH_MS;
     return (typeof v === 'number' && v >= 0) ? v : FRESH_MS;

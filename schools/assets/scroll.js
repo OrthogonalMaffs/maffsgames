@@ -27,9 +27,12 @@
  */
 (function () {
   'use strict';
-  var MARGIN = 8, token = 0, touched = 0;
+  var MARGIN = 8, token = 0, touched = -Infinity;
+  // Touch times are read on a clock that never jumps (performance.now()), never the wall clock, which the
+  // device can correct mid-game (MONOTONIC-CLOCK). Date only where performance is missing.
+  var clock = (typeof performance !== 'undefined' && performance && typeof performance.now === 'function') ? performance : Date;
 
-  function mark() { touched = Date.now(); }
+  function mark() { touched = clock.now(); }
   ['wheel', 'touchstart', 'keydown'].forEach(function (t) {
     try { window.addEventListener(t, mark, { passive: true, capture: true }); } catch (e) { /* ignore */ }
   });
@@ -56,7 +59,7 @@
   function reveal(target, opts) {
     opts = opts || {};
     var clear = opts.clear || 0, wanted = opts.inset, up = !!opts.up;
-    var mine = ++token, born = Date.now(), watch = null;
+    var mine = ++token, born = clock.now(), watch = null;
     function stop() { if (watch) { watch.disconnect(); watch = null; } }
 
     function pass(smooth) {

@@ -16,6 +16,9 @@ is played in headless Chromium against the real next-control.js and answer-lock.
   re-mark     clicking the answered option again, Enter, Space and the game's 1-4 keys change nothing
   fresh       a click within FRESH_MS of a new question is ignored; one after it is marked; isFresh()
               says so for the container and for no target, never for an element outside it
+  clock-step  the same, with the wall clock (Date.now) stepped back 10 s, then forward 10 s, inside the
+              window: the lock behaves exactly as without the step (the windows are timed on
+              performance.now(), MONOTONIC-CLOCK)
   dblclick    a double-click on Next advances once and its second click does not answer the next
               question (the option under it)
   double-tap  the same with two taps at 390px on a touch screen
@@ -25,7 +28,8 @@ is played in headless Chromium against the real next-control.js and answer-lock.
               timer set on the wrong path does not fire after MaffsNext's advance
   finish      finishOnce() runs once per session, and again after newSession()
 
-Then each planted fault (a CSS-only lock, no fresh delay, timers never cleared, a double finish) is put
+Then each planted fault (a CSS-only lock, no fresh delay, timers never cleared, a double finish, the
+windows timed on the wall clock) is put
 into a copy of the helper; each must FAIL a named check.
 """
 import argparse
@@ -97,6 +101,7 @@ PLANTS = [
     ('no fresh delay', 'fresh', 'var FRESH_MS = 300;', 'var FRESH_MS = 0;'),
     ('timers never cleared', 'timer', 'function clearTimers() {', 'function clearTimers() { return;'),
     ('a double finish', 'finish', 'if (ran === session) return undefined;', ''),
+    ('the wall clock', 'clock-step', 'function now() { return clock.now(); }', 'function now() { return Date.now(); }'),
 ]
 
 
@@ -185,6 +190,27 @@ async def suite(browser, lock_js, next_js):
           'answered %d straight after render, %d after 350 ms; isFresh(area, none, outside) %s then %s'
           % (r['early'], r['late'], r['during'], r['after']))
     await ctx.close()
+
+    # clock-step: the fresh window with the wall clock stepped mid-window, back then forward by 10 s. A step
+    # back must not hold the window open past FRESH_MS; a step forward must not close it early.
+    for step in (-10000, 10000):
+        ctx, page, errors = await fresh_page()
+        r = await page.evaluate("""async (step) => {
+            const real = Date.now.bind(Date);
+            render();
+            Date.now = () => real() + step;                 // the device corrects its clock mid-window
+            document.querySelector('#area .opt').click();
+            const early = [S.answered, MaffsLock.isFresh(area)];
+            await new Promise(res => setTimeout(res, 350));
+            const after = MaffsLock.isFresh(area);
+            document.querySelector('#area .opt').click();
+            Date.now = real;
+            return { early: early[0], during: early[1], after, late: S.answered };
+        }""", step)
+        check('clock-step', r['early'] == 0 and r['during'] is True and r['after'] is False and r['late'] == 1,
+              'wall clock %+d s: answered %d straight after render, %d after 350 ms; isFresh %s then %s'
+              % (step // 1000, r['early'], r['late'], r['during'], r['after']))
+        await ctx.close()
 
     # dblclick on Next: one advance, and the second click does not answer the option under it
     ctx, page, errors = await fresh_page()

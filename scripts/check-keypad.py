@@ -17,9 +17,14 @@ answer boxes in a row (the shape of a "round each number" step), and checks:
   Mouse     at 1280x720 and 390x844 with no touch: no keys are drawn; the boxes are ordinary text
             inputs (not read-only, inputmode="decimal") that take focus and typing.
   Privacy   nothing leaves the page: no request, no analytics call, no storage.
+  Clock     a box's own click within 600 ms of its pointerup (the ghost click) is ignored and one after
+            it is taken, also with the wall clock (Date.now) stepped back 10 s or forward 10 s in
+            between; a click straight after the page loads is taken (the window is timed on
+            performance.now(), which counts from page load, MONOTONIC-CLOCK).
   Faults    six planted faults must each fail: a key leaking to the wrong box, a tap focusing a box,
             no mark on the active box, the length limit ignored, keys drawn with a mouse, phone keys
-            under 48px.
+            under 48px. Two more must fail the Clock check: the window timed on the wall clock, and
+            the last pointerup starting at 0.
 
     python scripts/check-keypad.py               # the checks and the planted faults
     python scripts/check-keypad.py --shots DIR   # also save screenshots (4 boxes, each width)
@@ -77,6 +82,46 @@ FAULTS = [
     ("keys drawn with a mouse", 'js', "MaffsKeypad.CONFIG.query = 'all';"),
     ("phone keys under 48px", 'css', '.maffs-keypad-key{min-height:40px!important}'),
 ]
+
+
+CLOCK_FAULTS = [
+    ("the ghost-click window on the wall clock", 'src', 'clock.now()', 'Date.now()'),   # both readings
+    ("the last pointerup starting at 0", 'src', 'var lastUp = -Infinity;', 'var lastUp = 0;'),
+]
+
+# The 600 ms ghost-click window on box 1 (a 2-box touch page): pointerup on it, box 0 made active by the
+# handle, then box 1's own click at `wait` ms, the wall clock stepped by `step` ms just after the pointerup.
+# Returns the active box after the click: 0 if the click was ignored, 1 if it was taken. A click with no
+# pointerup before it, straight after load, is first checked with performance.now() reading 5 ms.
+CLOCK_JS = """async ([step, wait]) => {
+  const t1 = document.getElementById('t1'), real = Date.now.bind(Date), perf = performance.now;
+  performance.now = () => 5;
+  __kp.select(0); t1.click();
+  const fresh = __kp.active();
+  performance.now = perf;
+  t1.dispatchEvent(new PointerEvent('pointerup', { bubbles: true }));
+  Date.now = () => real() + step;
+  __kp.select(0);
+  await new Promise(res => setTimeout(res, wait));
+  t1.click();
+  Date.now = real;
+  return [fresh, __kp.active()];
+}"""
+
+
+async def clock_check(browser, fault=None):
+    out = []
+    for step in (0, -10000, 10000):
+        for wait, want in ((100, 0), (700, 1)):
+            ctx, page, _ = await open_page(browser, 390, 844, True, 2, fault)
+            fresh, got = await page.evaluate(CLOCK_JS, [step, wait])
+            await ctx.close()
+            if fresh != 1:
+                out.append('clock: a click straight after load was ignored (active box %d, expected 1)' % fresh)
+            if got != want:
+                out.append('clock: wall clock %+d s, a click %d ms after pointerup was %s (expected %s)'
+                           % (step // 1000, wait, 'taken' if got == 1 else 'ignored', 'taken' if want else 'ignored'))
+    return out
 
 
 def theme_css():
@@ -293,6 +338,12 @@ async def run(shots):
         fails.extend(await minus_check(browser))
         for w, h in MOUSE:
             fails.extend(await mouse_check(browser, w, h))
+        fails.extend(await clock_check(browser))
+        for fault in CLOCK_FAULTS:
+            caught = await clock_check(browser, fault)
+            print('  fault %-34s %s' % (fault[0], ('caught (%s)' % caught[0][:80]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
         for fault in FAULTS:
             caught = []
             for n in (1, 2):
@@ -324,8 +375,8 @@ def main():
     print('PASS: MaffsKeypad on touch phones at %s with %s boxes (read-only, inputmode none, never focused, '
           'one box marked, keys to the active box only, DEL and C on it alone, 12-character limit, keys 48px, '
           'no sideways scroll, box and keys in view together); the minus key; ordinary inputs with a mouse; '
-          'nothing sent; %d planted faults caught'
-          % ('/'.join(str(w) for w, _ in TOUCH), '/'.join(str(n) for n in COUNTS), len(FAULTS)))
+          'nothing sent; the ghost-click window with the wall clock stepped; %d planted faults caught'
+          % ('/'.join(str(w) for w, _ in TOUCH), '/'.join(str(n) for n in COUNTS), len(FAULTS) + len(CLOCK_FAULTS)))
     return 0
 
 

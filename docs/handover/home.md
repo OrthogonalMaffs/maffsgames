@@ -16,6 +16,19 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): MONOTONIC-CLOCK (the shared input windows on a clock that never jumps)
+
+Claude Code (home lane), worktree `~/mg-monotonic-clock`, branch `claude/monotonic-clock`; contract `docs/handover/contracts/2026-11-15-monotonic-clock.md`. Jon's ruling (15 Nov 11:07): option 1 of todo row ANSWER-LOCK-WALL-CLOCK, now closed in `docs/history/todo-done.md`.
+
+- **Changed:** answer-lock.js `now()`, keypad.js's ghost-click window and scroll.js's touch cancel read `performance.now()`, with `Date` only where `performance.now` is missing. Each window's two sides read the same clock. The window lengths and MaffsLock's API are unchanged. No game file changed, and none of the timestamp uses named in the contract changed.
+- **Starting values:** keypad's `lastUp` and scroll's `touched` start at `-Infinity`, not 0. `performance.now()` counts from page load, so a 0 would have ignored a box's click in the page's first 600 ms. check-keypad plants the 0 and catches it.
+- **Tests:** `test-answer-lock.py` "clock-step" steps `Date.now()` 10 s back, then 10 s forward, inside the fresh window. Its plant "the wall clock" fails it twice. `check-keypad.py` "Clock" does the same to the 600 ms window, at 100 ms and 700 ms, and with no step. It has two plants: both readings back on `Date.now()`, and `lastUp` starting at 0. Both are caught.
+- **Load:** `test-answer-lock.py --no-plants`, six at a time for 20 rounds (120 runs), with six wall-clock steps of about -2.9 s during the rounds: 0 failed. Before this change, 18 of 120 failed.
+- **The four Date.now() stubs were left as they are:** sequence-solver (the game's hidden timer; its sweep sets `NO_LOCK_FRESH_INIT`), trig-identity-duel (the game's time line; it waits FRESH_MS first), unit-converter (it already skews `performance.now()` with `Date.now()`) and test-top-scores (stored dates). Each still passes.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 2 (checks offline; the local flake parked)
 
 Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answer-lock-flake`; contract `docs/history/contracts/2026-11-15-answer-lock-flake.md`. The cloud session's draft (735f405, branch `claude/laughing-einstein-3hckbl`) is applied unchanged as this PR's second commit, and every claim in it was checked here.
