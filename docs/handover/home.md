@@ -18,13 +18,16 @@
 
 ## 2026-11-14 (home): UGH-STATS-HOME
 
-Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/handover/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
+Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/history/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
 
 - The total link: `.answer-total-link:has(> .answer-total[hidden])` is `display:none`, so while the total is hidden the link takes no space and is never focused. answer-count.js puts "Updated every 5 minutes" inside the link, so it is linked too.
 - Each link has its own `data-mfg-section` (`answer-total`, `ugh-stats-link`, `ugh-stats-topic`). analytics.js counts an item only inside a section, and test-section-clicks.py reads the sections from the page.
 - On a phone, choosing a topic scrolls to the first result; with Statistics chosen, that is the card. The card ignores the level, search and New filters.
 - Laptop: at 1280 px the new badge wraps onto a second row and the header grows from 240 to 282 px. It fits on one row at 1440 px. From 600 px down the badge row scrolls sideways inside itself, as before, so the header height on phones is unchanged and the row never wraps.
 - **Not done: the art/answer-box-redraws branch is NOT deleted.** The STOP IF fired, so the branch is parked. It holds one commit, 799748c "Add files via upload", made against merge base da84b07. That commit adds `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`, and `git diff 799748c c0cec86 --` on those two files is not empty: neither file is on main. #769 landed only WebP conversions, under `tools/pack-generator/rooms/*/art/`. The original PNGs exist only on that branch, so the next cloud close-out must not record the branch as deleted. Jon's question is in `docs/todo.md` row ANSWER-BOX-REDRAWS-BRANCH (§7).
+- MERGED 14 Nov, 23:53 UTC, as 14f0a3c (#771), live on the homepage. Main on the merge commit: check-site 43655483437 success, phone-fit-full 43655483470 success. Local check-changed: 63 of 63 passed. The PR's first Gate failed only in Content verifiers 47, where the Playwright image pull from mcr.microsoft.com timed out and no test ran. This token cannot rerun jobs (rerun-failed-jobs returned 403), so an empty commit re-ran the Gate, and it passed: a flake.
+
+Record: agent Claude Code; wall about 0:55 (contract to merge); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-14 (home): UGH-STATS-CASE1-1DP
 
