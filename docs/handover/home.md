@@ -18,7 +18,7 @@
 
 ## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 2 (checks offline; the local flake parked)
 
-Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answer-lock-flake`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. The cloud session's draft (735f405, branch `claude/laughing-einstein-3hckbl`) is applied unchanged as this PR's second commit, and every claim in it was checked here.
+Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answer-lock-flake`; contract `docs/history/contracts/2026-11-15-answer-lock-flake.md`. The cloud session's draft (735f405, branch `claude/laughing-einstein-3hckbl`) is applied unchanged as this PR's second commit, and every claim in it was checked here.
 
 - **Cause (a), CI (main run 43590939932, L7, trig-identity-duel):** `check-answer-lock.py`'s route aborted everything off the stub server except KaTeX, which went to cdn.jsdelivr.net. A page's 'load' waits for KaTeX's stylesheet and script.
   - Reproduced on unmodified main: KaTeX held 25 s gives "Page.goto: Timeout 20000ms exceeded" at 20.1 s, CI's error. Served from the pinned copy, the page loads in 0.1 s.
@@ -26,11 +26,14 @@ Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answe
   - Fixed in `bank_common.offline()` / `offline_async()`, called by all 30, verify-cast-away and verify-log-laws. Guarded by `scripts/test-offline-routes.py` and check-answer-lock's self-test over a dead network.
   - The remainder (20 no-route scripts) is todo row CHECKS-OFFLINE-REST.
 - **Causes (b)/(c), local (`test-answer-lock.py`): STOPPED** on the STOP IF "the cause is in a shared site asset". answer-lock.js times its window with `Date.now()`, and WSL steps the wall clock back about 2.5 s every 30 s. 18 of 120 load runs failed, every failing round held a clock step, and no round without one failed. Not fixed; the question for Jon is in todo row ANSWER-LOCK-WALL-CLOCK. LOCAL-CHECKS updated.
-- When this merges: delete the remote branch `claude/laughing-einstein-3hckbl` (Jon, 15 Nov) and record it here.
+- MERGED 15 Nov as 5446ace (#777). Main on the merge commit: check-site 43709064790 success, phone-fit-full 43709064695 success. Local check-changed: 174 checks. Seven failed in the parallel run: test-top-scores was a real bug in the draft (`bc` out of scope), fixed. Four passed alone. HC Factor and Negative Number Line failed on unmodified main too (table in #777).
+- The remote branch `claude/laughing-einstein-3hckbl` was deleted after the merge (Jon, 15 Nov). Its tip, 735f405, had landed byte for byte as #777's second commit, and the two #774 commits under it duplicated PR 1.
+
+Record: agent Claude Code; wall about 2:30 (contract to PR 2 merge, both PRs); review cycles 0; amendments 1 (Jon's follow-up of about 10:00); usage n/a.
 
 ## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 1 (header badge, leftover branch)
 
-Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/header-badge-trim`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. PR 2 (the answer-lock flake) follows on a new branch once this PR merges.
+Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/header-badge-trim`; contract `docs/history/contracts/2026-11-15-answer-lock-flake.md`. PR 2 (the answer-lock flake) follows on a new branch once this PR merges.
 
 - Jon ruled on 15 Nov at 08:51 ("remove the badge entirely please"), and the "Built to be safe for school networks" header badge is removed from `index.html`. No other badge changes. The wording stays on /op/ and /privacy/.
 - Measured locally in Chromium (stub server, Outfit loaded). Header heights before, then after, the removal:
