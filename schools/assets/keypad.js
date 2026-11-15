@@ -32,6 +32,9 @@
 
   var CONFIG = { query: '(pointer: coarse)', readOnly: true, inputmode: true, blur: true, cue: true };
   var MAX = 12;
+  // The ghost-click window is timed on a clock that never jumps (performance.now()), never the wall clock, which
+  // the device can correct mid-game (MONOTONIC-CLOCK). Date only where performance is missing.
+  var clock = (typeof performance !== 'undefined' && performance && typeof performance.now === 'function') ? performance : Date;
   // Five columns, the calculator's, so a key is the same size as MaffsCalc's on a phone. The point
   // spans two columns when there is no minus key.
   var KEYS = [
@@ -154,17 +157,17 @@
       t.addEventListener('focus', function () { if (enabled() && cfg().blur) t.blur(); });
       // Activate on pointerup: WebKit sends no click after a touch whose pointerdown was cancelled (which is
       // what keeps focus, and so the keyboard, away). click stays for anything without pointer events.
-      var lastUp = 0;
+      var lastUp = -Infinity;
       var activate = function () {
         if (opts.onTap) { opts.onTap(i); return; }
         select(i);
         keepTogether();
       };
-      t.addEventListener('pointerup', function () { if (!enabled()) return; lastUp = Date.now(); activate(); });
+      t.addEventListener('pointerup', function () { if (!enabled()) return; lastUp = clock.now(); activate(); });
       // Activating may move the page, so the tap's own click could land on whatever is now under the
       // finger, a key: cancel it.
       t.addEventListener('touchend', function (e) { if (enabled() && cfg().blur) e.preventDefault(); }, { passive: false });
-      t.addEventListener('click', function () { if (enabled() && Date.now() - lastUp > 600) activate(); });
+      t.addEventListener('click', function () { if (enabled() && clock.now() - lastUp > 600) activate(); });
     });
 
     if (el) {
