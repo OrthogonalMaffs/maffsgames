@@ -118,9 +118,6 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .check-btn{display:block;width:100%;padding:14px;border-radius:10px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;cursor:pointer;transition:opacity 0.15s;margin:16px 0}
 .check-btn:hover{opacity:0.9}
 .check-btn:disabled{opacity:0.4;cursor:default}
-.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s}
-.next-btn:hover{border-color:var(--accent)}
-.next-btn.visible{display:block}
 
 /* Feedback */
 .feedback{text-align:center;padding:12px;border-radius:10px;margin:12px 0;font-weight:600;font-size:15px}
@@ -175,12 +172,15 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
   "ready": "document.getElementById('gameScreen').classList.contains('active')",
   "answer": [
     "if (!document.getElementById('gameScreen').classList.contains('active')) return;",
     "const q = questions[currentQ]; if (!q) return;",
+    "if (q.type === 'lineup') { const c = document.querySelectorAll('#lineupZone .suspect-card');",
+    "  moveSuspect(c[0], c[1]); moveSuspect(c[0], c[1]); }",
     "if (q.type === 'roundup') { const b = [...document.querySelectorAll('.option-btn')];",
     "  if (b.length) b[i % b.length].click();",
     " }if (q.type === 'placeit') setMarkerPosition(i % 2 ? 0.1 : 0.9);",
@@ -245,7 +245,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div id="gameArea"></div>
   <div class="feedback" id="feedback" style="display:none"></div>
   <button class="check-btn" id="checkBtn" onclick="checkAnswer()" style="display:none">Check</button>
-  <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next Case</button>
+  <div id="nextMount" data-maffs-lock-skip></div>
 </div>
 
 <!-- REVEAL SCREEN -->
@@ -347,6 +347,8 @@ let correctCount = 0;
 let typeCorrect = {lineup:0,roundup:0,placeit:0};
 let typeTotal = {lineup:0,roundup:0,placeit:0};
 const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
+const nextMount = document.getElementById('nextMount'); // where MaffsNext puts Next Case
+const RIGHT_ADVANCE_MS = 1000;                          // a right answer moves on by itself (canon 7.6)
 let markerPos = null; // for Place It: null until the student places the marker
 let revealShown = false;
 
@@ -440,6 +442,9 @@ function startGame() {
 }
 
 function loadQuestion() {
+  // Nothing the last case set may act on this one: its advance timer, its Next Case.
+  MaffsLock.clearTimers();
+  if (window.MaffsNext) MaffsNext.clear(nextMount);
   if (currentQ >= questions.length) {
     showReveal();
     return;
@@ -455,8 +460,9 @@ function loadQuestion() {
 
   document.getElementById('feedback').style.display = 'none';
   document.getElementById('checkBtn').style.display = 'block';
-  document.getElementById('checkBtn').disabled = false;
-  document.getElementById('nextBtn').classList.remove('visible');
+  // Check starts disabled for every type: each enables it once the student has done something (moved a
+  // card, picked an option, placed the marker). It started enabled until 15 Nov 2026, and Line-Up left it so.
+  document.getElementById('checkBtn').disabled = true;
 
   if (q.type === 'lineup') renderLineup(q.data);
   else if (q.type === 'roundup') renderRoundup(q.data);
@@ -474,6 +480,10 @@ function renderLineup(data) {
   document.getElementById('promptSub').textContent = 'Drag the suspects into order — smallest to largest.';
 
   const shuffled = shuffle(data.suspects.map((v, i) => ({display: v, numeric: parseFloat(v), origIdx: i})));
+  // The start is never an order Check would mark right (a free mark until 15 Nov 2026). A shuffle that
+  // lands on one has its first card moved to the end: the smallest value is then last, and every row
+  // has two different values, so that order is always wrong. No redraw.
+  if (lineupMarks(shuffled.map(s => s.numeric), data).every(Boolean)) shuffled.push(shuffled.shift());
 
   area.innerHTML = `
     <div class="arrow-hint"><span>Smallest</span> <span style="font-size:24px">&#8594;</span> <span>Largest</span></div>
@@ -483,6 +493,24 @@ function renderLineup(data) {
   `;
 
   setupDragHandlers();
+}
+
+// Line-Up's marking rule, card by card: card i is right when its value is the key's value at i
+// (two cards equal in value, 0.77 and 0.770, may go in either order).
+function lineupMarks(values, data) {
+  const sortedValues = data.sorted.map(s => parseFloat(s));
+  return values.map((v, i) => Math.abs(v - sortedValues[i]) < 1e-9);
+}
+
+// The one place a card moves (mouse drag and touch drag alike): `card` goes to where `target` is.
+// Check can be pressed from the first move on.
+function moveSuspect(card, target) {
+  if (MaffsLock.isLocked(gameEl) || !card || !target || card === target) return;
+  const zone = document.getElementById('lineupZone');
+  const cards = [...zone.querySelectorAll('.suspect-card')];
+  if (cards.indexOf(card) < cards.indexOf(target)) zone.insertBefore(card, target.nextSibling);
+  else zone.insertBefore(card, target);
+  document.getElementById('checkBtn').disabled = false;
 }
 
 function setupDragHandlers() {
@@ -522,17 +550,7 @@ function onDragOver(e) {
   if (!dragState || e.target === dragState) return;
   const target = e.target.closest('.suspect-card');
   if (!target || target === dragState) return;
-
-  const zone = document.getElementById('lineupZone');
-  const cards = [...zone.querySelectorAll('.suspect-card')];
-  const dragIdx = cards.indexOf(dragState);
-  const targetIdx = cards.indexOf(target);
-
-  if (dragIdx < targetIdx) {
-    zone.insertBefore(dragState, target.nextSibling);
-  } else {
-    zone.insertBefore(dragState, target);
-  }
+  moveSuspect(dragState, target);
 }
 
 function onDrop(e) {
@@ -582,17 +600,7 @@ function onTouchMove(e) {
   if (touchGhost) touchGhost.style.display = '';
 
   const target = el ? el.closest('.suspect-card') : null;
-  if (target && target !== touchCard) {
-    const zone = document.getElementById('lineupZone');
-    const cards = [...zone.querySelectorAll('.suspect-card')];
-    const dragIdx = cards.indexOf(touchCard);
-    const targetIdx = cards.indexOf(target);
-    if (dragIdx < targetIdx) {
-      zone.insertBefore(touchCard, target.nextSibling);
-    } else {
-      zone.insertBefore(touchCard, target);
-    }
-  }
+  if (target && target !== touchCard) moveSuspect(touchCard, target);
 }
 
 function onTouchEnd(e) {
@@ -842,18 +850,11 @@ function checkLineup(data) {
   const zone = document.getElementById('lineupZone');
   const cards = [...zone.querySelectorAll('.suspect-card')];
   const userValues = cards.map(c => parseFloat(c.dataset.value));
-  const sortedValues = data.sorted.map(s => parseFloat(s));
 
   // Compare numerically (handles duplicates and trailing zeros)
-  let allCorrect = true;
-  cards.forEach((card, i) => {
-    if (Math.abs(userValues[i] - sortedValues[i]) < 1e-9) {
-      card.classList.add('correct');
-    } else {
-      card.classList.add('incorrect');
-      allCorrect = false;
-    }
-  });
+  const marks = lineupMarks(userValues, data);
+  const allCorrect = marks.every(Boolean);
+  cards.forEach((card, i) => card.classList.add(marks[i] ? 'correct' : 'incorrect'));
 
   recordAnswer('lineup', allCorrect, equalValueNote(data.suspects));
 }
@@ -916,8 +917,9 @@ function checkPlaceit(data) {
   setStepButtons();
 
   // Canon 7.6.1: the reason and Next sit above the fold. On a short phone they can end under the fixed
-  // 40px footer, so bring Next up (the feedback is above it, and fits with it on any phone).
-  MaffsScroll.reveal(document.getElementById('nextBtn'));
+  // 40px footer, so bring Next up (the feedback is above it, and fits with it on any phone); a right
+  // answer has no Next, so bring up its feedback.
+  MaffsScroll.reveal(() => nextMount.querySelector('.maffs-next') || document.getElementById('feedback'));
 }
 
 function recordAnswer(type, isCorrect, note) {
@@ -943,7 +945,10 @@ function recordAnswer(type, isCorrect, note) {
   }
 
   document.getElementById('checkBtn').style.display = 'none';
-  document.getElementById('nextBtn').classList.add('visible');
+  // Canon 7.6: a right answer moves on after a moment. A wrong one waits for the student on MaffsNext,
+  // and so does a right one that carries a note to read (two cards equal in value; Jon, 4 Oct 2026).
+  if (isCorrect && !note) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);
+  else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion, label: 'Next Case \u2192' });
 
   if (typeof mfg === 'function') {
     mfg('question_answered', {

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium) |
+# ci-line: Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium) |
 """Decimal Detective: every key recomputed, and every answer marked through the real page.
 
 The bank (45 items, one level: 15 Line-Up, 15 Round Up, 15 Place It) was keyed by hand and never
@@ -20,7 +20,18 @@ The bank is read from the live page (post any runtime patch), then:
   Marking, in Chromium: every item is shown through the game's own loadQuestion().
     Line-Up: the recomputed order is marked right, and with any equal pair swapped; one wrong
       order (two unequal neighbours swapped) is marked wrong; a row with an equal pair shows the
-      note naming both cards, right or wrong.
+      note naming both cards, right or wrong. The cards are moved by the page's own moveSuspect(),
+      the one place a card moves.
+    Line-Up's start (15 Nov 2026; todo 1.51: Check was enabled on load, and a shuffle could land on
+      the key, a free mark): every row has two different values; for every item and each of SEEDS
+      seeded shuffles, the start is the row's own cards, Check is disabled, and the start is not
+      an order the key marks right (compared here with Decimal). Then a real mouse drag of one card
+      onto its neighbour changes the order and enables Check, on every item; and on each phone a
+      real touch drag does the same.
+    Moving on (canon 7.6), for each type: a right answer mounts no Next and moves on by itself after
+      RIGHT_ADVANCE_MS (1000); a wrong answer shows its feedback and MaffsNext's "Next Case", stays
+      put, and moves on once when it is pressed. A right Line-Up whose row has an equal pair carries
+      the note, so it waits on Next Case too (Jon's ruling of 4 Oct 2026 keeps that note readable).
     Round Up: every option clicked; only the key is marked right.
     Place It (Jon's ruling on audit F4, 5 Oct 2026; canon 7.1.2): on load the marker is off the line
       and Check is disabled, so no item can score with no placement; pressing Check anyway marks
@@ -32,14 +43,18 @@ The bank is read from the live page (post any runtime patch), then:
       marker one step (nothing before a placement, nothing past an end, nothing after Check).
     Phones, on a touch profile at 320x568, 375x667 and 390x844: the step buttons are at least 44px
       each way and below the line; for every item, one tap three steps from the value, then the step
-      buttons, reach it with no value visible, and Check marks it right; after a right and after a
-      wrong answer the feedback and Next are on screen, above the 40px footer.
+      buttons, reach it with no value visible, and Check marks it right; after a right answer the
+      feedback, and after a wrong answer the feedback and Next (the MaffsNext control), are on
+      screen, above the 40px footer.
     The session is never finished, so nothing is submitted; every request off the stub server is
     aborted.
 A fault-injection self-test must FAIL each time: identical cards in a row and an equal-value
-distractor (patched bank copies), a wrong Round Up key, and three patched pages served in place of
-the file: the marker starting at 50% with Check enabled, a one-step tolerance in the marking, and a
-live value readout on the marker. It runs unless --no-selftest. The file is never touched.
+distractor (patched bank copies), a wrong Round Up key, and patched pages served in place of
+the file (scripts/plant_common.py: a plant that does not apply is a STALE PLANT and fails the run):
+the marker starting at 50% with Check enabled, a one-step tolerance in the marking, a live value
+readout on the marker, Check enabled when a question loads, a Line-Up start left as shuffled (so
+some seed starts on the key), a right answer that waits, and a wrong answer that moves on by
+itself. It runs unless --no-selftest. The file is never touched.
 
     python scripts/verify-decimal-detective.py [--verbose] [--no-selftest] [--chromium PATH]
 """
@@ -54,6 +69,7 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import plant_common as pc  # noqa: E402
 
 SLUG = 'decimal-detective'
 COUNTS = {'LINEUP': 15, 'ROUNDUP': 15, 'PLACEIT': 15}
@@ -70,6 +86,8 @@ FORM_ASKS = {
 STEPS = 20
 PHONES = [(320, 568), (375, 667), (390, 844)]
 FOOTER = 40
+SEEDS = range(1, 61)   # seeded shuffles of each Line-Up row's start
+RIGHT_ADVANCE_MS = 1000
 
 # The planted Place It faults, each a page served in place of the file: (fixed text, planted text).
 PATCHES = {
@@ -80,7 +98,16 @@ PATCHES = {
     'readout': ("  marker.style.display = '';\n  document.getElementById('checkBtn').disabled = false;\n  setStepButtons();",
                 "  marker.style.display = '';\n  document.getElementById('checkBtn').disabled = false;\n  setStepButtons();\n"
                 "  document.getElementById('markerValue').textContent = formatPlaceit(placeitValue(placeItData, markerPos));"),
+    'check-on-load': ("Line-Up left it so.\n  document.getElementById('checkBtn').disabled = true;",
+                      "Line-Up left it so.\n  document.getElementById('checkBtn').disabled = false;"),
+    'start-as-shuffled': ("  if (lineupMarks(shuffled.map(s => s.numeric), data).every(Boolean)) shuffled.push(shuffled.shift());\n",
+                          "  /* planted: the start left as shuffled */\n"),
+    'right-waits': ("if (isCorrect && !note) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);\n  else MaffsNext.wrong(",
+                    "if (isCorrect && !note) { /* planted: waits */ }\n  else MaffsNext.wrong("),
+    'wrong-moves-on': ("else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion, label: 'Next Case \\u2192' });",
+                       "else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);"),
 }
+PLACEIT_PATCHES = ('start', 'tolerance', 'readout')   # their self-test run is the desktop Place It pass
 
 
 class Report:
@@ -201,11 +228,28 @@ def fmt(x):
 # The page
 # ---------------------------------------------------------------------------------------------
 JS_LOAD = '''([type, data]) => { questions = [{type, data}]; currentQ = 0; answered = false; loadQuestion(); }'''
+# Put the cards in `order` with the page's own moveSuspect(), so Check is enabled as a student's drag
+# enables it; when the start is already that order, one card goes there and back.
 JS_ORDER = '''(order) => {
   const zone = document.getElementById('lineupZone');
-  const cards = [...zone.querySelectorAll('.suspect-card')];
-  for (const s of order) zone.appendChild(cards.splice(cards.findIndex(c => c.dataset.display === s), 1)[0]);
+  const now = () => [...zone.querySelectorAll('.suspect-card')];
+  order.forEach((s, i) => { const cards = now(), c = cards.find(c => c.dataset.display === s);
+    if (cards[i] !== c) moveSuspect(c, cards[i]); });
+  if (document.getElementById('checkBtn').disabled) { const c = now(); moveSuspect(c[0], c[1]); moveSuspect(c[0], c[1]); }
+  return now().map(c => c.dataset.display);
 }'''
+# Math.random replaced by mulberry32 from a seed, so a shuffle can be repeated.
+JS_SEED = '''(seed) => { let a = seed >>> 0; Math.random = function () {
+  a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }'''
+JS_LINEUP = '''() => ({order: [...document.querySelectorAll('#lineupZone .suspect-card')].map(c => c.dataset.display),
+  checkDisabled: document.getElementById('checkBtn').disabled,
+  checkShown: getComputedStyle(document.getElementById('checkBtn')).display !== 'none'})'''
+JS_CARD_XY = '''(i) => { const b = document.querySelectorAll('#lineupZone .suspect-card')[i].getBoundingClientRect();
+  return [b.left + b.width / 2, b.top + b.height / 2]; }'''
+JS_LOAD2 = '''([type, data]) => { questions = [{type, data}, {type, data}]; currentQ = 0; loadQuestion(); }'''
+JS_NEXT_STATE = '''() => { const n = document.querySelectorAll('#gameScreen .maffs-next');
+  return {q: currentQ, next: n.length, label: n.length ? n[0].textContent : null}; }'''
 JS_FEEDBACK = '''() => { const f = document.getElementById('feedback');
   return f.style.display === 'none' ? null : f.textContent.trim(); }'''
 # The marker's place and every number the student can see in the Place It area (the tick labels and,
@@ -218,10 +262,10 @@ JS_PLACE = '''() => { const mv = document.getElementById('markerValue'), box = d
           checkDisabled: document.getElementById('checkBtn').disabled}; }'''
 JS_X = '''(k) => { const l = document.getElementById('numberLine').getBoundingClientRect();
   return [l.left + k / 20 * l.width, l.top + l.height / 2]; }'''
-JS_FOLD = '''() => { const r = id => document.getElementById(id).getBoundingClientRect();
-  return {fbTop: r('feedback').top, fbBottom: r('feedback').bottom, nextTop: r('nextBtn').top,
-          nextBottom: r('nextBtn').bottom, nextShown: getComputedStyle(document.getElementById('nextBtn')).display !== 'none',
-          fold: innerHeight - 40}; }'''
+JS_FOLD = '''() => { const fb = document.getElementById('feedback').getBoundingClientRect();
+  const n = document.querySelector('#nextMount .maffs-next'), nb = n ? n.getBoundingClientRect() : null;
+  return {fbTop: fb.top, fbBottom: fb.bottom, nextShown: !!n, nextTop: nb ? nb.top : null,
+          nextBottom: nb ? nb.bottom : null, nextH: nb ? nb.height : 0, fold: innerHeight - 40}; }'''
 
 
 def verdict(text):
@@ -236,6 +280,12 @@ def open_page(pw, base, chromium, viewport, touch, patch):
     ctx = browser.new_context(viewport={'width': viewport[0], 'height': viewport[1]},
                               has_touch=touch, is_mobile=touch)
     ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)   # MaffsNext's 3 s floor: Next Case is pressed at once
+    planted = None                               # a plant that does not apply raises StalePlant here, before anything is served
+    if patch:
+        fixed, new = PATCHES[patch]
+        with open(os.path.join(HERE, '..', 'games', SLUG, 'index.html'), encoding='utf-8') as f:
+            planted = pc.apply_plant(f.read(), fixed, new, name=patch)
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
@@ -244,12 +294,8 @@ def open_page(pw, base, chromium, viewport, touch, patch):
         url = r.request.url
         if not url.startswith(base):
             return r.abort()
-        if patch and url.split('?')[0] == page_url:
-            fixed, planted = PATCHES[patch]
-            with open(os.path.join(HERE, '..', 'games', SLUG, 'index.html'), encoding='utf-8') as f:
-                html = f.read()
-            assert html.count(fixed) == 1, 'self-test patch out of date: %r' % fixed
-            return r.fulfill(status=200, content_type='text/html', body=html.replace(fixed, planted))
+        if planted is not None and url.split('?')[0] == page_url:
+            return r.fulfill(status=200, content_type='text/html', body=planted)
         return r.continue_()
     page.route('**/*', route)
     page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
@@ -403,19 +449,166 @@ def phone_placeit(rep, page, items, size, verbose):
             text = page.evaluate(JS_FEEDBACK)
             if verdict(text) != ('right' if right else 'wrong'):
                 rep.fail(where, 'marking', 'reached step %d with the step buttons, Check shows %r' % (goal, text))
+            page.wait_for_timeout(60)   # MaffsScroll.reveal's second pass (an animation frame)
             f = page.evaluate(JS_FOLD)
-            if not f['nextShown'] or f['nextTop'] < 0 or f['nextBottom'] > f['fold'] or f['fbTop'] < 0:
-                rep.fail(where, 'fold', 'after a %s answer the feedback (%.0f-%.0f) and Next (%.0f-%.0f) are not '
-                         'both on screen above the footer (%.0f)' % ('right' if right else 'wrong', f['fbTop'],
-                         f['fbBottom'], f['nextTop'], f['nextBottom'], f['fold']))
+            if right:
+                if f['nextShown']:
+                    rep.fail(where, 'moving on', 'a Next control after a right answer (canon 7.6)')
+                if f['fbTop'] < 0 or f['fbBottom'] > f['fold']:
+                    rep.fail(where, 'fold', 'after a right answer the feedback (%.0f-%.0f) is not on screen above '
+                             'the footer (%.0f)' % (f['fbTop'], f['fbBottom'], f['fold']))
+                continue
+            if not f['nextShown']:
+                rep.fail(where, 'fold', 'after a wrong answer there is no MaffsNext control (canon 7.6)')
+                continue
+            if f['nextH'] < 44:
+                rep.fail(where, 'fold', 'the Next control is %.0fpx tall, under 44px' % f['nextH'])
+            if f['nextTop'] < 0 or f['nextBottom'] > f['fold'] or f['fbTop'] < 0:
+                rep.fail(where, 'fold', 'after a wrong answer the feedback (%.0f-%.0f) and Next (%.0f-%.0f) are not '
+                         'both on screen above the footer (%.0f)' % (f['fbTop'], f['fbBottom'], f['nextTop'],
+                                                                     f['nextBottom'], f['fold']))
             worst = max(worst or 0, f['nextBottom'])
     print('  %s: %d items reached right and wrong, %d step-button taps; Next ends by %.0f, fold %.0f '
           '(innerHeight - %dpx footer)' % (tag, len(items), presses, worst or 0, fold, FOOTER))
 
 
+def marked_right(order, q):
+    """Would the key mark this order right? Value by value against the row sorted here (Decimal)."""
+    return [D(x) for x in order] == sorted(D(x) for x in q['suspects'])
+
+
+def lineup_start(rep, page, items):
+    """Every Line-Up row, SEEDS seeded shuffles: Check disabled, the start the row's own cards and never
+    an order the key marks right; then a real mouse drag enables Check. Returns the starts read."""
+    starts = 0
+    for i, q in enumerate(items, 1):
+        where = 'Line-Up %d' % i
+        if len({D(x) for x in q['suspects']}) < 2:
+            rep.fail(where, 'row', 'every card has the same value, so no start can be wrong')
+            continue
+        for seed in SEEDS:
+            page.evaluate(JS_SEED, seed * 1000 + i)
+            page.evaluate(JS_LOAD, ['lineup', q])
+            st = page.evaluate(JS_LINEUP)
+            starts += 1
+            tag = 'seed %d start %s' % (seed, st['order'])
+            if sorted(st['order']) != sorted(q['suspects']):
+                rep.fail(where, 'start', 'not the row\'s own cards: %s' % tag)
+            if not st['checkShown'] or not st['checkDisabled']:
+                rep.fail(where, 'start', 'Check can be pressed before a card is moved: %s' % tag)
+            if marked_right(st['order'], q):
+                rep.fail(where, 'start', 'starts in an order the key marks right, a free mark: %s' % tag)
+        # A student's own move: the first card dragged onto the second, with the mouse.
+        before = page.evaluate(JS_LINEUP)['order']
+        x0, y0 = page.evaluate(JS_CARD_XY, 0)
+        x1, y1 = page.evaluate(JS_CARD_XY, 1)
+        page.mouse.move(x0, y0)
+        page.mouse.down()
+        page.mouse.move((x0 + x1) / 2, (y0 + y1) / 2, steps=4)
+        page.mouse.move(x1, y1, steps=4)
+        page.mouse.up()
+        after = page.evaluate(JS_LINEUP)
+        if after['order'] == before:
+            rep.fail(where, 'drag', 'dragging the first card onto the second moved nothing')
+        elif after['checkDisabled']:
+            rep.fail(where, 'drag', 'a card was moved (%s to %s) and Check is still disabled' % (before, after['order']))
+    return starts
+
+
+def touch_drag(rep, page, q, tag):
+    """On a touch screen: Check disabled on a fresh Line-Up; a real touch drag of the first card onto the
+    second (Chromium's own touch events) moves it and enables Check."""
+    page.evaluate(JS_LOAD, ['lineup', q])
+    page.evaluate('window.scrollTo(0, 0)')
+    before = page.evaluate(JS_LINEUP)
+    if not before['checkDisabled']:
+        rep.fail(tag, 'Line-Up start', 'Check can be pressed before a card is moved')
+    x0, y0 = page.evaluate(JS_CARD_XY, 0)
+    x1, y1 = page.evaluate(JS_CARD_XY, 1)
+    cdp = page.context.new_cdp_session(page)
+    cdp.send('Input.dispatchTouchEvent', {'type': 'touchStart', 'touchPoints': [{'x': x0, 'y': y0}]})
+    for k in range(1, 5):
+        cdp.send('Input.dispatchTouchEvent', {'type': 'touchMove', 'touchPoints': [
+            {'x': x0 + (x1 - x0) * k / 4, 'y': y0 + (y1 - y0) * k / 4}]})
+    cdp.send('Input.dispatchTouchEvent', {'type': 'touchEnd', 'touchPoints': []})
+    cdp.detach()
+    after = page.evaluate(JS_LINEUP)
+    if after['order'] == before['order']:
+        rep.fail(tag, 'Line-Up touch drag', 'dragging the first card onto the second moved nothing')
+    elif after['checkDisabled']:
+        rep.fail(tag, 'Line-Up touch drag', 'a card was moved and Check is still disabled')
+
+
+def advance_pass(rep, page, bank):
+    """Canon 7.6 for each type: a right answer moves on by itself (unless it carries a note to read); a
+    wrong one waits on Next Case."""
+    got = page.evaluate('RIGHT_ADVANCE_MS')
+    if got != RIGHT_ADVANCE_MS:
+        rep.fail('moving on', 'right answer', 'RIGHT_ADVANCE_MS is %s, expected %d' % (got, RIGHT_ADVANCE_MS))
+    plain = next(q for q in bank['LINEUP'] if len({D(x) for x in q['suspects']}) == len(q['suspects']))
+    paired = next(q for q in bank['LINEUP'] if len({D(x) for x in q['suspects']}) < len(q['suspects']))
+    rq, pq = bank['ROUNDUP'][0], next(q for q in bank['PLACEIT'] if grid_index(q) is not None)
+
+    def answer(kind, q, right):
+        page.evaluate(JS_LOAD2, [kind, q])
+        if kind == 'lineup':
+            order = sorted(q['suspects'], key=D)
+            page.evaluate(JS_ORDER, order if right else order[::-1])
+        elif kind == 'roundup':
+            page.click('.option-btn[data-option="%s"]' % (q['answer'] if right else next(o for o in q['options'] if o != q['answer'])))
+        else:
+            kt = grid_index(q)
+            page.evaluate('(k) => setMarkerPosition(k / 20)', kt if right else (kt - 1 if kt > 0 else kt + 1))
+        page.click('#checkBtn')
+        return verdict(page.evaluate(JS_FEEDBACK)), page.evaluate(JS_NEXT_STATE)
+
+    def waits(where, what, st):
+        if st['next'] != 1:
+            rep.fail(where, what, '%d MaffsNext controls, expected 1 (canon 7.6)' % st['next'])
+            return
+        if not (st['label'] or '').startswith('Next Case'):
+            rep.fail(where, what, 'the control reads %r, expected "Next Case"' % st['label'])
+        page.wait_for_timeout(RIGHT_ADVANCE_MS + 500)
+        if page.evaluate('currentQ') != 0:
+            rep.fail(where, what, 'moved on by itself: it must wait for Next Case (canon 7.6)')
+            return
+        page.click('#nextMount .maffs-next')
+        after = page.evaluate(JS_NEXT_STATE)
+        if after['q'] != 1 or after['next']:
+            rep.fail(where, what, 'Next Case left case %d and %d control(s)' % (after['q'] + 1, after['next']))
+
+    for kind, q, name in (('lineup', plain, 'Line-Up'), ('roundup', rq, 'Round Up'), ('placeit', pq, 'Place It')):
+        got, st = answer(kind, q, True)
+        if got != 'right':
+            rep.fail(name, 'right answer', 'marked %r' % got)
+        if st['next']:
+            rep.fail(name, 'right answer', 'a Next control is mounted: a right answer must not wait (canon 7.6)')
+        if st['q'] != 0:
+            rep.fail(name, 'right answer', 'moved on before the feedback could be read')
+        try:
+            page.wait_for_function('currentQ === 1', timeout=RIGHT_ADVANCE_MS + 4000)
+        except Exception:
+            rep.fail(name, 'right answer', 'did not move on by itself within %d ms (canon 7.6)' % (RIGHT_ADVANCE_MS + 4000))
+        got, st = answer(kind, q, False)
+        if got != 'wrong':
+            rep.fail(name, 'wrong answer', 'marked %r' % got)
+        waits(name, 'wrong answer', st)
+    got, st = answer('lineup', paired, True)          # right, with the equal-value note: it waits to be read
+    if got != 'right':
+        rep.fail('Line-Up with an equal pair', 'right answer', 'marked %r' % got)
+    waits('Line-Up with an equal pair', 'right answer with its note', st)
+
+
+def close(browser, page):
+    """Close, with no right answer's advance timer left to run: the session is never finished."""
+    page.evaluate('MaffsLock.clearTimers()')
+    browser.close()
+
+
 def run_page(rep, chromium=None, verbose=False, patch=None):
     """Read the bank, then mark every item through the page. Returns (bank, actions).
-    A self-test run (patch) does the desktop Place It pass only."""
+    A self-test run does only what its plant needs: the desktop Place It pass (PLACEIT_PATCHES), or
+    Line-Up's start and the moving on (the others)."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -424,9 +617,16 @@ def run_page(rep, chromium=None, verbose=False, patch=None):
             bank = page.evaluate('JSON.parse(JSON.stringify({LINEUP: LINEUP_QUESTIONS, '
                                  'ROUNDUP: ROUNDUP_QUESTIONS, PLACEIT: PLACEIT_QUESTIONS}))')
             actions = 0
-            if patch:
+            if patch in PLACEIT_PATCHES:
                 actions += desktop_placeit(rep, page, bank['PLACEIT'])
-                browser.close()
+                close(browser, page)
+                return bank, actions
+            actions += lineup_start(rep, page, bank['LINEUP'])
+            advance_pass(rep, page, bank)
+            if patch:
+                close(browser, page)
+                for e in errors:
+                    rep.fail('page', 'error', e)
                 return bank, actions
 
             for i, q in enumerate(bank['LINEUP'], 1):
@@ -470,11 +670,12 @@ def run_page(rep, chromium=None, verbose=False, patch=None):
             keys_placeit(rep, page, placeable[0])
             if page.evaluate('window._mfgCompleted === true'):
                 rep.fail('page', 'session', 'the session reached its end screen; it must not (nothing may submit)')
-            browser.close()
+            close(browser, page)
             for size in PHONES:
                 browser, page, errs = open_page(pw, base, chromium, size, True, None)
+                touch_drag(rep, page, bank['LINEUP'][0], '%dx%d' % size)
                 phone_placeit(rep, page, placeable, size, verbose)
-                browser.close()
+                close(browser, page)
                 errors += errs
             for e in errors:
                 rep.fail('page', 'error', e)
@@ -528,9 +729,18 @@ def selftest(bank, chromium):
 
     for patch, name in (('start', 'Place It marker at 50%, Check enabled (page)'),        # the audit's F1
                         ('tolerance', 'Place It one-step tolerance (page)'),               # F2, F3
-                        ('readout', 'Place It live value readout (page)')):                # F4
+                        ('readout', 'Place It live value readout (page)'),                 # F4
+                        ('check-on-load', 'Check enabled when a question loads (page)'),   # todo 1.51
+                        ('start-as-shuffled', 'Line-Up start left as shuffled (page)'),    # todo 1.51
+                        ('right-waits', 'a right answer waits (page)'),                    # canon 7.6
+                        ('wrong-moves-on', 'a wrong answer moves on by itself (page)')):
         rep = Report()
-        run_page(rep, chromium, patch=patch)
+        try:
+            run_page(rep, chromium, patch=patch)
+        except pc.StalePlant as e:                                              # a plant that did not apply fails the run
+            ok = False
+            lines.append('  self-test %-44s %s' % (name, e))
+            continue
         record(name, rep)
     return ok, lines
 
@@ -559,7 +769,7 @@ def main():
             print(ln)
         ok = ok and s_ok
     print('\n%s: %d FAIL(s); %d items (Line-Up and Round Up keys recomputed with Decimal), '
-          '%d answers marked in Chromium'
+          '%d Line-Up starts and answers read or marked in Chromium'
           % ('PASS' if ok else 'FAILED', len(rep.fails), sum(len(v) for v in bank.values()), actions))
     return 0 if ok else 1
 
