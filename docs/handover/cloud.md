@@ -77,6 +77,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-15 (cloud): CONTENT-SAFETY-COVERAGE (`docs/handover/contracts/2026-11-15-content-safety-coverage.md`; Jon's ruling 14 Nov 22:46, item 3 of 3)
+
+Agent Claude Code (cloud), branch `claude/nice-davinci-26hl5y` from main 7b00e6c. Close-out of ESSENTIALS-PHONE-FIT-PAIR (#788 6065fb6, #790 984851c) in the first commit. One PR, Medium, merging on green.
+Done on the branch: `scripts/check-content-safety.py` no longer reads a hand list (GLOBS); it reads every `.html` and `.js` (git's tracked and untracked-not-ignored files, or a walk for a `--root` copy) outside a named `EXCLUDE` (.git, .github, .claude, docs, scripts, data, tools, firebase, node_modules, each with its reason), games and escape rooms first, each once. `guard()` fails a top-level folder holding an `.html` that is neither a published section (`SITE`, read from `scripts/check-publish-scope.py`, not copied) nor in `EXCLUDE`, and a published page or script that `EXCLUDE` would hide (docs/art/ is SITE inside docs). Selftest: 28 to 33 cases (a tier (a) word on an Ugh, stats page; a planted `newsection/`; a planted `docs/art/page.html`; the tree passes the guard; ugh-stats read). Files read 241 to 248: new, the six `/ugh-stats/` pages and `parents/guide.js`; 0 hits. Run time 7.3 s to 6.8 s locally. Todo row 52 moved to todo-done.
+Decided for you: the contract's guard ("neither read nor in EXCLUDE") cannot fire when everything outside EXCLUDE is read, so its other side is the site's own publish classification; no second list of sections.
+Next: Gate, merge, main's two runs; the contract moves to history in the next cloud task's first commit.
+
 ## 2026-11-15 (cloud): ESSENTIALS-PHONE-FIT-PAIR (`docs/history/contracts/2026-11-15-essentials-phone-fit-pair.md`; Jon's rulings 14 Nov 22:46 and 22:54, 15 Nov 18:46)
 
 Agent Claude Code (cloud), branch `claude/tender-meitner-t6gc5f` from main 7aeefca. Close-out of PACK-WORDING-1511 (#785) 2ab5608. Two PRs in order, Medium, each merging on green; lane exception for `schools/assets/session-length.js` (Jon, 14 Nov 22:54).
