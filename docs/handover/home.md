@@ -18,16 +18,16 @@
 
 ## 2026-11-15 (home): MONOTONIC-CLOCK (the shared input windows on a clock that never jumps)
 
-Claude Code (home lane), worktree `~/mg-monotonic-clock`, branch `claude/monotonic-clock`; contract `docs/handover/contracts/2026-11-15-monotonic-clock.md`. Jon's ruling (15 Nov 11:07): option 1 of todo row ANSWER-LOCK-WALL-CLOCK, now closed in `docs/history/todo-done.md`.
+Claude Code (home lane), worktree `~/mg-monotonic-clock`, branch `claude/monotonic-clock`; contract `docs/history/contracts/2026-11-15-monotonic-clock.md`. Jon's ruling (15 Nov 11:07): option 1 of todo row ANSWER-LOCK-WALL-CLOCK, now closed in `docs/history/todo-done.md`.
 
 - **Changed:** answer-lock.js `now()`, keypad.js's ghost-click window and scroll.js's touch cancel read `performance.now()`, with `Date` only where `performance.now` is missing. Each window's two sides read the same clock. The window lengths and MaffsLock's API are unchanged. No game file changed, and none of the timestamp uses named in the contract changed.
 - **Starting values:** keypad's `lastUp` and scroll's `touched` start at `-Infinity`, not 0. `performance.now()` counts from page load, so a 0 would have ignored a box's click in the page's first 600 ms. check-keypad plants the 0 and catches it.
 - **Tests:** `test-answer-lock.py` "clock-step" steps `Date.now()` 10 s back, then 10 s forward, inside the fresh window. Its plant "the wall clock" fails it twice. `check-keypad.py` "Clock" does the same to the 600 ms window, at 100 ms and 700 ms, and with no step. It has two plants: both readings back on `Date.now()`, and `lastUp` starting at 0. Both are caught.
 - **Load:** `test-answer-lock.py --no-plants`, six at a time for 20 rounds (120 runs), with six wall-clock steps of about -2.9 s during the rounds: 0 failed. Before this change, 18 of 120 failed.
 - **The four Date.now() stubs were left as they are:** sequence-solver (the game's hidden timer; its sweep sets `NO_LOCK_FRESH_INIT`), trig-identity-duel (the game's time line; it waits FRESH_MS first), unit-converter (it already skews `performance.now()` with `Date.now()`) and test-top-scores (stored dates). Each still passes.
-- MERGED: pending.
+- MERGED 15 Nov as d59aeca (#781), after #780 (8e8f3d6) made check-ugh-stats round halves up. The first Gate on #781 failed only on "Ugh, stats pages", which main failed too from the bot's data commit 54e4a99 (Jon: wait for #780, do not change the check). Branch then brought up to date with main (278e168), and the Gate went green. Main on the merge commit: check-site 43722528620 success, phone-fit-full 43722528614 success. Contract moved to `docs/history/contracts/` by the close-out.
 
-Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; review cycles 0; amendments 1 (Jon's follow-up: wait for #780); usage n/a.
 
 ## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 2 (checks offline; the local flake parked)
 

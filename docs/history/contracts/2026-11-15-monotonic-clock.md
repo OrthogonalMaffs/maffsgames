@@ -25,3 +25,9 @@ DO NOT TOUCH: every timestamp use listed in CLASS CHECK; the windows' lengths (3
 SUCCESS CONDITION: no short input window in a shared asset reads Date.now(); the step tests pass and the plant fails; test-answer-lock.py passes under the parallel load that failed 18 of 120 runs, at the same count (120 runs, 0 failures); every check using these assets passes; Gate green; merged; main's check-site and phone-fit-full green on the merge commit and reported; home.md updated.
 STOP IF: a window's behaviour changes when the clock does not step (the windows must behave exactly as now); a reading turns out to be a timestamp that is stored or sent (leave it, report it); a test needs loosening.
 ```
+
+## Amendment 1 (Jon, 15 Nov 2026, after #781's first Gate failed on "Ugh, stats pages"; verbatim)
+
+```text
+Do not change check-ugh-stats.py. The cloud lane's PR #780 (head a65e129) already makes fmt() round halves up, with a self-test plant. Wait for #780 to merge to main. Then bring #781 up to date with main, let the Gate run again, and merge #781 on green as the contract says. Report main's check-site and phone-fit-full on the merge commit, and fill in the merge line in home.md. If #781's Gate is still red on anything other than "Ugh, stats pages" after the update, stop and report.
+```
