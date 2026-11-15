@@ -16,6 +16,23 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): UNLIST-GRAPH-SKETCHER (Graph Sketcher off every list, page live; two todo rows)
+
+Claude Code (home lane), worktree `~/mg-unlist-gs`, branch `claude/unlist-graph-sketcher`; contract `docs/handover/contracts/2026-11-15-unlist-graph-sketcher.md`. The first commit carries FOOTER-NO-SUPPORT's close-out (merge line below, contract to history).
+
+- **Off every list (SR-21's list in reverse):** the roster row goes to Unlisted (#71, with its note and a dated bullet; Core 9 to 8, Unlisted 6 to 7); the portal card (index.html); sitemap.xml; the spec map's three rows (now "Graph Sketcher (being rebuilt)", as glorious-gantt's are); the hub row (leaderboards/index.html) and a NOT_ON_HUB entry (check-leaderboard-coverage.js). There was no weekly-fact, /resit/ or parent-guide link.
+- **Kept:** data/games.json (check-meta needs one entry per roster row, unlisted rows too), launch-dates.json, firebase-leaderboard.js's names, check-ledger.json and the scripts' slug lists. The game page stays indexed and gains only the correction notice (follow-ups below).
+- **/updates/:** Jon's line is verbatim at the top of November's list. The October "Wrong answer keys" line keeps its link (it lost it only while the page had noindex).
+- **todo:** new rows GRAPH-SKETCHER-REDESIGN (11 points) and PACK-ART-EXTRAS ((a)-(d)), beside the print-pack rows in §3. todo-done's PACK-WORDING-1511 close note gains the re-tracked sentence.
+- **Local checks (quick, not a merge condition):** check-meta, check-spec-mapping, check-canonical-links, check-look-signoff, check-levels, check-theme, check-analytics-loader, check-publish-scope, check-context-size and check-leaderboard-coverage all pass.
+- **STOPPED 15 Nov, about 20:25, PR #791 not merged (STOP IF: a check would need loosening).** The Gate failed only in check-site's "Findings register" (audit-register.py:206-214, FACTS-AND-NOTICE, 14 Oct): "graph-sketcher is unlisted for faults but its page lacks <!-- maffs-correction-notice -->: add the correction notice". Passing needs either the notice banner on the game page, which is visible to students and outside DO NOT TOUCH ("beyond the noindex line"), or graph-sketcher in UNLISTED_NOT_BY_AUDIT, which loosens the check. Waiting on Jon and Project Claude.
+- **Follow-up 20:35 (Jon 20:33), saved under the contract:** the noindex line is out, the October /updates/ link is restored, the notice (verbatim) and its CSS are on the start screen, and SR-20 has its sentence. **STOPPED again (its STOP IF: the notice changes the phone fit).** Start button bottom on main is 526 at 320x568, 469 at 375x667, 469 at 390x844 and 434 at 1280x720. With the notice at the top of the start screen (154 px tall at 320) it is 696 at 320x568 (fold 568: BELOW), 618 at 375x667 and 390x844, and 518 at 1280x720 (all above). Measured alternatives at 320x568: notice just above Start, 692 (BELOW); notice just after Start, 526 (above, the notice at 545-699, partly below the fold). Committed on the branch, not pushed (the Gate has not run on it).
+- **Second follow-up 20:50 (Jon: option 1), saved under the contract; the stop is closed.** The marker and notice moved to just after Start, unchanged. audit-register checks only that the marker is on the page (:211), not where. Start's bottom edge, the same as on main: 526 at 320x568, 469 at 375x667, 469 at 390x844, 434 at 1280x720. The notice's top and bottom: 545-699, 489-621, 489-621, 453-521. audit-register --check, check-canonical-links, check-theme, check-content-safety and check-meta pass locally.
+- **Third follow-up 20:55, saved under the contract (Jon, 20:50: "with the escape room section reduced, the "start with the hamster heist" is redundant, particularly as that is one of the 3 games currently showing. we need to remove it"):** the homepage band's last esc-note now reads exactly "Free, in a browser, nothing to install." (the " &mdash;" and the start-hamster-heist link are gone). `start-hamster-heist` was only in index.html: no check or analytics config held it. check-escape-rooms reads only an esc-note straight after a card, and test-escape-credit's fit is unaffected. Band layout: at 320 px the note goes from two lines to one (38 to 19 px), so the band is 19 px shorter (1554 to 1535); the cards, the button and the printables link do not move. At 1280 px the note is narrower (420 to 203 px) and the band is unchanged at 444 px. The merge watch on 9c5792ad was stopped before its Gate finished, so this could join the PR.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): FOOTER-NO-SUPPORT (the Support MaffsGames link out of the site footer)
 
 Claude Code (home lane), worktree `~/mg-footer-no-support`, branch `claude/footer-no-support`; contract `docs/handover/contracts/2026-11-15-footer-no-support.md`. The first commit carries HOME-LEAN's close-out (merge line below, contract to history).
@@ -27,7 +44,7 @@ Claude Code (home lane), worktree `~/mg-footer-no-support`, branch `claude/foote
 - **check-footer has no self-test.** Plants were run by hand on a copy instead: a page still carrying the Support link FAILS ("footer differs from the canonical markup"), and a page with its footer removed FAILS ("no footer").
 - No other check needs the link: check-site's 'buy me a coffee' is a skip-list entry, and verify-the-6-ps strips the footer before its emoji check.
 - /updates/: no line (a footer tidy). todo: none.
-- MERGED: pending.
+- MERGED 15 Nov as 8791910 (#789). Main on the merge commit: check-site 43753882335 success, phone-fit-full 43753882351 success; the live footer ends at Feedback and About keeps its coffee button. end-task removed claude/footer-no-support.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
