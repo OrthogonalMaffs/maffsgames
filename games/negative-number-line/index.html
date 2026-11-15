@@ -129,10 +129,6 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .feedback-bar.correct{background:var(--green-dim);color:var(--green)}
 .feedback-bar.incorrect{background:var(--red-dim);color:var(--red)}
 
-.next-btn{display:none;width:100%;padding:14px;border-radius:10px;border:none;background:var(--surface);border:1px solid var(--border);color:var(--text);font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:border-color 0.15s;margin-top:8px}
-.next-btn:hover{border-color:var(--accent)}
-.next-btn.visible{display:block}
-
 /* Reveal screen */
 .reveal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:100;justify-content:center;align-items:center;padding:24px}
 .reveal-overlay.active{display:flex}
@@ -188,6 +184,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
   "ready": "document.getElementById('gameScreen').classList.contains('active')",
@@ -288,7 +285,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   </div>
 
   <div class="feedback-bar" id="feedbackBar"></div>
-  <button class="next-btn" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()">Next</button>
+  <div id="nextMount" data-maffs-lock-skip></div>
 </div>
 
 <!-- REVEAL OVERLAY -->
@@ -376,6 +373,9 @@ let totalCorrect = 0;
 let placedValue = null;
 let currentType = ''; // 'place','order','calc'
 const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
+const nextMount = document.getElementById('nextMount'); // where MaffsNext puts Next after a wrong answer
+const RIGHT_ADVANCE_MS = 1000;                          // a right answer moves on by itself (canon 7.6)
+const LINE_MIN = -10, LINE_MAX = 10;                    // the drawn line: every tick, target and option is on it
 let orderedTiles = [];
 let dragState = null;
 
@@ -544,6 +544,9 @@ function startGame() {
 //  SHOW QUESTION
 // ============================================================
 function showQuestion() {
+  // Nothing the last question set may act on this one: its advance timer, its Next.
+  MaffsLock.clearTimers();
+  if (window.MaffsNext) MaffsNext.clear(nextMount);
   // A new question: input on it is ignored for MaffsLock.FRESH_MS (a double-click on Start or Next).
   MaffsLock.fresh(gameEl);
   placedValue = null;
@@ -554,8 +557,6 @@ function showQuestion() {
   const fb = document.getElementById('feedbackBar');
   fb.className = 'feedback-bar';
   fb.textContent = '';
-  document.getElementById('nextBtn').classList.remove('visible');
-  document.getElementById('nextBtn').style.display = 'none';
 
   document.getElementById('placeItArea').style.display = 'none';
   document.getElementById('orderArea').style.display = 'none';
@@ -876,6 +877,21 @@ function checkOrder() {
 // ============================================================
 //  CALCULATE
 // ============================================================
+// The wrong answers a Calculate question can offer: never the key, no two alike, and every one a
+// point on the drawn line. (Until 15 Nov 2026 the range was -12 to 12, so 4 - 7 could offer 11.)
+function calcWrongs(data) {
+  const correct = data.answer;
+  return [...new Set([
+    data.start + data.val, // common mistake: always add
+    data.start - data.val, // common mistake: always subtract
+    -correct,              // sign error
+    correct + 1,
+    correct - 1,
+    correct + 2,
+    correct - 2
+  ])].filter(w => w !== correct && w >= LINE_MIN && w <= LINE_MAX);
+}
+
 function showCalculate(data) {
   document.getElementById('calcArea').style.display = 'block';
   const prompt = document.getElementById('calcPrompt');
@@ -886,29 +902,17 @@ function showCalculate(data) {
 
   // Generate 4 options including the correct answer
   const correct = data.answer;
-  const wrongSet = new Set();
-  wrongSet.add(correct);
-  // Generate plausible wrong answers
-  const wrongs = [
-    data.start + data.val, // common mistake: always add
-    data.start - data.val, // common mistake: always subtract
-    -data.answer,          // sign error
-    correct + 1,
-    correct - 1,
-    correct + 2,
-    correct - 2
-  ].filter(w => w !== correct && w >= -12 && w <= 12);
 
   // Pick 3 unique wrongs
-  const shuffledWrongs = shuffle([...new Set(wrongs)]);
+  const shuffledWrongs = shuffle(calcWrongs(data));
   const options = [correct];
   for (const w of shuffledWrongs) {
     if (options.length >= 4) break;
     if (!options.includes(w)) options.push(w);
   }
-  // Pad if needed
+  // Pad if needed, from the line's own whole numbers
   while (options.length < 4) {
-    const r = Math.floor(Math.random() * 21) - 10;
+    const r = Math.floor(Math.random() * (LINE_MAX - LINE_MIN + 1)) + LINE_MIN;
     if (!options.includes(r)) options.push(r);
   }
 
@@ -958,13 +962,14 @@ function selectCalcOption(btn, selected, data) {
 // ============================================================
 //  FEEDBACK & NAVIGATION
 // ============================================================
+// Canon 7.6: a right answer moves on after a moment; a wrong one shows the answer (msg) and waits
+// for the student on MaffsNext.
 function showFeedback(correct, msg) {
   const fb = document.getElementById('feedbackBar');
   fb.className = 'feedback-bar show ' + (correct ? 'correct' : 'incorrect');
   fb.textContent = msg;
-  const btn = document.getElementById('nextBtn');
-  btn.classList.add('visible');
-  btn.style.display = 'block';
+  if (correct) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);
+  else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion });
 }
 
 function updateScore() {
