@@ -384,8 +384,8 @@ Each idea is one line here and nowhere else in the repo; detail goes in its spec
 - **Pi Day**: idea only.
 
 **Printables:**
-- **PRINTABLES-PAGE** (Jon, 12 Nov 2026): the printables page and its "Printable games" section (Jon's ruling, 13 Nov 2026, 18:42: Six Sevens, Bruv loop cards free on its own; one £5 Tes item of all three loop-card packs, Six Sevens, Bruv, Like Terms Collector and Free Daily Pizza, not sold individually) is a separate contract, waiting for the Tes links (all three packs' wording approved 13 Nov: LOOP-CARDS-APPROVE and FDP-LOOP-CARDS-APPROVE are closed). Owner: Project Claude to write the contract; home lane. 15 Nov 2026: /printables/ is live with the escape-room packs (contract PRINTABLES-PAGE); its "Printable games" section reads "Coming soon" until the loop-card listings are on Tes.
 - **PRINTABLES-CORE** (PRINTABLES-PAGE, 15 Nov 2026; Jon 09:52 "Now, add Core later"): add the three ★★ Core rooms (Car Trap, Roll for Initiative, Prom Budget) and the Core bundle to /printables/ once Tes publishes them, prices as Tes shows them, each card built as the page's others (chip from /escape-rooms/, topics from the room's own page description). Owner: home lane, when Jon sends the Tes links.
+- **ESC-BAND-ROTATION** (ESC-BAND-SLIM, 15 Nov 2026; later, research first): the homepage band now features three rooms, one per star band (Library Jam, The Great Hamster Heist, The Rugby Mud Bath). Rotate them by time of year or topic; Jon 15 Nov 14:59 "yes, it could be rotated", and suggested matching common schemes of work (e.g. Sparx) to upcoming or recent topics. check-escape-rooms.py already allows any live room per band, in hub order. Owner: Project Claude to research and write the contract; home lane.
 
 ## 4. Prevention and quality — after §1–3
 
