@@ -11,8 +11,10 @@ file and passes on the new; the self-test proves it in CI by serving each game w
 (the old code, planted as a patch; the file is never touched) and requiring that check to fail.
 Full per-game verifiers follow in the audit's fix batches (docs/audit-resit-correctness-2026-10-04.md).
 
-  shape-shifter        every rotation key matches its words, recomputed here on the y-up grid
-                       (clockwise (x,y)->(y,-x), anticlockwise (-y,x), 180 (-x,-y)); four distinct
+  shape-shifter        every rotation key matches its words, recomputed here on the y-up grid about
+                       the centre the words name (since 15 Nov 2026 the game turns shapes about points
+                       other than (0,0) too; about the origin: clockwise (x,y)->(y,-x), anticlockwise
+                       (-y,x), 180 (-x,-y)); four distinct
                        options, none the object; the letters at least 0.8 units apart; tapping each
                        option's letter selects that option,
                        for every question in several letter orders (real clicks in Chromium)
@@ -59,6 +61,11 @@ REVERT = {
          "      const validWrongs = wrongs.filter((w, k) => shapeFits(w) && !shapesEqual(w, correct) &&\n"
          "        !shapesEqual(w, b.shape) && !wrongs.slice(0, k).some(v => shapesEqual(v, w)));",
          "      const validWrongs = wrongs.filter(w => shapeFits(w) && !shapesEqual(w, correct));")],
+    # Jon, 15 Nov 2026: a rotation about a centre other than (0,0) whose key is turned about (0,0).
+    "shape-shifter centre ignored": [
+        ("games/shape-shifter/index.html",
+         "        correct: correct,\n        wrongs: validWrongs,",
+         "        correct: rotateShape(b.shape, 0, 0, angle),\n        wrongs: validWrongs,")],
     "probability-pioneer": [
         ("games/probability-pioneer/index.html",
          '{q:"A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES.", answer:"3/5",', '{q:"A letter is chosen at random from the word MATHS. Write down the probability that the letter is also in the word GAMES.", answer:"2/5",')],
@@ -146,12 +153,17 @@ async def open_game(browser, root, slug, patches, viewport=(1000, 900)):
 
 
 def rotate(shape, desc):
+    """The image the words give: the turn they name, about the centre they name. None if either is missing."""
+    m = re.search(r"about \((-?\d+),(-?\d+)\)", desc)
+    if not m:
+        return None
+    cx, cy = int(m.group(1)), int(m.group(2))
     if "anticlockwise" in desc:
-        f = lambda x, y: (-y, x)
+        f = lambda x, y: (cx - (y - cy), cy + (x - cx))
     elif "clockwise" in desc:
-        f = lambda x, y: (y, -x)
+        f = lambda x, y: (cx + (y - cy), cy - (x - cx))
     elif "180" in desc:
-        f = lambda x, y: (-x, -y)
+        f = lambda x, y: (2 * cx - x, 2 * cy - y)
     else:
         return None
     return sorted(f(x, y) for x, y in shape)
@@ -171,12 +183,12 @@ async def check_shape_shifter(browser, root, patches, orders=6):
                                 "return {desc: currentQ.desc, shape: currentQ.shape, correct: currentQ.correct, "
                                 "cx: currentQ.cx, cy: currentQ.cy, wrongs: currentQ.wrongs}; }", k)
         where = "shape-shifter rotation %d (%s, object %s)" % (k + 1, q["desc"], q["shape"])
-        if (q["cx"], q["cy"]) != (0, 0) or "about (0,0)" not in q["desc"]:
-            errs.append("%s: this check recomputes rotations about (0,0) only" % where)
+        if "about (%s,%s)" % (q["cx"], q["cy"]) not in q["desc"]:
+            errs.append("%s: the item's centre (%s,%s) is not the centre in its words" % (where, q["cx"], q["cy"]))
             continue
         want = rotate(q["shape"], q["desc"])
         if want is None:
-            errs.append("%s: no direction in the words" % where)
+            errs.append("%s: no direction or centre in the words" % where)
         elif as_set(q["correct"]) != want:
             errs.append("%s: keyed %s, the image is %s" % (where, as_set(q["correct"]), want))
         sets = [tuple(as_set(s)) for s in [q["correct"]] + q["wrongs"]]

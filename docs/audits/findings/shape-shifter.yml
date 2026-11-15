@@ -104,7 +104,8 @@ findings:
     (0,0)'
   evidence: In-page ROTATION_QUESTIONS angles all +-90; bases list 180 in 8 of 12; filter and 'validWrongs.length
     < 3' drop re-read at source
-  status: open
+  status: fixed
+  pr: 778
 - id: shape-shifter-t3-003
   severity: MEDIUM
   jc: true
@@ -125,7 +126,8 @@ findings:
   where: games/shape-shifter/index.html:257-274,276-293,339-383
   summary: Each mode has 15 distinct items (10/session); Random Mix 45 (bank size only)
   evidence: In-page counts T=15, R=15, O=15 (rotation capped at 15)
-  status: open
+  status: fixed
+  pr: 778
 - id: shape-shifter-t3-005
   severity: LOW
   jc: true
