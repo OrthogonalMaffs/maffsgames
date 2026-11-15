@@ -31,6 +31,7 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
+import bank_common as bc  # noqa: E402  (offline_async, in play())
 
 _spec = importlib.util.spec_from_file_location("check_top_scores", os.path.join(HERE, "check-top-scores.py"))
 CT = importlib.util.module_from_spec(_spec)
