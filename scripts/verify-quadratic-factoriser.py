@@ -41,6 +41,14 @@ misconception message are recomputed. The Formula level's root boxes are on the 
 phone keypad (MaffsKeypad) with a minus key: roots can be negative and a phone's decimal
 pad (iOS) has none.
 
+THE NUMBER PADS (QF-PICKER, Jon 15 Nov 2026)
+--------------------------------------------
+The GCSE brackets and the Higher Independent slots are played with real taps, numbers only: GCSE's key tapped in
+the other order is marked right; Higher's p, q, r, s (then k) fill in that order, base and HCF items both; a filled
+slot is tapped and changed; with every slot full a number changes nothing. Both pads are laid out at 320, 390 and
+1366 wide: no row mixes negatives and positives, the keys run in increasing order, GCSE is 6 a row on a phone, every
+key is at least 44 px (canon 7.6.1) and negatives are coloured as positives. Every pooled key is on its pad.
+
 USAGE
 -----
     python scripts/verify-quadratic-factoriser.py
@@ -123,6 +131,210 @@ KEYPAD_JS = r"""async () => {
 }"""
 
 
+# The number pads (QF-PICKER, Jon 15 Nov 2026). PAD_JS reads one pad as laid out: its keys grouped into rows by their
+# top edge, left to right, each key's size and colour, and whether the page scrolls sideways.
+PAD_JS = r"""(sel) => {
+  const grid = document.querySelector(sel);
+  if (!grid) return null;
+  const keys = [...grid.querySelectorAll('.num-btn')].map(b => { const r = b.getBoundingClientRect();
+    return { n: +b.textContent, top: Math.round(r.top), left: r.left, w: r.width, h: r.height, colour: getComputedStyle(b).color }; });
+  const rows = {};
+  keys.forEach(k => { (rows[k.top] = rows[k.top] || []).push(k); });
+  return { rows: Object.keys(rows).map(Number).sort((a, b) => a - b)
+             .map(t => rows[t].sort((a, b) => a.left - b.left).map(k => k.n)),
+           minSide: Math.min(...keys.map(k => Math.min(k.w, k.h))),
+           negColour: [...new Set(keys.filter(k => k.n < 0).map(k => k.colour))],
+           posColour: [...new Set(keys.filter(k => k.n > 0).map(k => k.colour))],
+           sideways: document.documentElement.scrollWidth > window.innerWidth };
+}"""
+
+# Opens the Higher level's Independent screen on one pooled item, base or HCF (the first in the pool), and returns its key.
+HIGHER_INDEP_JS = r"""(stage) => {
+  currentLevel = 'higher'; startGame();
+  const item = window.QF_POOLS.higher.pool.find(it => it.stage === stage);
+  sessionQuestions = [item]; qIndex = 0; hfMode = 'independent'; hfBeginRealQuestion();
+  return { p: item.p, q: item.q, r: item.r, s: item.s, k: item.k || null };
+}"""
+
+GCSE_STATE_JS = r"""() => ({ v1: val1, v2: val2, line: document.getElementById('pickerEditing').textContent,
+  fb: document.getElementById('feedback').className })"""
+HIGHER_STATE_JS = r"""() => ({ picks: Object.assign({}, hfIndependentPicks),
+  line: document.getElementById('hfIndepEditing').textContent, fb: document.getElementById('hfFeedback').className })"""
+
+PAD_SIZES = ((320, 568), (390, 844), (1366, 768))
+FRESH_WAIT = 400   # MaffsLock ignores every tap for 300 ms after a new question renders (FRESH_MS)
+
+
+def other(n, avoid, lo, hi):
+    """A pad number near n that is none of avoid."""
+    for d in (1, -1, 2, -2, 3, -3):
+        m = n + d
+        if lo <= m <= hi and m != 0 and m not in avoid:
+            return m
+    raise ValueError(n)
+
+
+async def check_pads(open_page, browser):
+    """Plays the pads as a student would, with real taps: numbers only, then a slot changed. Lays each pad out at the
+    phone and laptop widths. Returns what it saw; verify_pads() judges it."""
+    out = {"layout": {}, "gcse": {}, "higher": {}}
+
+    async def tap(page, sel):
+        await page.click(sel)
+        await page.wait_for_timeout(40)
+
+    def key(pad, n):
+        return '%s .num-btn:text-is("%d")' % (pad, n)
+
+    for w, h in PAD_SIZES:
+        page, _ = await open_page(await browser.new_context(viewport={"width": w, "height": h}))
+        await page.evaluate("startGame()")
+        await page.wait_for_timeout(FRESH_WAIT)
+        gcse = await page.evaluate(PAD_JS, "#numGrid")
+        await page.evaluate(HIGHER_INDEP_JS, "hcf")
+        await page.wait_for_timeout(FRESH_WAIT)
+        out["layout"][w] = {"gcse": gcse, "higher": await page.evaluate(PAD_JS, "#hfIndepGrid")}
+        await page.context.close()
+
+    # GCSE, numbers only: the second number of the pair first, so either order is tested.
+    page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+    await page.evaluate("startGame()")
+    await page.wait_for_timeout(FRESH_WAIT)
+    q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
+    g = out["gcse"]
+    g["key"] = q
+    g["start"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, key("#numGrid", q["q"]))
+    g["one"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, key("#numGrid", q["p"]))
+    g["two"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, key("#numGrid", other(q["p"], (q["p"], q["q"]), -12, 12)))   # full, nothing selected: no change
+    g["full"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, "#checkBtn")
+    g["checked"] = await page.evaluate(GCSE_STATE_JS)
+    await page.context.close()
+
+    # GCSE, change a slot: a wrong number, then the right one in bracket 2; bracket 1 tapped and changed.
+    page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+    await page.evaluate("startGame()")
+    await page.wait_for_timeout(FRESH_WAIT)
+    q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
+    wrong = other(q["p"], (q["p"], q["q"]), -12, 12)
+    await tap(page, key("#numGrid", wrong))
+    await tap(page, key("#numGrid", q["q"]))
+    await tap(page, "#num1")
+    g["selected"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, key("#numGrid", q["p"]))
+    g["changed"] = await page.evaluate(GCSE_STATE_JS)
+    await tap(page, "#checkBtn")
+    g["changedChecked"] = await page.evaluate(GCSE_STATE_JS)
+    g["wrong"], g["key2"] = wrong, q
+    await page.context.close()
+
+    # Higher, a base item and an HCF item: numbers only, in the order p, q, r, s (then k); then s changed.
+    for stage in ("base", "hcf"):
+        r = out["higher"][stage] = {}
+        page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+        item = await page.evaluate(HIGHER_INDEP_JS, stage)
+        await page.wait_for_timeout(FRESH_WAIT)
+        order = ["p", "q", "r", "s"] + (["k"] if item["k"] else [])
+        r["key"], r["order"] = item, order
+        r["start"] = await page.evaluate(HIGHER_STATE_JS)
+        for slot in order:
+            await tap(page, key("#hfIndepGrid", item[slot]))
+        r["filled"] = await page.evaluate(HIGHER_STATE_JS)
+        await tap(page, "#hfIndepCheckBtn")
+        r["checked"] = await page.evaluate(HIGHER_STATE_JS)
+        await page.context.close()
+
+        page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+        await page.evaluate(HIGHER_INDEP_JS, stage)
+        await page.wait_for_timeout(FRESH_WAIT)
+        wrong = other(item["s"], (item["s"],), -9, 9)
+        for slot in order:
+            await tap(page, key("#hfIndepGrid", wrong if slot == "s" else item[slot]))
+        await tap(page, '.hf-slot[data-slot="s"]')
+        await tap(page, key("#hfIndepGrid", item["s"]))
+        r["changed"] = await page.evaluate(HIGHER_STATE_JS)
+        await tap(page, "#hfIndepCheckBtn")
+        r["changedChecked"] = await page.evaluate(HIGHER_STATE_JS)
+        r["wrong"] = wrong
+        await page.context.close()
+    return out
+
+
+def verify_pads(pads, pools):
+    """The pads as a student meets them (QF-PICKER): tapping numbers alone answers; a filled slot can be changed;
+    negatives look like positives; no row mixes signs; every key a student needs is on its pad."""
+    bad = []
+    g = pads["gcse"]
+    p, q = g["key"]["p"], g["key"]["q"]
+    if g["start"]["line"] != "Tap a number":
+        bad.append("gcse: the picker line starts %r, not 'Tap a number'" % g["start"]["line"])
+    if g["one"]["v1"] != q:
+        bad.append("gcse: a number tapped with no bracket tapped did not fill bracket 1 (val1 %r, tapped %r)"
+                   % (g["one"]["v1"], q))
+    if (g["two"]["v1"], g["two"]["v2"]) != (q, p):
+        bad.append("gcse: two numbers tapped gave brackets %r, %r, not %r, %r" % (g["two"]["v1"], g["two"]["v2"], q, p))
+    if (g["full"]["v1"], g["full"]["v2"]) != (q, p) or "change" not in g["full"]["line"]:
+        bad.append("gcse: with both brackets full a number tap changed them or the line does not say how to "
+                   "change one (%r, %r, %r)" % (g["full"]["v1"], g["full"]["v2"], g["full"]["line"]))
+    if "correct" not in g["checked"]["fb"].split():
+        bad.append("gcse: the key tapped as numbers only, in the other order (%d then %d), was not marked right (%r)"
+                   % (q, p, g["checked"]["fb"]))
+    if g["selected"]["line"] != "Tap a number for bracket 1":
+        bad.append("gcse: tapping bracket 1 when full says %r" % g["selected"]["line"])
+    p2, q2 = g["key2"]["p"], g["key2"]["q"]
+    if (g["changed"]["v1"], g["changed"]["v2"]) != (p2, q2) or "correct" not in g["changedChecked"]["fb"].split():
+        bad.append("gcse: bracket 1 (%d) tapped and changed to %d gave %r, %r, marked %r"
+                   % (g["wrong"], p2, g["changed"]["v1"], g["changed"]["v2"], g["changedChecked"]["fb"]))
+    for stage, r in sorted(pads["higher"].items()):
+        it, order = r["key"], r["order"]
+        if r["start"]["line"] != "Tap a number for p":
+            bad.append("higher %s: the picker line starts %r, not 'Tap a number for p'" % (stage, r["start"]["line"]))
+        got = [r["filled"]["picks"][s] for s in order]
+        want = [it[s] for s in order]
+        if got != want:
+            bad.append("higher %s: numbers tapped in the order %s filled %s, not %s" % (stage, order, got, want))
+        if "correct" not in r["checked"]["fb"].split():
+            bad.append("higher %s: the key tapped as numbers only was not marked right (%r)" % (stage, r["checked"]["fb"]))
+        if r["changed"]["picks"]["s"] != it["s"] or "correct" not in r["changedChecked"]["fb"].split():
+            bad.append("higher %s: s (%d) tapped and changed to %d gave s = %r, marked %r"
+                       % (stage, r["wrong"], it["s"], r["changed"]["picks"]["s"], r["changedChecked"]["fb"]))
+    for w, both in sorted(pads["layout"].items()):
+        for pad, lay in sorted(both.items()):
+            name = "%s pad at %d wide" % (pad, w)
+            if not lay:
+                bad.append(name + ": not found")
+                continue
+            for row in lay["rows"]:
+                if min(row) < 0 < max(row):
+                    bad.append(name + ": a row mixes negatives and positives: %s" % row)
+            flat = [n for row in lay["rows"] for n in row]
+            if flat != sorted(flat):
+                bad.append(name + ": the keys are not in increasing order, row by row: %s" % lay["rows"])
+            if pad == "gcse" and w <= 390 and [len(row) for row in lay["rows"]] != [6, 6, 6, 6]:
+                bad.append(name + ": not 6 columns (rows %s)" % lay["rows"])
+            if lay["minSide"] < 44:
+                bad.append(name + ": a key is %.0f px, under 44" % lay["minSide"])
+            if lay["negColour"] != lay["posColour"] or len(lay["negColour"]) != 1:
+                bad.append(name + ": negatives are coloured %s, positives %s" % (lay["negColour"], lay["posColour"]))
+            if lay["sideways"]:
+                bad.append(name + ": the page scrolls sideways")
+    if pools:   # every key a student must enter is on its pad: GCSE -12..12, Higher -9..9, never 0
+        gk = [n for it in pools["gcse"]["pool"] for n in (it["p"], it["q"]) if not (0 < abs(n) <= 12)]
+        hk = [n for it in pools["higher"]["pool"] for n in (it["p"], it["q"], it["r"], it["s"], it.get("k") or 1)
+              if not (0 < abs(n) <= 9)]
+        if gk or hk:
+            bad.append("a key not on its pad: gcse %s, higher %s" % (gk[:5], hk[:5]))
+    for m in bad:
+        fail("pads: " + m)
+    if not bad:
+        print("  pads: numbers alone answer GCSE (either order) and Higher (base and HCF); a filled slot changes; "
+              "no row mixes signs at %s wide; keys 44 px or more, negatives coloured as positives"
+              % ", ".join(str(w) for w, _ in PAD_SIZES))
+
+
 PAGES = 4   # the guided steps are played on this many pages at once (each its own renderer process)
 
 
@@ -170,8 +382,9 @@ async def fetch_pools(html=None, every=1):
         phone = await open_page(await browser.new_context(
             viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True))
         keypad = await phone[0].evaluate(KEYPAD_JS)
+        pads = await check_pads(open_page, browser)
         await browser.close()
-        return pools, guided, keypad, errors + phone[1]
+        return pools, guided, keypad, pads, errors + phone[1]
 
 
 def poly(latex):
@@ -604,7 +817,7 @@ def run(html=None, every=1, pools_too=True):
     server, base = bc.start_stub_server()
     PORT = urlsplit(base).port
     try:
-        pools, guided, keypad, errors = asyncio.run(fetch_pools(html, every))
+        pools, guided, keypad, pads, errors = asyncio.run(fetch_pools(html, every))
     finally:
         server.terminate()
 
@@ -617,6 +830,7 @@ def run(html=None, every=1, pools_too=True):
     if not pools_too:
         verify_guided(guided, len(pools["higher"]["pool"]), every)
         verify_keypad(keypad)
+        verify_pads(pads, None)
         return list(_FAILURES)
 
     if "gcse" in pools:
@@ -638,6 +852,9 @@ def run(html=None, every=1, pools_too=True):
         verify_keypad(keypad)
     else:
         fail("window.QF_POOLS.formula is missing")
+    if "gcse" in pools and "higher" in pools:
+        print("Verifying the number pads...")
+        verify_pads(pads, pools)
     return list(_FAILURES)
 
 
@@ -670,6 +887,25 @@ PLANTS = [
      "  if (window.MaffsKeypad) {\n    MaffsKeypad.mount(", "  if (false) {\n    MaffsKeypad.mount("),
     ("the keypad without its minus key",
      "keys: { minus: true }, keepInView", "keys: { minus: false }, keepInView"),
+    # The number pads (QF-PICKER, Jon 15 Nov 2026).
+    ("gcse: the old guard, a number ignored until a bracket is tapped",
+     "  if (MaffsLock.isLocked(gcsePanel())) return;\n  const slot = qfTargetSlot(",
+     "  if (MaffsLock.isLocked(gcsePanel()) || !editingSlot) return;\n  const slot = qfTargetSlot("),
+    ("higher: the old guard, a number ignored until a slot is tapped",
+     "  if (MaffsLock.isLocked(hfPanel())) return;\n  const slot = qfTargetSlot(",
+     "  if (MaffsLock.isLocked(hfPanel()) || !hfEditingSlot) return;\n  const slot = qfTargetSlot("),
+    ("a full pad's tap overwriting the last slot",
+     "  return order.find(slot => valueOf(slot) === null) || null;",
+     "  return order.find(slot => valueOf(slot) === null) || order[order.length - 1];"),
+    ("higher: slots filled out of their place in (px + q)(rx + s)",
+     "['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];", "['q', 'p', 'r', 's', 'k'] : ['q', 'p', 'r', 's'];"),
+    ("negatives muted again",
+     "  .num-btn:disabled { opacity: 0.4; cursor: default; }",
+     "  .num-btn:disabled { opacity: 0.4; cursor: default; }\n  .num-btn.neg { color: var(--muted); }"),
+    ("a 7-column grid (one block of 24, as before)",
+     "  .num-block {\n    display: flex;",
+     "  .num-grid { display: grid; grid-template-columns: repeat(7, 44px); justify-content: center; }\n"
+     "  .num-block {\n    display: contents;"),
 ]
 
 

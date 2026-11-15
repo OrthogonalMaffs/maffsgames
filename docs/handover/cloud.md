@@ -77,6 +77,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-15 (cloud): QF-PICKER (`docs/handover/contracts/2026-11-15-qf-picker.md`; Jon's rulings 15 Nov 10:21, 10:22, 10:23)
+
+Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` from main 595b3af. Claim commit 9ed73f2; close-out of ESSENTIALS-AUDIT-LEFTOVERS (#778) 9ec09d9. One PR, Medium, merging on green.
+Done on the branch: Quadratic Factoriser's two number pads share one tap rule (`qfTargetSlot`: the tapped slot, else the first empty one; GCSE brackets 1 then 2, Higher p, q, r, s, then k) and one layout (`qfBuildPad`: negatives then positives, each its own block). GCSE is 6 a row on phones and 12 where a block fits on one line (laptops, 616 px), so the laptop keeps main's two rows. Keys stay 44 px on phones (were 40, under canon 7.6.1); `.num-btn.neg`'s muted colour is gone; `#gcsePanel` is full width (it had been only because the old one-line keypad overflowed). Marking, pools and the Formula level are untouched.
+Checked here: the verifier passes and fails on main's page (33 failures); self-test 17 of 17 plants caught; answer-lock PASS; phone-fit normal, Aa and laptop exit 0 with no list change (390x844 798/804; 375x667 790 to 800, still listed; laptop 722, as main).
+Next: the Gate, merge, main's two runs. The next cloud task's first commit closes this out.
+
 ## 2026-11-15 (cloud): ESSENTIALS-AUDIT-LEFTOVERS (`docs/history/contracts/2026-11-14-essentials-audit-leftovers.md`; Jon's rulings 14 Nov 22:46 and 22:49; Amendments 1 and 2, 15 Nov)
 
 Agent Claude Code (cloud), branch `claude/keen-curie-uk4uep`. Three PRs in order, each from the main of its moment, each game claimed in its PR's first commit and released in that PR. All three merges go by the standing ruling of 10 Nov 2026 (gh auth fails: "The token in GH_TOKEN is invalid"), pinned to the head whose Gate was green.
