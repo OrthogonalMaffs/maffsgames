@@ -1,0 +1,22 @@
+CONTENT-SAFETY-COVERAGE (Project Claude, Sat 14 Nov 2026 23:05; re-checked against main 7b00e6c at 20:30 on 15 Nov; Jon 22:46 "do them in numerical order please" (this is 3 of 3))
+Recommended: Sonnet, effort medium: one check's file selection, inverted from a hand list to everything published, with a guard and plants.
+LANE: cloud (todo row 52: "whichever lane next touches the content-safety check"; scripts/check-content-safety.py is not a Gate file). TIER: Medium (merge on green; Project Claude reviews after merge). START: now. This task's first commit is ESSENTIALS-PHONE-FIT-PAIR's close-out (the standing rule: PR 1 #788 6065fb6, check-site 43751842791 + phone-fit-full 43751842703; PR 2 #790 984851c, check-site 43755895132 + phone-fit-full 43755894977; all green; contract to history). One PR. Branch from current origin/main.
+MERGE: on a green Gate, by merge-pr.py or, when gh auth fails, the 10 Nov 2026 GitHub-connection route; before merging, main's latest full run green with only bot commits after it.
+
+JON'S RULING (verbatim in the PR body): 14 Nov 22:46: "do them in numerical order please" (item 3 of 3: the SR-14 scan reads the Ugh, stats pages).
+
+TASK: Make the SR-14 content-safety scan read every published page, the six /ugh-stats/ pages included, so that a section added later cannot fall outside it.
+
+ROOT CAUSE: scripts/check-content-safety.py reads only the folders in its hand-written GLOBS (:57-64). /ugh-stats/ (six pages, added 14 Nov) is not on it, so SR-14 has never been checked there (todo row 52, CONTENT-SAFETY-UGH-STATS). printables/ was added to the list by hand on 15 Nov, the same pattern. Project Claude ran the scan's own displayed() and hits_in() over the six /ugh-stats/ pages on 14 Nov 2026 (main c0cec86): no hits. schools/assets/ugh-stats.js is already read, via "schools/assets/*.js".
+
+CLASS CHECK: A class within this check. The bug is not the missing folder; it is a hand list that every new section falls out of until someone notices (ugh-stats missed; printables added by hand). Adding "ugh-stats/**/*.html" would leave the next section exposed the same way. SR-14 is site-wide (the comment at :58-60, LISTINGS-AND-GATE part B, 13 Oct 2026), so the check selects every published page and excludes by name, and a guard fails on a folder it has not been told about. The other checks with folder lists (check-student-labels.py PORTALS and SURFACES; check-money.py GLOBS) are scoped by their own canon rules to games, rooms and portals, so they are not this bug, and they are not changed.
+
+EXACT CHANGE:
+1. Replace GLOBS with: every *.html and *.js under the repo root, minus a named EXCLUDE list of folders that hold no published page (start from docs/, scripts/, data/, tools/, firebase/, .github/, .claude/; add any other you find, each with a one-line reason). Games and escape rooms are still read first; each file is read once; displayed() and hits_in() are unchanged.
+2. A guard: a top-level folder holding any .html that is neither read nor in EXCLUDE fails the check, naming the folder and saying to read it or exclude it with a reason.
+3. --selftest plants: a tier (a) word in a planted /ugh-stats/ page is caught; a new top-level folder with an .html file, in neither list, fails the guard; the tree as it is passes.
+4. Run the widened check on the tree and report how many files it reads before and after, and which folders are new to it.
+5. todo row 52 closed; docs/handover/cloud.md entry; no /updates/ line (a check, not a feature).
+DO NOT TOUCH: TIER_A, TIER_B, ALLOW, KNOWN, HUMOUR_KEYS, CODE_ATTRS and displayed(); the Ugh, stats pages and every other page's wording; the other checks; the workflow line for this check; Gate files.
+SUCCESS CONDITION: ESSENTIALS-PHONE-FIT-PAIR's close-out is in the first commit; the check reads all six /ugh-stats/ pages and every other published page; the guard fails a planted unlisted folder; the selftest plants are caught and the tree passes; the file counts and the new folders are reported in the PR body; Gate green; merged; main's check-site and phone-fit-full green on the merge commit and reported; cloud.md and todo row 52 updated.
+STOP IF: the wider read finds any hit, in /ugh-stats/ or in any page not read before (report each with its line for Jon's ruling; do not reword, allowlist or add to KNOWN); it is unclear whether a folder is published; the check's run time rises enough that the timing report warns on its group; the change would need the workflow or another Gate file edited.
