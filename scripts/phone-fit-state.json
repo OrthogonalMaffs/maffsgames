@@ -452,11 +452,6 @@
   },
   "sideways": {
     "normal": {
-      "chart-interrogator": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
       "component-crusher": [
         "320x568"
       ],
@@ -477,11 +472,6 @@
     "aa": {
       "better-value": [
         "320x568"
-      ],
-      "chart-interrogator": [
-        "320x568",
-        "375x667",
-        "390x844"
       ],
       "component-crusher": [
         "320x568"

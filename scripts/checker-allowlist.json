@@ -1659,13 +1659,6 @@
   ],
   "tier1_phone_overflow": [
     {
-      "path": "games/chart-interrogator/index.html",
-      "at": "start",
-      "width": 392,
-      "todo": "§3.9 batch 4",
-      "where": "div.diagram-panel; div#questionPanel.question-panel"
-    },
-    {
       "path": "games/component-crusher/index.html",
       "at": "start",
       "width": 334,
