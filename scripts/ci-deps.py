@@ -17,6 +17,11 @@ A verifier's dependencies, derived from its source and the pages it tests:
   - the script itself and every local module it imports (recursively), or names as a file, except CI's own modules
     (scripts/ci-*): a change to one already runs everything, so following one would only make its literals (its own
     self-test fixtures among them) false dependencies of every verifier that loads it (LINE-LIMIT-SCOPE, 21 Oct 2026);
+    a site-wide check it loads (a scripts/check-*.py that is not itself a content verifier) gives its own file and the
+    files of the modules it loads in turn, never their literals: their paths, game slugs and self-test fixtures are what
+    the check reads site-wide, not what the verifier tests (CONTENT-SAFETY-COVERAGE, #792, 15 Nov 2026: verify-correlation-
+    or-coincidence.py loads check-content-safety.py, which loads check-publish-scope.py, whose literals made a docs-only
+    change select it);
   - every repo path its string literals name (a file, or a folder as a prefix);
   - each game it names (a literal equal to a games/ folder name, or containing games/<slug>/): that whole
     folder, plus every local file the game's page loads (src/href and quoted asset paths), followed through
@@ -128,27 +133,41 @@ def py_literals(tree):
     return lits
 
 
-def script_deps(script, seen=None, origin=OWN):
-    """(paths, [(text, is_join, origin)]) for a script and, recursively, the local modules it imports."""
+_VERIFIERS = None      # the scripts in a selective ("Content verifiers") group, once checks() has been read
+
+
+def site_check(script):
+    """A site-wide check: a scripts/check-*.py that is not itself a content verifier (no hand list of names)."""
+    global _VERIFIERS
+    if _VERIFIERS is None:
+        _VERIFIERS = {s for _, sel, _, _, s in checks() if sel and s}
+    return os.path.basename(script).startswith("check-") and script not in _VERIFIERS
+
+
+def script_deps(script, seen=None, origin=OWN, files_only=False):
+    """(paths, [(text, is_join, origin)]) for a script and, recursively, the local modules it imports. files_only:
+    below a site-wide check, a module gives its file, never its literals (see the docstring)."""
     seen = set() if seen is None else seen
-    if script in seen or not exists(script):
+    if (script, files_only) in seen or not exists(script):
         return set(), []
-    seen.add(script)
+    seen.add((script, files_only))
     tree = ast.parse(open(os.path.join(ROOT, script), encoding="utf-8").read())
     paths = {script}
-    lits = [(t, j, origin) for t, j in py_literals(tree)]
+    own = py_literals(tree)
+    lits = [] if files_only else [(t, j, origin) for t, j in own]
     mods = set()
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             mods |= {a.name.split(".")[0] for a in node.names}
         elif isinstance(node, ast.ImportFrom) and node.module:
             mods.add(node.module.split(".")[0])
-    for t, _, _ in lits:                             # importlib by file: spec_from_file_location("x", ".../x.py")
+    for t, _ in own:                                 # importlib by file: spec_from_file_location("x", ".../x.py")
         if t.endswith(".py") and exists("scripts/" + os.path.basename(t)):
             mods.add(os.path.basename(t)[:-3])
     for m in mods:
         if exists("scripts/%s.py" % m) and not m.startswith("ci-"):     # CI's own modules: see the docstring
-            p, l = script_deps("scripts/%s.py" % m, seen, LIB)
+            sub = "scripts/%s.py" % m
+            p, l = script_deps(sub, seen, LIB, files_only or site_check(sub))
             paths |= p
             lits += l
     return paths, lits
@@ -447,7 +466,25 @@ def selftest():
         check("(c) %s runs everything" % p, run_all, why[0] if why else "")
     # A doc-only change runs no verifier (beyond any that always run).
     _, _, picked = select(["docs/todo.md", "CLAUDE.md"], dmap)
-    check("docs-only change runs no verifier", set(picked) == always, "-> %d" % len(picked))
+    check("docs-only change runs no verifier", set(picked) == always,
+          "-> %d: %s" % (len(picked), ", ".join(sorted(os.path.basename(p) for p in set(picked) - always))))
+    # A picture in docs/art/ that no page loads selects only the verifiers that read docs/art/ themselves: never one
+    # through a site-wide check it loads (check-publish-scope.py names docs/art/ as published; #792).
+    loaded = "".join(open(os.path.join(dp, f), encoding="utf-8", errors="replace").read()
+                     for top in ("games", "escape-rooms", "schools", "parents") for dp, _, fs in os.walk(os.path.join(ROOT, top))
+                     for f in fs if f.endswith((".html", ".js", ".css")))
+    art = [f for f in sorted(os.listdir(os.path.join(ROOT, "docs", "art"))) if f not in loaded][:1]
+    _, _, picked = select(["docs/art/" + f for f in art], dmap)
+    want = always | {t for t, i in sel.items() if "docs/art/" in i["deps"]}
+    check("docs/art/%s selects only verifiers that read docs/art/" % (art[0] if art else "?"), bool(art) and set(picked) == want,
+          "-> extra: %s" % ", ".join(sorted(os.path.basename(p) for p in set(picked) - want)))
+    # A site-wide check a verifier loads is still a dependency, its file and the files it loads (#792), and the
+    # verifier's own game still selects it.
+    cc = "scripts/verify-correlation-or-coincidence.py"
+    for p in ("scripts/check-content-safety.py", "scripts/check-publish-scope.py",
+              "games/correlation-or-coincidence/index.html"):
+        _, _, picked = select([p], dmap)
+        check("%s selects %s" % (p, os.path.basename(cc)), cc in sel and cc in picked, "")
     # A verifier that loads CI's own modules inherits none of their literals (LINE-LIMIT-SCOPE, 21 Oct 2026): ci-groups.py
     # loads ci-deps.py, whose self-test names docs/todo.md, and following it made that file a dependency of every verifier
     # that reads ci-groups.py (verify-equation-builder.py, verify-just-pythag-it-bruv.py).
