@@ -676,7 +676,7 @@ def tile_order_fails(page=PAGE):
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             page_url = re.compile(r'/games/equation-builder/(\?[^/]*)?$')
-            ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+            bc.offline(ctx, base)
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             pg = ctx.new_page()

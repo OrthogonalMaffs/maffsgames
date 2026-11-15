@@ -34,45 +34,6 @@ Done rows moved word for word to `docs/history/todo-done.md` ("Done rows from §
 | ANALYTICS-FIELDS | **`game_completed`'s fields differ from `.claude/rules/analytics.md:21` site-wide: fix the games or the rule?** The rule lists `score`, `questions_answered`, `questions_correct`. Counted on main 3f0975b (14 Nov 2026): of 109 game pages that send `game_completed`, 52 omit `questions_correct`, and 54 send an `accuracy` the rule does not name. `accuracy` means different things: first-time correctness in Chart Interrogator (Phase 1 questions right first time over Phase 1 questions, since CI-PHASE2-LOGGING; a constant 100 before it), progress in Prime Sprint (`games/prime-factorisation/index.html:462`, numbers reached over the session's length). The Sheets endpoint writes a fixed column list, so which of these reach the sheet is part of the question. To rule: the fields every game sends and what each means, then whether the games change or the rule does. Not changed by CI-PHASE2-LOGGING (no `questions_correct` added to Chart Interrogator). | Jon to rule |
 
 **Done this session (26 Sep):**
-- [x] **1.1 Expectation Station cannot be completed — since it shipped (`812cd6a`, 22 Mar).**
-  `checkStage1()` hid its own Check Table button (`:707`, `:725`) and `renderStage1()` never
-  re-showed it, unlike stages 2 and 3 (`:822`, `:953`). From question 2 onward a student filled
-  the table and had no way to submit — no run had reached `game_completed` since it shipped. **Fixed**: `renderStage1()`
-  now sets `checkStage1`'s `display` back to `''` alongside its existing `disabled` line, one
-  line, matching the pattern stages 2 and 3 already used. Confirmed no second blocker — the
-  function rebuilds the table cells and tile listeners from scratch on every call, so `display`
-  was the only state it failed to restore. **Verified completing at 8, 16 and 24 questions**
-  under the stub server, driving real clicks through a headless browser and asserting
-  `game_completed` fires: 8 → score 10, `questions_correct` 3; 16 → score 24, `questions_correct`
-  8; 24 → score 31, `questions_correct` 10 (see the next bullet for why 24 answers 20).
-  - **A "24 questions" core session only ever serves 20 — found while verifying, reported, not
-    fixed.** `newQuestion()`'s `questionQueue = shuffle([...bank]).slice(0,
-    Math.min(sessionLength, bank.length))` caps the queue at the level's bank size. Core has 20
-    questions, GCSE 15, A-level 10 — **none of the three levels has 24**, so the "24" button
-    always under-delivers, silently, and correctly ends the session early with `game_completed`
-    reporting the true count (`questions_answered: questionQueue.length`). Nothing is broken —
-    the game behaves consistently — but the UI promises a number the content can't back on any
-    level. Not this contract's fix (bank/scoring were DO NOT TOUCH); flagging for a content or UI
-    decision (more questions authored, or the "24" option removed/relabelled per level).
-  - **The verification itself took three false leads worth recording**, since each nearly got
-    misread as a game defect: (1) the first driver script filled Stage-1 cells by watching for
-    the `missing` CSS class to clear, but the game correctly keeps that class after a wrong
-    attempt (only adds `incorrect-cell` alongside it) — an infinite loop in the *test*, not the
-    game. (2) A "Page crashed" on the 24-question run reproduced twice with a fresh browser each
-    time, independent of GPU flags, with a flat JS heap throughout (5–7MB, no leak) — looked like
-    a real bug, but per-question timing logs showed the crash always landed at roughly the same
-    *elapsed time* rather than the same *question count*, which pointed at something external to
-    the page. (3) With full instrumentation it turned out to be the bank-size cap above: the
-    driver kept "playing" past the natural end of the queue once the game had already switched to
-    the results screen, hammering controls that no longer existed. Fixed by checking for the
-    results screen at the top of every loop iteration, not just after finishing a question.
-  - **Class check on this shape, requested and run:** a static scan for "an element's
-    `style.display` set to `'none'` inside an answer/check handler and never restored anywhere in
-    the file" across all 95 games. One category-A hit outside Expectation Station
-    (`shape-shifter:843`, `undoBtn`), which is a false positive — `shape-shifter:509` restores it
-    via a ternary (`(mode === 'rotation') ? 'none' : 'inline-block'`) that a literal-value scan
-    can't read; checked by hand and it restores correctly. **No other game in the roster looks
-    uncompletable by this defect shape.**
 - [x] **1.2 Worked solutions showed the author's self-correction.** The original diagnosis (dead
   duplicate `c:`/`d:` keys, canon §8.2c Shape 2) was wrong about *where* the leak lived —
   `showExplain` renders only `q.s`, and the prose was in the `s:` array, never duplicated.
@@ -590,7 +551,7 @@ Each idea is one line here and nowhere else in the repo; detail goes in its spec
 20. **GATE-STEP-4: repeatable gating checks** (step 4 of GATE-WARN-THEN-ENFORCE). The stub server injects a fixed default seed; verifiers keep fixed seed lists; a nightly, non-gating random sweep adds each failing seed to its list; ~~Take a Walk's `Date.now` seed is fixed~~ DONE 12 Nov 2026 (TAKE-A-WALK-SEED): no game's seed reads the clock (take-a-walk, how-many-parts, just-pythag-it-bruv, squared-squirrel), and check-site.py tier 2's clock-seed scan keeps it so (allow-list: equatle's and free-daily-pizza's daily seeds; Jon's option A); every page measurement waits on `bc.wait_settled`, `measure-phone-fit.py` included. Spec, Jon's ruling and the audit of about 45 sites: `docs/handover/contracts/2026-10-27-gate-step4-spec.md`. Moved from cloud.md's live pointers. **Still owed, added 12 Nov 2026 (Jon, option 1 of TAKE-A-WALK-SEED): phone-fit measures only the first asking screen in every game; answer and later screens are unmeasured.** A shared-infrastructure gap, not Take a Walk's (`measure-phone-fit.py` stops at the first screen with answer controls; Take a Walk's answer screen overflowed by up to 272 px unseen, row TAKE-A-WALK-PHONE-LAYOUT). Owner: cloud lane (gate files).
 21. **GATE-STEP-6: the shard migration** (step 6 of GATE-WARN-THEN-ENFORCE, `docs/handover/contracts/2026-10-27-gate-warn-then-enforce.md`; steps 1, 2, 3 and 5 merged as #590, #630, #592 and #631). Step 6 supersedes PLAN-SHARED-ASSETS (`docs/history/contracts/2026-10-27-plan-shared-assets.md`). The warn list is empty; moving Factor Theorem (88 s), Growth and Decay (123 s) and Screening Room (94 s) to work units is insurance only. Moved from cloud.md's live pointers. Owner: **Jon** to say; cloud lane.
 22. **PROBE-DATA-OPT** (PHONE-FIT-RED follow-up): the phone-fit checker should see `[data-opt]` delegated buttons, with `possibly-maybe`'s unmeasurable entry coming off; the sideways check should run on every game, unmeasurable ones included; diagnose "asking only" on `hc-factor`, `y-so-steep`, `i-found-a-mark` and `who-ate-all-the-pies` (`y-so-steep` and `i-found-a-mark` have no `[data-opt]`). Owner: home lane.
-23. **LOCAL-CHECKS**: browser verifiers fail intermittently in WSL `maffs`, on clean main too. Leading lead, untested: WSL's clock stepping backwards, up to 2.884 s in 40 s. Local runs measure `screening-room` 717/680 while CI passes it; CI is the authority (AGENTS.md). Owner: home lane. Re-checked 2026-11-08: CI's nightly now reproduces screening-room 717/680 (see SCREENING-ROOM-FOLD), so that case is not local-only. teacher-feedback-line fails locally on prisoners-dilemma's tournament at 390 px; passes in CI. 9 Nov: verifiers of squared-squirrel, its-on-sale, estimation-engine, the-6-ps and the Burst, Chart drawings and two Feedback-that-teaches checks fail locally on clean main; pass in CI (#719).
+23. **LOCAL-CHECKS**: browser verifiers fail intermittently in WSL `maffs`, on clean main too. Lead TESTED 15 Nov 2026 (ANSWER-LOCK-FLAKE): WSL's wall clock runs fast and is stepped back 2.37 to 2.65 s about every 29.8 s (over 40 steps logged against the monotonic clock). Every check whose page times a window with `Date.now()` is exposed: see row ANSWER-LOCK-WALL-CLOCK. Local runs measure `screening-room` 717/680 while CI passes it; CI is the authority (AGENTS.md). Owner: home lane. Re-checked 2026-11-08: CI's nightly now reproduces screening-room 717/680 (see SCREENING-ROOM-FOLD), so that case is not local-only. teacher-feedback-line fails locally on prisoners-dilemma's tournament at 390 px; passes in CI. 9 Nov: verifiers of squared-squirrel, its-on-sale, estimation-engine, the-6-ps and the Burst, Chart drawings and two Feedback-that-teaches checks fail locally on clean main; pass in CI (#719).
 24. **AA-AUDIT**: font-family overrides that bypass OpenDyslexic; HUD label overlap at 375; Aa `line-height` never below 1.5 (`distinctly-average` sets 1.4). Owner: home lane (shared Aa styles); per-game fixes cloud lane.
 25. **VARIANT-EFFORT**: no check that a lock's variants take similar effort (COMIC-CAPER-PRIME-LOCK, §3, is the case in hand). Owner: home lane.
 26. **LEVEL-CODES**: the portal's level code `l4` against the games' `level4` (one game's `l4` key is noted in §2). Owner: home lane.
@@ -620,6 +581,8 @@ Each idea is one line here and nowhere else in the repo; detail goes in its spec
 50. **AA-KEY-MISMATCH**: probability-pioneer, shape-shifter and like-terms-collector read only mfg_dyslexia; measure-phone-fit.py --aa sets mfg_accessible, so the Gate never measures their Aa mode. Fix at the measuring layer or the games' key. Owner: cloud lane (Gate files). Recorded 12 Nov 2026 (contract PP-AA-STACK).
 51. **CI-DEPS-UGH-STATS** (UGH-STATS-PAGES, 14 Nov 2026; Jon: log it, do not change): `scripts/ci-deps.py` KNOWN_TOP does not name `ugh-stats`, so a change under `ugh-stats/` is a path in no known area and selects every verifier in the Gate. Add the folder to KNOWN_TOP. Owner: cloud lane (a Gate file).
 52. **CONTENT-SAFETY-UGH-STATS** (UGH-STATS-QUESTIONS, 14 Nov 2026): `scripts/check-content-safety.py` GLOBS do not include `ugh-stats/**/*.html`, so the SR-14 scan never reads the Ugh, stats pages. For #UGH-STATS-QUESTIONS the scan's own `hits_in()` was run on them by hand: no hits. Add the folder to GLOBS. Owner: whichever lane next touches the content-safety check.
+53. **ANSWER-LOCK-WALL-CLOCK** (15 Nov 2026; stopped for Jon, shared asset): `test-answer-lock.py` fails locally because answer-lock.js:86 times its window with `Date.now()` and WSL steps the wall clock back ~2.5 s every 30 s. Evidence and Jon's three options: #777's body. Owner: Jon, then home lane.
+54. **CHECKS-OFFLINE-REST** (15 Nov 2026): 20 no-route scripts and ~20 unread `continue_()` routes can still reach a third party; list and reasons in #777's body. Owner: home lane.
 
 ### Check-ledger debt (DOCS-BUNDLE, 9 Nov 2026)
 

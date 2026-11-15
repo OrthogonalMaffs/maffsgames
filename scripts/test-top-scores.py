@@ -31,6 +31,7 @@ import time
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
+import bank_common as bc  # noqa: E402  (offline_async, in play())
 
 _spec = importlib.util.spec_from_file_location("check_top_scores", os.path.join(HERE, "check-top-scores.py"))
 CT = importlib.util.module_from_spec(_spec)
@@ -83,7 +84,7 @@ async def katex_local(route, *_):
 async def play(browser, base, slug, routes=()):
     ctx = await browser.new_context(locale="en-US", timezone_id="Europe/London", viewport={"width": 1280, "height": 900})
     await ctx.add_init_script(CLOCK)
-    await ctx.route(lambda u: not u.startswith(base) and "/katex@" not in u, lambda r: r.abort())
+    await bc.offline_async(ctx, base)
     await ctx.route(re.compile(r"/katex@[^/]+/dist/"), katex_local)
     await ctx.route(re.compile(r"/schools/assets/firebase-leaderboard\.js(\?.*)?$"), lambda r: r.abort())
     for pat, body, ctype in routes:
