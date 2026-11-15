@@ -16,6 +16,19 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): HOME-LEAN (neither lane runs check-changed.py before pushing)
+
+Claude Code (home lane), worktree `~/mg-home-lean`, branch `claude/home-lean`; contract `docs/handover/contracts/2026-11-15-home-lean.md`. The first commit carries ESC-BAND-SLIM's close-out (merge line below, contract to history).
+
+- **AGENTS.md:** the two pre-push lines (home runs check-changed.py; cloud does not) are one rule for both lanes: the PR's Gate is the check, local runs are optional and never a merge condition, and the by-hand list is the personal-details scan, the skip-CI word check, the selftest of touched scripts and the §7.8.4 worst-case test. 299 bytes.
+- **Canon:** §7.8's pre-push and "which lane" lines carry the new rule, with the 7 Oct note kept as history (CI minutes are free). §12 has a HOME-LEAN section after CLOUD-LEAN (Jon's two rulings, the measured cost, the by-hand list); CLOUD-LEAN's home-lane line now points to it. SR-27 is marked superseded, its text kept.
+- **docs/rules/scripts.md:** its SR-27 pointer now says check-changed.py is optional and SR-27 is history. CLAUDE.md has no such line.
+- Not run: check-changed.py (this ruling). By hand: the personal-details scan, the skip-CI word check, check-context-size.py.
+- todo: none.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): ESC-BAND-SLIM (the homepage escape-rooms band down to three rooms; loop cards on /printables/)
 
 Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-slim`; contract `docs/handover/contracts/2026-11-15-esc-band-slim.md`, with Jon's 17:03 follow-up (the loop bundle) in the PR body. The first commit carries PRINTABLES-PAGE's close-out: the merge line above, and the contract moved to history.
@@ -33,7 +46,7 @@ Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-
   - the £5 loop-card bundle (Tes link only).
   - Both Tes links returned 200 with their own listing titles.
 - todo: PRINTABLES-PAGE is closed to todo-done; ESC-BAND-ROTATION is added (later, research first).
-- MERGED: pending.
+- MERGED 15 Nov, 18:28 UTC, as d5381e8 (#786). Main on the merge commit: check-site 43746949609 success, phone-fit-full 43746949659 success; live checked. end-task removed claude/esc-band-slim. Local check-changed was stopped at 203 of 260 (none failed) on Jon's 18:15 ruling (HOME-LEAN).
 
 Record: agent Claude Code; review cycles 0; amendments 1 (Jon 17:03, the loop bundle card); usage n/a.
 
