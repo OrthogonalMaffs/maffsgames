@@ -62,3 +62,11 @@ STOP IF: the Findings register step or any other check still fails after 1-3 (re
 
 UNLIST-GRAPH-SKETCHER: second follow-up from Project Claude, 15 Nov 2026 20:50. Jon's ruling: option 1. Move the correction notice (marker and div together) to just after the Start button on the start screen; no change to its text, style or the rest of 449905c6. Start's bottom edge must be unchanged from main at 320x568, 375x667, 390x844 and 1280x720 (526, 469, 469, 434); report the notice's top and bottom edges at each. Then push, Gate, merge as the contract says, report main's check-site and phone-fit-full on the merge commit, and close the stop in home.md.
 STOP IF: the Findings register check requires the marker in a particular place on the page (report its rule); Start moves at any measured width.
+
+
+---
+
+UNLIST-GRAPH-SKETCHER: third follow-up from Project Claude, 15 Nov 2026 20:55 (Jon, 20:50: "with the escape room section reduced, the "start with the hamster heist" is redundant, particularly as that is one of the 3 games currently showing. we need to remove it"). Add to this PR (#791), same commit series:
+index.html:914-915, the homepage escape-rooms band's last esc-note: remove " &mdash;" and the link `<a href="escape-rooms/hamster-heist/" data-mfg-item="start-hamster-heist">start with The Great Hamster Heist</a>`, so the span reads exactly: Free, in a browser, nothing to install.
+Nothing else in the band changes (the three cards, "Open all fourteen rooms", the printables link). grep the repo for start-hamster-heist and remove any reference a check or analytics config holds to it; report each. Note it in the PR body and home.md with Jon's words above.
+STOP IF: a check requires that link or that note's wording (report its rule); removing it changes the band's layout at 320 px or 1280 px beyond the one line getting shorter.
