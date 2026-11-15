@@ -20,3 +20,18 @@ EXACT CHANGE:
 DO NOT TOUCH: TIER_A, TIER_B, ALLOW, KNOWN, HUMOUR_KEYS, CODE_ATTRS and displayed(); the Ugh, stats pages and every other page's wording; the other checks; the workflow line for this check; Gate files.
 SUCCESS CONDITION: ESSENTIALS-PHONE-FIT-PAIR's close-out is in the first commit; the check reads all six /ugh-stats/ pages and every other published page; the guard fails a planted unlisted folder; the selftest plants are caught and the tree passes; the file counts and the new folders are reported in the PR body; Gate green; merged; main's check-site and phone-fit-full green on the merge commit and reported; cloud.md and todo row 52 updated.
 STOP IF: the wider read finds any hit, in /ugh-stats/ or in any page not read before (report each with its line for Jon's ruling; do not reword, allowlist or add to KNOWN); it is unclear whether a folder is published; the check's run time rises enough that the timing report warns on its group; the change would need the workflow or another Gate file edited.
+
+---
+
+AMENDMENT 1 (Project Claude, 15 Nov 2026 20:45; Jon's ruling, given in answer to the cloud lane's stop on PR #792's red Plan job):
+
+CONTENT-SAFETY-COVERAGE: follow-up from Project Claude, 15 Nov 2026 20:45. Jon's ruling: yes to route 1 (fix ci-deps.py, the class fix), in this PR (#792). This lifts the STOP IF on editing a Gate file for scripts/ci-deps.py only; the workflow and every other Gate file stay untouched.
+
+Why: the same bug shape as LINE-LIMIT-SCOPE (21 Oct 2026, ci-deps.py:17-19): an imported module's string literals become false dependencies of every verifier that loads it. Now: verify-correlation-or-coincidence.py imports check-content-safety.py, which imports check-publish-scope.py, whose SITE literals (docs/art/ among them) make a docs-only change select that verifier.
+
+Do:
+1. scripts/ci-deps.py: when following a verifier's local imports, a module that is a site-wide check (a scripts/check-*.py that is not itself a content verifier) contributes its own file, and the files of modules it imports, as dependencies, but NOT its string-literal paths, its game slugs or its fixtures. The verifier's own literals and its "# ci-deps:" header are unchanged. Update the docstring's dependency list to say so, citing this PR beside LINE-LIMIT-SCOPE.
+2. --selftest proofs, all run on the real tree: (a) a docs-only change (e.g. docs/todo.md, docs/art/<any file>) selects no content verifier it did not select on main; (b) a change to scripts/check-content-safety.py selects verify-correlation-or-coincidence.py; (c) a change to scripts/check-publish-scope.py selects it too; (d) a change to games/correlation-or-coincidence/index.html selects it. Plant a fault (drop the new rule) and show (a) fails.
+3. Run ci-deps.py --explain before and after; in the PR body, list every verifier whose dependency set changed and confirm each lost only literals of an imported site-wide check, never its own pages or its game.
+Then: Gate green, merge as the contract says, report main's check-site and phone-fit-full on the merge commit, cloud.md updated (record the rule beside LINE-LIMIT-SCOPE).
+STOP IF: any verifier loses a dependency on its own game folder, a page it tests or a shared asset that page loads; the rule cannot be stated without a hand list of module names; any other Gate file would need changing.
