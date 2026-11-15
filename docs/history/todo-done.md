@@ -3183,3 +3183,47 @@ Moved word for word from `docs/todo.md` §7, with its closing note (contract ANS
 - **ANSWER-BOX-REDRAWS-BRANCH** (UGH-STATS-HOME, 14 Nov 2026): the remote branch `art/answer-box-redraws` was NOT deleted, because its content check failed. Its one commit, 799748c "Add files via upload", adds `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`, about 1.8 MB each. Neither file is on main at c0cec86: #769 landed only WebP conversions, in `tools/pack-generator/rooms/prom-budget/art/` and `tools/pack-generator/rooms/roll-for-initiative/art/`. **Question for Jon:** are the WebP versions on main enough, so the branch and its original PNGs can be deleted (the home lane runs `git push origin --delete art/answer-box-redraws`), or should the PNGs be kept somewhere first? Owner: Jon, then home lane.
 
 **Closed 15 Nov 2026.** Jon's ruling of 15 Nov, 08:37: "I have all the images saved on the computer as well as on chatgpt". The WebP versions on main are enough. Before deleting, the home lane confirmed that the branch's only commit is 799748c and that it adds only `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`. It then ran `git push origin --delete art/answer-box-redraws` (ANSWER-LOCK-FLAKE PR 1).
+
+## Moved for size by ANSWER-LOCK-FLAKE PR 2 (15 Nov 2026)
+
+Moved word for word from `docs/todo.md` §1's "Done this session (26 Sep)" block, so that file stays under its 150 KiB cap (check-context-size.py: "move history to docs/history/"). Done since 26 Sep 2026; nothing owed.
+
+- [x] **1.1 Expectation Station cannot be completed — since it shipped (`812cd6a`, 22 Mar).**
+  `checkStage1()` hid its own Check Table button (`:707`, `:725`) and `renderStage1()` never
+  re-showed it, unlike stages 2 and 3 (`:822`, `:953`). From question 2 onward a student filled
+  the table and had no way to submit — no run had reached `game_completed` since it shipped. **Fixed**: `renderStage1()`
+  now sets `checkStage1`'s `display` back to `''` alongside its existing `disabled` line, one
+  line, matching the pattern stages 2 and 3 already used. Confirmed no second blocker — the
+  function rebuilds the table cells and tile listeners from scratch on every call, so `display`
+  was the only state it failed to restore. **Verified completing at 8, 16 and 24 questions**
+  under the stub server, driving real clicks through a headless browser and asserting
+  `game_completed` fires: 8 → score 10, `questions_correct` 3; 16 → score 24, `questions_correct`
+  8; 24 → score 31, `questions_correct` 10 (see the next bullet for why 24 answers 20).
+  - **A "24 questions" core session only ever serves 20 — found while verifying, reported, not
+    fixed.** `newQuestion()`'s `questionQueue = shuffle([...bank]).slice(0,
+    Math.min(sessionLength, bank.length))` caps the queue at the level's bank size. Core has 20
+    questions, GCSE 15, A-level 10 — **none of the three levels has 24**, so the "24" button
+    always under-delivers, silently, and correctly ends the session early with `game_completed`
+    reporting the true count (`questions_answered: questionQueue.length`). Nothing is broken —
+    the game behaves consistently — but the UI promises a number the content can't back on any
+    level. Not this contract's fix (bank/scoring were DO NOT TOUCH); flagging for a content or UI
+    decision (more questions authored, or the "24" option removed/relabelled per level).
+  - **The verification itself took three false leads worth recording**, since each nearly got
+    misread as a game defect: (1) the first driver script filled Stage-1 cells by watching for
+    the `missing` CSS class to clear, but the game correctly keeps that class after a wrong
+    attempt (only adds `incorrect-cell` alongside it) — an infinite loop in the *test*, not the
+    game. (2) A "Page crashed" on the 24-question run reproduced twice with a fresh browser each
+    time, independent of GPU flags, with a flat JS heap throughout (5–7MB, no leak) — looked like
+    a real bug, but per-question timing logs showed the crash always landed at roughly the same
+    *elapsed time* rather than the same *question count*, which pointed at something external to
+    the page. (3) With full instrumentation it turned out to be the bank-size cap above: the
+    driver kept "playing" past the natural end of the queue once the game had already switched to
+    the results screen, hammering controls that no longer existed. Fixed by checking for the
+    results screen at the top of every loop iteration, not just after finishing a question.
+  - **Class check on this shape, requested and run:** a static scan for "an element's
+    `style.display` set to `'none'` inside an answer/check handler and never restored anywhere in
+    the file" across all 95 games. One category-A hit outside Expectation Station
+    (`shape-shifter:843`, `undoBtn`), which is a false positive — `shape-shifter:509` restores it
+    via a ternary (`(mode === 'rotation') ? 'none' : 'inline-block'`) that a literal-value scan
+    can't read; checked by hand and it restores correctly. **No other game in the roster looks
+    uncompletable by this defect shape.**
