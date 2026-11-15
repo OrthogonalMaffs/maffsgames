@@ -29,6 +29,7 @@ Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/heade
   - The badge row now needs 1,012 px, against 1,257 px before.
   - Locally the row already fitted at 1366. Project Claude measured 282 px there, so the two renderers differ by a few pixels; after the removal there is about 245 px to spare at 1280.
 - `art/answer-box-redraws` deleted from the remote after Jon's ruling of 15 Nov at 08:37. Before deleting, its only commit was confirmed as 799748c, adding only the two `art-incoming/` PNGs. Todo row ANSWER-BOX-REDRAWS-BRANCH moved to `docs/history/todo-done.md`. No cloud close-out should carry the branch.
+- MERGED 15 Nov as dd03c87 (#773). Main on the merge commit: check-site 43699387814 success, phone-fit-full 43699387701 success (push run). Local check-changed: 63 of 63 passed.
 
 ## 2026-11-14 (home): UGH-STATS-HOME
 
