@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps played in Chromium, each split, factor and line recomputed; Formula roots on the keypad with a minus key) |
-# ci-line: Quadratic Factoriser self-test (the old split and eight other faults planted in the guided steps and the keypad; each must fail) | --selftest
+# ci-line: Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps, seven with the HCF step, played in Chromium, each HCF, split, factor and line recomputed; Formula roots on the keypad with a minus key) |
+# ci-line: Quadratic Factoriser self-test (the old HCF flow and eleven other faults planted in the guided steps and the keypad; each must fail) | --selftest
 """Layers C + D verification for quadratic-factoriser (docs/quadratic-factoriser-spec.md,
 item 5). Grows with each build phase; this version covers Phase 1 ('gcse'), Phase 2
 ('higher') and Phase 3 ('formula').
@@ -37,7 +37,17 @@ ac and adds to b; the step 4 line equals the quadratic on screen, its middle ter
 accepted split; step 5's first pair equals the factor times the bracket, and the accepted
 second-pair factor times the bracket equals the second pair; step 6's accepted
 factorisation equals the quadratic; the figures in the tutorial's narration and in each
-misconception message are recomputed. The Formula level's root boxes are on the shared
+misconception message are recomputed.
+
+THE HCF STEP (QF-HCF-FIRST, Jon 15 Nov 2026)
+--------------------------------------------
+An HCF item, k(px + q)(rx + s), is played through seven steps: first "Take out the highest common factor", whose
+one accepted option is gcd(a, b, c), recomputed here and required to equal the item's k, with the two wrong options
+and their retry messages recomputed too; then the six AC steps on the quadratic left in the bracket (a/k, b/k, c/k),
+shown on screen as "= k(...)", the split ps and qr; step 6's answer keeps k in front. On every Higher item the
+accepted step 2 value and the accepted step 3 pair's product are at most 72 in size, the base pool's |ac| bound: no
+value the student must work out needs a calculator (Jon, 15 Nov 15:15: step 2's a x b and b x c distractors are
+deliberate and not guarded). The Formula level's root boxes are on the shared
 phone keypad (MaffsKeypad) with a minus key: roots can be negative and a phone's decimal
 pad (iOS) has none.
 
@@ -79,7 +89,8 @@ def fail(msg):
 
 PAGE = os.path.join(ROOT, "games", SLUG, "index.html")
 
-# Plays one Higher item's six guided steps: renders each step as the page does (hfRenderStep), then tries
+# Plays one Higher item's guided steps (six, seven with an HCF item's HCF step first, from the page's own
+# hfFirstStep): renders each step as the page does (hfRenderStep), then tries
 # every option the step offers (its own onclick), noting whether the page accepts it ("Correct!") and any
 # misconception message it shows. Every LaTeX string is read back from KaTeX's annotation, as rendered.
 GUIDED_JS = r"""(indices) => {
@@ -90,11 +101,13 @@ GUIDED_JS = r"""(indices) => {
     for (const mode of (i === 0 ? ['tutorial', 'guided'] : ['guided'])) {
       const item = items[i];
       currentQ = item; hfMode = mode; hfViaShowMethod = false;
-      const rec = { i, mode, a: item.a, b: item.b, c: item.c, steps: [] };
-      for (let st = 1; st <= 6; st++) {
+      const rec = { i, mode, a: item.a, b: item.b, c: item.c, k: item.k || null, stage: item.stage, steps: [] };
+      for (let st = hfFirstStep(); st <= 6; st++) {
         hfStep = st; hfRenderStep();
         const panel = hfPanel(), body = document.getElementById('hfStepBody');
+        const label = panel.querySelector('.hf-step-label');
         const step = { quad: ann(panel.querySelector('.hf-quadratic')),
+          reduced: [...panel.querySelectorAll('.hf-reduced')].map(ann), label: label ? label.textContent : null,
           prompts: [...body.querySelectorAll('.hf-note, .hf-step-prompt')].map(ann), opts: [] };
         const calls = [...body.querySelectorAll('.hf-choice-btn:not(.hf-continue-btn)')]
           .map(b => ({ call: b.getAttribute('onclick'), tex: ann(b) }));
@@ -105,7 +118,7 @@ GUIDED_JS = r"""(indices) => {
           body.querySelectorAll('.hf-misconception').forEach(m => m.remove());
           (0, eval)(o.call);
           const mis = body.querySelector('.hf-misconception');
-          step.opts.push({ call: o.call, tex: o.tex, accepted: fb.textContent === 'Correct!',
+          step.opts.push({ call: o.call, tex: o.tex, accepted: fb.textContent === 'Correct!', fb: fb.textContent,
             mis: mis ? { name: mis.dataset.misconception, tex: ann(mis), text: mis.textContent } : null });
         }
         rec.steps.push(step);
@@ -509,17 +522,61 @@ def verify_guided(guided, n_pool, every=1):
             bad.append(None)
 
     for rec in guided:
-        a, b, c = rec["a"], rec["b"], rec["c"]
-        Q = {i: v for i, v in {2: a, 1: b, 0: c}.items() if v}
-        steps = rec["steps"]
-        if len(steps) != 6:
-            note(rec, "%d steps rendered, not 6" % len(steps)); continue
+        a0, b0, c0 = rec["a"], rec["b"], rec["c"]
+        Q = {i: v for i, v in {2: a0, 1: b0, 0: c0}.items() if v}
+        hcf = rec["stage"] == "hcf"
+        g = math.gcd(math.gcd(abs(a0), abs(b0)), abs(c0))
+        if hcf and g != rec["k"]:
+            note(rec, "the HCF of a, b, c is %d, not the item's k = %r" % (g, rec["k"])); continue
+        K = g if hcf else 1
+        # Steps 1 to 5 work on the quadratic left in the bracket (QF-HCF-FIRST); on a base item that is the quadratic.
+        a, b, c = a0 // K, b0 // K, c0 // K
+        Qw = {i: v for i, v in {2: a, 1: b, 0: c}.items() if v}
+        n_steps = 7 if hcf else 6
+        allsteps = rec["steps"]
+        if len(allsteps) != n_steps:
+            note(rec, "%d steps rendered, not %d" % (len(allsteps), n_steps)); continue
+        labels = [st["label"] for st in allsteps]
+        if labels != ["Step %d of %d" % (n, n_steps) for n in range(1, n_steps + 1)]:
+            note(rec, "the step labels read %r" % labels)
         try:
-            for st in steps:
+            for j, st in enumerate(allsteps):
                 if len(st["quad"]) != 1 or poly(st["quad"][0]) != Q:
-                    raise ValueError("the quadratic on screen %r is not %dx^2 %+dx %+d" % (st["quad"], a, b, c))
+                    raise ValueError("the quadratic on screen %r is not %dx^2 %+dx %+d" % (st["quad"], a0, b0, c0))
+                if not hcf or j == 0:
+                    if st["reduced"]:
+                        raise ValueError("step %d shows %r, before the HCF is taken out" % (j + 1, st["reduced"]))
+                    continue
+                rm = re.match(r"^= (\d+)\((.*)\)$", st["reduced"][0][0]) if (
+                    len(st["reduced"]) == 1 and len(st["reduced"][0]) == 1) else None
+                if not rm or int(rm.group(1)) != K or poly(rm.group(2)) != Qw:
+                    raise ValueError("step %d shows %r under the quadratic, not = %d(%dx^2 %+dx %+d)"
+                                     % (j + 1, st["reduced"], K, a, b, c))
         except ValueError as e:
             note(rec, str(e)); continue
+        if hcf:
+            # The HCF step: k, 1, and one more wrong value (a proper divisor of k above 1, else the gcd of two of
+            # the coefficients where that is not k, else 2k), each wrong pick with its retry message.
+            hs = allsteps[0]
+            divs = [d for d in range(K - 1, 1, -1) if K % d == 0]
+            twos = [v for v in (math.gcd(abs(a0), abs(b0)), math.gcd(abs(a0), abs(c0)), math.gcd(abs(b0), abs(c0)))
+                    if v != K]
+            third = divs[0] if divs else (twos[0] if twos else 2 * K)
+            got = sorted(args_of(o["call"])[0] for o in hs["opts"])
+            if got != sorted([K, 1, third]) or len(set(got)) != 3:
+                note(rec, "the HCF step offers %r, not %r" % (got, sorted([K, 1, third])))
+            acc = [args_of(o["call"])[0] for o in hs["opts"] if o["accepted"]]
+            if acc != [K]:
+                note(rec, "the HCF step accepts %r, not only the HCF %d" % (acc, K))
+            for o in hs["opts"]:
+                v = args_of(o["call"])[0]
+                if v == K:
+                    continue
+                want = ("Check every term: is there a bigger number that goes into all three?" if K % v == 0
+                        else "That doesn't go into every term.")
+                if o["fb"] != want:
+                    note(rec, "the HCF step's message for %d is %r, not %r" % (v, o["fb"], want))
+        steps = allsteps[1:] if hcf else allsteps
 
         def one_accepted(k, right):
             opts = steps[k - 1]["opts"]
@@ -537,7 +594,7 @@ def verify_guided(guided, n_pool, every=1):
         # Step 1: a, b and c.
         one_accepted(1, lambda o: args_of(o["call"]) == [a, b, c])
         # Step 2: a x c.
-        one_accepted(2, lambda o: args_of(o["call"]) == [a * c])
+        acc2 = one_accepted(2, lambda o: args_of(o["call"]) == [a * c])
         # Step 3: the pair that multiplies to ac and adds to b; each option's own sums shown right.
         for o in steps[2]["opts"]:
             m, n = args_of(o["call"])
@@ -552,6 +609,13 @@ def verify_guided(guided, n_pool, every=1):
                 if m * n != c or [int(v) for v in mt[:1]] != [c] or str(a * c) not in mt:
                     note(rec, "step 3's misconception for %r states %r" % (o["call"], o["mis"]["text"]))
         acc3 = one_accepted(3, lambda o: (lambda m, n: m * n == a * c and m + n == b)(*args_of(o["call"])))
+        # The class guard (QF-HCF-FIRST; narrowed by Jon, 15 Nov 15:15): the values the student must work out, the
+        # accepted step 2 value and the accepted step 3 pair's product, within the base pool's |ac| <= 72 on every
+        # Higher item, so no step needs a calculator. Step 2's a x b and b x c distractors are deliberate, not guarded.
+        big = [abs(v) for v in ([args_of(acc2["call"])[0]] if acc2 else []) +
+               ([args_of(acc3["call"])[0] * args_of(acc3["call"])[1]] if acc3 else []) if abs(v) > 72]
+        if big:
+            note(rec, "a step needs a number over 72: %r" % big)
         if rec["mode"] == "tutorial":
             lead = " ".join(steps[2]["prompts"][0])
             if "ac = %d" % (a * c) not in lead or "b = %d" % b not in lead:
@@ -566,8 +630,8 @@ def verify_guided(guided, n_pool, every=1):
             note(rec, "step 4's line %r writes a negative term after a plus or a coefficient of 1" % line[0])
         m1 = (-1 if mid.group(1) == "-" else 1) * (int(mid.group(2)) if mid.group(2) else 1)
         n1 = (-1 if mid.group(3) == "-" else 1) * (int(mid.group(4)) if mid.group(4) else 1)
-        if poly(line[0]) != Q:
-            note(rec, "step 4's line %s does not equal the quadratic" % line[0])
+        if poly(line[0]) != Qw:
+            note(rec, "step 4's line %s does not equal the quadratic%s" % (line[0], " in the bracket" if hcf else ""))
         if acc3 and sorted([m1, n1]) != sorted(args_of(acc3["call"])):
             note(rec, "step 4 splits into %dx and %dx, not the accepted pair %s" % (m1, n1, acc3["call"]))
         # Step 5: the first pair is the factor times the bracket; the accepted factor x bracket is the second pair.
@@ -593,7 +657,8 @@ def verify_guided(guided, n_pool, every=1):
     if len(bad) > len(shown):
         fail("guided steps: %d more" % (len(bad) - len(shown)))
     if not bad:
-        print("  guided steps: %d item-modes, every step's key, split, line and factor recomputed" % len(guided))
+        print("  guided steps: %d item-modes (%d with the HCF step first), every step's HCF, key, split, line and "
+              "factor recomputed; no step needs a number over 72" % (len(guided), sum(r["stage"] == "hcf" for r in guided)))
 
 
 def verify_keypad(keypad):
@@ -711,6 +776,11 @@ def verify_higher(level):
             g = math.gcd(math.gcd(abs(a), abs(b)), abs(c))
             if g != 1:
                 fail("higher base item %r has a common factor %d across a,b,c" % (item, g))
+        # D: an HCF item's highest common factor is exactly its k (QF-HCF-FIRST: the guided flow takes k out first).
+        if item["stage"] == "hcf":
+            g = math.gcd(math.gcd(abs(a), abs(b)), abs(c))
+            if g != item["k"]:
+                fail("higher HCF item %r has highest common factor %d, not its k" % (item, g))
 
     # No duplicate (a,b,c) anywhere in the level's combined pool -- same "no session ever
     # repeats a question" guarantee as gcse (spec 2.2), checked across BOTH stages: a base
@@ -882,15 +952,31 @@ def run(html=None, every=1, pools_too=True, parts=ALL_PARTS):
 # the guided steps and the Formula keypad, or, marked PADS, against the number pads alone: the part it plants in.
 PADS = ("pads",)
 PLANTS = [
-    ("the old split (base ps, qr on an HCF item)",
-     "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }",
-     "function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }"),
-    ("step 5's first-pair factor without k",
-     "const factor = `${k * p === 1 ? '' : k * p}x`;", "const factor = `${p === 1 ? '' : p}x`;"),
-    ("step 5 accepting q, not kq",
-     "if (v === hfK(currentQ) * q) { hfStepCorrectAdvance(6); return; }", "if (v === q) { hfStepCorrectAdvance(6); return; }"),
-    ("step 5 offering q and -q",
-     "const opts = MaffsOptions.shuffle([k * q, -k * q]);", "const opts = MaffsOptions.shuffle([q, -q]);"),
+    # QF-HCF-FIRST (Jon, 15 Nov 2026): an HCF item takes out k first, then the AC steps run on the bracket. The three
+    # step 5 plants are SWEEP-1's turned round: k on the bracket's quadratic is now the fault.
+    ("the old HCF flow (no HCF step, the AC steps on the full quadratic, the split kps, kqr)",
+     "function hfWork(item) { const k = hfK(item); return { a: item.a / k, b: item.b / k, c: item.c / k }; }\n"
+     "function hfFirstStep() { return hfIsHcf(currentQ) ? 0 : 1; }\n"
+     "function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }",
+     "function hfWork(item) { return { a: item.a, b: item.b, c: item.c }; }\n"
+     "function hfFirstStep() { return 1; }\n"
+     "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }"),
+    ("the HCF step accepting a proper divisor of k",
+     "if (v === k) { hfStepCorrectAdvance(1); return; }",
+     "if (v === k || (v > 1 && k % v === 0)) { hfStepCorrectAdvance(1); return; }"),
+    ("step 3 on an HCF item with kps, kqr after the HCF step",
+     "function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }",
+     "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }"),
+    ("step 2 accepting the unreduced ac on an HCF item",
+     ("  const correct = a * c;\n", "  if (v === w.a * w.c) hfStepCorrectAdvance(3);"),
+     ("  const correct = a * c * hfK(currentQ) * hfK(currentQ);\n",
+      "  if (v === currentQ.a * currentQ.c) hfStepCorrectAdvance(3);")),
+    ("step 5's first-pair factor with k on the bracket's quadratic",
+     "const factor = `${p === 1 ? '' : p}x`;", "const factor = `${hfK(currentQ) * p === 1 ? '' : hfK(currentQ) * p}x`;"),
+    ("step 5 accepting kq, not q",
+     "if (v === q) { hfStepCorrectAdvance(6); return; }", "if (v === hfK(currentQ) * q) { hfStepCorrectAdvance(6); return; }"),
+    ("step 5 offering kq and -kq",
+     "const opts = MaffsOptions.shuffle([q, -q]);", "const opts = MaffsOptions.shuffle([hfK(currentQ) * q, -hfK(currentQ) * q]);"),
     ("step 3 accepting the pair that multiplies to c",
      "if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }",
      "if (pairsEqual([m, n], [split.m, split.n]) || m * n === currentQ.c) { hfStepCorrectAdvance(4); return; }"),
@@ -941,11 +1027,16 @@ def selftest():
     if clean:
         bad.append("the page as served fails (%d)" % len(clean))
     for name, old, new, *part in PLANTS:
-        if src.count(old) != 1:
+        # A plant is one find-and-replace, or a tuple of them applied together.
+        olds, news = (old, new) if isinstance(old, tuple) else ((old,), (new,))
+        if any(src.count(o) != 1 for o in olds):
             bad.append(name + " (the plant no longer matches the page)")
             continue
+        planted = src
+        for o, n in zip(olds, news):
+            planted = planted.replace(o, n)
         print("\nselftest plant: " + name)
-        if not run(src.replace(old, new), SAMPLE, pools_too=False, parts=part[0] if part else ("guided",)):
+        if not run(planted, SAMPLE, pools_too=False, parts=part[0] if part else ("guided",)):
             bad.append(name + " (passed)")
     print()
     print("selftest: %s" % ("FAILED: " + "; ".join(bad) if bad else "PASS (%d plants fail)" % len(PLANTS)))
