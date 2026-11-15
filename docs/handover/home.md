@@ -25,7 +25,7 @@ Claude Code (home lane), worktree `~/mg-home-lean`, branch `claude/home-lean`; c
 - **docs/rules/scripts.md:** its SR-27 pointer now says check-changed.py is optional and SR-27 is history. CLAUDE.md has no such line.
 - Not run: check-changed.py (this ruling). By hand: the personal-details scan, the skip-CI word check, check-context-size.py.
 - todo: none.
-- MERGED: pending.
+- MERGED 15 Nov as 4809d1a (#787). Main on the merge commit: check-site 43749922722 success, phone-fit-full 43749922791 success. end-task removed claude/home-lean.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
