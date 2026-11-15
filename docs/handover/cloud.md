@@ -77,6 +77,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-15 (cloud): QF-HCF-FIRST (`docs/handover/contracts/2026-11-15-qf-hcf-first.md`; Jon's rulings 15 Nov 14:35 and 14:43)
+
+Agent Claude Code (cloud), branch `claude/laughing-brown-5y47d3` from main ea4d4ea. Claim commit b061cf2; close-out of QF-K-FIRST (#782) 8f36132. One PR, Medium, merging on green.
+Done on the branch: a Higher HCF question in Guided (and "Show me the method") has seven steps: "Take out the highest common factor" first (k, 1 and one more wrong value, each wrong pick a retry message), then the six AC steps on the quadratic in the bracket, shown as "= k(...)" under the quadratic, the split ps and qr (`hfWork`, `hfFirstStep`, `hfStepHcfHtml`/`Pick`, `hfCorrectSplit`); step 6 keeps k in front. Base items, Independent mode, the pads and the pools unchanged. Verifier: the HCF recomputed and equal to every item's k (pool and page), HCF items played through seven steps on the bracket's quadratic, labels "Step n of 7"/"of 6", the "= k(...)" line, and the class guard (step 2's ac and every step 3 option's product at most 72); plants: the old HCF flow, the HCF step taking a proper divisor, step 3 with kps, kqr; SWEEP-1's three step 5 plants turned round (k on the bracket is now the fault). /updates/: one sentence on today's line.
+Checked here: verifier PASS (47 s, 3,762 item-modes, 3,008 with the HCF step); self-test PASS, 19 of 19 (100 s); phone fit normal, Aa and laptop: same known lists and figures as main.
+Found, not fixed (base step, DO NOT TOUCH): step 2's two wrong options are a x b and b x c, up to 665 on 464 of the 752 base quadratics, so also on HCF items' bracket (189 and -168 on 4(9x^2 + 21x - 8)). Nothing asks the student to compute them, but they are shown.
+Next: the Gate, merge, main's two runs; the next cloud task's first commit closes this out.
+
 ## 2026-11-15 (cloud): QF-K-FIRST (`docs/history/contracts/2026-11-15-qf-k-first.md`; Jon's follow-up to #780 and Amendment 1, 15 Nov)
 
 Agent Claude Code (cloud), branch `claude/trusting-goldberg-y3i4qg` restarted from main d59aeca. Claim commit d876f44; close-out of QF-PICKER (#780) 836f527. One small PR, merging on green.

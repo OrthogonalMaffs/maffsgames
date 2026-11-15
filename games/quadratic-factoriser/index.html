@@ -586,6 +586,8 @@
   }
   .hf-quadratic { font-size: clamp(20px, 5vw, 26px); font-weight: 700; color: var(--navy); margin-bottom: 16px; }
   .hf-quadratic .katex { font-size: 1em; }
+  .hf-reduced { font-size: clamp(18px, 4.5vw, 22px); font-weight: 700; color: var(--navy); margin: -8px 0 16px; }
+  .hf-reduced .katex { font-size: 1em; }
   .hf-step-label { font-size: 10px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px; }
   .hf-step-prompt { font-size: 15px; color: var(--navy); margin-bottom: 14px; line-height: 1.6; }
   .hf-step-prompt .katex { font-size: 1em; }
@@ -1369,11 +1371,18 @@ function hfBracketLatex(p, q, r, s, k) {
   const inner = `(${p}x ${sq} ${Math.abs(q)})(${r}x ${ss} ${Math.abs(s)})`;
   return (k && k !== 1) ? `${k}${inner}` : inner;
 }
-// The AC split of the quadratic on screen. An item is k(px + q)(rx + s), so a = kpr, b = k(ps + qr), c = kqs and
-// ac = k^2 pqrs: the pair is kps and kqr (it multiplies to ac and adds to b). A base item has no k (k = 1); an HCF
-// item's k is 2 to 5, and the base pair ps, qr would multiply to ac/k^2 and add to b/k (SWEEP-1, Jon 13 Oct 2026).
+// An item is k(px + q)(rx + s). A base item has no k (k = 1). An HCF item's k is 2 to 5 and is its highest common
+// factor (gcd(p, q) = gcd(r, s) = 1, so (px + q)(rx + s) has none of its own): the guided flow takes k out first, then
+// runs the AC steps on the quadratic left in the bracket, pr x^2 + (ps + qr)x + qs, whose split is ps and qr. On the
+// full quadratic the pair would be kps and kqr, multiplying to k^2 times the bracket's ac (up to 1800): a calculator
+// in a non-calculator skill, and not the method a student uses (Jon, 15 Nov 2026, QF-HCF-FIRST; this replaces
+// SWEEP-1's kps, kqr of 13 Oct 2026 for HCF items).
 function hfK(item) { return item.k || 1; }
-function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }
+function hfIsHcf(item) { return item.stage === 'hcf'; }
+// The quadratic the AC steps work on: the bracket's after the HCF step, else the quadratic itself.
+function hfWork(item) { const k = hfK(item); return { a: item.a / k, b: item.b / k, c: item.c / k }; }
+function hfFirstStep() { return hfIsHcf(currentQ) ? 0 : 1; }
+function hfCorrectSplit(item) { return { m: item.p * item.s, n: item.q * item.r }; }
 function pairsEqual(pair1, pair2) {
   return (pair1[0] === pair2[0] && pair1[1] === pair2[1]) || (pair1[0] === pair2[1] && pair1[1] === pair2[0]);
 }
@@ -1382,7 +1391,7 @@ function hfStartTutorial() {
   hfMode = 'tutorial';
   currentQ = higherTutorialExample;
   document.getElementById('qcount').textContent = 'Tutorial';
-  hfStep = 1;
+  hfStep = hfFirstStep();
   hfRenderStep();
 }
 
@@ -1393,7 +1402,7 @@ function hfBeginRealQuestion() {
   qIndex++;
   document.getElementById('qcount').textContent = `${qIndex}/${sessionQuestions.length}`;
   if (hfMode === 'independent') hfRenderIndependent();
-  else { hfStep = 1; hfRenderStep(); }
+  else { hfStep = hfFirstStep(); hfRenderStep(); }
 }
 
 function hfModeLabel() { return hfMode === 'tutorial' ? 'Tutorial' : hfMode === 'guided' ? 'Guided' : 'Independent'; }
@@ -1417,19 +1426,26 @@ function hfRenderStep() {
   const split = hfCorrectSplit(currentQ);
   const narrate = hfMode === 'tutorial';
   let stepHtml;
-  if (hfStep === 1) stepHtml = hfStep1Html(narrate);
+  if (hfStep === 0) stepHtml = hfStepHcfHtml(narrate);
+  else if (hfStep === 1) stepHtml = hfStep1Html(narrate);
   else if (hfStep === 2) stepHtml = hfStep2Html(narrate);
   else if (hfStep === 3) stepHtml = hfStep3Html(narrate, split);
   else if (hfStep === 4) stepHtml = hfStep4Html(narrate, split);
   else if (hfStep === 5) stepHtml = hfStep5Html(narrate);
   else stepHtml = hfStep6Html(narrate);
+  // An HCF item has the HCF step first (step 1 of 7); once it is done, the quadratic is shown as k(the bracket).
+  const extra = hfIsHcf(currentQ) ? 1 : 0;
+  const w = hfWork(currentQ);
+  const reduced = extra && hfStep >= 1
+    ? `<div class="hf-reduced">${tex(`= ${hfK(currentQ)}(${formatQuadratic(w.b, w.c, w.a)})`)}</div>` : '';
 
   hfPanel().innerHTML = `
     <div class="hf-box">
       <div class="hf-mode-badge">${hfModeLabel()}</div>
       <div class="q-label">Factorise</div>
       <div class="hf-quadratic">${tex(formatQuadratic(currentQ.b, currentQ.c, currentQ.a))}</div>
-      <div class="hf-step-label">Step ${hfStep} of 6</div>
+      ${reduced}
+      <div class="hf-step-label">Step ${hfStep + extra} of ${6 + extra}</div>
       <div id="hfStepBody">${stepHtml}</div>
       <div class="hf-feedback" id="hfFeedback"></div>
       <div class="next-mount" id="hfNextMount"></div>
@@ -1449,8 +1465,25 @@ function hfDistinctTriples(correct, candidates, want) {
   return out;
 }
 
+// The HCF step's options: k (the highest common factor), 1, and one more wrong value: a proper divisor of k above 1
+// if there is one, else the gcd of only two of the coefficients where that is not k, else 2k (QF-HCF-FIRST).
+function hfHcfWrong(item) {
+  const k = hfK(item), { a, b, c } = item;
+  for (let d = k - 1; d > 1; d--) if (k % d === 0) return d;
+  for (const g of [gcdAbs(a, b), gcdAbs(a, c), gcdAbs(b, c)]) if (g !== k) return g;
+  return 2 * k;
+}
+function hfStepHcfHtml(narrate) {
+  const opts = MaffsOptions.shuffle([hfK(currentQ), 1, hfHcfWrong(currentQ)]);
+  const rows = opts.map(v => `<button class="hf-choice-btn" onclick="hfStepHcfPick(${v})">${tex(String(v))}</button>`).join('');
+  const lead = narrate
+    ? 'Every term shares a factor. Take out the highest common factor first, then factorise what is left in the bracket.'
+    : 'Take out the highest common factor.';
+  return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
+}
+
 function hfStep1Html(narrate) {
-  const { a, b, c } = currentQ;
+  const { a, b, c } = hfWork(currentQ);
   const distractors = hfDistinctTriples({ a, b, c },
     [{ a, b: c, c: b }, { a, b: -b, c }, { a, b: c, c: -b }, { a, b: -c, c: -b }], 2);
   const opts = MaffsOptions.shuffle([{ a, b, c }, ...distractors]);
@@ -1459,12 +1492,12 @@ function hfStep1Html(narrate) {
   ).join('');
   const lead = narrate
     ? mx('Read the coefficients straight off the quadratic: the number in front of \\(x^2\\) is \\(a\\), the number in front of \\(x\\) is \\(b\\), and the number on its own is \\(c\\).')
-    : mx('Identify \\(a\\), \\(b\\) and \\(c\\).');
+    : mx(hfIsHcf(currentQ) ? 'Identify \\(a\\), \\(b\\) and \\(c\\) in the bracket.' : 'Identify \\(a\\), \\(b\\) and \\(c\\).');
   return `<div class="${narrate ? 'hf-note' : 'hf-step-prompt'}">${lead}</div><div class="hf-choice-row">${rows}</div>`;
 }
 
 function hfStep2Html(narrate) {
-  const { a, b, c } = currentQ;
+  const { a, b, c } = hfWork(currentQ);
   const correct = a * c;
   const distractors = hfDistinctTriples({ a: 0, b: 0, c: correct },
     [a * b, b * c, a + c, a - c].map(v => ({ a: 0, b: 0, c: v })), 2).map(o => o.c);
@@ -1477,7 +1510,7 @@ function hfStep2Html(narrate) {
 }
 
 function hfStep3Html(narrate, split) {
-  const { a, b, c } = currentQ;
+  const { a, b, c } = hfWork(currentQ);
   const correctPair = [split.m, split.n];
   let cPair = pairsEqual([1, c], correctPair) ? [-1, -c] : [1, c];
   let negPair = pairsEqual([-split.m, -split.n], correctPair) || pairsEqual([-split.m, -split.n], cPair)
@@ -1502,7 +1535,7 @@ function hfStep3Html(narrate, split) {
 function hfLaterTerm(coef, v) { return ` ${coef < 0 ? '-' : '+'} ${v && Math.abs(coef) === 1 ? '' : Math.abs(coef)}${v}`; }
 
 function hfStep4Html(narrate, split) {
-  const { a, c } = currentQ;
+  const { a, c } = hfWork(currentQ);
   const line = `${a === 1 ? '' : a}x^2${hfLaterTerm(split.m, 'x')}${hfLaterTerm(split.n, 'x')}${hfLaterTerm(c, '')}`;
   const note = narrate
     ? `<div class="hf-note">${mx(`Either order is fine: \\(${split.m}x\\) then \\(${split.n}x\\), or the other way round.`)}</div>`
@@ -1512,11 +1545,10 @@ function hfStep4Html(narrate, split) {
 }
 
 function hfStep5Html(narrate) {
-  const { p, q, r, s } = currentQ;
-  const k = hfK(currentQ);   // ax^2 + kps x = kpx(rx + s); kqr x + c = kq(rx + s)
+  const { p, q, r, s } = currentQ;   // on the bracket's quadratic: prx^2 + ps x = px(rx + s); qr x + qs = q(rx + s)
   const bracket = `${r === 1 ? '' : r}x ${s >= 0 ? '+' : '-'} ${Math.abs(s)}`;
-  const factor = `${k * p === 1 ? '' : k * p}x`;
-  const opts = MaffsOptions.shuffle([k * q, -k * q]);
+  const factor = `${p === 1 ? '' : p}x`;
+  const opts = MaffsOptions.shuffle([q, -q]);
   const rows = opts.map(v => `<button class="hf-choice-btn" onclick="hfStep5Pick(${v})">${tex(String(v))}</button>`).join('');
   const lead = narrate
     ? mx(`The first pair factorises to \\(${factor}(${bracket})\\). Now factorise the second pair — its bracket must come out IDENTICAL to the first.`)
@@ -1543,16 +1575,27 @@ function hfStepCorrectAdvance(nextStep) {
   MaffsLock.timer(() => { hfStep = nextStep; hfRenderStep(); }, 700);
 }
 
+function hfStepHcfPick(v) {
+  if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
+  hfDisableChoices();
+  const k = hfK(currentQ);
+  if (v === k) { hfStepCorrectAdvance(1); return; }
+  hfWrongRetry(k % v === 0
+    ? 'Check every term: is there a bigger number that goes into all three?'
+    : "That doesn't go into every term.");
+}
 function hfStep1Pick(a, b, c) {
   if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
-  if (a === currentQ.a && b === currentQ.b && c === currentQ.c) hfStepCorrectAdvance(2);
+  const w = hfWork(currentQ);
+  if (a === w.a && b === w.b && c === w.c) hfStepCorrectAdvance(2);
   else hfWrongRetry();
 }
 function hfStep2Pick(v) {
   if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
-  if (v === currentQ.a * currentQ.c) hfStepCorrectAdvance(3);
+  const w = hfWork(currentQ);
+  if (v === w.a * w.c) hfStepCorrectAdvance(3);
   else hfWrongRetry();
 }
 function hfStep3Pick(m, n) {
@@ -1560,10 +1603,11 @@ function hfStep3Pick(m, n) {
   hfDisableChoices();
   const split = hfCorrectSplit(currentQ);
   if (pairsEqual([m, n], [split.m, split.n])) { hfStepCorrectAdvance(4); return; }
-  if (m * n === currentQ.c) {
+  const w = hfWork(currentQ);
+  if (m * n === w.c) {
     hfShowMisconception('mult-c',
-      `That pair multiplies to \\(c = ${currentQ.c}\\), not \\(a \\times c = ${currentQ.a * currentQ.c}\\). ` +
-      `Find two numbers that multiply to \\(ac\\) and add to \\(b = ${currentQ.b}\\).`);
+      `That pair multiplies to \\(c = ${w.c}\\), not \\(a \\times c = ${w.a * w.c}\\). ` +
+      `Find two numbers that multiply to \\(ac\\) and add to \\(b = ${w.b}\\).`);
     return;
   }
   hfWrongRetry();
@@ -1573,7 +1617,7 @@ function hfStep5Pick(v) {
   if (!MaffsLock.lock(hfPanel())) return;   // one pick per step (canon 7.6.0)
   hfDisableChoices();
   const { q, r, s } = currentQ;
-  if (v === hfK(currentQ) * q) { hfStepCorrectAdvance(6); return; }
+  if (v === q) { hfStepCorrectAdvance(6); return; }
   const wrongR = -r, wrongS = -s;
   hfShowMisconception('bracket-mismatch',
     `Taking out \\(${v}\\) leaves \\(${wrongR}x ${wrongS >= 0 ? '+' : '-'} ${Math.abs(wrongS)}\\), which does not match the ` +
@@ -1700,7 +1744,7 @@ function hfIndepCheck() {
 }
 function hfShowMethod() {
   hfViaShowMethod = true;
-  hfStep = 1;
+  hfStep = hfFirstStep();
   hfRenderStep();
 }
 
