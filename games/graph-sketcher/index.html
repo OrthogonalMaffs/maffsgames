@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Tables of values, sketching and reading quadratic, cubic, exponential, reciprocal and trig graphs. For A-Level, Level 4 and Core Maths. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/graph-sketcher/">
 <meta property="og:title" content="Sketching Graphs Game – Core Maths | MaffsGames">
@@ -43,6 +42,7 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 
 /* Menu */
 .menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.6rem auto;max-width:540px}
+.correction-notice{margin:.4rem 0 .6rem;padding:.7rem .9rem;background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--accent);border-radius:8px;color:var(--text);font-size:.9rem;line-height:1.5}
 .level-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.6rem;max-width:500px;margin:1rem auto}
 .level-btn{padding:.8rem;border-radius:12px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer;transition:all .15s;text-align:center}
 .level-btn:hover{border-color:var(--primary)}
@@ -189,6 +189,8 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 
 <!-- MENU -->
 <div id="menuScreen" class="screen active">
+  <!-- maffs-correction-notice -->
+  <div class="correction-notice" role="note">We're rebuilding this game. Some answer boxes clear themselves, there's no calculator for the questions that need one, and some graphs are drawn at the wrong scale, so it's harder to play than it should be until this notice is removed.</div>
   <div class="header"><h1>Graph Sketcher</h1><div class="sub">Can you complete the table — and draw what it means?</div>  <button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button>
 </div>
   <div class="menu-info">Complete tables of values, sketch curves, and interpret graphs. Quadratic, cubic, exponential, reciprocal, and trig functions in real-world contexts.</div>
