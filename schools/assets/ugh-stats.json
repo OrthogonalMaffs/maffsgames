@@ -1,9 +1,9 @@
 {
- "as_of": "2026-11-14T21:40:21Z",
+ "as_of": "2026-11-15T12:56:52Z",
  "countries": [
   {
    "country": "United Kingdom",
-   "sessions": 1243
+   "sessions": 1160
   },
   {
    "country": "Spain",
@@ -11,35 +11,35 @@
   },
   {
    "country": "United States",
-   "sessions": 148
+   "sessions": 131
   },
   {
    "country": "Singapore",
-   "sessions": 80
-  },
-  {
-   "country": "Ireland",
-   "sessions": 34
+   "sessions": 75
   },
   {
    "country": "Malaysia",
-   "sessions": 30
+   "sessions": 29
   },
   {
    "country": "Uruguay",
    "sessions": 27
   },
   {
-   "country": "China",
-   "sessions": 19
+   "country": "Ireland",
+   "sessions": 26
   },
   {
-   "country": "Australia",
+   "country": "China",
    "sessions": 17
   },
   {
+   "country": "Australia",
+   "sessions": 16
+  },
+  {
    "country": "Slovakia",
-   "sessions": 15
+   "sessions": 14
   },
   {
    "country": "Germany",
@@ -59,14 +59,10 @@
   },
   {
    "country": "Other countries",
-   "sessions": 117
+   "sessions": 116
   }
  ],
  "daily": [
-  {
-   "date": "2026-10-15",
-   "starts": 98
-  },
   {
    "date": "2026-10-16",
    "starts": 88
@@ -182,6 +178,10 @@
   {
    "date": "2026-11-13",
    "starts": 105
+  },
+  {
+   "date": "2026-11-14",
+   "starts": 15
   }
  ],
  "hours": {
@@ -221,47 +221,47 @@
    "<10",
    0,
    "<10",
-   14,
-   19,
-   "<10",
-   "<10",
-   "<10",
-   22,
+   11,
+   18,
    10,
+   "<10",
+   10,
+   23,
+   "<10",
    14,
    12,
    16,
    12,
    "<10",
-   28,
+   20,
    "<10",
-   11
+   10
   ]
  },
  "levels": [
   {
    "level": "gcse",
-   "starts": 177
-  },
-  {
-   "level": "ks3",
-   "starts": 97
+   "starts": 163
   },
   {
    "level": "year6",
-   "starts": 90
+   "starts": 94
+  },
+  {
+   "level": "ks3",
+   "starts": 88
   },
   {
    "level": "all",
-   "starts": 62
+   "starts": 56
   },
   {
    "level": "core",
-   "starts": 45
+   "starts": 41
   },
   {
    "level": "alevel",
-   "starts": 23
+   "starts": 22
   },
   {
    "level": "level3",

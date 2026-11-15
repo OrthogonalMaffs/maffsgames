@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-14T21:40:19Z",
+ "as_of": "2026-11-15T12:56:50Z",
  "games": {
   "52dle": 14,
   "angle-ace": 5,
@@ -20,7 +20,7 @@
   "core-maths-paper2c": 4,
   "correlation-or-coincidence": 246,
   "curling-friction": 4,
-  "decimal-detective": 135,
+  "decimal-detective": 155,
   "differentiation-duel": 95,
   "dimension-checker": 1,
   "distinctly-average": 95,
@@ -73,7 +73,7 @@
   "maths-court": 110,
   "matrix-crunch": 22,
   "modular-battle": 45,
-  "negative-number-line": 729,
+  "negative-number-line": 739,
   "new-shapes": 27,
   "normal-navigator": 5,
   "percentage-flip": 388,
@@ -85,15 +85,15 @@
   "probability-pioneer": 44,
   "proof-builder": 39,
   "proportion-blaster": 6,
-  "quadratic-factoriser": 98,
+  "quadratic-factoriser": 106,
   "scale-factor-scaling": 1,
   "screening-room": 5,
   "sequence-solver": 407,
   "seven-bridges": 311,
-  "shape-shifter": 12,
+  "shape-shifter": 29,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4181,
-  "split-it": 747,
+  "split-it": 748,
   "spot-the-error": 36,
   "spot-the-muppet": 56,
   "squared-squirrel": 38,
@@ -120,5 +120,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 25962
+ "total": 26018
 }
