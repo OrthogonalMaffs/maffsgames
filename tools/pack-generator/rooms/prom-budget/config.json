@@ -4,7 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Prom saved",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-15"},
   "images": [
     {"file": "art/prom-01-invoice.webp", "role": "clue", "object": "invoice", "label_boxes": [[122, 233, 1129, 386], [175, 446, 1079, 873]], "font": "label",
      "printed": "BRONZE COMMISSION &mdash; ST MARTHA&rsquo;S SECONDARY. · Cast, crated and awaiting collection. Total charged, including the {{quote.pct}}% vanity levy: &pound;{{quote.total}}.00. Non-refundable once cleared.",

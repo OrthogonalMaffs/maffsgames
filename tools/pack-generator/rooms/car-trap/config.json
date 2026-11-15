@@ -4,7 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Car freed",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-15"},
   "answer_units": {"head-bay-lower-bound": {"unit": "cm", "scale": 100}},
   "images": [
     {"file": "art/car-01-bay-spec.webp", "role": "clue", "object": "spec", "label_box": [305, 220, 945, 1080], "font": "label",

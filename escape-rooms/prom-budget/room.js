@@ -64,7 +64,10 @@ window.ROOM = {
   failAlt: 'A school sports hall under harsh strip lighting with nobody in it. Bare white walls, steel roof trusses and ductwork overhead, high windows dark with night, and wooden wall bars along the right hung with one paper garland. A folding trestle table on the left carries a closed laptop and a single small bowl of crisps. The parquet floor and its court markings are empty apart from the middle, where a life-sized bronze statue of a smiling man in a suit stands on a low wooden plinth, arms at his sides, lit from above.',
   winAlt: 'The same school sports hall at night with the lights down and nobody in it yet. A mirrorball hangs from the roof trusses and turns, throwing coloured spots across the walls, the floor and the ceiling, with a row of small stage lamps in blue, amber and purple on a bar behind it. Fairy lights, bunting and paper garlands are draped along the wooden wall bars on the right. A folding trestle table on the left carries a laptop between two speakers, an ice bucket of bottles and a row of plastic cups. In the middle of the empty parquet floor stands a low wooden plinth with nothing on it.',
 
-  hook: 'Sit down. All of you. No, there aren&rsquo;t enough chairs &mdash; some of you will have to stand. ' +
+  hook: 'It&rsquo;s prom week, and you are the prom committee: six months of cake sales, a sponsored silence and one car wash ' +
+        'nobody talks about any more. This morning the Head called all of you to his office. He has never done that ' +
+        'before. He has never needed to.<br><br>' +
+        'Sit down. All of you. No, there aren&rsquo;t enough chairs &mdash; some of you will have to stand. ' +
         'That&rsquo;s the nature of a working office and frankly it does no harm.<br><br>' +
         'Now. I&rsquo;ve asked you in because there&rsquo;s been a <i>repositioning</i> of the prom fund. Let me ' +
         'finish before anybody reacts, because people do have a habit of reacting before I&rsquo;ve finished and ' +
