@@ -16,6 +16,20 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 1 (header badge, leftover branch)
+
+Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/header-badge-trim`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. PR 2 (the answer-lock flake) follows on a new branch once this PR merges.
+
+- Jon ruled on 15 Nov at 08:51 ("remove the badge entirely please"), and the "Built to be safe for school networks" header badge is removed from `index.html`. No other badge changes. The wording stays on /op/ and /privacy/.
+- Measured locally in Chromium (stub server, Outfit loaded). Header heights before, then after, the removal:
+  - 1280 × 800: 282 px on two rows, then 240 px on one row.
+  - 1366 × 768: 240 px on one row, then 240 px on one row.
+  - 1440 × 900: 240 px on one row, then 240 px on one row.
+  - Before #771 (4114eeac) it was 240 px on one row at all three widths.
+  - The badge row now needs 1,012 px, against 1,257 px before.
+  - Locally the row already fitted at 1366. Project Claude measured 282 px there, so the two renderers differ by a few pixels; after the removal there is about 245 px to spare at 1280.
+- `art/answer-box-redraws` deleted from the remote after Jon's ruling of 15 Nov at 08:37. Before deleting, its only commit was confirmed as 799748c, adding only the two `art-incoming/` PNGs. Todo row ANSWER-BOX-REDRAWS-BRANCH moved to `docs/history/todo-done.md`. No cloud close-out should carry the branch.
+
 ## 2026-11-14 (home): UGH-STATS-HOME
 
 Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/history/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
