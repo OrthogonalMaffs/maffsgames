@@ -609,15 +609,13 @@
   .esc-band{max-width:1140px;margin:0 auto 32px;padding:26px 26px 24px;border-radius:16px;color:#e2e8f0;
     background:linear-gradient(135deg,#0f172a 0%,#1e1b4b 55%,#3b2f63 100%);
     box-shadow:0 10px 30px rgba(15,23,42,0.18);}
-  .esc-flag{display:inline-block;background:#f59e0b;color:#1f2937;font-size:11px;font-weight:800;
-    letter-spacing:.09em;text-transform:uppercase;padding:4px 10px;border-radius:999px;margin-bottom:12px;}
   .esc-band h2{font-size:27px;line-height:1.15;margin:0 0 10px;color:#fff;font-weight:800;letter-spacing:-.02em;}
   .esc-lede{font-size:15px;line-height:1.65;margin:0 0 16px;color:#cbd5e1;max-width:72ch;}
   .esc-lede b{color:#fff;}
   .esc-facts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px;}
   .esc-fact{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);
     border-radius:999px;padding:5px 12px;font-size:12.5px;color:#e2e8f0;}
-  .esc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+  .esc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px;}
   .esc-card{display:block;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
     border-radius:11px;overflow:hidden;text-decoration:none;
     transition:transform .15s ease,border-color .15s ease;}
@@ -637,10 +635,14 @@
   .esc-note a{color:#fff;}
   .esc-key{margin:-6px 0 14px;}
   .esc-band.cmp-on:not(.cmp-open) .esc-key{margin:10px 0 0;}
-  @media(max-width:960px){.esc-grid{grid-template-columns:repeat(3,1fr);}}
   @media(max-width:768px){.esc-band{padding:20px 18px;}.esc-band h2{font-size:22px;}
     .esc-grid{grid-template-columns:repeat(2,1fr);gap:10px;}}
   @media(max-width:460px){.esc-grid{grid-template-columns:1fr;}}
+  /* ESC-BAND-SLIM (15 Nov 2026): three featured rooms, one per star band. Above 768 px each card sets its picture
+     beside its text, so the band is about a third of the fourteen-card height; phones stack the cards as before. */
+  @media(min-width:769px){.esc-card{display:flex;align-items:stretch;}
+    .esc-card img{width:40%;flex:none;height:auto;aspect-ratio:auto;align-self:stretch;}
+    .esc-card .esc-body{flex:1;min-width:0;align-self:center;}}
 
   /* ---------- Parent Guides strip ---------- */
   .par-strip{max-width:1140px;margin:0 auto 32px;padding:16px 22px;border-radius:12px;
@@ -859,15 +861,14 @@
 
 
 <!-- ESCAPE ROOMS FEATURE BAND -->
-<div class="esc-band cmp" data-mfg-section="escape-rooms">
+<div class="esc-band cmp" data-mfg-section="escape-rooms" data-room-count="14">
   <div class="cmp-bar esc-sum">
     <a class="cmp-summary esc-sum-link" href="escape-rooms/" data-mfg-item="summary">
       <img class="esc-sum-img" alt="" data-cmp-img onerror="this.remove()">
       <span class="esc-sum-text"><strong>Escape rooms</strong> &mdash; <span data-cmp-count></span> rooms, 15 to 20 minutes each</span>
     </a>
-    <button class="cmp-toggle" type="button" aria-expanded="false" data-mfg-item="show-all" data-more="Show all rooms" data-less="Hide rooms">Show all rooms</button>
+    <button class="cmp-toggle" type="button" aria-expanded="false" data-mfg-item="show-all" data-more="Show rooms" data-less="Hide rooms">Show rooms</button>
   </div>
-  <span class="esc-flag" data-cmp-hide>New this term</span>
   <h2 data-cmp-hide>Maths Escape Rooms</h2>
   <p class="esc-lede" data-cmp-hide>Fourteen narrative rooms where <b>the maths is the action</b>, not a toll gate: no question boxes,
     just instruments you have to set correctly &mdash; a dial, a slider, a keypad. Three or four locks a room,
@@ -882,42 +883,6 @@
   </div>
   <p class="esc-note esc-key" data-star-key>Stars show difficulty, set by each room&rsquo;s hardest lock: <span aria-hidden="true">★ Warm-up, grades 1–3</span><span class="sr-only">one star, Warm-up, grades 1 to 3;</span> <span aria-hidden="true">&middot;</span> <span aria-hidden="true">★★ Core, grades 4–5</span><span class="sr-only">two stars, Core, grades 4 to 5;</span> <span aria-hidden="true">&middot;</span> <span aria-hidden="true">★★★ Challenge, grades 6–9</span><span class="sr-only">three stars, Challenge, grades 6 to 9</span>.</p>
   <div class="esc-grid" data-cmp-hide>
-  <div style="display:flex;flex-direction:column;gap:6px">
-    <a class="esc-card" href="escape-rooms/big-school-begins/" data-mfg-item="big-school-begins" style="flex:1">
-      <img onerror="this.remove()" src="docs/art/big-school-begins-scene.webp" alt="" width="1600" height="873" loading="lazy">
-      <div class="esc-body">
-        <span class="esc-chip" data-label="starter"><span aria-hidden="true">Starter</span><span class="sr-only">Level: Starter</span></span>
-        <h3>Big School Begins</h3>
-        <p>Coordinates &middot; Turns &middot; Time &middot; Money</p>
-      </div>
-    </a>
-    <span class="esc-note">Mrs Rogers' idea, and she stars in it. Want something built?
-      <a href="/feedback/">Let us know.</a></span>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:6px">
-    <a class="esc-card" href="escape-rooms/comic-caper/" data-mfg-item="comic-caper" style="flex:1">
-      <img onerror="this.remove()" src="docs/art/comic-caper-scene.webp" alt="" width="1600" height="873" loading="lazy">
-      <div class="esc-body">
-        <span class="esc-chip" data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span><span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span></span>
-        <h3>The Comic Caper</h3>
-        <p>Factors &middot; Primes &middot; HCF</p>
-      </div>
-    </a>
-    <span class="esc-note">Built from a site user's request. Want something built?
-      <a href="/feedback/">Let us know.</a></span>
-  </div>
-  <div style="display:flex;flex-direction:column;gap:6px">
-    <a class="esc-card" href="escape-rooms/kiln-disaster/" data-mfg-item="kiln-disaster" style="flex:1">
-      <img onerror="this.remove()" src="docs/art/kiln-disaster-scene.webp" alt="" width="1600" height="873" loading="lazy">
-      <div class="esc-body">
-        <span class="esc-chip" data-stars="1"><span aria-hidden="true">★ Warm-up &middot; grades 1–3</span><span class="sr-only">Difficulty: 1 of 3, Warm-up, grades 1–3</span></span>
-        <h3>The Kiln Disaster</h3>
-        <p>Multiples &middot; LCM &middot; Order of operations</p>
-      </div>
-    </a>
-    <span class="esc-note">Built from a site user's request. Want something built?
-      <a href="/feedback/">Let us know.</a></span>
-  </div>
   <a class="esc-card" href="escape-rooms/library-jam/" data-mfg-item="library-jam">
     <img onerror="this.remove()" src="docs/art/library-jam-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
@@ -934,66 +899,6 @@
       <p>Circumference, upper bounds, gradient.</p>
     </div>
   </a>
-  <a class="esc-card" href="escape-rooms/pe-shed-rebellion/" data-mfg-item="pe-shed-rebellion">
-    <img onerror="this.remove()" src="docs/art/pe-shed-rebellion-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The P.E. Store Rebellion</h3>
-      <p>Sectors, inverse proportion, sequences.</p>
-    </div>
-  </a>
-  <a class="esc-card" href="escape-rooms/heatwave-mutiny/" data-mfg-item="heatwave-mutiny">
-    <img onerror="this.remove()" src="docs/art/heatwave-mutiny-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The Heatwave Mutiny</h3>
-      <p>LCM, surface area to volume, inequalities.</p>
-    </div>
-  </a>
-  <a class="esc-card" href="escape-rooms/prom-budget/" data-mfg-item="prom-budget">
-    <img onerror="this.remove()" src="docs/art/prom-budget-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The Prom Budget Embezzlement</h3>
-      <p>Reverse percentages, compound growth, Venn.</p>
-    </div>
-  </a>
-  <a class="esc-card" href="escape-rooms/canteen-hack/" data-mfg-item="canteen-hack">
-    <img onerror="this.remove()" src="docs/art/canteen-hack-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The Canteen Menu Hack</h3>
-      <p>Mean averages, simultaneous equations, fractions.</p>
-    </div>
-  </a>
-  <a class="esc-card" href="escape-rooms/car-trap/" data-mfg-item="car-trap">
-    <img onerror="this.remove()" src="docs/art/car-trap-v2-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The Headteacher&rsquo;s Car Trap</h3>
-      <p>Bounds &middot; Arc length &middot; Quadratics</p>
-    </div>
-  </a>
-  <div style="display:flex;flex-direction:column;gap:6px">
-    <a class="esc-card" href="escape-rooms/roll-for-initiative/" data-mfg-item="roll-for-initiative" style="flex:1">
-      <img onerror="this.remove()" src="docs/art/roll-for-initiative-scene.webp" alt="" width="1600" height="873" loading="lazy">
-      <div class="esc-body">
-        <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-        <h3>Roll for Initiative</h3>
-        <p>Probability &middot; Scale &middot; Area of a circle</p>
-      </div>
-    </a>
-    <span class="esc-note">Built from a teacher's idea. Thank you, Mrs Rogers. Want something built?
-      <a href="/feedback/">Let us know.</a></span>
-  </div>
-  <a class="esc-card" href="escape-rooms/christmas-tree-fiasco/" data-mfg-item="christmas-tree-fiasco">
-    <img onerror="this.remove()" src="docs/art/christmas-tree-fiasco-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="2"><span aria-hidden="true">★★ Core &middot; grades 4–5</span><span class="sr-only">Difficulty: 2 of 3, Core, grades 4–5</span></span>
-      <h3>The Christmas Tree Fiasco</h3>
-      <p>Negative numbers, scale and combined ratios.</p>
-    </div>
-  </a>
   <a class="esc-card" href="escape-rooms/rugby-mud/" data-mfg-item="rugby-mud">
     <img onerror="this.remove()" src="docs/art/rugby-mud-scene.webp" alt="" width="1600" height="873" loading="lazy">
     <div class="esc-body">
@@ -1002,17 +907,10 @@
       <p>Area scale factors, rates, index laws.</p>
     </div>
   </a>
-  <a class="esc-card" href="escape-rooms/rightful-king/" data-mfg-item="rightful-king">
-    <img onerror="this.remove()" src="docs/art/rightful-king-scene.webp" alt="" width="1600" height="873" loading="lazy">
-    <div class="esc-body">
-      <span class="esc-chip" data-stars="3"><span aria-hidden="true">★★★ Challenge &middot; grades 6–9</span><span class="sr-only">Difficulty: 3 of 3, Challenge, grades 6–9</span></span>
-      <h3>The Rightful King</h3>
-      <p>Counting &middot; Exponential decay &middot; Conditional probability</p>
-    </div>
-  </a>
   </div>
   <div class="esc-actions" data-cmp-hide>
     <a class="esc-btn" href="escape-rooms/" data-mfg-item="open-all">Open all fourteen rooms &rarr;</a>
+    <span class="esc-note"><a href="/printables/" data-mfg-item="printables">Printable class packs &rarr;</a></span>
     <span class="esc-note">Free, in a browser, nothing to install &mdash;
       <a href="escape-rooms/hamster-heist/" data-mfg-item="start-hamster-heist">start with The Great Hamster Heist</a>.</span>
   </div>
@@ -3655,8 +3553,9 @@ function cmpShowResults() {
 
 function cmpInit() {
   var band = document.querySelector('.esc-band');
-  // The room count and the picture come from the band's own cards, never typed in.
-  band.querySelector('[data-cmp-count]').textContent = band.querySelectorAll('.esc-card').length;
+  // The room count is the band's data-room-count (check-escape-rooms.py holds it to the live rooms; the band shows
+  // three of them, ESC-BAND-SLIM); the picture is its first card's.
+  band.querySelector('[data-cmp-count]').textContent = band.getAttribute('data-room-count');
   var pic = band.querySelector('.esc-card img'), img = band.querySelector('[data-cmp-img]');
   if (pic && img) img.src = pic.getAttribute('src'); else if (img) img.remove();
 

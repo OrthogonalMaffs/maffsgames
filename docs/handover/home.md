@@ -16,6 +16,27 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): ESC-BAND-SLIM (the homepage escape-rooms band down to three rooms; loop cards on /printables/)
+
+Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-slim`; contract `docs/handover/contracts/2026-11-15-esc-band-slim.md`, with Jon's 17:03 follow-up (the loop bundle) in the PR body. The first commit carries PRINTABLES-PAGE's close-out: the merge line above, and the contract moved to history.
+
+- **The band** (index.html) now shows three rooms, one per star band, in hub order and with today's markup: Library Jam, The Great Hamster Heist, The Rugby Mud Bath. The other eleven cards are gone, and so is the "New this term" flag with its CSS. The heading, lede, facts and star key are unchanged.
+  - Above 768 px the three cards sit in one row, each with its picture beside its text (CSS only). At 1280 px the band is 487 px tall; it was 1520 px, so it is now 32%. Phones stack the cards as before.
+  - "Printable class packs →" (to /printables/, `data-mfg-item="printables"`) now sits after "Open all fourteen rooms →".
+  - The band carries `data-room-count="14"`, and the phone summary reads that, not the number of cards: it still says "14 rooms". The toggle reads "Show rooms" / "Hide rooms".
+- **check-escape-rooms.py, front page:** "a card for every live room, in the hub's order" is replaced. The band must now show exactly one card per star band, each live and carrying the right chip, in hub order (a subsequence of the hub's). data-room-count must equal the number of live rooms, and the lede's "Fourteen" and the button's "fourteen" must be that number as a word.
+  - Seven plants are caught: a fourth card, two cards in one band, a band missing, cards out of hub order, a wrong data-room-count, and a wrong number word in the lede and in the button.
+  - The hub's rules and plants are unchanged.
+- **Other checks:** test-escape-credit still passes on the three cards without loosening. No other check asserts a card per room.
+- **/printables/:** "Printable games" now has the loop-cards line, two cards and "More decks coming soon.":
+  - Six Sevens, Bruv (Free; Tes and play links);
+  - the £5 loop-card bundle (Tes link only).
+  - Both Tes links returned 200 with their own listing titles.
+- todo: PRINTABLES-PAGE is closed to todo-done; ESC-BAND-ROTATION is added (later, research first).
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 1 (Jon 17:03, the loop bundle card); usage n/a.
+
 ## 2026-11-15 (home): PRINTABLES-PAGE (/printables/, the escape-room packs on Tes)
 
 Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printables-page`; contract `docs/handover/contracts/2026-11-15-printables-page.md`. The first commit carries MONOTONIC-CLOCK's close-out (merge line above, contract and Amendment 1 to history).
@@ -35,7 +56,7 @@ Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printab
   - `printables/` is in check-publish-scope's SITE and in check-content-safety's GLOBS. Both add coverage, as for `ugh-stats/`, and neither is an exception.
   - data/games.json is not touched. check-meta needs no record, because no portal card links to the page.
 - todo: the PRINTABLES-PAGE row is updated (loop cards still to come), and a new row PRINTABLES-CORE is added.
-- MERGED: pending.
+- MERGED 15 Nov, 16:41 UTC, as a892547 (#784). Main on the merge commit: check-site 43736934812 success, phone-fit-full 43736934783 success. Local check-changed: 260 checks passed. The branch was rebased onto QF-HCF-FIRST (#783) before the push; the only conflict was the /updates/ November list. Leftover worktree ~/mg-monotonic-closeout and branch claude/monotonic-clock-closeout (1435f511, never pushed) removed by hand on Jon's ruling, after its diff was shown to reverse-apply cleanly on main; end-task removed claude/printables-page.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 

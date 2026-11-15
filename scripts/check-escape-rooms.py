@@ -15,10 +15,17 @@ Run after any edit to escape-rooms/*/room.js. It catches:
   * difficulty (contract ESCAPE-DIFFICULTY, 10 Oct 2026; Jon's scheme of 9 Oct): a lock in a
     live room with no `grade: N` (1-9); a card on the hub or the front page whose data-stars
     or label disagrees with the rating derived from its room's hardest lock (★ Warm-up 1-3,
-    ★★ Core 4-5, ★★★ Challenge 6-9); a live room with no card on either page; bands in
+    ★★ Core 4-5, ★★★ Challenge 6-9); a live room with no card on the hub; bands in
     escape-rooms/assets/rating.js that differ from BANDS here; hub cards out of rating order
     (the hub says "Ordered easiest to hardest"). Two faults are planted on every run (Rugby
     Mud's hub card saying ★; a lock's grade removed) and must each be caught.
+  * the front page (contract ESC-BAND-SLIM, 15 Nov 2026; it replaced FRONT-PAGE-ROOM-ORDER's "a card for every
+    live room, in the hub's order"): the homepage band features exactly one room per star band (★, ★★, ★★★),
+    each a live room with the right chip (above), in the hub's order (a subsequence of it). The band's
+    data-room-count is the number of live rooms (the phone summary shows it), and the lede's "Fourteen" and the
+    button's "fourteen" are that number as a word. Seven faults are planted on every run (a fourth card, two cards
+    in one band, a band missing, cards out of hub order, data-room-count wrong, the lede's and the button's
+    number words wrong) and must each be caught.
   * the star key (contract STAR-KEY, 10 Oct 2026): the one line on the hub and on the front
     page that says what the stars mean must name exactly the bands above, with the stars
     hidden from screen readers and read as "one star, Warm-up, grades 1 to 3" and so on, and
@@ -449,8 +456,10 @@ def check_ratings(room_js, live, pages, rating_js):
             elif (int(c.group(1)), c.group(2), c.group(3)) != (stars, label, sr):
                 out.append(f"{page}: {slug}'s card says {c.group(2)} (data-stars {c.group(1)}), "
                            f"its locks make it {label}")
-        for slug in sorted(set(want) - set(seen)):
-            out.append(f"{page}: no card for live room {slug}")
+        # The hub lists every live room; the front page features one per star band (ESC-BAND-SLIM, below).
+        if page == "hub":
+            for slug in sorted(set(want) - set(seen)):
+                out.append(f"{page}: no card for live room {slug}")
         # Every page that lists rooms lists them easiest first (FRONT-PAGE-ROOM-ORDER, 12 Oct 2026; the hub
         # says "Ordered easiest to hardest").
         seqs[page] = [s for s in seen if s in want]
@@ -459,16 +468,63 @@ def check_ratings(room_js, live, pages, rating_js):
         if order != sorted(order):
             out.append(f"{page}: cards are not in rating order (easiest first, Starter before every star): "
                        + ", ".join(f"{s} {'Starter' if rank[s] == 0 else '*' * rank[s]}" for s in seqs[page]))
-    # The hub is the one source for the order within a star band: the front page lists the same rooms in the same order.
+    # The front page (ESC-BAND-SLIM, 15 Nov 2026): exactly one featured room per star band, Starter rooms in none.
+    if FRONT in seqs:
+        seq = seqs[FRONT]
+        if len(seq) != len(BANDS):
+            out.append(f"{FRONT}: {len(seq)} cards, want exactly {len(BANDS)}, one per star band: {', '.join(seq)}")
+        for slug in seq:
+            if rank[slug] == 0:
+                out.append(f"{FRONT}: {slug} is a Starter room, in no star band; the band features one room per star band")
+        for _, stars, name, _ in BANDS:
+            inb = [s for s in seq if rank[s] == stars]
+            if not inb:
+                out.append(f"{FRONT}: no card in the {'★' * stars} {name} band")
+            elif len(inb) > 1:
+                out.append(f"{FRONT}: {len(inb)} cards in the {'★' * stars} {name} band ({', '.join(inb)}), want one")
+    # The hub is the one source for the order: the front page's rooms appear in the hub's order (a subsequence of it).
     if "hub" in seqs:
         for page, seq in seqs.items():
-            if page != "hub" and seq != seqs["hub"]:
-                out.append(f"{page}: room order differs from the hub's (the hub is the source for the order within a band)."
+            it = iter(seqs["hub"])
+            if page != "hub" and not all(s in it for s in seq):
+                out.append(f"{page}: room order differs from the hub's (the hub is the source for the order)."
                            f" hub: {', '.join(seqs['hub'])}; {page}: {', '.join(seq)}")
     js_bands = [(int(t), int(st), n, g) for st, n, g, t in re.findall(
         r"\{ stars: (\d), name: '([^']+)', grades: '([^']+)', top: (\d) \}", rating_js)]
     if js_bands != BANDS:
         out.append(f"escape-rooms/assets/rating.js bands {js_bands} differ from this checker's {BANDS}")
+    return out
+
+
+FRONT = "front page"
+NUMBER_WORDS = ("zero one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen "
+                "seventeen eighteen nineteen").split()
+TENS = "_ _ twenty thirty forty fifty sixty seventy eighty ninety".split()
+
+
+def number_word(n):
+    """0-99 in words, lower case: 14 -> 'fourteen', 21 -> 'twenty-one'."""
+    if n < 20:
+        return NUMBER_WORDS[n]
+    return TENS[n // 10] + ("-" + NUMBER_WORDS[n % 10] if n % 10 else "")
+
+
+def check_room_count(live, html):
+    """Problems with the front page's room count (ESC-BAND-SLIM): the band shows three rooms, so the number of rooms
+    is stated once, as data-room-count, and the lede and the button say it in words; all three must match the live rooms."""
+    out, n = [], len(live)
+    m = re.search(r'<div class="esc-band[^"]*"[^>]*\bdata-room-count="([^"]*)"', html)
+    if not m:
+        out.append(f"{FRONT}: the escape-rooms band has no data-room-count (want {n})")
+    elif m.group(1) != str(n):
+        out.append(f"{FRONT}: data-room-count is {m.group(1)!r}, but {n} rooms are live")
+    for where, pat, want in (("the lede", r'<p class="esc-lede"[^>]*>\s*([A-Za-z-]+) narrative rooms', number_word(n).capitalize()),
+                             ("the button", r'data-mfg-item="open-all">Open all ([A-Za-z-]+) rooms', number_word(n))):
+        w = re.search(pat, html)
+        if not w:
+            out.append(f"{FRONT}: {where} does not say how many rooms (want {want!r})")
+        elif w.group(1) != want:
+            out.append(f"{FRONT}: {where} says {w.group(1)!r} rooms, but {n} are live (want {want!r})")
     return out
 
 
@@ -510,6 +566,7 @@ rating_js = (ROOMS / "assets" / "rating.js").read_text(encoding="utf-8")
 problems += check_ratings(room_js, live, pages, rating_js)
 problems += check_star_key(pages)
 problems += check_credits(room_js, live, pages, rating_js)
+problems += check_room_count(live, pages[FRONT])
 star_report = {s: room_rating([g for _, g in lock_grades(room_js[s])]) for s in sorted(live)
                if all(g for _, g in lock_grades(room_js[s]))}
 
@@ -632,25 +689,52 @@ if len(credit_plants) != 3:
 credit_line = ("credits: " + ", ".join(f"{s} {room_credit(room_js[s])!r}" for s in credited)
                + "; faults caught: " + "; ".join(credit_plants))
 
-# Order faults on the front page (FRONT-PAGE-ROOM-ORDER): each must be caught, or the order rule has stopped working.
-hub_seq = re.findall(CARD["hub"][0], pages["hub"])
-stars_of = {s: order_rank(room_label(room_js[s]), room_rating([g for _, g in lock_grades(room_js[s])])[0]) for s in live}
-hub_seq = [s for s in hub_seq if s in stars_of]
-same_band = next(((a, b) for a, b in zip(hub_seq, hub_seq[1:]) if stars_of[a] == stars_of[b]), None)
+# Front-page faults (ESC-BAND-SLIM): each must be caught, or the front-page rule has stopped working.
+FRONT_CARD = r'  <a class="esc-card" href="escape-rooms/%s/".*?</a>\n'
+hub_seq = [s for s in re.findall(CARD["hub"][0], pages["hub"]) if s in live]
+front_seq = [s for s in re.findall(CARD[FRONT][0], pages[FRONT]) if s in live]
 order_plants = {}
-if hub_seq and stars_of[hub_seq[0]] != stars_of[hub_seq[-1]]:
-    order_plants["two front-page cards swapped across a star band"] = (
-        swap_cards(pages["front page"], hub_seq[0], hub_seq[-1]), "front page: cards are not in rating order")
-if same_band:
-    order_plants["front page rating-ordered but with a different tie order from the hub"] = (
-        swap_cards(pages["front page"], *same_band), "front page: room order differs from the hub's")
-for what, (fp, expect) in order_plants.items():
-    got = check_ratings(room_js, live, dict(pages, **{"front page": fp}), rating_js)
-    if not any(expect in g for g in got):
-        problems.append(f"planted fault NOT caught: {what} (the rating check found {got or 'nothing'})")
-if len(order_plants) != 2:
-    problems.append(f"order plants: expected 2, built {len(order_plants)} (need a star band change and a tie in the hub)")
-order_line = "order faults caught: " + "; ".join(order_plants)
+try:
+    fp = pages[FRONT]
+    if len(front_seq) < 2:
+        raise pc.StalePlant("the front-page plants", f"the front page features {len(front_seq)} live room(s); they need two or more")
+    first, mid, last = front_seq[0], front_seq[len(front_seq) // 2], front_seq[-1]
+    card = {s: re.search(FRONT_CARD % s, fp, re.S).group(0) for s in (first, mid, last)}
+    stars = {s: room_rating([g for _, g in lock_grades(room_js[s])])[0] for s in live if all(g for _, g in lock_grades(room_js[s]))}
+    # A second room in the middle card's band: a live, unlabelled hub room not on the front page.
+    twin = next((s for s in hub_seq if s not in front_seq and room_label(room_js[s]) is None and stars.get(s) == stars[mid]), None)
+    if twin is None:
+        raise pc.StalePlant("a second card in one band", f"no other live room shares {mid}'s band")
+    twin_card = card[mid].replace(f'escape-rooms/{mid}/', f'escape-rooms/{twin}/').replace(
+        f'data-mfg-item="{mid}"', f'data-mfg-item="{twin}"')
+    n = len(live)
+    rc = f'data-room-count="{n}"'
+    order_plants["a fourth card"] = (
+        pc.apply_plant(fp, card[mid], card[mid] + twin_card, name="a fourth card"), "cards, want exactly")
+    order_plants["two cards in one band"] = (
+        pc.apply_plant(fp, card[last], twin_card, name="two cards in one band"), "cards in the")
+    order_plants["a band missing"] = (
+        pc.apply_plant(fp, card[last], "", name="a band missing"), "no card in the")
+    order_plants["cards out of hub order"] = (
+        swap_cards(fp, first, last), "room order differs from the hub's")
+    order_plants["data-room-count wrong"] = (
+        pc.apply_plant(fp, rc, f'data-room-count="{n + 1}"', name="data-room-count wrong"), "data-room-count is")
+    order_plants["the lede's number word wrong"] = (
+        pc.apply_re_plant(fp, r'(<p class="esc-lede"[^>]*>\s*)[A-Za-z-]+( narrative rooms)',
+                          r"\g<1>%s\g<2>" % number_word(n + 1).capitalize(), name="the lede's number word wrong"), "the lede says")
+    order_plants["the button's number word wrong"] = (
+        pc.apply_re_plant(fp, r'(data-mfg-item="open-all">Open all )[A-Za-z-]+( rooms)',
+                          r"\g<1>%s\g<2>" % number_word(n - 1), name="the button's number word wrong"), "the button says")
+    for what, (pg, expect) in order_plants.items():
+        got = (check_ratings(room_js, live, dict(pages, **{FRONT: pg}), rating_js) + check_room_count(live, pg))
+        if not any(expect in g for g in got):
+            problems.append(f"planted fault NOT caught: {what} (the front-page checks found {got or 'nothing'})")
+except pc.StalePlant as exc:
+    problems.append(str(exc))
+if len(order_plants) != 7:
+    problems.append(f"front-page plants: expected 7, built {len(order_plants)}")
+order_line = (f"front page: {', '.join(front_seq)} (one per star band, in hub order), data-room-count {len(live)}; "
+              "faults caught: " + "; ".join(order_plants))
 
 
 # ---- a true minus sign (TRUE-MINUS, Jon, 5 Nov 2026) --------------------------
