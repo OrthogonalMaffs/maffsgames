@@ -23,8 +23,10 @@ What the scan does, per tier:
   ALLOW phrases are blanked out before matching.
 
 What it reads (Jon's ruling, 4 Oct 2026: "the scan checks text a player sees; code identifiers are
-excluded"): every games/**/*.html and *.js and escape-rooms/**/*.html and *.js file, reduced by
-displayed() to the text a player can be shown, everything else blanked with its line numbers kept:
+excluded"): every *.html and *.js file in the repository outside EXCLUDE, so every published page
+(CONTENT-SAFETY-COVERAGE, 15 Nov 2026: SR-14 is site-wide, so a new section is read without being added by
+hand; games and escape rooms first, each file once), reduced by displayed() to the text a player can be
+shown, everything else blanked with its line numbers kept:
   HTML: text nodes and attribute values, except CODE_ATTRS (class, id, style, href, src, ...); on*="..."
         is read as JavaScript; <style>, comments and tag names are blanked.
   JS (<script> blocks, .js files): string literals and template-literal text (${...} read as JavaScript),
@@ -51,18 +53,73 @@ mechanics and titles); `hanging` (masses on strings, open drawers; the one unsaf
 pair, has its own check in scripts/check-resit-fixes.py). Crime is not in SR-14 as amended (4 Oct 2026),
 so crime words are not scanned. Change a list here, never in a game, and update KNOWN in the same PR.
 """
-import argparse, collections, functools, pathlib, re, sys
+import argparse, collections, functools, importlib.util, pathlib, re, subprocess, sys
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
-GLOBS = ("games/**/*.html", "games/**/*.js", "escape-rooms/**/*.html", "escape-rooms/**/*.js",
-         # Every other published page and the shared script that puts words on screen (LISTINGS-AND-GATE part B,
-         # 13 Oct 2026: SR-14 is site-wide, so the portal's weekly facts, /essentials/, /resit/, the parents' guides
-         # and the rest are read too). Games and escape rooms stay first; a file is read once.
-         "*.html", "essentials/**/*.html", "resit/**/*.html", "op/**/*.html", "parents/**/*.html",
-         "spec-map/**/*.html", "year6/**/*.html", "6-7/**/*.html", "about/**/*.html", "updates/**/*.html",
-         "the-6-ps/**/*.html", "printables/**/*.html",
-         "leaderboards/**/*.html", "privacy/**/*.html", "feedback/**/*.html", "schools/**/*.html",
-         "schools/assets/*.js")
+# What the scan reads: every *.html and *.js in the repository (tracked or new, not git-ignored) except under these
+# top-level folders, none of which is published (_config.yml excludes them, or Jekyll skips dot-paths). It was a
+# hand list of folders to read until 15 Nov 2026 (CONTENT-SAFETY-COVERAGE): /ugh-stats/ fell outside it unnoticed and
+# /printables/ was added by hand. Now a new section is read by default, and guard() fails any folder that is neither
+# a published section (SITE in scripts/check-publish-scope.py, the site's one classification) nor named here.
+EXCLUDE = {
+    ".git": "git's own metadata",
+    ".github": "workflows and CI configuration; Jekyll does not publish dot-paths",
+    ".claude": "agent rules; Jekyll does not publish dot-paths",
+    "docs": "project documents and Apps Script code (_config.yml excludes its .md, .txt and .js); its one published "
+            "part, docs/art/, is images, and guard() fails if a page appears under it",
+    "scripts": "checks, verifiers and their test fixtures (scripts/fixtures/*.html); excluded by _config.yml",
+    "data": "the checker's ledger and the extracted banks; excluded by _config.yml",
+    "tools": "the pack generator and other local tools; excluded by _config.yml",
+    "firebase": "Firestore rules and their tests; excluded by _config.yml",
+    "node_modules": "npm packages installed for CI; excluded by _config.yml",
+}
+FIRST = ("games/", "escape-rooms/")      # read first, as before
+
+
+def _repo_files(root):
+    """Every file under root, relative POSIX paths: git's tracked and untracked-not-ignored files, or a walk."""
+    try:
+        out = subprocess.run(["git", "-C", str(root), "ls-files", "-z", "-co", "--exclude-standard"],
+                             capture_output=True, check=True).stdout.decode("utf-8", "replace")
+        return sorted({f for f in out.split("\0") if f and (root / f).is_file()})
+    except (OSError, subprocess.CalledProcessError):
+        return sorted(f.relative_to(root).as_posix() for f in root.rglob("*") if f.is_file()
+                      and f.relative_to(root).parts[0] not in EXCLUDE)
+
+
+def files_to_read(files):
+    """The .html and .js files the scan reads, in order: games, escape rooms, then the rest."""
+    read = [f for f in files if f.endswith((".html", ".js")) and ("/" not in f or f.split("/", 1)[0] not in EXCLUDE)]
+    return sorted(read, key=lambda f: (next((i for i, p in enumerate(FIRST) if f.startswith(p)), len(FIRST)), f))
+
+
+def _site(root):
+    """SITE, the published paths, from scripts/check-publish-scope.py (the root's copy, else this repo's)."""
+    path = root / "scripts" / "check-publish-scope.py"
+    spec = importlib.util.spec_from_file_location("check_publish_scope", path if path.is_file() else
+                                                  BASE / "scripts" / "check-publish-scope.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.SITE
+
+
+def guard(files, site):
+    """Errors: a top-level folder holding an .html file that is neither a published section nor in EXCLUDE; and a
+    page or script under a published path that EXCLUDE hides from the scan."""
+    sections = {s.rstrip("/") for s in site if s.endswith("/") and "/" not in s.rstrip("/")}
+    errors = []
+    for top in sorted({f.split("/", 1)[0] for f in files if "/" in f and f.endswith(".html")}):
+        if top not in sections and top not in EXCLUDE:
+            errors.append("%s/ holds .html but is neither a published section (SITE in scripts/check-publish-scope.py)"
+                          " nor in EXCLUDE here: read it (classify it as SITE there) or add it to EXCLUDE with a "
+                          "one-line reason" % top)
+    for f in files:
+        top = f.split("/", 1)[0]
+        if "/" in f and top in EXCLUDE and f.endswith((".html", ".js")) and \
+                any(s.endswith("/") and f.startswith(s) for s in site):
+            errors.append("%s is published (SITE) but EXCLUDE[%r] hides it from the scan" % (f, top))
+    return errors
+
 
 # Tier (a): banned everywhere. Whole words; a trailing \w* takes the word's other forms.
 TIER_A = {
@@ -394,20 +451,24 @@ def terms(text, humour=False):
 
 def scan(root, override=None):
     """{relative path: [(line, word)]} for every file with a hit. override: {rel: text} replaces a file."""
-    out, seen = {}, set()
-    for g in GLOBS:
-        for f in sorted(root.glob(g)):
-            rel = f.relative_to(root).as_posix()
-            if rel in seen:
-                continue
-            seen.add(rel)
-            text = (override or {}).get(rel)
-            if text is None:
-                text = f.read_text(encoding="utf-8", errors="replace")
-            h = hits_in(text, js=rel.endswith(".js"))
-            if h:
-                out[rel] = h
+    out = {}
+    for rel in files_to_read(_files(root)):
+        text = (override or {}).get(rel)
+        if text is None:
+            text = (root / rel).read_text(encoding="utf-8", errors="replace")
+        h = hits_in(text, js=rel.endswith(".js"))
+        if h:
+            out[rel] = h
     return out
+
+
+@functools.lru_cache(maxsize=None)
+def _files_cached(root):
+    return tuple(_repo_files(pathlib.Path(root)))
+
+
+def _files(root):
+    return list(_files_cached(str(root)))
 
 
 # Every hit present on 4 Oct 2026 (SR-14 as amended that evening), for Jon to rule on: file -> {word: count}.
@@ -443,8 +504,23 @@ def selftest(root):
     if not compare(scan(root), KNOWN)[0]:     # else the real run reports the tree's own errors
         missed, n = _selftest_files(root)
     m2, n2 = _selftest_snippets()
-    print("self-test: %d of %d planted cases right" % (n + n2 - len(missed) - len(m2), n + n2))
-    return ["self-test: wrong: " + m for m in missed + m2]
+    m3, n3 = _selftest_guard(root)
+    print("self-test: %d of %d planted cases right" % (n + n2 + n3 - len(missed) - len(m2) - len(m3), n + n2 + n3))
+    return ["self-test: wrong: " + m for m in missed + m2 + m3]
+
+
+def _selftest_guard(root):
+    """The tree passes the guard; a new top-level folder in neither list fails it; so does EXCLUDE hiding a page."""
+    files, site, missed = _files(root), _site(root), []
+    if guard(files, site):
+        missed.append("the tree as it is must pass the guard (got %s)" % guard(files, site))
+    if not any("newsection/" in e for e in guard(files + ["newsection/index.html"], site)):
+        missed.append("a new top-level folder with an .html file, in neither list, must fail the guard")
+    if not guard(files + ["docs/art/page.html"], site):
+        missed.append("a page under a published path inside an EXCLUDE folder (docs/art/) must fail the guard")
+    if "ugh-stats/charts/index.html" not in files_to_read(files):
+        missed.append("ugh-stats/charts/index.html must be read")
+    return missed, 4
 
 
 def _selftest_files(root):
@@ -461,6 +537,10 @@ def _selftest_files(root):
     home = (root / "index.html").read_text(encoding="utf-8")
     faults["tier (a) on the portal page (outside games/)"] = ({"index.html": home.replace("</body>", "<p>Nobody drowned.</p></body>")}, KNOWN)
     faults["tier (b) in a joke on the portal page"] = ({"index.html": home.replace("</body>", "<script>var x={joke:'the hospital did it'};</script></body>")}, KNOWN)
+    ugh = "ugh-stats/charts/index.html"
+    if (root / ugh).is_file():     # a published section that the old hand list never read
+        page = (root / ugh).read_text(encoding="utf-8")
+        faults["tier (a) on an Ugh, stats page"] = ({ugh: page.replace("</body>", "<p>Nobody drowned.</p></body>")}, KNOWN)
     missed = [name for name, (override, known) in faults.items() if not compare(scan(root, override), known)[0]]
     return missed, len(faults)
 
@@ -523,11 +603,11 @@ def main():
         return 1 if errors else 0
     found = scan(root)
     errs, known_hits = compare(found, KNOWN)
-    errors += errs
+    errors += errs + guard(_files(root), _site(root))
     files = sorted(r for r in found if r in KNOWN)
     by_tier = collections.Counter(tier(w) for r in files for _, w in found[r])
     print("SR-14 content scan: %d files read; %d KNOWN hit(s) in %d file(s) (tier a: %d, tier b in humour: %d), "
-          "for Jon to rule on (reported, not failed)" % (sum(1 for g in GLOBS for _ in root.glob(g)), known_hits,
+          "for Jon to rule on (reported, not failed)" % (len(files_to_read(_files(root))), known_hits,
                                                         len(files), by_tier["a"], by_tier["b"]))
     for rel in files:
         c = collections.Counter(w for _, w in found[rel])
