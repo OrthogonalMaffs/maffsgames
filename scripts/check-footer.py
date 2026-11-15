@@ -37,6 +37,7 @@ _LINKS = [
     ('/parents/', 'Parent guides'),
     ('/updates/', "What's changed"),
     ('/ugh-stats/', 'Ugh, stats'),
+    ('/printables/', 'Printable packs'),
     ('mailto:contact@maffsgames.co.uk', 'Contact'),
     ('/privacy/', 'Privacy'),
     ('/feedback/', 'Feedback'),

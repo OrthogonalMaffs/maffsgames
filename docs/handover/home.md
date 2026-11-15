@@ -16,6 +16,29 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): PRINTABLES-PAGE (/printables/, the escape-room packs on Tes)
+
+Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printables-page`; contract `docs/handover/contracts/2026-11-15-printables-page.md`. The first commit carries MONOTONIC-CLOCK's close-out (merge line above, contract and Amendment 1 to history).
+
+- **The page.** `printables/index.html` shows Jon's approved wording (13:23) word for word. It is styled as `/updates/` is: Outfit, navy and teal, the nav bar with its back link, and the site footer.
+  - **Cards, in the contract's order:** Christmas Tree Fiasco, Kiln Disaster, Comic Caper, Library Jam, then the Warm-up bundle.
+  - **Each room card:** its chip copied from /escape-rooms/ (data-stars and the sr-only text), three topics from the room page's meta description, the price, "View on Tes →" (new tab, rel="noopener") and "Play it free online".
+  - The bundle card has the Warm-up chip (all three rooms are ★) and no topics line.
+  - The links carry `data-mfg-section="printables"` and `data-mfg-item`, so they count as section_clicked. No new event.
+- **Tes links:** all five returned 200 on 15 Nov, each with its own listing title.
+- **Footer.** `('/printables/', 'Printable packs')` was added to `_LINKS`, and `apply-footer.py` changed 152 pages. check-footer passes.
+  - At 320, 375 and 390 px the footer is one 40 px row that scrolls inside itself, exactly as on main, and no page scrolls sideways. site-footer.css is not changed.
+- **Also changed:**
+  - /escape-rooms/ has one line under its first lede.
+  - /updates/ has the approved line.
+  - `printables/` is in the sitemap.
+  - `printables/` is in check-publish-scope's SITE and in check-content-safety's GLOBS. Both add coverage, as for `ugh-stats/`, and neither is an exception.
+  - data/games.json is not touched. check-meta needs no record, because no portal card links to the page.
+- todo: the PRINTABLES-PAGE row is updated (loop cards still to come), and a new row PRINTABLES-CORE is added.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): MONOTONIC-CLOCK (the shared input windows on a clock that never jumps)
 
 Claude Code (home lane), worktree `~/mg-monotonic-clock`, branch `claude/monotonic-clock`; contract `docs/history/contracts/2026-11-15-monotonic-clock.md`. Jon's ruling (15 Nov 11:07): option 1 of todo row ANSWER-LOCK-WALL-CLOCK, now closed in `docs/history/todo-done.md`.
