@@ -1,18 +1,23 @@
 #!/usr/bin/env python3
-# ci-shards: Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught) | | 5
+# ci-shards: Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation (90° each way and 180°, about (0,0) and other points) and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught) | | 5
 """Shape Shifter: translate, reflect, rotate and enlarge a shape on a -5..5 grid; five modes.
 
-Banks, read from the page as served: TRANSLATION_QUESTIONS (15, tap the image's vertices), REFLECTION_QUESTIONS (15 typed
-in the axes, then 20 built by the page: five each in y = x, y = -x, x = k and y = k; tap the image's vertices),
-ROTATION_QUESTIONS (15, built by the page from 12 bases, four options A-D, tap a shape) and ENLARGEMENT_QUESTIONS (16,
-built by the page: scale factors 2, 3 and 1/2, centres at the origin and in every quadrant; tap the image's vertices).
+Banks, read from the page as served: TRANSLATION_QUESTIONS (32, built by the page since 15 Nov 2026: every move once,
+twelve in one direction only; tap the image's vertices), REFLECTION_QUESTIONS (15 typed in the axes, then 20 built by
+the page: five each in y = x, y = -x, x = k and y = k; tap the image's vertices), ROTATION_QUESTIONS (36, built by the
+page since 15 Nov 2026: twelve each of 90° anticlockwise, 90° clockwise and 180°, half of each about (0,0) and half
+about another whole-number point; four options A-D, tap a shape) and ENLARGEMENT_QUESTIONS (16, built by the page:
+scale factors 2, 3 and 1/2, centres at the origin and in every quadrant; tap the image's vertices).
 A session is 10 questions: one mode, or Random Mix (translation, reflection and rotation: at least 3 of each, one extra;
 no enlargement).
 
 Checks, independent of the game's code (the maths is integer-exact, so no Fraction is needed):
-  Translation: the words ("Translate 3 right and 2 up") are parsed and the image is the shape moved by them; dx and dy
-    stored in the item agree with the words; the shape is a triangle, a rectangle or a square as its type says; the
-    shape and its image are on the grid (so every vertex can be tapped); the image is not the shape itself.
+  Translation: the words ("Translate 3 right and 2 up", "Translate 4 left", "Translate 3 up") are parsed and the image
+    is the shape moved by them; dx and dy stored in the item agree with the words; the shape is a triangle, a rectangle
+    or a square as its type says; the shape and its image are on the grid (so every vertex can be tapped); the image is
+    not the shape itself.
+  Translation coverage (t3-004, fixed): at least 30 items, no two the same; at least a third in one direction only;
+    right, left, up and down each used.
   Reflection: the mirror line in the words ("Reflect in the y-axis", "Reflect in the line x = 2") is the item's axis; the
     image is worked out here as the reflection in that line (a x + b y = c, a point moved twice its signed distance along
     the normal), not from the game's formulas; on the grid; not the shape itself as a set of vertices (shape-shifter-t3-003, fixed: the one item that was its own
@@ -24,11 +29,17 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     negative); the item's sfn, sfd, cx and cy agree; every image vertex is worked out here with Fractions, is a whole
     number on the grid, and no corner is the centre; at least 15 items, 5 with scale factor 1/2, 8 with a centre other
     than the origin, and a centre in every quadrant.
-  Rotation: the words ("Rotate 90 degrees clockwise about (0,0)") are parsed and the true image is turned here, a quarter
-    turn clockwise as (x, y) -> (y, -x) about the centre and anticlockwise as (x, y) -> (-y, x). The item's key is that
-    image. Four options, no two the same shape, exactly one the true image, none the shape itself; every wrong option is a
-    named slip (the opposite turn, a reflection in an axis, or the same turn about (1,1)); all on the grid. The letter of
-    each option lies inside its own shape, and no two letters sit on the same point.
+  Rotation: the words ("Rotate 90 degrees clockwise about (2,1)", any whole-number centre) are parsed and the true image
+    is turned here, a quarter turn clockwise as (x, y) -> (y, -x) about the centre, anticlockwise as (x, y) -> (-y, x),
+    a half turn as (x, y) -> (-x, -y). The item's key is that image, on the grid and not the shape itself. Four options,
+    no two the same shape, exactly one the true image, none the shape itself, all on the grid. The three wrong options
+    are one each of three named slips: the wrong direction (the opposite quarter turn about the same centre; for 180°,
+    which has no wrong direction, a quarter turn about the same centre), a reflection in an axis, and the wrong centre
+    (the same turn about (0,0) when the centre is another point, about (1,1) when it is (0,0)).
+  Rotation coverage (t3-002 and t3-004, fixed): at least 36 items, no two the same; at least 12 each of 90° clockwise,
+    90° anticlockwise and 180°; at least half about a centre other than (0,0), those centres in more than one quadrant.
+  Letters: in every one of the 24 orders the four options can be lettered in, each letter lies inside its own shape and
+    no two letters are under 0.8 of a grid unit apart (the distance check-resit-fixes.py holds its six random orders to).
   Sessions: startGame() in each of the four modes, dealt five times: 10 questions, all different, all from the right
     bank; Random Mix has at least 3 of each mode and each question comes from the bank of the mode it is labelled with.
   Marking, in Chromium (390x844), through the game's own canvas handlers (a click event at each grid point's pixel):
@@ -41,14 +52,16 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     option's letter tapped over eight deals: the true image reads "Correct! (L)", any other reads "Not quite - correct
     answer was L" naming the true image's letter. A whole session played from this script's own answers scores 10/10 in
     each mode and 0/10 when every answer is wrong.
+  Moving on (canon 7.6), for a vertex mode and for rotation: a right answer mounts no Next and moves on by itself after
+    RIGHT_ADVANCE_MS (1000); a wrong answer shows its feedback and MaffsNext's Next, stays put, and moves on once when
+    Next is pressed.
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 Colour (t3-001, fixed in ESSENTIALS-FALSE-TEXT 4/4): after an answer the correct shape is stroked in the page's own
 --green, at both drawing sites (the shape tapped and the rotation option), with a contrast of at least 3:1 against the
 canvas background (WCAG 1.4.11), and the wrong-answer feedback names that colour, "correct shape shown in green".
 
-Not asserted (open findings, left open): no 180 degree rotation ever built (t3-002), 15 items in translation and rotation (t3-004), the
-shared board and no keyboard path (t3-005).
+Not asserted (open finding, left open): the shared board and no keyboard path (t3-005).
 
     python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
 
@@ -66,11 +79,14 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import plant_common as pc  # noqa: E402
 
 SLUG = 'shape-shifter'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 DEALS = 5
 ROT_DEALS = 8
+RIGHT_ADVANCE_MS = 1000
+LETTER_GAP = 0.8   # grid units between two option letters, in every lettering order
 MODES = ('translation', 'reflection', 'rotation', 'enlargement', 'mix')
 # Expected failures: items that break a rule and whose finding stays open. The check fails on any other item that does,
 # and fails if one of these stops failing (close the finding then).
@@ -157,9 +173,11 @@ def turn(shape, cx, cy, kind):
 
 
 def parse_translation(desc):
-    m = re.fullmatch(r'Translate (\d+) (left|right)(?: and (\d+) (up|down))?', desc)
+    m = re.fullmatch(r'Translate (?:([1-9]\d*) (left|right)(?: and ([1-9]\d*) (up|down))?|([1-9]\d*) (up|down))', desc)
     if not m:
         return None
+    if m.group(5):                                    # one direction only, up or down
+        return 0, int(m.group(5)) * (1 if m.group(6) == 'up' else -1)
     dx = int(m.group(1)) * (1 if m.group(2) == 'right' else -1)
     dy = 0 if m.group(3) is None else int(m.group(3)) * (1 if m.group(4) == 'up' else -1)
     return dx, dy
@@ -281,6 +299,62 @@ def check_enlargement_coverage(fails, eq):
         fails.append('enlargement coverage: a scale factor other than 2, 3 and 1/2')
 
 
+def check_translation_coverage(fails, tq):
+    """t3-004: at least 30 translations; at least a third in one direction only; right, left, up and down each used."""
+    ds = [d for d in (parse_translation(q['desc']) for q in tq) if d]
+    if len(ds) < 30:
+        fails.append('translation coverage: %d items, at least 30 needed' % len(ds))
+    one = sum(1 for dx, dy in ds if dx == 0 or dy == 0)
+    if 3 * one < len(ds):
+        fails.append('translation coverage: %d of %d items move in one direction only, at least a third needed' % (one, len(ds)))
+    for name, used in (('right', any(dx > 0 for dx, _ in ds)), ('left', any(dx < 0 for dx, _ in ds)),
+                       ('up', any(dy > 0 for _, dy in ds)), ('down', any(dy < 0 for _, dy in ds))):
+        if not used:
+            fails.append('translation coverage: no item moves %s' % name)
+
+
+def check_rotation_coverage(fails, oq):
+    """t3-002, t3-004: at least 36 rotations, 12 of each turn; at least half about a centre other than (0,0), those
+    centres in more than one quadrant."""
+    ds = [d for d in (parse_rotation(q['desc']) for q in oq) if d]
+    if len(ds) < 36:
+        fails.append('rotation coverage: %d items, at least 36 needed' % len(ds))
+    for kind, name in (('cw', '90° clockwise'), ('ccw', '90° anticlockwise'), ('half', '180°')):
+        n = sum(1 for k, _, _ in ds if k == kind)
+        if n < 12:
+            fails.append('rotation coverage: %d items turn %s, at least 12 needed' % (n, name))
+    other = [(cx, cy) for _, cx, cy in ds if (cx, cy) != (0, 0)]
+    if 2 * len(other) < len(ds):
+        fails.append('rotation coverage: %d of %d items turn about a centre other than (0,0), at least half needed' % (len(other), len(ds)))
+    quads = {(cx > 0, cy > 0) for cx, cy in other if cx and cy}
+    if len(quads) < 2:
+        fails.append('rotation coverage: the centres other than (0,0) lie in %d quadrant(s), more than one needed' % len(quads))
+
+
+def classify_rotation_wrongs(q, kind, cx, cy):
+    """The three wrong options against the three named slips. Returns None when they are one of each, else why not."""
+    if kind == 'half':
+        direction = [fs(turn(q['shape'], cx, cy, 'cw')), fs(turn(q['shape'], cx, cy, 'ccw'))]
+        dname = 'a quarter turn about the same centre'
+    else:
+        direction = [fs(turn(q['shape'], cx, cy, 'ccw' if kind == 'cw' else 'cw'))]
+        dname = 'the opposite turn about the same centre'
+    wc = (1, 1) if (cx, cy) == (0, 0) else (0, 0)
+    slips = [(dname, direction),
+             ('a reflection in an axis', [fs(reflect(q['shape'], 'x')), fs(reflect(q['shape'], 'y'))]),
+             ('the same turn about (%d,%d)' % wc, [fs(turn(q['shape'], wc[0], wc[1], kind))])]
+    wrongs = [fs(w) for w in q['wrongs']]
+    if len(wrongs) != 3:
+        return '%d wrong options, not 3' % len(wrongs)
+    for k, w in enumerate(wrongs, 1):
+        if not any(w in imgs for _, imgs in slips):
+            return 'distractor %d %r is not a named slip' % (k, sorted(w))
+    for order in itertools.permutations(range(3)):
+        if all(wrongs[k] in slips[order[k]][1] for k in range(3)):
+            return None
+    return 'the three distractors are not one each of: %s' % '; '.join(n for n, _ in slips)
+
+
 def check_banks(fails, expected_hit, tq, rq, oq, eq):
     seen = set()
     for i, q in enumerate(tq, 1):
@@ -303,6 +377,7 @@ def check_banks(fails, expected_hit, tq, rq, oq, eq):
         if k in seen:
             fails.append('%s: translation item repeated' % where)
         seen.add(k)
+    check_translation_coverage(fails, tq)
     for i, q in enumerate(rq, 1):
         where = 'reflection %d (%s)' % (i, q['desc'])
         axis = parse_reflection(q['desc'])
@@ -367,6 +442,10 @@ def check_banks(fails, expected_hit, tq, rq, oq, eq):
         true = fs(turn(q['shape'], cx, cy, kind))
         if fs(q['correct']) != true:
             fails.append('%s: rotation key %r but turning the shape gives %r' % (where, sorted(fs(q['correct'])), sorted(true)))
+        if not on_grid(turn(q['shape'], cx, cy, kind)):
+            fails.append('%s: rotation image %r is off the grid' % (where, sorted(true)))
+        if true == fs(q['shape']):
+            fails.append('%s: rotation image is the shape itself' % where)
         opts = [q['correct']] + list(q['wrongs'])
         if len(opts) != 4:
             fails.append('%s: rotation has %d options, not 4' % (where, len(opts)))
@@ -380,19 +459,14 @@ def check_banks(fails, expected_hit, tq, rq, oq, eq):
             fails.append('%s: rotation options equal the true image at %s, not just the key (option 0)' % (where, right))
         if fs(q['shape']) in sets:
             fails.append('%s: a rotation option is the shape itself' % where)
-        slips = []
-        for name, img in (('the opposite turn', turn(q['shape'], cx, cy, {'cw': 'ccw', 'ccw': 'cw', 'half': 'half'}[kind])),
-                          ('a reflection in the x-axis', reflect(q['shape'], 'x')),
-                          ('a reflection in the y-axis', reflect(q['shape'], 'y')),
-                          ('the same turn about (1,1)', turn(q['shape'], 1, 1, kind))):
-            slips.append(fs(img))
-        for k, w in enumerate(q['wrongs'], 1):
-            if fs(w) not in slips:
-                fails.append('%s: rotation distractor %d %r is not a named slip' % (where, k, w))
+        why = classify_rotation_wrongs(q, kind, cx, cy)
+        if why:
+            fails.append('%s: rotation distractors: %s' % (where, why))
         k = ('o', fs(q['shape']), d)
         if k in seen:
             fails.append('%s: rotation item repeated' % where)
         seen.add(k)
+    check_rotation_coverage(fails, oq)
 
 
 # ---- in the page ----------------------------------------------------------------------------------------------------
@@ -490,12 +564,27 @@ SESSION_JS = r"""() => {
 LETTERS_JS = r"""() => {
   const out = [];
   startGame('rotation');
-  for (const item of ROTATION_QUESTIONS) for (let d = 0; d < 8; d++) {
+  const perms = (a) => a.length < 2 ? [a] : a.flatMap((x, i) => perms(a.slice(0, i).concat(a.slice(i + 1))).map(p => [x].concat(p)));
+  ROTATION_QUESTIONS.forEach((item, n) => {
     questions = [item]; qIndex = 0; selectedMode = 'rotation'; mode = 'rotation'; loadQuestion();
-    out.push({shapes: rotationOptions.map(o => o.shape.map(p => p.slice())), ats: rotationOptions.map(o => o.at.slice())});
-  }
+    const dealt = rotationOptions.slice();
+    for (const p of perms(dealt.map((_, i) => i))) {      // every order the options can be lettered in
+      rotationOptions = p.map((i, k) => ({shape: dealt[i].shape, correct: dealt[i].correct, label: 'ABCD'[k]}));
+      placeLabels();
+      out.push({item: n + 1, desc: item.desc, shapes: rotationOptions.map(o => o.shape.map(q => q.slice())),
+                ats: rotationOptions.map(o => o.at.slice())});
+    }
+  });
   MaffsLock.clearTimers();
   return out; }"""
+# Canon 7.6 in the page: answer the question on screen with `taps` (grid points), then report what follows.
+ADVANCE_JS = r"""([m, item, taps]) => {
+  selectedMode = m; mode = m; questions = [item, item]; qIndex = 0; mixModes = []; loadQuestion();
+  const r = canvas.getBoundingClientRect();
+  for (const [gx, gy] of taps) { const p = gridToPixel(gx, gy);
+    canvas.dispatchEvent(new MouseEvent('click', {clientX: r.left + p[0], clientY: r.top + p[1], bubbles: true, cancelable: true})); }
+  return {fb: document.getElementById('feedbackBar').textContent, q: qIndex,
+          next: document.querySelectorAll('#gameScreen .maffs-next').length}; }"""
 
 def play_session(page, m, wrong):
     """Play one whole session of mode m from this script's own answers; return the final score text."""
@@ -532,6 +621,8 @@ def play_session(page, m, wrong):
             true = fs(turn(q['shape'], cx, cy, kind))
             ats = page.evaluate('() => rotationOptions.map(o => ({shape: o.shape, at: o.at}))')
             idx = [i for i, o in enumerate(ats) if fs(o['shape']) == true]
+            if not idx:        # no option is the true image (a wrong key): tap the first, and the session's score reports it
+                idx = [0]
             pick = [i for i in range(len(ats)) if i not in idx][0] if wrong else idx[0]
             taps = [ats[pick]['at']]
         page.evaluate('''(taps) => { const r = canvas.getBoundingClientRect();
@@ -627,15 +718,73 @@ def rotation_checks(fails, page, bank):
 
 
 def letter_checks(fails, page):
-    for n, d in enumerate(page.evaluate(LETTERS_JS)):
+    """Every item, every one of the 24 orders its four options can be lettered in. Returns the closest pair's distance."""
+    closest = None
+    for d in page.evaluate(LETTERS_JS):
+        where = 'letters: rotation %d (%s)' % (d['item'], d['desc'])
         for k, (sh, at) in enumerate(zip(d['shapes'], d['ats'])):
             if not inside(at[0], at[1], sh):
-                fails.append('letters: deal %d: the letter of option %d is not inside its shape (%r at %r)' % (n, k, sh, at))
-                return
+                fails.append('%s: the letter of option %d is not inside its shape (%r at %r)' % (where, k, sh, at))
+                return closest
         for a, b in itertools.combinations(d['ats'], 2):
-            if abs(a[0] - b[0]) < 1e-9 and abs(a[1] - b[1]) < 1e-9:
-                fails.append('letters: deal %d: two letters sit on the same point %r' % (n, a))
-                return
+            gap = ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+            closest = gap if closest is None else min(closest, gap)
+            if gap < LETTER_GAP:
+                fails.append('%s: two letters are %.2f grid units apart (%r and %r), under %.1f' % (where, gap, a, b, LETTER_GAP))
+                return closest
+    return closest
+
+
+def advance_checks(fails, page, tq, oq):
+    """Canon 7.6: a right answer moves on by itself, a wrong one waits on MaffsNext; a vertex mode and rotation."""
+    got = page.evaluate('RIGHT_ADVANCE_MS')
+    if got != RIGHT_ADVANCE_MS:
+        fails.append('moving on: RIGHT_ADVANCE_MS is %s, expected %d' % (got, RIGHT_ADVANCE_MS))
+    page.evaluate('() => { startGame("translation"); }')
+    t = tq[0]
+    image = [list(p) for p in translate(t['shape'], *parse_translation(t['desc']))]
+    o = oq[0]
+    kind, cx, cy = parse_rotation(o['desc'])
+    true = fs(turn(o['shape'], cx, cy, kind))
+
+    def rotation_taps(right):
+        page.evaluate('(item) => { selectedMode = "rotation"; mode = "rotation"; questions = [item, item]; qIndex = 0; loadQuestion(); }', o)
+        ats = page.evaluate('() => rotationOptions.map(o => ({shape: o.shape, at: o.at}))')
+        at = next((a['at'] for a in ats if (fs(a['shape']) == true) == right), None)
+        return None if at is None else [at]      # None: no option is the true image (a wrong key); reported, not a crash
+
+    for name, m, item, taps in (('translation', 'translation', t, lambda right: image if right else [list(p) for p in t['shape']]),
+                                ('rotation', 'rotation', o, rotation_taps)):
+        right_taps, wrong_taps = taps(True), taps(False)
+        if right_taps is None or wrong_taps is None:
+            fails.append('moving on: %s: no option is the true image (or none is wrong), so the rule cannot be played' % name)
+            continue
+        st = page.evaluate(ADVANCE_JS, [m, item, right_taps])
+        if not st['fb'].startswith('Correct!'):
+            fails.append('moving on: %s: the right answer reads %r' % (name, st['fb']))
+        if st['next']:
+            fails.append('moving on: %s: a Next control after a right answer: it must not wait (canon 7.6)' % name)
+        if st['q'] != 0:
+            fails.append('moving on: %s: a right answer moved on before its feedback could be read' % name)
+        try:
+            page.wait_for_function('qIndex === 1', timeout=RIGHT_ADVANCE_MS + 4000)
+        except Exception:
+            fails.append('moving on: %s: a right answer did not move on by itself within %d ms (canon 7.6)' % (name, RIGHT_ADVANCE_MS + 4000))
+        st = page.evaluate(ADVANCE_JS, [m, item, wrong_taps])
+        if not st['fb'].startswith('Not quite'):
+            fails.append('moving on: %s: the wrong answer reads %r' % (name, st['fb']))
+        if st['next'] != 1:
+            fails.append('moving on: %s: %d MaffsNext controls after a wrong answer, expected 1 (canon 7.6)' % (name, st['next']))
+            continue
+        page.wait_for_timeout(RIGHT_ADVANCE_MS + 500)
+        if page.evaluate('qIndex') != 0:
+            fails.append('moving on: %s: a wrong answer moved on by itself: it must wait for Next (canon 7.6)' % name)
+            continue
+        page.click('#btnRow .maffs-next')
+        after = page.evaluate('() => ({q: qIndex, next: document.querySelectorAll("#gameScreen .maffs-next").length})')
+        if after['q'] != 1 or after['next']:
+            fails.append('moving on: %s: Next left question %d and %d control(s)' % (name, after['q'] + 1, after['next']))
+    page.evaluate('() => MaffsLock.clearTimers()')
 
 
 def session_checks(fails, page, nbank):
@@ -765,6 +914,7 @@ def play(fails, html, expected_hit, cards=True):
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+            ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)   # MaffsNext's 3 s floor: Next is pressed at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
             ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
@@ -780,7 +930,8 @@ def play(fails, html, expected_hit, cards=True):
             eq = page.evaluate('() => JSON.parse(JSON.stringify(ENLARGEMENT_QUESTIONS))')
             check_banks(fails, expected_hit, tq, rq, oq, eq)
             session_checks(fails, page, (len(tq), len(rq), len(oq)))
-            letter_checks(fails, page)
+            closest = letter_checks(fails, page)
+            advance_checks(fails, page, tq, oq)
             page.evaluate('() => { startGame("translation"); }')
             vertex_checks(fails, page, 'translation', tq)
             vertex_checks(fails, page, 'reflection', rq)
@@ -801,7 +952,7 @@ def play(fails, html, expected_hit, cards=True):
             if cards:   # the bank plants need none of it; only the main run and the mode-card plants pay for it
                 mode_card_checks(fails, html, browser, base)
             browser.close()
-            stats = {'translation': len(tq), 'reflection': len(rq), 'rotation': len(oq), 'enlargement': len(eq)}
+            stats = {'translation': len(tq), 'reflection': len(rq), 'rotation': len(oq), 'enlargement': len(eq), 'closest': closest}
     finally:
         proc.terminate()
         proc.wait()
@@ -809,9 +960,31 @@ def play(fails, html, expected_hit, cards=True):
 
 
 PLANTS = [
-    ('a wrong translation key (dx 3 for "2 right")', 'translation key',
-     [("{ shape:[[1,1],[3,1],[2,3]], desc:'Translate 2 right and 1 up', dx:2, dy:1, type:'triangle' }",
-       "{ shape:[[1,1],[3,1],[2,3]], desc:'Translate 2 right and 1 up', dx:3, dy:1, type:'triangle' }")]),
+    ('a translation keyed with dx and dy swapped', 'translation key',
+     [("dx: dx, dy: dy, type: c.type });", "dx: dy, dy: dx, type: c.type });")]),
+    ('the translation pool cut to 15', 'translation coverage',
+     [("  for (const [dx, dy] of moves) {", "  for (const [dx, dy] of moves.slice(0, 15)) {")]),
+    # The key filter (a slip equal to the key is dropped) is proven here: with the old direction rule alone no 180° item
+    # can be built (rotation coverage fails); with the filter gone too, each is built with its key offered twice. The
+    # filter's own plant ("a second correct rotation option") went on 15 Nov 2026: alone it changes no item of this pool.
+    ('a 180° item whose wrong-direction option equals the key', 'rotation options',
+     [("wrongs.push(rotateShape(shape, cx, cy, correctAngle === 180 ? quarter : -correctAngle));",
+       "wrongs.push(rotateShape(shape, cx, cy, -correctAngle));"),
+      ("shapeFits(w) && !shapesEqual(w, correct) &&", "shapeFits(w) && true &&")]),
+    ('a centre ignored when rotating (the key turned about (0,0))', 'rotation key',
+     [("        correct: correct,\n        wrongs: validWrongs,",
+       "        correct: rotateShape(b.shape, 0, 0, angle),\n        wrongs: validWrongs,")]),
+    ('the rotation pool cut to 15', 'rotation coverage',
+     [("  for (const [angle, cx, cy] of specs) {", "  for (const [angle, cx, cy] of specs.slice(0, 15)) {")]),
+    ('the wrong-centre option about (1,1) whatever the centre', 'rotation distractors',
+     [("wrongs.push(rotateShape(shape, origin ? 1 : 0, origin ? 1 : 0, correctAngle));",
+       "wrongs.push(rotateShape(shape, 1, 1, correctAngle));")]),
+    ('a right answer waits (canon 7.6)', 'moving on',
+     [("if (correct) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);\n  else MaffsNext.wrong(",
+       "if (correct) { /* planted: waits */ }\n  else MaffsNext.wrong(")]),
+    ('a wrong answer moves on by itself (canon 7.6)', 'moving on',
+     [("else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion });",
+       "else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);")]),
     ('a wrong reflection axis (x-axis item keyed y)', 'reflection key',
      [("{ shape:[[2,-1],[4,-1],[3,2]], axis:'x', desc:'Reflect in the x-axis', type:'triangle' }",
        "{ shape:[[2,-1],[4,-1],[3,2]], axis:'y', desc:'Reflect in the x-axis', type:'triangle' }")]),
@@ -820,8 +993,6 @@ PLANTS = [
        "const rx = Math.round(dx * Math.cos(rad) + dy * Math.sin(rad) + cx);"),
       ("const ry = Math.round(dx * Math.sin(rad) + dy * Math.cos(rad) + cy);",
        "const ry = Math.round(-dx * Math.sin(rad) + dy * Math.cos(rad) + cy);")]),
-    ('a second correct rotation option (key filter removed)', 'rotation options',
-     [("shapeFits(w) && !shapesEqual(w, correct) &&", "shapeFits(w) && true &&")]),
     ('a wrong letter in the rotation feedback', 'marking: tapping letter',
      [("const correctLabel = rotationOptions.find(o => o.correct).label;",
        "const correctLabel = rotationOptions.find(o => !o.correct).label;")]),
@@ -896,7 +1067,10 @@ def main():
             print('  correct shape after an answer drawn in --green at both sites, %.2f:1 against the canvas; the feedback names it (t3-001)'
                   % contrast(re.search(r'--green:\s*(#[0-9a-fA-F]{6})', html).group(1),
                              re.search(r'canvas\{[^}]*background:\s*(#[0-9a-fA-F]{6})', html).group(1)))
-            print('  not asserted (open): no 180 degree rotation built (t3-002), 15 items in translation and rotation (t3-004), board and keyboard (t3-005)')
+            if st.get('closest') is not None:
+                print('  option letters: every item in all 24 lettering orders, the closest two %.2f grid units apart (at least %.1f)'
+                      % (st['closest'], LETTER_GAP))
+            print('  not asserted (open): board and keyboard (t3-005)')
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
     for f in fails[:40]:
         print('FAIL  ' + f[:400])
@@ -914,14 +1088,14 @@ def selftest(html, plants, shard):
     ok = True
     for what, tag, edits in plants:
         with shard.unit('plant: ' + what):
-            bad = [o for o, n in edits if html.count(o) != 1]
-            if bad:
-                print('  self-test %-58s *** CANNOT PLANT (%r) ***' % (what, bad[0][:60]))
+            try:                                       # a plant that does not apply fails the run (plant_common, canon 7.9)
+                planted = html
+                for o, n in edits:
+                    planted = pc.apply_plant(planted, o, n, name=what)
+            except pc.StalePlant as e:
+                print('  self-test %-58s %s' % (what, e))
                 ok = False
                 continue
-            planted = html
-            for o, n in edits:
-                planted = planted.replace(o, n)
             rep = []
             play(rep, planted, set(), cards=tag == 'mode cards')
             found = [f for f in rep if tag in f]

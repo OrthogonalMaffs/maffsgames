@@ -77,6 +77,7 @@ canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:cro
 .game-btn.primary{background:var(--accent);color:#fff}
 .game-btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
 .game-btn:disabled{opacity:0.4;cursor:default}
+.btn-row .maffs-next{margin-top:0}   /* Next sits where the old button sat, so the feedback and Next stay as near the fold as before */
 
 /* Reveal panel */
 .reveal-panel{background:var(--surface-alt);border-top:3px solid var(--accent);border-radius:12px;padding:28px 24px;margin:20px auto;max-width:560px;opacity:0;transform:translateY(20px);transition:opacity 0.3s,transform 0.3s}
@@ -145,6 +146,7 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
 <script>var resolvedLevel=MaffsLevel.resolve({slug:'shape-shifter',levels:['year6'],fallback:'year6'});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
   "start_sel": "[onclick=\"startGame('rotation')\"]",
@@ -220,7 +222,6 @@ body.accessible .instruction-bar,body.accessible .reveal-text,body.accessible .s
   <div class="feedback-bar" id="feedbackBar"></div>
   <div class="btn-row" id="btnRow">
     <button class="game-btn secondary" id="undoBtn" onclick="undoVertex()" style="display:none">Undo</button>
-    <button class="game-btn primary" id="nextBtn" data-maffs-lock-skip onclick="nextQuestion()" style="display:none">Next</button>
   </div>
 </div>
 
@@ -302,24 +303,8 @@ function pixelToGrid(px, py) {
 
 // ── QUESTION BANKS ──
 
-const TRANSLATION_QUESTIONS = [
-  { shape:[[1,1],[3,1],[2,3]], desc:'Translate 2 right and 1 up', dx:2, dy:1, type:'triangle' },
-  { shape:[[-3,1],[-1,1],[-1,3],[-3,3]], desc:'Translate 4 right', dx:4, dy:0, type:'rectangle' },
-  { shape:[[0,-2],[2,-2],[1,1]], desc:'Translate 1 left and 3 up', dx:-1, dy:3, type:'triangle' },
-  { shape:[[2,2],[4,2],[4,4],[2,4]], desc:'Translate 3 left and 2 down', dx:-3, dy:-2, type:'square' },
-  { shape:[[-2,-3],[0,-3],[-1,-1]], desc:'Translate 2 right and 2 up', dx:2, dy:2, type:'triangle' },
-  // Generated 10 more
-  { shape:[[1,-1],[3,-1],[2,1]], desc:'Translate 2 left and 1 down', dx:-2, dy:-1, type:'triangle' },
-  { shape:[[-4,-1],[-2,-1],[-2,1],[-4,1]], desc:'Translate 3 right and 2 up', dx:3, dy:2, type:'rectangle' },
-  { shape:[[0,0],[2,0],[2,2],[0,2]], desc:'Translate 1 left and 3 down', dx:-1, dy:-3, type:'square' },
-  { shape:[[-1,2],[1,2],[0,4]], desc:'Translate 3 right and 1 down', dx:3, dy:-1, type:'triangle' },
-  { shape:[[1,-3],[3,-3],[3,-1],[1,-1]], desc:'Translate 4 left', dx:-4, dy:0, type:'rectangle' },
-  { shape:[[-3,-2],[-1,-2],[-2,0]], desc:'Translate 1 right and 3 up', dx:1, dy:3, type:'triangle' },
-  { shape:[[0,1],[2,1],[1,3]], desc:'Translate 2 left and 2 down', dx:-2, dy:-2, type:'triangle' },
-  { shape:[[-2,0],[0,0],[0,2],[-2,2]], desc:'Translate 5 right', dx:5, dy:0, type:'square' },
-  { shape:[[2,-2],[4,-2],[3,0]], desc:'Translate 3 left and 1 up', dx:-3, dy:1, type:'triangle' },
-  { shape:[[-1,-4],[1,-4],[1,-2],[-1,-2]], desc:'Translate 2 right and 3 up', dx:2, dy:3, type:'rectangle' },
-];
+// Built from rules by buildTranslationQuestions, below (15 hand-written items until 15 Nov 2026).
+const TRANSLATION_QUESTIONS = [];
 
 const REFLECTION_QUESTIONS = [
   { shape:[[1,1],[3,1],[2,3]], axis:'y', desc:'Reflect in the y-axis', type:'triangle' },
@@ -370,17 +355,17 @@ function enlargeShape(shape, cx, cy, sfn, sfd) {
   return shape.map(([x,y]) => [cx + (x - cx) * sfn / sfd, cy + (y - cy) * sfn / sfd]);
 }
 
-// Generate wrong rotation options
-function generateWrongRotations(shape, cx, cy, correctAngle) {
+// Generate wrong rotation options: three named slips.
+function generateWrongRotations(shape, cx, cy, correctAngle, quarter) {
   const wrongs = [];
-  // Wrong direction
-  wrongs.push(rotateShape(shape, cx, cy, -correctAngle));
+  // Wrong direction. A half turn has none (180° either way is the same image, which is why no 180° question
+  // was ever built until 15 Nov 2026), so a quarter turn about the same centre (`quarter`, 90 or -90) stands in.
+  wrongs.push(rotateShape(shape, cx, cy, correctAngle === 180 ? quarter : -correctAngle));
   // Reflection instead
   wrongs.push(reflectShape(shape, correctAngle === 180 ? 'y' : 'x'));
-  // Wrong centre (use (1,1) if centre is (0,0))
-  const wrongCx = cx === 0 ? 1 : 0;
-  const wrongCy = cy === 0 ? 1 : 0;
-  wrongs.push(rotateShape(shape, wrongCx, wrongCy, correctAngle));
+  // Wrong centre: about (0,0) when the centre is another point, otherwise about (1,1)
+  const origin = cx === 0 && cy === 0;
+  wrongs.push(rotateShape(shape, origin ? 1 : 0, origin ? 1 : 0, correctAngle));
   return wrongs;
 }
 
@@ -395,51 +380,8 @@ function shapeFits(shape) {
   return shape.every(([x,y]) => x >= GRID_MIN && x <= GRID_MAX && y >= GRID_MIN && y <= GRID_MAX);
 }
 
+// Built from rules by buildRotationQuestions, below (12 hand-written bases, all about (0,0), until 15 Nov 2026).
 const ROTATION_QUESTIONS = [];
-(function buildRotationQuestions() {
-  const bases = [
-    { shape:[[1,1],[3,1],[2,3]], cx:0, cy:0, angles:[90,180,-90], type:'triangle' },
-    { shape:[[1,1],[3,1],[3,3],[1,3]], cx:0, cy:0, angles:[90,180,-90], type:'square' },
-    { shape:[[0,1],[2,1],[0,3]], cx:0, cy:0, angles:[90,180,-90], type:'triangle' },
-    { shape:[[1,0],[3,0],[2,2]], cx:0, cy:0, angles:[90,180], type:'triangle' },
-    { shape:[[-1,1],[1,1],[0,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
-    { shape:[[1,1],[2,1],[2,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
-    { shape:[[0,0],[2,0],[2,2],[0,2]], cx:0, cy:0, angles:[90,-90,180], type:'square' },
-    { shape:[[1,0],[3,0],[3,1],[1,1]], cx:0, cy:0, angles:[90,-90], type:'rectangle' },
-    { shape:[[0,1],[2,1],[2,3],[0,3]], cx:0, cy:0, angles:[180], type:'rectangle' },
-    { shape:[[1,2],[3,2],[2,4]], cx:0, cy:0, angles:[90,-90], type:'triangle' },
-    { shape:[[-2,1],[0,1],[-1,3]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
-    { shape:[[0,0],[2,0],[1,2]], cx:0, cy:0, angles:[90,-90,180], type:'triangle' },
-  ];
-
-  for (const b of bases) {
-    for (const angle of b.angles) {
-      const correct = rotateShape(b.shape, b.cx, b.cy, angle);
-      if (!shapeFits(correct)) continue;
-
-      const wrongs = generateWrongRotations(b.shape, b.cx, b.cy, angle);
-      // Filter out wrongs that match correct or don't fit
-      const validWrongs = wrongs.filter((w, k) => shapeFits(w) && !shapesEqual(w, correct) &&
-        !shapesEqual(w, b.shape) && !wrongs.slice(0, k).some(v => shapesEqual(v, w)));
-      if (validWrongs.length < 3) continue;
-
-      // +90 is anticlockwise on this y-up grid (rotatePoint); it was labelled clockwise until 4 Oct 2026.
-      const dirLabel = angle === 90 ? '90\u00b0 anticlockwise' : angle === -90 ? '90\u00b0 clockwise' : '180\u00b0';
-      ROTATION_QUESTIONS.push({
-        shape: b.shape,
-        cx: b.cx, cy: b.cy,
-        angle: angle,
-        correct: correct,
-        wrongs: validWrongs.slice(0, 3),
-        desc: `Rotate ${dirLabel} about (${b.cx},${b.cy})`,
-        type: b.type
-      });
-
-      if (ROTATION_QUESTIONS.length >= 15) break;
-    }
-    if (ROTATION_QUESTIONS.length >= 15) break;
-  }
-})();
 
 // ── GENERATED REFLECTIONS AND ENLARGEMENTS (26 Oct 2026) ──
 // Built the way the rotations are: from rules, so each key is right by construction (scripts/verify-shape-shifter.py
@@ -530,6 +472,73 @@ const ENLARGEMENT_QUESTIONS = [];
   }
 })();
 
+// ── GENERATED ROTATIONS AND TRANSLATIONS (15 Nov 2026) ──
+// The same pattern: rules and a fixed seed, every key right by construction and recomputed from its words by
+// scripts/verify-shape-shifter.py. A candidate that breaks a rule is redrawn, never kept short.
+
+// Rotations: twelve each of 90° anticlockwise, 90° clockwise and 180°; of each twelve, six about (0,0) and six about
+// another whole-number point, in every quadrant (GCSE Foundation G7; Jon, 14 Nov 2026).
+(function buildRotationQuestions() {
+  const rnd = seededRandom(15112026);
+  const origin = [[0,0],[0,0],[0,0],[0,0],[0,0],[0,0]];
+  const specs = [];
+  [[1,1],[-1,1],[-1,-1],[1,-1],[2,1],[-2,-1]].concat(origin).forEach(c => specs.push([90, c[0], c[1]]));
+  [[-1,1],[1,-1],[1,2],[-1,-2],[2,-1],[-2,1]].concat(origin).forEach(c => specs.push([-90, c[0], c[1]]));
+  [[1,1],[-1,-1],[-1,2],[1,-2],[-2,1],[2,-1]].concat(origin).forEach(c => specs.push([180, c[0], c[1]]));
+  for (const [angle, cx, cy] of specs) {
+    for (let tries = 0; tries < 20000; tries++) {
+      const b = drawShapeOn(rnd, [2, 3], 1);
+      const quarter = rnd() < 0.5 ? 90 : -90;   // the quarter turn a 180° question offers in place of "the wrong direction"
+      if (!b || !shapeOnGrid(b.shape)) continue;
+      const correct = rotateShape(b.shape, cx, cy, angle);
+      if (!shapeOnGrid(correct) || sameShape(correct, b.shape)) continue;
+      if (ROTATION_QUESTIONS.some(q => sameShape(q.shape, b.shape))) continue;   // no shape is asked about twice
+
+      const wrongs = generateWrongRotations(b.shape, cx, cy, angle, quarter);
+      // Filter out wrongs that match correct or don't fit
+      const validWrongs = wrongs.filter((w, k) => shapeFits(w) && !shapesEqual(w, correct) &&
+        !shapesEqual(w, b.shape) && !wrongs.slice(0, k).some(v => shapesEqual(v, w)));
+      if (validWrongs.length < 3) continue;   // redrawn, not dropped
+
+      // +90 is anticlockwise on this y-up grid (rotatePoint); it was labelled clockwise until 4 Oct 2026.
+      const dirLabel = angle === 90 ? '90\u00b0 anticlockwise' : angle === -90 ? '90\u00b0 clockwise' : '180\u00b0';
+      ROTATION_QUESTIONS.push({
+        shape: b.shape,
+        cx: cx, cy: cy,
+        angle: angle,
+        correct: correct,
+        wrongs: validWrongs,
+        desc: `Rotate ${dirLabel} about (${cx},${cy})`,
+        type: b.type
+      });
+      break;
+    }
+  }
+})();
+
+// Translations: every move appears once, so no two questions read the same. Twelve in one direction only (three each
+// of right, left, up and down), twenty in two (five for each pair of directions).
+(function buildTranslationQuestions() {
+  const rnd = seededRandom(15112027);
+  const moves = [
+    [2,0],[4,0],[5,0], [-1,0],[-3,0],[-4,0], [0,1],[0,3],[0,4], [0,-2],[0,-3],[0,-5],
+    [2,1],[1,3],[3,2],[4,1],[2,4], [-1,3],[-3,1],[-2,2],[-4,3],[-2,5],
+    [3,-1],[1,-2],[2,-3],[4,-2],[5,-1], [-3,-2],[-1,-3],[-2,-1],[-4,-4],[-1,-5]
+  ];
+  for (const [dx, dy] of moves) {
+    for (let tries = 0; tries < 20000; tries++) {
+      const c = drawShapeOn(rnd, [2, 3], 1);
+      if (!c || !shapeOnGrid(c.shape)) continue;
+      if (!shapeOnGrid(c.shape.map(([x,y]) => [x + dx, y + dy]))) continue;
+      if (TRANSLATION_QUESTIONS.some(q => sameShape(q.shape, c.shape))) continue;   // no shape is asked about twice
+      const across = dx ? Math.abs(dx) + (dx > 0 ? ' right' : ' left') : '';
+      const upDown = dy ? Math.abs(dy) + (dy > 0 ? ' up' : ' down') : '';
+      TRANSLATION_QUESTIONS.push({ shape: c.shape, desc: 'Translate ' + [across, upDown].filter(Boolean).join(' and '), dx: dx, dy: dy, type: c.type });
+      break;
+    }
+  }
+})();
+
 // ── GAME STATE ──
 let mode = 'translation'; // 'translation' | 'reflection' | 'rotation' | 'enlargement'
 let questions = [];
@@ -543,6 +552,8 @@ let totalAnswered = 0;
 let totalCorrect = 0;
 let questionIndex = 0; // 1-based across entire session
 const gameEl = document.getElementById('gameScreen');   // MaffsLock's container (canon 7.6.0)
+const nextMount = document.getElementById('btnRow');    // where MaffsNext puts Next after a wrong answer: the row the old button sat in
+const RIGHT_ADVANCE_MS = 1000;                          // a right answer moves on by itself (canon 7.6)
 let rotationOptions = []; // [{shape, label, correct}]
 let hoveredOption = -1;
 let selectedOption = -1;
@@ -650,6 +661,9 @@ function updateModePill() {
 
 // ── LOAD QUESTION ──
 function loadQuestion() {
+  // Nothing the last question set may act on this one: its advance timer, its Next.
+  MaffsLock.clearTimers();
+  if (window.MaffsNext) MaffsNext.clear(nextMount);
   // A new question: input on it is ignored for MaffsLock.FRESH_MS, so the second click of a double-click on a
   // mode card or Next, or a second Enter, cannot answer it (shape-shifter-t3-005).
   MaffsLock.fresh(gameEl);
@@ -667,7 +681,6 @@ function loadQuestion() {
 
   document.getElementById('feedbackBar').textContent = '';
   document.getElementById('feedbackBar').className = 'feedback-bar';
-  document.getElementById('nextBtn').style.display = 'none';
   document.getElementById('undoBtn').style.display = (mode === 'rotation') ? 'none' : 'inline-block';
 
   const instrBar = document.getElementById('instructionBar');
@@ -1062,7 +1075,7 @@ function checkVertexAnswer() {
 
   document.getElementById('scoreNum').textContent = totalCorrect;
   document.getElementById('undoBtn').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'inline-block';
+  moveOn(allCorrect);
 
   mfg('question_answered', {
     game_slug: 'shape-shifter', level: resolvedLevel,
@@ -1090,7 +1103,7 @@ function selectRotationOption(i) {
   }
 
   document.getElementById('scoreNum').textContent = totalCorrect;
-  document.getElementById('nextBtn').style.display = 'inline-block';
+  moveOn(correct);
 
   mfg('question_answered', {
     game_slug: 'shape-shifter', level: resolvedLevel,
@@ -1101,6 +1114,13 @@ function selectRotationOption(i) {
 }
 
 // ── NEXT QUESTION ──
+// Canon 7.6: a right answer moves on after a moment; a wrong one shows the correct shape and waits
+// for the student on MaffsNext.
+function moveOn(correct) {
+  if (correct) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);
+  else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion });
+}
+
 function nextQuestion() {
   qIndex++;
   if (qIndex >= questions.length) {
