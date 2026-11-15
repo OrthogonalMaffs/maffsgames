@@ -49,8 +49,7 @@ git -C ~/maffsgames worktree add -b codex/<task> ~/mg-<task> origin/main
 
 ## Checks, merge and cleanup
 
-- Before the first push, run `python -X utf8 scripts/check-changed.py`; SR-27's verifier-only exception applies. Report selected checks and CI deferrals. The cloud lane's rule is the next line. Queue details: `docs/rules/scripts.md`.
-- The cloud lane does not run check-changed.py. Before its first push it runs only the worst-case test where canon §7.8.4 requires it by hand, and the selftest of any script it changed; the PR's Gate is the check. The home lane keeps check-changed.py. Reason: canon §12, CLOUD-LEAN.
+- Neither lane runs check-changed.py before pushing; the PR's Gate is the check (local runs optional, never a merge condition). By hand first: personal-details scan of added lines, commits and PR body; skip-CI word check; selftest of touched scripts; §7.8.4 worst-case test. Canon §12, HOME-LEAN.
 - A Firebase rules change adds its REFUSE/ACCEPT cases to firebase/rules.test.mjs and runs the emulator suite before Jon deploys; the console's Rules Playground is optional, never the proof. See docs/firebase-rules-deploy.md; canon §12, RULES-EMULATOR-TEST.
 - On the maffs WSL machine, CI is the authority over local browser runs: local runs are unreliable (LOCAL-CHECKS row in `docs/todo.md`). Jon, 7 Nov; contract BACKLOG-ONE.
 - A check failing after your change may be fixed when its cause is understood and the fix stays in EXACT CHANGE's files. Stop if the same check still fails after your second fix, or its cause is unclear. Any other unexpected event: stop and report. Jon, 2 Nov; canon §12.

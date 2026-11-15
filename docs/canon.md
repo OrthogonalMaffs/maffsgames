@@ -86,7 +86,7 @@ Jon" list below. Where a ruling and a canon section say more, the section has th
 | SR-24 | **A counterexample must refute the statement as written, not a softer one.** For Spot the Error-type games; read with SR-16 and SR-18. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 5 Oct 2026, SR-14 fix batch) |
 | SR-25 | **Words, figure and key must agree.** A question's text, its drawn figure and its key describe the same thing (Circle Theorem Spotter Q19: the figure drew the point on the minor arc while the text said major; a centreCirc `inside` flag puts C inside the marked angle). SR-8 covers what follows a changed key; this covers text against figure. | 8 Oct 2026 | Jon, 8 Oct 2026 (contract CTX's "For Jon" list; first written in a CLAUDE.md handover, 3 Oct 2026, PR #11) |
 | SR-26 | **Growing banks.** "A bank that is too small, or holds duplicates, is fixed by growing it, never by swapping single items. Growth is generated from parameters, so duplicates cannot occur and every distractor comes from a nameable student error. New real-world contexts still stop for Jon. A game's bank is grown only after its verifier runs in CI, so every new item is checked as it arrives." | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
-| SR-27 | **Pre-push checks for verifier-only PRs.** "A PR whose only changes are a new or edited scripts/verify-<slug>.py, that game's findings file and the lane's handover runs, instead of check-changed.py: the verifier and its self-test; ci-groups.py --check; audit-register.py --check; check-verifier-coverage.py; check-context-size.py. CI runs the rest. A PR that also changes a game page, a shared asset or any other script runs check-changed.py as before." Why: the full run took about 30 minutes in the cloud container and reported only environment failures (missing esprima and WebKit, blocked KaTeX CDN), while CI minutes are free. | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
+| SR-27 | **Superseded by HOME-LEAN (15 Nov 2026; §12): neither lane runs check-changed.py before pushing, so this substitute list no longer applies. Kept as history.** **Pre-push checks for verifier-only PRs.** "A PR whose only changes are a new or edited scripts/verify-<slug>.py, that game's findings file and the lane's handover runs, instead of check-changed.py: the verifier and its self-test; ci-groups.py --check; audit-register.py --check; check-verifier-coverage.py; check-context-size.py. CI runs the rest. A PR that also changes a game page, a shared asset or any other script runs check-changed.py as before." Why: the full run took about 30 minutes in the cloud container and reported only environment failures (missing esprima and WebKit, blocked KaTeX CDN), while CI minutes are free. | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, VERIFIERS-20) |
 | SR-28 | **Algebraic terms divide as a whole.** A term such as 2x² is one object: implied multiplication binds tighter than ÷, so 6x⁷ ÷ 2x² means division by 2x². Such stems are not ambiguous and need no brackets; SR-17 does not apply. A stem is ambiguous only if it reads two ways under this convention (for example ÷ followed by a sum or a bracket). | 12 Oct 2026 | Jon, 12 Oct 2026 (chat, ruling on index-laws-v20-001) |
 | SR-29 | **A listing names who a game is for, not a version of it.** A card or roster row may list an audience that a game's single bank suits, beside the level it was written for, provided the game offers that audience no separate level, level selector or board. The listing names who the game is for, not a version of it. A game that offers a level must serve content for it. This narrows "A level that serves another level's items is not listed as that level" (recorded with SR-16 to SR-20, below): read the two together. `scripts/check-levels.py` holds the permitted listings in `AUDIENCE_LISTINGS` and fails if one gains a level selector or a separate board. | 13 Oct 2026 | Jon, 13 Oct 2026 (level listings) |
 | SR-30 | **New builds ship checked.** A new game, room, mode or stage has its verifier running in CI in its first PR; it enters every shared check's MIGRATED list directly (theme, answer lock, levels); it has a findings file (rooms: docs/audits/findings/<slug>.yml, accepted by audit-register.py since AUDIT-ROOMS). A live wrong answer on an existing game outranks any build. One new build in flight at a time alongside improvement work. (Replaces the build freeze, lifted the same day.) | 15 Oct 2026 | Jon, 15 Oct 2026; §0.2 |
@@ -1876,9 +1876,14 @@ and is not edited by fix PRs.
 - **One-off exception, 9 Oct 2026: the cloud lane edited `scripts/ci-groups.py`** to add group E2 (Jon's approval,
   after #211 turned main red with group E at 9m04s of 9m). It set no precedent: CI-BALANCE (#220) replaced hand-made
   groups with packing from measured times (§7.8.1), and `scripts/ci-groups.py` is home-lane CI work again.
-- **Before the first push of every PR:** `python scripts/check-changed.py` (one PR on 7 Oct 2026 cost three
-  runs without it).
-- **Which lane runs it (CLOUD-LEAN, Jon 3 Nov 2026):** the home lane runs `check-changed.py` before the first push; the cloud lane follows AGENTS.md, no local suite (reasons in §12).
+- **Before the first push (HOME-LEAN, Jon 15 Nov 2026):** neither lane runs `check-changed.py`; the PR's Gate is the
+  check. By hand before the first push: the personal-details scan of the added lines, the commit messages and the PR
+  body; the skip-CI word check; the selftest of any script the change touches; the worst-case test where §7.8.4
+  requires it. `check-changed.py` stays as an optional local tool for a quick answer on a few checks, never a merge
+  condition. Reasons in §12, CLOUD-LEAN and HOME-LEAN.
+- **History:** from 4 Oct 2026 every PR ran `python scripts/check-changed.py` before its first push (one PR on 7 Oct
+  2026 cost three runs without it). That saving no longer applies: CI minutes are free (the repository is public).
+  CLOUD-LEAN (3 Nov 2026) dropped the local run for the cloud lane, HOME-LEAN (15 Nov 2026) for the home lane.
 - **Relisting a fixed game** is a home-lane docs PR, batched with others.
 - **Contracts are kept verbatim, outside the start-up load** (Jon, 8 Oct 2026, contract CONTRACTS-FOLDER; after a
   `/clear` wiped the cloud lane's only copy of three contracts, and the repo held summaries only). On receipt, each
@@ -3326,7 +3331,8 @@ every cloud session had to re-learn it.
   missing) before CI runs the same checks without them. CI minutes are free (the repository is public), so the local run
   was a slower, noisier copy of the Gate. Jon ruled it out for the cloud lane on 2 Nov; it stood as a handover note until
   this contract. What remains by hand: the worst-case test where §7.8.4 needs it, and the selftest of any script the
-  change touches. The home lane keeps check-changed.py, and SR-27 still describes the home lane's verifier-only case.
+  change touches. The home lane kept check-changed.py, and SR-27 described its verifier-only case, until HOME-LEAN
+  (below, 15 Nov 2026) replaced both: neither lane runs it now.
 - **A fresh context is a new session.** `/clear` empties the conversation but keeps the session's container and the clone
   it started with. On 3 Nov a session cleared with `/clear` reloaded Sunday 1 Nov's rules from its original checkout
   (0925c2fb, before RULEBOOK merged) and failed the load test; a new session, cloned that day, passed it. So when Jon asks
@@ -3342,6 +3348,27 @@ every cloud session had to re-learn it.
   jobs>`, `NOT FINISHED after <n>s` or `NO RUN FOUND`, and exit 0 only for green. The guard is not changed by it. Its
   selftest covers all four outcomes, and a watch planted to trust the run's own status (green while a job still runs) is
   caught.
+
+## HOME-LEAN: neither lane runs check-changed.py before pushing (Jon, 15 Nov 2026)
+
+The reasons for AGENTS.md's pre-push line. CLOUD-LEAN (above) took the local suite away from the cloud lane; this takes
+it away from the home lane too, so the PR's Gate is the check for both.
+
+- **The cost.** On ESC-BAND-SLIM (15 Nov), a change to index.html selected 260 checks. check-changed.py had run 194 of
+  them in 48 minutes, with about an hour to go: about 110 minutes before the PR could exist, after which the Gate runs
+  the same checks in CI in parallel. It was stopped at 203 of 260, with none failed. CI minutes are free (the
+  repository is public), so the local run was a slower copy of the Gate, as it was in the cloud.
+- **Jon's rulings.** 15 Nov 18:12, on that report: "are we going overboard on the checks ?" 15 Nov 18:13, to: the home
+  lane stops running check-changed.py before pushing and the PR's Gate is the check, as for the cloud lane since
+  CLOUD-LEAN; by hand before the first push it keeps the personal-details scan, the skip-CI word check, the self-test of
+  any script it changed and any worst-case test canon §7.8.4 requires: "yes please, taking 2 hours for a check is tooo
+  much". In force from 18:15.
+- **What stays by hand, before the first push, in both lanes:** the personal-details scan of the added lines, the commit
+  messages and the PR body; the skip-CI word check (a squash copies the PR text into main's commit); the selftest of any
+  script the change touches; the worst-case test where §7.8.4 requires it.
+- **What does not change.** check-changed.py stays as an optional local tool, for a quick answer on a few checks; it is
+  never a merge condition. Neither merge-pr.py nor the workflow reads its output. SR-27 (§0.3), its verifier-only
+  substitute list, is superseded and kept as history.
 
 ## MERGE-ROUTE and CLOSE-OUTS (Jon, 10 Nov 2026)
 

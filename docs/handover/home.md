@@ -16,6 +16,40 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): HOME-LEAN (neither lane runs check-changed.py before pushing)
+
+Claude Code (home lane), worktree `~/mg-home-lean`, branch `claude/home-lean`; contract `docs/handover/contracts/2026-11-15-home-lean.md`. The first commit carries ESC-BAND-SLIM's close-out (merge line below, contract to history).
+
+- **AGENTS.md:** the two pre-push lines (home runs check-changed.py; cloud does not) are one rule for both lanes: the PR's Gate is the check, local runs are optional and never a merge condition, and the by-hand list is the personal-details scan, the skip-CI word check, the selftest of touched scripts and the §7.8.4 worst-case test. 299 bytes.
+- **Canon:** §7.8's pre-push and "which lane" lines carry the new rule, with the 7 Oct note kept as history (CI minutes are free). §12 has a HOME-LEAN section after CLOUD-LEAN (Jon's two rulings, the measured cost, the by-hand list); CLOUD-LEAN's home-lane line now points to it. SR-27 is marked superseded, its text kept.
+- **docs/rules/scripts.md:** its SR-27 pointer now says check-changed.py is optional and SR-27 is history. CLAUDE.md has no such line.
+- Not run: check-changed.py (this ruling). By hand: the personal-details scan, the skip-CI word check, check-context-size.py.
+- todo: none.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-15 (home): ESC-BAND-SLIM (the homepage escape-rooms band down to three rooms; loop cards on /printables/)
+
+Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-slim`; contract `docs/handover/contracts/2026-11-15-esc-band-slim.md`, with Jon's 17:03 follow-up (the loop bundle) in the PR body. The first commit carries PRINTABLES-PAGE's close-out: the merge line above, and the contract moved to history.
+
+- **The band** (index.html) now shows three rooms, one per star band, in hub order and with today's markup: Library Jam, The Great Hamster Heist, The Rugby Mud Bath. The other eleven cards are gone, and so is the "New this term" flag with its CSS. The heading, lede, facts and star key are unchanged.
+  - Above 768 px the three cards sit in one row, each with its picture beside its text (CSS only). At 1280 px the band is 487 px tall; it was 1520 px, so it is now 32%. Phones stack the cards as before.
+  - "Printable class packs →" (to /printables/, `data-mfg-item="printables"`) now sits after "Open all fourteen rooms →".
+  - The band carries `data-room-count="14"`, and the phone summary reads that, not the number of cards: it still says "14 rooms". The toggle reads "Show rooms" / "Hide rooms".
+- **check-escape-rooms.py, front page:** "a card for every live room, in the hub's order" is replaced. The band must now show exactly one card per star band, each live and carrying the right chip, in hub order (a subsequence of the hub's). data-room-count must equal the number of live rooms, and the lede's "Fourteen" and the button's "fourteen" must be that number as a word.
+  - Seven plants are caught: a fourth card, two cards in one band, a band missing, cards out of hub order, a wrong data-room-count, and a wrong number word in the lede and in the button.
+  - The hub's rules and plants are unchanged.
+- **Other checks:** test-escape-credit still passes on the three cards without loosening. No other check asserts a card per room.
+- **/printables/:** "Printable games" now has the loop-cards line, two cards and "More decks coming soon.":
+  - Six Sevens, Bruv (Free; Tes and play links);
+  - the £5 loop-card bundle (Tes link only).
+  - Both Tes links returned 200 with their own listing titles.
+- todo: PRINTABLES-PAGE is closed to todo-done; ESC-BAND-ROTATION is added (later, research first).
+- MERGED 15 Nov, 18:28 UTC, as d5381e8 (#786). Main on the merge commit: check-site 43746949609 success, phone-fit-full 43746949659 success; live checked. end-task removed claude/esc-band-slim. Local check-changed was stopped at 203 of 260 (none failed) on Jon's 18:15 ruling (HOME-LEAN).
+
+Record: agent Claude Code; review cycles 0; amendments 1 (Jon 17:03, the loop bundle card); usage n/a.
+
 ## 2026-11-15 (home): PRINTABLES-PAGE (/printables/, the escape-room packs on Tes)
 
 Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printables-page`; contract `docs/handover/contracts/2026-11-15-printables-page.md`. The first commit carries MONOTONIC-CLOCK's close-out (merge line above, contract and Amendment 1 to history).
@@ -35,7 +69,7 @@ Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printab
   - `printables/` is in check-publish-scope's SITE and in check-content-safety's GLOBS. Both add coverage, as for `ugh-stats/`, and neither is an exception.
   - data/games.json is not touched. check-meta needs no record, because no portal card links to the page.
 - todo: the PRINTABLES-PAGE row is updated (loop cards still to come), and a new row PRINTABLES-CORE is added.
-- MERGED: pending.
+- MERGED 15 Nov, 16:41 UTC, as a892547 (#784). Main on the merge commit: check-site 43736934812 success, phone-fit-full 43736934783 success. Local check-changed: 260 checks passed. The branch was rebased onto QF-HCF-FIRST (#783) before the push; the only conflict was the /updates/ November list. Leftover worktree ~/mg-monotonic-closeout and branch claude/monotonic-clock-closeout (1435f511, never pushed) removed by hand on Jon's ruling, after its diff was shown to reverse-apply cleanly on main; end-task removed claude/printables-page.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
@@ -101,37 +135,4 @@ Claude Code (home lane), worktree `~/mg-ugh-1dp`, branch `claude/ugh-stats-case1
 
 - The 0.1 rule cannot bite before about 20 March 2027: 10 or more answers in at most 200 days is always 0.05 a day or more. Its plant therefore lets a game with 1 answer through.
 - MERGED 14 Nov as 51bc881 (#768). Main on the merge commit: check-site 43646870538 success, phone-fit-full 43646870632 success. The local run's one failure, Shared answer lock in the parallel run, passed when rerun alone.
-
-## 2026-11-14 (home): UGH-STATS-QUESTIONS
-
-Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/history/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
-
-- Launch dates: 108 of 126 came from the archive's history, read from the local clone `E:\jon\maffsgames` (remote `maffsgames-archive`; `gh` cannot see that repo from WSL) through a saved `git log` (`--archive-log`). None was left at 2026-10-02. A new game adds its own line; `check-ugh-stats.py` LAUNCH fails without it.
-- Answers send `stats_question_answered` (level case1 to case4). `doPost` stores any event name and `mfg()` passes it unchanged, so no Apps Script change.
-- Case 1 Q2's game 2 is Factor Theorem only when it has 10 or more answers; on 14 Nov it had 9, so the page asks about the lowest-answered game with 10 or more that has a launch date (It's on Sale!), named from its page's `<h1>`.
-- Typed answers are worked in whole numbers (`UghStats.divide`); the working shows more decimal places when 1 place would read as a half that rounds the other way, so the working never disagrees with the answer.
-- `.btn[hidden]` added: `.btn`'s `display` had overridden `hidden`, so a hidden button still showed.
-- todo CONTENT-SAFETY-UGH-STATS: the SR-14 scan does not read `ugh-stats/`.
-- MERGED 14 Nov as 8f2b84f (#766), after Project Claude's 21:25 follow-up (game 2 only an A level / Further Maths / Level 4 game, levels read from the home page's cards; Q3 names them) and Jon's ruling on the Case 4 place name ("Generalise it": the south-west of England, CSV column `daylight_hours`). Main on the merge commit: check-site 43644118236 and phone-fit-full 43644118171, both success.
-
-## 2026-11-14 (home): UGH-STATS-PAGES
-
-Claude Code (home lane), worktree `~/mg-ugh-stats`, branch `claude/ugh-stats-pages`; contract `docs/history/contracts/2026-11-14-ugh-stats-pages.md`. Four new pages under `/ugh-stats/` (landing, `half-our-games/`, `charts/`, `whos-playing/`), one loader and chart drawer `schools/assets/ugh-stats.js`, shared look `ugh-stats/ugh-stats.css`, gate `scripts/check-ugh-stats.py` (ci-line), sitemap, /updates/ entry, one canon line (section 3).
-
-- Case 1's ten groups cut at floor(n i / 10): that, not "remainder from the top", reproduces the 12 November figures from that day's file (commit 0e426612). Quartiles are the exclusive method.
-- The loader uses XMLHttpRequest: `serve-stubbed.py` replaces `window.fetch` with a stub that refuses.
-- Jon's rulings, 14 Nov: "Ugh, stats" joins the one canonical footer on every page (`check-footer.py` `_LINKS`, `apply-footer.py`), overriding the contract; the landing page's "Figures below 10 are hidden" sentence is deleted and Case 2's can't-tell box gains "Figures below 10 are shown as <10: too small to mean anything."; the deviations are accepted; `ci-deps.py` is todo CI-DEPS-UGH-STATS, not changed.
-- MERGED 14 Nov as 84848b8 (#763). Main on the merge commit: check-site run 43605958933 success, phone-fit-full 43605959013 success. The local check-changed run (248 checks, 6,522 s) failed 37: Publish scope was real (`ugh-stats/` added to SITE in `check-publish-scope.py`); the other 36 were browser verifiers timing out on a loaded machine, not rerun locally, and the Gate passed them. Phone screenshots: `docs/screens/ugh-stats/`. Open: Jon edits the /updates/ entry; todo CI-DEPS-UGH-STATS.
-
-## 2026-11-14 (home): BACK-LINK-START
-
-Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-link-start`; PR #757; contract `docs/history/contracts/2026-11-14-back-link-start.md`. Nineteen games showed no link back to the games list on their start screen (the only ones were in a header hidden until Start, or on the results screen). Each now has `<a href="../../" class="back-link">← Back to Games</a>` as the first element of `#startScreen`, on the page's own `.back-link` rule; nothing else on any page changed. New gate `scripts/check-start-back-link.py` (ci-line, `--selftest && --check`): every `games/<slug>/index.html`, loaded at 390 × 844, must show a visible link to the site root or `/games/`; 7 plants fail, 4 controls pass.
-
-- A standalone script, not a second gate in `measure-phone-fit.py` (the contract allowed either): that script runs only in `phone-fit-full.yml` (nightly, and after a push to main that changes a shared path), never on a pull request, and loads the 109 roster games, not all 111 pages. The ci-line runs in the Gate whenever a game or a shared asset changes.
-- On main before the edits the gate failed exactly the contract's 19 and passed the other 92; after, 111 pass.
-- On four pages (better-value, expected-damage, formula-plug-in, new-shapes) the page's own phone rule for `.back-link` draws the new link 20 px and 44 px tall, centred; on the other 15 it is 13 px, left. Style is todo 3.20's.
-- Phone fit for the 19, main against the branch, three modes: every asking screen identical; Next after a wrong answer matched on quiet reruns (the driver's reading moves between runs of one tree). Start screens (report only): two first controls moved below the fold (expectation-station at 390 × 844, spot-the-muppet at 375 × 667); the table is in the PR.
-- Merged as c6c9385 (#757) by merge-pr.py on a green Gate, 14 Nov: main's check-site run 43575260622 success; phone-fit-full 43575260595 success, its measure jobs skipped because no shared path changed (the nightly run measures every game). check-changed.py before the push: 90 checks, 88 passed; verify-negative-number-line.py and verify-decimal-detective.py failed locally and fail the same way on clean main (todo LOCAL-CHECKS); the Gate passed both. Done: merged and live; Project Claude's review and Jon's sample play follow. Cleanup: end-task.py removed the branch and worktree.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 

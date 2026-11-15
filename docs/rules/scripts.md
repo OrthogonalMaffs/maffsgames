@@ -4,7 +4,7 @@ Python must be at least 3.10 (`write_text`'s `newline=`); CI pins 3.12, enforced
 
 Local check planning uses two queues: heavy checks (CI time at least 60 seconds or internally concurrent browser work) run one at a time; six light checks may run beside them. Never run heavy checks together. Reason: canon §12, RULEBOOK.
 
-Heavy checks reached only through shared files are deferred to CI and listed with the selecting file. CI's Gate still requires them; `--all-heavy` runs them locally and `--full` selects the whole local suite. SR-27 in canon specifies the verifier-only alternative checks.
+Heavy checks reached only through shared files are deferred to CI and listed with the selecting file. CI's Gate still requires them; `--all-heavy` runs them locally and `--full` selects the whole local suite. check-changed.py is optional: neither lane runs it before pushing (AGENTS.md; canon §12, HOME-LEAN), and SR-27's verifier-only list is history.
 
 Every PR runs the site-wide checks; main, weekly and manual full runs execute all verifiers. CI selection, timings, budgets, median recording and sharding are documented in canon §7.8.1. New limits warn until main meets them; use canon §7.8.4 for gate work and its worst-case test.
 
