@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones) |
+# ci-line: Negative Number Line (keys recomputed, every placement marked by real taps, every Calculate option on the line, every target reached on three phones) |
 """Negative Number Line: every key recomputed, Place It marked by exact match through real taps,
 and every target reachable on a phone.
 
@@ -15,8 +15,17 @@ The bank is read from the live page, then:
   Place It: targets distinct, on the line, on the 0.5 grid (a target off the grid can never be
     placed).
   Order Them: four distinct numbers on the line; the key is them sorted (Fraction).
-  Calculate: the key is start + val or start - val; start and key on the line. (Distractors that
-    lie off the line are logged LOW in the audit and not checked here.)
+  Calculate: the key is start + val or start - val; start and key on the line.
+  Calculate options (15 Nov 2026; the audit's LOW, todo 1.51: until then the wrong options were kept
+    to -12..12 on a line drawn from -10 to 10, so 4 - 7 could offer 11): the line's ends are read
+    from the ticks the page draws; for every item, every wrong answer the page can offer
+    (calcWrongs) is a whole number on that line, not the key, no two alike, and there are at least
+    three, so no question is padded; then every item is drawn with SEEDS seeded draws and the four
+    buttons read back: four, all different, the key once, every one on the line, each showing its
+    own value.
+  Moving on (canon 7.6), for Place It, Order Them and Calculate: a right answer shows "Correct!",
+    mounts no Next and moves on by itself after RIGHT_ADVANCE_MS (1000); a wrong answer shows the
+    answer and MaffsNext's Next, stays put, and moves on once when Next is pressed.
   The helper, in the page: snapped placements match exactly (0.1 + 0.2 counts as 0.3; 0 and 1 do
     not count as 0.5; nothing placed is false); any other mode ('continuous') throws "must snap (canon
     §7.1.2)": the mode was removed on Jon's ruling on audit DD F4 (5 Oct 2026).
@@ -26,15 +35,19 @@ The bank is read from the live page, then:
     marker by 0.5 (and nothing before a placement, nor past an end).
   Phones, in Chromium on a touch profile at 320x568, 375x667 and 390x844: the step buttons are at
     least 44px each way and below the line; the marker's value is shown above the line, at least
-    16px; Confirm, and after a wrong answer the feedback and Next, end at least 8px above the fold in
-    the real fonts (canon 7.6.1; FONT-FIT); for every target, one tap 1.5 units away and then the step
-    buttons reach the target, and Confirm marks it right.
+    16px; Confirm, and after a wrong answer the feedback and Next (the MaffsNext control), end at
+    least 8px above the fold in the real fonts (canon 7.6.1; FONT-FIT); for every target, one tap 1.5
+    units away and then the step buttons reach the target, and Confirm marks it right. (Only Place
+    It's wrong-answer screen is held to the fold: Order Them's and Calculate's Next is below it at
+    320x568, as it was with the old button; the phone-fit lists carry the game.)
   The session is never finished, so nothing is submitted; every request off the stub server is
   aborted.
 A fault-injection self-test must FAIL each time: a 0.5 tolerance planted in the helper (a patched
 number-line.js served in place of the file, so a game marking anywhere else would not be caught),
-and wrong Calculate and Order Them keys (patched copies of the bank). It runs unless --no-selftest.
-No file is touched.
+wrong Calculate and Order Them keys (patched copies of the bank), and three faults planted in a
+served copy of the page (scripts/plant_common.py: a plant that does not apply is a STALE PLANT and
+fails the run): the wrong options kept to -12..12 again (4 - 7 offers 11), a right answer that waits,
+and a wrong answer that moves on by itself. It runs unless --no-selftest. No file is touched.
 
     python scripts/verify-negative-number-line.py [--verbose] [--no-selftest] [--chromium PATH]
 """
@@ -47,6 +60,7 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import plant_common as pc  # noqa: E402
 
 SLUG = 'negative-number-line'
 COUNTS = {'PLACE': 15, 'ORDER': 15, 'CALC': 15}
@@ -54,9 +68,26 @@ LO, HI = -10, 10
 POSITIONS = [F(k, 2) for k in range(2 * LO, 2 * HI + 1)]
 PHONES = [(320, 568), (375, 667), (390, 844)]
 MARGIN = 8   # px between Confirm, the feedback or Next and the fold (the footer's top), every phone (FONT-FIT, Jon 10 Oct 2026)
+SEEDS = range(1, 41)   # seeded draws of each Calculate item's options
+RIGHT_ADVANCE_MS = 1000
 HELPER = 'schools/assets/number-line.js'
+PAGE = 'games/%s/index.html' % SLUG
 EXACT_RULE = 'return Math.abs(opts.placed - opts.target) < EPS;'
 PLANTED_RULE = 'return Math.abs(opts.placed - opts.target) <= 0.5;'
+
+
+# Faults planted in a served copy of the page: (name, the page's text, the planted text).
+PAGE_PLANTS = [
+    ('Calculate wrongs kept to -12..12 (an option at 11)',
+     'w !== correct && w >= LINE_MIN && w <= LINE_MAX);',
+     'w !== correct && w >= -12 && w <= 12);'),
+    ('a right answer waits (no advance)',
+     'if (correct) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);\n  else MaffsNext.wrong(',
+     'if (correct) { /* planted: waits */ }\n  else MaffsNext.wrong('),
+    ('a wrong answer moves on by itself (no Next)',
+     'else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion });',
+     'else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);'),
+]
 
 
 class Report:
@@ -124,13 +155,44 @@ JS_HELPER = '''() => {
   catch (e) { out.cont = e.message; }
   return out; }'''
 HELPER_WANT = [True, False, False, False, True, False]
+# Math.random replaced by mulberry32 from a seed, so a draw of the options can be repeated.
+JS_SEED = '''(seed) => { let a = seed >>> 0; Math.random = function () {
+  a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }'''
+JS_LOAD_Q = '''(q) => { questions = [q, q]; qIndex = 0; showQuestion(); }'''
+JS_TICKS = '''() => [...document.querySelectorAll('#calcNL .nl-tick-label, #calcNL .nl-zero-label')]
+  .map(t => t.textContent)'''
+JS_OPTIONS = '''() => [...document.querySelectorAll('#calcOptions .calc-option')]
+  .map(b => ({val: b.dataset.value, text: b.textContent}))'''
+JS_NEXT_STATE = '''() => ({q: qIndex, next: document.querySelectorAll('#gameScreen .maffs-next').length,
+  feedback: document.getElementById('feedbackBar').textContent.trim(),
+  shown: document.getElementById('feedbackBar').classList.contains('show')})'''
+# Answer the question on screen right (ok) or wrong, by the game's own controls.
+JS_ANSWER = '''(ok) => { const q = questions[qIndex];
+  if (q.type === 'place') { setPlaced(ok ? q.data : (q.data >= 0 ? q.data - 1 : q.data + 1));
+    document.getElementById('placeConfirm').click(); return; }
+  if (q.type === 'order') { const want = ok ? q.data.answer : [...q.data.answer].reverse();
+    want.forEach(v => [...document.querySelectorAll('#sourceZone .order-tile')]
+      .find(t => parseFloat(t.dataset.value) === v).click());
+    document.getElementById('orderCheck').click(); return; }
+  [...document.querySelectorAll('#calcOptions .calc-option')]
+    .find(b => (parseFloat(b.dataset.value) === q.data.answer) === ok).click(); }'''
 
 
-def open_page(pw, base, chromium, viewport, touch, patched_helper):
+def open_page(pw, base, chromium, viewport, touch, patched_helper, page_plant=None):
     browser = pw.chromium.launch(**({'executable_path': chromium} if chromium else {}))
     ctx = browser.new_context(viewport={'width': viewport[0], 'height': viewport[1]},
                               has_touch=touch, is_mobile=touch)
     ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)   # MaffsNext's 3 s floor: Next is pressed at once
+    planted = helper_js = None                   # a plant that does not apply raises StalePlant here, before anything is served
+    if page_plant:
+        name, old, new = page_plant
+        with open(os.path.join(HERE, '..', PAGE), encoding='utf-8') as f:
+            planted = pc.apply_plant(f.read(), old, new, name=name)
+    if patched_helper:
+        with open(os.path.join(HERE, '..', HELPER), encoding='utf-8') as f:
+            helper_js = pc.apply_plant(f.read(), EXACT_RULE, PLANTED_RULE, name='0.5 tolerance in the helper')
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
@@ -139,11 +201,10 @@ def open_page(pw, base, chromium, viewport, touch, patched_helper):
         url = r.request.url
         if not url.startswith(base):
             return r.abort()
-        if patched_helper and url.split('?')[0].endswith('/' + HELPER):
-            with open(os.path.join(HERE, '..', HELPER), encoding='utf-8') as f:
-                js = f.read()
-            assert js.count(EXACT_RULE) == 1, 'self-test patch out of date: %r' % EXACT_RULE
-            return r.fulfill(status=200, content_type='application/javascript', body=js.replace(EXACT_RULE, PLANTED_RULE))
+        if helper_js is not None and url.split('?')[0].endswith('/' + HELPER):
+            return r.fulfill(status=200, content_type='application/javascript', body=helper_js)
+        if planted is not None and url.split('?')[0].endswith('/games/' + SLUG + '/'):
+            return r.fulfill(status=200, content_type='text/html; charset=utf-8', body=planted)
         return r.continue_()
     page.route('**/*', route)
     page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
@@ -151,6 +212,12 @@ def open_page(pw, base, chromium, viewport, touch, patched_helper):
     page.wait_for_function('typeof PLACE_QUESTIONS !== "undefined" && window.MaffsNumberLine', timeout=8000)
     page.evaluate('startGame()')
     return browser, page, errors
+
+
+def close(browser, page):
+    """Close, with no right answer's advance timer left to run: the session is never finished."""
+    page.evaluate('MaffsLock.clearTimers()')
+    browser.close()
 
 
 def desktop_pass(rep, page, targets, verbose):
@@ -175,6 +242,94 @@ def desktop_pass(rep, page, targets, verbose):
     if verbose:
         print('  %d clicks marked at 1000px' % clicks)
     return clicks
+
+
+def calc_options_pass(rep, page, calc):
+    """Every Calculate item: the wrong answers the page can offer, then SEEDS seeded draws of its four
+    buttons, all against the line the page draws. Returns the number of buttons read."""
+    page.evaluate(JS_LOAD_Q, {'type': 'calc', 'data': calc[0]})
+    ticks = [F(t) for t in page.evaluate(JS_TICKS)]
+    if not ticks or (min(ticks), max(ticks)) != (LO, HI):
+        rep.fail('Calculate', 'line', 'the drawn line runs %s to %s, expected %d to %d'
+                 % (min(ticks) if ticks else None, max(ticks) if ticks else None, LO, HI))
+        return 0
+    lo, hi = min(ticks), max(ticks)
+
+    def on_line(v):
+        return lo <= v <= hi and v.denominator == 1
+
+    read = 0
+    for i, q in enumerate(calc, 1):
+        where = 'Calculate %d (%s %s %s)' % (i, q['start'], q['op'], q['val'])
+        key = F(str(q['answer']))
+        pool = [F(str(w)) for w in page.evaluate('(q) => calcWrongs(q)', q)]
+        for w in pool:
+            if not on_line(w):
+                rep.fail(where, 'wrong answer', '%s can be offered, and is not on the line (%s to %s)' % (fmt(w), lo, hi))
+        if key in pool:
+            rep.fail(where, 'wrong answer', 'the key %s is among the wrong answers' % fmt(key))
+        if len(set(pool)) != len(pool):
+            rep.fail(where, 'wrong answer', 'a wrong answer is repeated: %s' % [fmt(w) for w in pool])
+        if len(pool) < 3:
+            rep.fail(where, 'wrong answer', 'only %d wrong answers on the line, so the question is padded' % len(pool))
+        for seed in SEEDS:
+            page.evaluate(JS_SEED, seed * 1000 + i)
+            page.evaluate(JS_LOAD_Q, {'type': 'calc', 'data': q})
+            opts = page.evaluate(JS_OPTIONS)
+            vals = [F(o['val']) for o in opts]
+            read += len(opts)
+            tag = 'seed %d options %s' % (seed, [o['text'] for o in opts])
+            if len(vals) != 4 or len(set(vals)) != 4:
+                rep.fail(where, 'options', 'not four different options: %s' % tag)
+            if vals.count(key) != 1:
+                rep.fail(where, 'options', 'the key %s is offered %d times: %s' % (fmt(key), vals.count(key), tag))
+            for v, o in zip(vals, opts):
+                if not on_line(v):
+                    rep.fail(where, 'options', '%s is offered, and is not on the line (%s to %s): %s' % (fmt(v), lo, hi, tag))
+                if o['text'] != fmt(v):
+                    rep.fail(where, 'options', 'the button for %s reads %r' % (fmt(v), o['text']))
+    return read
+
+
+def advance_pass(rep, page, bank):
+    """Canon 7.6 for each question type: a right answer moves on by itself, a wrong one waits on Next."""
+    got = page.evaluate('RIGHT_ADVANCE_MS')
+    if got != RIGHT_ADVANCE_MS:
+        rep.fail('moving on', 'right answer', 'RIGHT_ADVANCE_MS is %s, expected %d' % (got, RIGHT_ADVANCE_MS))
+    samples = (('place', bank['PLACE'][0]), ('order', bank['ORDER'][0]), ('calc', bank['CALC'][0]))
+    for kind, data in samples:
+        where = {'place': 'Place It', 'order': 'Order Them', 'calc': 'Calculate'}[kind]
+        # Right: "Correct!", no Next, and the second question arrives by itself.
+        page.evaluate(JS_LOAD_Q, {'type': kind, 'data': data})
+        page.evaluate(JS_ANSWER, True)
+        st = page.evaluate(JS_NEXT_STATE)
+        if st['feedback'] != 'Correct!' or not st['shown']:
+            rep.fail(where, 'right answer', 'shows %r, expected "Correct!"' % st['feedback'])
+        if st['next']:
+            rep.fail(where, 'right answer', 'a Next control is mounted: a right answer must not wait (canon 7.6)')
+        if st['q'] != 0:
+            rep.fail(where, 'right answer', 'moved on before the feedback could be read')
+        try:
+            page.wait_for_function('qIndex === 1', timeout=RIGHT_ADVANCE_MS + 4000)
+        except Exception:
+            rep.fail(where, 'right answer', 'did not move on by itself within %d ms (canon 7.6)' % (RIGHT_ADVANCE_MS + 4000))
+        # Wrong: the answer and Next; it stays put for longer than a right answer takes; Next moves on once.
+        page.evaluate(JS_LOAD_Q, {'type': kind, 'data': data})
+        page.evaluate(JS_ANSWER, False)
+        st = page.evaluate(JS_NEXT_STATE)
+        if not st['shown'] or not st['feedback'] or st['feedback'] == 'Correct!':
+            rep.fail(where, 'wrong answer', 'shows %r, expected the answer' % st['feedback'])
+        if st['next'] != 1:
+            rep.fail(where, 'wrong answer', '%d MaffsNext controls, expected 1 (canon 7.6)' % st['next'])
+        page.wait_for_timeout(RIGHT_ADVANCE_MS + 500)
+        if page.evaluate('qIndex') != 0:
+            rep.fail(where, 'wrong answer', 'moved on by itself: a wrong answer waits for Next (canon 7.6)')
+        elif st['next'] == 1:
+            page.click('#nextMount .maffs-next')
+            after = page.evaluate(JS_NEXT_STATE)
+            if after['q'] != 1 or after['next'] or after['shown']:
+                rep.fail(where, 'wrong answer', 'Next left question %d, %d control(s), feedback %r'
+                         % (after['q'] + 1, after['next'], after['feedback']))
 
 
 def keys_pass(rep, page):
@@ -238,8 +393,15 @@ def phone_pass(rep, page, targets, size, verbose):
     x, y = page.evaluate(JS_X, float(F(str(targets[0])) + (1 if targets[0] < HI else -1)))
     page.touchscreen.tap(x, y)
     page.tap('#placeConfirm')
-    fold = page.evaluate('''() => ({fb: document.getElementById('feedbackBar').getBoundingClientRect().bottom,
-      next: document.getElementById('nextBtn').getBoundingClientRect().bottom, fold: innerHeight - 40})''')
+    fold = page.evaluate('''() => { const n = document.querySelector('#nextMount .maffs-next');
+      return {fb: document.getElementById('feedbackBar').getBoundingClientRect().bottom,
+              next: n ? n.getBoundingClientRect().bottom : null,
+              nextH: n ? n.getBoundingClientRect().height : 0, fold: innerHeight - 40}; }''')
+    if fold['next'] is None:
+        rep.fail(tag, 'fold', 'after a wrong answer there is no MaffsNext control to measure (canon 7.6)')
+        return
+    if fold['nextH'] < 44:
+        rep.fail(tag, 'fold', 'the Next control is %.0fpx tall, under 44px' % fold['nextH'])
     for name in ('fb', 'next'):
         if fold[name] > fold['fold'] - MARGIN:
             rep.fail(tag, 'fold', 'after a wrong answer the %s ends at %.0f, under %dpx above the fold %.0f (canon 7.6.1)'
@@ -279,15 +441,26 @@ def phone_pass(rep, page, targets, size, verbose):
         print('  %s: %d targets reached, %d step-button taps' % (tag, len(targets), presses))
 
 
-def run_page(rep, chromium=None, verbose=False, patched_helper=False):
-    """Returns (bank, clicks). The self-test run (patched_helper) does the desktop marking only."""
+def run_page(rep, chromium=None, verbose=False, patched_helper=False, page_plant=None):
+    """Returns (bank, clicks, option buttons read). A self-test run does only what its plant needs: the
+    desktop marking (patched_helper), or the Calculate options and the moving on (page_plant)."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
-            browser, page, errors = open_page(pw, base, chromium, (1000, 900), False, patched_helper)
+            browser, page, errors = open_page(pw, base, chromium, (1000, 900), False, patched_helper, page_plant)
             bank = page.evaluate('JSON.parse(JSON.stringify({PLACE: PLACE_QUESTIONS, ORDER: ORDER_QUESTIONS, '
                                  'CALC: CALC_QUESTIONS}))')
+            if not patched_helper:
+                read = calc_options_pass(rep, page, bank['CALC'])
+                advance_pass(rep, page, bank)
+                if verbose:
+                    print('  %d Calculate option buttons read (%d items, %d seeds each)' % (read, len(bank['CALC']), len(SEEDS)))
+            if page_plant:
+                close(browser, page)
+                for e in errors:
+                    rep.fail('page', 'error', e)
+                return bank, 0, read
             if not patched_helper:
                 h = page.evaluate(JS_HELPER)
                 for (p, t, got), want in zip(h['cases'], HELPER_WANT):
@@ -298,16 +471,16 @@ def run_page(rep, chromium=None, verbose=False, patched_helper=False):
             clicks = desktop_pass(rep, page, bank['PLACE'], verbose)
             if not patched_helper:
                 keys_pass(rep, page)
-            browser.close()
+            close(browser, page)
             if not patched_helper:
                 for size in PHONES:
                     browser, page, errs = open_page(pw, base, chromium, size, True, False)
                     phone_pass(rep, page, bank['PLACE'], size, verbose)
-                    browser.close()
+                    close(browser, page)
                     errors += errs
             for e in errors:
                 rep.fail('page', 'error', e)
-            return bank, clicks
+            return bank, clicks, 0 if patched_helper else read
     finally:
         proc.terminate()
         proc.wait()
@@ -340,9 +513,20 @@ def selftest(bank, chromium):
         a[0], a[1] = a[1], a[0]
     expect('wrong Order Them key (first two swapped)', order_key)
 
-    rep = Report()                                                              # the audit's F1, F2
-    run_page(rep, chromium, patched_helper=True)
-    record('0.5 tolerance planted in the helper', rep, [])
+    def page_run(name, **kw):
+        nonlocal ok
+        rep = Report()
+        try:
+            run_page(rep, chromium, **kw)
+        except pc.StalePlant as e:                                              # a plant that did not apply fails the run
+            ok = False
+            lines.append('  self-test %-42s %s' % (name[:42], e))
+            return
+        record(name, rep, [])
+
+    page_run('0.5 tolerance planted in the helper', patched_helper=True)        # the audit's F1, F2
+    for plant in PAGE_PLANTS:
+        page_run(plant[0], page_plant=plant)
     return ok, lines
 
 
@@ -358,7 +542,7 @@ def main():
     args = ap.parse_args()
 
     rep = Report()
-    bank, clicks = run_page(rep, args.chromium, args.verbose)
+    bank, clicks, read = run_page(rep, args.chromium, args.verbose)
     check_bank(rep, bank, args.verbose)
     for f in rep.fails:
         print('FAIL ' + f)
@@ -370,8 +554,8 @@ def main():
             print(ln)
         ok = ok and s_ok
     print('\n%s: %d FAIL(s); %d items (Order Them and Calculate keys recomputed), %d placements marked in '
-          'Chromium, every target reached on three phones' % ('PASS' if ok else 'FAILED', len(rep.fails),
-                                                              sum(len(v) for v in bank.values()), clicks))
+          'Chromium, %d Calculate option buttons read (every one on the line), every target reached on three '
+          'phones' % ('PASS' if ok else 'FAILED', len(rep.fails), sum(len(v) for v in bank.values()), clicks, read))
     return 0 if ok else 1
 
 
