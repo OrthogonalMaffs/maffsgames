@@ -27,7 +27,7 @@ Claude Code (home lane), worktree `~/mg-footer-no-support`, branch `claude/foote
 - **check-footer has no self-test.** Plants were run by hand on a copy instead: a page still carrying the Support link FAILS ("footer differs from the canonical markup"), and a page with its footer removed FAILS ("no footer").
 - No other check needs the link: check-site's 'buy me a coffee' is a skip-list entry, and verify-the-6-ps strips the footer before its emoji check.
 - /updates/: no line (a footer tidy). todo: none.
-- MERGED: pending.
+- MERGED 15 Nov as 8791910 (#789). Main on the merge commit: check-site 43753882335 success, phone-fit-full 43753882351 success; the live footer ends at Feedback and About keeps its coffee button. end-task removed claude/footer-no-support.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
