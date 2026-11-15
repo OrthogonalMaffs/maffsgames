@@ -80,8 +80,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 ## 2026-11-15 (cloud): ESSENTIALS-AUDIT-LEFTOVERS (`docs/handover/contracts/2026-11-14-essentials-audit-leftovers.md`; Jon's rulings 14 Nov 22:46 and 22:49)
 
 Agent Claude Code (cloud), branch `claude/keen-curie-uk4uep` from main a43c595. Three PRs in order, each merged before the next opens, each from current origin/main: 1 Negative Number Line, 2 Decimal Detective, 3 Shape Shifter. Each game is claimed in its PR's first commit and released in that PR.
-PR 1 (Negative Number Line): in progress. Claim commit 3921550; second commit carries #769's close-out (its entry below).
-Next: PR 1's page and verifier, its Gate, merge by the 10 Nov route (gh auth fails: "The token in GH_TOKEN is invalid"), main's two runs; then PR 2, then PR 3.
+PR 1 (Negative Number Line): #775 OPEN, merging on green. Claim commit 3921550 (released in the PR); second commit carries #769's close-out (its entry below).
+Done in #775: Calculate's wrong answers come only from the drawn line (`calcWrongs`; before, -12..12, so 4 of 15 items could offer 11, -11 or 12). The own Next button is gone: a right answer moves on after 1000 ms, a wrong one waits on MaffsNext, all three question types. `showQuestion()` clears the last question's timers, so a harness that loads a question directly (check-resit-fixes.py, the verifier) cannot be ended by a right answer's advance timer. The verifier reads every Calculate option against the line the page draws (2,400 buttons), checks the moving-on rule, and measures the fold on the MaffsNext control; six plants caught.
+Discovery: Order Them's and Calculate's Next is below the fold at 320x568 after a wrong answer (630 and 585 against 528; 624 and 579 on main with the old button): todo row NNL-PHONE-NEXT, not fixed here.
+Next: #775's Gate, merge by the 10 Nov route (gh auth fails: "The token in GH_TOKEN is invalid"), main's two runs; then PR 2 (Decimal Detective) from the new main, then PR 3 (Shape Shifter).
 
 ## 2026-11-14 (cloud): ANSWER-BOX-ART-SWAP (`docs/history/contracts/2026-11-14-answer-box-art-swap.md`; Jon's rulings 14 Nov 16:40 to 21:45)
 
