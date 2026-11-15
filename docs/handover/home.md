@@ -112,25 +112,3 @@ Claude Code (home lane), worktree `~/mg-back-link-start`, branch `claude/back-li
 
 Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
-## 2026-11-13 (home): LOOP-PAGE1 (Amendment 1)
-
-Claude Code (home lane), worktree `~/mg-loop-page1`, branch `claude/loop-page1`; PR #754; contract `docs/history/contracts/2026-11-13-loop-page1.md`. Start art for Six Sevens, Bruv and Like Terms Collector (`games/<slug>/assets/start.webp`, 1600 × 873, 91,232 and 176,708 bytes; the ESSENTIALS-ART pattern in both pages). `build_deck.py` `run_page()`: every pack's page 1 opens with the game's art (`game_art()`, read from the game folder) beside `loop_diagram()`, one loop step drawn from the first deck; the check fails a missing diagram, a diagram whose back its front does not answer, and art that exists but is not printed. `free_pizza.py`: a recurring decimal carries "(recurring)" under it and a dot 0.28em across (was 0.13em); the parser requires the label. Two plants, two controls: selftest 3 packs, 25 plants.
-
-- Stopped once, ruled by Jon (13 Nov): the art moves the first control below the fold on phones (Six Sevens at 320 × 568 and 375 × 667; Like Terms at 375 × 667 and 390 × 844); accepted as it is, start screens being report-only for phone fit. The table is in the PR.
-- Also ruled: the sources were two files in Jon's Downloads, not in a checkout (he confirmed which); PNG proofs are allowed (the ban is for art sources); the diagram's caption is outside page 1's 120-word count; ANSWER-LOGGING-WRONG's contract file is left for the cloud lane.
-- Against main's `--final` builds: Six Sevens and Like Terms differ on page 1 only (pages 2 to 40 pixel-identical); Free Daily Pizza's six recurring cards and its answer sheets gain the label; all three still 40 pages. Todo LOOP-PAGE1-CHECK is Jon's look before Tes.
-- Merged as 816679e (#754) by merge-pr.py on a green Gate, 13 Nov: main's check-site run 43517360052 success, phone-fit-full 43517359973 success (all three modes, both changed start screens among them). check-changed.py before the push: 58 checks, all passed. Done: merged and live; Project Claude's review and Jon's LOOP-PAGE1-CHECK follow. Cleanup: end-task.py removed the branch and worktree.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-13 (home): FDP-LOOP-CARDS (Amendment 1)
-
-Claude Code (home lane), worktree `~/mg-fdp-loop-cards`, branch `claude/fdp-loop-cards`; PR #752; contract `docs/history/contracts/2026-11-13-fdp-loop-cards.md` (Amendment 1's text; the 19:10 contract was stopped before any code, on its own STOP IF: `build_deck.py` had to change). New `tools/loop-cards/free_pizza.py` and `decks/free-daily-pizza/config.json`: the third pack, FP-16, FP-24 and FP-32. The values and every printed form come from the game page's own FDP code, run each build in a node subprocess (`vm`, no browser; node on PATH or Playwright's, as `scripts/test-ga4-country.py` finds it and as check-site.yml puts it on PATH for `verify-test-the-claim.py`). `build_deck.py`: `free_pizza` in `ADAPTERS`, five plants, the pack count computed, the third slug in `--help`; nothing else. First commit also moved four merged home contracts (#726, #727, #728, #736) to history.
-
-- Built (DRAFT, 40 pages): each deck one closed loop, every value once, all 15 S1 values in, pairs 2-2-3-3-3-3 (16), 4 each (24), 6-5-5-6-5-5 (32); fronts 57 pt, backs 30.5 pt with the value at 1.4 times that. The "/" of a stacked fraction is in the page's text and not in the PDF's (checked by extraction and by eye). Selftest: 3 packs, 23 plants. Six Sevens and Like Terms: all 80 pages pixel-identical to main's build, same page text.
-- Deviation: page 1's extra line is "0.25 and 25% never both appear." The contract's sentence made page 1 126 words; the limit is 120 and was not loosened (todo FDP-LOOP-CARDS-APPROVE said so).
-- Merged as 69a2a1a (#752) by merge-pr.py on a green Gate, 13 Nov: main's check-site run 43497247741 success, phone-fit-full 43497247777 success. check-changed.py before the push: 43 checks, all passed. Cleanup: end-task.py removed the branch and worktree.
-- Close-out PR, Jon's instruction of 13 Nov: he approved Free Daily Pizza's loop-card wording, so its config's `wording_approved` is `{"by": "Jon", "date": "2026-11-13"}` and FDP-LOOP-CARDS-APPROVE is closed (moved to `docs/history/todo-done.md`). All three loop-card packs are approved; the `--final` PDF was built for him.
-
-Record: agent Claude Code; wall n/a; review cycles 0; amendments 1; usage n/a.
-
