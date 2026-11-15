@@ -25,6 +25,7 @@ Claude Code (home lane), worktree `~/mg-unlist-gs`, branch `claude/unlist-graph-
 - **/updates/:** Jon's line is verbatim at the top of November's list. The October "Wrong answer keys" line loses its link to the game, with its words unchanged, because check-canonical-links fails an /updates/ link to a noindex page.
 - **todo:** new rows GRAPH-SKETCHER-REDESIGN (11 points) and PACK-ART-EXTRAS ((a)-(d)), beside the print-pack rows in §3. todo-done's PACK-WORDING-1511 close note gains the re-tracked sentence.
 - **Local checks (quick, not a merge condition):** check-meta, check-spec-mapping, check-canonical-links, check-look-signoff, check-levels, check-theme, check-analytics-loader, check-publish-scope, check-context-size and check-leaderboard-coverage all pass.
+- **STOPPED 15 Nov, about 20:25, PR #791 not merged (STOP IF: a check would need loosening).** The Gate failed only in check-site's "Findings register" (audit-register.py:206-214, FACTS-AND-NOTICE, 14 Oct): "graph-sketcher is unlisted for faults but its page lacks <!-- maffs-correction-notice -->: add the correction notice". Passing needs either the notice banner on the game page, which is visible to students and outside DO NOT TOUCH ("beyond the noindex line"), or graph-sketcher in UNLISTED_NOT_BY_AUDIT, which loosens the check. Waiting on Jon and Project Claude.
 - MERGED: pending.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
