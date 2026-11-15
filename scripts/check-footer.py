@@ -43,10 +43,8 @@ _LINKS = [
     ('/feedback/', 'Feedback'),
 ]
 _SEP = '<span class="sep">&middot;</span>'
-_SUPPORT = ('<a href="https://buymeacoffee.com/maffsgames" target="_blank" rel="noopener">'
-            '&#9749; Support<span class="sf-long"> MaffsGames</span></a>')
 CANONICAL = ('<footer class="site-footer">'
-             + _SEP.join(['<a href="%s">%s</a>' % l for l in _LINKS] + [_SUPPORT])
+             + _SEP.join(['<a href="%s">%s</a>' % l for l in _LINKS])
              + '</footer>')
 
 # Pages that carry no footer, each with its reason. A key ending in "/" covers a folder.
