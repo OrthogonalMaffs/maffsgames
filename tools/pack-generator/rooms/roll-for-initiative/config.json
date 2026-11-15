@@ -4,7 +4,7 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Party escaped",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-15"},
   "images": [
     {"file": "art/rfi-01-character-sheet.webp", "role": "clue", "object": "charsheet", "label_box": [178, 172, 976, 1069], "font": "label"},
     {"file": "art/rfi-02-dm-screen.webp", "role": "clue", "object": "dmscreen", "label_box": [369, 406, 882, 922], "font": "label",
