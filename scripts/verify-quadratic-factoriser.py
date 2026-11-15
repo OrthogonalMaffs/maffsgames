@@ -176,7 +176,8 @@ def other(n, avoid, lo, hi):
 
 async def check_pads(open_page, browser):
     """Plays the pads as a student would, with real taps: numbers only, then a slot changed. Lays each pad out at the
-    phone and laptop widths. Returns what it saw; verify_pads() judges it."""
+    phone and laptop widths. Each flow has its own page and they run together. Returns what it saw; verify_pads()
+    judges it."""
     out = {"layout": {}, "gcse": {}, "higher": {}}
 
     async def tap(page, sel):
@@ -186,8 +187,12 @@ async def check_pads(open_page, browser):
     def key(pad, n):
         return '%s .num-btn:text-is("%d")' % (pad, n)
 
-    for w, h in PAD_SIZES:
+    async def fresh_page(w=390, h=844):
         page, _ = await open_page(await browser.new_context(viewport={"width": w, "height": h}))
+        return page
+
+    async def layout(w, h):
+        page = await fresh_page(w, h)
         await page.evaluate("startGame()")
         await page.wait_for_timeout(FRESH_WAIT)
         gcse = await page.evaluate(PAD_JS, "#numGrid")
@@ -196,45 +201,48 @@ async def check_pads(open_page, browser):
         out["layout"][w] = {"gcse": gcse, "higher": await page.evaluate(PAD_JS, "#hfIndepGrid")}
         await page.context.close()
 
-    # GCSE, numbers only: the second number of the pair first, so either order is tested.
-    page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
-    await page.evaluate("startGame()")
-    await page.wait_for_timeout(FRESH_WAIT)
-    q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
     g = out["gcse"]
-    g["key"] = q
-    g["start"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, key("#numGrid", q["q"]))
-    g["one"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, key("#numGrid", q["p"]))
-    g["two"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, key("#numGrid", other(q["p"], (q["p"], q["q"]), -12, 12)))   # full, nothing selected: no change
-    g["full"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, "#checkBtn")
-    g["checked"] = await page.evaluate(GCSE_STATE_JS)
-    await page.context.close()
 
-    # GCSE, change a slot: a wrong number, then the right one in bracket 2; bracket 1 tapped and changed.
-    page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
-    await page.evaluate("startGame()")
-    await page.wait_for_timeout(FRESH_WAIT)
-    q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
-    wrong = other(q["p"], (q["p"], q["q"]), -12, 12)
-    await tap(page, key("#numGrid", wrong))
-    await tap(page, key("#numGrid", q["q"]))
-    await tap(page, "#num1")
-    g["selected"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, key("#numGrid", q["p"]))
-    g["changed"] = await page.evaluate(GCSE_STATE_JS)
-    await tap(page, "#checkBtn")
-    g["changedChecked"] = await page.evaluate(GCSE_STATE_JS)
-    g["wrong"], g["key2"] = wrong, q
-    await page.context.close()
+    async def gcse_order():
+        # Numbers only: the second number of the pair first, so either order is tested.
+        page = await fresh_page()
+        await page.evaluate("startGame()")
+        await page.wait_for_timeout(FRESH_WAIT)
+        q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
+        g["key"] = q
+        g["start"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, key("#numGrid", q["q"]))
+        g["one"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, key("#numGrid", q["p"]))
+        g["two"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, key("#numGrid", other(q["p"], (q["p"], q["q"]), -12, 12)))   # full, nothing selected: no change
+        g["full"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, "#checkBtn")
+        g["checked"] = await page.evaluate(GCSE_STATE_JS)
+        await page.context.close()
 
-    # Higher, a base item and an HCF item: numbers only, in the order p, q, r, s (then k); then s changed.
-    for stage in ("base", "hcf"):
+    async def gcse_change():
+        # A wrong number, then the right one in bracket 2; bracket 1 tapped and changed.
+        page = await fresh_page()
+        await page.evaluate("startGame()")
+        await page.wait_for_timeout(FRESH_WAIT)
+        q = await page.evaluate("() => ({ p: currentQ.p, q: currentQ.q })")
+        wrong = other(q["p"], (q["p"], q["q"]), -12, 12)
+        await tap(page, key("#numGrid", wrong))
+        await tap(page, key("#numGrid", q["q"]))
+        await tap(page, "#num1")
+        g["selected"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, key("#numGrid", q["p"]))
+        g["changed"] = await page.evaluate(GCSE_STATE_JS)
+        await tap(page, "#checkBtn")
+        g["changedChecked"] = await page.evaluate(GCSE_STATE_JS)
+        g["wrong"], g["key2"] = wrong, q
+        await page.context.close()
+
+    async def higher(stage):
+        # A base item and an HCF item: numbers only, in the order p, q, r, s (then k); then s changed.
         r = out["higher"][stage] = {}
-        page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+        page = await fresh_page()
         item = await page.evaluate(HIGHER_INDEP_JS, stage)
         await page.wait_for_timeout(FRESH_WAIT)
         order = ["p", "q", "r", "s"] + (["k"] if item["k"] else [])
@@ -247,7 +255,7 @@ async def check_pads(open_page, browser):
         r["checked"] = await page.evaluate(HIGHER_STATE_JS)
         await page.context.close()
 
-        page, _ = await open_page(await browser.new_context(viewport={"width": 390, "height": 844}))
+        page = await fresh_page()
         await page.evaluate(HIGHER_INDEP_JS, stage)
         await page.wait_for_timeout(FRESH_WAIT)
         wrong = other(item["s"], (item["s"],), -9, 9)
@@ -260,6 +268,9 @@ async def check_pads(open_page, browser):
         r["changedChecked"] = await page.evaluate(HIGHER_STATE_JS)
         r["wrong"] = wrong
         await page.context.close()
+
+    await asyncio.gather(*[layout(w, h) for w, h in PAD_SIZES], gcse_order(), gcse_change(),
+                         higher("base"), higher("hcf"))
     return out
 
 
@@ -338,10 +349,13 @@ def verify_pads(pads, pools):
 PAGES = 4   # the guided steps are played on this many pages at once (each its own renderer process)
 
 
-async def fetch_pools(html=None, every=1):
+ALL_PARTS = ("guided", "pads")   # "guided": the guided steps and the Formula keypad; "pads": the number pads
+
+
+async def fetch_pools(html=None, every=1, parts=ALL_PARTS):
     """Reads window.QF_POOLS, plays the Higher items' guided steps (every one, or every `every`-th with the tutorial
-    example: the self-test's sample), and checks the Formula keypad on a phone. html, when given, is served in
-    place of the page (the self-test's planted copies)."""
+    example: the self-test's sample), and checks the Formula keypad on a phone and the number pads. html, when given,
+    is served in place of the page (the self-test's planted copies); parts names which of those a plant needs."""
     from playwright.async_api import async_playwright
 
     base = "http://127.0.0.1:%d" % PORT
@@ -364,8 +378,8 @@ async def fetch_pools(html=None, every=1):
         browser = await pw.chromium.launch()
         page, errors = await open_page(await browser.new_context())
         pools = await page.evaluate("() => window.QF_POOLS || null")
-        guided = []
-        if pools and "higher" in pools:
+        guided, keypad, pads, phone_errors = [], None, None, []
+        if pools and "higher" in pools and "guided" in parts:
             todo = list(range(0, len(pools["higher"]["pool"]) + 1, every))
 
             async def play(share):
@@ -379,12 +393,15 @@ async def fetch_pools(html=None, every=1):
             for got in await asyncio.gather(*[play(todo[k::PAGES]) for k in range(PAGES)]):
                 guided += got
             guided.sort(key=lambda r: (r["i"], r["mode"]))
-        phone = await open_page(await browser.new_context(
-            viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True))
-        keypad = await phone[0].evaluate(KEYPAD_JS)
-        pads = await check_pads(open_page, browser)
+        if "guided" in parts:
+            phone = await open_page(await browser.new_context(
+                viewport={"width": 390, "height": 844}, has_touch=True, is_mobile=True))
+            keypad = await phone[0].evaluate(KEYPAD_JS)
+            phone_errors = phone[1]
+        if "pads" in parts:
+            pads = await check_pads(open_page, browser)
         await browser.close()
-        return pools, guided, keypad, pads, errors + phone[1]
+        return pools, guided, keypad, pads, errors + phone_errors
 
 
 def poly(latex):
@@ -807,9 +824,10 @@ def verify_formula(level):
              "minority ('mostly non-square')" % square_pct)
 
 
-def run(html=None, every=1, pools_too=True):
+def run(html=None, every=1, pools_too=True, parts=ALL_PARTS):
     """Every check, on the page as served (or on html in its place). Returns the failures. pools_too=False (the
-    self-test's plants) leaves out the SymPy pool checks, which no plant touches."""
+    self-test's plants) leaves out the SymPy pool checks, which no plant touches; parts, the browser checks a plant
+    does not touch (each plant is run against the part it plants in, so the self-test stays inside its CI budget)."""
     global PORT
     del _FAILURES[:]
     # A free port chosen per run; raises bc.StubServerError, naming the cause, if the
@@ -817,7 +835,7 @@ def run(html=None, every=1, pools_too=True):
     server, base = bc.start_stub_server()
     PORT = urlsplit(base).port
     try:
-        pools, guided, keypad, pads, errors = asyncio.run(fetch_pools(html, every))
+        pools, guided, keypad, pads, errors = asyncio.run(fetch_pools(html, every, parts))
     finally:
         server.terminate()
 
@@ -828,9 +846,11 @@ def run(html=None, every=1, pools_too=True):
         fail("page error: " + e)
 
     if not pools_too:
-        verify_guided(guided, len(pools["higher"]["pool"]), every)
-        verify_keypad(keypad)
-        verify_pads(pads, None)
+        if "guided" in parts:
+            verify_guided(guided, len(pools["higher"]["pool"]), every)
+            verify_keypad(keypad)
+        if "pads" in parts:
+            verify_pads(pads, None)
         return list(_FAILURES)
 
     if "gcse" in pools:
@@ -858,7 +878,9 @@ def run(html=None, every=1, pools_too=True):
     return list(_FAILURES)
 
 
-# Planted faults: each must fail (the self-test). The first is the old split, fixed 13 Oct 2026.
+# Planted faults: each must fail (the self-test). The first is the old split, fixed 13 Oct 2026. A plant is run against
+# the guided steps and the Formula keypad, or, marked PADS, against the number pads alone: the part it plants in.
+PADS = ("pads",)
 PLANTS = [
     ("the old split (base ps, qr on an HCF item)",
      "function hfCorrectSplit(item) { const k = hfK(item); return { m: k * item.p * item.s, n: k * item.q * item.r }; }",
@@ -890,22 +912,22 @@ PLANTS = [
     # The number pads (QF-PICKER, Jon 15 Nov 2026).
     ("gcse: the old guard, a number ignored until a bracket is tapped",
      "  if (MaffsLock.isLocked(gcsePanel())) return;\n  const slot = qfTargetSlot(",
-     "  if (MaffsLock.isLocked(gcsePanel()) || !editingSlot) return;\n  const slot = qfTargetSlot("),
+     "  if (MaffsLock.isLocked(gcsePanel()) || !editingSlot) return;\n  const slot = qfTargetSlot(", PADS),
     ("higher: the old guard, a number ignored until a slot is tapped",
      "  if (MaffsLock.isLocked(hfPanel())) return;\n  const slot = qfTargetSlot(",
-     "  if (MaffsLock.isLocked(hfPanel()) || !hfEditingSlot) return;\n  const slot = qfTargetSlot("),
+     "  if (MaffsLock.isLocked(hfPanel()) || !hfEditingSlot) return;\n  const slot = qfTargetSlot(", PADS),
     ("a full pad's tap overwriting the last slot",
      "  return order.find(slot => valueOf(slot) === null) || null;",
-     "  return order.find(slot => valueOf(slot) === null) || order[order.length - 1];"),
+     "  return order.find(slot => valueOf(slot) === null) || order[order.length - 1];", PADS),
     ("higher: slots filled out of their place in (px + q)(rx + s)",
-     "['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];", "['q', 'p', 'r', 's', 'k'] : ['q', 'p', 'r', 's'];"),
+     "['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];", "['q', 'p', 'r', 's', 'k'] : ['q', 'p', 'r', 's'];", PADS),
     ("negatives muted again",
      "  .num-btn:disabled { opacity: 0.4; cursor: default; }",
-     "  .num-btn:disabled { opacity: 0.4; cursor: default; }\n  .num-btn.neg { color: var(--muted); }"),
+     "  .num-btn:disabled { opacity: 0.4; cursor: default; }\n  .num-btn.neg { color: var(--muted); }", PADS),
     ("a 7-column grid (one block of 24, as before)",
      "  .num-block {\n    display: flex;",
      "  .num-grid { display: grid; grid-template-columns: repeat(7, 44px); justify-content: center; }\n"
-     "  .num-block {\n    display: contents;"),
+     "  .num-block {\n    display: contents;", PADS),
 ]
 
 
@@ -918,12 +940,12 @@ def selftest():
     clean = run(None, SAMPLE, pools_too=False)
     if clean:
         bad.append("the page as served fails (%d)" % len(clean))
-    for name, old, new in PLANTS:
+    for name, old, new, *part in PLANTS:
         if src.count(old) != 1:
             bad.append(name + " (the plant no longer matches the page)")
             continue
         print("\nselftest plant: " + name)
-        if not run(src.replace(old, new), SAMPLE, pools_too=False):
+        if not run(src.replace(old, new), SAMPLE, pools_too=False, parts=part[0] if part else ("guided",)):
             bad.append(name + " (passed)")
     print()
     print("selftest: %s" % ("FAILED: " + "; ".join(bad) if bad else "PASS (%d plants fail)" % len(PLANTS)))

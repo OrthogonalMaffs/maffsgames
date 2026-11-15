@@ -46,6 +46,7 @@ Everything is served by serve-stubbed.py; nothing is sent anywhere.
 import argparse
 import datetime as dt
 import json
+import math
 import os
 import re
 import sys
@@ -95,7 +96,18 @@ FROZEN_TEXT = [
 
 # ------------------------------------------------------------------------------------------------ the figures, worked here
 def fmt(n):
-    return "{:,}".format(int(round(n)))
+    # Halves round up, as the pages' Math.round does and as a student is taught; Python's round() rounds a half to
+    # the even neighbour, so 14.5 became 14 against the page's 15 (main red from 54e4a99, contract QF-PICKER).
+    return "{:,}".format(int(math.floor(n + 0.5)))
+
+
+# The selftest holds fmt() to these: every x.5 rounds up.
+ROUNDING = [(14.5, "15"), (2.5, "3"), (0.5, "1"), (1234.5, "1,235"), (14.49, "14"), (212.0, "212")]
+
+
+def rounding_faults(fmt_fn):
+    return ["ROUND: %r shown as %r, want %r (a half rounds up, as the pages' Math.round)" % (x, fmt_fn(x), want)
+            for x, want in ROUNDING if fmt_fn(x) != want]
 
 
 def show(v):
@@ -1063,6 +1075,12 @@ def selftest():
          ("QUIZ",), "game 2"),
     ]
     bad = []
+    if rounding_faults(fmt):
+        bad.append("the checker's own rounding: " + rounding_faults(fmt)[0])
+    hit = rounding_faults(lambda n: "{:,}".format(int(round(n))))   # the plant: banker's rounding (14.5 -> 14)
+    print("  %s  plant: %-32s %s" % ("ok  " if hit else "FAIL", "banker's rounding in fmt()", (hit or ["passed, but must fail"])[0][:150]))
+    if not hit:
+        bad.append("banker's rounding in fmt()")
     site = Site()
     try:
         for name, p, groups, word in plants:
@@ -1074,7 +1092,7 @@ def selftest():
                 bad.append(name)
     finally:
         site.close()
-    print("selftest: %s (%d plants)" % ("FAILED: " + "; ".join(bad) if bad else "PASS", len(plants)))
+    print("selftest: %s (%d plants)" % ("FAILED: " + "; ".join(bad) if bad else "PASS", len(plants) + 1))
     return 1 if bad else 0
 
 
