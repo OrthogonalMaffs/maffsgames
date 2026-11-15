@@ -16,6 +16,21 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): FOOTER-NO-SUPPORT (the Support MaffsGames link out of the site footer)
+
+Claude Code (home lane), worktree `~/mg-footer-no-support`, branch `claude/footer-no-support`; contract `docs/handover/contracts/2026-11-15-footer-no-support.md`. The first commit carries HOME-LEAN's close-out (merge line below, contract to history).
+
+- **check-footer.py:** `_SUPPORT` is gone, so CANONICAL is the ten `_LINKS` joined by `_SEP`, unchanged in order. apply-footer.py rewrote 152 pages, including the two test fixtures (check-footer scans them). Every page's diff was checked to be the footer's Support link and its separator only; a second run changes nothing.
+- **site-footer.css:** the `.sf-long` media rule and the header comment's two lines about it are removed; nothing else changes.
+- **Kept:** About's coffee button and the privacy page's Buy Me a Coffee section are unchanged.
+- **Fit (local Chromium, / and /about/):** the footer is still 40 px. Its row is 808 px wide (it was 885 px), so at 320, 375 and 390 px it still scrolls inside itself, as it did before. No page scrolls sideways. At 1280 px it fits in one row.
+- **check-footer has no self-test.** Plants were run by hand on a copy instead: a page still carrying the Support link FAILS ("footer differs from the canonical markup"), and a page with its footer removed FAILS ("no footer").
+- No other check needs the link: check-site's 'buy me a coffee' is a skip-list entry, and verify-the-6-ps strips the footer before its emoji check.
+- /updates/: no line (a footer tidy). todo: none.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): HOME-LEAN (neither lane runs check-changed.py before pushing)
 
 Claude Code (home lane), worktree `~/mg-home-lean`, branch `claude/home-lean`; contract `docs/handover/contracts/2026-11-15-home-lean.md`. The first commit carries ESC-BAND-SLIM's close-out (merge line below, contract to history).
