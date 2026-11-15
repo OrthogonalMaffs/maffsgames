@@ -33,7 +33,7 @@ Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-
   - the £5 loop-card bundle (Tes link only).
   - Both Tes links returned 200 with their own listing titles.
 - todo: PRINTABLES-PAGE is closed to todo-done; ESC-BAND-ROTATION is added (later, research first).
-- MERGED: pending.
+- MERGED 15 Nov, 18:28 UTC, as d5381e8 (#786). Main on the merge commit: check-site 43746949609 success, phone-fit-full 43746949659 success; live checked. end-task removed claude/esc-band-slim. Local check-changed was stopped at 203 of 260 (none failed) on Jon's 18:15 ruling (HOME-LEAN).
 
 Record: agent Claude Code; review cycles 0; amendments 1 (Jon 17:03, the loop bundle card); usage n/a.
 
