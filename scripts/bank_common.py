@@ -317,6 +317,46 @@ async def serve_real_font_async(route):
     got = real_font_response(route.request.url)
     await (route.fulfill(**got) if got else route.abort())
 
+
+# ---------------------------------------------------------------------------------------------------------------
+# Nothing a check loads comes from the network (contract ANSWER-LOCK-FLAKE, 15 Nov 2026). A page's 'load' event waits
+# for every stylesheet and script the page names, wherever it lives, so a check that lets one request through to a
+# third party waits on that third party. 18 scripts carried the same route, copied from one to the next:
+#     ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+# It aborts everything off the stub server EXCEPT KaTeX, which went to cdn.jsdelivr.net on every page load. When one of
+# those responses stalled, the page never reached 'load' and the check failed on a fault no game had (main run
+# 43590939932, "Page.goto: Timeout 20000ms exceeded", on a game whose only off-machine requests were KaTeX's
+# stylesheet and script); when one failed outright, the page drew unstyled maths (docs/handover/mm-overflow-diag.md).
+# offline() is that route with the hole closed. Everything off the stub server is aborted, as before; KaTeX 0.16.9's own
+# files are answered from the pinned copy in scripts/fonts/ (the bytes the CDN serves, checked by test-real-fonts.py),
+# so the page gets the same KaTeX with no network. A KaTeX URL with no pinned copy is aborted too: nothing is left to
+# reach the network. Google Fonts stay aborted, as they were for these checks (a check that measures layout in the
+# real text faces registers serve_real_font for them, as before).
+#
+# Register it FIRST. Playwright tries the route registered last first, so a check's own later routes (a planted page,
+# an optional --katex-dir) still win, exactly as they did over the old line.
+def _offline_answer(url):
+    """What an off-server request gets: the pinned copy of a KaTeX CDN file (route.fulfill's keyword arguments), or
+    None (abort)."""
+    return real_font_response(url) if url.startswith(KATEX_CDN) else None
+
+
+def offline(target, base):
+    """Sync Playwright. On a browser context or a page: abort every request that is not for the stub server at `base`,
+    except KaTeX's CDN files, which are answered from scripts/fonts/. See the note above."""
+    def handle(route):
+        got = _offline_answer(route.request.url)
+        route.fulfill(**got) if got else route.abort()
+    target.route(lambda url: not url.startswith(base), handle)
+
+
+async def offline_async(target, base):
+    """The same for Playwright's async API."""
+    async def handle(route):
+        got = _offline_answer(route.request.url)
+        await (route.fulfill(**got) if got else route.abort())
+    await target.route(lambda url: not url.startswith(base), handle)
+
 # A dict is "question-like" if it carries an answer key at its own top level.
 # correct_override appears without `correct` in normal-navigator:222/:241
 # (canon, todo 1.12), so either key alone must qualify. `answer` and `ans`

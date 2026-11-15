@@ -245,6 +245,7 @@ def open_page(pw, base, html, size, aa=False, reduced=False, touch=None):
     if aa:
         ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
     page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+    bc.offline(ctx, base)       # first, so --katex-dir's route below is tried before it
     if KATEX_DIR:
         def kx(route):
             path = route.request.url.split('/dist/', 1)[1].split('?')[0]
@@ -254,7 +255,6 @@ def open_page(pw, base, html, size, aa=False, reduced=False, touch=None):
             else:
                 route.abort()
         ctx.route(re.compile(r'https://cdn\.jsdelivr\.net/npm/katex@0\.16\.9/dist/.*'), kx)
-    ctx.route(lambda url: not url.startswith(base) and 'cdn.jsdelivr.net/npm/katex' not in url, lambda route: route.abort())
     ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
     page = ctx.new_page()

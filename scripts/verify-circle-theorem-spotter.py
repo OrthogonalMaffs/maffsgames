@@ -447,7 +447,7 @@ def read_tangent_figures(html):
             browser = pw.chromium.launch()
             ctx = browser.new_context()
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+            bc.offline(ctx, base)
             ctx.route(lambda u: bool(page_url.search(u)), lambda r: r.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             pg = ctx.new_page()

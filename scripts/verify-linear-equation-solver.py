@@ -651,7 +651,7 @@ def page_context(pw, base, html):
     browser = pw.chromium.launch()
     ctx = browser.new_context(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
     bc_page = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-    ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+    bc.offline(ctx, base)
     if KATEX_DIR:
         ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
             path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))

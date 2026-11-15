@@ -181,7 +181,7 @@ def games(shard):
                     problems = []
                     for key in JUNK + d['levels']:
                         ctx = browser.new_context()
-                        ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+                        bc.offline(ctx, base)
                         pg = ctx.new_page()
                         errs = []
                         pg.on('pageerror', lambda e: errs.append(str(e)[:140]))

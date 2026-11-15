@@ -125,7 +125,7 @@ def run(helper_js):
         with sync_playwright() as pw:
             browser = pw.chromium.launch()
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
-            ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+            bc.offline(ctx, base)
             ctx.route(lambda url: url.split('?')[0].endswith('/schools/assets/exam-vocab.js'),
                       lambda route: route.fulfill(status=200, content_type='application/javascript', body=helper_js))
             page = ctx.new_page()
