@@ -2,6 +2,58 @@
 
 ## Moved 2026-11-15 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 2 (checks offline; the local flake parked)
+
+Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answer-lock-flake`; contract `docs/history/contracts/2026-11-15-answer-lock-flake.md`. The cloud session's draft (735f405, branch `claude/laughing-einstein-3hckbl`) is applied unchanged as this PR's second commit, and every claim in it was checked here.
+
+- **Cause (a), CI (main run 43590939932, L7, trig-identity-duel):** `check-answer-lock.py`'s route aborted everything off the stub server except KaTeX, which went to cdn.jsdelivr.net. A page's 'load' waits for KaTeX's stylesheet and script.
+  - Reproduced on unmodified main: KaTeX held 25 s gives "Page.goto: Timeout 20000ms exceeded" at 20.1 s, CI's error. Served from the pinned copy, the page loads in 0.1 s.
+  - It is a class: 30 scripts carried the copied route, and 18 of them left KaTeX on the CDN (both counts re-counted here).
+  - Fixed in `bank_common.offline()` / `offline_async()`, called by all 30, verify-cast-away and verify-log-laws. Guarded by `scripts/test-offline-routes.py` and check-answer-lock's self-test over a dead network.
+  - The remainder (20 no-route scripts) is todo row CHECKS-OFFLINE-REST.
+- **Causes (b)/(c), local (`test-answer-lock.py`): STOPPED** on the STOP IF "the cause is in a shared site asset". answer-lock.js times its window with `Date.now()`, and WSL steps the wall clock back about 2.5 s every 30 s. 18 of 120 load runs failed, every failing round held a clock step, and no round without one failed. Not fixed; the question for Jon is in todo row ANSWER-LOCK-WALL-CLOCK. LOCAL-CHECKS updated.
+- MERGED 15 Nov as 5446ace (#777). Main on the merge commit: check-site 43709064790 success, phone-fit-full 43709064695 success. Local check-changed: 174 checks. Seven failed in the parallel run: test-top-scores was a real bug in the draft (`bc` out of scope), fixed. Four passed alone. HC Factor and Negative Number Line failed on unmodified main too (table in #777).
+- The remote branch `claude/laughing-einstein-3hckbl` was deleted after the merge (Jon, 15 Nov). Its tip, 735f405, had landed byte for byte as #777's second commit, and the two #774 commits under it duplicated PR 1.
+
+Record: agent Claude Code; wall about 2:30 (contract to PR 2 merge, both PRs); review cycles 0; amendments 1 (Jon's follow-up of about 10:00); usage n/a.
+
+## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 1 (header badge, leftover branch)
+
+Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/header-badge-trim`; contract `docs/history/contracts/2026-11-15-answer-lock-flake.md`. PR 2 (the answer-lock flake) follows on a new branch once this PR merges.
+
+- Jon ruled on 15 Nov at 08:51 ("remove the badge entirely please"), and the "Built to be safe for school networks" header badge is removed from `index.html`. No other badge changes. The wording stays on /op/ and /privacy/.
+- Measured locally in Chromium (stub server, Outfit loaded). Header heights before, then after, the removal:
+  - 1280 × 800: 282 px on two rows, then 240 px on one row.
+  - 1366 × 768: 240 px on one row, then 240 px on one row.
+  - 1440 × 900: 240 px on one row, then 240 px on one row.
+  - Before #771 (4114eeac) it was 240 px on one row at all three widths.
+  - The badge row now needs 1,012 px, against 1,257 px before.
+  - Locally the row already fitted at 1366. Project Claude measured 282 px there, so the two renderers differ by a few pixels; after the removal there is about 245 px to spare at 1280.
+- `art/answer-box-redraws` deleted from the remote after Jon's ruling of 15 Nov at 08:37. Before deleting, its only commit was confirmed as 799748c, adding only the two `art-incoming/` PNGs. Todo row ANSWER-BOX-REDRAWS-BRANCH moved to `docs/history/todo-done.md`. No cloud close-out should carry the branch.
+- MERGED 15 Nov as dd03c87 (#773). Main on the merge commit: check-site 43699387814 success, phone-fit-full 43699387701 success (push run). Local check-changed: 63 of 63 passed.
+
+## 2026-11-14 (home): UGH-STATS-HOME
+
+Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/history/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
+
+- The total link: `.answer-total-link:has(> .answer-total[hidden])` is `display:none`, so while the total is hidden the link takes no space and is never focused. answer-count.js puts "Updated every 5 minutes" inside the link, so it is linked too.
+- Each link has its own `data-mfg-section` (`answer-total`, `ugh-stats-link`, `ugh-stats-topic`). analytics.js counts an item only inside a section, and test-section-clicks.py reads the sections from the page.
+- On a phone, choosing a topic scrolls to the first result; with Statistics chosen, that is the card. The card ignores the level, search and New filters.
+- Laptop: at 1280 px the new badge wraps onto a second row and the header grows from 240 to 282 px. It fits on one row at 1440 px. From 600 px down the badge row scrolls sideways inside itself, as before, so the header height on phones is unchanged and the row never wraps.
+- **Not done: the art/answer-box-redraws branch is NOT deleted.** The STOP IF fired, so the branch is parked. It holds one commit, 799748c "Add files via upload", made against merge base da84b07. That commit adds `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`, and `git diff 799748c c0cec86 --` on those two files is not empty: neither file is on main. #769 landed only WebP conversions, under `tools/pack-generator/rooms/*/art/`. The original PNGs exist only on that branch, so the next cloud close-out must not record the branch as deleted. Jon's question is in `docs/todo.md` row ANSWER-BOX-REDRAWS-BRANCH (§7).
+- MERGED 14 Nov, 23:53 UTC, as 14f0a3c (#771), live on the homepage. Main on the merge commit: check-site 43655483437 success, phone-fit-full 43655483470 success. Local check-changed: 63 of 63 passed. The PR's first Gate failed only in Content verifiers 47, where the Playwright image pull from mcr.microsoft.com timed out and no test ran. This token cannot rerun jobs (rerun-failed-jobs returned 403), so an empty commit re-ran the Gate, and it passed: a flake.
+
+Record: agent Claude Code; wall about 0:55 (contract to merge); review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-14 (home): UGH-STATS-CASE1-1DP
+
+Claude Code (home lane), worktree `~/mg-ugh-1dp`, branch `claude/ugh-stats-case1-1dp`; contract `docs/history/contracts/2026-11-14-ugh-stats-case1-1dp.md`. Case 1 Q1 and Q2 ask answers per day to 1 decimal place (working to 3), and Q3 quotes those values. A typed question may set `dp: 1` in `UghStats.quiz`: the decimal keypad, and only the 1 dp value accepted ("90.9" or "90.90", never "91" or "90.8"). Cases 2 and 3 keep dp 0 and their unchanged code path. Game 2 must also show at least 0.1 a day.
+
+- The 0.1 rule cannot bite before about 20 March 2027: 10 or more answers in at most 200 days is always 0.05 a day or more. Its plant therefore lets a game with 1 answer through.
+- MERGED 14 Nov as 51bc881 (#768). Main on the merge commit: check-site 43646870538 success, phone-fit-full 43646870632 success. The local run's one failure, Shared answer lock in the parallel run, passed when rerun alone.
+
+## Moved 2026-11-15 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-14 (home): UGH-STATS-QUESTIONS
 
 Claude Code (home lane), worktree `~/mg-ugh-q`, branch `claude/ugh-stats-questions`; contract `docs/history/contracts/2026-11-14-ugh-stats-questions.md`. Questions in every case (one widget, `UghStats.quiz()` in `schools/assets/ugh-stats.js`; each page passes its questions as data), Cases 3 (`ugh-stats/one-class/`) and 4 (`ugh-stats/flu-and-answers/`) with their `data.csv`, the foreword and two cards on the landing page, `schools/assets/launch-dates.json` (written once by `scripts/build-launch-dates.py`), B29 in Correlation or Coincidence (`MIN_BANK` 84 to 85 in its verifier), one privacy line.
