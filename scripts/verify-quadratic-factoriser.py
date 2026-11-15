@@ -44,7 +44,7 @@ pad (iOS) has none.
 THE NUMBER PADS (QF-PICKER, Jon 15 Nov 2026)
 --------------------------------------------
 The GCSE brackets and the Higher Independent slots are played with real taps, numbers only: GCSE's key tapped in
-the other order is marked right; Higher's p, q, r, s (then k) fill in that order, base and HCF items both; a filled
+the other order is marked right; Higher's k (when shown), p, q, r, s fill in that order, base and HCF items both; a filled
 slot is tapped and changed; with every slot full a number changes nothing. Both pads are laid out at 320, 390 and
 1366 wide: no row mixes negatives and positives, the keys run in increasing order, GCSE is 6 a row on a phone, every
 key is at least 44 px (canon 7.6.1) and negatives are coloured as positives. Every pooled key is on its pad.
@@ -240,12 +240,12 @@ async def check_pads(open_page, browser):
         await page.context.close()
 
     async def higher(stage):
-        # A base item and an HCF item: numbers only, in the order p, q, r, s (then k); then s changed.
+        # A base item and an HCF item: numbers only, in the order k (when shown), p, q, r, s; then s changed.
         r = out["higher"][stage] = {}
         page = await fresh_page()
         item = await page.evaluate(HIGHER_INDEP_JS, stage)
         await page.wait_for_timeout(FRESH_WAIT)
-        order = ["p", "q", "r", "s"] + (["k"] if item["k"] else [])
+        order = (["k"] if item["k"] else []) + ["p", "q", "r", "s"]
         r["key"], r["order"] = item, order
         r["start"] = await page.evaluate(HIGHER_STATE_JS)
         for slot in order:
@@ -301,8 +301,8 @@ def verify_pads(pads, pools):
                    % (g["wrong"], p2, g["changed"]["v1"], g["changed"]["v2"], g["changedChecked"]["fb"]))
     for stage, r in sorted(pads["higher"].items()):
         it, order = r["key"], r["order"]
-        if r["start"]["line"] != "Tap a number for p":
-            bad.append("higher %s: the picker line starts %r, not 'Tap a number for p'" % (stage, r["start"]["line"]))
+        if r["start"]["line"] != "Tap a number for %s" % order[0]:
+            bad.append("higher %s: the picker line starts %r, not 'Tap a number for %s'" % (stage, r["start"]["line"], order[0]))
         got = [r["filled"]["picks"][s] for s in order]
         want = [it[s] for s in order]
         if got != want:
@@ -920,7 +920,7 @@ PLANTS = [
      "  return order.find(slot => valueOf(slot) === null) || null;",
      "  return order.find(slot => valueOf(slot) === null) || order[order.length - 1];", PADS),
     ("higher: slots filled out of their place in (px + q)(rx + s)",
-     "['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];", "['q', 'p', 'r', 's', 'k'] : ['q', 'p', 'r', 's'];", PADS),
+     "['k', 'p', 'q', 'r', 's'] : ['p', 'q', 'r', 's'];", "['k', 'q', 'p', 'r', 's'] : ['q', 'p', 'r', 's'];", PADS),
     ("negatives muted again",
      "  .num-btn:disabled { opacity: 0.4; cursor: default; }",
      "  .num-btn:disabled { opacity: 0.4; cursor: default; }\n  .num-btn.neg { color: var(--muted); }", PADS),
