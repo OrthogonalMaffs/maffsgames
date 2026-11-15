@@ -123,7 +123,7 @@
   "Merge guard (scripts/merge-pr.py: green Gate and green main or no merge; override only for main; recorded API fixtures)": "4",
   "Modular Battle (all 408 questions the generator can draw, each driven through the game's own generator: key, options, dot grid and feedback figures recomputed; every option pressed in Chromium)": "48",
   "Moments Master (every key recomputed with SymPy, options distinct in value, every option clicked in Chromium)": "34",
-  "Negative Number Line (keys recomputed, every placement marked by real taps, every target reached on three phones)": "9",
+  "Negative Number Line (keys recomputed, every placement marked by real taps, every Calculate option on the line, every target reached on three phones)": "9",
   "New Shapes (every formula, key, substitution and working step recomputed; the figure's labels checked against the item; every item answered right and wrong in Chromium)": "18",
   "New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; three plants caught)": "25",
   "Normal Navigator (independent recomputation + rendered labels)": "51",
@@ -273,7 +273,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
