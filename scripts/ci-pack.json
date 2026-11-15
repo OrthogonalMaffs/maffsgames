@@ -23,6 +23,7 @@
   "Chart Interrogator (independent recomputation of every key and tolerance)": "16",
   "Chart drawings (every chart the reading-charts, pie-chart and probability banks draw is read back FROM THE SCREEN, by hit-testing what is really painted, and compared with its data: pictogram symbols whole, half and quarter by their visible width; bar and segment lengths, line and scatter points through the numbers on the axes; pie slices by the angle each one really covers; spinner wedges and counters visible; the pictogram key and the symbol counts in the worked steps; fault-injection self-test), part 1 of 2": "15",
   "Chart drawings (every chart the reading-charts, pie-chart and probability banks draw is read back FROM THE SCREEN, by hit-testing what is really painted, and compared with its data: pictogram symbols whole, half and quarter by their visible width; bar and segment lengths, line and scatter points through the numbers on the axes; pie slices by the angle each one really covers; spinner wedges and counters visible; the pictogram key and the symbol counts in the worked steps; fault-injection self-test), part 2 of 2": "32",
+  "Checks stay offline (bank_common.offline: with the network dead a page still loads, its KaTeX from scripts/fonts/; no script's route leaves KaTeX to the CDN; the old route planted and caught)": "57",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium)": "35",
   "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "1",
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
@@ -37,7 +38,7 @@
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
   "Dash before a number (no em dash or spaced en dash directly before a number, a variable or a minus sign in student-facing text; planted faults)": "30",
-  "Decimal Detective (Line-Up and Round Up keys recomputed, Place It start state, every answer marked in Chromium)": "57",
+  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)": "50",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "7",
@@ -231,7 +232,7 @@
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
+   "how": "kept from the pack (6 needed)",
    "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
    "parts": 7,
    "tier": "lock"
@@ -345,7 +346,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"

@@ -3184,6 +3184,50 @@ Moved word for word from `docs/todo.md` §7, with its closing note (contract ANS
 
 **Closed 15 Nov 2026.** Jon's ruling of 15 Nov, 08:37: "I have all the images saved on the computer as well as on chatgpt". The WebP versions on main are enough. Before deleting, the home lane confirmed that the branch's only commit is 799748c and that it adds only `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`. It then ran `git push origin --delete art/answer-box-redraws` (ANSWER-LOCK-FLAKE PR 1).
 
+## Moved for size by ANSWER-LOCK-FLAKE PR 2 (15 Nov 2026)
+
+Moved word for word from `docs/todo.md` §1's "Done this session (26 Sep)" block, so that file stays under its 150 KiB cap (check-context-size.py: "move history to docs/history/"). Done since 26 Sep 2026; nothing owed.
+
+- [x] **1.1 Expectation Station cannot be completed — since it shipped (`812cd6a`, 22 Mar).**
+  `checkStage1()` hid its own Check Table button (`:707`, `:725`) and `renderStage1()` never
+  re-showed it, unlike stages 2 and 3 (`:822`, `:953`). From question 2 onward a student filled
+  the table and had no way to submit — no run had reached `game_completed` since it shipped. **Fixed**: `renderStage1()`
+  now sets `checkStage1`'s `display` back to `''` alongside its existing `disabled` line, one
+  line, matching the pattern stages 2 and 3 already used. Confirmed no second blocker — the
+  function rebuilds the table cells and tile listeners from scratch on every call, so `display`
+  was the only state it failed to restore. **Verified completing at 8, 16 and 24 questions**
+  under the stub server, driving real clicks through a headless browser and asserting
+  `game_completed` fires: 8 → score 10, `questions_correct` 3; 16 → score 24, `questions_correct`
+  8; 24 → score 31, `questions_correct` 10 (see the next bullet for why 24 answers 20).
+  - **A "24 questions" core session only ever serves 20 — found while verifying, reported, not
+    fixed.** `newQuestion()`'s `questionQueue = shuffle([...bank]).slice(0,
+    Math.min(sessionLength, bank.length))` caps the queue at the level's bank size. Core has 20
+    questions, GCSE 15, A-level 10 — **none of the three levels has 24**, so the "24" button
+    always under-delivers, silently, and correctly ends the session early with `game_completed`
+    reporting the true count (`questions_answered: questionQueue.length`). Nothing is broken —
+    the game behaves consistently — but the UI promises a number the content can't back on any
+    level. Not this contract's fix (bank/scoring were DO NOT TOUCH); flagging for a content or UI
+    decision (more questions authored, or the "24" option removed/relabelled per level).
+  - **The verification itself took three false leads worth recording**, since each nearly got
+    misread as a game defect: (1) the first driver script filled Stage-1 cells by watching for
+    the `missing` CSS class to clear, but the game correctly keeps that class after a wrong
+    attempt (only adds `incorrect-cell` alongside it) — an infinite loop in the *test*, not the
+    game. (2) A "Page crashed" on the 24-question run reproduced twice with a fresh browser each
+    time, independent of GPU flags, with a flat JS heap throughout (5–7MB, no leak) — looked like
+    a real bug, but per-question timing logs showed the crash always landed at roughly the same
+    *elapsed time* rather than the same *question count*, which pointed at something external to
+    the page. (3) With full instrumentation it turned out to be the bank-size cap above: the
+    driver kept "playing" past the natural end of the queue once the game had already switched to
+    the results screen, hammering controls that no longer existed. Fixed by checking for the
+    results screen at the top of every loop iteration, not just after finishing a question.
+  - **Class check on this shape, requested and run:** a static scan for "an element's
+    `style.display` set to `'none'` inside an answer/check handler and never restored anywhere in
+    the file" across all 95 games. One category-A hit outside Expectation Station
+    (`shape-shifter:843`, `undoBtn`), which is a false positive — `shape-shifter:509` restores it
+    via a ternary (`(mode === 'rotation') ? 'none' : 'inline-block'`) that a literal-value scan
+    can't read; checked by hand and it restores correctly. **No other game in the roster looks
+    uncompletable by this defect shape.**
+
 | 1.51 | **Resit audit (PR #35): what is left in the five games PR #36 fixed**, by the audit's fix batches. **Batch 2 (wrong keys at the card's level):** ~~`probability-pioneer` Stage 3 Q7 "If two outcomes are equally likely, each has probability 0.5" keyed True (audit F2; Jon ruled 4 Oct (decision 4): rekey False, with the explanation)~~ **DONE PR #45, with F3-F6 and F8 below; probability-pioneer now has its full verifier (`scripts/verify-probability-pioneer.py`, CI); only F7 (judgement call) remains.** **Batch 4 (MEDIUM):** ~~`probability-pioneer` F3 (lottery feedback says Impossible), F4 (rain in Britain keyed Certain only)~~ (done, PR #45); `estimation-engine` F2 (the meter's centre label is the key rounded to a whole number, outside the band on six items) and F3 (A-Level items served to everyone; rides with its SR-12 rebuild); `decimal-detective` ~~F4 (the 2 d.p. readout lets a student drag to the target without reading the scale; judgement call)~~ (done, PR #65, with F2 and F3). **Batch 5 (LOW):** `shape-shifter` F5 (15 items per mode; no 180° question is ever built, because its wrong-direction distractor equals the answer, so it is filtered out; every rotation is about (0,0)); `probability-pioneer` ~~F5/F6 (two value-equal distractor pairs, 2/3 and 4/6, 1/2 and 2/4)~~, F7, ~~F8~~ (F5, F6, F8 done, PR #45; F7 a judgement call, left); `estimation-engine` F5 (float edge on the band), F6 (an empty entry stops the timer silently), F7 (2 s auto-advance, not `MaffsNext`); `decimal-detective` ~~F6 (Round Up 9.5/9.50), F7 (= §1.49)~~ (done, PR #50, with F1), F5 (7.895: 7.90 vs 7.9, stands: the ask names the form), Line-Up's Check enabled on load; ~~`negative-number-line` (Calculate distractors off the drawn line; wrong-answer Next not `MaffsNext`)~~ (done, #775; its full verifier is in CI since PR #54). **Fixed in PR #36 beyond the contract's list:** shape-shifter F3 (duplicate options) and F4 (a distractor equal to the object), decimal-detective F3 (0.25's neighbouring tenths), negative-number-line F2 (half-way points). Each game still needs its full verifier (audit class 1); `check-resit-fixes.py` covers only the fixed faults. Re-checked 2026-11-08 on main f8a287b4: PART — FIXED: probability-pioneer in full (F2–F6 and F8 by #45; F7's item removed by #576; `scripts/verify-probability-pioneer.py`); estimation-engine F2, F3, F5, F6 and F7 by its rebuild, #74 (old pool, meter and timer gone; MaffsNext; `scripts/verify-estimation-engine.py`); decimal-detective F4 (#65), F6 and F7 (#50); each of the four games has its full verifier in CI (`verify-shape-shifter.py`, `verify-decimal-detective.py`, `verify-negative-number-line.py`, `verify-estimation-engine.py`), all green in main run 42512282061. STILL LIVE: shape-shifter F5 (`docs/audits/findings/shape-shifter.yml` t3-002 and t3-004 open: no 180° rotation, 15 items a mode, every rotation about (0,0)). decimal-detective F5 stands (ruled). **ESSENTIALS-AUDIT-LEFTOVERS PR 1 (#775, 15 Nov 2026):** negative-number-line FIXED: Calculate's wrong answers come only from the drawn line, a right answer moves on and a wrong one waits on MaffsNext (`scripts/verify-negative-number-line.py` reads every option against the line). **PR 2 (#776, 15 Nov 2026):** decimal-detective FIXED: Line-Up's Check is disabled until a card is moved and the start is never an order marked right; a right answer moves on, a wrong one waits on MaffsNext (`scripts/verify-decimal-detective.py`). Still live: shape-shifter, above (PR 3). | Code Claude, batch by batch (F2 of probability-pioneer ruled by Jon, 4 Oct) |
 
 **Closed 15 Nov 2026 (ESSENTIALS-AUDIT-LEFTOVERS PR 3, #778).** Row 1.51, moved word for word above. Its last three items are fixed: negative-number-line (#775), decimal-detective (#776), and shape-shifter F5 with findings t3-002 and t3-004 (#778: 36 rotations built from a seed, 12 each of 90° clockwise, 90° anticlockwise and 180°, half about (0,0) and half about other whole-number points; 32 translations; `scripts/verify-shape-shifter.py` asserts the counts). decimal-detective F5 stands, as ruled. What the three PRs found and left is in todo rows NNL-PHONE-NEXT, DD-LINEUP-FEEDBACK and SHAPE-SHIFTER-LISTING.

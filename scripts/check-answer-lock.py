@@ -80,6 +80,12 @@ TIME_SCALE = 0.25
 WORKERS = 4
 SEED = 1           # the run's seed (--seed): every page's Math.random is seeded with it, and it is printed
 WAIT_MS = 15000    # the longest any wait on the game's state runs (real clock) before the driver gives up on it
+LOAD_MS = 20000    # the longest a page may take to reach 'load'
+# How a page's requests off the stub server are answered: aborted, except KaTeX, which comes from the pinned copy in
+# scripts/fonts/ (bank_common.offline_async), so no page load waits on a third party (contract ANSWER-LOCK-FLAKE, 15 Nov
+# 2026; main run 43590939932 failed here on a KaTeX response that never came). The self-test replaces it: a dead
+# network under it, and the old route planted.
+NETWORK = bc.offline_async
 
 # The cloud lane's remaining list: the one "cloud-remaining" value, a list of slugs, in scripts/answer-lock-state.json
 # (contract ANSWER-LOCK-STATE, 19 Oct 2026: state, not prose, so a handover edit no longer selects this check). While a
@@ -672,7 +678,7 @@ async def play(browser, base, slug, level, page_html):
         ctx = await browser.new_context(**kw)
         await ctx.add_init_script(CHECK_SITE.TIER3_INIT)
         await ctx.add_init_script(INIT % {'scale': TIME_SCALE, 'seed': SEED})   # after: its mfg recorder wins
-        await ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())
+        await NETWORK(ctx, base)
         if page_html is not None:
             pat = re.compile(r'/games/%s/(\?[^/]*)?$' % re.escape(slug))
             await ctx.route(lambda u: bool(pat.search(u)), lambda r: r.fulfill(
@@ -683,7 +689,7 @@ async def play(browser, base, slug, level, page_html):
         # page's markup fault, not a marking fault (equatle :337 had one until F1 batch 2 restored it).
         page.on('pageerror', lambda e: errs.append(str(e)[:120])
                 if "Failed to read the 'onclick' property" not in str(e) else None)
-        await page.goto(url, wait_until='load', timeout=20000)
+        await page.goto(url, wait_until='load', timeout=LOAD_MS)
         await page.wait_for_timeout(300)
         return ctx, page, errs
 
@@ -919,6 +925,7 @@ PLANT = ('<script>MaffsLock.lock = function () { return true; }; MaffsLock.isLoc
 
 
 PLANT_GAME = 'decimal-detective'   # the self-test's planted game (#133's): it needs MaffsLock to pass
+KATEX_GAME = 'trig-identity-duel'  # the self-test's dead-network game: its page names KaTeX's stylesheet and script on the CDN
 
 
 def static_results(judged, page, remaining, only=None, against=None):
@@ -1005,6 +1012,37 @@ def selftest(games):
             errs.append('a maffs-lock-hint with %s passed' % why)
     if read_hint('<!-- maffs-lock-hint x\n{"answer": ["a;", " b"], "keys": ["p"]}\n-->') != ({'answer': 'a; b', 'keys': ['p']}, []):
         errs.append('read_hint() misreads a declaration')
+    # Every play below runs with the network dead (contract ANSWER-LOCK-FLAKE, 15 Nov 2026): a route registered first, so
+    # it is asked last, takes every request the check's own routes leave for the network and never answers it, the way a
+    # stalled CDN does. Nothing may reach it, and the plants must still be caught with it there.
+    global NETWORK, LOAD_MS
+    waiting = []
+
+    def dead_under(routes):
+        async def network(ctx, base):
+            await ctx.route(lambda u: not u.startswith(base), lambda r: waiting.append(r.request.url))
+            await routes(ctx, base)
+        return network
+
+    async def old_route(ctx, base):     # the line this check carried until 15 Nov 2026: KaTeX left to the CDN
+        await ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())   # offline-ok: the plant
+
+    real_network, real_load = NETWORK, LOAD_MS
+    NETWORK = dead_under(real_network)
+    try:
+        errs += selftest_plays(games, waiting, dead_under, old_route)
+    finally:
+        NETWORK, LOAD_MS = real_network, real_load
+    for e in errs:
+        print('FAIL  self-test: ' + e)
+    return errs
+
+
+def selftest_plays(games, waiting, dead_under, old_route):
+    """The self-test's plays in Chromium, each over a dead network (selftest() sets it up and restores it)."""
+    import tempfile
+    global NETWORK, LOAD_MS
+    errs = []
     # The plant: one named migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
     # adopted and has taken off its list. Named, not "the first in MIGRATED": a game that also guards itself
     # (binomial-blaster, first once the cloud lane's games joined) plays clean without the lock, and a plant
@@ -1052,8 +1090,31 @@ def selftest(games):
             errs.append('planted %s (bare show(), no MaffsLock.screen) passed the Play again check: %s' % (pslug, pres or 'clean'))
         else:
             print('  self-test: planted %s (a bare show(): no MaffsLock.screen): CAUGHT (%s)' % (pslug, hit[0][:110]))
-    for e in errs:
-        print('FAIL  self-test: ' + e)
+    if waiting:
+        errs.append('the plants above left %d request(s) for the network (dead in the self-test), e.g. %s'
+                    % (len(waiting), waiting[0]))
+    # The dead-network plant: a game whose page names KaTeX on the CDN. With this check's routes it plays clean and
+    # nothing is left waiting on the network. With the old route planted, KaTeX's stylesheet and script go to the
+    # network, which never answers, and the page never reaches 'load': main run 43590939932's failure, word for word.
+    kgame = next(g for g in games if g[0] == KATEX_GAME)
+    del waiting[:]
+    clean = asyncio.run(play_all([kgame], None)).get(kgame[0], [])
+    left = list(waiting)
+    del waiting[:]
+    NETWORK, LOAD_MS = dead_under(old_route), 4000      # (a short wait is enough: the answer never comes)
+    old = asyncio.run(play_all([kgame], None)).get(kgame[0], [])
+    held = sorted(set(u.rsplit('/', 1)[-1] for u in waiting if '/katex@' in u))
+    if clean:
+        errs.append('with the network dead, %s does not play clean: %s' % (kgame[0], clean[0][:160]))
+    elif left:
+        errs.append('with the network dead, %s left %d request(s) waiting on it, e.g. %s' % (kgame[0], len(left), left[0]))
+    elif not any('Page.goto: Timeout' in x for x in old) or not held:
+        errs.append('the old route (KaTeX left to the CDN), planted over a dead network, was not caught: %s; waiting on the '
+                    'network: %s' % (old or 'played clean', held or 'nothing'))
+    else:
+        print('  self-test: the network dead (every request left for it held, never answered): %s plays clean and nothing '
+              'waits on it; the old route (KaTeX left to the CDN) planted: CAUGHT (%s; waiting on the network: %s)'
+              % (kgame[0], old[0].split('\n')[0][:70], ', '.join(held)))
     return errs
 
 

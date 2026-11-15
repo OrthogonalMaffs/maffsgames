@@ -154,7 +154,7 @@ async def new_ctx(browser, base, routes, init=True, **kw):
     await ctx.add_init_script(AL.CHECK_SITE.TIER3_INIT)
     if init:
         await ctx.add_init_script(init_script() % {"scale": AL.TIME_SCALE, "seed": AL.SEED})
-    await ctx.route(lambda u: not u.startswith(base) and "/katex@" not in u, lambda r: r.abort())
+    await bc.offline_async(ctx, base)
     for pat, body, ctype in routes:
         def serve(b, c):
             return lambda route, *_: route.fulfill(status=200, content_type=c, body=b)

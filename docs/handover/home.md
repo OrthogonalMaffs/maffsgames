@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 2 (checks offline; the local flake parked)
+
+Claude Code (home lane), worktree `~/mg-answer-lock-flake`, branch `claude/answer-lock-flake`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. The cloud session's draft (735f405, branch `claude/laughing-einstein-3hckbl`) is applied unchanged as this PR's second commit, and every claim in it was checked here.
+
+- **Cause (a), CI (main run 43590939932, L7, trig-identity-duel):** `check-answer-lock.py`'s route aborted everything off the stub server except KaTeX, which went to cdn.jsdelivr.net. A page's 'load' waits for KaTeX's stylesheet and script.
+  - Reproduced on unmodified main: KaTeX held 25 s gives "Page.goto: Timeout 20000ms exceeded" at 20.1 s, CI's error. Served from the pinned copy, the page loads in 0.1 s.
+  - It is a class: 30 scripts carried the copied route, and 18 of them left KaTeX on the CDN (both counts re-counted here).
+  - Fixed in `bank_common.offline()` / `offline_async()`, called by all 30, verify-cast-away and verify-log-laws. Guarded by `scripts/test-offline-routes.py` and check-answer-lock's self-test over a dead network.
+  - The remainder (20 no-route scripts) is todo row CHECKS-OFFLINE-REST.
+- **Causes (b)/(c), local (`test-answer-lock.py`): STOPPED** on the STOP IF "the cause is in a shared site asset". answer-lock.js times its window with `Date.now()`, and WSL steps the wall clock back about 2.5 s every 30 s. 18 of 120 load runs failed, every failing round held a clock step, and no round without one failed. Not fixed; the question for Jon is in todo row ANSWER-LOCK-WALL-CLOCK. LOCAL-CHECKS updated.
+- When this merges: delete the remote branch `claude/laughing-einstein-3hckbl` (Jon, 15 Nov) and record it here.
+
 ## 2026-11-15 (home): ANSWER-LOCK-FLAKE PR 1 (header badge, leftover branch)
 
 Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/header-badge-trim`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. PR 2 (the answer-lock flake) follows on a new branch once this PR merges.
@@ -29,6 +41,7 @@ Claude Code (home lane), worktree `~/mg-header-badge-trim`, branch `claude/heade
   - The badge row now needs 1,012 px, against 1,257 px before.
   - Locally the row already fitted at 1366. Project Claude measured 282 px there, so the two renderers differ by a few pixels; after the removal there is about 245 px to spare at 1280.
 - `art/answer-box-redraws` deleted from the remote after Jon's ruling of 15 Nov at 08:37. Before deleting, its only commit was confirmed as 799748c, adding only the two `art-incoming/` PNGs. Todo row ANSWER-BOX-REDRAWS-BRANCH moved to `docs/history/todo-done.md`. No cloud close-out should carry the branch.
+- MERGED 15 Nov as dd03c87 (#773). Main on the merge commit: check-site 43699387814 success, phone-fit-full 43699387701 success (push run). Local check-changed: 63 of 63 passed.
 
 ## 2026-11-14 (home): UGH-STATS-HOME
 

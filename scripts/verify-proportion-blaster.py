@@ -308,7 +308,7 @@ def play(fails, html):
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once (F1 batch 8)
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda url: not url.startswith(base) and '/katex@' not in url, lambda route: route.abort())
+            bc.offline(ctx, base)
             if KATEX_DIR:
                 ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
                     path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
