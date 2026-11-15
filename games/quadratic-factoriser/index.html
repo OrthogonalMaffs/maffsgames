@@ -300,12 +300,26 @@
     min-height: 20px;
   }
 
+  /* One layout rule for both number pads (QF-PICKER, Jon 15 Nov 2026): the negatives, then the positives, each its
+     own block in increasing order, at most --cols keys a row and wrapping only within its block, so no row mixes signs. */
   .num-grid {
+    --gap: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--gap);
+  }
+  .num-block {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
     justify-content: center;
+    gap: var(--gap);
+    max-width: calc(var(--cols, 6) * 44px + (var(--cols, 6) - 1) * var(--gap));
   }
+  /* Where a whole block fits on one line (twelve 44px keys and their gaps: 616px), it takes one line, so a laptop keeps
+     two rows, as before, and the answer controls stay where the laptop rule measured them. */
+  .num-grid { container-type: inline-size; width: 100%; }
+  @container (min-width: 616px) { .num-block { max-width: none; } }
 
   .num-btn {
     font-family: 'JetBrains Mono', monospace;
@@ -327,8 +341,6 @@
   }
   .num-btn:active:not(:disabled) { transform: scale(0.95); }
   .num-btn:disabled { opacity: 0.4; cursor: default; }
-  .num-btn.neg { color: var(--muted); }
-  .num-btn.neg:hover:not(:disabled) { color: var(--navy); }
 
   /* ── Check button ── */
   .check-btn {
@@ -489,6 +501,9 @@
   /* ── Main game ── */
   .main-game { display: none; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
   .main-game.visible { display: flex; }
+  /* Full width, as the Higher and Formula panels are: it had been, only because the keypad's one long line was wider
+     than the screen (QF-PICKER). */
+  #gcsePanel { width: 100%; }
 
   /* ── Button ── */
   .btn {
@@ -642,8 +657,11 @@
 
   @media (max-width: 500px) {
     .game-area { padding: 16px 14px 40px; }
-    .num-grid { gap: 6px; }
-    .num-btn { width: 40px; height: 40px; font-size: 12px; }
+    .num-grid { --gap: 4px; }
+  }
+  /* Six 44px keys and their gaps need 284px: at 360px and narrower the picker's side padding gives way, never the keys. */
+  @media (max-width: 360px) {
+    .picker { padding-left: 2px; padding-right: 2px; }
   }
 /* === Accessibility === */
 body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
@@ -744,7 +762,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 
       <div class="picker">
         <div class="picker-label">Select a Number</div>
-        <div class="picker-editing" id="pickerEditing">Tap a bracket number above to start</div>
+        <div class="picker-editing" id="pickerEditing">Tap a number</div>
         <div class="num-grid" id="numGrid"></div>
       </div>
 
@@ -1163,18 +1181,46 @@ let score = 0, correctCount = 0, qIndex = 0, sessionQuestions = [];
 let val1 = null, val2 = null, editingSlot = null, currentQ = null;
 function gcsePanel() { return document.getElementById('gcsePanel'); }   // MaffsLock's container (canon 7.6.0)
 
-function buildNumGrid() {
-  const grid = document.getElementById('numGrid');
+/* The number pads (QF-PICKER, Jon 15 Nov 2026). One layout rule and one tap rule serve both the GCSE brackets and the
+   Higher slots. Layout: -max to -1 in one block, 1 to max in the next (CSS .num-block). Tap rule: a number goes into
+   the slot the student tapped, else the first empty slot in `order`; with every slot full and none tapped it goes
+   nowhere. Marking is untouched: GCSE accepts either bracket order, Higher reads p, q, r, s and k by position. */
+function qfBuildPad(grid, max, cols, onPick) {
   grid.innerHTML = '';
-  const nums = [];
-  for (let n = -12; n <= 12; n++) if (n !== 0) nums.push(n);
-  nums.forEach(n => {
-    const btn = document.createElement('button');
-    btn.className = 'num-btn' + (n < 0 ? ' neg' : '');
-    btn.textContent = n;
-    btn.onclick = () => selectNum(n);
-    grid.appendChild(btn);
+  grid.style.setProperty('--cols', cols);
+  [-1, 1].forEach(sign => {
+    const block = document.createElement('div');
+    block.className = 'num-block';
+    for (let i = 1; i <= max; i++) {
+      const n = sign < 0 ? i - max - 1 : i;   // -max .. -1, then 1 .. max
+      const btn = document.createElement('button');
+      btn.className = 'num-btn' + (n < 0 ? ' neg' : '');
+      btn.textContent = n;
+      btn.onclick = () => onPick(n);
+      block.appendChild(btn);
+    }
+    grid.appendChild(block);
   });
+}
+function qfTargetSlot(order, valueOf, selected) {
+  if (selected !== null) return selected;
+  return order.find(slot => valueOf(slot) === null) || null;
+}
+
+function buildNumGrid() {
+  qfBuildPad(document.getElementById('numGrid'), 12, 6, selectNum);
+}
+
+const GCSE_SLOTS = [1, 2];
+function gcseValue(slot) { return slot === 1 ? val1 : val2; }
+// The picker line says what the next tap does, and the number in the bracket it will fill turns the accent colour.
+function gcseShowTarget() {
+  const target = qfTargetSlot(GCSE_SLOTS, gcseValue, editingSlot);
+  GCSE_SLOTS.forEach(s => document.getElementById('num' + s).classList.toggle('selected', s === target));
+  document.getElementById('pickerEditing').textContent =
+    target === null ? 'Both brackets filled. Tap a bracket to change it, or check.'
+    : val1 === null && val2 === null ? 'Tap a number'
+    : `Tap a number for bracket ${target}`;
 }
 
 function setGridEnabled(on) {
@@ -1185,12 +1231,14 @@ function setGridEnabled(on) {
 function startEditing(slot) {
   if (MaffsLock.isLocked(gcsePanel())) return;
   editingSlot = slot;
-  document.getElementById('pickerEditing').textContent = `Selecting number for bracket ${slot}...`;
+  gcseShowTarget();
 }
 
 function selectNum(n) {
-  if (MaffsLock.isLocked(gcsePanel()) || !editingSlot) return;
-  if (editingSlot === 1) {
+  if (MaffsLock.isLocked(gcsePanel())) return;
+  const slot = qfTargetSlot(GCSE_SLOTS, gcseValue, editingSlot);
+  if (slot === null) { gcseShowTarget(); return; }
+  if (slot === 1) {
     val1 = n;
     document.getElementById('sign1').textContent = n >= 0 ? '+' : '−';
     document.getElementById('num1').textContent = Math.abs(n);
@@ -1199,8 +1247,8 @@ function selectNum(n) {
     document.getElementById('sign2').textContent = n >= 0 ? '+' : '−';
     document.getElementById('num2').textContent = Math.abs(n);
   }
-  document.getElementById('pickerEditing').textContent = `Selected ${n} for bracket ${editingSlot}. Tap the other bracket or check.`;
   editingSlot = null;
+  gcseShowTarget();
 }
 
 function startGame() {
@@ -1254,7 +1302,7 @@ function loadQ() {
   document.getElementById('feedback').textContent = '';
   document.getElementById('feedback').className = 'feedback';
   document.getElementById('hintText').innerHTML = '';
-  document.getElementById('pickerEditing').textContent = 'Tap a bracket number above to start';
+  gcseShowTarget();
   const chips = document.getElementById('hintChips');
   chips.innerHTML = `<span class="hint-chip">${tex('p + q = ' + currentQ.b)}</span><span class="hint-chip">${tex('p \\times q = ' + currentQ.c)}</span>`;
   setGridEnabled(true);
@@ -1567,6 +1615,7 @@ function hfCompleteStepFlow() {
 
 function hfRenderIndependent() {
   hfIndependentPicks = { p: null, q: null, r: null, s: null, k: null };
+  hfEditingSlot = null;
   const isHcf = currentQ.stage === 'hcf';
   hfPanel().innerHTML = `
     <div class="hf-box">
@@ -1580,7 +1629,7 @@ function hfRenderIndependent() {
         <span class="hf-slot" data-slot="r" onclick="hfIndepEdit('r')">?</span><span>x</span>
         <span class="hf-slot" data-slot="s" onclick="hfIndepEdit('s')">?</span><span>)</span>
       </div>
-      <div class="picker-editing" id="hfIndepEditing">Tap a slot, then a number below.</div>
+      <div class="picker-editing" id="hfIndepEditing">Tap a number for p</div>
       <div class="num-grid" id="hfIndepGrid"></div>
       <button class="check-btn" id="hfIndepCheckBtn" onclick="hfIndepCheck()">Check Factorisation</button>
       <button class="hf-show-method" onclick="hfShowMethod()">Show me the method</button>
@@ -1592,36 +1641,37 @@ function hfRenderIndependent() {
 }
 
 function hfBuildIndepGrid() {
-  const grid = document.getElementById('hfIndepGrid');
-  grid.innerHTML = '';
-  const nums = [];
-  for (let n = -9; n <= 9; n++) if (n !== 0) nums.push(n);
-  nums.sort((a, b) => a - b);
-  nums.forEach(n => {
-    const btn = document.createElement('button');
-    btn.className = 'num-btn' + (n < 0 ? ' neg' : '');
-    btn.textContent = n;
-    btn.onclick = () => hfIndepSelect(n);
-    grid.appendChild(btn);
-  });
+  qfBuildPad(document.getElementById('hfIndepGrid'), 9, 9, hfIndepSelect);
+  hfShowTarget();
+}
+// The slots fill in the order of (px + q)(rx + s), then k when the question has one: the order the answer is read in.
+function hfSlotOrder() { return currentQ.stage === 'hcf' ? ['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's']; }
+function hfShowTarget() {
+  const target = qfTargetSlot(hfSlotOrder(), slot => hfIndependentPicks[slot], hfEditingSlot);
+  hfPanel().querySelectorAll('.hf-slot').forEach(el => el.classList.toggle('active', el.dataset.slot === target));
+  document.getElementById('hfIndepEditing').textContent = target === null
+    ? 'Every slot filled. Tap a slot to change it, or check.'
+    : `Tap a number for ${target}`;
 }
 function hfIndepEdit(slot) {
   if (MaffsLock.isLocked(hfPanel())) return;
   hfEditingSlot = slot;
-  document.getElementById('hfIndepEditing').textContent = `Selecting a value for ${slot}...`;
+  hfShowTarget();
 }
 function hfIndepSelect(n) {
-  if (MaffsLock.isLocked(hfPanel()) || !hfEditingSlot) return;
-  hfIndependentPicks[hfEditingSlot] = n;
-  const el = document.querySelector(`.hf-slot[data-slot="${hfEditingSlot}"]`);
-  if (el) el.textContent = (hfEditingSlot === 'p' || hfEditingSlot === 'r' || hfEditingSlot === 'k') ? n : (n >= 0 ? `+${n}` : n);
-  document.getElementById('hfIndepEditing').textContent = `Set ${hfEditingSlot} = ${n}. Tap another slot or check.`;
+  if (MaffsLock.isLocked(hfPanel())) return;
+  const slot = qfTargetSlot(hfSlotOrder(), s => hfIndependentPicks[s], hfEditingSlot);
+  if (slot === null) { hfShowTarget(); return; }
+  hfIndependentPicks[slot] = n;
+  const el = document.querySelector(`.hf-slot[data-slot="${slot}"]`);
+  if (el) el.textContent = (slot === 'p' || slot === 'r' || slot === 'k') ? n : (n >= 0 ? `+${n}` : n);
   hfEditingSlot = null;
+  hfShowTarget();
 }
 function hfIndepCheck() {
   const picks = hfIndependentPicks;
   const isHcf = currentQ.stage === 'hcf';
-  const needed = isHcf ? ['p', 'q', 'r', 's', 'k'] : ['p', 'q', 'r', 's'];
+  const needed = hfSlotOrder();
   if (needed.some(slot => picks[slot] === null)) {
     const fb = document.getElementById('hfFeedback');
     fb.textContent = 'Fill in every slot first.'; fb.className = 'hf-feedback wrong';
