@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): ANSWER-LOCK-FLAKE (PR 1 of 2: the header badge and the leftover branch)
+
+Claude Code, in a cloud session (the contract's lane is home; no WSL worktree), branch `claude/laughing-einstein-3hckbl`; contract `docs/handover/contracts/2026-11-15-answer-lock-flake.md`. PR 1 removes the "Built to be safe for school networks" badge from the homepage header (`index.html`, Jon 15 Nov 08:51); no other badge, style or order changed. PR 2, the answer-lock flake's cause, follows on the same branch name once PR 1 is merged.
+
+- Header, measured in Chromium with the pinned Outfit (`scripts/fonts/`), the answers total showing: before #771 240 px, one row, at 1280, 1366 and 1440 px; on main 282 px at 1280 (the "Ugh, stats" badge alone on a second row) and 240 px at 1366 and 1440; after, 240 px and one row at all three, and at 1263, 1349 and 1423 px (the same screens with a 17 px scrollbar).
+- Main's 282 px at 1366 (Project Claude's figure) appears only when Outfit does not load: in the fallback font the row needs 1,318 px and has 1,302. With Outfit it needs 1,253. After the change the row needs 1,013 px (1,060 in the fallback font) and has 1,199 at its narrowest laptop width, so it is one row either way.
+- `art/answer-box-redraws`: nothing to delete. On 15 Nov the remote had no such branch (`git ls-remote --heads origin`, and GitHub's list of 42 branches). This session's copy of the ref still read 799748c, one commit on da84b07 adding only `art-incoming/prom-11-router-dial.png` and `art-incoming/rfi-10-plans-keypad.png`, so the content check the contract asked for was made. Todo row ANSWER-BOX-REDRAWS-BRANCH is closed (moved to `docs/history/todo-done.md`).
+- Checks: this container cannot run the home lane's `check-changed.py` usefully (the KaTeX CDN is refused by its proxy); the Gate is the check, as for the cloud lane. Run by hand: see the PR body.
+
 ## 2026-11-14 (home): UGH-STATS-HOME
 
 Claude Code (home lane), worktree `~/mg-ugh-stats-home`, branch `claude/ugh-stats-home`; contract `docs/history/contracts/2026-11-14-ugh-stats-home.md`. The homepage gets three ways into /ugh-stats/: an "Ugh, stats" badge, last in the header row and styled like the white trust badges; the questions-answered total as a link; and a card at the top of the game list, shown only with the Statistics topic. All three are in `index.html`. `answer-count.js` and the other shared files are unchanged.
