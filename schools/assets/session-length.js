@@ -26,6 +26,9 @@
  *   - if the previously-selected length is no longer offered (a level or
  *     filter change shrank the pool), the largest offered length is selected
  *     instead — never a length the new pool can't fill
+ *   - the buttons wrap onto a second line rather than scroll a narrow phone
+ *     sideways: render() sets the mount's flex-wrap (the game's own CSS
+ *     styles the row; a mount that is not a flex row is unaffected)
  *
  * WHAT IT DOES NOT DO
  * -------------------
@@ -80,6 +83,7 @@
     var wanted = offered.indexOf(opts.selected) !== -1 ? opts.selected : offered[offered.length - 1];
 
     mount.innerHTML = '';
+    mount.style.flexWrap = 'wrap';
     offered.forEach(function (count) {
       var btn = document.createElement('button');
       btn.className = 'session-btn' + (count === wanted ? ' ' + selectedClass : '');
