@@ -16,6 +16,19 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-15 (home): UNLIST-GRAPH-SKETCHER (Graph Sketcher off every list, page live; two todo rows)
+
+Claude Code (home lane), worktree `~/mg-unlist-gs`, branch `claude/unlist-graph-sketcher`; contract `docs/handover/contracts/2026-11-15-unlist-graph-sketcher.md`. The first commit carries FOOTER-NO-SUPPORT's close-out (merge line below, contract to history).
+
+- **Off every list (SR-21's list in reverse):** the roster row goes to Unlisted (#71, with its note and a dated bullet; Core 9 to 8, Unlisted 6 to 7); the portal card (index.html); sitemap.xml; the spec map's three rows (now "Graph Sketcher (being rebuilt)", as glorious-gantt's are); the hub row (leaderboards/index.html) and a NOT_ON_HUB entry (check-leaderboard-coverage.js). There was no weekly-fact, /resit/ or parent-guide link.
+- **Kept:** data/games.json (check-meta needs one entry per roster row, unlisted rows too), launch-dates.json, firebase-leaderboard.js's names, check-ledger.json and the scripts' slug lists. The game page changes only by its noindex line.
+- **/updates/:** Jon's line is verbatim at the top of November's list. The October "Wrong answer keys" line loses its link to the game, with its words unchanged, because check-canonical-links fails an /updates/ link to a noindex page.
+- **todo:** new rows GRAPH-SKETCHER-REDESIGN (11 points) and PACK-ART-EXTRAS ((a)-(d)), beside the print-pack rows in §3. todo-done's PACK-WORDING-1511 close note gains the re-tracked sentence.
+- **Local checks (quick, not a merge condition):** check-meta, check-spec-mapping, check-canonical-links, check-look-signoff, check-levels, check-theme, check-analytics-loader, check-publish-scope, check-context-size and check-leaderboard-coverage all pass.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): FOOTER-NO-SUPPORT (the Support MaffsGames link out of the site footer)
 
 Claude Code (home lane), worktree `~/mg-footer-no-support`, branch `claude/footer-no-support`; contract `docs/handover/contracts/2026-11-15-footer-no-support.md`. The first commit carries HOME-LEAN's close-out (merge line below, contract to history).
