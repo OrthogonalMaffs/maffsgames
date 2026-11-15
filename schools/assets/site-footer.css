@@ -15,9 +15,7 @@
    - a scroll-shadow cue on whichever edge has more links (CSS only: opaque
      covers that move with the content, `local`, over shadows fixed to the bar,
      `scroll`; a cover hides its shadow only when that edge is fully scrolled);
-   - every link a tap target the full 40px high;
-   - below 480px the Support link drops "MaffsGames" (.sf-long). If this file
-     ever fails to load, the link still reads in full. */
+   - every link a tap target the full 40px high. */
 
 .site-footer {
   position: fixed;
@@ -57,6 +55,3 @@
 .site-footer a:hover { text-decoration: underline; }
 .site-footer a:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
 .site-footer .sep { opacity: 0.4; }
-@media (max-width: 479.98px) {
-  .site-footer .sf-long { display: none; }
-}
