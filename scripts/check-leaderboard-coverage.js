@@ -161,6 +161,9 @@ const NOT_ON_HUB = {
   // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
   // entry removed, in that PR.
   'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
+  // Jon, 15 Nov 2026 (10:29): unlisted pending its redesign (contract UNLIST-GRAPH-SKETCHER, todo
+  // GRAPH-SKETCHER-REDESIGN); the hub row is restored, and this entry removed, at relisting (canon SR-21).
+  'graph-sketcher': 'unlisted pending its redesign; hub row restored at relisting',
   // New (contract HC-FACTOR, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'hc-factor': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract Y-SO-STEEP, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
