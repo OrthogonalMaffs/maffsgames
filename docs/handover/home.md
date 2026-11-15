@@ -35,7 +35,7 @@ Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printab
   - `printables/` is in check-publish-scope's SITE and in check-content-safety's GLOBS. Both add coverage, as for `ugh-stats/`, and neither is an exception.
   - data/games.json is not touched. check-meta needs no record, because no portal card links to the page.
 - todo: the PRINTABLES-PAGE row is updated (loop cards still to come), and a new row PRINTABLES-CORE is added.
-- MERGED: pending.
+- MERGED 15 Nov, 16:41 UTC, as a892547 (#784). Main on the merge commit: check-site 43736934812 success, phone-fit-full 43736934783 success. Local check-changed: 260 checks passed. The branch was rebased onto QF-HCF-FIRST (#783) before the push; the only conflict was the /updates/ November list. Leftover worktree ~/mg-monotonic-closeout and branch claude/monotonic-clock-closeout (1435f511, never pushed) removed by hand on Jon's ruling, after its diff was shown to reverse-apply cleanly on main; end-task removed claude/printables-page.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
