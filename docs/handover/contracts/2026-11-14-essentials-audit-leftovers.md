@@ -43,3 +43,10 @@ STOP IF: a rotation or translation key cannot be made right by construction unde
 
 AMENDMENT 1 (Jon, 15 Nov 2026, about 11:10; verbatim):
 Follow-up for ESSENTIALS-AUDIT-LEFTOVERS PR 3 (Jon, 15 Nov ~11:10): approved. scripts/check-resit-fixes.py may be extended so its Shape Shifter rotation check reads the centre from each question's words and recomputes about that centre (any whole-number centre), in place of failing every non-origin rotation (:174). Conditions: its four existing Shape Shifter plants still fire; add one plant, a rotation about a non-origin centre whose key is computed about (0,0), which it must catch; no other game's checks in that script change. With that, PR 3 merges on green as the contract says; record this follow-up verbatim in the PR body.
+
+AMENDMENT 2 (Jon, 15 Nov 2026; verbatim):
+Follow-up for ESSENTIALS-AUDIT-LEFTOVERS PR 3 (#778) (Jon, 15 Nov): option 2, all of it. The 6 P's takes every new rotation and translation (119 questions). Lane exception for this PR only: you may change scripts/gen-six-ps.py and regenerate schools/assets/six-ps/transformations.json (and its inventory doc row), nothing else under schools/assets/. Worked line for a rotation about a centre other than the origin, verbatim in the gen-six-ps.py rule's style, built with the same off_words() and tex() helpers the enlargement case uses (:2407-2413); origin rotations keep their current line:
+  1. "A rotation of {turn} about {centre}: work from the centre, not the origin."
+  2. "From the centre to {name} is {off_words(ox, oy)}. Turned {turn}, that is {off_words(rx, ry)}."
+  3. "Starting at {centre} and moving {off_words(rx, ry)} gives {image}."
+  where (ox, oy) = the point minus the centre and (rx, ry) is (oy, -ox) for 90° clockwise, (-oy, ox) for 90° anticlockwise, (-ox, -oy) for 180°; assert the image equals centre + (rx, ry). Add the assertion that every rotation, any centre, is recomputed from its words, in place of the origin-only assertion. Report the bank's new count, the question ids that changed, and one worked solution of each turn about a non-origin centre in the PR body. Then PR 3 merges on green.

@@ -2218,13 +2218,18 @@ async def topic_simultaneous(h):
 
 
 # --- transformations: shape-shifter's items (translate, reflect, rotate, enlarge), asked as the image of one corner ---
-# The first 45 items are the game's Random Mix as it was (15 translations, the 15 typed reflections in the axes, 15 rotations):
-# they come first, in that order, so each keeps the corner it was always asked about. The 20 reflections the game builds in
-# y = x, y = -x, x = k and y = k and its 16 enlargements follow (26 Oct 2026).
+# The game's Random Mix comes first (its translations, the 15 typed reflections in the axes, its rotations), then the 20
+# reflections the game builds in y = x, y = -x, x = k and y = k and its 16 enlargements (26 Oct 2026). Since 15 Nov 2026 the
+# game builds its translations (32) and rotations (36, half of them about a point other than the origin) from rules, so those
+# two groups are new questions; every reflection and enlargement keeps the corner it was always asked about (TRANSF_BASE).
 TRANSF_JS = r"""() => [].concat(TRANSLATION_QUESTIONS.map((q, i) => ({k: 'T', i: i, q: q})),
   REFLECTION_QUESTIONS.slice(0, 15).map((q, i) => ({k: 'F', i: i, q: q})), ROTATION_QUESTIONS.map((q, i) => ({k: 'R', i: i, q: q})),
   REFLECTION_QUESTIONS.slice(15).map((q, i) => ({k: 'F', i: i + 15, q: q})), ENLARGEMENT_QUESTIONS.map((q, i) => ({k: 'E', i: i, q: q})))"""
 SHAPE_NAMES = {"triangle": "triangle", "rectangle": "rectangle", "square": "square"}
+# The corner an item is asked about is corner (base + its index in its bank) mod the number of corners. The bases are each
+# group's place in the list when there were 15 translations and 15 rotations, so the questions that did not change on
+# 15 Nov 2026 (every reflection and enlargement) are asked about the same corner, and keep their ids.
+TRANSF_BASE = {"T": 0, "F": 15, "R": 30, "F+": 30, "E": 65}      # F+: the built reflections, index 15 on: 45 + (i - 15)
 MIRRORS = {"x": (0, 1, 0), "y": (1, 0, 0), "y=x": (1, -1, 0), "y=-x": (1, 1, 0)}      # a x + b y = c; "x" is the x-axis
 
 
@@ -2286,11 +2291,24 @@ def transf_image(it, pt):
         sf, cx, cy = transf_enlargement(desc)
         assert (Fraction(q["sfn"], q["sfd"]), q["cx"], q["cy"]) == (sf, cx, cy), ("shape-shifter: the enlargement's words", desc)
         return enlarge_point(pt, sf, cx, cy)
-    m = re.fullmatch(r"Rotate (90° anticlockwise|90° clockwise|180°) about \((-?\d+),(-?\d+)\)", desc)
-    assert (int(m.group(2)), int(m.group(3))) == (q["cx"], q["cy"]) == (0, 0), ("shape-shifter: the centre", desc)
-    turn = m.group(1)
+    turn, cx, cy = transf_rotation(desc)
+    assert (cx, cy) == (q["cx"], q["cy"]), ("shape-shifter: the centre", desc)
     assert {"90° anticlockwise": 90, "90° clockwise": -90, "180°": 180}[turn] == q["angle"], ("shape-shifter: the angle", desc)
-    return {"90° anticlockwise": (-y, x), "90° clockwise": (y, -x), "180°": (-x, -y)}[turn]
+    rx, ry = transf_turned(turn, x - cx, y - cy)
+    return (cx + rx, cy + ry)
+
+
+def transf_rotation(desc):
+    """(turn, cx, cy) from the words of a rotation about any whole-number centre."""
+    m = re.fullmatch(r"Rotate (90° anticlockwise|90° clockwise|180°) about \((-?\d+),(-?\d+)\)", desc)
+    assert m, ("shape-shifter: the words of a rotation", desc)
+    return m.group(1), int(m.group(2)), int(m.group(3))
+
+
+def transf_turned(turn, ox, oy):
+    """An offset from the centre after the turn, on the y-up grid: clockwise (ox, oy) -> (oy, -ox), anticlockwise
+    (-oy, ox), a half turn (-ox, -oy)."""
+    return {"90° clockwise": (oy, -ox), "90° anticlockwise": (-oy, ox), "180°": (-ox, -oy)}[turn]
 
 
 def transf_svg(shape, mirror=None, centre=None, ray_to=None):
@@ -2411,10 +2429,21 @@ def transf_worked(it, name, pt, img):
                     name, off_words(ox, oy), "Halved" if sf < 1 else "Multiplied by " + sfw, off_words(mx, my)),
                 "Starting at %s and moving %s gives %s." % (centre, off_words(mx, my), tex("(%d, %d)" % img))]
         assert img == (cx + mx, cy + my)
-    else:
+    elif (q["cx"], q["cy"]) == (0, 0):
         turn, new = {180: ("180°", "(-x, -y)"), -90: ("90° clockwise", "(y, -x)"), 90: ("90° anticlockwise", "(-y, x)")}[q["angle"]]
         rule = ["A rotation of %s about the origin: %s goes to %s." % (turn, tex("(x, y)"), tex(new))]
         assert img == {180: (-x, -y), -90: (y, -x), 90: (-y, x)}[q["angle"]]
+    else:
+        # A rotation about a centre other than the origin (Jon's wording, 15 Nov 2026), in the enlargement lines' style.
+        turn, cx, cy = transf_rotation(desc)
+        ox, oy = x - cx, y - cy
+        assert (ox, oy) != (0, 0), ("shape-shifter: the corner asked about is the centre of the rotation, so it has no offset to turn", desc, pt)
+        rx, ry = transf_turned(turn, ox, oy)
+        centre = tex("(%d, %d)" % (cx, cy))
+        rule = ["A rotation of %s about %s: work from the centre, not the origin." % (turn, centre),
+                "From the centre to %s is %s. Turned %s, that is %s." % (name, off_words(ox, oy), turn, off_words(rx, ry)),
+                "Starting at %s and moving %s gives %s." % (centre, off_words(rx, ry), tex("(%d, %d)" % img))]
+        assert img == (cx + rx, cy + ry)
     return rule + [last]
 
 
@@ -2464,19 +2493,21 @@ def transf_slips(it, pt, img):
 
 
 async def topic_transformations(h):
-    """The items of shape-shifter's Random Mix (15 translations, 15 typed reflections in the axes, 15 rotations) and the 20
-    reflections and 16 enlargements the game builds (26 Oct 2026). The game asks the student to place the image on a grid,
+    """The items of shape-shifter's Random Mix (its 32 translations, 15 typed reflections in the axes, its 36 rotations) and the
+    20 reflections and 16 enlargements the game builds (26 Oct 2026). The game asks the student to place the image on a grid,
     which a typed bank cannot, so each item is asked as the coordinates of the image of one corner (A, B, C or D in turn),
-    the object drawn on a grid. The image is recomputed from the item's words, and for a rotation compared with the game's
-    own correct shape. The game has no written solution: the worked lines are Project Claude's template."""
+    the object drawn on a grid. The image is recomputed from the item's words, and every rotation, about any centre, is
+    compared with the game's own correct shape. The game has no written solution: the worked lines are Project Claude's
+    template, and for a rotation about a point other than the origin Jon's (15 Nov 2026)."""
     pg = await h.page("shape-shifter", "level=year6")
     items = await pg.evaluate(TRANSF_JS)
     out = []
     for n, it in enumerate(items):
         q = it["q"]
         shape = [tuple(p) for p in q["shape"]]
-        # the first 45 keep the corner they have always been asked about; the new ones continue the count
-        v = n % len(shape)
+        # the corner asked about: a fixed rule (TRANSF_BASE), so a question that has not changed is never asked differently
+        built_reflection = it["k"] == "F" and it["i"] >= 15
+        v = (TRANSF_BASE["F+" if built_reflection else it["k"]] + it["i"]) % len(shape)
         img = transf_image(it, shape[v])
         if it["k"] == "R":
             assert [list(transf_image(it, p)) for p in shape] == q["correct"], ("shape-shifter: the game's rotated shape", q["desc"])
