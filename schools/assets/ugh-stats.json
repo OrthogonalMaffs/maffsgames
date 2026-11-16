@@ -1,9 +1,9 @@
 {
- "as_of": "2026-11-15T22:03:52Z",
+ "as_of": "2026-11-16T13:58:51Z",
  "countries": [
   {
    "country": "United Kingdom",
-   "sessions": 1160
+   "sessions": 1217
   },
   {
    "country": "Spain",
@@ -15,23 +15,23 @@
   },
   {
    "country": "Singapore",
-   "sessions": 75
+   "sessions": 76
   },
   {
    "country": "Malaysia",
    "sessions": 29
   },
   {
+   "country": "Ireland",
+   "sessions": 28
+  },
+  {
    "country": "Uruguay",
    "sessions": 27
   },
   {
-   "country": "Ireland",
-   "sessions": 26
-  },
-  {
    "country": "China",
-   "sessions": 17
+   "sessions": 18
   },
   {
    "country": "Australia",
@@ -43,7 +43,7 @@
   },
   {
    "country": "Germany",
-   "sessions": 11
+   "sessions": 12
   },
   {
    "country": "Netherlands",
@@ -59,14 +59,10 @@
   },
   {
    "country": "Other countries",
-   "sessions": 116
+   "sessions": 119
   }
  ],
  "daily": [
-  {
-   "date": "2026-10-16",
-   "starts": 88
-  },
   {
    "date": "2026-10-17",
    "starts": 28
@@ -182,6 +178,10 @@
   {
    "date": "2026-11-14",
    "starts": 15
+  },
+  {
+   "date": "2026-11-15",
+   "starts": 41
   }
  ],
  "hours": {
@@ -223,45 +223,45 @@
    "<10",
    11,
    18,
-   10,
+   11,
    "<10",
    10,
+   18,
+   "<10",
+   15,
+   18,
+   10,
+   19,
+   11,
    23,
-   "<10",
-   14,
-   12,
-   16,
-   12,
-   "<10",
-   20,
-   "<10",
-   10
+   10,
+   "<10"
   ]
  },
  "levels": [
   {
    "level": "gcse",
-   "starts": 163
+   "starts": 159
   },
   {
    "level": "year6",
-   "starts": 94
+   "starts": 115
   },
   {
    "level": "ks3",
-   "starts": 88
+   "starts": 87
   },
   {
    "level": "all",
-   "starts": 56
+   "starts": 53
   },
   {
    "level": "core",
-   "starts": 41
+   "starts": 32
   },
   {
    "level": "alevel",
-   "starts": 22
+   "starts": 24
   },
   {
    "level": "level3",
@@ -269,7 +269,7 @@
   },
   {
    "level": "higher",
-   "starts": 13
+   "starts": 14
   },
   {
    "level": "further",
