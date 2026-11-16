@@ -77,6 +77,11 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-16 (cloud): MERGE-ROUTE-RETIRE (`docs/handover/contracts/2026-11-16-merge-route-retire.md`; Jon's ruling 16 Nov 09:41)
+
+Agent Claude Code (cloud), branch `claude/great-hypatia-7d9ksh` from main c73ea61. Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** PERCENTAGE-FLIP-BANKS merged #793 as c73ea61, via the GitHub connection under the (now retired) merge-route ruling of 10 Nov. The merge message carried a literal skip marker in a closing line the merging session wrote itself, so no run started on main; check-site and phone-fit-full were started by hand (workflow_dispatch) on c73ea61 at 09:30 UTC, Jon's go-ahead: check-site 43840393393 success (09:43:31 UTC), phone-fit-full 43840399609 success (09:42:40 UTC). Contract moved to docs/history/contracts/.
+
 ## 2026-11-16 (cloud): PERCENTAGE-FLIP-BANKS (`docs/handover/contracts/2026-11-16-percentage-flip-banks.md`; Jon's rulings 15 Nov 22:52)
 
 Agent Claude Code (cloud), branch `claude/pensive-fermat-j6m1x8` from main 14b8711. Medium; merges on green.
