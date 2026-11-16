@@ -492,7 +492,69 @@ def _heat_lamp_gradient(v):
                       "miss": _whole(Fraction(rise), "the rise, not divided by the run")}}
 
 
+# ---- The P.E. Store Rebellion (contract PE-SHED-PACK, 16 Nov 2026) --------------------------------------------------
+
+def _reduced(num, den):
+    """num / den in lowest terms as "a/b", by trying every common divisor from the smaller number down (no gcd)."""
+    for d in range(min(num, den), 0, -1):
+        if num % d == 0 and den % d == 0:
+            return "%d/%d" % (num // d, den // d)
+
+
+def _sprinkler_sector_area(v):
+    """sprinkler-sector-area: a sector of angle A on a circle of radius r has area (A / 360) x pi x r squared. The
+    limit is K pi square metres, so every setting on the dial, 10 to 360 degrees in tens, is tried against
+    A x r squared = 360 x K (the pi on both sides): exactly one must fit. The common wrong answer, by the room's rule
+    (its missSays): K against the whole circle worked out as a decimal, 360 x K / (pi x r squared), on the dial's
+    nearest ten degrees, with pi held between two exact fractions (_pi_bounds) so both ends must settle on the same
+    ten. The worked line's figures: r squared, counted as r rows of r, and K over r squared in lowest terms."""
+    r, K = v["r"], v["K"]
+    r_squared = sum(r for _ in range(r))
+    fits = [a for a in range(10, 361, 10) if a * r_squared == 360 * K]
+    if len(fits) != 1:
+        raise ValueError("arc settings %s fit a %d pi limit at reach %d m, not exactly one" % (fits, K, r))
+    low, high = _pi_bounds()
+    tens = {_half_up(Fraction(360 * K) / (pi * r_squared) / 10) for pi in (low, high)}
+    if len(tens) != 1:
+        raise ValueError("the decimal-circle angle cannot be settled: pi's bracket straddles a half")
+    return {"answer": fits[0], "miss": 10 * tens.pop(), "r2": r_squared, "frac": _reduced(K, r_squared)}
+
+
+def _dodgeball_pressure_boyle(v):
+    """dodgeball-pressure-boyle: pressure is inversely proportional to volume, so pressure x volume is the same
+    folded and open. Every whole psi on the gauge, 0 to 100, is tried against P x V2 = P1 x V1: exactly one must fit.
+    The common wrong answer, by the room's rule (its missSays, "direct proportion"): the pressure scaled up with the
+    volume, P1 x V2 / V1, which must be whole. The worked line's figure: the constant, V1 x P1."""
+    v1, p1, v2 = v["V1"], v["P1"], v["V2"]
+    fits = [p for p in range(0, 101) if p * v2 == p1 * v1]
+    if len(fits) != 1:
+        raise ValueError("gauge settings %s fit %d m3 at %d psi opened to %d m3, not exactly one" % (fits, v1, p1, v2))
+    return {"answer": fits[0], "miss": _whole(Fraction(p1 * v2, v1), "the directly scaled pressure"), "k": v1 * p1}
+
+
+def _locker_nth_term(v):
+    """locker-nth-term: the codes are a linear sequence in the day of term. Its daily step is found from the first
+    two entries, (c2 - c1) / (d2 - d1), and must be whole; the third entry must lie on the same line; the nth-term
+    rule is then code = step x day + (c1 - step x d1), and the answer is that rule at today, dT. The common wrong
+    answer, by the room's rule (its missTitle, "you treated day d3 as yesterday"): the last code plus the jump between
+    the first two, c3 + (c2 - c1). The worked line's figures: the day gaps d3 - d1, d2 - d1 and dT - d3, and the rise
+    c3 - c1."""
+    d1, c1, d2, c2, d3, c3, dT = (v[k] for k in ("d1", "c1", "d2", "c2", "d3", "c3", "dT"))
+    step = _whole(Fraction(c2 - c1, d2 - d1), "the daily step")
+    zero_term = c1 - step * d1
+
+    def nth(day):
+        return step * day + zero_term
+    if nth(d3) != c3:
+        raise ValueError("day %d's code %d is not on the line through days %d and %d" % (d3, c3, d1, d2))
+    return {"answer": nth(dT), "miss": c3 + (c2 - c1), "step": step,
+            "span": d3 - d1, "rise": c3 - c1, "ahead": dT - d3, "check": d2 - d1}
+
+
 RECOMPUTE = {
+    "sprinkler-sector-area": _sprinkler_sector_area,
+    "dodgeball-pressure-boyle": _dodgeball_pressure_boyle,
+    "locker-nth-term": _locker_nth_term,
     "hamster-wheel-rpm": _hamster_wheel_rpm,
     "hamster-feeder-bounds": _hamster_feeder_bounds,
     "heat-lamp-gradient": _heat_lamp_gradient,

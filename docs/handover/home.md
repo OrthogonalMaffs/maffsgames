@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-16 (home): PE-SHED-PACK (The P.E. Store Rebellion print pack, DRAFT; variant 0 fixed)
+
+Claude Code (home lane), worktree `~/mg-pe-shed-pack`, branch `claude/pe-shed-pack`; contract `docs/handover/contracts/2026-11-16-pe-shed-pack.md`. The first commit carries FOOTER-PHONE-FOUR's close-out (#797, cdc38aec; its entry below). #800 had merged (5a82f369) before this branched.
+
+- **Pack:** `rooms/pe-shed-rebellion/config.json` (6 sets, seed 1, DRAFT, certificate "Cross-country cancelled", no `answer_units`: every answer is whole degrees, psi or a dial number) and its eleven WebPs (pe-01-logbook ... pe-11-locker-dial, 1254 px, 44-247 KB). Label boxes measured by pixel: the largest rectangle of near-white (grey 225+) grown from a seed in each blank surface, then 26 px (2%) inside it on every side. The calendar's box sits below the drawn ring. Print-only words on the log, clipboard and laminated card (the clue sentence runs through their bold parts). Bibs and coat have no blank surface: no words printed.
+- **lockcheck.py:** sector area (every arc tried against A x r² = 360K; the decimal-circle wrong answer with pi bracketed by Machin), Boyle (every gauge setting tried against P x V2 = P1 x V1; wrong answer P1 x V2 / V1), nth term (step from the first two entries, third checked on the line, rule at day dT; wrong answer c3 + (c2 - c1)). All 27 library variants agree.
+- **Variant 0:** sprinkler variant 0 is 9 m / 27π (was 12 m / 48π), same answer 120 and miss 40; check-escape-rooms reports it VALID (273 of 720 draws). Row 47 closed to todo-done.
+- **Build:** 36 pages, 6 sets, every check passed first time; no shared-generator change was needed. Other packs: built before and after with a harness that keeps every `build_html()` document and the PDF: HTML and build logs byte-identical, final targets identical, PDFs identical once the two date fields are removed. Roll for Initiative does not build on this machine either way (locks pages 972 > 953 px); its HTML and log are identical. test-pack-generator.py: 67/67, 21 plants caught, 8 controls pass.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-16 (home): FOOTER-PHONE-FOUR (four footer links on phones)
 
 Codex (home lane), worktree `~/mg-footer-phone-four`, branch `codex/footer-phone-four`; contract `docs/handover/contracts/2026-11-16-footer-phone-four.md`. First commit 78e43086 closed UNLIST-GRAPH-SKETCHER (#791, 7be6482; check-site 43762342514 and phone-fit-full 43762342465 green; three follow-ups).
@@ -23,6 +35,8 @@ Codex (home lane), worktree `~/mg-footer-phone-four`, branch `codex/footer-phone
 - Shared footer: six wide-only links and their preceding separators gain `sf-wide` in CANONICAL; `apply-footer.py` wrote 152 pages. One media query hides them below 810px. In local Chromium with the real fonts, the ten-link row is 784px plus 24px padding and first fits at 808px; 810px is the rounded breakpoint. The four phone links are About, Contact, Privacy and Feedback on the existing 40px bar.
 - The browser assertion in `measure-phone-fit.py` passed on the homepage, prime-or-composite and the fractions parent guide at 320, 375, 390, 810 and 1280px. Both plants failed it: missing classes on a homepage copy and the media query removed from a stylesheet copy. `check-footer.py` passed all 152 pages; a diff check found only footer classes in those pages and the dated /updates/ line. `measure-phone-fit.py --selftest`, `check-context-size.py` and `git diff --check` passed; `ci-groups.py --worst-case` said no gate file changed. Next: PR Gate, merge and main-run report.
 - Backlog housekeeping: #794, #793, #795 and #796 rows closed or updated as the contract names. The B4 Angle Ace ledger row was not in item 7 and stays for a later contract; its text is stale on main.
+
+- MERGED 16 Nov as cdc38aec (#797), carried by PE-SHED-PACK's first commit. Main on the merge commit: check-site 43927268181 success, phone-fit-full 43927268127 success (both push runs). Contract moved to `docs/history/contracts/`.
 
 Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
 

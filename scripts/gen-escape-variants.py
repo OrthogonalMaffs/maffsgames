@@ -65,8 +65,10 @@ V = {}
 # ---------------------------------------------------- C1 sector area (dial 10-360/10)
 # answer = 360K/r^2. Misconception: the pi is dropped on one side only, so the
 # fraction is computed as K over the decimal area and lands one notch out.
+# Variant 0 is (9, 27), not the bank's (12, 48): 48 pi met the compressor's 48 psi and
+# 12 m the locker's day 12 (PE-SHED-VARIANT-0, Jon 29 Sep 2026). Same answer 120 and miss 40.
 store = []
-for r, K in shuffled([(12, 48)] + [(r, K) for r in range(5, 26) for K in range(5, 301)]):
+for r, K in shuffled([(9, 27)] + [(r, K) for r in range(5, 26) for K in range(5, 301)]):
     if r * r == 0 or (360 * K) % (r * r):
         continue
     ans = 360 * K // (r * r)

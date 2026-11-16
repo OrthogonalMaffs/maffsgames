@@ -154,11 +154,11 @@ window.ROOM = {
                     unit: '°', start: 10, sweep: 360, wedge: true, verb: 'Set the arc' },
       variants: [
         {
-          "r": 12,
-          "K": 48,
+          "r": 9,
+          "K": 27,
           "answer": 120,
           "miss": 40,
-          "r2": 144,
+          "r2": 81,
           "frac": "1/3"
         },
         {

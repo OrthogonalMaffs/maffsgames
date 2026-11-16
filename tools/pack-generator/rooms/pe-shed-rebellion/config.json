@@ -1,0 +1,29 @@
+{
+  "room": "pe-shed-rebellion",
+  "pack_version": "1",
+  "sets": 6,
+  "seed": 1,
+  "certificate_title": "Cross-country cancelled",
+  "wording_approved": null,
+  "images": [
+    {"file": "art/pe-01-logbook.webp", "role": "clue", "object": "log", "label_box": [397, 317, 987, 860], "font": "hand",
+     "printed": "Cricket square, watering limits. · The wet patch must never exceed {{arc.K}}&pi;&nbsp;square metres.",
+     "caption": "&ldquo;Any more than that and the square floods, and then we are all in trouble.&rdquo;"},
+    {"file": "art/pe-02-spec-sheet.webp", "role": "clue", "object": "spec", "label_box": [143, 151, 1105, 1102], "font": "label"},
+    {"file": "art/pe-03-clipboard.webp", "role": "clue", "object": "clipboard", "label_box": [301, 317, 949, 1102], "font": "hand",
+     "printed": "Day {{seq.d1}}: {{seq.c1}} · Day {{seq.d2}}: {{seq.c2}} · Day {{seq.d3}}: {{seq.c3}}",
+     "caption": "Scrawled on the back: &ldquo;Codes I have already used, so I stop repeating myself.&rdquo;"},
+    {"file": "art/pe-04-calendar.webp", "role": "clue", "object": "calendar", "label_box": [208, 575, 1043, 944], "font": "hand"},
+    {"file": "art/pe-05-card.webp", "role": "clue", "object": "card", "label_box": [264, 385, 969, 855], "font": "label",
+     "printed": "Pressure is inversely proportional to volume. · Folded flat, the arena holds {{psi.V1}} cubic metres at {{psi.P1}} psi.",
+     "caption": "COMPRESSOR &mdash; read before use. &ldquo;Too much pressure splits the seams.&rdquo;"},
+    {"file": "art/pe-06-arena-label.webp", "role": "clue", "object": "arena", "label_box": [263, 409, 1027, 901], "font": "label"},
+    {"file": "art/pe-07-bibs.webp", "role": "herring", "object": "bibs", "label_box": [300, 700, 900, 950], "font": "label",
+     "text": ""},
+    {"file": "art/pe-08-coat.webp", "role": "herring", "object": "coat", "label_box": [450, 500, 800, 800], "font": "label",
+     "text": ""},
+    {"file": "art/pe-09-sprinkler-dial.webp", "role": "answer", "lock": "sprinkler-sector-area", "label_box": [154, 902, 1097, 1109]},
+    {"file": "art/pe-10-compressor.webp", "role": "answer", "lock": "dodgeball-pressure-boyle", "label_box": [116, 907, 1130, 1156]},
+    {"file": "art/pe-11-locker-dial.webp", "role": "answer", "lock": "locker-nth-term", "label_box": [75, 950, 1175, 1177]}
+  ]
+}
