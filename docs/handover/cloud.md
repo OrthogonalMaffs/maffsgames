@@ -69,12 +69,18 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/handover/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
+## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/handover/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` from main d388414. Tier not stated; treated as Small (merge on green). Per-game fix, cloud lane's own.
+**Close-out carried (first commit):** HAMSTER-PACK-FINAL (#799, bf6cd95), recorded below; contract moved. Todo row LEDGER-B4-ANGLE-ACE closed to `docs/history/todo-done.md` (#795 made the GCSE bank 45; no B4 ledger entry remains).
+Next: the start-screen line and "n / 20" counter from MAX_TARGETS, 200 points and the GOAT message at 0° off, the verifier's model and four new plants, the /updates/ line; Gate; merge by merge-pr.py; main's two runs.
+
+## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/history/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
 
 Agent Claude Code (cloud), branch `claude/amazing-ptolemy-xiax6r` restarted from main 8af500e (#798 squash-merged). Tier not stated; treated as Medium (merge on green). Lane exception (Jon 18:06/18:08): tools/pack-generator/, scripts/test-pack-generator.py, scripts/gen-escape-variants.py, escape-rooms/variants.json, escape-rooms/hamster-heist/room.js.
 **Close-out carried (first commit):** HAMSTER-HEIST-PACK (#798, 5ee4713), recorded below; contract moved.
 Done on the branch: `miss_scale` (answer_units; `scale_of()`), `miss_is_answer()` in selection and `check_sets()` (every room), `lock_words` (`with_lock_words()`, validated, applied to the pack's copy of the lock so every word check reads it); lockcheck's heat-lamp printed miss is the rise; gen-escape-variants.py E3 appends three variants (runs 4, 5, 4: 50, 30, 45 per ten minutes; the seven existing unchanged; variants.json and room.js diffs heat-lamp only; check-escape-rooms passes). Hamster config: miss_scale 1, Jon's Hint 1 and missSays verbatim, wording approved 2026-11-16. `--final` build: 36 pages, no DRAFT, heat-lamp variants 9, 4, 3, 2, 6, 0 (no run of 10); targets 20897, 2120, 5544, 3310, 11080, 12000. Seven other packs: build_html's HTML byte-identical before/after, selection lines and targets identical. test-pack-generator.py: 67/67, then 21 plants caught and 8 controls pass. /updates/ line; todo HAMSTER-PACK-APPROVE closed, PI-FIGURE-BINDING added.
-Next: Gate, merge by merge-pr.py, main's two runs.
+**Merged** #799 as bf6cd95 via merge-pr.py, first attempt, last line "main bf6cd95 run 43930644204: GREEN", exit 0. Main's runs on bf6cd95 (push): check-site 43930644204 success 18:49:16 UTC, phone-fit-full 43930644108 success 18:49:07 UTC. Close-out carried by BEARING-BLITZ-GOAT's first commit (contract moved).
 
 ## 2026-11-16 (cloud): HAMSTER-HEIST-PACK (`docs/history/contracts/2026-11-16-hamster-heist-pack.md`; Jon 16:41, 16:43, 16:53, 17:23)
 

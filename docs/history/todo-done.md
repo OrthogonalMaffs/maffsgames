@@ -3286,3 +3286,11 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 | HAMSTER-PACK-APPROVE | **Proofread The Great Hamster Heist print pack and approve its wording** (contract HAMSTER-HEIST-PACK, 16 Nov 2026). Build it with `python -X utf8 tools/pack-generator/build_pack.py hamster-heist` (36 pages, DRAFT badge on pages 1 and 2) and read it against the README's "What to proofread". Wording calls to approve or change: the printed unit "°C per ten minutes"; the manual, invoice, clipboard, hopper label and instruction slip print-only words and captions in `tools/pack-generator/rooms/hamster-heist/config.json`; the two red-herring lines. Then set `"wording_approved"` in that config, build with `--final` and list it on Tes at £3; with PE Shed Rebellion, Heatwave Mutiny and Canteen Hack it completes the £10 bundle of all seven ★★ Core rooms. | Jon |
 
 **Closed 16 Nov 2026 (HAMSTER-PACK-FINAL).** Row HAMSTER-PACK-APPROVE, moved word for word above. Jon approved The Great Hamster Heist pack's wording 16 Nov 2026, 18:05-18:08 ("option 1 with your hint is approved"; "lets do option 1 ... we output the final version"), with this fix: the heat lamp's common wrong answer printed as the rise (miss_scale 1), no set with readings ten minutes apart, and his print-only Hint 1 and common-wrong-answer note (lock_words). The config has `wording_approved: {"by": "Jon", "date": "2026-11-16"}` and builds with `--final`. Listing it on Tes at £3, and the £10 bundle once PE Shed Rebellion, Heatwave Mutiny and Canteen Hack follow, are Jon's.
+
+## Closed by BEARING-BLITZ-GOAT (16 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| LEDGER-B4-ANGLE-ACE | **B4 ledger debt, `angle-ace`: 1 level below the 40-question minimum** (gcse 35). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+**Closed 16 Nov 2026 (BEARING-BLITZ-GOAT, close-out).** Row LEDGER-B4-ANGLE-ACE, moved word for word above. ANGLE-ACE-GCSE-45 (#795, 833f6e1) made Angle Ace's GCSE bank 45 questions; `data/check-ledger.json` carries no B4 entry for `angle-ace`.
