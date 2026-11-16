@@ -73,7 +73,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` restarted from main ef92245 (#795 squash-merged). Small; merges on green, by merge-pr.py only.
 **Close-out carried (first commit):** ANGLE-ACE-GCSE-45 (Amendments 1 and 2) merged #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 success (14:19:57 UTC), phone-fit-full 43882219278 success (14:06:17 UTC), both push-triggered. Contract moved to docs/history/contracts/.
-Next: the twenty GCSE items, the verifier's data, ledger B4, /updates/.
+Done on the branch: the twenty items appended verbatim (sliced from the saved contract; exact substring, 40 gcse ids); verify-better-value.py COUNTS gcse 40, docstring 90 items, the twenty REVIEW lines, BREAK_EVEN bv_gcse_038, MUST_SAY for 038-040; ledger B4 `better-value::gcse` gone (`extract-banks.py --only better-value`, `check-banks.py --write-ledger --only better-value`; the layer A flag goes violations to verified with it, as check-banks.py:1119 derives it from the entries); /updates/ line.
+Local: verify-better-value-claims.py "90 items, 360 conclusions; 0 known failure(s)" PASS, 7 self-tests caught; verify-better-value.py "90 items, every keyed and explanation figure recomputed, every card clicked in Chromium" PASS, 10 caught; verify-better-value-tax.py PASS; check-tax-year.py OK; check-banks --only better-value B1-B11 all 0; check-answer-count, check-question-id, check-levels, check-resit-page pass.
+Next: Gate, merge by merge-pr.py, main's two runs.
+**For the home lane:** close todo LEDGER-B4-BETTER-VALUE; the roster row for Better Value (.claude/rules/game-roster.md) says "50 questions" and should say GCSE 40, Core 50.
 
 ## 2026-11-16 (cloud): ANGLE-ACE-GCSE-45 (`docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md`; Jon 11:15)
 
