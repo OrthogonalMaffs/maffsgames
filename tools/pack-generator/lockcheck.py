@@ -432,7 +432,67 @@ def _wifi_venn_router(v):
     return {"answer": both, "miss": 0, "atleast": at_least_one, "sum": a + b}
 
 
+# ---- The Great Hamster Heist (contract HAMSTER-HEIST-PACK, 16 Nov 2026) --------------------------------------------
+
+def _whole(x, what):
+    """A Fraction that must be a whole number, as an int; anything else stops the build, naming it."""
+    if x.denominator != 1:
+        raise ValueError("%s, %s, is not a whole number" % (what, x))
+    return int(x)
+
+
+def _hamster_wheel_rpm(v):
+    """hamster-wheel-rpm: the wheel covers K pi cm a second and one turn covers its circumference, d pi cm; the pi is
+    in both, so the turns a second are K / d, exactly. A minute is sixty seconds, so the dial's revolutions per minute
+    are 60 x K / d. The common wrong answer, by the room's rule (its missTitle, "per second"): the turns a second, the
+    x 60 forgotten. Both must be whole."""
+    per_second = Fraction(v["K"], v["d"])
+    seconds_in_a_minute = 60
+    return {"answer": _whole(seconds_in_a_minute * per_second, "the revolutions per minute"),
+            "miss": _whole(per_second, "the turns a second")}
+
+
+def _hamster_feeder_bounds(v):
+    """hamster-feeder-bounds: a depth measured to the nearest centimetre as D lies from D - 1/2 up to (not reaching)
+    D + 1/2, so the shallowest the hopper can be is D - 1/2; the cross-section X is exact, so the smallest volume is
+    X x (D - 1/2), which must be whole. The common wrong answer, by the room's rule (its missTitle, "treats a rounded
+    measurement as exact"): X x D. The lower bound is printed as its one-decimal text, rebuilt from the Fraction."""
+    lower = Fraction(v["D"]) - Fraction(1, 2)
+    tenths = lower * 10
+    if tenths.denominator != 1:
+        raise ValueError("the lower bound %s is not a whole number of tenths" % lower)
+    return {"answer": _whole(v["X"] * lower, "the smallest volume"), "miss": v["X"] * v["D"],
+            "lb": "%d.%d" % divmod(int(tenths), 10)}
+
+
+def _heat_lamp_gradient(v):
+    """heat-lamp-gradient: the warming is a straight line through (t1, T1) and (t2, T2), so its rate is the rise
+    over the run, (T2 - T1) / (t2 - t1) degrees a minute, exactly. The common wrong answer, by the room's rule (its
+    missTitle, "the whole climb, not the rate"): the rise, not divided. The room prints both to one decimal place
+    (aTxt, mTxt), so each must be a whole number of tenths; the numbers are compared as those texts read. The pack asks for the rate in degrees every ten minutes
+    (its config's answer_units), so this also works the rate in that unit, from the readings: the rise over the run
+    counted in tens of minutes, (T2 - T1) / ((t2 - t1) / 10); and the common wrong answer the same way, the rise taken
+    as the rate per minute and so ten of it every ten minutes. Both must be whole."""
+    rise, run = v["T2"] - v["T1"], v["t2"] - v["t1"]
+    if run <= 0:
+        raise ValueError("the readings at %s and %s minutes are not in order" % (v["t1"], v["t2"]))
+    rate = Fraction(rise, run)
+
+    def one_place(x, what):
+        tenths = _whole(x * 10, "%s in tenths" % what)
+        return "%d.%d" % divmod(tenths, 10)
+    per_ten = Fraction(rise) / (Fraction(run) / 10)
+    a_txt, m_txt = one_place(rate, "the rate"), one_place(Fraction(rise), "the rise")
+    # the stored numbers are JSON's reading of their one-place text (0.8 is the float nearest 4/5, not 4/5 itself)
+    return {"rise": rise, "run": run, "answer": float(a_txt), "miss": float(m_txt), "aTxt": a_txt, "mTxt": m_txt,
+            PRINTED: {"unit": "°C per ten minutes", "answer": _whole(per_ten, "the rate every ten minutes"),
+                      "miss": _whole(Fraction(rise) * 10, "the rise as a rate every ten minutes")}}
+
+
 RECOMPUTE = {
+    "hamster-wheel-rpm": _hamster_wheel_rpm,
+    "hamster-feeder-bounds": _hamster_feeder_bounds,
+    "heat-lamp-gradient": _heat_lamp_gradient,
     "gate-modifiers-probability": _gate_modifiers_probability,
     "fortress-plan-scale": _fortress_plan_scale,
     "fireball-circle-area": _fireball_circle_area,

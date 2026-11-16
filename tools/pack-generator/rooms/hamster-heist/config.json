@@ -1,0 +1,26 @@
+{
+  "room": "hamster-heist",
+  "pack_version": "1",
+  "sets": 6,
+  "seed": 1,
+  "certificate_title": "Hamster returned",
+  "wording_approved": null,
+  "answer_units": {"heat-lamp-gradient": {"unit": "°C per ten minutes", "scale": 10}},
+  "images": [
+    {"file": "art/ham-01-invoice.webp", "role": "clue", "object": "invoice", "label_box": [230, 220, 1070, 1120], "font": "hand"},
+    {"file": "art/ham-02-clipboard.webp", "role": "clue", "object": "clipboard", "label_box": [265, 300, 1055, 1130], "font": "hand"},
+    {"file": "art/ham-03-hopper-label.webp", "role": "clue", "object": "hopperlabel", "label_box": [125, 195, 1125, 1060], "font": "label"},
+    {"file": "art/ham-04-slip.webp", "role": "clue", "object": "slip", "label_box": [165, 435, 1080, 820], "font": "hand"},
+    {"file": "art/ham-05-jotter.webp", "role": "clue", "object": "jotter", "label_box": [115, 275, 545, 965], "font": "hand"},
+    {"file": "art/ham-06-manual.webp", "role": "clue", "object": "manual", "label_box": [245, 465, 1000, 960], "font": "label",
+     "printed": "Set the lamp to the warming rate it should expect, in degrees every ten minutes.",
+     "caption": "&ldquo;The lamp holds the last catch until it is set right. Get it wrong and it simply goes on holding.&rdquo;"},
+    {"file": "art/ham-07-planets.webp", "role": "herring", "object": "planets", "label_box": [200, 120, 1150, 270], "font": "hand",
+     "text": "Pluto is still on it."},
+    {"file": "art/ham-08-mug.webp", "role": "herring", "object": "mug", "label_box": [520, 690, 880, 1010], "font": "hand",
+     "text": "You are not going to be the one who moves it."},
+    {"file": "art/ham-09-dynamo-slider.webp", "role": "answer", "lock": "hamster-wheel-rpm", "label_box": [105, 845, 1150, 1090]},
+    {"file": "art/ham-10-feeder-slider.webp", "role": "answer", "lock": "hamster-feeder-bounds", "label_box": [65, 870, 1190, 1110]},
+    {"file": "art/ham-11-lamp-slider.webp", "role": "answer", "lock": "heat-lamp-gradient", "label_box": [60, 925, 1195, 1190]}
+  ]
+}
