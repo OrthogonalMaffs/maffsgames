@@ -77,6 +77,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-16 (cloud): PERCENTAGE-FLIP-BANKS (`docs/handover/contracts/2026-11-16-percentage-flip-banks.md`; Jon's rulings 15 Nov 22:52)
+
+Agent Claude Code (cloud), branch `claude/pensive-fermat-j6m1x8` from main 14b8711. Medium; merges on green.
+**Close-out carried (first commit):** CONTENT-SAFETY-COVERAGE merged as d64b788 (#792); main check-site 43764352225 and phone-fit-full 43764352219, both success (read through the GitHub connection). Route: the PR does not record it; gh auth fails in cloud sessions ("Failed to log in to github.com using token (GH_TOKEN)", checked again here), so it was the GitHub connection under the standing ruling of 10 Nov 2026. Contract moved to docs/history/contracts/.
+In progress: see the PR. Bank recomputed independently from each question's text before any edit: 120 keys and every working line, 0 disagreements (no STOP).
+
 ## 2026-11-15 (cloud): CONTENT-SAFETY-COVERAGE (`docs/handover/contracts/2026-11-15-content-safety-coverage.md`; Jon's ruling 14 Nov 22:46, item 3 of 3)
 
 Agent Claude Code (cloud), branch `claude/nice-davinci-26hl5y` from main 7b00e6c. Close-out of ESSENTIALS-PHONE-FIT-PAIR (#788 6065fb6, #790 984851c) in the first commit. One PR, Medium, merging on green.
