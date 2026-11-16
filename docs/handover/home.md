@@ -24,7 +24,7 @@ Claude Code (home lane), worktree `~/mg-pe-shed-final`, branch `claude/pe-shed-f
 - **Room:** pe-shed-rebellion's config has Jon's readout_voice text, as given (apostrophes as `&rsquo;`, as the room writes them), and `"wording_approved": {"by": "Jon", "date": "2026-11-16"}`. teacher.html's clueMap and notes now quote variant 0 as it is: 27π limit, 9 m reach, 27π over 81π, 84.823... over 254.469... (27π = 84.8230..., 81π = 254.4690...). Nothing in the repo generates those lines (only test-pack-generator.py reads clueMap, for Hamster Heist).
 - **Todo:** PE-SHED-PACK-APPROVE closed to todo-done; new row PACK-READOUT-VOICE (the other eight rooms' read-outs, any fix needs Jon's go-ahead, as those packs are on Tes).
 - **Checks:** see the PR. Other packs compared with ~/pe-tools/dump.py before (origin/main) and after.
-- MERGED: pending.
+- MERGED 16 Nov as 6e1f4e0 (#803) via merge-pr.py on its second call (the first was refused: no Gate check yet). The second's last line was "main 6e1f4e0: NO RUN FOUND", exit 1: it looked before main's push runs registered; the merge itself succeeded. Main on the merge commit: check-site 43961875130 FAILURE (the Shape Shifter verifier's rotation "moving on" check only, a flake in scripts/verify-shape-shifter.py fixed by SHAPE-SHIFTER-FLAKE; nothing #803 touched), phone-fit-full 43961875121 success (both push runs). Jon ruled "merge at 37 pages" in session (recorded on the PR). Contract moved to `docs/history/contracts/`.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
