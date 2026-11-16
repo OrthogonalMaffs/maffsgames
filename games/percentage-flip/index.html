@@ -16,6 +16,8 @@
 <title>Percentages of Amounts Game – KS3/GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own tokens: one rose accent (6.04:1 on the
    white surface), its tint, and the card's back face (deep indigo, white text 11.42:1). Everything else is a base token. */
@@ -51,6 +53,13 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .answer-label{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.6rem;display:block}
 .answer-input{font-family:var(--font-num);font-weight:700;font-size:1.5rem;width:140px;padding:.5rem;border:3px solid var(--accent);border-radius:12px;text-align:center;color:var(--text);background:var(--surface);outline:none}
 .answer-input:focus{border-color:var(--text)}
+.answer-box{display:inline-flex;align-items:center;gap:.4rem}
+.answer-unit{font-family:var(--font-num);font-weight:700;font-size:1.5rem;color:var(--text)}
+.answer-unit[hidden]{display:none}
+.card-back .workings .working-line{white-space:nowrap}
+.card-back .workings .katex{font-size:1em;color:inherit}
+/* After a wrong answer the box, Check and Skip cannot be used: they fold away so the working and Next stay above the fold (canon 7.6.1). */
+.main-game.answered .answer-label,.main-game.answered .answer-box,.main-game.answered .answer-row{display:none}
 .answer-row{display:flex;gap:12px;justify-content:center;margin-top:.8rem;flex-wrap:wrap}
 .btn{font-weight:700;font-size:1rem;min-height:44px;padding:.65rem 1.6rem;border:none;border-radius:10px;cursor:pointer;transition:transform 0.1s,opacity 0.1s}
 .btn:active{transform:scale(0.97)}
@@ -132,6 +141,7 @@ body.accessible .score-val,body.accessible .answer,body.accessible .answer-input
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {}
@@ -176,7 +186,7 @@ body.accessible .score-val,body.accessible .answer,body.accessible .answer-input
         </div>
         <div class="card-face card-back">
           <div class="answer" id="answerText">40</div>
-          <div class="workings" id="workingsText">50% = ÷2 → 80÷2 = 40</div>
+          <div class="workings" id="workingsText"></div>
         </div>
       </div>
     </div>
@@ -184,7 +194,7 @@ body.accessible .score-val,body.accessible .answer,body.accessible .answer-input
 
     <div class="answer-area">
       <span class="answer-label">Your answer</span>
-      <input type="number" class="answer-input" id="answerInput" placeholder="?" onkeydown="if(event.key==='Enter')checkAnswer()">
+      <span class="answer-box"><input type="text" inputmode="decimal" autocomplete="off" class="answer-input" id="answerInput" placeholder="?" aria-label="Your answer" onkeydown="if(event.key==='Enter')checkAnswer()"><span class="answer-unit" id="answerUnit" aria-hidden="true" hidden></span></span>
       <div class="answer-row">
         <button class="btn btn-primary" onclick="checkAnswer()">Check</button>
         <button class="btn btn-skip" onclick="skipQ()">Skip</button>
@@ -211,61 +221,220 @@ body.accessible .score-val,body.accessible .answer,body.accessible .answer-input
 </div>
 
 <script>
-const QUESTIONS_DEFAULT = [
-  // Easy
-  {q:"What is 50% of 80?", a:40, w:"50% = ÷2 → 80÷2 = 40"},
-  {q:"What is 25% of 200?", a:50, w:"25% = ÷4 → 200÷4 = 50"},
-  {q:"What is 10% of 350?", a:35, w:"10% = ÷10 → 350÷10 = 35"},
-  {q:"What is 100% of 47?", a:47, w:"100% = the whole thing!"},
-  // Medium
-  {q:"What is 20% of 150?", a:30, w:"10% = 15, × 2 = 30"},
-  {q:"What is 75% of 80?", a:60, w:"75% = 50%+25% → 40+20 = 60"},
-  {q:"What is 15% of 200?", a:30, w:"10% = 20, 5% = 10 → 20+10 = 30"},
-  {q:"What is 40% of 250?", a:100, w:"10% = 25, × 4 = 100"},
-  // Harder
-  {q:"What is 35% of 120?", a:42, w:"10% = 12, 30% = 36, 5% = 6 → 42"},
-  {q:"What is 12.5% of 160?", a:20, w:"12.5% = ÷8 → 160÷8 = 20"},
-  {q:"What is 60% of 85?", a:51, w:"10% = 8.5, × 6 = 51"},
-  {q:"What is 5% of 340?", a:17, w:"10% = 34, 5% = 17"},
-];
+const QUESTIONS = {
+  year6: [
+    {"band": 1, "q": "What is 50% of 80?", "a": 40, "w": ["50\\% = \\tfrac{1}{2}", "80 \\div 2 = 40"]},
+    {"band": 1, "q": "What is 50% of 200?", "a": 100, "w": ["50\\% = \\tfrac{1}{2}", "200 \\div 2 = 100"]},
+    {"band": 1, "q": "What is 50% of 60?", "a": 30, "w": ["50\\% = \\tfrac{1}{2}", "60 \\div 2 = 30"]},
+    {"band": 1, "q": "What is 50% of 140?", "a": 70, "w": ["50\\% = \\tfrac{1}{2}", "140 \\div 2 = 70"]},
+    {"band": 1, "q": "What is 50% of 100?", "a": 50, "w": ["50\\% = \\tfrac{1}{2}", "100 \\div 2 = 50"]},
+    {"band": 1, "q": "What is 10% of 160?", "a": 16, "w": ["10\\% = \\tfrac{1}{10}", "160 \\div 10 = 16"]},
+    {"band": 1, "q": "What is 10% of 90?", "a": 9, "w": ["10\\% = \\tfrac{1}{10}", "90 \\div 10 = 9"]},
+    {"band": 1, "q": "What is 10% of 40?", "a": 4, "w": ["10\\% = \\tfrac{1}{10}", "40 \\div 10 = 4"]},
+    {"band": 1, "q": "What is 10% of 120?", "a": 12, "w": ["10\\% = \\tfrac{1}{10}", "120 \\div 10 = 12"]},
+    {"band": 1, "q": "What is 10% of 200?", "a": 20, "w": ["10\\% = \\tfrac{1}{10}", "200 \\div 10 = 20"]},
+    {"band": 2, "q": "What is 25% of 120?", "a": 30, "w": ["25\\% = \\tfrac{1}{4}", "120 \\div 4 = 30"]},
+    {"band": 2, "q": "What is 25% of 80?", "a": 20, "w": ["25\\% = \\tfrac{1}{4}", "80 \\div 4 = 20"]},
+    {"band": 2, "q": "What is 25% of 200?", "a": 50, "w": ["25\\% = \\tfrac{1}{4}", "200 \\div 4 = 50"]},
+    {"band": 2, "q": "What is 25% of 160?", "a": 40, "w": ["25\\% = \\tfrac{1}{4}", "160 \\div 4 = 40"]},
+    {"band": 2, "q": "What is 25% of 40?", "a": 10, "w": ["25\\% = \\tfrac{1}{4}", "40 \\div 4 = 10"]},
+    {"band": 2, "q": "What is 75% of 40?", "a": 30, "w": ["50\\% = 20, \\; 25\\% = 10", "75\\% = 20 + 10 = 30"]},
+    {"band": 2, "q": "What is 75% of 120?", "a": 90, "w": ["50\\% = 60, \\; 25\\% = 30", "75\\% = 60 + 30 = 90"]},
+    {"band": 2, "q": "What is 75% of 80?", "a": 60, "w": ["50\\% = 40, \\; 25\\% = 20", "75\\% = 40 + 20 = 60"]},
+    {"band": 2, "q": "What is 75% of 200?", "a": 150, "w": ["50\\% = 100, \\; 25\\% = 50", "75\\% = 100 + 50 = 150"]},
+    {"band": 2, "q": "What is 75% of 160?", "a": 120, "w": ["50\\% = 80, \\; 25\\% = 40", "75\\% = 80 + 40 = 120"]},
+    {"band": 3, "q": "What is 20% of 60?", "a": 12, "w": ["10\\% = 6", "20\\% = 6 \\times 2 = 12"]},
+    {"band": 3, "q": "What is 20% of 350?", "a": 70, "w": ["10\\% = 35", "20\\% = 35 \\times 2 = 70"]},
+    {"band": 3, "q": "What is 5% of 80?", "a": 4, "w": ["10\\% = 8", "5\\% = 8 \\div 2 = 4"]},
+    {"band": 3, "q": "What is 5% of 240?", "a": 12, "w": ["10\\% = 24", "5\\% = 24 \\div 2 = 12"]},
+    {"band": 3, "q": "What is 30% of 90?", "a": 27, "w": ["10\\% = 9", "30\\% = 9 \\times 3 = 27"]},
+    {"band": 3, "q": "What is 40% of 50?", "a": 20, "w": ["10\\% = 5", "40\\% = 5 \\times 4 = 20"]},
+    {"band": 3, "q": "What is 60% of 70?", "a": 42, "w": ["10\\% = 7", "60\\% = 7 \\times 6 = 42"]},
+    {"band": 3, "q": "What is 30% of 400?", "a": 120, "w": ["10\\% = 40", "30\\% = 40 \\times 3 = 120"]},
+    {"band": 3, "q": "What is 40% of 120?", "a": 48, "w": ["10\\% = 12", "40\\% = 12 \\times 4 = 48"]},
+    {"band": 3, "q": "What is 60% of 250?", "a": 150, "w": ["10\\% = 25", "60\\% = 25 \\times 6 = 150"]},
+    {"band": 4, "q": "What is 15% of 360?", "a": 54, "w": ["10\\% = 36, \\; 5\\% = 18", "15\\% = 36 + 18 = 54"]},
+    {"band": 4, "q": "What is 15% of 80?", "a": 12, "w": ["10\\% = 8, \\; 5\\% = 4", "15\\% = 8 + 4 = 12"]},
+    {"band": 4, "q": "What is 35% of 60?", "a": 21, "w": ["10\\% = 6, \\; 5\\% = 3", "30\\% = 6 \\times 3 = 18", "35\\% = 18 + 3 = 21"]},
+    {"band": 4, "q": "What is 45% of 200?", "a": 90, "w": ["10\\% = 20, \\; 5\\% = 10", "40\\% = 20 \\times 4 = 80", "45\\% = 80 + 10 = 90"]},
+    {"band": 4, "q": "What is 1% of 600?", "a": 6, "w": ["1\\% = \\tfrac{1}{100}", "600 \\div 100 = 6"]},
+    {"band": 4, "q": "What is 1% of 300?", "a": 3, "w": ["1\\% = \\tfrac{1}{100}", "300 \\div 100 = 3"]},
+    {"band": 4, "q": "What is 35% of 140?", "a": 49, "w": ["10\\% = 14, \\; 5\\% = 7", "30\\% = 14 \\times 3 = 42", "35\\% = 42 + 7 = 49"]},
+    {"band": 4, "q": "What is 12 out of 25 as a percentage?", "a": 48, "u": "%", "w": ["\\frac{12}{25} = \\frac{48}{100}", "= 48\\%"]},
+    {"band": 4, "q": "What is 18 out of 50 as a percentage?", "a": 36, "u": "%", "w": ["\\frac{18}{50} = \\frac{36}{100}", "= 36\\%"]},
+    {"band": 4, "q": "What is 7 out of 20 as a percentage?", "a": 35, "u": "%", "w": ["\\frac{7}{20} = \\frac{35}{100}", "= 35\\%"]},
+  ],
+  ks3: [
+    {"band": 1, "q": "What is 20% of 45?", "a": 9, "w": ["10\\% = 4.5", "20\\% = 4.5 \\times 2 = 9"]},
+    {"band": 1, "q": "What is 30% of 70?", "a": 21, "w": ["10\\% = 7", "30\\% = 7 \\times 3 = 21"]},
+    {"band": 1, "q": "What is 75% of 64?", "a": 48, "w": ["50\\% = 32, \\; 25\\% = 16", "75\\% = 32 + 16 = 48"]},
+    {"band": 1, "q": "What is 25% of 36?", "a": 9, "w": ["25\\% = \\tfrac{1}{4}", "36 \\div 4 = 9"]},
+    {"band": 1, "q": "What is 40% of 35?", "a": 14, "w": ["10\\% = 3.5", "40\\% = 3.5 \\times 4 = 14"]},
+    {"band": 1, "q": "What is 5% of 60?", "a": 3, "w": ["10\\% = 6", "5\\% = 6 \\div 2 = 3"]},
+    {"band": 1, "q": "What is 60% of 45?", "a": 27, "w": ["10\\% = 4.5", "60\\% = 4.5 \\times 6 = 27"]},
+    {"band": 1, "q": "What is 15% of 60?", "a": 9, "w": ["10\\% = 6, \\; 5\\% = 3", "15\\% = 6 + 3 = 9"]},
+    {"band": 1, "q": "What is 90% of 50?", "a": 45, "w": ["10\\% = 5", "90\\% = 5 \\times 9 = 45"]},
+    {"band": 1, "q": "What is 70% of 30?", "a": 21, "w": ["10\\% = 3", "70\\% = 3 \\times 7 = 21"]},
+    {"band": 2, "q": "What is 35% of 80?", "a": 28, "w": ["10\\% = 8, \\; 5\\% = 4", "30\\% = 8 \\times 3 = 24", "35\\% = 24 + 4 = 28"]},
+    {"band": 2, "q": "What is 12.5% of 64?", "a": 8, "w": ["12.5\\% = \\tfrac{1}{8}", "64 \\div 8 = 8"]},
+    {"band": 2, "q": "What is 1% of 250?", "a": 2.5, "w": ["1\\% = \\tfrac{1}{100}", "250 \\div 100 = 2.5"]},
+    {"band": 2, "q": "What is 2% of 350?", "a": 7, "w": ["1\\% = 3.5", "2\\% = 3.5 \\times 2 = 7"]},
+    {"band": 2, "q": "What is 45% of 60?", "a": 27, "w": ["10\\% = 6, \\; 5\\% = 3", "40\\% = 6 \\times 4 = 24", "45\\% = 24 + 3 = 27"]},
+    {"band": 2, "q": "What is 17.5% of 40?", "a": 7, "w": ["10\\% = 4, \\; 5\\% = 2, \\; 2.5\\% = 1", "17.5\\% = 4 + 2 + 1 = 7"]},
+    {"band": 2, "q": "What is 65% of 40?", "a": 26, "w": ["10\\% = 4, \\; 5\\% = 2", "60\\% = 4 \\times 6 = 24", "65\\% = 24 + 2 = 26"]},
+    {"band": 2, "q": "What is 15% of 180?", "a": 27, "w": ["10\\% = 18, \\; 5\\% = 9", "15\\% = 18 + 9 = 27"]},
+    {"band": 2, "q": "What is 95% of 60?", "a": 57, "w": ["10\\% = 6, \\; 5\\% = 3", "95\\% = 60 - 3 = 57"]},
+    {"band": 2, "q": "What is 55% of 120?", "a": 66, "w": ["10\\% = 12, \\; 5\\% = 6", "50\\% = 12 \\times 5 = 60", "55\\% = 60 + 6 = 66"]},
+    {"band": 3, "q": "Increase 60 by 15%.", "a": 69, "w": ["10\\% = 6, \\; 5\\% = 3", "15\\% = 6 + 3 = 9", "60 + 9 = 69"]},
+    {"band": 3, "q": "Decrease 80 by 35%.", "a": 52, "w": ["10\\% = 8, \\; 5\\% = 4", "30\\% = 8 \\times 3 = 24", "35\\% = 24 + 4 = 28", "80 - 28 = 52"]},
+    {"band": 3, "q": "Increase 240 by 5%.", "a": 252, "w": ["10\\% = 24", "5\\% = 24 \\div 2 = 12", "240 + 12 = 252"]},
+    {"band": 3, "q": "Decrease 150 by 20%.", "a": 120, "w": ["10\\% = 15", "20\\% = 15 \\times 2 = 30", "150 - 30 = 120"]},
+    {"band": 3, "q": "A jacket costs £45. Its price is reduced by 20%. What is the new price?", "a": 36, "u": "£", "w": ["10\\% = 4.50", "20\\% = 4.50 \\times 2 = 9", "45 - 9 = 36"]},
+    {"band": 3, "q": "A ticket costs £36. The price goes up by 25%. What is the new price?", "a": 45, "u": "£", "w": ["25\\% = \\tfrac{1}{4}", "36 \\div 4 = 9", "36 + 9 = 45"]},
+    {"band": 3, "q": "A 500 g bag of rice is made 12% smaller. How many grams does the new bag hold?", "a": 440, "u": "g", "w": ["10\\% = 50, \\; 1\\% = 5", "2\\% = 10", "12\\% = 50 + 10 = 60", "500 - 60 = 440"]},
+    {"band": 3, "q": "What is 18 as a percentage of 40?", "a": 45, "u": "%", "w": ["\\frac{18}{40} \\times 100 = 45\\%"]},
+    {"band": 3, "q": "Sam got 27 out of 30 on a test. What percentage is that?", "a": 90, "u": "%", "w": ["\\frac{27}{30} \\times 100 = 90\\%"]},
+    {"band": 3, "q": "14 of the 35 students in a class walk to school. What percentage walk?", "a": 40, "u": "%", "w": ["\\frac{14}{35} \\times 100 = 40\\%"]},
+    {"band": 4, "q": "A number goes up from 40 to 50. What is the percentage increase?", "a": 25, "u": "%", "w": ["\\text{change} = 10", "\\frac{10}{40} \\times 100 = 25\\%"]},
+    {"band": 4, "q": "A number goes down from 80 to 60. What is the percentage decrease?", "a": 25, "u": "%", "w": ["\\text{change} = 20", "\\frac{20}{80} \\times 100 = 25\\%"]},
+    {"band": 4, "q": "A bike's price rises from £120 to £150. What is the percentage increase?", "a": 25, "u": "%", "w": ["\\text{change} = 30", "\\frac{30}{120} \\times 100 = 25\\%"]},
+    {"band": 4, "q": "A crowd falls from 250 to 200 people. What is the percentage decrease?", "a": 20, "u": "%", "w": ["\\text{change} = 50", "\\frac{50}{250} \\times 100 = 20\\%"]},
+    {"band": 4, "q": "A plant grows from 25 cm to 40 cm tall. What is the percentage increase?", "a": 60, "u": "%", "w": ["\\text{change} = 15", "\\frac{15}{25} \\times 100 = 60\\%"]},
+    {"band": 4, "q": "£200 is saved at 3% simple interest per year. How much interest is earned in 4 years?", "a": 24, "u": "£", "w": ["\\text{one year: }1\\% = 2", "3\\% = 2 \\times 3 = 6", "\\text{interest} = 6 \\times 4 = 24"]},
+    {"band": 4, "q": "£500 is saved at 2% simple interest per year. How much interest is earned in 3 years?", "a": 30, "u": "£", "w": ["\\text{one year: }1\\% = 5", "2\\% = 5 \\times 2 = 10", "\\text{interest} = 10 \\times 3 = 30"]},
+    {"band": 4, "q": "£1200 is saved at 5% simple interest per year. How much interest is earned in 2 years?", "a": 120, "u": "£", "w": ["\\text{one year: }10\\% = 120", "5\\% = 120 \\div 2 = 60", "\\text{interest} = 60 \\times 2 = 120"]},
+    {"band": 4, "q": "What is 150% of 40?", "a": 60, "w": ["10\\% = 4", "150\\% = 4 \\times 15 = 60"]},
+    {"band": 4, "q": "What is 120% of 35?", "a": 42, "w": ["10\\% = 3.5", "120\\% = 3.5 \\times 12 = 42"]},
+  ],
+  gcse: [
+    {"band": 1, "q": "What is 35% of 260?", "a": 91, "w": ["10\\% = 26, \\; 5\\% = 13", "30\\% = 26 \\times 3 = 78", "35\\% = 78 + 13 = 91"]},
+    {"band": 1, "q": "What is 15% of 240?", "a": 36, "w": ["10\\% = 24, \\; 5\\% = 12", "15\\% = 24 + 12 = 36"]},
+    {"band": 1, "q": "What is 45% of 80?", "a": 36, "w": ["10\\% = 8, \\; 5\\% = 4", "40\\% = 8 \\times 4 = 32", "45\\% = 32 + 4 = 36"]},
+    {"band": 1, "q": "What is 12.5% of 96?", "a": 12, "w": ["12.5\\% = \\tfrac{1}{8}", "96 \\div 8 = 12"]},
+    {"band": 1, "q": "What is 65% of 140?", "a": 91, "w": ["10\\% = 14, \\; 5\\% = 7", "60\\% = 14 \\times 6 = 84", "65\\% = 84 + 7 = 91"]},
+    {"band": 1, "q": "What is 2.5% of 400?", "a": 10, "w": ["10\\% = 40", "2.5\\% = 40 \\div 4 = 10"]},
+    {"band": 1, "q": "What is 85% of 60?", "a": 51, "w": ["10\\% = 6, \\; 5\\% = 3", "80\\% = 6 \\times 8 = 48", "85\\% = 48 + 3 = 51"]},
+    {"band": 1, "q": "What is 32% of 50?", "a": 16, "w": ["1\\% = 0.5", "32\\% = 0.5 \\times 32 = 16"]},
+    {"band": 1, "q": "What is 17.5% of 120?", "a": 21, "w": ["10\\% = 12, \\; 5\\% = 6, \\; 2.5\\% = 3", "17.5\\% = 12 + 6 + 3 = 21"]},
+    {"band": 1, "q": "What is 1% of 3500?", "a": 35, "w": ["1\\% = \\tfrac{1}{100}", "3500 \\div 100 = 35"]},
+    {"band": 2, "q": "A phone bill of £24 a month goes up by 15%. What is the new monthly bill?", "a": 27.6, "u": "£", "w": ["10\\% = 2.40, \\; 5\\% = 1.20", "15\\% = 2.40 + 1.20 = 3.60", "24 + 3.60 = 27.60"]},
+    {"band": 2, "q": "A coat costs £85. It is reduced by 20% in a sale. What is the sale price?", "a": 68, "u": "£", "w": ["10\\% = 8.50", "20\\% = 8.50 \\times 2 = 17", "85 - 17 = 68"]},
+    {"band": 2, "q": "Jo earns £9.60 an hour. She gets a 5% pay rise. What is her new hourly pay?", "a": 10.08, "u": "£", "w": ["10\\% = 0.96", "5\\% = 0.96 \\div 2 = 0.48", "9.60 + 0.48 = 10.08"]},
+    {"band": 2, "q": "A TV costs £350. A sale takes 30% off. What is the sale price?", "a": 245, "u": "£", "w": ["10\\% = 35", "30\\% = 35 \\times 3 = 105", "350 - 105 = 245"]},
+    {"band": 2, "q": "Rent of £650 a month goes up by 4%. What is the new monthly rent?", "a": 676, "u": "£", "w": ["1\\% = 6.50", "4\\% = 6.50 \\times 4 = 26", "650 + 26 = 676"]},
+    {"band": 2, "q": "A train ticket costs £56. A railcard takes 25% off. What does the ticket cost with the railcard?", "a": 42, "u": "£", "w": ["25\\% = \\tfrac{1}{4}", "56 \\div 4 = 14", "56 - 14 = 42"]},
+    {"band": 2, "q": "A meal costs £35 before VAT. VAT of 20% is added. What is the total cost?", "a": 42, "u": "£", "w": ["10\\% = 3.50", "20\\% = 3.50 \\times 2 = 7", "35 + 7 = 42"]},
+    {"band": 2, "q": "Lena scored 42 out of 60 on a test. What percentage did she score?", "a": 70, "u": "%", "w": ["\\frac{42}{60} \\times 100 = 70\\%"]},
+    {"band": 2, "q": "12 of the 30 people on a course drive to it. What percentage is that?", "a": 40, "u": "%", "w": ["\\frac{12}{30} \\times 100 = 40\\%"]},
+    {"band": 2, "q": "Ali spends £18 of his £72 budget on food. What percentage of his budget is that?", "a": 25, "u": "%", "w": ["\\frac{18}{72} \\times 100 = 25\\%"]},
+    {"band": 3, "q": "A price rises from £40 to £46. What is the percentage increase?", "a": 15, "u": "%", "w": ["\\text{change} = 6", "\\frac{6}{40} \\times 100 = 15\\%"]},
+    {"band": 3, "q": "A price falls from £80 to £68. What is the percentage decrease?", "a": 15, "u": "%", "w": ["\\text{change} = 12", "\\frac{12}{80} \\times 100 = 15\\%"]},
+    {"band": 3, "q": "Mo buys a car for £5000 and sells it for £4000. What is his percentage loss?", "a": 20, "u": "%", "w": ["\\text{change} = 1000", "\\frac{1000}{5000} \\times 100 = 20\\%"]},
+    {"band": 3, "q": "A shop buys a mug for £12 and sells it for £15. What is the percentage profit?", "a": 25, "u": "%", "w": ["\\text{change} = 3", "\\frac{3}{12} \\times 100 = 25\\%"]},
+    {"band": 3, "q": "A town's population grows from 2500 to 2800. What is the percentage increase?", "a": 12, "u": "%", "w": ["\\text{change} = 300", "\\frac{300}{2500} \\times 100 = 12\\%"]},
+    {"band": 3, "q": "A weekly wage rises from £300 to £315. What is the percentage increase?", "a": 5, "u": "%", "w": ["\\text{change} = 15", "\\frac{15}{300} \\times 100 = 5\\%"]},
+    {"band": 3, "q": "A concert ticket drops from £64 to £48. What is the percentage decrease?", "a": 25, "u": "%", "w": ["\\text{change} = 16", "\\frac{16}{64} \\times 100 = 25\\%"]},
+    {"band": 3, "q": "£800 is saved at 3% simple interest per year. How much interest is earned in 5 years?", "a": 120, "u": "£", "w": ["\\text{one year: }1\\% = 8", "3\\% = 8 \\times 3 = 24", "\\text{interest} = 24 \\times 5 = 120"]},
+    {"band": 3, "q": "£2400 is saved at 1.5% simple interest per year. How much interest is earned in 2 years?", "a": 72, "u": "£", "w": ["\\text{one year: }1\\% = 24, \\; 0.5\\% = 12", "1.5\\% = 24 + 12 = 36", "\\text{interest} = 36 \\times 2 = 72"]},
+    {"band": 3, "q": "£600 is saved at 4% simple interest per year. How much is in the account after 3 years?", "a": 672, "u": "£", "w": ["\\text{one year: }1\\% = 6", "4\\% = 6 \\times 4 = 24", "\\text{interest} = 24 \\times 3 = 72", "600 + 72 = 672"]},
+    {"band": 4, "q": "After a 20% increase, a price is £60. What was the price before the increase?", "a": 50, "u": "£", "w": ["60 \\text{ is } 120\\% \\text{ of the original}", "20\\% = 60 \\div 6 = 10", "100\\% = 10 \\times 5 = 50"]},
+    {"band": 4, "q": "After a 10% reduction, a price is £45. What was the original price?", "a": 50, "u": "£", "w": ["45 \\text{ is } 90\\% \\text{ of the original}", "10\\% = 45 \\div 9 = 5", "100\\% = 5 \\times 10 = 50"]},
+    {"band": 4, "q": "A jumper costs £36 in a 25% off sale. What was the price before the sale?", "a": 48, "u": "£", "w": ["36 \\text{ is } 75\\% \\text{ of the original}", "25\\% = 36 \\div 3 = 12", "100\\% = 12 \\times 4 = 48"]},
+    {"band": 4, "q": "A bill is £84 including 20% VAT. What was the bill before VAT?", "a": 70, "u": "£", "w": ["84 \\text{ is } 120\\% \\text{ of the original}", "20\\% = 84 \\div 6 = 14", "100\\% = 14 \\times 5 = 70"]},
+    {"band": 4, "q": "After a 5% pay rise, Kim earns £420 a week. What did she earn before the rise?", "a": 400, "u": "£", "w": ["420 \\text{ is } 105\\% \\text{ of the original}", "5\\% = 420 \\div 21 = 20", "100\\% = 20 \\times 20 = 400"]},
+    {"band": 4, "q": "A pair of trainers costs £68 after 15% off. What was the original price?", "a": 80, "u": "£", "w": ["68 \\text{ is } 85\\% \\text{ of the original}", "5\\% = 68 \\div 17 = 4", "100\\% = 4 \\times 20 = 80"]},
+    {"band": 4, "q": "A game costs £27 after 40% off. What was the original price?", "a": 45, "u": "£", "w": ["27 \\text{ is } 60\\% \\text{ of the original}", "20\\% = 27 \\div 3 = 9", "100\\% = 9 \\times 5 = 45"]},
+    {"band": 4, "q": "After a 30% increase, a village has 1300 people. How many people lived there before?", "a": 1000, "w": ["1300 \\text{ is } 130\\% \\text{ of the original}", "10\\% = 1300 \\div 13 = 100", "100\\% = 100 \\times 10 = 1000"]},
+    {"band": 4, "q": "After a 50% price rise, a haircut costs £33. What did it cost before?", "a": 22, "u": "£", "w": ["33 \\text{ is } 150\\% \\text{ of the original}", "50\\% = 33 \\div 3 = 11", "100\\% = 11 \\times 2 = 22"]},
+    {"band": 4, "q": "A cereal box holds 440 g after a 12% cut. How many grams did it hold before?", "a": 500, "u": "g", "w": ["440 \\text{ is } 88\\% \\text{ of the original}", "4\\% = 440 \\div 22 = 20", "100\\% = 20 \\times 25 = 500"]},
+  ],
+};
 
-const QUESTIONS_YEAR6 = [
-  {q:"What is 50% of 80?", a:40, w:"50% = ÷2 → 80÷2 = 40"},
-  {q:"What is 25% of 120?", a:30, w:"25% = ÷4 → 120÷4 = 30"},
-  {q:"What is 10% of 160?", a:16, w:"10% = ÷10 → 160÷10 = 16"},
-  {q:"What is 75% of 40?", a:30, w:"75% = 50%+25% → 20+10 = 30"},
-  {q:"What is 50% of 200?", a:100, w:"50% = ÷2 → 200÷2 = 100"},
-  {q:"What is 25% of 80?", a:20, w:"25% = ÷4 → 80÷4 = 20"},
-  {q:"What is 10% of 90?", a:9, w:"10% = ÷10 → 90÷10 = 9"},
-  {q:"What is 75% of 120?", a:90, w:"75% = 50%+25% → 60+30 = 90"},
-  {q:"What is 50% of 60?", a:30, w:"50% = ÷2 → 60÷2 = 30"},
-  {q:"What is 25% of 200?", a:50, w:"25% = ÷4 → 200÷4 = 50"},
-  {q:"What is 10% of 40?", a:4, w:"10% = ÷10 → 40÷10 = 4"},
-  {q:"What is 75% of 80?", a:60, w:"75% = 50%+25% → 40+20 = 60"},
-  {q:"What is 50% of 140?", a:70, w:"50% = ÷2 → 140÷2 = 70"},
-  {q:"What is 25% of 160?", a:40, w:"25% = ÷4 → 160÷4 = 40"},
-  {q:"What is 10% of 120?", a:12, w:"10% = ÷10 → 120÷10 = 12"},
-  {q:"What is 75% of 200?", a:150, w:"75% = 50%+25% → 100+50 = 150"},
-  {q:"What is 50% of 100?", a:50, w:"50% = ÷2 → 100÷2 = 50"},
-  {q:"What is 25% of 40?", a:10, w:"25% = ÷4 → 40÷4 = 10"},
-  {q:"What is 10% of 200?", a:20, w:"10% = ÷10 → 200÷10 = 20"},
-  {q:"What is 75% of 160?", a:120, w:"75% = 50%+25% → 80+40 = 120"},
-];
-
-// Detect level from URL param
-const _pfUrlLevel = MaffsLevel.resolve({slug:'percentage-flip',levels:['year6','ks3','gcse'],fallback:'ks3',boards:['all']});
-const gameLevel = _pfUrlLevel === 'year6' ? 'year6' : 'all';
-const QUESTIONS = gameLevel === 'year6' ? QUESTIONS_YEAR6 : QUESTIONS_DEFAULT;
+// One bank per level (Jon, 15 Nov 2026): the level the URL names, kept to year6 | ks3 | gcse.
+const gameLevel = MaffsLevel.resolve({slug:'percentage-flip',levels:['year6','ks3','gcse'],fallback:'ks3'});
+const POOL = QUESTIONS[gameLevel];
 
 let score = 0, qNum = 0, correct = 0, flipped = false, questions = [];
 const mainEl = document.getElementById('mainGame');   // MaffsLock's container (canon 7.6.0); the card stays tappable
 
-function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+// Fisher-Yates: every order equally likely (the sort-based shuffle was not).
+function shuffle(arr) {
+  const out = arr.slice();
+  for (let i = out.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = out[i]; out[i] = out[j]; out[j] = t; }
+  return out;
+}
+
+// A game is 10 questions, easiest first: 3 from band 1, 3 from band 2, 2 from band 3, 2 from band 4 (Jon, 15 Nov 2026).
+const SERVE = [[1, 3], [2, 3], [3, 2], [4, 2]];
+function deal(pool) {
+  let out = [];
+  SERVE.forEach(function (bn) { out = out.concat(shuffle(pool.filter(function (q) { return q.band === bn[0]; })).slice(0, bn[1])); });
+  return out;
+}
+
+// How the key is written on the card: pence to 2 d.p. (27.60), whole pounds bare (£36); the unit after a % or g key.
+function shown(q) {
+  if (q.u === '£') return '£' + (Number.isInteger(q.a) ? String(q.a) : q.a.toFixed(2));
+  if (q.u === '%') return q.a + '%';
+  if (q.u === 'g') return q.a + ' g';
+  return String(q.a);
+}
+
+// The working, one KaTeX line each (canon 7.1.1).
+function renderWorking(q) {
+  const box = document.getElementById('workingsText');
+  box.textContent = '';
+  q.w.forEach(function (line) {
+    const el = document.createElement('div');
+    el.className = 'working-line';
+    if (window.katex) katex.render(line, el, {throwOnError:false, displayMode:false});
+    else el.textContent = line;
+    box.appendChild(el);
+  });
+}
+
+// The card is at least as tall as either face's content (a four-line working, a long question, Aa mode): never clipped.
+function fitCard() {
+  const scene = document.querySelector('.card-scene');
+  scene.style.height = '';
+  let need = 0;
+  document.querySelectorAll('.card-face').forEach(function (face) {
+    const cs = getComputedStyle(face);
+    let h = parseFloat(cs.paddingTop) + parseFloat(cs.paddingBottom);
+    Array.from(face.children).forEach(function (el) {
+      const ec = getComputedStyle(el);
+      h += el.offsetHeight + parseFloat(ec.marginTop) + parseFloat(ec.marginBottom);
+    });
+    need = Math.max(need, Math.ceil(h));
+  });
+  if (need > scene.clientHeight) scene.style.height = need + 'px';
+}
+
+// The answer box for this question: a money box for £ (MaffsAnswer.moneyInput), the unit beside it for % and g.
+const UNIT_LABEL = {'%': 'Your answer, as a percentage', 'g': 'Your answer, in grams'};
+function setBox(q) {
+  const input = document.getElementById('answerInput');
+  MaffsAnswer.moneyInput(input, q.u === '£' ? '£' : null);
+  if (q.u !== '£') input.setAttribute('aria-label', UNIT_LABEL[q.u] || 'Your answer');
+  const unit = document.getElementById('answerUnit');
+  unit.textContent = q.u === '%' ? '%' : q.u === 'g' ? 'g' : '';
+  unit.hidden = !(q.u === '%' || q.u === 'g');
+}
+
+// The one mark (canon 7.1.3): 'correct', 'wrong', or 'format' / 'unreadable', which are never marked.
+function markAnswer(raw, q) {
+  return q.u === '£' ? MaffsAnswer.money(raw, q.a) : MaffsAnswer.exact(raw, q.a);
+}
+function unmarked(result, raw, q) {
+  const fb = document.getElementById('feedback');
+  fb.textContent = MaffsAnswer.message(result, raw, q.u === '£' ? {currency:'£'} : {});
+  fb.className = 'feedback';
+}
 
 function startGame() {
   score = 0; qNum = 0; correct = 0;
   MaffsLock.newSession();
-  questions = shuffle(QUESTIONS).slice(0, 10);
+  questions = deal(POOL);
   document.getElementById('startScreen').style.display = 'none';
   document.getElementById('gameOver').classList.remove('visible');
   document.getElementById('mainGame').classList.add('visible');
@@ -284,9 +453,12 @@ function loadQuestion() {
   MaffsLock.fresh(mainEl);   // a new card: a double-click on Start or Play again cannot answer it
   const q = questions[qNum];
   document.getElementById('questionText').textContent = q.q;
-  document.getElementById('answerText').textContent = q.a;
-  document.getElementById('workingsText').textContent = q.w;
+  document.getElementById('answerText').textContent = shown(q);
+  renderWorking(q);
+  fitCard();
   document.getElementById('card').classList.remove('flipped');
+  mainEl.classList.remove('answered');
+  setBox(q);
   document.getElementById('answerInput').value = '';
   document.getElementById('answerInput').focus();
   document.getElementById('feedback').textContent = '';
@@ -296,57 +468,56 @@ function loadQuestion() {
   document.getElementById('progressFill').style.width = (qNum/10*100) + '%';
 }
 
-function flipCard() {
-  document.getElementById('card').classList.toggle('flipped');
-  flipped = !flipped;
-  if(flipped && !MaffsLock.isLocked(mainEl)) {
-    MaffsLock.lock(mainEl);
-    const userVal = parseFloat(document.getElementById('answerInput').value);
-    const correctVal = questions[qNum].a;
-    const fb = document.getElementById('feedback');
-    const _isCorrect = !isNaN(userVal) && Math.abs(userVal - correctVal) < 0.01;
-    mfg('question_answered',{game_slug:'percentage-flip',level:gameLevel,correct:_isCorrect,question_index:qNum+1});
-    if(_isCorrect) {
-      score += 10; correct++;
-      fb.textContent = 'Correct! +10';
-      fb.className = 'feedback correct';
-    } else if(!isNaN(userVal)) {
-      fb.textContent = `Not quite: the answer is ${correctVal}`;
-      fb.className = 'feedback wrong';
-    } else {
-      fb.textContent = `Answer was ${correctVal}`;
-      fb.className = 'feedback wrong';
-    }
-    document.getElementById('score').textContent = score;
-    // canon §7.6: a right answer moves on briskly; otherwise the working stays up until Next.
-    if(_isCorrect) MaffsLock.timer(nextCard, 2000);
-    else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextCard });
+// The one place a question is scored and logged: once per question (MaffsLock), whichever way it was answered.
+// fromFlip: the card was tapped, so it is already showing the answer.
+function record(isCorrect, typed, fromFlip) {
+  const q = questions[qNum];
+  const fb = document.getElementById('feedback');
+  mfg('question_answered',{game_slug:'percentage-flip',level:gameLevel,correct:isCorrect,question_index:qNum+1});
+  if(isCorrect) {
+    score += 10; correct++;
+    fb.textContent = fromFlip ? 'Correct! +10' : 'Correct! +10. Tap the card to see why.';
+    fb.className = 'feedback correct';
+  } else {
+    fb.textContent = typed ? `Not quite: the answer is ${shown(q)}` : `Answer was ${shown(q)}`;
+    fb.className = 'feedback wrong';
+    mainEl.classList.add('answered');   // a wrong answer: the box and buttons fold away, so the working and Next fit (canon 7.6.1)
   }
+  document.getElementById('score').textContent = score;
+  document.getElementById('tapHint').textContent = 'Tap the card to reveal.';
+  // canon §7.6: a right answer moves on briskly; a wrong one shows the working (the card) and waits for Next.
+  if(isCorrect) MaffsLock.timer(nextCard, fromFlip ? 2000 : 3000);
+  else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextCard });
+}
+
+function showBack(on) {
+  flipped = on;
+  document.getElementById('card').classList.toggle('flipped', on);
+}
+
+// Tapping the card: with nothing typed it reveals the answer and the question counts wrong; with an answer typed, that
+// answer is marked first, and an unreadable or wrongly written one is not marked and the card does not turn.
+function flipCard() {
+  if(MaffsLock.isLocked(mainEl)) { showBack(!flipped); return; }
+  const q = questions[qNum];
+  const raw = document.getElementById('answerInput').value;
+  const typed = raw.trim() !== '';
+  const result = typed ? markAnswer(raw, q) : 'wrong';
+  if(result === 'format' || result === 'unreadable') { unmarked(result, raw, q); return; }
+  if(!MaffsLock.lock(mainEl)) return;
+  showBack(true);
+  record(result === 'correct', typed, true);
 }
 
 function checkAnswer() {
   if(MaffsLock.isLocked(mainEl)) return;
-  const userVal = parseFloat(document.getElementById('answerInput').value);
-  if(isNaN(userVal)) { document.getElementById('feedback').textContent = 'Enter a number first!'; return; }
+  const q = questions[qNum];
+  const raw = document.getElementById('answerInput').value;
+  const result = markAnswer(raw, q);
+  if(result === 'format' || result === 'unreadable') { unmarked(result, raw, q); return; }
   if(!MaffsLock.lock(mainEl)) return;
-  const correctVal = questions[qNum].a;
-  const fb = document.getElementById('feedback');
-  const _isOk = Math.abs(userVal - correctVal) < 0.01;
-  mfg('question_answered',{game_slug:'percentage-flip',level:gameLevel,correct:_isOk,question_index:qNum+1});
-  if(_isOk) {
-    score += 10; correct++;
-    fb.textContent = 'Correct! +10. Tap the card to see why.';
-    fb.className = 'feedback correct';
-  } else {
-    fb.textContent = 'Not quite. Tap the card to see the answer.';
-    fb.className = 'feedback wrong';
-  }
-  document.getElementById('score').textContent = score;
-  document.getElementById('tapHint').textContent = 'Tap the card to reveal.';
-  MaffsLock.timer(() => { if(!flipped) flipCard(); }, 1500);
-  // canon §7.6: a right answer moves on briskly; a wrong one shows the working (the card) and waits for Next.
-  if(_isOk) MaffsLock.timer(nextCard, 3000);
-  else MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: nextCard });
+  record(result === 'correct', true, false);
+  MaffsLock.timer(() => { if(!flipped) showBack(true); }, 1500);
 }
 
 function nextCard() { qNum++; loadQuestion(); }
@@ -374,7 +545,11 @@ function renderLB() {
   if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'percentage-flip', gameLevel, 5);
 }
 document.getElementById('best').textContent = getBest();
-(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
+// KaTeX loads deferred: a card dealt before it arrived is drawn again once it has.
+window.addEventListener('load', function () { if (questions[qNum]) { renderWorking(questions[qNum]); fitCard(); } });
+window.addEventListener('resize', function () { if (questions[qNum]) fitCard(); });
+if (document.fonts) document.fonts.addEventListener('loadingdone', function () { if (questions[qNum]) fitCard(); });
+(function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));if(questions[qNum])fitCard();}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'percentage-flip');</script>
