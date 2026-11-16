@@ -1450,16 +1450,28 @@ def score_extras():
 
 
 PENALTY_FIGURE = re.compile(r"\b(?:\d+(?:\.\d+)?|a|an|one|two|three|half a)\s+(?:minutes?|mins?)\b")
+# The words that make a time figure a penalty on a student page (HAMSTER-HEIST-PACK Amendment 2, Jon 16 Nov 2026
+# 17:23): whole words, any case, in the same sentence as the figure.
+PENALTY_WORDS = ("adds", "added", "add", "costs", "cost", "penalty", "penalties", "lose", "loses", "off", "docked")
+PENALTY_WORDING = re.compile(r"\b(?:%s)\b" % "|".join(PENALTY_WORDS), re.I)
 NO_FIGURE_KINDS = ("score", "cover", "evidence", "locks", "hints")
+STRICT_KINDS = ("score",)          # the generator's own wording only: every time figure there is a penalty figure
 
 
 def fixed_penalties(pages_text):
-    """A fixed penalty figure ("1 minute", "a minute") on the score sheet or a student page (Amendment 6). Lowercase
-    only, so a clue's own unit ("CYCLE 6 MIN") is not one."""
+    """A fixed penalty figure ("1 minute", "a minute") on the score sheet or a student page (Amendment 6: the teacher
+    sets the penalties). Lowercase only, so a clue's own unit ("CYCLE 6 MIN") is not one. On the score sheet every
+    such figure is refused. On a student page (cover, evidence, locks, hints) the room's own maths may be measured in
+    minutes ("Run = 16 - 4 = 12 minutes"), so a figure is refused only when a word of PENALTY_WORDS ("adds", "costs",
+    "penalty", ...) is in the same sentence (Jon, 16 Nov 2026, 17:23; contract HAMSTER-HEIST-PACK Amendment 2)."""
     out = []
     for kind, text in pages_text:
-        if kind in NO_FIGURE_KINDS:
-            for m in PENALTY_FIGURE.finditer(" ".join(text.split())):
+        if kind not in NO_FIGURE_KINDS:
+            continue
+        for sentence in re.split(r"(?<=[.!?])\s+", " ".join(text.split())):
+            if kind not in STRICT_KINDS and not PENALTY_WORDING.search(sentence):
+                continue
+            for m in PENALTY_FIGURE.finditer(sentence):
                 out.append("a %s page prints a fixed penalty figure: %r" % (kind, m.group(0)))
     return out
 

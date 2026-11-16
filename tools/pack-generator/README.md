@@ -54,7 +54,10 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    **The final padlock (Amendments 5, 7, 11):** students are told only: each answer once, any of + - x /, no
    brackets, no calculator, make the target. Behind the scenes every set's one solution has the same shape (one x and
    one + or -), is the only expression of any shape that makes the target, works out in whole steps, and its product
-   has a factor that is a multiple of 5 or 12 or less; the sets are chosen so every set has one, or the build fails.
+   has a factor that is a multiple of 5 or 12 or less, and never two factors of 100 or more (Jon, 16 Nov 2026,
+   HAMSTER-HEIST-PACK: three-digit answers had let 420 × 812 through; rebuilding the seven earlier packs under it
+   changed none of their pages, so the PDFs on Tes still match a fresh build); the sets are chosen so every set has
+   one, or the build fails.
    The shape is never printed for students (the build checks); "About this room" gives it, the target range and the
    intended route (estimation) for the teacher. Option B (one + and one -) is `"final_shape": "plus-and-minus"`.
 5. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
@@ -129,7 +132,9 @@ Then, in order, any failure stopping the build:
    maximum; no `{{token}}` is left unfilled; every footer carries the logo and name under 12 mm high; the one URL
    printed (covers and page 2) resolves to the room's own live page in this repo (host from `CNAME`); the score sheet
    has one row per set and one column group per lock and for the final padlock; no fixed penalty figure is on the
-   score sheet or a student page; `stakes` is only in its read-out and, prefixed, on the covers; the hook is in the
+   score sheet (any "N minutes" there) or a student page (an "N minutes" in the same sentence as adds, costs, penalty
+   or another word of `PENALTY_WORDS`, so a room's own time maths, "Run = 16 − 4 = 12 minutes", is not one; Jon,
+   16 Nov 2026); `stakes` is only in its read-out and, prefixed, on the covers; the hook is in the
    start read-out and on no cover, and a hook or brief with a `{{token}}` fails the build (the start read-out is
    filled once, from set A); page 1 is at most
    150 words and no rule is stated on more than one teacher page; no student page prints the final padlock's
@@ -163,7 +168,11 @@ answer box built with `--final`, and a hint card whose "2 m" is not bound. Two m
 control (the first room), the longest-story control (the room with the most words, fitted as the build fits it),
 the answer-box controls (every room's covers, as the build judges them, and page 1 with its DRAFT notes) and the
 binding controls (what `bind_figures()` binds, and that it leaves tags, attributes and line breaks alone) must
-pass. It builds no PDF.
+pass. It builds no PDF. `scripts/test-pack-generator.py` then plants the HAMSTER-HEIST-PACK faults against The Great
+Hamster Heist (a wrong recomputed answer for each of its locks, its heat-lamp scale removed, its manual's art left
+saying "per minute", a product of two factors of 100 or more in `final.py` and in `lockcheck.py`, and fixed penalty
+figures on a hints page, a cover and the score sheet), with controls (a unit written `&deg;C/min` and the declared
+other spelling each converted, time maths on a hints page, the score sheet as printed).
 
 ## Adding a room
 
@@ -216,6 +225,12 @@ answer (a hint card, the key's common-wrong-answer note, the worked solution), t
 room's own tokens for them (`answer`, `aTxt`, `miss`, `mTxt`), each of which must be followed by the room's unit, or
 the build stops; a bound that happens to equal the answer ("2.45 m ≤ width") and the clue's given width stay as
 the room wrote them. The live room is not changed, and a lock with no entry is not touched.
+The unit after a token is matched as a reader sees it: `&deg;C/min` is `°C/min`, `&nbsp;` a space (any HTML entity,
+`as_read()`). A room that words its unit more than one way lists the others in the entry, plain text, under
+`"room_unit_spellings"`, each matched as the slider's unit is (HAMSTER-HEIST-PACK Amendment 1, 16 Nov 2026): Hamster
+Heist's heat lamp is `{"unit": "°C per ten minutes", "scale": 10, "room_unit_spellings": ["°C per minute"]}`, since
+its hint says "°C per minute" and its slider "°C/min". A spelling not listed still stops the build. A printed unit
+has no digit (it would put a digit in the answer box), so ten minutes is spelt out.
 
 ## Fonts
 
