@@ -121,8 +121,8 @@ Then, in order, any failure stopping the build:
 1. `scripts/check-escape-rooms.py` is imported unchanged, which runs the whole room check; its `draw_is_valid()` and
    `clue_strings()` are the rules the room engine serves draws by.
 2. **Selection:** every joint draw (one variant per lock) is judged VALID or not; from the VALID ones, a seeded
-   search picks the sets so that no lock's answer repeats across them and every set has a final padlock with a
-   friendly product; then `final.py` gives each set its final padlock in the pack's one shape.
+   search picks the sets so that no lock's answer repeats across them, no lock's printed common wrong answer is its
+   printed answer, and every set has a final padlock with a friendly product; then `final.py` gives each set its final padlock in the pack's one shape.
 3. **Verification:** `lockcheck.py` recomputes every answer, common wrong answer and worked-solution figure from each
    variant's givens, by its own method (it imports neither the variant generator nor its set checks), and re-reads
    every final expression with its own parser: its value, its shape, and that no other expression makes its target.
@@ -211,6 +211,17 @@ When a clue cannot be tidied into a caption (its sentence runs through the `<b>`
 Both are filled for each set with the same `{{token}}` filler as the clue, and the caption check applies to an
 override too. Either key on a `herring` or `answer` image fails the build. Library Jam's reset card uses both.
 
+**A lock's print-only words (contract HAMSTER-PACK-FINAL, 16 Nov 2026).** A hint or the key's common-wrong-answer
+note that is right online can be wrong on paper, when the pack asks for the answer another way. A room's config may
+then give the lock print-only words: `"lock_words": {"<lock id>": {"hints": {"<1-based hint number>": "<words>"},
+"missSays": "<words>"}}`, printed on that lock's hint card and in the key instead of the room's own; the live room
+keeps its words. The lock must be one of the room's, the hint number one its hints have, each value non-empty words,
+and every `{{token}}` one the room's own strings for that lock use, or the build stops. The words take the room's
+place in the pack's copy of the lock, so every check on the room's words checks them too (figure binding,
+`both_units()`, the fixed-penalty and unfilled-token checks on the built pages), and filled with the lock's first
+variant they must read as a sentence, as a caption must. Hamster Heist's heat lamp uses both: Hint 1 and the note
+speak of the warming in ten minutes, not per minute.
+
 **An answer asked for in another unit (contract CAR-TRAP-PACK, 14 Nov 2026).** The final padlock needs whole
 numbers, and a live room may ask for a decimal (Car Trap's bay width, 2.35 m). A room's config may then declare
 `"answer_units": {"<lock id>": {"unit": "cm", "scale": 100}}`, and the pack asks for that lock in the printed unit:
@@ -231,6 +242,13 @@ The unit after a token is matched as a reader sees it: `&deg;C/min` is `°C/min`
 Heist's heat lamp is `{"unit": "°C per ten minutes", "scale": 10, "room_unit_spellings": ["°C per minute"]}`, since
 its hint says "°C per minute" and its slider "°C/min". A spelling not listed still stops the build. A printed unit
 has no digit (it would put a digit in the answer box), so ten minutes is spelt out.
+An entry may also give `"miss_scale"` (a whole number of 1 or more), the scale for the common wrong answer where it
+is not the answer's (contract HAMSTER-PACK-FINAL, 16 Nov 2026). Car Trap's wrong width is the same mistake in either
+unit, so it takes the answer's scale (no `miss_scale`). Hamster Heist's is not: online the slip is the rise as a rate
+per minute, 18 °C/min; on paper a student who does not divide writes the rise itself, 18 °C per ten minutes, not 180,
+so its entry has `"miss_scale": 1`, and lockcheck works its printed wrong answer the same way. A set in which any
+lock's printed common wrong answer equals its printed answer is never chosen (`miss_is_answer()`, every room): such a
+lock opens for the very mistake it tests, as the heat lamp would per ten minutes with readings ten minutes apart.
 
 ## Fonts
 

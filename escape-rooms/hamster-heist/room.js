@@ -370,6 +370,42 @@ window.ROOM = {
           "miss": 20.0,
           "aTxt": "2.5",
           "mTxt": "20.0"
+        },
+        {
+          "t1": 6,
+          "T1": 25,
+          "t2": 10,
+          "T2": 45,
+          "rise": 20,
+          "run": 4,
+          "answer": 5.0,
+          "miss": 20.0,
+          "aTxt": "5.0",
+          "mTxt": "20.0"
+        },
+        {
+          "t1": 5,
+          "T1": 23,
+          "t2": 10,
+          "T2": 38,
+          "rise": 15,
+          "run": 5,
+          "answer": 3.0,
+          "miss": 15.0,
+          "aTxt": "3.0",
+          "mTxt": "15.0"
+        },
+        {
+          "t1": 6,
+          "T1": 24,
+          "t2": 10,
+          "T2": 42,
+          "rise": 18,
+          "run": 4,
+          "answer": 4.5,
+          "miss": 18.0,
+          "aTxt": "4.5",
+          "mTxt": "18.0"
         }
       ],
       missTitle: '{{grad.rise}} is the whole climb, not the rate.',

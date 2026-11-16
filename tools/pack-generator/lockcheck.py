@@ -471,8 +471,11 @@ def _heat_lamp_gradient(v):
     missTitle, "the whole climb, not the rate"): the rise, not divided. The room prints both to one decimal place
     (aTxt, mTxt), so each must be a whole number of tenths; the numbers are compared as those texts read. The pack asks for the rate in degrees every ten minutes
     (its config's answer_units), so this also works the rate in that unit, from the readings: the rise over the run
-    counted in tens of minutes, (T2 - T1) / ((t2 - t1) / 10); and the common wrong answer the same way, the rise taken
-    as the rate per minute and so ten of it every ten minutes. Both must be whole."""
+    counted in tens of minutes, (T2 - T1) / ((t2 - t1) / 10). The common wrong answer on paper is the rise itself, the
+    same mistake made in that unit: a student who does not divide by the run writes down how much warmer it got, 18,
+    not 180 (contract HAMSTER-PACK-FINAL, 16 Nov 2026; before it this said ten of the rise, the room's per-minute
+    slip scaled, which no student writes; the pack's config gives the wrong answer "miss_scale": 1 to match). Both
+    must be whole."""
     rise, run = v["T2"] - v["T1"], v["t2"] - v["t1"]
     if run <= 0:
         raise ValueError("the readings at %s and %s minutes are not in order" % (v["t1"], v["t2"]))
@@ -486,7 +489,7 @@ def _heat_lamp_gradient(v):
     # the stored numbers are JSON's reading of their one-place text (0.8 is the float nearest 4/5, not 4/5 itself)
     return {"rise": rise, "run": run, "answer": float(a_txt), "miss": float(m_txt), "aTxt": a_txt, "mTxt": m_txt,
             PRINTED: {"unit": "°C per ten minutes", "answer": _whole(per_ten, "the rate every ten minutes"),
-                      "miss": _whole(Fraction(rise) * 10, "the rise as a rate every ten minutes")}}
+                      "miss": _whole(Fraction(rise), "the rise, not divided by the run")}}
 
 
 RECOMPUTE = {

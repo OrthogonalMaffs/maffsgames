@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet; controls: an entity-written and an other-spelling unit each converted, time maths on a hints page); no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale; no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
 CI finds its lines only in scripts/*.py headers (scripts/ci-groups.py), and the generator lives in tools/pack-generator/,
 so this file is the line. It runs `build_pack.py --selftest`, then the plants of contract HAMSTER-HEIST-PACK
 (Amendments 1 and 2, 16 Nov 2026), which import the generator and plant faults against The Great Hamster Heist's own
-locks, sets and config. Each plant must be caught by the check named beside it; each control must pass. A plant whose
+locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -82,6 +82,7 @@ def hamster_plants():
         try:
             pg = B.offline_context(browser).new_page()
             checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = B.prepare(SLUG, None, None, pg)
+            car = B.prepare("car-trap", None, None, pg)       # the control room: a scaled lock with no miss_scale
         finally:
             browser.close()
     shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
@@ -167,6 +168,107 @@ def hamster_plants():
                 if "two numbers of 100 or more" in x]
     results.append(("a product of two factors of 100 or more, in lockcheck.py", "plant", plant_big_product_lockcheck,
                     "lockcheck.final_problems"))
+
+    # ---- HAMSTER-PACK-FINAL (16 Nov 2026): miss_scale, the answer/miss rule, lock_words ------------------------------
+    def refused(fn):
+        try:
+            fn()
+        except B.BuildError as e:
+            return [str(e)]
+        return []
+
+    for bad in (0, 1.5, True):
+        def plant_miss_scale(bad=bad):
+            return refused(lambda: B.answer_units(
+                {"answer_units": {SCALED: {"unit": "°C per ten minutes", "scale": 10, "miss_scale": bad}}}, SLUG))
+        results.append(("a miss_scale of %r" % (bad,), "plant", plant_miss_scale, "answer_units"))
+
+    def plant_printed_miss_disagrees():
+        # without miss_scale the wrong answer prints as the rise x 10, which lockcheck's own figure (the rise) refutes
+        if B.verify_sets(locks, sets)[0]:
+            return []                                    # the control: as configured, every printed figure agrees
+        bare = [dict(l, answer_unit={k: v for k, v in l["answer_unit"].items() if k != "miss_scale"})
+                if l.get("answer_unit") else l for l in locks]
+        if bare == locks:
+            raise pc.StalePlant("the printed miss disagreeing", "%s has no miss_scale to remove" % SCALED)
+        return [x for x in B.verify_sets(bare, sets)[0] if "miss prints as" in x]
+    results.append(("lockcheck's printed miss disagreeing with the printed miss", "plant", plant_printed_miss_disagrees,
+                    "verify_sets / lockcheck PRINTED"))
+
+    def plant_miss_is_answer():
+        # a set whose heat lamp has readings ten minutes apart: the rise is the answer per ten minutes
+        i = lock_index(locks, SCALED, pc)
+        k = next((j for j, v in enumerate(locks[i]["variants"]) if v["run"] == 10), None)
+        if k is None:
+            raise pc.StalePlant("a set whose printed miss is its answer", "no heat-lamp variant is ten minutes apart")
+        if any("prints as its answer" in x for x in B.check_sets(checker, room_js, locks, sets)):
+            return []                                    # the control: the chosen sets have none
+        s = copy.deepcopy(sets)
+        s[0]["vars"][i] = copy.deepcopy(locks[i]["variants"][k])
+        return [x for x in B.check_sets(checker, room_js, locks, s) if "prints as its answer" in x]
+    results.append(("a set whose printed common wrong answer is its printed answer", "plant", plant_miss_is_answer,
+                    "check_sets / miss_is_answer"))
+
+    base = B.with_answer_units(cfg, B.room_locks(room, SLUG), SLUG)       # the locks before lock_words
+    words = cfg.get("lock_words") or {}
+    if not words:
+        raise pc.StalePlant("lock_words plants", "%s has no lock_words" % SLUG)
+
+    def with_words(w):
+        return refused(lambda: B.with_lock_words(dict(cfg, lock_words=w), base, SLUG))
+    w0 = copy.deepcopy(words)
+    for label, w in (("an unknown lock", {"no-such-lock": {"missSays": "Words."}}),
+                     ("an unknown hint number", {SCALED: {"hints": {"9": "Words."}}}),
+                     ("an unknown token", {SCALED: {"missSays": "It took {{grad.nope}} minutes."}}),
+                     ("an empty string", {SCALED: {"hints": {"1": "  "}}})):
+        results.append(("a lock_words entry with %s" % label, "plant", lambda w=w: with_words(w), "with_lock_words"))
+    results.append(("Hamster Heist's own lock_words", "control", lambda: with_words(w0), "with_lock_words"))
+
+    def plant_unbound_override():
+        # the override as the pack fills it is bound ("4 minutes" with a no-break space); with an ordinary space the
+        # printed-words figure rule must catch it
+        i = lock_index(locks, SCALED, pc)
+        good = B.filler(locks, s0)(locks[i]["missSays"])
+        if words[SCALED]["missSays"] != locks[i]["missSays"]:
+            raise pc.StalePlant("an override with an unbound figure", "the lock does not carry its lock_words missSays")
+        if B.unbound_figures(good):
+            return []                                    # the control: as filled, the override is bound
+        bad = pc.apply_plant(good, chr(160) + "minutes", " minutes", allow_multiple=True,
+                             name="an override with an unbound figure")
+        return B.unbound_figures(bad)
+    results.append(("an override with an unbound figure", "plant", plant_unbound_override, "unbound_figures"))
+
+    def control_overrides_printed():
+        i = lock_index(locks, SCALED, pc)
+        out = []
+        if locks[i]["hints"][0] != words[SCALED]["hints"]["1"]:
+            out.append("hint 1 is not the override")
+        if room["locks"][i]["hints"][0] == locks[i]["hints"][0]:
+            out.append("the live room's hint 1 was changed")
+        for s in sets:
+            v = s["vars"][i]
+            a, m = B.printed_number(locks[i], v["answer"], "answer"), B.printed_number(locks[i], v["miss"], "miss")
+            if m != v["rise"] or a == m:
+                out.append("set %s: printed miss %s, answer %s, rise %s" % (s["letter"], m, a, v["rise"]))
+            if v["run"] == 10:
+                out.append("set %s: readings ten minutes apart" % s["letter"])
+        return out
+    results.append(("the heat lamp as printed: hint 1 and missSays overridden, miss the rise, never the answer",
+                    "control", control_overrides_printed, "with_lock_words / miss_scale"))
+
+    def control_car_trap():
+        c_checker, c_cfg, c_room, c_teach, c_js, c_locks, c_sets = car[:7]
+        au = next(l["answer_unit"] for l in c_locks if l.get("answer_unit"))
+        out = ["car-trap has a miss_scale"] if "miss_scale" in au else []
+        out += B.verify_sets(c_locks, c_sets)[0] + B.check_sets(c_checker, c_js, c_locks, c_sets)
+        for l in c_locks:
+            if l.get("answer_unit"):
+                for s in c_sets:
+                    v = s["vars"][c_locks.index(l)]
+                    if B.printed_number(l, v["miss"], "miss") != B.printed_number(l, v["miss"], "answer"):
+                        out.append("car-trap's miss is not scaled as its answer")
+        return out
+    results.append(("car-trap with no miss_scale", "control", control_car_trap, "scale_of / verify_sets"))
 
     # item 9: fixed penalty figures (Amendment 6), strict on the score sheet, penalty-worded on student pages
     for label, kind, text in (("each hint adds 1 minute, on a hints page", "hints", "Each hint adds 1 minute."),

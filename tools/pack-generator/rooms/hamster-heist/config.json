@@ -4,8 +4,11 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Hamster returned",
-  "wording_approved": null,
-  "answer_units": {"heat-lamp-gradient": {"unit": "°C per ten minutes", "scale": 10, "room_unit_spellings": ["°C per minute"]}},
+  "wording_approved": {"by": "Jon", "date": "2026-11-16"},
+  "answer_units": {"heat-lamp-gradient": {"unit": "°C per ten minutes", "scale": 10, "miss_scale": 1, "room_unit_spellings": ["°C per minute"]}},
+  "lock_words": {"heat-lamp-gradient": {
+    "hints": {"1": "A rate is how much it warms in a set time. You have two readings, and they are not ten minutes apart."},
+    "missSays": "{{grad.T2}} &minus; {{grad.T1}} = {{grad.rise}} is how much warmer it got &mdash; but that took {{grad.run}} minutes, not ten. The rate asked for is the warming in ten minutes, so the rise is divided by the run and then multiplied by ten."}},
   "images": [
     {"file": "art/ham-01-invoice.webp", "role": "clue", "object": "invoice", "label_box": [230, 220, 1070, 1120], "font": "hand",
      "printed": "Replacement · running wheel, · {{rpm.d}} cm diameter",
