@@ -73,7 +73,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6f9498b (#800 and #801 merged). Size medium. Replaces ANSWER-AUDIT-SCRIPT, which STOPPED 19:51 (extract-banks.py holds source data, not the student's screen: 21 of 109 banks carry both a question and an answer field; full Opus run ~$200).
 **Close-out carried (first commit):** BEARING-BLITZ-GOAT (#800, 5a82f36), recorded below; contract moved.
-Next: scripts/audit-answers.py (FIELD_MAP for the 21 games, figure exclusions, Sonnet pass 1 / Opus pass 2 by Batch API, key from a mode-600 file only, --max-usd), its --selftest, todo row ANSWER-AUDIT-RUN, .gitignore data/audit/; --selftest and a --dry-run over the 21; Gate; merge.
+Done on the branch: `scripts/audit-answers.py` (FIELD_MAP for the 21; Sonnet 5.5 pass 1, Opus 5.5 pass 2 on DISAGREE/UNCLEAR, Message Batches; key only from a mode-600 file outside the repo; --max-usd guards both passes), `--selftest` PASS (25 checks, no network), todo row ANSWER-AUDIT-RUN, `data/audit/` gitignored. Dry run over the 21: 1,228 to send, 137 not audited for a figure (angle-ace 85 `fig`, normal-navigator 47 `shade`, core-maths 5 `svg`), 0 for shape; pass 1 ~$12.70 (assumed 2,000 output tokens a reply; ceiling at max_tokens $49.12), pass 2 worst case ~$49.97. Discoveries: the STOP's 3,073 counted banks once per serving level; unique questions are 1,365. The Batch API's custom_id allows only letters, digits, _ and -, so `<slug>--<level>--<index>` is sent and the manifest maps it to `<slug>|<level>|<index>`. Not verifiable here (no key): that both models and the Batch API answer as described; Jon's pilot of one game is that check.
+Next: Gate; merge by merge-pr.py; main's two runs.
 
 ## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/history/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
 
