@@ -911,7 +911,7 @@ def main():
     if not args.no_selftest:
         _, _, extra_r, _ = run_page(args.chromium, None, PATCH_EXTERIOR)
         extra = {k: v for k, v in extra_r.items()
-                 if banks['year6'][k[1]].get('isRecognition') and banks['year6'][k[1]]['answer'].startswith('Alternate')}
+                 if k[0] == 'year6' and banks['year6'][k[1]].get('isRecognition') and banks['year6'][k[1]]['answer'].startswith('Alternate')}
         first = min(k[1] for k in extra)
         extra = {k: v for k, v in extra.items() if k[1] == first}
         s_ok, lines = selftest(banks, reasons, renders, marks, extra)

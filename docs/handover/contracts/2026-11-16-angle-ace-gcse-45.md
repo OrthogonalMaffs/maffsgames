@@ -1,14 +1,16 @@
-ANGLE-ACE-GCSE-45 (Project Claude, Mon 16 Nov 2026 11:40; Jon 11:15 "yes please, lets keep cloud lane working")
+ANGLE-ACE-GCSE-45, AMENDMENT 1 (whole contract reissued; Project Claude, Mon 16 Nov 2026 12:10; original 11:40; Jon 11:15 "yes please, lets keep cloud lane working")
+AMENDMENT 1: adds the one-line self-test fix in scripts/verify-angle-ace.py (EXACT CHANGE 3, ROOT CAUSE, DO NOT TOUCH, STOP IF). CONTINUE on branch ccr-bd20fca4-euxido: its two commits (close-out; bank, headers, COUNTS, ledger, /updates/) stand as done; add the fix as a third commit, and in the same commit replace docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md with this amended text, verbatim; then cloud.md, then open the PR. The ccr- branch name is the cloud environment's own and is accepted.
 Recommended: Sonnet, effort medium: ten checked items pasted into one bank, one count changed in the verifier; the verifier does the geometry.
-LANE: cloud. SEND: now, in a new cloud session (cloud lane free since #794; main at 4c13e95). TIER: Small (merge on green; Project Claude reviews after the merge; Jon plays GCSE after it). One PR, branched from current origin/main.
+LANE: cloud. SEND: now, to the session that stopped on this contract (it holds the branch). TIER: Small (merge on green; Project Claude reviews after the merge; Jon plays GCSE after it). One PR, branched from current origin/main.
 CLOSE-OUT (first commit, AGENTS.md:61): MERGE-ROUTE-RETIRE merged #794 by merge-pr.py (the only route; its last line "main 4e7a25d run 43847525596: GREEN", exit 0) as 4e7a25d; main check-site 43847525596 success (10:31:06 UTC), phone-fit-full 43847525561 success (10:17:52 UTC), both push-triggered. Move docs/handover/contracts/2026-11-16-merge-route-retire.md to docs/history/contracts/ with those figures. Save this contract verbatim as docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md in the same commit.
 MERGE: python -X utf8 scripts/merge-pr.py <n> --watch --wait 3600, unpiped; report its last line. No other route: if merge-pr.py cannot reach GitHub, STOP and report; the PR waits.
 
 TASK: Bring Angle Ace's GCSE bank from 35 to 45 questions with the ten items below, verbatim, so the level meets the site's 40-50 minimum.
 
 ROOT CAUSE (main 4c13e95): QUESTIONS_BY_LEVEL.gcse in games/angle-ace/index.html (:501-645) has 35 items, below the 40 minimum (todo 1.52, "STILL LIVE: GCSE has 35 questions"). The headers at :301 and :499 say "GCSE 35"; scripts/verify-angle-ace.py holds COUNTS = {'year6': 40, 'gcse': 35} (:57).
+- Latent verifier bug (found by the cloud lane, 16 Nov 11:59): the self-test's filter at scripts/verify-angle-ace.py:914 looks every recording key (level, index, width) up in banks['year6'] by index alone, ignoring the level. With 35 GCSE items every GCSE index was below year6's 40, so it never crashed but let GCSE recordings with a matching index into the planted set; with 45, indices 40-44 raise IndexError and the self-test dies before planting a fault.
 
-CLASS CHECK: Local. One game's bank is short; the content was the missing piece (todo 1.52: "Adding questions is content (Jon's call); every new item needs only a fig and passes scripts/verify-angle-ace.py or fails it"). The diagram correctness class (audit class 6) is already fixed architecturally: every figure is drawn by drawFig() from its fig and measured by the verifier, which these items go through unchanged. No shared code changes.
+CLASS CHECK: Local. One game's bank is short; the content was the missing piece (todo 1.52: "Adding questions is content (Jon's call); every new item needs only a fig and passes scripts/verify-angle-ace.py or fails it"). The diagram correctness class (audit class 6) is already fixed architecturally: every figure is drawn by drawFig() from its fig and measured by the verifier, which these items go through unchanged. No shared code changes. The verifier fix is local too: one verifier's filter fails to match on level; no shared module is involved.
 
 EXACT CHANGE:
 1. In games/angle-ace/index.html, append these ten items to QUESTIONS_BY_LEVEL.gcse, verbatim, after the last item (the "Three angles on a straight line. Find x." item, whose steps end 'x = 90°']},) and before the closing ]; of the array:
@@ -46,13 +48,15 @@ prompt:'Find angle x',answer:34,reason:REASONS.TRIANGLE,angleOpts:[34,146,44,24]
 
    (Project Claude ran scripts/verify-angle-ace.py --no-selftest locally with exactly these ten items appended and COUNTS gcse 45: "PASS: 0 FAIL(s); 85 items (year6, gcse) measured at 320/390/1280 px; every option and reason marked in Chromium".)
 2. The comment headers: :301 "Starter 40, GCSE 45"; :499 "45 questions".
-3. scripts/verify-angle-ace.py:57: COUNTS gcse 35 -> 45. Nothing else in the verifier changes (no TWO_STEP entry: all ten are one-step items).
+3. scripts/verify-angle-ace.py: COUNTS gcse 35 -> 45 (:57, done); and at :914 the filter becomes
+       if k[0] == 'year6' and banks['year6'][k[1]].get('isRecognition') and banks['year6'][k[1]]['answer'].startswith('Alternate')}
+   (k[0] == 'year6' added at the front; nothing else in the line changes). Nothing else in the verifier changes (no TWO_STEP entry: all ten are one-step items). Project Claude ran the full verifier, self-test included, with the ten items, COUNTS 45 and this fix: all 8 planted faults caught; "PASS: 0 FAIL(s); 85 items (year6, gcse) measured at 320/390/1280 px".
 4. data/check-ledger.json: if it holds a B4 entry for angle-ace's GCSE level, remove it the way the repo removes a fixed entry; check-banks must pass B4 for angle-ace at both levels. Leave the year6 B3 duplicate entries (the recognition items) untouched.
 5. /updates/: one line in the site's plain wording, e.g. "Angle Ace: ten more GCSE questions, including angles at a point, vertically opposite and exterior angles."
 6. docs/handover/cloud.md: an entry for this PR, ending with the row for the home lane: close todo 1.52 (GCSE now 45; KS3 part already fixed by #333).
 
-DO NOT TOUCH: the 35 existing GCSE items and the 40 Starter items; the ten new items' text, numbers, options and steps (if any fails a check, STOP; do not edit it); drawFig, FIG and every other function; the verifier beyond COUNTS; the ledger's year6 entries; schools/assets/; docs/todo.md; canon; the roster; Gate files; every other game.
+DO NOT TOUCH: the 35 existing GCSE items and the 40 Starter items; the ten new items' text, numbers, options and steps (if any fails a check, STOP; do not edit it); drawFig, FIG and every other function; the verifier beyond COUNTS and the :914 filter; the ledger's year6 entries; schools/assets/; docs/todo.md; canon; the roster; Gate files; every other game.
 
 SUCCESS CONDITION: Angle Ace GCSE has 45 items, the ten above verbatim; verify-angle-ace.py passes with its self-test (every planted fault still fails); check-banks passes B4 for angle-ace at both levels; the headers say 45; /updates/ has the line; merged by merge-pr.py; main's check-site and phone-fit-full green on the merge commit and reported with their IDs; cloud.md updated and the work committed.
 
-STOP IF: any of the ten items fails verify-angle-ace.py or check-banks (report the item and the failure; change nothing in it); the verifier's self-test stops failing a planted fault; merge-pr.py cannot reach GitHub; main's run on the merge commit does not start.
+STOP IF: any of the ten items fails verify-angle-ace.py or check-banks (report the item and the failure; change nothing in it); the verifier's self-test, with the :914 fix, fails to catch any planted fault or still crashes; merge-pr.py cannot reach GitHub; main's run on the merge commit does not start.
