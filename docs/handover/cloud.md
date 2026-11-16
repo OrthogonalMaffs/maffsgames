@@ -77,6 +77,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 **Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
 
+## 2026-11-16 (cloud): PERCENTAGE-FLIP-BANKS (`docs/handover/contracts/2026-11-16-percentage-flip-banks.md`; Jon's rulings 15 Nov 22:52)
+
+Agent Claude Code (cloud), branch `claude/pensive-fermat-j6m1x8` from main 14b8711. Medium; merges on green.
+**Close-out carried (first commit):** CONTENT-SAFETY-COVERAGE merged as d64b788 (#792); main check-site 43764352225 and phone-fit-full 43764352219, both success (read through the GitHub connection). Route: the PR does not record it; gh auth fails in cloud sessions ("Failed to log in to github.com using token (GH_TOKEN)", checked again here), so it was the GitHub connection under the standing ruling of 10 Nov 2026. Contract moved to docs/history/contracts/.
+Bank checked first, from each question's own words: 120 keys and every equation in every working line, 0 disagreements (no STOP).
+Done on the branch (PR #793): one level-keyed `QUESTIONS` (verbatim); `gameLevel` is `MaffsLevel.resolve` (year6 | ks3 | gcse, fallback ks3, no 'all'); deals 3/3/2/2 by band, Fisher-Yates; one `markAnswer()` (money() for £ with moneyInput on/off, else exact()) behind both Check and the card; format/unreadable never marked; KaTeX working, one line each; the card sized to its taller face (`fitCard()`); after a wrong answer the box, Check and Skip fold away. Portal card, Essentials (now GCSE: its data-key and label follow the link, check-resit-page requires it), spec-map N12, hub row, /updates/. extract-banks 40/40/40 scoped; ledger B4 entries gone (`check-banks.py --write-ledger --only percentage-flip`). f1-001 fixed. verify-percentage-flip.py rewritten: PASS, 6/6 plants, 59 s locally.
+Fold, after a wrong answer, worst Next bottom (fold = height less 40): normal 389 at 320x568, 383 at 375x667. Aa mode (not in this contract): fits at 375x667 (550 of 627) but not at 320x568 on 44 of 120 questions (Next to 605 of 528): canon 7.6.1's known Aa gap.
+**For the home lane, docs/todo.md:** close 3.11 and LEDGER-B4-PERCENTAGE-FLIP; mark the percentage-flip parts of 1.36 (MaffsAnswer, money to the penny) and 1.35 (extract-banks now counts 40 a level) done. **Proposed row PERCENT-SUFFIX:** a typed "35%" is 'unreadable' in MaffsAnswer (answer.js NUM takes no unit). Listed games that mark a typed percentage: chart-interrogator (:783, `suffix:'%'`), screening-room (:343, :935); percentage-flip (this PR); unlisted its-on-sale.
+
 ## 2026-11-15 (cloud): CONTENT-SAFETY-COVERAGE (`docs/handover/contracts/2026-11-15-content-safety-coverage.md`; Jon's ruling 14 Nov 22:46, item 3 of 3)
 
 Agent Claude Code (cloud), branch `claude/nice-davinci-26hl5y` from main 7b00e6c. Close-out of ESSENTIALS-PHONE-FIT-PAIR (#788 6065fb6, #790 984851c) in the first commit. One PR, Medium, merging on green.
