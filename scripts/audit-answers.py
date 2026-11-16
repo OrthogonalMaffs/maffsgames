@@ -522,7 +522,7 @@ def run_batch(client, reqs, pass_no, run_dir, state, resume_id, poll):
                                                                  rc.errored))
         time.sleep(poll)
     results = {}
-    with open(os.path.join(run_dir, 'pass%d-results.jsonl' % pass_no), 'w', encoding='utf-8') as f:
+    with open(os.path.join(run_dir, 'pass%d-results.jsonl' % pass_no), 'w', encoding='utf-8', newline='') as f:
         for r in client.messages.batches.results(bid):
             n = norm_result(r)
             results[n['custom_id']] = n
@@ -544,7 +544,7 @@ def outcome(item, res):
 
 
 def save_json(path, obj):
-    with open(path, 'w', encoding='utf-8') as f:
+    with open(path, 'w', encoding='utf-8', newline='') as f:
         json.dump(obj, f, ensure_ascii=False, indent=1)
 
 
@@ -741,7 +741,7 @@ def selftest():
     os.makedirs(banks)
 
     def bank(slug, groups):
-        with open(os.path.join(banks, slug + '.json'), 'w', encoding='utf-8') as f:
+        with open(os.path.join(banks, slug + '.json'), 'w', encoding='utf-8', newline='') as f:
             json.dump({'slug': slug, 'levels': {'gcse': {'groups': [
                 {'variable': 'QUESTIONS', 'path': [p], 'count': len(qs), 'questions': qs} for p, qs in groups]}}}, f)
 
@@ -814,7 +814,7 @@ def selftest():
 
     # The key file.
     kf = os.path.join(tmp, 'key')
-    with open(kf, 'w') as f:
+    with open(kf, 'w', newline='') as f:
         f.write('sk-fake-not-a-key\n')
     os.chmod(kf, 0o644)
     try:
@@ -827,7 +827,7 @@ def selftest():
     inrepo = os.path.join(REPO, 'data', '.audit-selftest-key')
     try:
         os.makedirs(os.path.dirname(inrepo), exist_ok=True)
-        with open(inrepo, 'w') as f:
+        with open(inrepo, 'w', newline='') as f:
             f.write('x')
         os.chmod(inrepo, 0o600)
         try:
