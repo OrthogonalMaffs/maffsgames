@@ -133,14 +133,8 @@
     "status": "fail"
    },
    "B4": {
-    "entries": [
-     {
-      "detail": "level 'gcse' has 35 question(s), below the 40 minimum",
-      "id": "angle-ace::gcse",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B5": {
     "entries": [],

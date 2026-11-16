@@ -73,7 +73,9 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` from main 4c13e95. Small; merges on green, by merge-pr.py only.
 **Close-out carried (first commit):** MERGE-ROUTE-RETIRE merged #794 by merge-pr.py (last line "main 4e7a25d run 43847525596: GREEN", exit 0) as 4e7a25d; main check-site 43847525596 success (10:31:06 UTC), phone-fit-full 43847525561 success (10:17:52 UTC), both push-triggered. Contract moved to docs/history/contracts/.
-Next: the ten GCSE items, headers, verifier COUNTS, ledger B4, /updates/.
+Done on the branch: the ten items appended verbatim (checked as an exact substring of the contract file; non-ASCII only U+00B0 and U+2212); headers :301 and :499 say 45; verifier COUNTS gcse 45; ledger B4 `angle-ace::gcse` gone (`extract-banks.py --only angle-ace`, then `check-banks.py --write-ledger --only angle-ace`; diff is that entry only, year6 B3 untouched); check-banks --only angle-ace exit 0, B4 0; /updates/ line.
+Main checks: verify-angle-ace.py reports no FAIL on 85 items.
+**STOPPED (STOP IF: the self-test; DO NOT TOUCH: the verifier beyond COUNTS). No PR opened.** The self-test crashes before planting anything: `IndexError: list index out of range` at `scripts/verify-angle-ace.py:914`. The filter on the patched page's renders, keyed `(level, index, width)`, looks every key up in `banks['year6']` by index without checking the level, so a gcse key with index 40-44 (new with this bank) is out of range. Latent before: at 35 it silently let gcse renders with a matching index into `extra`. Proposed one-line fix (tested on a scratchpad copy, not committed): prefix the condition with `k[0] == 'year6' and`. With it: all 8 plants caught, "PASS: 0 FAIL(s); 85 items". Waiting on an amendment.
 
 ## 2026-11-16 (cloud): MERGE-ROUTE-RETIRE (`docs/handover/contracts/2026-11-16-merge-route-retire.md`; Jon's ruling 16 Nov 09:41)
 

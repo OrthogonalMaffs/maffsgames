@@ -54,7 +54,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'angle-ace'
 LEVELS = ['year6', 'gcse']
-COUNTS = {'year6': 40, 'gcse': 35}
+COUNTS = {'year6': 40, 'gcse': 45}
 WIDTHS = [(320, 568), (390, 844), (1280, 800)]
 LINE_MIN = 40      # px: a stroked segment this long is a line of the figure; shorter strokes are marks
 TOL = 1.0          # degrees: a label against its region, an arc against its region, x against the key
