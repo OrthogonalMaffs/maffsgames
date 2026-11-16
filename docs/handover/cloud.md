@@ -69,13 +69,19 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-16 (cloud): HAMSTER-HEIST-PACK (`docs/handover/contracts/2026-11-16-hamster-heist-pack.md`; Jon 16:41, 16:43)
+
+Agent Claude Code (cloud), branch `claude/amazing-ptolemy-xiax6r` from main dc4bc08. Medium; merges on green, by merge-pr.py only. Lane exception (Jon 16:41): tools/pack-generator/ and scripts/test-pack-generator.py.
+**Close-out carried (first commit):** BETTER-VALUE-GCSE-40 (#796, fa88964), recorded in its entry below; contract moved.
+In progress: config, art, lockcheck RECOMPUTE, build, selftest plants.
+
 ## 2026-11-16 (cloud): BETTER-VALUE-GCSE-40 (`docs/handover/contracts/2026-11-16-better-value-gcse-40.md`; Jon 15:18)
 
 Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` restarted from main ef92245 (#795 squash-merged). Small; merges on green, by merge-pr.py only.
 **Close-out carried (first commit):** ANGLE-ACE-GCSE-45 (Amendments 1 and 2) merged #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 success (14:19:57 UTC), phone-fit-full 43882219278 success (14:06:17 UTC), both push-triggered. Contract moved to docs/history/contracts/.
 Done on the branch: the twenty items appended verbatim (sliced from the saved contract; exact substring, 40 gcse ids); verify-better-value.py COUNTS gcse 40, docstring 90 items, the twenty REVIEW lines, BREAK_EVEN bv_gcse_038, MUST_SAY for 038-040; ledger B4 `better-value::gcse` gone (`extract-banks.py --only better-value`, `check-banks.py --write-ledger --only better-value`; the layer A flag goes violations to verified with it, as check-banks.py:1119 derives it from the entries); /updates/ line.
 Local: verify-better-value-claims.py "90 items, 360 conclusions; 0 known failure(s)" PASS, 7 self-tests caught; verify-better-value.py "90 items, every keyed and explanation figure recomputed, every card clicked in Chromium" PASS, 10 caught; verify-better-value-tax.py PASS; check-tax-year.py OK; check-banks --only better-value B1-B11 all 0; check-answer-count, check-question-id, check-levels, check-resit-page pass.
-Next: Gate, merge by merge-pr.py, main's two runs.
+**Merged (closed out by HAMSTER-HEIST-PACK's first commit):** #796 by merge-pr.py as fa88964 ("main fa88964 run 43903757375: GREEN", exit 0); main check-site 43903757375 success (16:20:15 UTC), phone-fit-full 43903757261 success (16:06:38 UTC), both push-triggered. Flake on the PR: run 43899954166 attempt 1, job "PR budget (measured times)" marked cancelled with every step succeeded, green on attempt 2. Contract moved to docs/history/contracts/.
 **For the home lane:** close todo LEDGER-B4-BETTER-VALUE; the roster row for Better Value (.claude/rules/game-roster.md) says "50 questions" and should say GCSE 40, Core 50.
 
 ## 2026-11-16 (cloud): ANGLE-ACE-GCSE-45 (`docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md`; Jon 11:15)
