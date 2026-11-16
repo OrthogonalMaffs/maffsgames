@@ -24,6 +24,8 @@ Codex (home lane), worktree `~/mg-footer-phone-four`, branch `codex/footer-phone
 - The browser assertion in `measure-phone-fit.py` passed on the homepage, prime-or-composite and the fractions parent guide at 320, 375, 390, 810 and 1280px. Both plants failed it: missing classes on a homepage copy and the media query removed from a stylesheet copy. `check-footer.py` passed all 152 pages; a diff check found only footer classes in those pages and the dated /updates/ line. `measure-phone-fit.py --selftest`, `check-context-size.py` and `git diff --check` passed; `ci-groups.py --worst-case` said no gate file changed. Next: PR Gate, merge and main-run report.
 - Backlog housekeeping: #794, #793, #795 and #796 rows closed or updated as the contract names. The B4 Angle Ace ledger row was not in item 7 and stays for a later contract; its text is stale on main.
 
+- MERGED 16 Nov as cdc38aec (#797), carried by PE-SHED-PACK's first commit. Main on the merge commit: check-site 43927268181 success, phone-fit-full 43927268127 success (both push runs). Contract moved to `docs/history/contracts/`.
+
 Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-15 (home): UNLIST-GRAPH-SKETCHER (Graph Sketcher off every list, page live; two todo rows)
