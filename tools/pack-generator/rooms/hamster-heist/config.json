@@ -5,7 +5,7 @@
   "seed": 1,
   "certificate_title": "Hamster returned",
   "wording_approved": null,
-  "answer_units": {"heat-lamp-gradient": {"unit": "°C per ten minutes", "scale": 10}},
+  "answer_units": {"heat-lamp-gradient": {"unit": "°C per ten minutes", "scale": 10, "room_unit_spellings": ["°C per minute"]}},
   "images": [
     {"file": "art/ham-01-invoice.webp", "role": "clue", "object": "invoice", "label_box": [230, 220, 1070, 1120], "font": "hand"},
     {"file": "art/ham-02-clipboard.webp", "role": "clue", "object": "clipboard", "label_box": [265, 300, 1055, 1130], "font": "hand"},

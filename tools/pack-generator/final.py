@@ -11,7 +11,9 @@ Every set in a pack uses the same SHAPE (Amendment 7: sets race each other, so t
 all): by default one x and one + or - (Option B, "plus-and-minus": one + and one -, set by the room's config). A target
 is a whole number of any size, never one of the set's own answers, never the plain sum, and its expression works out
 in whole, non-negative steps (the generator's two rules, kept by Amendment 7); its product has a factor that is a
-multiple of 5 or 12 or less (Amendment 11), and students are never told the shape. A set with no such target fails the
+multiple of 5 or 12 or less, and at most one of its factors is 100 or more (Amendment 11; the second half is Jon's
+ruling of 16 Nov 2026, contract HAMSTER-HEIST-PACK Amendment 1: three-digit answers had let 420 x 812 through; the
+packs already on Tes are not rebuilt), and students are never told the shape. A set with no such target fails the
 build: there is no fallback to an easier shape.
 
 tools/pack-generator/lockcheck.py checks every target again by its own evaluator, search and shape count.
@@ -34,10 +36,13 @@ DEFAULT_SHAPE = "times-and-plus-or-minus"
 
 
 def friendly(form):
-    """True when every product in the class has a factor that is a multiple of 5 or is 12 or less (Amendment 11)."""
+    """True when every product in the class has a factor that is a multiple of 5 or is 12 or less, and at most one
+    factor of 100 or more (Amendment 11; the second rule Jon's, 16 Nov 2026)."""
     for _, factors in form:
         mult = [x for e, x in factors if e == 1]
         if len(mult) > 1 and not any(x % 5 == 0 or x <= 12 for x in mult):
+            return False
+        if len(mult) > 1 and sum(1 for x in mult if x >= 100) > 1:
             return False
     return True
 

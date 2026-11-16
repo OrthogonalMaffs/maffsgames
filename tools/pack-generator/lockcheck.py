@@ -617,6 +617,8 @@ def final_problems(letter, nums, final, shape):
             a, b = node.left.value, node.right.value
             if not (a % 5 == 0 or b % 5 == 0 or a <= 12 or b <= 12):
                 out.append("set %s: product %s x %s has no factor a multiple of 5 or 12 or less" % (letter, a, b))
+            if a >= 100 and b >= 100:                # Jon, 16 Nov 2026: never two factors of 100 or more
+                out.append("set %s: product %s x %s multiplies two numbers of 100 or more" % (letter, a, b))
     if used != sorted(Fraction(str(n)) for n in nums):
         out.append("set %s: expression %r does not use each answer %s exactly once" % (letter, expr, list(nums)))
     if got != t:
