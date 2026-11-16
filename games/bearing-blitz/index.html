@@ -93,6 +93,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <div id="menu" class="screen active">
 <div class="header"><h1>⚓ Bearing Blitz</h1><div class="sub">You are a submarine. Enemy ships are closing in.<br>Set your bearing by eye — no numbers, no labels. Fire first.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
 <div class="menu-info">
+<strong id="runLength"></strong><br>
 Drag the needle to the target bearing. You have <strong>no readout</strong> — judge it by eye using the tick marks.<br>
 <strong>±5° tolerance</strong> = hit. Outside = miss + depth charge.<br>
 <strong>Three lives.</strong> Lose them all and the surface ships destroy you. After a miss you get the same target again.<br><br>
@@ -105,7 +106,7 @@ Drag the needle to the target bearing. You have <strong>no readout</strong> — 
 
 <div id="game" class="screen">
 <div class="hud">
-<div class="hud-item"><div class="hud-label">Ships sunk</div><div class="hud-val" id="sunk">0</div></div>
+<div class="hud-item"><div class="hud-label">Ships sunk</div><div class="hud-val" id="sunk"></div></div>
 <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="score">0</div></div>
 <div class="hud-item"><div class="hud-label">Lives</div><div class="lives" id="lives"></div></div>
 </div>
@@ -128,6 +129,10 @@ let currentAngle=0,targetBearing=0,livesLeft=3,sunkCount=0,score=0,totalShots=0,
 let showTarget=false,targetAngleToShow=0;
 const TOLERANCE=5,MAX_TARGETS=20;
 const bearings=[];
+// The run's length, built from MAX_TARGETS: a third miss ends the game, so 20 hits and 2 misses (or 19 and 3) is the most any game fires.
+document.getElementById('runLength').textContent=MAX_TARGETS+' enemy ships. Only '+(MAX_TARGETS+2)+' torpedoes. Can you become a legend?';
+function showSunk(){document.getElementById('sunk').textContent=sunkCount+' / '+MAX_TARGETS}
+showSunk();
 
 function generateBearings(){
   bearings.length=0;
@@ -230,7 +235,7 @@ function startGame(){
   MaffsLock.newSession();
   generateBearings();
   livesLeft=3;sunkCount=0;score=0;totalShots=0;currentAngle=0;gameActive=true;showTarget=false;
-  document.getElementById('sunk').textContent='0';
+  showSunk();
   document.getElementById('score').textContent='0';
   updateLives();drawCompass();
   show('game');
@@ -267,13 +272,15 @@ function fire(){
   const msg=document.getElementById('message');
 
   if(diff<=TOLERANCE){
-    let pts=150;
-    if(diff<=1)pts=150;else if(diff<=3)pts=100;else pts=50;
+    let pts;
+    if(diff===0)pts=200;else if(diff<=1)pts=150;else if(diff<=3)pts=100;else pts=50;
     score+=pts;sunkCount++;
     document.getElementById('score').textContent=score;
-    document.getElementById('sunk').textContent=sunkCount;
+    showSunk();
     msg.className='message show hit';
-    msg.textContent='💥 HIT! Target was '+pad3(targetBearing)+'° — you were '+diff+'° off. +'+pts+' points';
+    msg.textContent=diff===0
+      ? '💥 HIT! 0° off. The radar operator whispers: “this one is the GOAT.” +'+pts+' points'
+      : '💥 HIT! Target was '+pad3(targetBearing)+'° — you were '+diff+'° off. +'+pts+' points';
     mfg('question_answered',{game_slug:'bearing-blitz',level:'all',correct:true,question_index:totalShots});
     MaffsLock.timer(nextTarget,1800);
   } else {
