@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught) | | 2
+# ci-shards: Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points (200 dead on, the GOAT message) and message figures recomputed around 0/360; the "n / 20" counter and the start-screen line checked; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught) | | 2
 """Bearing Blitz: a target bearing is shown ("045°"); the student drags the needle by eye and fires; within ±5° is a hit.
 
 Generated, not banked: `generateBearings()` gives 16 fixed bearings (0, 30, 45, 60, 90, ... 330) and 8 drawn from 0..359, shuffled;
@@ -13,12 +13,17 @@ Checks, independent of the game's code (bearings measured clockwise from North, 
     along B and not along B + 90, B + 180 or B + 270).
   Display: the target reads as three digits and a degree sign ("005°"); North is marked at the top.
   Marking (each shot through the game's own Fire button): the error is the shorter way round, min(|n - t|, 360 - |n - t|); 5 or
-    under is a hit worth 150 (0-1 off), 100 (2-3) or 50 (4-5), and the message reads "💥 HIT! Target was TTT° — you were D° off. +P
-    points"; over 5 is a miss that costs a life, shows the target line, and reads "... You were D° off. Target was TTT°. N lives
-    left!" with the Next control.
+    under is a hit worth 200 (0 off), 150 (1), 100 (2-3) or 50 (4-5); the message reads "💥 HIT! Target was TTT° — you were D°
+    off. +P points", except dead on (0 off): "💥 HIT! 0° off. The radar operator whispers: “this one is the GOAT.” +200 points";
+    over 5 is a miss that costs a life, shows the target line, and reads "... You were D° off. Target was TTT°. N lives left!"
+    with the Next control. The 0-off shots are set through the real compass too: a press at the target's own bearing, fired.
+  Counter: "Ships sunk" reads "n / 20" (20 the run's length): "0 / 20" at the start, "1 / 20" after a hit, "0 / 20" after a
+    miss, and "k / 20" after each of the twenty hits in the winning flow.
+  Start screen: its first line, in bold, reads "20 enemy ships. Only 22 torpedoes. Can you become a legend?" (22: a third
+    miss ends the game, so 20 hits and 2 misses, or 19 and 3, is the most any game fires).
   Sessions: startGame() dealt five times: 24 bearings, whole numbers 0..359, the 16 fixed ones all present.
   Flows: three misses read "HIT! Surface ships locked onto your position." and Next shows "Submarine Destroyed!" with the shots, hits and accuracy; twenty hits end
-    with "All Ships Sunk!" and the score added up here.
+    with "All Ships Sunk!" and the score added up here under the points above (two of the twenty dead on).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
     python scripts/verify-bearing-blitz.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
@@ -73,7 +78,16 @@ def press_point(b, left, top, w, h):
 
 
 def points(d):
-    return 150 if d <= 1 else 100 if d <= 3 else 50
+    return 200 if d == 0 else 150 if d <= 1 else 100 if d <= 3 else 50
+
+
+RUNS, TORPEDOES = 20, 22             # a third miss ends the game: 20 hits + 2 misses, or 19 + 3
+START_LINE = '%d enemy ships. Only %d torpedoes. Can you become a legend?' % (RUNS, TORPEDOES)
+GOAT = '💥 HIT! 0° off. The radar operator whispers: “this one is the GOAT.” +200 points'
+
+
+def counter(n):
+    return '%d / %d' % (n, RUNS)
 
 
 RECT_JS = "() => { const r = canvas.getBoundingClientRect(); return [r.left, r.top, r.width, r.height]; }"
@@ -94,11 +108,13 @@ PRESS_JS = r"""(pts) => {
 }""" % NEEDLE_RGB
 SHOT_JS = r"""([t, n]) => {
   startGame(); MaffsLock.clearTimers();
+  const before = document.getElementById('sunk').textContent;
   bearings.length = 0; bearings.push(t); sunkCount = 0; nextTarget();
   const shown = document.getElementById('targetBearing').textContent;
   currentAngle = n; drawCompass();
   document.getElementById('fireBtn').click();
   const res = {shown: shown, msg: document.getElementById('message').textContent, score: score, lives: livesLeft, sunk: sunkCount,
+               before: before, counter: document.getElementById('sunk').textContent,
                next: document.getElementById('nextMount').querySelectorAll('button').length};
   MaffsLock.clearTimers();
   return res;
@@ -118,15 +134,16 @@ SURV_JS = r"""(lives) => {
 }"""
 WIN_JS = r"""(offs) => {
   startGame(); MaffsLock.clearTimers();
-  const ts = [];
+  const ts = [], counters = [];
   for (let k = 0; k < 20; k++) {
     ts.push(targetBearing);
     currentAngle = (targetBearing + offs[k] + 360) % 360; drawCompass();
     document.getElementById('fireBtn').click();
+    counters.push(document.getElementById('sunk').textContent);
     MaffsLock.clearTimers();
     nextTarget();
   }
-  return {ts: ts, title: document.getElementById('resultTitle').textContent, score: document.getElementById('finalScore').textContent,
+  return {ts: ts, counters: counters, title: document.getElementById('resultTitle').textContent, score: document.getElementById('finalScore').textContent,
           stats: document.getElementById('statsLine').textContent};
 }"""
 
@@ -178,7 +195,7 @@ def play(fails, html):
                         fails.append('display: target %d shows %r' % (t, r['shown']))
                     if d <= 5:
                         p = points(d)
-                        want = '💥 HIT! Target was %03d° — you were %d° off. +%d points' % (t, d, p)
+                        want = GOAT if d == 0 else '💥 HIT! Target was %03d° — you were %d° off. +%d points' % (t, d, p)
                         ok = r['msg'] == want and r['score'] == p and r['sunk'] == 1 and r['lives'] == 3
                     else:
                         want = "💣 Depth charge dropped nearby! You were %d° off. Target was %03d°. 2 lives left!" % (d, t)
@@ -187,6 +204,24 @@ def play(fails, html):
                         fails.append('marking: target %03d, needle %03d (%d° off): %r, score %d, lives %d, expected %r' % (
                             t, n, d, r['msg'], r['score'], r['lives'], want))
                         break
+                    want_c = counter(1 if d <= 5 else 0)
+                    if r['before'] != counter(0) or r['counter'] != want_c:
+                        fails.append('counter: target %03d, needle %03d (%d° off): reads %r at the start and %r after the shot, expected %r and %r' % (
+                            t, n, d, r['before'], r['counter'], counter(0), want_c))
+                        break
+            # dead on through the real compass: a press at the target's own bearing, then the game's Fire button
+            for t in (0, 45, 90, 180, 270, 359, 123):
+                page.evaluate('([t]) => { startGame(); MaffsLock.clearTimers(); bearings.length = 0; bearings.push(t); sunkCount = 0; nextTarget(); }', [t])
+                left, top, w, h = page.evaluate(RECT_JS)
+                cx, cy = press_point(t, left, top, w, h)
+                page.evaluate(PRESS_JS, [[t, cx, cy]])
+                r = page.evaluate('() => { const a = currentAngle; document.getElementById("fireBtn").click(); '
+                                  'const res = {read: a, msg: document.getElementById("message").textContent, score: score, '
+                                  'counter: document.getElementById("sunk").textContent}; MaffsLock.clearTimers(); return res; }')
+                if r['read'] != t or r['msg'] != GOAT or r['score'] != 200 or r['counter'] != counter(1):
+                    fails.append('marking: a press dead on target %03d through the compass reads %r and gives %r, score %r, counter %r; expected %d, %r, 200, %r' % (
+                        t, r['read'], r['msg'], r['score'], r['counter'], t, GOAT, counter(1)))
+                    break
             for bs in page.evaluate(SESSION_JS):
                 if len(bs) != 24 or any(not isinstance(b, int) or not 0 <= b <= 359 for b in bs) or any(f not in bs for f in FIXED):
                     fails.append('session: bearings %r: expected 24 whole numbers 0..359 including the 16 fixed' % bs)
@@ -211,6 +246,8 @@ def play(fails, html):
             if win['title'] != 'All Ships Sunk!' or win['score'] != str(total) or '20 ships sunk from 20 torpedoes' not in win['stats'] \
                     or 'Accuracy: 100%' not in win['stats']:
                 fails.append('flow: twenty hits end %r, score %r (expected %d), %r' % (win['title'], win['score'], total, win['stats']))
+            if win['counters'] != [counter(k) for k in range(1, 21)]:
+                fails.append('counter: the twenty hits read %r, expected "1 / 20" .. "20 / 20"' % win['counters'])
             # SWEEP-1 (bearing-blitz-s1-002, R1): "Survived with 1 life", "... 2 lives"
             for lives, want in ((1, 'Survived with 1 life'), (2, 'Survived with 2 lives')):
                 surv = page.evaluate(SURV_JS, lives)
@@ -219,6 +256,10 @@ def play(fails, html):
             # SWEEP-1 (bearing-blitz-s1-001, -003, R6, R2): no death imagery, and the start screen says a miss repeats the target
             page.evaluate('() => { show("menu"); }')
             menu = page.inner_text('#menu')
+            first = page.evaluate('() => { const m = document.querySelector("#menu .menu-info"); const s = m.firstElementChild; '
+                                  'return {tag: s ? s.tagName : null, text: s ? s.textContent : null, lead: m.textContent.trim().split("\\n")[0].trim()}; }')
+            if first['tag'] != 'STRONG' or first['text'] != START_LINE or first['lead'] != START_LINE:
+                fails.append('start: the start screen\'s first line reads %r (%s), expected %r in bold' % (first['lead'], first['tag'], START_LINE))
             if 'Fire first.' not in menu or 'Fire or die' in menu:
                 fails.append('start: the subtitle must read "Fire first." (SR-14: no "Fire or die", bearing-blitz-s1-001)')
             if 'same target again' not in menu:
@@ -251,6 +292,10 @@ PLANTS = [
      [("document.getElementById('targetBearing').textContent=pad3(targetBearing)+'°';",
        "document.getElementById('targetBearing').textContent=pad3((targetBearing+180)%360)+'°';")]),
     ('a fixed bearing dropped from the session', 'session:', [("const fixed=[0,30,45,60,", "const fixed=[0,30,60,")]),
+    ('0 degrees off scoring 150', 'marking:', [("if(diff===0)pts=200;", "if(diff===0)pts=150;")]),
+    ('the GOAT message shown at 1 degree off', 'marking:', [("msg.textContent=diff===0", "msg.textContent=diff<=1")]),
+    ('the counter missing "/ 20"', 'counter:', [("textContent=sunkCount+' / '+MAX_TARGETS", "textContent=String(sunkCount)")]),
+    ('the start screen saying 21 torpedoes', 'start:', [("(MAX_TARGETS+2)", "(MAX_TARGETS+1)")]),
 ]
 
 

@@ -73,7 +73,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` from main d388414. Tier not stated; treated as Small (merge on green). Per-game fix, cloud lane's own.
 **Close-out carried (first commit):** HAMSTER-PACK-FINAL (#799, bf6cd95), recorded below; contract moved. Todo row LEDGER-B4-ANGLE-ACE closed to `docs/history/todo-done.md` (#795 made the GCSE bank 45; no B4 ledger entry remains).
-Next: the start-screen line and "n / 20" counter from MAX_TARGETS, 200 points and the GOAT message at 0° off, the verifier's model and four new plants, the /updates/ line; Gate; merge by merge-pr.py; main's two runs.
+Done on the branch: the start screen's first line, bold, "20 enemy ships. Only 22 torpedoes. Can you become a legend?", built from MAX_TARGETS and MAX_TARGETS + 2; the counter "n / 20" (one `showSunk()` sets it everywhere); 0° off scores 200 with the GOAT message verbatim, 1° 150 and the rest unchanged. verify-bearing-blitz.py: the new model (points, GOAT, counter at start, after every marked shot and after each of the twenty winning hits, the start line), dead-on shots pressed through the real compass at seven bearings; PASS, all 16 plants caught (12 old, 4 new). /updates/ line.
+Next: Gate; merge by merge-pr.py; main's two runs.
 
 ## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/history/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
 
