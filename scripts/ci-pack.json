@@ -131,7 +131,7 @@
   "Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); no PDF is ever built in CI)": "38",
   "Parent guides (every stated figure recomputed from the page)": "61",
   "Partial Fractions Duel (every key solved from its own stem with SymPy, every option checked and clicked)": "11",
-  "Percentage Flip (every key and every figure in the working recomputed; typed answers marked right and wrong in Chromium, both ways round)": "6",
+  "Percentage Flip (every key and every equation in the working recomputed from the question text alone; 3/3/2/2 easiest-first deals per level; MaffsAnswer marking both ways round, money format never marked; KaTeX working; the fold after a wrong answer at 320x568 and 375x667)": "53",
   "Planted-fault helper (scripts/plant_common.py: a plant whose target is missing, repeated or unchanged is a STALE PLANT, an error is never a catch)": "2",
   "Portal score ticker links (a score whose game has a portal card opens it, with its level only when a card lists that level and never a board key; no card means plain text; only the first set is in the Tab order and focus on a link pauses the scores; ticker_clicked carries the slug and badge; Firebase text shown as text, never markup; taps at least 24 px at 390 and 1280; planted faults caught)": "17",
   "Portal score ticker pause (the ticker stops on hover, on keyboard focus in its scores and with its own pause/play button, which keeps its state through hover and focus; nothing moves under prefers-reduced-motion; its height is 36 px at 360, 768 and 1440; planted faults caught)": "61",
@@ -344,7 +344,7 @@
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "kept from the pack (9 needed)",
+   "how": "kept from the pack (8 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation (90° each way and 180°, about (0,0) and other points) and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 9,
    "tier": "content"
