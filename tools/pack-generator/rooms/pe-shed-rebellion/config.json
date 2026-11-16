@@ -4,7 +4,8 @@
   "sets": 6,
   "seed": 1,
   "certificate_title": "Cross-country cancelled",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-16"},
+  "readout_voice": "Read this as the PE teacher, standing in the store doorway. It&rsquo;s four degrees and raining, and he&rsquo;s sending the class out on a six-kilometre cross-country run.",
   "images": [
     {"file": "art/pe-01-logbook.webp", "role": "clue", "object": "log", "label_box": [397, 317, 987, 860], "font": "hand",
      "printed": "Cricket square, watering limits. · The wet patch must never exceed {{arc.K}}&pi;&nbsp;square metres.",

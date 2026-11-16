@@ -16,7 +16,8 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
     print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), a lock's optional print-only answer
     unit ("answer_units", contract CAR-TRAP-PACK, 14 Nov 2026; its common wrong answer scaled by "miss_scale" when
     that differs, contract HAMSTER-PACK-FINAL, 16 Nov 2026), a lock's optional print-only hint and common-wrong-answer
-    words ("lock_words", HAMSTER-PACK-FINAL), and whether Jon has
+    words ("lock_words", HAMSTER-PACK-FINAL), an optional line naming whose voice the start read-out is in
+    ("readout_voice", contract PE-SHED-FINAL, 16 Nov 2026; printed in italics above the hook), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
     --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
 
@@ -208,6 +209,7 @@ def load_config(slug):
         check_overrides(im)
     wording_approved(cfg, slug)
     answer_units(cfg, slug)
+    readout_voice(cfg, slug)
     return cfg
 
 
@@ -1771,13 +1773,44 @@ def student_page_final_problems(pages_text):
 
 
 STAKES_PREFIX = "If time runs out:"
+READOUT_VOICE = "readout_voice"   # PE-SHED-FINAL: whose voice the start read-out is in, printed above the hook
 
 
-def readouts(room, fill):
+def readout_voice(cfg, slug):
+    """The config's "readout_voice" (contract PE-SHED-FINAL, 16 Nov 2026), or None when it has none. A room whose hook
+    is spoken in a character's voice says so here: one line, printed in italics as the start read-out's first line,
+    telling the teacher who they are speaking as and why (Jon, 16 Nov 2026). It must be a non-empty string of plain
+    words (entities such as &rsquo; allowed, no HTML tag) with no {{token}} (the start read-out is printed once, for
+    every set), and every wording check the pack's own words meet applies to it: it reads as a sentence
+    (caption_problems()), its figures are bound to their units (bound()) and it prints no fixed penalty figure
+    (fixed_penalties(), the student-page rule). Any failure stops the build. Returned bound, as printed."""
+    v = cfg.get(READOUT_VOICE)
+    if v is None:
+        return None
+    if not isinstance(v, str) or not v.strip():
+        raise BuildError('%s: "%s" must be words, not %r' % (slug, READOUT_VOICE, v))
+    if "{{" in v or "}}" in v:
+        raise BuildError('%s: "%s" contains a {{token}}: the start read-out is filled once, for every set: %r'
+                         % (slug, READOUT_VOICE, v))
+    if TAG_RE.search(v):
+        raise BuildError('%s: "%s" must be plain words (it is printed in italics), not HTML: %r' % (slug, READOUT_VOICE, v))
+    problems = caption_problems(v) + fixed_penalties([("hints", text_of(v))])
+    if problems:
+        raise BuildError('%s: "%s" has %s: %r' % (slug, READOUT_VOICE, " and ".join(problems), v))
+    try:
+        return bound(v)
+    except BuildError as e:
+        raise BuildError('%s: "%s": %s' % (slug, READOUT_VOICE, e))
+
+
+def readouts(room, fill, voice=None):
     """The teacher's three read-outs, each for its moment (Amendment 8): the start (hook, brief and the race's rules),
-    a team finishing (room.js `win`, the escape outcome) and time called (room.js `stakes`, the timeout outcome)."""
-    start = ("<p>%s</p><p>%s</p><p>Bring each answer to me. Wrong answers and hints add time. Lowest total time "
-             "wins.</p>" % (fill(room["hook"]), fill(room["brief"])))
+    a team finishing (room.js `win`, the escape outcome) and time called (room.js `stakes`, the timeout outcome).
+    voice: readout_voice(), printed in italics as the start read-out's first line (PE-SHED-FINAL); None prints
+    nothing, so a room without one is printed exactly as before."""
+    start = ("%s<p>%s</p><p>%s</p><p>Bring each answer to me. Wrong answers and hints add time. Lowest total time "
+             "wins.</p>" % ("<p class='voice'><i>%s</i></p>" % voice if voice else "", fill(room["hook"]),
+                            fill(room["brief"])))
     return {"start": start, "finish": "<p>%s</p>" % fill(room.get("win", "")),
             "timeout": "<p>%s</p>" % fill(room.get("stakes", ""))}
 
@@ -1906,7 +1939,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
                       "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge=draft_badge(cfg, slug), notes=draft_notes_block(draft_notes)))
-    reads = readouts(room, fill_a)
+    reads = readouts(room, fill_a, readout_voice(cfg, slug))
     scripts = ["<p class='when'><b>Read this at the start</b></p><blockquote>%s</blockquote>" % reads["start"],
                "<p class='when'><b>Read this when a team finishes</b></p><blockquote>%s</blockquote>"
                "<p class='when'><b>Read this when you call time</b></p><blockquote>%s</blockquote>"
@@ -2275,10 +2308,10 @@ def selftest():
                          + answer_unit_problems(locks, ["\n".join(answer_caption(l) for l in locks)])
                          + fixed_penalties([("score", text_of("".join(score_extras())))])
                          + stakes_problems(text_of(filler(locks, sets[0])(room.get("stakes"))),
-                                           text_of(readouts(room, filler(locks, sets[0]))["start"]),
+                                           text_of(readouts(room, filler(locks, sets[0]), readout_voice(cfg, slug))["start"]),
                                            [text_of(cover_story(room, filler(locks, sets[0])))])
                          + story_token_problems(room)
-                         + hook_problems(text_of(room.get("hook")), text_of(readouts(room, filler(locks, sets[0]))["start"]),
+                         + hook_problems(text_of(room.get("hook")), text_of(readouts(room, filler(locks, sets[0]), readout_voice(cfg, slug))["start"]),
                                          [text_of(cover_story(room, filler(locks, sets[0])))])
                          + student_page_final_problems([("locks", text_of(final_section(x["letter"], len(locks),
                                                                                        x["final"]["target"])))
