@@ -106,39 +106,3 @@ Claude Code (home lane), worktree `~/mg-esc-band-slim`, branch `claude/esc-band-
 
 Record: agent Claude Code; review cycles 0; amendments 1 (Jon 17:03, the loop bundle card); usage n/a.
 
-## 2026-11-15 (home): PRINTABLES-PAGE (/printables/, the escape-room packs on Tes)
-
-Claude Code (home lane), worktree `~/mg-printables-page`, branch `claude/printables-page`; contract `docs/handover/contracts/2026-11-15-printables-page.md`. The first commit carries MONOTONIC-CLOCK's close-out (merge line above, contract and Amendment 1 to history).
-
-- **The page.** `printables/index.html` shows Jon's approved wording (13:23) word for word. It is styled as `/updates/` is: Outfit, navy and teal, the nav bar with its back link, and the site footer.
-  - **Cards, in the contract's order:** Christmas Tree Fiasco, Kiln Disaster, Comic Caper, Library Jam, then the Warm-up bundle.
-  - **Each room card:** its chip copied from /escape-rooms/ (data-stars and the sr-only text), three topics from the room page's meta description, the price, "View on Tes →" (new tab, rel="noopener") and "Play it free online".
-  - The bundle card has the Warm-up chip (all three rooms are ★) and no topics line.
-  - The links carry `data-mfg-section="printables"` and `data-mfg-item`, so they count as section_clicked. No new event.
-- **Tes links:** all five returned 200 on 15 Nov, each with its own listing title.
-- **Footer.** `('/printables/', 'Printable packs')` was added to `_LINKS`, and `apply-footer.py` changed 152 pages. check-footer passes.
-  - At 320, 375 and 390 px the footer is one 40 px row that scrolls inside itself, exactly as on main, and no page scrolls sideways. site-footer.css is not changed.
-- **Also changed:**
-  - /escape-rooms/ has one line under its first lede.
-  - /updates/ has the approved line.
-  - `printables/` is in the sitemap.
-  - `printables/` is in check-publish-scope's SITE and in check-content-safety's GLOBS. Both add coverage, as for `ugh-stats/`, and neither is an exception.
-  - data/games.json is not touched. check-meta needs no record, because no portal card links to the page.
-- todo: the PRINTABLES-PAGE row is updated (loop cards still to come), and a new row PRINTABLES-CORE is added.
-- MERGED 15 Nov, 16:41 UTC, as a892547 (#784). Main on the merge commit: check-site 43736934812 success, phone-fit-full 43736934783 success. Local check-changed: 260 checks passed. The branch was rebased onto QF-HCF-FIRST (#783) before the push; the only conflict was the /updates/ November list. Leftover worktree ~/mg-monotonic-closeout and branch claude/monotonic-clock-closeout (1435f511, never pushed) removed by hand on Jon's ruling, after its diff was shown to reverse-apply cleanly on main; end-task removed claude/printables-page.
-
-Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-15 (home): MONOTONIC-CLOCK (the shared input windows on a clock that never jumps)
-
-Claude Code (home lane), worktree `~/mg-monotonic-clock`, branch `claude/monotonic-clock`; contract `docs/history/contracts/2026-11-15-monotonic-clock.md`. Jon's ruling (15 Nov 11:07): option 1 of todo row ANSWER-LOCK-WALL-CLOCK, now closed in `docs/history/todo-done.md`.
-
-- **Changed:** answer-lock.js `now()`, keypad.js's ghost-click window and scroll.js's touch cancel read `performance.now()`, with `Date` only where `performance.now` is missing. Each window's two sides read the same clock. The window lengths and MaffsLock's API are unchanged. No game file changed, and none of the timestamp uses named in the contract changed.
-- **Starting values:** keypad's `lastUp` and scroll's `touched` start at `-Infinity`, not 0. `performance.now()` counts from page load, so a 0 would have ignored a box's click in the page's first 600 ms. check-keypad plants the 0 and catches it.
-- **Tests:** `test-answer-lock.py` "clock-step" steps `Date.now()` 10 s back, then 10 s forward, inside the fresh window. Its plant "the wall clock" fails it twice. `check-keypad.py` "Clock" does the same to the 600 ms window, at 100 ms and 700 ms, and with no step. It has two plants: both readings back on `Date.now()`, and `lastUp` starting at 0. Both are caught.
-- **Load:** `test-answer-lock.py --no-plants`, six at a time for 20 rounds (120 runs), with six wall-clock steps of about -2.9 s during the rounds: 0 failed. Before this change, 18 of 120 failed.
-- **The four Date.now() stubs were left as they are:** sequence-solver (the game's hidden timer; its sweep sets `NO_LOCK_FRESH_INIT`), trig-identity-duel (the game's time line; it waits FRESH_MS first), unit-converter (it already skews `performance.now()` with `Date.now()`) and test-top-scores (stored dates). Each still passes.
-- MERGED 15 Nov as d59aeca (#781), after #780 (8e8f3d6) made check-ugh-stats round halves up. The first Gate on #781 failed only on "Ugh, stats pages", which main failed too from the bot's data commit 54e4a99 (Jon: wait for #780, do not change the check). Branch then brought up to date with main (278e168), and the Gate went green. Main on the merge commit: check-site 43722528620 success, phone-fit-full 43722528614 success. Contract moved to `docs/history/contracts/` by the close-out.
-
-Record: agent Claude Code; review cycles 0; amendments 1 (Jon's follow-up: wait for #780); usage n/a.
-
