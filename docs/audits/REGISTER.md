@@ -25,9 +25,9 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 |---|---|---|---|---|
 | CRITICAL | 1 | 34 | 0 | 35 |
 | HIGH | 7 | 230 | 0 | 237 |
-| MEDIUM | 159 | 339 | 5 | 503 |
+| MEDIUM | 158 | 340 | 5 | 503 |
 | LOW | 100 | 243 | 1 | 344 |
-| **All** | 267 | 846 | 6 | 1119 |
+| **All** | 266 | 847 | 6 | 1119 |
 
 ### By class
 
@@ -59,7 +59,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | NEW:hand-typed explanation figure | 4 | 8 |
 | NEW:second-correct-answer | 0 | 8 |
 | NEW:hint-gives-answer | 4 | 7 |
-| NEW:phone-layout | 4 | 7 |
+| NEW:phone-layout | 3 | 7 |
 | NEW:wrong-explanation | 0 | 7 |
 | NEW:ill-posed wording | 1 | 6 |
 | NEW:level-content-mismatch | 3 | 6 |
@@ -208,7 +208,7 @@ Progress measures, not a gate: the build freeze they once gated was lifted on 15
 | `new-shapes` | yes | verify-new-shapes.py | 0 | 2 | 7 | 3 | 7 | 5 | 0 |
 | `normal-navigator` | yes | verify-normal-navigator.py | 0 | 0 | 4 | 7 | 5 | 6 | 0 |
 | `partial-fractions-duel` | yes | verify-partial-fractions-duel.py | 0 | 7 | 4 | 2 | 1 | 12 | 0 |
-| `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 1 | 1 | 0 |
+| `percentage-flip` | yes | verify-percentage-flip.py | 0 | 0 | 2 | 0 | 0 | 2 | 0 |
 | `possibly-maybe` | unlisted | verify-possibly-maybe.py | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | `prime-factorisation` | yes | verify-prime-factorisation.py | 0 | 0 | 4 | 1 | 4 | 1 | 0 |
 | `prime-or-composite` | yes | verify-prime-or-composite.py | 0 | 1 | 1 | 0 | 1 | 1 | 0 |
