@@ -222,6 +222,15 @@ place in the pack's copy of the lock, so every check on the room's words checks 
 variant they must read as a sentence, as a caption must. Hamster Heist's heat lamp uses both: Hint 1 and the note
 speak of the warming in ten minutes, not per minute.
 
+**Who is speaking the start read-out (contract PE-SHED-FINAL, 16 Nov 2026).** A room's hook may be spoken in a
+character's voice (The P.E. Store Rebellion's is the PE teacher's), and a teacher reading it aloud from paper needs to
+know whose voice it is and why before they start. A room's config may then give `"readout_voice": "<words>"`, printed
+in italics as the first line of "Read this at the start", above the hook. It must be non-empty plain words (an entity
+such as `&rsquo;` is fine; no HTML tag) with no `{{token}}`, since the start read-out is printed once for every set,
+and it meets every check the pack's own words do: it must read as a sentence (the caption rules), every figure is
+bound to its unit, and it may not print a fixed penalty figure. A room without the key prints its read-outs exactly
+as before.
+
 **An answer asked for in another unit (contract CAR-TRAP-PACK, 14 Nov 2026).** The final padlock needs whole
 numbers, and a live room may ask for a decimal (Car Trap's bay width, 2.35 m). A room's config may then declare
 `"answer_units": {"<lock id>": {"unit": "cm", "scale": 100}}`, and the pack asks for that lock in the printed unit:

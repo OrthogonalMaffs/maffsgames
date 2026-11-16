@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale; no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice; no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
 CI finds its lines only in scripts/*.py headers (scripts/ci-groups.py), and the generator lives in tools/pack-generator/,
 so this file is the line. It runs `build_pack.py --selftest`, then the plants of contract HAMSTER-HEIST-PACK
 (Amendments 1 and 2, 16 Nov 2026), which import the generator and plant faults against The Great Hamster Heist's own
-locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words). Each plant must be caught by the check named beside it; each control must pass. A plant whose
+locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words), then those of PE-SHED-FINAL
+(readout_voice, the line naming whose voice the start read-out is in). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -269,6 +270,52 @@ def hamster_plants():
                         out.append("car-trap's miss is not scaled as its answer")
         return out
     results.append(("car-trap with no miss_scale", "control", control_car_trap, "scale_of / verify_sets"))
+
+    # ---- PE-SHED-FINAL (16 Nov 2026): readout_voice, whose voice the start read-out is in ---------------------------
+    def voiced(v):
+        return refused(lambda: B.readout_voice(dict(cfg, readout_voice=v), SLUG))
+    for label, bad in (("empty", "   "), ("holding a {{token}}", "Read this as the keeper of {{wheel.r}} hamsters."),
+                       ("not a string", ["Read this as the keeper."])):
+        results.append(("a readout_voice %s" % label, "plant", lambda bad=bad: voiced(bad), "readout_voice"))
+
+    def control_voice_printed():
+        # the read-out page as build_html prints it, with a voice: the voice in italics, first in the start read-out,
+        # above the hook; and the pack as configured (no voice) prints no voice line
+        voice = "Read this as the head keeper, standing at the cage door. It&rsquo;s feeding time."
+        greys = {l["id"]: 255 for l in locks}          # every answer box over white art: covers only, not read here
+        out = []
+        for c, want in ((dict(cfg, readout_voice=voice), True), (cfg, False)):
+            if "readout_voice" in cfg:
+                raise pc.StalePlant("a readout_voice control", "%s now has a readout_voice of its own" % SLUG)
+            doc = B.build_html(SLUG, room, teach, locks, sets, c, seed, "2026-11-16", B.room_url(SLUG), rating,
+                               greys=greys)[0]
+            kinds = re.findall(r'<section class="page[^"]*" data-kind="(\w+)"', doc)
+            pages = re.split(r'(?=<section class="page)', doc)[1:]
+            if len(pages) != len(kinds) or kinds[:2] != ["run", "readouts"]:
+                out.append("the pages begin %r, not run then readouts" % kinds[:2])
+                continue
+            page2 = pages[1]
+            start = page2[page2.index("Read this at the start"):page2.index("</blockquote>")]
+            line = "<p class='voice'><i>%s</i></p>" % voice
+            hook = B.text_of(room["hook"]).split()[0]
+            if want:
+                if line not in start:
+                    out.append("the voice is not printed in italics in the start read-out")
+                elif not re.match(r"<blockquote>%s<p>" % re.escape(line), start[start.index("<blockquote>"):]):
+                    out.append("the voice is not the start read-out's first line")
+                elif B.text_of(start).find(hook) < B.text_of(start).find("feeding time"):
+                    out.append("the voice is not above the hook")
+                if line in doc.replace(page2, ""):
+                    out.append("the voice is printed off the read-out page")
+            elif "class='voice'" in doc:
+                out.append("a pack with no readout_voice prints a voice line")
+        return out
+    results.append(("a readout_voice printed in italics above the hook, on the read-out page", "control",
+                    control_voice_printed, "readout_voice / readouts / build_html"))
+    results.append(("The P.E. Store Rebellion's own readout_voice", "control",
+                    lambda: voiced(B.load_config("pe-shed-rebellion").get("readout_voice")) or
+                    ([] if B.load_config("pe-shed-rebellion").get("readout_voice") else ["pe-shed-rebellion has none"]),
+                    "readout_voice"))
 
     # item 9: fixed penalty figures (Amendment 6), strict on the score sheet, penalty-worded on student pages
     for label, kind, text in (("each hint adds 1 minute, on a hints page", "hints", "Each hint adds 1 minute."),

@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-16 (home): PE-SHED-FINAL (P.E. Store Rebellion pack approved; readout_voice; teacher page's variant 0)
+
+Claude Code (home lane), worktree `~/mg-pe-shed-final`, branch `claude/pe-shed-final`; contract `docs/handover/contracts/2026-11-16-pe-shed-final.md`. The first commit carries PE-SHED-PACK's close-out (#801, 6f9498b; its entry below).
+
+- **Generator:** `build_pack.py` takes an optional `"readout_voice"` in a room's config: one line, printed in italics as the first line of "Read this at the start", above the hook. readout_voice() (called from load_config()) refuses an empty value, a non-string, a `{{token}}` and an HTML tag, and holds it to the caption sentence rules, figure binding (bound()) and the fixed-penalty rule. Without the key, readouts() prints exactly as before. Documented in the module docstring and the README.
+- **Room:** pe-shed-rebellion's config has Jon's readout_voice text, as given (apostrophes as `&rsquo;`, as the room writes them), and `"wording_approved": {"by": "Jon", "date": "2026-11-16"}`. teacher.html's clueMap and notes now quote variant 0 as it is: 27π limit, 9 m reach, 27π over 81π, 84.823... over 254.469... (27π = 84.8230..., 81π = 254.4690...). Nothing in the repo generates those lines (only test-pack-generator.py reads clueMap, for Hamster Heist).
+- **Todo:** PE-SHED-PACK-APPROVE closed to todo-done; new row PACK-READOUT-VOICE (the other eight rooms' read-outs, any fix needs Jon's go-ahead, as those packs are on Tes).
+- **Checks:** see the PR. Other packs compared with ~/pe-tools/dump.py before (origin/main) and after.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-16 (home): PE-SHED-PACK (The P.E. Store Rebellion print pack, DRAFT; variant 0 fixed)
 
 Claude Code (home lane), worktree `~/mg-pe-shed-pack`, branch `claude/pe-shed-pack`; contract `docs/handover/contracts/2026-11-16-pe-shed-pack.md`. The first commit carries FOOTER-PHONE-FOUR's close-out (#797, cdc38aec; its entry below). #800 had merged (5a82f369) before this branched.
