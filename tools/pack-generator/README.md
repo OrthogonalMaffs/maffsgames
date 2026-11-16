@@ -211,6 +211,11 @@ When a clue cannot be tidied into a caption (its sentence runs through the `<b>`
 Both are filled for each set with the same `{{token}}` filler as the clue, and the caption check applies to an
 override too. Either key on a `herring` or `answer` image fails the build. Library Jam's reset card uses both.
 
+A clue with no `<b>` part at all (the whole clue is narration, or the whole of it is the note on the object) needs
+both keys, `"printed"` non-empty (contract HEATWAVE-PACK, 16 Nov 2026): the config then says what is printed on the
+art and what goes under it. With either missing, the build stops as before. The Heatwave Mutiny's wall-clock note
+and sticky note use this.
+
 **A lock's print-only words (contract HAMSTER-PACK-FINAL, 16 Nov 2026).** A hint or the key's common-wrong-answer
 note that is right online can be wrong on paper, when the pack asks for the answer another way. A room's config may
 then give the lock print-only words: `"lock_words": {"<lock id>": {"hints": {"<1-based hint number>": "<words>"},
@@ -220,7 +225,11 @@ and every `{{token}}` one the room's own strings for that lock use, or the build
 place in the pack's copy of the lock, so every check on the room's words checks them too (figure binding,
 `both_units()`, the fixed-penalty and unfilled-token checks on the built pages), and filled with the lock's first
 variant they must read as a sentence, as a caption must. Hamster Heist's heat lamp uses both: Hint 1 and the note
-speak of the warming in ten minutes, not per minute.
+speak of the warming in ten minutes, not per minute. A third key, `"label"` (contract HEATWAVE-PACK, 16 Nov 2026),
+replaces the instrument's label on the answer box and the "Opens at" line, where the room's own label gives something
+away on paper: The Heatwave Mutiny's door keypad is labelled "Door keypad — four digits" online, and a student page
+may not give a code's length (Amendment 4), so its pack prints "Door keypad". The answer-box checks apply to it as to
+the room's own label.
 
 **Who is speaking the start read-out (contract PE-SHED-FINAL, 16 Nov 2026).** A room's hook may be spoken in a
 character's voice (The P.E. Store Rebellion's is the PE teacher's), and a teacher reading it aloud from paper needs to

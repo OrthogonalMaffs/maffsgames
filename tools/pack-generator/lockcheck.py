@@ -551,7 +551,78 @@ def _locker_nth_term(v):
             "span": d3 - d1, "rise": c3 - c1, "ahead": dT - d3, "check": d2 - d1}
 
 
+def _prime_powers(n):
+    """{prime: exponent} of n, by trial division."""
+    out, p = {}, 2
+    while n > 1:
+        while n % p == 0:
+            out[p] = out.get(p, 0) + 1
+            n //= p
+        p += 1
+    return out
+
+
+def _powers_html(pw):
+    """{2: 2, 3: 1} as the room prints it: 2<sup>2</sup> &times; 3."""
+    return " &times; ".join("%d<sup>%d</sup>" % (p, e) if e > 1 else "%d" % p for p, e in sorted(pw.items()))
+
+
+def _patrol_lcm_timer(v):
+    """patrol-lcm-timer: the first time all three Supervisors are back together, found by counting up in the longest
+    lap until every lap divides it. The common wrong answer, by the room's rule (its missSays): the three lap times
+    added together. The worked line's figures: each lap's prime factors and the highest power of each prime."""
+    laps = [v["a"], v["b"], v["c"]]
+    t = max(laps)
+    while any(t % x for x in laps):
+        t += max(laps)
+    top = {}
+    for x in laps:
+        for p, e in _prime_powers(x).items():
+            top[p] = max(top.get(p, 0), e)
+    return {"answer": t, "miss": sum(laps),
+            "factors": ", ".join("%d = %s" % (x, _powers_html(_prime_powers(x))) for x in laps),
+            "lcmfactors": _powers_html(top)}
+
+
+def _cube_surface_volume(v):
+    """cube-surface-volume: a cube has six equal square faces, so one face is SA / 6 (whole); the edge is the whole
+    number whose square is that face, found by counting up; the volume is edge x edge x edge. The common wrong
+    answer, by the room's rule (its missTitle, "one face, not the tank"): the area of one face."""
+    face = _whole(Fraction(v["SA"], 6), "one face")
+    edge = next(n for n in range(1, face + 1) if n * n >= face)
+    if edge * edge != face:
+        raise ValueError("one face, %d cm2, is not a whole number squared" % face)
+    return {"answer": edge * edge * edge, "miss": face, "face": face, "edge": edge}
+
+
+def _two_places(q):
+    """A Fraction as the room prints a bound: whole, or to 2 decimal places (half up) without trailing zeros."""
+    if q.denominator == 1:
+        return "%d" % q
+    hundredths = (q * 100 * 2 + 1) // 2                        # half up, in whole hundredths
+    return ("%d.%02d" % divmod(hundredths, 100)).rstrip("0")
+
+
+def _canteen_freezer_inequality(v):
+    """canteen-freezer-inequality: every whole frequency f from 0 to 50 Hz (the dial) tried against
+    lo < m f - k < hi; the band is what survives, and the answer is the one prime in it (primes by trial division).
+    The common wrong answer, by the room's rule (its missSays, "taking the largest one and stopping there"): the
+    band's largest. The worked line's figures: lo + k and hi + k, the bounds (lo + k) / m and (hi + k) / m, and the
+    band."""
+    lo, m, k, hi = v["lo"], v["m"], v["k"], v["hi"]
+    band = [f for f in range(0, 51) if lo < m * f - k < hi]
+    primes = [f for f in band if f > 1 and all(f % d for d in range(2, f))]
+    if len(primes) != 1:
+        raise ValueError("the band %s holds %d primes, not one" % (band, len(primes)))
+    return {"answer": primes[0], "miss": max(band), "band": ", ".join("%d" % f for f in band),
+            "lok": lo + k, "hik": hi + k, "low": _two_places(Fraction(lo + k, m)),
+            "high": _two_places(Fraction(hi + k, m))}
+
+
 RECOMPUTE = {
+    "patrol-lcm-timer": _patrol_lcm_timer,
+    "cube-surface-volume": _cube_surface_volume,
+    "canteen-freezer-inequality": _canteen_freezer_inequality,
     "sprinkler-sector-area": _sprinkler_sector_area,
     "dodgeball-pressure-boyle": _dodgeball_pressure_boyle,
     "locker-nth-term": _locker_nth_term,
