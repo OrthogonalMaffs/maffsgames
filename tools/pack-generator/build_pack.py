@@ -44,6 +44,7 @@ import copy
 import datetime
 import decimal
 import html
+import html.entities
 import importlib.util
 import io
 import itertools
@@ -217,6 +218,11 @@ def load_config(slug):
 # ("= <value> <unit>") and as the final padlock's number. The room and its variants are not changed, and a lock with
 # no entry takes none of these paths.
 
+# HAMSTER-HEIST-PACK Amendment 1 (16 Nov 2026): an entry may also list the room's other spellings of its own unit,
+# "room_unit_spellings": ["°C per minute"], matched exactly as the slider's unit is (both_units()).
+ROOM_SPELLINGS = "room_unit_spellings"
+
+
 def answer_units(cfg, slug):
     """The config's "answer_units", {lock id: {"unit", "scale"}} ({} when it has none), or BuildError if an entry is
     not a printed unit (a non-empty string with no digit) and a whole-number scale of 1 or more."""
@@ -226,12 +232,17 @@ def answer_units(cfg, slug):
     if not isinstance(units, dict):
         raise BuildError('%s: "answer_units" must be {"<lock id>": {"unit": ..., "scale": ...}}, not %r' % (slug, units))
     for lid, u in units.items():
-        ok = (isinstance(u, dict) and set(u) == {"unit", "scale"} and isinstance(u["unit"], str)
+        ok = (isinstance(u, dict) and {"unit", "scale"} <= set(u) <= {"unit", "scale", ROOM_SPELLINGS}
+              and isinstance(u["unit"], str)
               and u["unit"] and u["unit"] == u["unit"].strip() and not re.search(r"\d", u["unit"])
               and isinstance(u["scale"], int) and not isinstance(u["scale"], bool) and u["scale"] >= 1)
+        spellings = u.get(ROOM_SPELLINGS, []) if isinstance(u, dict) else []
+        ok = ok and isinstance(spellings, list) and all(
+            isinstance(x, str) and x and x == x.strip() and x == html.unescape(x) for x in spellings)
         if not ok:
-            raise BuildError('%s: "answer_units" for %s must be {"unit": "<printed unit>", "scale": <whole number>}, '
-                             'not %r' % (slug, lid, u))
+            raise BuildError('%s: "answer_units" for %s must be {"unit": "<printed unit>", "scale": <whole number>} '
+                             'and, if the room words its own unit more than one way, "%s": ["<the room\'s other '
+                             'spelling>", ...] (plain text, no entity), not %r' % (slug, lid, ROOM_SPELLINGS, u))
     return units
 
 
@@ -307,6 +318,20 @@ def printed_figure(lock, value):
 ANSWER_TOKENS = {"answer": ("answer", "aTxt"), "miss": ("miss", "mTxt")}
 
 
+def as_read(unit):
+    """A pattern for a unit as a reader sees it in a room's raw HTML: each character as itself or as any HTML entity
+    that decodes to it ("°" as ° or &deg; or &#176;, a space as a space or &nbsp;), so matching works on what the
+    words say, not on how they were typed (HAMSTER-HEIST-PACK Amendment 1; html.unescape's own entity table)."""
+    out = []
+    for ch in unit:
+        alts = [re.escape(ch), "&#0*%d;" % ord(ch), "(?i:&#x0*%x;)" % ord(ch)]
+        alts += [re.escape("&%s;" % name) for name in html.entities.codepoint2name.get(ord(ch), "").split() if name]
+        if ch == " ":
+            alts += [r"\s", "&nbsp;", "&#0*160;", "(?i:&#x0*a0;)"]
+        out.append("(?:%s)" % "|".join(alts))
+    return "".join(out)
+
+
 def both_units(lock, v, text):
     """CAR-TRAP-PACK Amendment 2 (Jon, 14 Nov 2026): wherever a room's words give a scaled lock's answer or common
     wrong answer (a hint card, the key's common-wrong-answer note, the worked solution, anything filled for print),
@@ -316,6 +341,7 @@ def both_units(lock, v, text):
     figure is in, so it cannot convert it for the reader."""
     au = lock["answer_unit"]
     own = text_of((lock.get("instrument") or {}).get("unit", "")).strip()
+    spellings = [own] + [x for x in au.get(ROOM_SPELLINGS, []) if x != own] if own else []
     for which, names in ANSWER_TOKENS.items():
         if v.get(which) is None:
             continue
@@ -323,7 +349,9 @@ def both_units(lock, v, text):
             token = "{{%s.%s}}" % (lock["key"], name)
             if token not in text:
                 continue
-            with_unit = re.compile(re.escape(token) + r"(\s|&nbsp;)" + re.escape(own) + r"(?!\w)")
+            # the unit as a reader sees it (Amendment 1): "&deg;C/min" is "°C/min"; any of the room's spellings
+            with_unit = re.compile(re.escape(token) + r"(?:\s|&nbsp;|&#160;|&#xa0;)(?:"
+                                   + "|".join(as_read(x) for x in sorted(spellings, key=len, reverse=True)) + r")(?!\w)")
             if not own or len(with_unit.findall(text)) != text.count(token):
                 raise BuildError("%s: these words give its %s (%s) without the room's unit %r after it, so the pack "
                                  "cannot show it in %s as well: %r"
@@ -1422,16 +1450,28 @@ def score_extras():
 
 
 PENALTY_FIGURE = re.compile(r"\b(?:\d+(?:\.\d+)?|a|an|one|two|three|half a)\s+(?:minutes?|mins?)\b")
+# The words that make a time figure a penalty on a student page (HAMSTER-HEIST-PACK Amendment 2, Jon 16 Nov 2026
+# 17:23): whole words, any case, in the same sentence as the figure.
+PENALTY_WORDS = ("adds", "added", "add", "costs", "cost", "penalty", "penalties", "lose", "loses", "off", "docked")
+PENALTY_WORDING = re.compile(r"\b(?:%s)\b" % "|".join(PENALTY_WORDS), re.I)
 NO_FIGURE_KINDS = ("score", "cover", "evidence", "locks", "hints")
+STRICT_KINDS = ("score",)          # the generator's own wording only: every time figure there is a penalty figure
 
 
 def fixed_penalties(pages_text):
-    """A fixed penalty figure ("1 minute", "a minute") on the score sheet or a student page (Amendment 6). Lowercase
-    only, so a clue's own unit ("CYCLE 6 MIN") is not one."""
+    """A fixed penalty figure ("1 minute", "a minute") on the score sheet or a student page (Amendment 6: the teacher
+    sets the penalties). Lowercase only, so a clue's own unit ("CYCLE 6 MIN") is not one. On the score sheet every
+    such figure is refused. On a student page (cover, evidence, locks, hints) the room's own maths may be measured in
+    minutes ("Run = 16 - 4 = 12 minutes"), so a figure is refused only when a word of PENALTY_WORDS ("adds", "costs",
+    "penalty", ...) is in the same sentence (Jon, 16 Nov 2026, 17:23; contract HAMSTER-HEIST-PACK Amendment 2)."""
     out = []
     for kind, text in pages_text:
-        if kind in NO_FIGURE_KINDS:
-            for m in PENALTY_FIGURE.finditer(" ".join(text.split())):
+        if kind not in NO_FIGURE_KINDS:
+            continue
+        for sentence in re.split(r"(?<=[.!?])\s+", " ".join(text.split())):
+            if kind not in STRICT_KINDS and not PENALTY_WORDING.search(sentence):
+                continue
+            for m in PENALTY_FIGURE.finditer(sentence):
                 out.append("a %s page prints a fixed penalty figure: %r" % (kind, m.group(0)))
     return out
 
