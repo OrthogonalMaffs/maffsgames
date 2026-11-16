@@ -6,6 +6,28 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-16 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-16 (cloud): ANGLE-ACE-GCSE-45 (`docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md`; Jon 11:15)
+
+Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` from main 4c13e95. Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** MERGE-ROUTE-RETIRE merged #794 by merge-pr.py (last line "main 4e7a25d run 43847525596: GREEN", exit 0) as 4e7a25d; main check-site 43847525596 success (10:31:06 UTC), phone-fit-full 43847525561 success (10:17:52 UTC), both push-triggered. Contract moved to docs/history/contracts/.
+Done on the branch: the ten items appended verbatim (checked as an exact substring of the contract file; non-ASCII only U+00B0 and U+2212); headers :301 and :499 say 45; verifier COUNTS gcse 45; ledger B4 `angle-ace::gcse` gone (`extract-banks.py --only angle-ace`, then `check-banks.py --write-ledger --only angle-ace`; diff is that entry only, year6 B3 untouched); check-banks --only angle-ace exit 0, B4 0; /updates/ line.
+Main checks: verify-angle-ace.py reports no FAIL on 85 items.
+**STOPPED 11:59 (STOP IF: the self-test; DO NOT TOUCH: the verifier beyond COUNTS).** The self-test crashed before planting anything: `IndexError: list index out of range` at `scripts/verify-angle-ace.py:914`. The filter on the patched page's renders, keyed `(level, index, width)`, looked every key up in `banks['year6']` by index without checking the level, so a gcse key with index 40-44 (new with this bank) was out of range. Latent before: at 35 it silently let gcse renders with a matching index into `extra`.
+**Amendment 1 (Project Claude, 12:10), done in the third commit:** `k[0] == 'year6' and` at the front of the :914 filter; the contract file replaced with the amended text. Full verifier, self-test included, from the repo copy: exit 0, all 8 planted faults caught, "PASS: 0 FAIL(s); 85 items (year6, gcse) measured at 320/390/1280 px".
+**STOPPED 12:20, PR #795 not merged (closed by Amendment 2 below).** merge-pr.py: "REFUSED #795: the Gate on head ca3c956 is failure", exit 1. The only failed job is Content verifiers 85 (run 43863264772, job 133286571338), in "The 6 P's banks": "FAIL  angles.json is not what the game's questions generate; run gen-six-ps.py --write". `scripts/gen-six-ps.py` `topic_angles` builds `schools/assets/six-ps/angles.json` from Angle Ace's `QUESTIONS_BY_LEVEL.gcse`, so the ten new items change it. That file is under `schools/assets/` (DO NOT TOUCH). Locally, `gen-six-ps.py --check --only angles` reads 45 questions with no assertion (every answer recomputed from its fig, every label matched) and fails only on the committed file.
+**Amendment 2 (Project Claude, 13:40), done in one commit:** `gen-six-ps.py --write --only angles` changed only angles.json (+228 lines; 35 to 45 questions, the first 35 unchanged); `--check --only angles` PASS ("1 banks match their games"; labels: 0 still faulty after moving); `gen-exam-topics.py --check` PASS; /updates/ line widened to the 6 P's; contract file replaced with the Amendment 2 text.
+MERGED #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 and phone-fit-full 43882219278 success. Contract moved to history by BETTER-VALUE-GCSE-40's first commit.
+**For the home lane, docs/todo.md:** close row 1.52 (GCSE now 45; the KS3 part already fixed by #333).
+
+## 2026-11-16 (cloud): MERGE-ROUTE-RETIRE (`docs/handover/contracts/2026-11-16-merge-route-retire.md`; Jon's ruling 16 Nov 09:41)
+
+Agent Claude Code (cloud), branch `claude/great-hypatia-7d9ksh` from main c73ea61. Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** PERCENTAGE-FLIP-BANKS merged #793 as c73ea61, via the GitHub connection under the (now retired) merge-route ruling of 10 Nov. The merge message carried a literal skip marker in a closing line the merging session wrote itself, so no run started on main; check-site and phone-fit-full were started by hand (workflow_dispatch) on c73ea61 at 09:30 UTC, Jon's go-ahead: check-site 43840393393 success (09:43:31 UTC), phone-fit-full 43840399609 success (09:42:40 UTC). Contract moved to docs/history/contracts/.
+Done on the branch: AGENTS.md's merge line (merge-pr.py only, either lane; if it cannot reach GitHub, stop, the PR waits; `gh auth status` is not the test); canon MERGE-ROUTE R1 replaced by its dated retirement note (R2 unchanged); this file's merge-route block and "Merges by the standing route" line replaced by one line.
+**For the home lane, docs/todo.md:** close row 40 CLOUD-MERGE-TOKEN (cause found: `gh auth status` is a false test in cloud sessions, where the proxy authenticates `gh api`; route retired; merge-pr.py proved by this PR's merge); and the Percentage Flip rows listed under #793 below (3.11, LEDGER-B4-PERCENTAGE-FLIP, the percentage-flip parts of 1.35 and 1.36, proposed PERCENT-SUFFIX).
+
+## Moved 2026-11-16 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-16 (cloud): PERCENTAGE-FLIP-BANKS (`docs/handover/contracts/2026-11-16-percentage-flip-banks.md`; Jon's rulings 15 Nov 22:52)
 
 Agent Claude Code (cloud), branch `claude/pensive-fermat-j6m1x8` from main 14b8711. Medium; merges on green.
