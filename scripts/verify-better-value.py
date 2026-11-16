@@ -2,7 +2,7 @@
 # ci-line: Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium) |
 """Better Value: every figure in every keyed conclusion and explanation recomputed; every card marked in Chromium.
 
-The game (70 items: gcse 20, core 50) shows two deals and four conclusion cards, one keyed correct, and on a
+The game (90 items: gcse 40, core 50) shows two deals and four conclusion cards, one keyed correct, and on a
 wrong pick the explanation. Its bank was keyed by hand with no verifier; the resit audit of 4 Oct 2026 found
 five Core conclusions whose figures were wrong (better-value-r-001 .. r-005): bv_core_009's bank loan costed
 with no repayments (2000 x 1.08^2) and keyed dearer; bv_core_031 calling the rival cheaper per month at
@@ -43,7 +43,7 @@ import bank_common as bc  # noqa: E402
 getcontext().prec = 40
 SLUG = 'better-value'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-COUNTS = {'gcse': 20, 'core': 50}
+COUNTS = {'gcse': 40, 'core': 50}
 
 
 def loan_payment(principal, apr, months):
@@ -84,6 +84,26 @@ REVIEW = dict([
     r('bv_gcse_018', [F(8, 6), F(6, 4)], [], 'Car Park B is cheaper per hour', 'lt'),
     r('bv_gcse_019', [F(30) / F('2.50')], [], 'worth it if you eat more than 12'),
     r('bv_gcse_020', [F(15, 1)], [16], 'saves money after more than 15 bottles'),
+    r('bv_gcse_021', [8*6], [48-40], 'monthly membership is cheaper', 'lt'),
+    r('bv_gcse_022', [10*30], [300-270], 'Instructor B is cheaper', 'lt'),
+    r('bv_gcse_023', [2*(35+F('4.5')), 2*38], [35+F('4.5'), 79-76], 'Site B is cheaper', 'lt'),
+    r('bv_gcse_024', [F('2.5')+25*F('1.6')], [25*F('1.6'), 45-(F('2.5')+25*F('1.6'))], 'Metro Taxis is cheaper', 'lt'),
+    r('bv_gcse_025', [F('5.5')+F('2.99')], [F('5.5')+F('2.99')-8], 'market stall is cheaper', 'lt'),
+    r('bv_gcse_026', [10*2], [20-F('18.5')], 'train is cheaper', 'lt'),
+    r('bv_gcse_027', [349+59], [349+59-399], 'Store A is cheaper with cover', 'lt'),
+    r('bv_gcse_028', [120+F('12.5')+5], [120+F('12.5')+5-135], 'Site B is cheaper overall', 'lt'),
+    r('bv_gcse_029', [39+25+8], [39+25+8-65], 'Airline B is cheaper overall', 'lt'),
+    r('bv_gcse_030', [6*15+30, 6*19], [6*15, 6*15+30-6*19], 'Gym B is cheaper over 6 months', 'lt'),
+    r('bv_gcse_031', [24*20+99, 24*24], [24*20, 24*20+99-24*24], 'Deal B is cheaper overall', 'lt'),
+    r('bv_gcse_032', [2/F('0.5'), F('2.7')/F('0.75')], [F('0.5'), F('0.75')], 'Box B is better value', 'lt'),
+    r('bv_gcse_033', [F('1.65')/F('1.5')], [F('1.2')], 'Bottle B is better value', 'lt'),
+    r('bv_gcse_034', [45/5, 68/8], [], 'Job A pays better per hour', 'gt'),
+    r('bv_gcse_035', [15/25, 8/10], [], 'Plan B is better value', 'lt'),
+    r('bv_gcse_036', [F('1.5')/6, F('3.3')/15], [], 'Box B is better value', 'lt'),
+    r('bv_gcse_037', [40/5, 30/4], [], 'Family B pays better per hour', 'gt'),
+    r('bv_gcse_038', [20/5], [], 'worth it if you see more than 4'),
+    r('bv_gcse_039', [180/F('1.5')], [121], 'saves money after more than 120 journeys'),
+    r('bv_gcse_040', [(70-40)/(F('0.05')-F('0.02'))], [70-40, F('0.05')-F('0.02'), 40+1000*F('0.05'), 1001], 'Printer B is cheaper for more than 1,000 pages'),
     r('bv_core_001', [12 * 35, 60 + 12 * 28], [12 * 28], 'Gym B is better value', 'lt'),
     r('bv_core_002', [18 * 29, 49 + 18 * 24], [18 * 24], 'Provider B is better value', 'lt'),
     r('bv_core_003', [260 * F('3.20'), 180 + 260 * F('0.40')], [260 * F('0.40')], 'subscription machine is better value', 'lt'),
@@ -235,7 +255,7 @@ def check_equations(fails, w, q):
 # SWEEP-1 (13 Oct 2026). SR-16: a wrong threshold option is false as written: "worth it if N or more" / "at least N" /
 # "above N" with N at or past the break-even point is TRUE unless it says "only" (s1-001). The smallest count (or the
 # level) from which each item's keyed option says it wins:
-BREAK_EVEN = {'bv_gcse_019': F(30) / F('2.50'), 'bv_core_028': 1, 'bv_core_033': F(17, 4)}
+BREAK_EVEN = {'bv_gcse_019': F(30) / F('2.50'), 'bv_gcse_038': F(20, 5), 'bv_core_028': 1, 'bv_core_033': F(17, 4)}
 THRESHOLD = re.compile(r'\b(?:is|are) (?:better value|worth it)\b.*?(?:at least|above)?\s*([\d.]+)\s*(?:or more)?\s*'
                        r'(?:lunches|films|kWh)', re.I)
 # Words a wrong option or a scenario must carry (SR-16, SR-17): (item, the card or scenario text it is in, words).
@@ -244,6 +264,9 @@ MUST_SAY = [('bv_core_050', '\u00a3790 vs \u00a3825', 'costs nothing'),         
             # s1-002 (Part 2 #12, R2): one break-even convention, stated; at the break-even point the cost is equal, not less
             ('bv_gcse_019', 'scenario', 'cheaper, not the same price'),
             ('bv_gcse_020', 'scenario', 'cheaper, not the same price'),
+            ('bv_gcse_038', 'scenario', 'cheaper, not the same price'),
+            ('bv_gcse_039', 'scenario', 'cheaper, not the same price'),
+            ('bv_gcse_040', 'scenario', 'cheaper, not the same price'),
             # s1-008 (R2): 52 / 6 = 8.7 is rounded, and the keyed £135 uses 9; s1-009 (R1): the sentence reads
             ('bv_core_047', 'scenario', 'use 9'),
             ('bv_core_011', 'scenario', 'is due if it has not been paid by then'),
