@@ -24,7 +24,7 @@ Claude Code (home lane), worktree `~/mg-pe-shed-pack`, branch `claude/pe-shed-pa
 - **lockcheck.py:** sector area (every arc tried against A x r² = 360K; the decimal-circle wrong answer with pi bracketed by Machin), Boyle (every gauge setting tried against P x V2 = P1 x V1; wrong answer P1 x V2 / V1), nth term (step from the first two entries, third checked on the line, rule at day dT; wrong answer c3 + (c2 - c1)). All 27 library variants agree.
 - **Variant 0:** sprinkler variant 0 is 9 m / 27π (was 12 m / 48π), same answer 120 and miss 40; check-escape-rooms reports it VALID (273 of 720 draws). Row 47 closed to todo-done.
 - **Build:** 36 pages, 6 sets, every check passed first time; no shared-generator change was needed. Other packs: built before and after with a harness that keeps every `build_html()` document and the PDF: HTML and build logs byte-identical, final targets identical, PDFs identical once the two date fields are removed. Roll for Initiative does not build on this machine either way (locks pages 972 > 953 px); its HTML and log are identical. test-pack-generator.py: 67/67, 21 plants caught, 8 controls pass.
-- MERGED: pending.
+- MERGED 16 Nov as 6f9498b (#801) via merge-pr.py, last line "main 6f9498b run 43942870305: GREEN", exit 0. Main on the merge commit: check-site 43942870305 success, phone-fit-full 43942870330 success (both push runs). Contract moved to .
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
