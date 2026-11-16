@@ -3370,16 +3370,21 @@ it away from the home lane too, so the PR's Gate is the check for both.
   never a merge condition. Neither merge-pr.py nor the workflow reads its output. SR-27 (§0.3), its verifier-only
   substitute list, is superseded and kept as history.
 
-## MERGE-ROUTE and CLOSE-OUTS (Jon, 10 Nov 2026)
+## MERGE-ROUTE (retired 16 Nov) and CLOSE-OUTS (Jon, 10 Nov 2026)
 
-**R1, the merge route.** Reason: some cloud sessions get an invalid GH_TOKEN (#721, #722, #723, #724).
-
-> STANDING RULING (Jon, Tue 10 Nov 2026, approved 07:58): merge route when merge-pr.py cannot authenticate.
-> Applies to any session, either lane, in which `gh auth status` fails (record its output in the report). It changes the ROUTE only, never the authorisation: a PR still merges only when its contract allows it (Jon's "merge", or a standing authorisation already in force).
-> Before merging, the session itself checks and reports what merge-pr.py would: (1) the PR's Gate is green on its current head SHA; (2) the PR is mergeable with no conflicts; (3) main's newest full run is green, and nothing has landed on main since that run other than the bot's own "[skip ci]" record commits (timings, answer counts, REGISTER.md), with no run on main queued or in progress. Any failure: STOP.
-> Then squash-merge through the GitHub connection pinned to that head SHA (refuse if it has moved), with the message as merge-pr.py would write it (the PR body, any "[skip ci]" disarmed to "(skip ci)"); watch main's run on the merge commit and report its result, as merge-pr.py --watch would.
-> Record each use in the PR's close-out: "Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: <output>)".
-> merge-pr.py remains the first route wherever it authenticates. This ruling expires when todo row CLOUD-MERGE-TOKEN closes, or on Tue 24 Nov 2026, whichever is first. Record it verbatim in docs/handover/cloud.md's standing rules in this contract's first commit.
+**R1, the merge route: retired by Jon, Mon 16 Nov 2026, 09:41** ("agree. we retire it completely please"; contract
+MERGE-ROUTE-RETIRE). The ruling of 10 Nov let a session whose `gh auth status` failed squash-merge by hand through the
+GitHub connection, repeating merge-pr.py's checks itself.
+- **Why it went.** Its trigger was a false test. In Claude Code cloud sessions GH_TOKEN is a stand-in and requests are
+  authenticated by the session's network proxy, so `gh auth status` reports the token invalid while `gh api`, the only
+  transport merge-pr.py uses, works (cloud diagnostic, 16 Nov 2026 09:40 UTC: `gh auth status` exit 1, "The token in
+  GH_TOKEN is invalid."; `gh api .../commits/main` exit 0; `merge-pr.py --watch-main c73ea61` read main's state). Every
+  cloud merge from 10 Nov took the hand route on that false signal. A hand-written merge message depends on care where
+  merge-pr.py disarms every skip marker itself: a live "[skip ci]" in the message meant main never ran its full checks on
+  #631 (34bac35, 2 Nov, before the ruling) and #793 (c73ea61, 16 Nov; both runs then dispatched by hand, green).
+- **What holds now.** merge-pr.py is the only merge route, in both lanes (AGENTS.md). If it cannot reach GitHub, the
+  session stops and reports its output; the PR waits. The todo row CLOUD-MERGE-TOKEN's cause is the false test above.
+- **The original text** stays in git history: docs/canon.md at c73ea61, this section's R1.
 
 **R2, cloud close-outs.** Reason: a PR cannot record main's run on its own merge commit.
 

@@ -63,19 +63,18 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 **Every PR:** no `check-changed.py` in the cloud (AGENTS.md, CLOUD-LEAN); merge only via `python scripts/merge-pr.py <n>
 --watch --wait 3600` (needs a green Gate and main, §7.8.3) and report its last line.
 
-**Standing ruling, merge route (Jon, 10 Nov 2026, 07:58; recorded verbatim, contract CAST-AWAY-BUILD's first commit):**
-> STANDING RULING (Jon, Tue 10 Nov 2026, approved 07:58): merge route when merge-pr.py cannot authenticate.
-> Applies to any session, either lane, in which `gh auth status` fails (record its output in the report). It changes the ROUTE only, never the authorisation: a PR still merges only when its contract allows it (Jon's "merge", or a standing authorisation already in force).
-> Before merging, the session itself checks and reports what merge-pr.py would: (1) the PR's Gate is green on its current head SHA; (2) the PR is mergeable with no conflicts; (3) main's newest full run is green, and nothing has landed on main since that run other than the bot's own "[skip ci]" record commits (timings, answer counts, REGISTER.md), with no run on main queued or in progress. Any failure: STOP.
-> Then squash-merge through the GitHub connection pinned to that head SHA (refuse if it has moved), with the message as merge-pr.py would write it (the PR body, any "[skip ci]" disarmed to "(skip ci)"); watch main's run on the merge commit and report its result, as merge-pr.py --watch would.
-> Record each use in the PR's close-out: "Merged via the GitHub connection under the standing ruling of 10 Nov 2026 (gh auth failed: <output>)".
-> merge-pr.py remains the first route wherever it authenticates. This ruling expires when todo row CLOUD-MERGE-TOKEN closes, or on Tue 24 Nov 2026, whichever is first. Record it verbatim in docs/handover/cloud.md's standing rules in this contract's first commit.
+**Merge route:** merge-pr.py only (the 10 Nov ruling was retired by Jon, 16 Nov 2026; canon MERGE-ROUTE). If it cannot reach GitHub, stop and report; the PR waits.
 
 **Standing rule, close-outs (Jon, 10 Nov 2026, 13:13; recorded verbatim, CUMFREQ-CURVE's preamble):**
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-**Merges by the standing route (Jon's ruling of 10 Nov):** the merge message is the PR body word for word, as merge-pr.py writes it (with its skip markers disarmed). #724's was a condensed form; recorded in its close-out.
+## 2026-11-16 (cloud): MERGE-ROUTE-RETIRE (`docs/handover/contracts/2026-11-16-merge-route-retire.md`; Jon's ruling 16 Nov 09:41)
+
+Agent Claude Code (cloud), branch `claude/great-hypatia-7d9ksh` from main c73ea61. Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** PERCENTAGE-FLIP-BANKS merged #793 as c73ea61, via the GitHub connection under the (now retired) merge-route ruling of 10 Nov. The merge message carried a literal skip marker in a closing line the merging session wrote itself, so no run started on main; check-site and phone-fit-full were started by hand (workflow_dispatch) on c73ea61 at 09:30 UTC, Jon's go-ahead: check-site 43840393393 success (09:43:31 UTC), phone-fit-full 43840399609 success (09:42:40 UTC). Contract moved to docs/history/contracts/.
+Done on the branch: AGENTS.md's merge line (merge-pr.py only, either lane; if it cannot reach GitHub, stop, the PR waits; `gh auth status` is not the test); canon MERGE-ROUTE R1 replaced by its dated retirement note (R2 unchanged); this file's merge-route block and "Merges by the standing route" line replaced by one line.
+**For the home lane, docs/todo.md:** close row 40 CLOUD-MERGE-TOKEN (cause found: `gh auth status` is a false test in cloud sessions, where the proxy authenticates `gh api`; route retired; merge-pr.py proved by this PR's merge); and the Percentage Flip rows listed under #793 below (3.11, LEDGER-B4-PERCENTAGE-FLIP, the percentage-flip parts of 1.35 and 1.36, proposed PERCENT-SUFFIX).
 
 ## 2026-11-16 (cloud): PERCENTAGE-FLIP-BANKS (`docs/handover/contracts/2026-11-16-percentage-flip-banks.md`; Jon's rulings 15 Nov 22:52)
 
