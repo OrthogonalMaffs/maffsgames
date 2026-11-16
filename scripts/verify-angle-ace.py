@@ -54,7 +54,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'angle-ace'
 LEVELS = ['year6', 'gcse']
-COUNTS = {'year6': 40, 'gcse': 35}
+COUNTS = {'year6': 40, 'gcse': 45}
 WIDTHS = [(320, 568), (390, 844), (1280, 800)]
 LINE_MIN = 40      # px: a stroked segment this long is a line of the figure; shorter strokes are marks
 TOL = 1.0          # degrees: a label against its region, an arc against its region, x against the key
@@ -911,7 +911,7 @@ def main():
     if not args.no_selftest:
         _, _, extra_r, _ = run_page(args.chromium, None, PATCH_EXTERIOR)
         extra = {k: v for k, v in extra_r.items()
-                 if banks['year6'][k[1]].get('isRecognition') and banks['year6'][k[1]]['answer'].startswith('Alternate')}
+                 if k[0] == 'year6' and banks['year6'][k[1]].get('isRecognition') and banks['year6'][k[1]]['answer'].startswith('Alternate')}
         first = min(k[1] for k in extra)
         extra = {k: v for k, v in extra.items() if k[1] == first}
         s_ok, lines = selftest(banks, reasons, renders, marks, extra)
