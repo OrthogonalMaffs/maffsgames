@@ -69,12 +69,19 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-16 (cloud): ANSWER-AUDIT-PILOT (`docs/handover/contracts/2026-11-16-answer-audit-pilot.md`; Jon 19:52)
+## 2026-11-16 (cloud): SHAPE-SHIFTER-FLAKE (`docs/handover/contracts/2026-11-16-shape-shifter-flake.md`)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6e1f4e0. Size small; sent first, HEATWAVE-PACK (home) waits on it.
+**Close-out carried (first commit):** ANSWER-AUDIT-PILOT (#802, bbbab73), recorded below; contract moved.
+Next: verify-shape-shifter.py's rotation moving-on check taps an option read after the load, with a stale-tap self-test unit and --loop-advance; The P.E. Store's `stakes` capitalised; other verifiers grepped for the same shape.
+
+## 2026-11-16 (cloud): ANSWER-AUDIT-PILOT (`docs/history/contracts/2026-11-16-answer-audit-pilot.md`; Jon 19:52)
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6f9498b (#800 and #801 merged). Size medium. Replaces ANSWER-AUDIT-SCRIPT, which STOPPED 19:51 (extract-banks.py holds source data, not the student's screen: 21 of 109 banks carry both a question and an answer field; full Opus run ~$200).
 **Close-out carried (first commit):** BEARING-BLITZ-GOAT (#800, 5a82f36), recorded below; contract moved.
 Done on the branch: `scripts/audit-answers.py` (FIELD_MAP for the 21; Sonnet 5.5 pass 1, Opus 5.5 pass 2 on DISAGREE/UNCLEAR, Message Batches; key only from a mode-600 file outside the repo; --max-usd guards both passes), `--selftest` PASS (25 checks, no network), todo row ANSWER-AUDIT-RUN, `data/audit/` gitignored. Dry run over the 21: 1,228 to send, 137 not audited for a figure (angle-ace 85 `fig`, normal-navigator 47 `shade`, core-maths 5 `svg`), 0 for shape; pass 1 ~$12.70 (assumed 2,000 output tokens a reply; ceiling at max_tokens $49.12), pass 2 worst case ~$49.97. Discoveries: the STOP's 3,073 counted banks once per serving level; unique questions are 1,365. The Batch API's custom_id allows only letters, digits, _ and -, so `<slug>--<level>--<index>` is sent and the manifest maps it to `<slug>|<level>|<index>`. Not verifiable here (no key): that both models and the Batch API answer as described; Jon's pilot of one game is that check.
-Next: Gate; merge by merge-pr.py; main's two runs.
+**Merged** #802 as bbbab73 via merge-pr.py, third invocation (the first refused on a red Gate: five text writes without newline='', check-text-writes, fixed in the script and main merged in; the second read the old head before GitHub registered the push), last line "main bbbab73 run 43950743520: GREEN", exit 0. Main's runs on bbbab73 (push): check-site 43950743520 success, phone-fit-full 43950743561 success. Close-out carried by SHAPE-SHIFTER-FLAKE's first commit (contract moved).
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0 (reissued once after the 19:51 STOP); usage n/a.
 
 ## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/history/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
 
