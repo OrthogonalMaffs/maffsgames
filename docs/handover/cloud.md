@@ -73,7 +73,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6e1f4e0. Size small; sent first, HEATWAVE-PACK (home) waits on it.
 **Close-out carried (first commit):** ANSWER-AUDIT-PILOT (#802, bbbab73), recorded below; contract moved.
-Next: verify-shape-shifter.py's rotation moving-on check taps an option read after the load, with a stale-tap self-test unit and --loop-advance; The P.E. Store's `stakes` capitalised; other verifiers grepped for the same shape.
+Done on the branch: verify-shape-shifter.py's rotation moving-on check picks the right or wrong option from `rotationOptions` as dealt after `loadQuestion()`, in the same call, taps its own letter point and requires `optionAt()` to resolve to it; `judge_wrong()` is shared with a new self-test unit, "plant: a stale rotation tap", which under a seeded Math.random finds a deal and re-deal where a stale wrong point reads "Correct! (B)" (main's exact failure) and must be reported, while the point read after the load reads "Not quite". `--loop-advance 50`: 0 of 50 runs failed. The P.E. Store's `stakes` now opens "The whistle goes"; check-escape-rooms passes. Sweep of the other verifiers: one real case, verify-modular-battle.py (coverage only, no false failure), todo row MODULAR-BATTLE-PRESS-ALL. Main's run 43961875130 failed only in this check (Content verifiers 86).
+Next: full verifier run with self-test; Gate; merge by merge-pr.py; main's two runs.
 
 ## 2026-11-16 (cloud): ANSWER-AUDIT-PILOT (`docs/history/contracts/2026-11-16-answer-audit-pilot.md`; Jon 19:52)
 
