@@ -17,3 +17,6 @@ CLAUDE.local.md
 # Printable escape-room packs (contract PACK-GENERATOR): the product, built locally by tools/pack-generator/build_pack.py.
 # Never committed, never published, never a CI artifact.
 dist-packs/
+
+# The answer audit's raw requests and results (scripts/audit-answers.py), local only.
+data/audit/

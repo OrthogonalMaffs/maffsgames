@@ -69,12 +69,20 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/handover/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
+## 2026-11-16 (cloud): ANSWER-AUDIT-PILOT (`docs/handover/contracts/2026-11-16-answer-audit-pilot.md`; Jon 19:52)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6f9498b (#800 and #801 merged). Size medium. Replaces ANSWER-AUDIT-SCRIPT, which STOPPED 19:51 (extract-banks.py holds source data, not the student's screen: 21 of 109 banks carry both a question and an answer field; full Opus run ~$200).
+**Close-out carried (first commit):** BEARING-BLITZ-GOAT (#800, 5a82f36), recorded below; contract moved.
+Done on the branch: `scripts/audit-answers.py` (FIELD_MAP for the 21; Sonnet 5.5 pass 1, Opus 5.5 pass 2 on DISAGREE/UNCLEAR, Message Batches; key only from a mode-600 file outside the repo; --max-usd guards both passes), `--selftest` PASS (25 checks, no network), todo row ANSWER-AUDIT-RUN, `data/audit/` gitignored. Dry run over the 21: 1,228 to send, 137 not audited for a figure (angle-ace 85 `fig`, normal-navigator 47 `shade`, core-maths 5 `svg`), 0 for shape; pass 1 ~$12.70 (assumed 2,000 output tokens a reply; ceiling at max_tokens $49.12), pass 2 worst case ~$49.97. Discoveries: the STOP's 3,073 counted banks once per serving level; unique questions are 1,365. The Batch API's custom_id allows only letters, digits, _ and -, so `<slug>--<level>--<index>` is sent and the manifest maps it to `<slug>|<level>|<index>`. Not verifiable here (no key): that both models and the Batch API answer as described; Jon's pilot of one game is that check.
+Next: Gate; merge by merge-pr.py; main's two runs.
+
+## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/history/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` from main d388414. Tier not stated; treated as Small (merge on green). Per-game fix, cloud lane's own.
 **Close-out carried (first commit):** HAMSTER-PACK-FINAL (#799, bf6cd95), recorded below; contract moved. Todo row LEDGER-B4-ANGLE-ACE closed to `docs/history/todo-done.md` (#795 made the GCSE bank 45; no B4 ledger entry remains).
 Done on the branch: the start screen's first line, bold, "20 enemy ships. Only 22 torpedoes. Can you become a legend?", built from MAX_TARGETS and MAX_TARGETS + 2; the counter "n / 20" (one `showSunk()` sets it everywhere); 0° off scores 200 with the GOAT message verbatim, 1° 150 and the rest unchanged. verify-bearing-blitz.py: the new model (points, GOAT, counter at start, after every marked shot and after each of the twenty winning hits, the start line), dead-on shots pressed through the real compass at seven bearings; PASS, all 16 plants caught (12 old, 4 new). /updates/ line.
-Next: Gate; merge by merge-pr.py; main's two runs.
+**Merged** #800 as 5a82f36 via merge-pr.py (second invocation: the first was stopped by the session's own 10-minute background limit while still waiting for the Gate, nothing merged), last line "main 5a82f36 run 43938279199: GREEN", exit 0. Main's runs on 5a82f36 (push): check-site 43938279199 success, phone-fit-full 43938279490 success. Close-out carried by ANSWER-AUDIT-PILOT's first commit (contract moved).
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/history/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
 
