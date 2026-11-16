@@ -16,6 +16,16 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-16 (home): FOOTER-PHONE-FOUR (four footer links on phones)
+
+Codex (home lane), worktree `~/mg-footer-phone-four`, branch `codex/footer-phone-four`; contract `docs/handover/contracts/2026-11-16-footer-phone-four.md`. First commit 78e43086 closed UNLIST-GRAPH-SKETCHER (#791, 7be6482; check-site 43762342514 and phone-fit-full 43762342465 green; three follow-ups).
+
+- Shared footer: six wide-only links and their preceding separators gain `sf-wide` in CANONICAL; `apply-footer.py` wrote 152 pages. One media query hides them below 810px. In local Chromium with the real fonts, the ten-link row is 784px plus 24px padding and first fits at 808px; 810px is the rounded breakpoint. The four phone links are About, Contact, Privacy and Feedback on the existing 40px bar.
+- The browser assertion in `measure-phone-fit.py` passed on the homepage, prime-or-composite and the fractions parent guide at 320, 375, 390, 810 and 1280px. Both plants failed it: missing classes on a homepage copy and the media query removed from a stylesheet copy. `check-footer.py` passed all 152 pages; a diff check found only footer classes in those pages and the dated /updates/ line. `measure-phone-fit.py --selftest`, `check-context-size.py` and `git diff --check` passed; `ci-groups.py --worst-case` said no gate file changed. Next: PR Gate, merge and main-run report.
+- Backlog housekeeping: #794, #793, #795 and #796 rows closed or updated as the contract names. The B4 Angle Ace ledger row was not in item 7 and stays for a later contract; its text is stale on main.
+
+Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-15 (home): UNLIST-GRAPH-SKETCHER (Graph Sketcher off every list, page live; two todo rows)
 
 Claude Code (home lane), worktree `~/mg-unlist-gs`, branch `claude/unlist-graph-sketcher`; contract `docs/handover/contracts/2026-11-15-unlist-graph-sketcher.md`. The first commit carries FOOTER-NO-SUPPORT's close-out (merge line below, contract to history).
@@ -29,7 +39,7 @@ Claude Code (home lane), worktree `~/mg-unlist-gs`, branch `claude/unlist-graph-
 - **Follow-up 20:35 (Jon 20:33), saved under the contract:** the noindex line is out, the October /updates/ link is restored, the notice (verbatim) and its CSS are on the start screen, and SR-20 has its sentence. **STOPPED again (its STOP IF: the notice changes the phone fit).** Start button bottom on main is 526 at 320x568, 469 at 375x667, 469 at 390x844 and 434 at 1280x720. With the notice at the top of the start screen (154 px tall at 320) it is 696 at 320x568 (fold 568: BELOW), 618 at 375x667 and 390x844, and 518 at 1280x720 (all above). Measured alternatives at 320x568: notice just above Start, 692 (BELOW); notice just after Start, 526 (above, the notice at 545-699, partly below the fold). Committed on the branch, not pushed (the Gate has not run on it).
 - **Second follow-up 20:50 (Jon: option 1), saved under the contract; the stop is closed.** The marker and notice moved to just after Start, unchanged. audit-register checks only that the marker is on the page (:211), not where. Start's bottom edge, the same as on main: 526 at 320x568, 469 at 375x667, 469 at 390x844, 434 at 1280x720. The notice's top and bottom: 545-699, 489-621, 489-621, 453-521. audit-register --check, check-canonical-links, check-theme, check-content-safety and check-meta pass locally.
 - **Third follow-up 20:55, saved under the contract (Jon, 20:50: "with the escape room section reduced, the "start with the hamster heist" is redundant, particularly as that is one of the 3 games currently showing. we need to remove it"):** the homepage band's last esc-note now reads exactly "Free, in a browser, nothing to install." (the " &mdash;" and the start-hamster-heist link are gone). `start-hamster-heist` was only in index.html: no check or analytics config held it. check-escape-rooms reads only an esc-note straight after a card, and test-escape-credit's fit is unaffected. Band layout: at 320 px the note goes from two lines to one (38 to 19 px), so the band is 19 px shorter (1554 to 1535); the cards, the button and the printables link do not move. At 1280 px the note is narrower (420 to 203 px) and the band is unchanged at 444 px. The merge watch on 9c5792ad was stopped before its Gate finished, so this could join the PR.
-- MERGED: pending.
+- MERGED as 7be6482 (#791); check-site 43762342514 and phone-fit-full 43762342465 green. Three follow-ups above were included.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 

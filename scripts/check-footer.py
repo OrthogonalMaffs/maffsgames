@@ -43,9 +43,20 @@ _LINKS = [
     ('/feedback/', 'Feedback'),
 ]
 _SEP = '<span class="sep">&middot;</span>'
-CANONICAL = ('<footer class="site-footer">'
-             + _SEP.join(['<a href="%s">%s</a>' % l for l in _LINKS])
-             + '</footer>')
+
+
+def canonical_links():
+    parts = []
+    for i, (href, label) in enumerate(_LINKS):
+        wide = 1 <= i <= 6
+        if i:
+            parts.append('<span class="sep sf-wide">&middot;</span>' if wide else _SEP)
+        parts.append('<a class="sf-wide" href="%s">%s</a>' % (href, label)
+                     if wide else '<a href="%s">%s</a>' % (href, label))
+    return ''.join(parts)
+
+
+CANONICAL = '<footer class="site-footer">' + canonical_links() + '</footer>'
 
 # Pages that carry no footer, each with its reason. A key ending in "/" covers a folder.
 # kind "redirect": the page must still redirect, or the exemption no longer holds.

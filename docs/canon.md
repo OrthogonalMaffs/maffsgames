@@ -1470,18 +1470,18 @@ palette and one check replace the rows, the tie-break and the exception.
 ### 7.5.2 The site footer — one markup, one stylesheet, checked in CI
 
 Added 2 Oct 2026 (to-do §1.28). Every page carries the same footer: a fixed navy (`#1a2744`) bar,
-exactly 40px, one line. Its look lives only in `schools/assets/site-footer.css`; its markup, nine
-root-absolute links (About · Leaderboards · Spec Map · Parent guides · What's changed · Contact ·
-Privacy · Feedback · ☕ Support MaffsGames), lives only in `scripts/check-footer.py` as `CANONICAL`.
+exactly 40px, one line. Its look lives only in `schools/assets/site-footer.css`; its markup, ten
+root-absolute links (About · Leaderboards · Spec Map · Parent guides · What's changed · Ugh, stats ·
+Printable packs · Contact · Privacy · Feedback), lives only in `scripts/check-footer.py` as `CANONICAL`.
 `scripts/apply-footer.py` writes both into every page (idempotent); `check-footer.py` fails CI on a
 page without the footer, a footer that differs by a byte, a missing stylesheet link, or any
 `.site-footer` rule outside the shared stylesheet. Exempt pages, each with its reason, are listed
 in `check-footer.py` (escape rooms and their teacher pages, redirect stubs).
 
-**On a narrow screen the links scroll sideways inside the bar** (Jon's ruling, 2 Oct 2026, option
-a): `justify-content: safe center` centres them when they fit and start-aligns them when they do
+**Below 810px only About · Contact · Privacy · Feedback show on the same 40px line** (Jon, 15 Nov
+2026): `justify-content: safe center` centres them when they fit and start-aligns them when they do
 not, so none is lost off the left edge; a CSS-only shading cue sits on whichever edge has more;
-every link is a 40px-high tap target; below 480px the Support link reads "☕ Support". **The bar
+every link is a 40px-high tap target. **The bar
 stays exactly 40px**: every game's phone fit (§7.6.1) measures its fold as the viewport minus it.
 
 **No footer links during a run (Jon's ruling, 27 Oct 2026).** Footer links sit where the thumb lands mid-game: pinned, beside Next (Jon mis-tapped Spec Map); in the flow, they rise into the spot the finger just left when the page shortens (the answer-lock double-tap on Next, planted A/B on proportion-blaster: with the footer in flow its second tap navigated away). The fix is state-based, not a timing guard (a 700 ms inert window was rejected). **Shipped for The 6 P's only:** it shows the footer on the start and results screens and removes it (display none: out of the tab order, not hit-testable) on a question, its feedback and between topics, driven by its own `show()`; the header links stay as the way out; `verify-the-6-ps.py` checks every state, with two plants. **Every other playable page keeps the pinned footer.** **Deferred to after the infrastructure freeze (Mon 2 Nov): the site-wide state-based fix** (a shared script that removes the footer while a run is in progress, for every page under games/, escape-rooms/ and the-6-ps/, and a check). The in-flow variant (`site-footer--flow`) was tried and dropped.
