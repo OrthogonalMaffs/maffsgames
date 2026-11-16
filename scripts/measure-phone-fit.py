@@ -82,6 +82,63 @@ SIZES = [(320, 568), (375, 667), (390, 844)]
 LAPTOP_SIZES = [(1366, 768), (1280, 720)]   # ruling R2 (Jon, 26 Oct 2026): judged with --laptop, normal mode
 KATEX_PREFIX = "https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/"
 DEFAULT_OUT = os.path.join(ROOT, "docs", "phone-fit-report.md")
+FOOTER_PAGES = ("index.html", "games/prime-or-composite/index.html", "parents/fractions/index.html")
+FOOTER_WIDTHS = (320, 375, 390, 810, 1280)
+FOOTER_PHONE_LINKS = ("About", "Contact", "Privacy", "Feedback")
+
+
+async def check_footer_pages(browser, base, overrides=None):
+    """The canonical footer has one phone row and one wide row in real fonts."""
+    failures = []
+    for width in FOOTER_WIDTHS:
+        ctx = await browser.new_context(viewport={"width": width, "height": 720})
+        page = await ctx.new_page()
+
+        async def route(r):
+            url = r.request.url
+            path = url.split("?", 1)[0].removeprefix(base)
+            if overrides and path in overrides:
+                return await r.fulfill(body=overrides[path],
+                                       content_type="text/css" if path.endswith(".css") else "text/html")
+            if bc.is_font_cdn(url):
+                got = bc.real_font_response(url)
+                return await (r.fulfill(**got) if got else r.abort())
+            if cs.block_reason(url):
+                return await r.abort()
+            return await r.continue_()
+
+        await page.route("**/*", route)
+        for rel in FOOTER_PAGES:
+            await page.goto(base + "/" + rel + "?cb=%d" % time.time_ns(),
+                            wait_until="domcontentloaded", timeout=20000)
+            await page.evaluate(bc.settle_js())
+            found = await page.evaluate("""() => {
+                const f = document.querySelector('.site-footer');
+                if (!f) return null;
+                const links = [...f.querySelectorAll('a')]
+                    .filter(a => getComputedStyle(a).display !== 'none' && a.getBoundingClientRect().width > 0)
+                    .map(a => a.textContent.trim());
+                const shown = [...f.querySelectorAll('a')]
+                    .filter(a => getComputedStyle(a).display !== 'none' && a.getBoundingClientRect().width > 0);
+                const left = shown.length ? shown[0].getBoundingClientRect().left : 0;
+                const right = shown.length ? shown[shown.length - 1].getBoundingClientRect().right : 0;
+                return {links, scroll:f.scrollWidth, client:f.clientWidth,
+                    height:f.getBoundingClientRect().height,
+                    centre:Math.abs(left - (innerWidth - right))};
+            }""")
+            want = FOOTER_PHONE_LINKS if width < 810 else tuple(
+                ("About", "Leaderboards", "Spec Map", "Parent guides", "What's changed",
+                 "Ugh, stats", "Printable packs", "Contact", "Privacy", "Feedback"))
+            if (not found or tuple(found["links"]) != want or
+                    found["scroll"] > found["client"] or found["height"] != 40 or
+                    found["centre"] > 1):
+                failures.append("%s at %dpx: %s" % (rel, width, found))
+        await ctx.close()
+    for failure in failures:
+        print("  FAIL footer " + failure)
+    print("footer widths: %s (%d pages x %d widths)" %
+          ("FAIL" if failures else "PASS", len(FOOTER_PAGES), len(FOOTER_WIDTHS)))
+    return not failures
 
 # Runs after TIER3_INIT. Tier 3 records which event fired and its question index;
 # this report also needs whether the answer was right, so mfg's accessor is
@@ -792,6 +849,10 @@ async def run(args):
             if args.chromium:
                 launch["executable_path"] = args.chromium
             browser = await p.chromium.launch(**launch)
+            if not args.aa and not args.laptop and args.fonts == "real":
+                if not await check_footer_pages(browser, base):
+                    await browser.close()
+                    sys.exit(1)
             sem = asyncio.Semaphore(args.workers)
             done = [0]
             jobs = [(s, sz) for s in slugs for sz in args.sizes]

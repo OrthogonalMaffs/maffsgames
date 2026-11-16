@@ -15,7 +15,12 @@
    - a scroll-shadow cue on whichever edge has more links (CSS only: opaque
      covers that move with the content, `local`, over shadows fixed to the bar,
      `scroll`; a cover hides its shadow only when that edge is fully scrolled);
-   - every link a tap target the full 40px high. */
+   - every link a tap target the full 40px high.
+
+   In local Chromium with the real fonts, all ten links need 784px plus 24px
+   padding: the row first fits at 808px. Rounded up to 810px, narrower
+   screens show About, Contact, Privacy and Feedback on the same 40px line
+   (Jon, 15 Nov 2026). The scroll cue remains for very large text settings. */
 
 .site-footer {
   position: fixed;
@@ -55,3 +60,6 @@
 .site-footer a:hover { text-decoration: underline; }
 .site-footer a:focus-visible { outline: 2px solid currentColor; outline-offset: -3px; }
 .site-footer .sep { opacity: 0.4; }
+@media (max-width: 809px) {
+  .site-footer .sf-wide { display: none; }
+}
