@@ -14,7 +14,9 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
   * tools/pack-generator/rooms/<slug>/config.json: the art, each image's role and label box in image pixels, the font
     per card, the set count, seed and pack version, the words printed on red-herring objects, a clue card's optional
     print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), a lock's optional print-only answer
-    unit ("answer_units", contract CAR-TRAP-PACK, 14 Nov 2026), and whether Jon has
+    unit ("answer_units", contract CAR-TRAP-PACK, 14 Nov 2026; its common wrong answer scaled by "miss_scale" when
+    that differs, contract HAMSTER-PACK-FINAL, 16 Nov 2026), a lock's optional print-only hint and common-wrong-answer
+    words ("lock_words", HAMSTER-PACK-FINAL), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
     --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
 
@@ -22,7 +24,8 @@ The build, in order; any failure stops it before a PDF exists:
   1. scripts/check-escape-rooms.py is imported (run in full, unchanged): its draw_is_valid() and clue_strings() are the
      rules the room engine serves draws by. If that check fails, nothing is built.
   2. Selection: every joint draw (one variant per lock) is judged by draw_is_valid(); from the VALID ones, N are chosen
-     with every lock's answers distinct across the N sets. Deterministic for a seed (a seeded shuffle, then a search).
+     with every lock's answers distinct across the N sets, and no set where a lock's printed common wrong answer is
+     its printed answer (HAMSTER-PACK-FINAL). Deterministic for a seed (a seeded shuffle, then a search).
   3. Verification: lockcheck.py recomputes every answer, common wrong answer and worked-solution figure from each
      variant's givens, by a method independent of the generator that made them. Any mismatch stops the build.
   4. Render: one HTML page per A4 page, printed to PDF by Playwright's Chromium with the network shut (fonts from the
@@ -221,28 +224,35 @@ def load_config(slug):
 # HAMSTER-HEIST-PACK Amendment 1 (16 Nov 2026): an entry may also list the room's other spellings of its own unit,
 # "room_unit_spellings": ["°C per minute"], matched exactly as the slider's unit is (both_units()).
 ROOM_SPELLINGS = "room_unit_spellings"
+MISS_SCALE = "miss_scale"          # HAMSTER-PACK-FINAL: the common wrong answer's own scale (default: "scale")
 
 
 def answer_units(cfg, slug):
     """The config's "answer_units", {lock id: {"unit", "scale"}} ({} when it has none), or BuildError if an entry is
-    not a printed unit (a non-empty string with no digit) and a whole-number scale of 1 or more."""
+    not a printed unit (a non-empty string with no digit) and a whole-number scale of 1 or more. An entry may also
+    carry "miss_scale", a whole number of 1 or more: the scale for the lock's common wrong answer, where it is not the
+    answer's (contract HAMSTER-PACK-FINAL, 16 Nov 2026: the heat lamp's wrong answer on paper is the rise itself, so
+    it is not multiplied by ten). Without it the common wrong answer takes "scale", as before."""
     units = cfg.get("answer_units")
     if units is None:
         return {}
     if not isinstance(units, dict):
         raise BuildError('%s: "answer_units" must be {"<lock id>": {"unit": ..., "scale": ...}}, not %r' % (slug, units))
     for lid, u in units.items():
-        ok = (isinstance(u, dict) and {"unit", "scale"} <= set(u) <= {"unit", "scale", ROOM_SPELLINGS}
+        ok = (isinstance(u, dict) and {"unit", "scale"} <= set(u) <= {"unit", "scale", MISS_SCALE, ROOM_SPELLINGS}
               and isinstance(u["unit"], str)
               and u["unit"] and u["unit"] == u["unit"].strip() and not re.search(r"\d", u["unit"])
-              and isinstance(u["scale"], int) and not isinstance(u["scale"], bool) and u["scale"] >= 1)
+              and isinstance(u["scale"], int) and not isinstance(u["scale"], bool) and u["scale"] >= 1
+              and (MISS_SCALE not in u or (isinstance(u[MISS_SCALE], int) and not isinstance(u[MISS_SCALE], bool)
+                                           and u[MISS_SCALE] >= 1)))
         spellings = u.get(ROOM_SPELLINGS, []) if isinstance(u, dict) else []
         ok = ok and isinstance(spellings, list) and all(
             isinstance(x, str) and x and x == x.strip() and x == html.unescape(x) for x in spellings)
         if not ok:
-            raise BuildError('%s: "answer_units" for %s must be {"unit": "<printed unit>", "scale": <whole number>} '
-                             'and, if the room words its own unit more than one way, "%s": ["<the room\'s other '
-                             'spelling>", ...] (plain text, no entity), not %r' % (slug, lid, ROOM_SPELLINGS, u))
+            raise BuildError('%s: "answer_units" for %s must be {"unit": "<printed unit>", "scale": <whole number>}, '
+                             'optionally "%s": <whole number of 1 or more> for the common wrong answer and, if the '
+                             'room words its own unit more than one way, "%s": ["<the room\'s other spelling>", ...] '
+                             '(plain text, no entity), not %r' % (slug, lid, MISS_SCALE, ROOM_SPELLINGS, u))
     return units
 
 
@@ -290,27 +300,34 @@ def with_answer_units(cfg, locks, slug):
     return out
 
 
-def printed_number(lock, value):
-    """A lock's answer, or its common wrong answer, as the pack prints it. A lock with no printed unit: the value as
-    it is. With one: value x scale, exactly (Decimal on the number's text, never float arithmetic), which must be a
-    whole number or the build stops."""
+def scale_of(au, which):
+    """The scale for a lock's answer ("answer") or its common wrong answer ("miss"): "miss_scale" for the wrong answer
+    where the config gives one (contract HAMSTER-PACK-FINAL), else "scale"."""
+    return au.get(MISS_SCALE, au["scale"]) if which == "miss" else au["scale"]
+
+
+def printed_number(lock, value, which="answer"):
+    """A lock's answer (which "answer"), or its common wrong answer (which "miss"), as the pack prints it. A lock
+    with no printed unit: the value as it is. With one: value x its scale (scale_of()), exactly (Decimal on the
+    number's text, never float arithmetic), which must be a whole number or the build stops."""
     au = lock.get("answer_unit")
     if not au:
         return value
-    scaled = text_decimal(value) * au["scale"]
+    k = scale_of(au, which)
+    scaled = text_decimal(value) * k
     if scaled != scaled.to_integral_value():
         raise BuildError("%s: %s x %d = %s %s is not a whole number, so it cannot be asked for in %s"
-                         % (lock["id"], format_token(value), au["scale"], scaled.normalize(), au["unit"], au["unit"]))
+                         % (lock["id"], format_token(value), k, scaled.normalize(), au["unit"], au["unit"]))
     return int(scaled)
 
 
-def printed_figure(lock, value):
+def printed_figure(lock, value, which="answer"):
     """The key's figure for a lock's answer or common wrong answer: the token as students read it, and for a lock
     with a printed unit the scaled value with that unit, since the room's own words beside it use the room's unit."""
     au = lock.get("answer_unit")
     if not au:
         return format_token(value)
-    return "%s&nbsp;%s" % (format_token(printed_number(lock, value)), esc(au["unit"]))
+    return "%s&nbsp;%s" % (format_token(printed_number(lock, value, which)), esc(au["unit"]))
 
 
 # The bank's names for a lock's answer and its common wrong answer in a room's words: the number itself and, where
@@ -357,7 +374,7 @@ def both_units(lock, v, text):
                                  "cannot show it in %s as well: %r"
                                  % (lock["id"], "answer" if which == "answer" else "common wrong answer", token, own,
                                     au["unit"], text[:120]))
-            text = with_unit.sub(lambda m: "%s = %s" % (m.group(0), printed_figure(lock, v[which])), text)
+            text = with_unit.sub(lambda m: "%s = %s" % (m.group(0), printed_figure(lock, v[which], which)), text)
     return text
 
 
@@ -374,7 +391,7 @@ def both_units_problems(lock, v, template, filled, where):
         named = sum(template.count("{{%s.%s}}" % (lock["key"], name)) for name in names)
         if not named or v.get(which) is None:
             continue
-        form = "= %s %s" % (format_token(printed_number(lock, v[which])), au["unit"])
+        form = "= %s %s" % (format_token(printed_number(lock, v[which], which)), au["unit"])
         if shown.count(form) < named:
             out.append("%s, %s: its words give the %s %d time(s), but %r is printed %d time(s): %r"
                        % (lock["id"], where, "answer" if which == "answer" else "common wrong answer", named, form,
@@ -473,6 +490,92 @@ def room_locks(room, slug):
             raise BuildError("%s/%s: room.js has drifted from variants.json" % (slug, lid))
         locks.append(dict(l, key=key, variants=verified[lid]))
     return locks
+
+
+LOCK_WORDS = "lock_words"         # HAMSTER-PACK-FINAL: a lock's print-only hint and common-wrong-answer words
+TOKEN_RE = re.compile(r"\{\{([\w.-]+)\}\}")
+
+
+def lock_strings(l):
+    """Every string of a lock as the room wrote it (its hints, brief, missTitle, missSays, solve, ...), not its
+    variants: where a print-only override may take its {{tokens}} from."""
+    out = []
+
+    def walk(x):
+        if isinstance(x, str):
+            out.append(x)
+        elif isinstance(x, list):
+            for y in x:
+                walk(y)
+        elif isinstance(x, dict):
+            for k, y in x.items():
+                if k != "variants":
+                    walk(y)
+    walk({k: v for k, v in l.items() if k not in ("variants", "answer_unit")})
+    return out
+
+
+def with_lock_words(cfg, locks, slug):
+    """The locks, each lock the config names in "lock_words" carrying its print-only words in place of the room's
+    (contract HAMSTER-PACK-FINAL, 16 Nov 2026): {"<lock id>": {"hints": {"<1-based hint number>": "<words>"},
+    "missSays": "<words>"}}. A copy: the room's data and the live room are not touched. Because the words replace the
+    room's in the lock, everything that prints or checks a hint card or the key's common-wrong-answer note (the
+    filler and its figure binding, both_units(), both_units_problems(), the fixed-penalty and unfilled-token checks
+    on the built pages) reads them exactly as it reads the room's. Each must be a lock of the room, a hint number the
+    room's hints have, a non-empty string whose every {{token}} is one the room's own strings for that lock use, and,
+    filled with the lock's first variant, must read as a sentence (caption_problems()). With no entry the locks come
+    back as they are."""
+    words = cfg.get(LOCK_WORDS)
+    if words is None:
+        return locks
+    if not isinstance(words, dict):
+        raise BuildError('%s: "%s" must be {"<lock id>": {"hints": {"<n>": "<words>"}, "missSays": "<words>"}}, not %r'
+                         % (slug, LOCK_WORDS, words))
+    unknown = sorted(set(words) - {l["id"] for l in locks})
+    if unknown:
+        raise BuildError('%s: "%s" names %s, which is not a lock of this room' % (slug, LOCK_WORDS, ", ".join(unknown)))
+    out = []
+    for l in locks:
+        w = words.get(l["id"])
+        if w is None:
+            out.append(l)
+            continue
+        if not isinstance(w, dict) or not w or not set(w) <= {"hints", "missSays"}:
+            raise BuildError('%s/%s: "%s" takes "hints" and "missSays" only, not %r' % (slug, l["id"], LOCK_WORDS, w))
+        own = {t for x in lock_strings(l) for t in TOKEN_RE.findall(x)}
+        first = {"%s.%s" % (l["key"], k): format_token(v) for k, v in l["variants"][0].items()}
+        new = dict(l)
+
+        def checked(where, text):
+            if not isinstance(text, str) or not text.strip():
+                raise BuildError('%s/%s: "%s" %s must be words, not %r' % (slug, l["id"], LOCK_WORDS, where, text))
+            stray = sorted(set(TOKEN_RE.findall(text)) - own)
+            if stray:
+                raise BuildError('%s/%s: "%s" %s uses %s, which no string of this lock in the room uses'
+                                 % (slug, l["id"], LOCK_WORDS, where, ", ".join("{{%s}}" % t for t in stray)))
+            filled = TOKEN_RE.sub(lambda m: first.get(m.group(1), m.group(0)), text)
+            problems = caption_problems(filled)
+            if problems:
+                raise BuildError('%s/%s: "%s" %s has %s: %r' % (slug, l["id"], LOCK_WORDS, where,
+                                                                " and ".join(problems), filled))
+            return text
+        if "hints" in w:
+            if not isinstance(w["hints"], dict) or not w["hints"]:
+                raise BuildError('%s/%s: "%s" hints must be {"<1-based hint number>": "<words>"}, not %r'
+                                 % (slug, l["id"], LOCK_WORDS, w["hints"]))
+            hints = list(l.get("hints", []))
+            for k, text in w["hints"].items():
+                if not (isinstance(k, str) and k.isdigit() and 1 <= int(k) <= len(hints)):
+                    raise BuildError('%s/%s: "%s" hint %r is not one of the room\'s %d hints'
+                                     % (slug, l["id"], LOCK_WORDS, k, len(hints)))
+                hints[int(k) - 1] = checked("hint %s" % k, text)
+            new["hints"] = hints
+        if "missSays" in w:
+            if "missSays" not in l:
+                raise BuildError('%s/%s: "%s" replaces missSays, which this lock does not have' % (slug, l["id"], LOCK_WORDS))
+            new["missSays"] = checked("missSays", w["missSays"])
+        out.append(new)
+    return out
 
 
 def room_url(slug):
@@ -706,11 +809,36 @@ def make_set(letter, pick, locks):
     return {"letter": letter, "pick": tuple(pick), "vars": [copy.deepcopy(l["variants"][i]) for l, i in zip(locks, pick)]}
 
 
+def miss_is_answer(locks, pick_or_vars):
+    """The locks of one joint draw whose printed common wrong answer is its printed answer, after each one's scale
+    (contract HAMSTER-PACK-FINAL, 16 Nov 2026): such a lock opens for a team making the very mistake it tests, as the
+    heat lamp does per ten minutes when the readings are ten minutes apart. pick_or_vars: variant indices or the
+    variants themselves."""
+    out = []
+    for l, x in zip(locks, pick_or_vars):
+        v = l["variants"][x] if isinstance(x, int) else x
+        if v.get("miss") is None:
+            continue
+        try:
+            a, m = printed_number(l, v["answer"], "answer"), printed_number(l, v["miss"], "miss")
+        except BuildError:
+            continue                                 # a value that is not whole stops the build elsewhere, by name
+        if checker_flat(a) & checker_flat(m):
+            out.append("%s (prints %s for both)" % (l["id"], format_token(a)))
+    return out
+
+
+def checker_flat(x):
+    """A printed answer as a set of numbers (a lock with several accepted answers gives each)."""
+    return frozenset(x if isinstance(x, list) else [x])
+
+
 def choose(checker, valid, locks, n, seed, final_ok=None):
     """N VALID draws with every lock's answers distinct across them, each with a final padlock final_ok accepts
     (Amendment 11: a target whose product is friendly), or BuildError naming the most found. The draws are shuffled by
     the seed, then searched in that order (depth first), so a seed gives one pack."""
-    usable = [p for p in valid if final_ok is None or final_ok(p)]
+    refused = [p for p in valid if miss_is_answer(locks, p)]          # HAMSTER-PACK-FINAL; none in most rooms
+    usable = [p for p in valid if (final_ok is None or final_ok(p)) and not miss_is_answer(locks, p)]
     order = list(usable)
     random.Random(seed).shuffle(order)
     ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order}
@@ -738,8 +866,9 @@ def choose(checker, valid, locks, n, seed, final_ok=None):
 
     if not search(0):
         raise BuildError("only %d sets can be chosen (VALID, every lock's answers distinct, a final padlock with a "
-                         "friendly product), fewer than the %d asked for (%d VALID draws, %d with such a final padlock)"
-                         % (len(best), n, len(valid), len(usable)))
+                         "friendly product, no common wrong answer printed as the answer), fewer than the %d asked for "
+                         "(%d VALID draws, %d refused as a common wrong answer prints as the answer, %d usable)"
+                         % (len(best), n, len(valid), len(refused), len(usable)))
     return [make_set(chr(ord("A") + i), p, locks) for i, p in enumerate(chosen)]
 
 
@@ -823,6 +952,8 @@ def check_sets(checker, room_js, locks, sets):
     for s in sets:
         if not checker.draw_is_valid([(l["key"], v) for l, v in zip(locks, s["vars"])], clues, herrings):
             out.append("set %s: its joint draw is not VALID" % s["letter"])
+        for x in miss_is_answer(locks, s["vars"]):
+            out.append("set %s: %s: its common wrong answer prints as its answer" % (s["letter"], x))
     for j, l in enumerate(locks):
         for a, b in itertools.combinations(sets, 2):
             if checker.flat(a["vars"][j]["answer"]) & checker.flat(b["vars"][j]["answer"]):
@@ -864,7 +995,7 @@ def verify_sets(locks, sets):
                     continue
                 checked += 1
                 try:
-                    printed = printed_number(l, v.get(k))
+                    printed = printed_number(l, v.get(k), k)
                 except BuildError as e:
                     printed = str(e)
                 if printed != in_unit.get(k):
@@ -1806,7 +1937,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
                    for l, m in zip(locks, meta)) + "<th>Final padlock<br><span class='wrong'>target: its one expression</span></th>"
     rows = "".join("<tr><th style='white-space:nowrap'>Set %s</th>%s<td class='n'>%s <span class='wrong'>= %s</span></td></tr>" % (s["letter"], "".join(
         "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
-        % (printed_figure(l, v["answer"]), printed_figure(l, v["miss"]) if v.get("miss") is not None else "none")
+        % (printed_figure(l, v["answer"]), printed_figure(l, v["miss"], "miss") if v.get("miss") is not None else "none")
         for l, v in zip(locks, s["vars"])), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s</b> %s %s</li>" % (lock_name_label(l["name"]), fill_a(l.get("missTitle", "")),
                                                      fill_a(l.get("missSays", "")))
@@ -1943,7 +2074,7 @@ def prepare(slug, n, seed, page, target=None):
     checker = load_checker()
     cfg = load_config(slug)
     room, teach, room_js, rating = read_room(page, slug)
-    locks = with_answer_units(cfg, room_locks(room, slug), slug)
+    locks = with_lock_words(cfg, with_answer_units(cfg, room_locks(room, slug), slug), slug)
     n = n or cfg.get("sets", 7)
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)

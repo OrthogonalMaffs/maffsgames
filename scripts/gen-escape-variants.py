@@ -249,6 +249,32 @@ for t1, T1, t2, T2 in cands:
           "answer": round(ans, 1), "miss": float(rise)}, minsep=0.2)
     if len(store) >= WANT:
         break
+# Appended (contract HAMSTER-PACK-FINAL, 16 Nov 2026; the variants above are unchanged and keep their order). The
+# print pack asks for this rate per ten minutes, so readings exactly ten minutes apart make the rise itself the
+# answer: a team that forgets to divide still opens the lock. The search above found only five with another run, too
+# few for a pack of six sets. These come from readings 4, 5 or 6 minutes apart, which the list above never tried;
+# each must be ten minutes apart in no way (run != 10), give a whole number per ten minutes that no variant above
+# gives, and pass keep() and check() as they are.
+per_ten = {Fraction(v["rise"] * 10, v["run"]) for v in store}
+for t1, T1, t2, T2 in shuffled([(t1, T1, t1 + run, T1 + rise)
+                                for t1 in range(2, 8) for T1 in range(15, 26)
+                                for run in (4, 5, 6) for rise in range(6, 21)]):
+    if len(store) >= WANT:
+        break
+    rise, run = T2 - T1, t2 - t1
+    g = Fraction(rise, run)
+    if run == 10 or (g * 10).denominator != 1 or g * 10 in per_ten:
+        continue
+    ans = float(g)
+    if not (0.5 <= ans <= 5) or rise > 20:
+        continue
+    before = len(store)
+    keep(store, "heat-lamp-gradient",
+         {"t1": t1, "T1": T1, "t2": t2, "T2": T2,
+          "rise": rise, "run": run,
+          "answer": round(ans, 1), "miss": float(rise)}, minsep=0.2)
+    if len(store) > before:
+        per_ten.add(g * 10)
 V["heat-lamp-gradient"] = store
 
 # ---------------------------------------------------- F1 area scale factor (dial 1-100)
