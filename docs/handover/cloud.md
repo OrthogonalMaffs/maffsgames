@@ -69,6 +69,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-16 (cloud): BETTER-VALUE-GCSE-40 (`docs/handover/contracts/2026-11-16-better-value-gcse-40.md`; Jon 15:18)
+
+Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` restarted from main ef92245 (#795 squash-merged). Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** ANGLE-ACE-GCSE-45 (Amendments 1 and 2) merged #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 success (14:19:57 UTC), phone-fit-full 43882219278 success (14:06:17 UTC), both push-triggered. Contract moved to docs/history/contracts/.
+Next: the twenty GCSE items, the verifier's data, ledger B4, /updates/.
+
 ## 2026-11-16 (cloud): ANGLE-ACE-GCSE-45 (`docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md`; Jon 11:15)
 
 Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` from main 4c13e95. Small; merges on green, by merge-pr.py only.
@@ -79,7 +85,7 @@ Main checks: verify-angle-ace.py reports no FAIL on 85 items.
 **Amendment 1 (Project Claude, 12:10), done in the third commit:** `k[0] == 'year6' and` at the front of the :914 filter; the contract file replaced with the amended text. Full verifier, self-test included, from the repo copy: exit 0, all 8 planted faults caught, "PASS: 0 FAIL(s); 85 items (year6, gcse) measured at 320/390/1280 px".
 **STOPPED 12:20, PR #795 not merged (closed by Amendment 2 below).** merge-pr.py: "REFUSED #795: the Gate on head ca3c956 is failure", exit 1. The only failed job is Content verifiers 85 (run 43863264772, job 133286571338), in "The 6 P's banks": "FAIL  angles.json is not what the game's questions generate; run gen-six-ps.py --write". `scripts/gen-six-ps.py` `topic_angles` builds `schools/assets/six-ps/angles.json` from Angle Ace's `QUESTIONS_BY_LEVEL.gcse`, so the ten new items change it. That file is under `schools/assets/` (DO NOT TOUCH). Locally, `gen-six-ps.py --check --only angles` reads 45 questions with no assertion (every answer recomputed from its fig, every label matched) and fails only on the committed file.
 **Amendment 2 (Project Claude, 13:40), done in one commit:** `gen-six-ps.py --write --only angles` changed only angles.json (+228 lines; 35 to 45 questions, the first 35 unchanged); `--check --only angles` PASS ("1 banks match their games"; labels: 0 still faulty after moving); `gen-exam-topics.py --check` PASS; /updates/ line widened to the 6 P's; contract file replaced with the Amendment 2 text.
-Next: Gate, merge by merge-pr.py, main's two runs.
+MERGED #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 and phone-fit-full 43882219278 success. Contract moved to history by BETTER-VALUE-GCSE-40's first commit.
 **For the home lane, docs/todo.md:** close row 1.52 (GCSE now 45; the KS3 part already fixed by #333).
 
 ## 2026-11-16 (cloud): MERGE-ROUTE-RETIRE (`docs/handover/contracts/2026-11-16-merge-route-retire.md`; Jon's ruling 16 Nov 09:41)
