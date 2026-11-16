@@ -6,8 +6,8 @@
   "Answer logging (no roster game logs only right answers: a page whose every question_answered call passes a literal correct:true fails; escape rooms out of scope; six plants caught and three controls pass)": "30",
   "As You Can See (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own chart data and ask, never from the bank's or the game's code: pictogram rows, bar, dual and stacked heights, line readings, scatter correlation, line of best fit, outlier, every stage-5 flaw read off the chart; accepted intervals; slips outside them; the game's marking compared with an independent marker; every drawn chart read back from its SVG against its data; all five stages played in the page at 390 px and the first questions at 375, 360, 320, 1280 and 1366 px with a wide font; fault-injection self-test)": "29",
   "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": "6",
-  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 1 of 2": "20",
-  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 2 of 2": "16",
+  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points (200 dead on, the GOAT message) and message figures recomputed around 0/360; the \"n / 20\" counter and the start-screen line checked; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 1 of 2": "16",
+  "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points (200 dead on, the GOAT message) and message figures recomputed around 0/360; the \"n / 20\" counter and the start-screen line checked; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught), part 2 of 2": "20",
   "Better Value (every keyed figure and explanation figure recomputed, one true card in four, every card marked in Chromium)": "16",
   "Better Value claims (every item's declared measure computed from its inputs; the key's claim true, every distractor's false; every text figure in its claim; KNOWN)": "28",
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "49",
@@ -254,8 +254,8 @@
    "tier": "lock"
   },
   "verify-bearing-blitz.py": {
-   "how": "kept from the pack (1 needed)",
-   "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points and message figures recomputed around 0/360; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
+   "how": "kept from the pack (2 needed)",
+   "label": "Bearing Blitz (every whole-degree bearing dragged on the real compass and read back; the needle drawn checked; hit, miss, points (200 dead on, the GOAT message) and message figures recomputed around 0/360; the \"n / 20\" counter and the start-screen line checked; lives and end flows played in Chromium; fault-injection self-test: every planted fault caught)",
    "parts": 2,
    "tier": "content"
   },
