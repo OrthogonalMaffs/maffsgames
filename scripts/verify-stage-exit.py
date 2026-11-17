@@ -252,7 +252,13 @@ def paper_exit(base, slug, size, out, sources=None):
         br, page, errors = open_page(pw, base, slug, size, sources)
         try:
             paper_off_play(page, where + ' start', out)
+            # the button appears with #gameScreen but outside it: it must open in a MaffsLock fresh window, so the
+            # second click of a double-click on Begin Practice or Play again cannot land on it (check-answer-lock.py)
+            page.evaluate("() => { window.__fresh0 = MaffsLock.FRESH_MS; MaffsLock.FRESH_MS = 5000; }")
             page.locator('.start-btn').click()
+            if not page.evaluate("() => MaffsLock.isFresh(document.getElementById('stageExitBtn'))"):
+                out.append('%s: the Exit paper button is open to a second click when the paper starts (no fresh window)' % where)
+            page.evaluate("() => { MaffsLock.FRESH_MS = window.__fresh0; MaffsLock.fresh(document.querySelector('.stage-exit-row'), 0); }")
             page.wait_for_timeout(150)
             if paper_screen(page) != 'gameScreen':
                 out.append('%s: Begin Practice did not start the paper' % where)
@@ -406,6 +412,9 @@ PLANTS = [
     ('paper: leaving fires game_completed', 'core-maths-paper1',
      dict(js=[('    if (leaveName) {', "    if (window.mfg) mfg('game_completed', {});\n    if (leaveName) {")]),
      r'fired game_completed'),
+    ('paper: the button opens with no fresh window', 'core-maths-paper2b',
+     dict(js=[('if (on && !wasActive && window.MaffsLock) MaffsLock.fresh(row);', 'void wasActive;')]),
+     r'open to a second click when the paper starts'),
     ('paper: the row hidden during play', 'core-maths-paper2c',
      dict(css=[('.stage-exit-row.stage-exit-inline{margin:.5rem 0}', '.stage-exit-row.stage-exit-inline{margin:.5rem 0}body:has(#gameScreen.active) .stage-exit-row{display:none}')]),
      r'no ".*" button on screen'),

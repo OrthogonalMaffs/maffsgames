@@ -23,7 +23,9 @@
  *   data-game="#gameScreen"      the in-play screen (default "#game"): its `.hud`, if it has one, gets the two controls.
  *                                With no `.hud` inside it, the header row holds them instead, in the place the back link
  *                                already takes (no extra height): the button shows while that screen is `.active`, the
- *                                home link on every screen.
+ *                                home link on every screen. The row sits outside that screen, so the shell gives it a
+ *                                MaffsLock fresh window each time the screen becomes active (the page's own screen()
+ *                                covers only its screen).
  *   data-leave="exitPaper"       the name of a global function that takes the page back to its own start (default: click
  *                                #menuBtn or #againBtn). It must record nothing.
  *   data-confirm="second-tap"    leaving takes two taps: the first turns the button into "Tap again to exit" for 3 s, a
@@ -108,6 +110,18 @@
     } else if (game) {
       row.classList.add('stage-exit-inline');
       game.classList.add('stage-exit-play');
+      // The button appears with that screen, but outside it: the page's MaffsLock.screen() covers its screen, never
+      // this row. So when the screen becomes active the row gets the same fresh window (canon §7.6.0), and a
+      // double-click's second click (Play again, Begin) cannot land on it. Leaving the screen by any route disarms.
+      var wasActive = game.classList.contains('active');
+      if (window.MutationObserver) {
+        new MutationObserver(function () {
+          var on = game.classList.contains('active');
+          if (on && !wasActive && window.MaffsLock) MaffsLock.fresh(row);
+          if (!on) disarm();
+          wasActive = on;
+        }).observe(game, { attributes: true, attributeFilter: ['class'] });
+      }
     }
   }
 
