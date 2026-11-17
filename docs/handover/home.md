@@ -25,7 +25,7 @@ Claude Code (home lane), worktree `~/mg-heatwave-pack`, branch `claude/heatwave-
 - **Generator (general, other packs byte-identical):** split_clue() accepts a clue with no `<b>` part when the image gives both "printed" and "caption" (the clock and sticky note have none); lock_words takes a "label" for the answer box (the keypad's "four digits" breaks Amendment 4 on paper; the slider's label printed "... set off min").
 - **lockcheck.py:** LCM by counting up in the longest lap, with the prime-factor lines; cube by face, edge counted up, edge cubed; inequality by trying every dial setting, the one prime, the band's largest. All 22 library variants agree.
 - **Checks:** see the PR. Other packs compared with ~/pe-tools/dump.py before (origin/main) and after: 28 files identical once date fields and worktree paths are normalised.
-- MERGED: pending.
+- MERGED 16 Nov as 61b2f9a (#804) via merge-pr.py on its second call; last line "main 61b2f9a: NO RUN FOUND", exit 1, as it looked before main's push runs registered; the merge itself succeeded. Main on the merge commit: check-site 44028365136 success, phone-fit-full 44028365052 success. Contract moved to `docs/history/contracts/` (closed out by FINAL-PADLOCK-FAIR's first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
