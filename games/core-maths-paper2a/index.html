@@ -26,6 +26,7 @@
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/stage-exit.js" data-game="#gameScreen" data-leave="exitPaper" data-confirm="second-tap" data-label="← Exit paper"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first that is not the key. Start is "Begin Practice".
 {
   "start_sel": ".start-btn",
@@ -124,6 +125,7 @@ body.accessible p,body.accessible .q-stem,body.accessible .option-text{line-heig
 @media(max-width:500px){.q-card{padding:16px}.option-btn{padding:12px}.results-card{padding:20px}}
 </style>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 </head>
 <body>
 <div class="container">
@@ -510,6 +512,14 @@ var currentQ = 0, score = 0, answers = [];
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
+}
+
+// "← Exit paper" (stage-exit.js, data-leave; CORE-PAPER-EXIT, 17 Nov 2026): back to the start screen mid-paper.
+// Leaving is not finishing: nothing is recorded. The section banner's pending timer is cleared so it cannot
+// bring a question back after leaving; Begin Practice runs startGame(), a fresh run from Q1.
+function exitPaper() {
+  MaffsLock.clearTimers();
+  showScreen('startScreen');
 }
 
 function startGame() {

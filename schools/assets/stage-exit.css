@@ -17,3 +17,11 @@ body:has(#example.active) .stage-exit-row .stage-exit-stages{display:inline-flex
   .hud .stage-exit-stages,.hud .stage-exit-home{font-size:.75rem}
   #game .hud{gap:.1rem}
 }
+/* data-game naming a screen with no .hud (CORE-PAPER-EXIT, 17 Nov 2026): the header row holds both controls in the
+   back link's own place, no taller than the link was (15px at .82rem: the 44px targets overflow the row as in the HUD); the button
+   only while that screen is active, the home link always. */
+.stage-exit-row.stage-exit-inline{margin:.5rem 0}
+.stage-exit-row.stage-exit-inline a.back-link,.stage-exit-row.stage-exit-inline .stage-exit-stages{min-height:44px;margin:-14.5px 0}
+body:has(.stage-exit-play.active) .stage-exit-row.stage-exit-inline .stage-exit-stages{display:inline-flex}
+/* data-confirm="second-tap": the armed button reads "Tap again to exit" for 3 s */
+.stage-exit-stages.stage-exit-armed{color:var(--text);font-weight:600}

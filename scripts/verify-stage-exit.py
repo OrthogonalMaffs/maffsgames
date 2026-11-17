@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
-# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css schools/assets/calculator.js schools/assets/calculator.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/whose-side-are-you-on/ games/i-found-a-mark/ games/free-daily-pizza/ games/who-ate-all-the-pies/ games/cast-away/ games/its-a-sine/
+# ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; the four Core Maths papers' two-tap Exit paper, in play and on the section banner only, back to the start with nothing recorded and a fresh run after; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
+# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css schools/assets/calculator.js schools/assets/calculator.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/whose-side-are-you-on/ games/i-found-a-mark/ games/free-daily-pizza/ games/who-ate-all-the-pies/ games/cast-away/ games/its-a-sine/ games/core-maths-paper1/ games/core-maths-paper2a/ games/core-maths-paper2b/ games/core-maths-paper2c/
 """Verification for the shared stage-exit shell (contract STAGE-EXIT, Jon, 28 Oct 2026).
 
 The stage games hid "Back to Games" while a question was on screen and had no way back to the stage picker,
@@ -20,6 +20,22 @@ Planted faults (each must be caught): button never shown, back link hidden in pl
 leave submits to a board, leave leaves the Next control running, leave does nothing, a page that lost the script tag,
 Who Ate All the Pies? hiding its back link in play again (PIES-EXIT, 3 Nov 2026: its HUD row now has a phone budget,
 the calculator toggle an icon at phone widths, so it carries the shell like the rest).
+
+The four Core Maths papers (contract CORE-PAPER-EXIT, Jon, 17 Nov 2026) use the shell's options: data-game="#gameScreen"
+(no HUD, so the header row carries the controls in the back link's place), data-leave="exitPaper",
+data-confirm="second-tap" and data-label="← Exit paper". For each paper this asserts:
+  - the button is hidden on the start and results screens, the "← Games" link shown on every screen;
+  - during play, on the section banner and on a question, both are on screen, and the row is no taller than the
+    page's own back link was (no extra height);
+  - one tap shows "Tap again to exit" and does not leave; the label comes back after 3 s; two taps within 3 s land
+    on the start screen;
+  - leaving fires no game_completed, submits to no board and records no score, and the section banner's pending
+    timer cannot bring a question back;
+  - Begin Practice after leaving starts at Q1 with score 0;
+  - the "← Games" link goes to the portal.
+A stage game keeps its own default: its header row stays hidden on a question (the HUD carries the controls).
+Paper plants: a single tap leaves, leaving fires game_completed, the row hidden during play, and a stage game's
+default changed (the header row visible during #game).
 """
 import argparse
 import os
@@ -37,6 +53,9 @@ GAMES = ['its-on-sale', 'as-you-can-see', 'possibly-maybe',
 SIZES = [(320, 568), (360, 640), (375, 667), (390, 844), (1280, 720)]
 ASSETS = {'stage-exit.js': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.js'),
           'stage-exit.css': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.css')}
+PAPERS = ['core-maths-paper1', 'core-maths-paper2a', 'core-maths-paper2b', 'core-maths-paper2c']
+PAPER_LABEL = '← Exit paper'
+ARMED = 'Tap again to exit'
 LABEL = {'hc-factor': '← Rounds', 'i-found-a-mark': '← Menu', 'free-daily-pizza': '← Menu'}
 ACTIVE = "() => { const a = document.querySelector('.screen.active'); return a ? a.id : null; }"
 
@@ -117,7 +136,7 @@ def through_example(page, scr):
 
 def check_controls(page, slug, where, out, min_h=30):
     m = page.evaluate(MEASURE)
-    want = LABEL.get(slug, '← Stages')
+    want = PAPER_LABEL if slug in PAPERS else LABEL.get(slug, '← Stages')
     if not m['btn'] or not m['btn']['shown']:
         out.append('%s: no "%s" button on screen' % (where, want))
         return False
@@ -174,6 +193,8 @@ def exit_game(base, slug, size, out, sources=None):
                 return
             if not check_controls(page, slug, where + ' question', out):
                 return
+            if page.evaluate(ROW_SHOWN):
+                out.append('%s question: the header row shows during a question (the default: the HUD carries the controls)' % where)
             # a Next control pending when the student leaves must not advance the stage later
             page.evaluate("""() => { const host = document.querySelector('#game .qcard') || document.getElementById('game');
                 const mount = document.createElement('div'); host.appendChild(mount); window.__adv = 0;
@@ -199,6 +220,137 @@ def exit_game(base, slug, size, out, sources=None):
                 out.append('%s: page error %s' % (where, e[:120]))
         finally:
             br.close()
+
+
+ROW_SHOWN = "(() => { const r = document.querySelector('.stage-exit-row'); return !!r && getComputedStyle(r).display !== 'none'; })()"
+BTN_SHOWN = "[...document.querySelectorAll('.stage-exit-stages')].some(b => getComputedStyle(b).display !== 'none' && b.getBoundingClientRect().width > 0)"
+LINK_TXT = "(() => { const a = document.querySelector('a.back-link'); return a && getComputedStyle(a).display !== 'none' && a.getBoundingClientRect().width > 0 ? a.textContent.trim() : null; })()"
+# The row against the back link it replaced: a bare a.back-link probe, styled by the page alone, outside the row.
+ROW_VS_LINK = """() => { const row = document.querySelector('.stage-exit-row'); if (!row) return null;
+  const p = document.createElement('a'); p.className = 'back-link'; p.href = '#'; p.textContent = 'MaffsGames';
+  row.parentNode.insertBefore(p, row); const cs = getComputedStyle, pr = p.getBoundingClientRect(), rr = row.getBoundingClientRect();
+  const outer = (e, r) => r.height + parseFloat(cs(e).marginTop) + parseFloat(cs(e).marginBottom);
+  const res = [outer(row, rr), outer(p, pr)]; p.remove(); return res; }"""
+
+
+def paper_screen(page):
+    return page.evaluate("() => { const a = document.querySelector('.screen.active'); return a ? a.id : null; }")
+
+
+def paper_off_play(page, where, out):
+    """Start or results screen: no exit button, the home link shown and labelled."""
+    if page.evaluate(BTN_SHOWN):
+        out.append('%s: the Exit paper button shows on %s' % (where, paper_screen(page)))
+    txt = page.evaluate(LINK_TXT)
+    if txt != '← Games':
+        out.append('%s: the home link on %s reads %r, not shown as "← Games"' % (where, paper_screen(page), txt))
+
+
+def paper_exit(base, slug, size, out, sources=None):
+    where = '%s %dx%d' % (slug, size[0], size[1])
+    with sync_playwright() as pw:
+        br, page, errors = open_page(pw, base, slug, size, sources)
+        try:
+            paper_off_play(page, where + ' start', out)
+            # the button appears with #gameScreen but outside it: it must open in a MaffsLock fresh window, so the
+            # second click of a double-click on Begin Practice or Play again cannot land on it (check-answer-lock.py)
+            page.evaluate("() => { window.__fresh0 = MaffsLock.FRESH_MS; MaffsLock.FRESH_MS = 5000; }")
+            page.locator('.start-btn').click()
+            if not page.evaluate("() => MaffsLock.isFresh(document.getElementById('stageExitBtn'))"):
+                out.append('%s: the Exit paper button is open to a second click when the paper starts (no fresh window)' % where)
+            page.evaluate("() => { MaffsLock.FRESH_MS = window.__fresh0; MaffsLock.fresh(document.querySelector('.stage-exit-row'), 0); }")
+            page.wait_for_timeout(150)
+            if paper_screen(page) != 'gameScreen':
+                out.append('%s: Begin Practice did not start the paper' % where)
+                return
+            # the section banner is up (2 s): the controls are there too
+            if page.evaluate("document.getElementById('sectionBanner').style.display") == 'block':
+                if not check_controls(page, slug, where + ' section banner', out):
+                    return
+            else:
+                out.append('%s: no section banner after Begin Practice' % where)
+            m = page.evaluate(ROW_VS_LINK)
+            if m and m[0] > m[1] + 0.5:
+                out.append('%s: the row takes %.1f px, the back link it replaced %.1f px (extra height)' % (where, m[0], m[1]))
+            page.wait_for_function("document.getElementById('questionArea').style.display === 'block'", timeout=8000)
+            if not check_controls(page, slug, where + ' question', out):
+                return
+            # play three questions, so a fresh run is told apart from this one
+            for _ in range(3):
+                page.wait_for_function("document.getElementById('questionArea').style.display === 'block' && document.querySelector('#optionsContainer .option-btn')", timeout=8000)
+                page.locator('#optionsContainer .option-btn').first.click()
+                page.wait_for_timeout(60)
+                page.evaluate('nextQuestion()')
+            page.wait_for_function("document.getElementById('questionArea').style.display === 'block'", timeout=8000)
+            if page.evaluate('currentQ') != 3:
+                out.append('%s: could not play three questions (currentQ %s)' % (where, page.evaluate('currentQ')))
+            btn = page.locator('#stageExitBtn')   # the header row's button: no HUD on a paper
+            btn.click()
+            page.wait_for_timeout(200)
+            if paper_screen(page) != 'gameScreen':
+                out.append('%s: one tap left the paper (now %s)' % (where, paper_screen(page)))
+                return
+            if btn.text_content().strip() != ARMED:
+                out.append('%s: one tap shows %r, not %r' % (where, btn.text_content().strip(), ARMED))
+            page.wait_for_timeout(3100)
+            if btn.text_content().strip() != PAPER_LABEL:
+                out.append('%s: the button reads %r 3 s after one tap, not back to %r' % (where, btn.text_content().strip(), PAPER_LABEL))
+            if paper_screen(page) != 'gameScreen':
+                out.append('%s: the paper left by itself after one tap' % where)
+            # leave from the section banner, whose 2 s timer is pending: it must not bring a question back
+            page.evaluate("currentQ = (typeof SECTION_STARTS !== 'undefined') ? SECTION_STARTS[1] : 18; showSectionBanner(currentQ)")
+            btn.click()
+            page.wait_for_timeout(400)
+            btn.click()
+            page.wait_for_timeout(200)
+            if paper_screen(page) != 'startScreen':
+                out.append('%s: two taps within 3 s did not reach the start screen (on %s)' % (where, paper_screen(page)))
+            if 'game_completed' in page.evaluate('window.__ev'):
+                out.append('%s: leaving fired game_completed' % where)
+            if page.evaluate('window.__sub.length'):
+                out.append('%s: leaving submitted to a leaderboard' % where)
+            if page.evaluate('window.__hist.length'):
+                out.append('%s: leaving recorded a score' % where)
+            page.wait_for_timeout(2300)
+            if page.evaluate("document.getElementById('questionArea').style.display") == 'block':
+                out.append('%s: the section banner\'s timer brought a question back after leaving' % where)
+            if paper_screen(page) != 'startScreen':
+                out.append('%s: the page left the start screen by itself (now %s)' % (where, paper_screen(page)))
+            paper_off_play(page, where + ' after leaving', out)
+            if btn.text_content().strip() != PAPER_LABEL:
+                out.append('%s: the button still reads %r after leaving' % (where, btn.text_content().strip()))
+            # a fresh run
+            page.locator('.start-btn').click()
+            page.wait_for_function("document.getElementById('questionArea').style.display === 'block'", timeout=8000)
+            st = page.evaluate("[currentQ, score, answers.length, document.getElementById('qCounter').textContent]")
+            if st[:3] != [0, 0, 0] or not st[3].startswith('Q1 '):
+                out.append('%s: Begin Practice after leaving is not a fresh run (currentQ, score, answers, counter = %s)' % (where, st))
+            # the results screen: no exit button
+            page.evaluate("showScreen('resultsScreen')")
+            paper_off_play(page, where + ' results', out)
+            page.evaluate("showScreen('gameScreen')")
+            page.locator('a.back-link:visible').first.click()
+            page.wait_for_load_state('load')
+            path = re.sub(r'^https?://[^/]+', '', page.url).split('?')[0]
+            if path != '/':
+                out.append('%s: the home link went to %s, not the portal' % (where, path))
+            for e in errors:
+                out.append('%s: page error %s' % (where, e[:120]))
+        finally:
+            br.close()
+
+
+def paper_fit(base, size, out):
+    for slug in PAPERS:
+        where = '%s %dx%d' % (slug, size[0], size[1])
+        with sync_playwright() as pw:
+            br, page, errors = open_page(pw, base, slug, size)
+            try:
+                page.locator('.start-btn').click()
+                page.wait_for_function("document.getElementById('questionArea').style.display === 'block'", timeout=8000)
+                check_controls(page, slug, where + ' question', out)
+            finally:
+                br.close()
 
 
 def fit_size(base, size, out):
@@ -251,6 +403,21 @@ PLANTS = [
      dict(js=[('if (go) go.click();', 'void go;')]),
      r'did not reach the picker'),
     ('a page that lost the script tag', 'i-found-a-mark', 'NOSCRIPT', r'no ".*" button on screen'),
+    ('a stage game\'s header row shows during a question', 'its-on-sale',
+     dict(css=[('body:has(#game.active) .stage-exit-row{display:none}', 'body:has(#game.active) .stage-exit-row{display:flex}')]),
+     r'header row shows during a question'),
+    ('paper: a single tap leaves', 'core-maths-paper2a',
+     dict(js=[('if (!secondTap) { leave(); return; }', 'leave(); return;')]),
+     r'one tap left the paper'),
+    ('paper: leaving fires game_completed', 'core-maths-paper1',
+     dict(js=[('    if (leaveName) {', "    if (window.mfg) mfg('game_completed', {});\n    if (leaveName) {")]),
+     r'fired game_completed'),
+    ('paper: the button opens with no fresh window', 'core-maths-paper2b',
+     dict(js=[('if (on && !wasActive && window.MaffsLock) MaffsLock.fresh(row);', 'void wasActive;')]),
+     r'open to a second click when the paper starts'),
+    ('paper: the row hidden during play', 'core-maths-paper2c',
+     dict(css=[('.stage-exit-row.stage-exit-inline{margin:.5rem 0}', '.stage-exit-row.stage-exit-inline{margin:.5rem 0}body:has(#gameScreen.active) .stage-exit-row{display:none}')]),
+     r'no ".*" button on screen'),
     ('Pies hides its back link in play again', 'who-ate-all-the-pies',
      ('PAGE', [('.badge-row{text-align:center;min-height:0}\n', '.badge-row{text-align:center;min-height:0}\nbody.playing a.back-link{display:none}\n')]),
      r'Back to Games link is not on screen'),
@@ -275,7 +442,7 @@ def run_plant(p):
         srcs = mutate(edit.get('js', ()), edit.get('css', ()))
     proc, base = bc.start_stub_server()
     try:
-        exit_game(base, slug, (375, 667), out, sources=srcs)
+        (paper_exit if slug in PAPERS else exit_game)(base, slug, (375, 667), out, sources=srcs)
     finally:
         proc.terminate()
     hit = [g for g in out if re.search(want, g)]
@@ -292,7 +459,8 @@ def main():
     except (AttributeError, ValueError):
         pass
     shard = bc.Shard(__file__, args)
-    units = ['exempt'] + ['exit ' + g for g in GAMES] + ['fit %dx%d' % s for s in SIZES] + ['plant: ' + p[0] for p in PLANTS]
+    units = (['exempt'] + ['exit ' + g for g in GAMES] + ['paper ' + g for g in PAPERS] + ['fit %dx%d' % s for s in SIZES]
+             + ['plant: ' + p[0] for p in PLANTS])
     if args.list_units:
         print('\n'.join(units))
         return 0
@@ -312,11 +480,17 @@ def main():
                 with shard.unit('exit ' + g):
                     exit_game(base, g, (375, 667), out)
                 print('stage-exit: %s left from the worked example and a question, to the picker and the portal' % g)
+        for g in PAPERS:
+            if 'paper ' + g in mine:
+                with shard.unit('paper ' + g):
+                    paper_exit(base, g, (375, 667), out)
+                print('stage-exit: %s two-tap exit to the start screen, nothing recorded, a fresh run after' % g)
         for s in SIZES:
             if 'fit %dx%d' % s in mine:
                 with shard.unit('fit %dx%d' % s):
                     fit_size(base, s, out)
-                print('stage-exit: both controls in view on all %d games at %dx%d' % ((len(GAMES),) + s))
+                    paper_fit(base, s, out)
+                print('stage-exit: both controls in view on all %d games and %d papers at %dx%d' % ((len(GAMES), len(PAPERS)) + s))
     finally:
         proc.terminate()
     for p in PLANTS:
