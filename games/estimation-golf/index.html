@@ -278,7 +278,7 @@ table.holes tr.done-row td { color: #555; }
   align-items: center;
   margin-bottom: 10px;
 }
-input[type=number] {
+#answerInput {
   flex: 1;
   padding: 10px 14px;
   font-family: 'Courier Prime', monospace;
@@ -289,11 +289,8 @@ input[type=number] {
   color: var(--ink);
   outline: none;
   transition: border-color 0.15s;
-  -moz-appearance: textfield;
 }
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; }
-input[type=number]:focus { border-color: var(--green); }
+#answerInput:focus { border-color: var(--green); }
 .submit-btn {
   padding: 10px 22px;
   background: var(--green);
@@ -484,7 +481,7 @@ input[type=number]:focus { border-color: var(--green); }
   .game-wrap { grid-template-columns: minmax(0, 1fr); width: 100%; }
   .play-area { order: -1; min-width: 0; }
   .scorecard { min-width: 0; }
-  input[type=number] { min-width: 0; }
+  #answerInput { min-width: 0; }
 }
 body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 </style>
@@ -495,6 +492,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {
   "ready": "document.getElementById('holeCard').style.display !== 'none' && !!currentQ",
@@ -590,7 +588,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
       <p class="question-text" id="questionText">Loading...</p>
       <div class="hint-text" id="hintText"></div>
       <div class="input-row">
-        <input type="number" id="answerInput" placeholder="Your estimate..." autocomplete="off">
+        <input type="text" inputmode="decimal" id="answerInput" placeholder="Your estimate..." autocomplete="off">
         <button class="submit-btn" id="submitBtn" onclick="submitAnswer()">Swing ⛳</button>
       </div>
       <div style="display:flex;gap:8px;margin-bottom:4px">
@@ -821,7 +819,9 @@ function showHint() {
 function submitAnswer() {
   const raw = document.getElementById('answerInput').value.trim();
   if (raw === '') return;
-  const guess = parseFloat(raw);
+  // A text box (contract ANSWER-BOX-TEXT, Amendment 2 (Jon, 17 Nov 2026)): what MaffsAnswer.parse cannot read ("1,000,000", "12abc") is
+  // refused, as the old number box emptied it, not read by parseFloat as 1 or 12. Anything else is read exactly as before.
+  const guess = MaffsAnswer.parse(raw) === null ? NaN : parseFloat(raw);
   if (isNaN(guess)) return;
   if (!MaffsLock.lock(holeEl)) return;
 

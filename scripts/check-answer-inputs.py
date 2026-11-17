@@ -42,8 +42,7 @@ ROOT = os.path.dirname(HERE)
 SCOPE = ('games', os.path.join('schools', 'assets'))
 
 EXEMPT = {
-    'games/estimation-golf/index.html': 'PR 2 of ANSWER-BOX-TEXT (it marks by its own code; its change is proved separately)',
-    'games/glorious-gantt/index.html': 'PR 2 of ANSWER-BOX-TEXT (it marks by its own code; its change is proved separately)',
+    # Empty since PR 2 of ANSWER-BOX-TEXT (estimation-golf and glorious-gantt). An entry needs a path and its reason.
 }
 
 # type="number" as an attribute: not after [ (a selector), a word character, '.', '-' or ':' (another attribute or a property).

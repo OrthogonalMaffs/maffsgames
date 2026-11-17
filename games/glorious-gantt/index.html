@@ -132,6 +132,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/level.js"></script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/answer.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
@@ -959,17 +960,22 @@ function renderForwardPass(q){
   box.innerHTML=`<div class="step-label">Step 2 — Forward Pass</div>
     <div class="step-prompt">Enter the early time for Node ${next.id}.</div>
     <div class="step-hint">Early time = maximum of (predecessor early time + arc duration) for all incoming arcs. Start node = 0.</div>
-    <input type="number" class="num-input" id="earlyInput" placeholder="Early time" step="1">
+    <input type="text" inputmode="decimal" class="num-input" id="earlyInput" placeholder="Early time">
     <button class="check-btn" onclick="checkEarly(${next.id})">Check</button>
     <div id="stepFb"></div>`;
 }
 
 function _trackGG(ok){G._qaIdx++;mfg('question_answered',{game_slug:'glorious-gantt',level:G.level,correct:ok,question_index:G._qaIdx});}
 
+// The boxes are text boxes (contract ANSWER-BOX-TEXT, Amendment 2 (Jon, 17 Nov 2026)): what MaffsAnswer.parse cannot read ("1,000",
+// "12abc") is refused, as the old number boxes emptied it, not read by parseInt as 1 or 12. Anything else is read exactly as
+// before, by parseInt ("2.5" as 2).
+function typedInt(raw){return MaffsAnswer.parse(raw)===null?NaN:parseInt(raw);}
+
 function checkEarly(nodeId){
   const q=G.questions[G.qIdx];
   const node=q.nodes.find(n=>n.id===nodeId);
-  const val=parseInt($('earlyInput').value);
+  const val=typedInt($('earlyInput').value);
   if(isNaN(val))return;
   const fb=$('stepFb');
   if(val===node.early){
@@ -996,7 +1002,7 @@ function renderBackwardPass(q){
   box.innerHTML=`<div class="step-label">Step 3 — Backward Pass</div>
     <div class="step-prompt">Enter the late time for Node ${next.id}.</div>
     <div class="step-hint">Late time = minimum of (successor late time − arc duration) for all outgoing arcs. End node: late = early.</div>
-    <input type="number" class="num-input" id="lateInput" placeholder="Late time" step="1">
+    <input type="text" inputmode="decimal" class="num-input" id="lateInput" placeholder="Late time">
     <button class="check-btn" onclick="checkLate(${next.id})">Check</button>
     <div id="stepFb"></div>`;
 }
@@ -1004,7 +1010,7 @@ function renderBackwardPass(q){
 function checkLate(nodeId){
   const q=G.questions[G.qIdx];
   const node=q.nodes.find(n=>n.id===nodeId);
-  const val=parseInt($('lateInput').value);
+  const val=typedInt($('lateInput').value);
   if(isNaN(val))return;
   const fb=$('stepFb');
   if(val===node.late){
@@ -1083,14 +1089,14 @@ function renderFloats(q){
   box.innerHTML=`<div class="step-label">Step 5 — Calculate Floats</div>
     <div class="step-prompt">Calculate the float for activity ${act.id} (${act.desc}).</div>
     <div class="step-hint">Float = Late time at end node − Early time at start node − Duration</div>
-    <input type="number" class="num-input" id="floatInput" placeholder="Float" step="1">
+    <input type="text" inputmode="decimal" class="num-input" id="floatInput" placeholder="Float">
     <button class="check-btn" onclick="checkFloat('${act.id}',${expected})">Check</button>
     <div id="stepFb"></div>`;
 }
 
 function checkFloat(actId,expected){
   const q=G.questions[G.qIdx];
-  const val=parseInt($('floatInput').value);
+  const val=typedInt($('floatInput').value);
   if(isNaN(val))return;
   const fb=$('stepFb');
   if(val===expected){
@@ -1175,7 +1181,7 @@ function renderGanttQs(q){
 
   if(gq.type==='read'){
     box.innerHTML=`<div class="step-label">Gantt Q${G.gqIdx+1}</div><div class="step-prompt">${gq.prompt}</div>
-      <input type="number" class="num-input" id="gqInput" step="1">
+      <input type="text" inputmode="decimal" class="num-input" id="gqInput">
       <button class="check-btn" onclick="checkGQ_read()">Check</button><div id="stepFb"></div>`;
   } else {
     const opts=[{text:gq.correct,c:true},...gq.wrong.map(w=>({text:w,c:false}))];
@@ -1189,7 +1195,7 @@ function renderGanttQs(q){
 
 function checkGQ_read(){
   const q=G.questions[G.qIdx],gq=q.ganttQs[G.gqIdx];
-  const val=parseInt($('gqInput').value);if(isNaN(val))return;
+  const val=typedInt($('gqInput').value);if(isNaN(val))return;
   const fb=$('stepFb');
   if(val===gq.answer){
     G.score+=10;$('hudScore').textContent=G.score;
