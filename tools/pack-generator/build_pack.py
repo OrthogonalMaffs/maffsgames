@@ -28,8 +28,9 @@ The build, in order; any failure stops it before a PDF exists:
   2. Selection: every joint draw (one variant per lock) is judged by draw_is_valid(); from the VALID ones, N are chosen
      with every lock's answers distinct across the N sets, and no set where a lock's printed common wrong answer is
      its printed answer (HAMSTER-PACK-FINAL), and every set's final padlock of one difficulty class with its product
-     in one window (contract FINAL-PADLOCK-FAIR; final.py's docstring). Deterministic for a seed (a seeded shuffle,
-     then a search).
+     in one window (contract FINAL-PADLOCK-FAIR; final.py's docstring), the easiest class that reaches N first
+     (easiest class first, Jon, 17 Nov 2026, contract PADLOCK-EASIEST-HINT). Deterministic for a seed (a seeded
+     shuffle of the draws, then a search).
   3. Verification: lockcheck.py recomputes every answer, common wrong answer and worked-solution figure from each
      variant's givens, by a method independent of the generator that made them. Any mismatch stops the build.
   4. Render: one HTML page per A4 page, printed to PDF by Playwright's Chromium with the network shut (fonts from the
@@ -849,14 +850,23 @@ def checker_flat(x):
     return frozenset(x if isinstance(x, list) else [x])
 
 
-def choose(checker, valid, locks, n, seed, grades=None):
+def class_order(classes, seed):
+    """The order choose() tries the difficulty classes in: easiest first (Jon, 17 Nov 2026, contract
+    PADLOCK-EASIEST-HINT; it was a seeded shuffle, which gave Car Trap 1-digit x 3-digit when easier classes were
+    there). The seed is not used: kept so a plant can put the old order back."""
+    return sorted(classes, key=lambda k: () if k is None else finalpad.ease(k))
+
+
+def choose(checker, valid, locks, n, seed, grades=None, only=None):
     """(N VALID draws with every lock's answers distinct across them, the pack's (class, lo)), or BuildError naming
     the best class found. grades(draw) gives {target: (class, product)} for every final-padlock target the draw allows
     (finalpad.difficulty; Amendment 11's friendly product and the 10,000 ceiling already applied). Every set must have
     a target of ONE class, its product in one window [lo, finalpad.RATIO_MAX x lo] (contract FINAL-PADLOCK-FAIR, Jon,
-    17 Nov 2026). The classes are tried in an order fixed by the seed, each class's windows smallest product first;
-    for each, the draws are shuffled by the seed and searched in that order (depth first), so a seed gives one pack.
-    With no grades, any draw is usable and there is no class (lo and class None)."""
+    17 Nov 2026). The classes are tried easiest first (class_order(), finalpad.ease; easiest class first, Jon, 17 Nov
+    2026, contract PADLOCK-EASIEST-HINT), each class's windows smallest product first; the first class and window that
+    reach N win. For each, the draws are shuffled by the seed and searched in that order (depth first), so a seed gives
+    one pack. With only, just that class is tried (easiest_class_problems). With no grades, any draw is usable and
+    there is no class (lo and class None)."""
     refused = [p for p in valid if miss_is_answer(locks, p)]          # HAMSTER-PACK-FINAL; none in most rooms
     usable = [p for p in valid if not miss_is_answer(locks, p)]
     g = {p: grades(p) for p in usable} if grades else {p: {None: (None, None)} for p in usable}
@@ -864,8 +874,9 @@ def choose(checker, valid, locks, n, seed, grades=None):
     order0 = list(usable)
     random.Random(seed).shuffle(order0)
     ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order0}
-    classes = sorted({k for p in usable for k, _ in g[p].values()}, key=repr)
-    random.Random("%s-class" % seed).shuffle(classes)
+    classes = class_order(sorted({k for p in usable for k, _ in g[p].values()}, key=repr), seed)
+    if only is not None:
+        classes = [k for k in classes if k == only]
     best = (0, None, None)
 
     def search_n(order):
@@ -913,6 +924,40 @@ def choose(checker, valid, locks, n, seed, grades=None):
                      "refused as a common wrong answer prints as the answer, %d usable)"
                      % (best[0], finalpad.PRODUCT_MAX, finalpad.RATIO_MAX, n, named, len(valid), len(refused),
                         len(usable)))
+
+
+def easiest_class_problems(checker, valid, locks, n, seed, grades, grade):
+    """Every difficulty class easier than the pack's (finalpad.ease) that, tried on its own by choose(), reaches N sets
+    (contract PADLOCK-EASIEST-HINT: the easiest class that reaches N is the pack's). (problems, [(class, found)] for
+    every easier class, each found below N)."""
+    klass = grade[0]
+    if klass is None:
+        return [], []
+    usable = [p for p in valid if not miss_is_answer(locks, p)]
+    easier = sorted({k for p in usable for k, _ in grades(p).values()
+                     if k is not None and finalpad.ease(k) < finalpad.ease(klass)}, key=finalpad.ease)
+    out, tried = [], []
+    for k in easier:
+        try:
+            choose(checker, valid, locks, n, seed, grades, only=k)
+        except BuildError as e:
+            m = re.match(r"only (\d+) sets", str(e))
+            tried.append((k, int(m.group(1)) if m else None))
+            continue
+        out.append("the pack's final padlocks are %s, but the easier class %s reaches %d sets (easiest class first, "
+                   "Jon, 17 Nov 2026)" % (finalpad.describe(klass), finalpad.describe(k), n))
+    return out, tried
+
+
+def grader(checker, locks, shape, target=None):
+    """grades(draw) for choose(): every final-padlock target the draw allows, with its difficulty class and product
+    (finalpad.difficulty; contract FINAL-PADLOCK-FAIR)."""
+    def grades(pk):
+        c = finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)
+        if target is not None:                   # --target: only that target, in whatever class it is
+            c = {target: c[target]} if target in c else {}
+        return {t: finalpad.difficulty(v[0]) for t, v in c.items()}
+    return grades
 
 
 def answers_of(checker, locks, s):
@@ -1758,13 +1803,14 @@ def about_box(room, teach, locks, sets, rating):
             "read-outs, score sheet, this key, worked solutions, hint cards, certificate.</p>"
             "<p><b>Locks:</b> %s.</p>%s"
             "<p><b>Final padlock (for you only):</b> every set&rsquo;s one solution is %s; targets %d to %d. "
-            "Estimation is the intended route: round the target, then find the two answers whose product is close.</p>"
+            "%s</p>"
             "<p>The common wrong answers below are for the debrief.</p>"
             "<p>Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p></div>"
             % (len(sets), letters[0], letters[-1], topics,
                "<p><b>Level:</b> %s (%d of 3 stars), grades %s, set by the hardest lock.</p>"
                % (esc(rating["name"]), rating["stars"], esc(rating["grades"])),
-               finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets)))
+               finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets),
+               final_key_line(sets[0]["final"]["shape"])))
 
 
 TEACHER_KINDS = ("run", "key", "solutions")   # the teacher's reference pages; the read-outs are spoken to students and
@@ -1801,14 +1847,68 @@ def final_section(letter, n, target):
             % (letter, n, target, target))
 
 
-FINAL_HINT = "Is the target close to a round number? Which two of your answers multiply to about that?"
+def final_hint(shape):
+    """The final padlock's student hint card, from the pack's shape (final.SHAPES; contract PADLOCK-EASIEST-HINT), or
+    BuildError naming a shape with none."""
+    try:
+        return finalpad.shape_wording(shape)[0]
+    except ValueError as e:
+        raise BuildError(str(e))
+
+
+def final_key_line(shape):
+    """The answer key's line on the final padlock's intended route, from the pack's shape (as final_hint)."""
+    try:
+        return finalpad.shape_wording(shape)[1]
+    except ValueError as e:
+        raise BuildError(str(e))
+
+
+def final_wording_problems(shape, pages_text):
+    """The pack's hint card or key not carrying its own shape's wording, or carrying another shape's, or any shape's
+    wording broken (final.shape_wording_problems; contract PADLOCK-EASIEST-HINT)."""
+    out = list(finalpad.shape_wording_problems())
+    try:
+        mine = finalpad.shape_wording(shape)
+    except ValueError as e:
+        return out + [str(e)]
+    others = [(name, w) for name in finalpad.SHAPES if name != shape
+              for w in finalpad.SHAPES[name][2:4] if isinstance(w, str) and w.strip()]
+    for kind, want in (("hints", mine[0]), ("key", mine[1])):
+        texts = [" ".join(t.split()) for k, t in pages_text if k == kind]
+        if not texts:
+            out.append("no %s page to check the final padlock's wording on" % kind)
+        elif not all(" ".join(text_of(want).split()) in t for t in texts):
+            out.append("a %s page does not carry the %s shape's wording (%r)" % (kind, shape, want))
+        for name, w in others:
+            if any(" ".join(text_of(w).split()) in t for t in texts):
+                out.append("a %s page carries the %s shape's wording, not %s's (%r)" % (kind, name, shape, w))
+        if "&times;" not in finalpad.SHAPES[shape][0]:   # a shape with no x: its final-padlock words never multiply
+            for t in texts:
+                part = final_part(kind, t)
+                said = [w for w in finalpad.MULTIPLY_WORDS if w in part.lower()]
+                if said:
+                    out.append("a %s page's final padlock says %r, and the %s shape has no ×: %r"
+                               % (kind, said[0], shape, part.strip()))
+    return out
+
+
+def final_part(kind, text):
+    """A page's final-padlock words: on a hints page the last card (after its last "Final padlock"), on the key the
+    "Final padlock (for you only):" paragraph, to "The common wrong answers"."""
+    if kind == "hints":
+        return text.rsplit("Final padlock", 1)[1] if "Final padlock" in text else ""
+    head = "Final padlock (for you only):"
+    if head not in text:
+        return ""
+    return text.split(head, 1)[1].split("The common wrong answers", 1)[0]
 STUDENT_KINDS = ("cover", "evidence", "locks", "hints")
 CALC_ALLOWED = re.compile(r"calculators?\s+(?:allowed|permitted|may be used|can be used)|use (?:a|your) calculator", re.I)
 
 
 def student_page_final_problems(pages_text):
     """The final padlock's shape, or a calculator allowance, on a page a student sees (Amendment 11)."""
-    shapes = [" ".join(text_of(words).split()) for words, _ in finalpad.SHAPES.values()]
+    shapes = [" ".join(text_of(entry[0]).split()) for entry in finalpad.SHAPES.values()]
     out = []
     for kind, text in pages_text:
         if kind not in STUDENT_KINDS:
@@ -2104,7 +2204,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
                         for k in range(max(len(l.get("hints", [])) for l in locks))
                         for l in locks for h in [l["hints"][k] if k < len(l.get("hints", [])) else ""])
         cards += ("<div class='hint'><div class='which'>Hint 1 of 1</div><div class='lockname'>Final padlock</div>"
-                  "<div class='text'>%s</div></div>" % FINAL_HINT)
+                  "<div class='text'>%s</div></div>" % final_hint(shape))
         rows = -(-(cards.count("<div class='hint'>")) // 3)
         sub = "Cut out" + ("" if s else ". The same for every set")
         pages.append(page("hints", "<div class='hints' style='grid-template-rows: repeat(%d, 1fr)'>%s</div>" % (rows, cards),
@@ -2186,11 +2286,8 @@ def prepare(slug, n, seed, page, target=None):
     valid, total = valid_picks(checker, room_js, locks)
     shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
 
-    def grades(pk):                              # FINAL-PADLOCK-FAIR: every target's difficulty class and product
-        c = finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)
-        if target is not None:                   # --target: only that target, in whatever class it is
-            c = {target: c[target]} if target in c else {}
-        return {t: finalpad.difficulty(v[0]) for t, v in c.items()}
+    final_hint(shape), final_key_line(shape)     # PADLOCK-EASIEST-HINT: a shape with no wording stops the build
+    grades = grader(checker, locks, shape, target)   # FINAL-PADLOCK-FAIR: every target's difficulty class and product
     sets, grade = choose(checker, valid, locks, n, seed, grades)
     add_finals(checker, locks, sets, seed, shape, target, grade)
     for s in sets:
@@ -2299,6 +2396,7 @@ def build(slug, n, seed, target=None, final=False):
                            + hook_problems(text_of(room.get("hook")), text_of(start_html),
                                            [t for k, t in audit["text"] if k == "cover"])
                            + teacher_page_problems(audit["text"]) + student_page_final_problems(audit["text"])
+                           + final_wording_problems(shape, audit["text"])
                            + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug, readout_pages)
                            + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"])
                            + draft_notes_problems(audit["notes"], notes))
@@ -2384,6 +2482,9 @@ def selftest():
             for slug in rooms:
                 checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = prepare(slug, None, None, pg)
                 greys_of[slug] = answer_box_greys(pg, cfg, slug)
+                shape_r = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
+                easiest, tried = easiest_class_problems(checker, valid, locks, n, seed,
+                                                        grader(checker, locks, shape_r), sets[0]["grade"])
                 probs = (check_sets(checker, room_js, locks, sets) + verify_sets(locks, sets)[0]
                          + check_score_sheet(score_sheet(locks, sets), locks, sets)
                          + verify_finals(checker, locks, sets, cfg.get("final_shape", finalpad.DEFAULT_SHAPE))
@@ -2398,8 +2499,14 @@ def selftest():
                                          [text_of(cover_story(room, filler(locks, sets[0])))])
                          + student_page_final_problems([("locks", text_of(final_section(x["letter"], len(locks),
                                                                                        x["final"]["target"])))
-                                                        for x in sets] + [("hints", FINAL_HINT)]))
-                print("%s: %d sets chosen from %d VALID draws; %s" % (slug, n, len(valid), "OK" if not probs else probs))
+                                                        for x in sets] + [("hints", final_hint(shape_r))])
+                         + final_wording_problems(shape_r, [("hints", final_hint(shape_r)),
+                                                            ("key", text_of(about_box(room, teach, locks, sets, rating)))])
+                         + easiest)
+                print("%s: %d sets chosen from %d VALID draws, class %s (easier: %s); %s"
+                      % (slug, n, len(valid), finalpad.describe(sets[0]["grade"][0]),
+                         ", ".join("%s %s" % (finalpad.describe(k), f) for k, f in tried) or "none",
+                         "OK" if not probs else probs))
                 failures += probs
                 shape0 = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
                 probs += teacher_page_problems(

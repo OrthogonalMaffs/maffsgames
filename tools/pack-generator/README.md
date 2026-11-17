@@ -65,14 +65,22 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    difficulty (the same contract: "all final locks on a room should be of a similar difficulty"): with a
    multiplication, every set's product has the same digit counts (every set 1-digit × 2-digit, say) and the largest
    product is at most 3 × the smallest; in plus-and-minus, every set's largest term has the same number of digits.
-   The build searches the classes in an order fixed by the seed (each class's product windows smallest first) for
-   enough sets, then draws each set's target from that class and window; no class reaching the set count fails the
+   The build searches the classes easiest first (easiest class first, Jon, 17 Nov 2026, contract
+   PADLOCK-EASIEST-HINT: 1×1, 1×2, 1×3, 1×4, then 2×2, 2×3, short multiplication before long; in plus-and-minus, the
+   fewest digits in the largest term), each class's product windows smallest first, for enough sets; the first class
+   and window that reach the set count win, and each set's target is drawn from that class and window; no class reaching the set count fails the
    build, naming the best class found. The sets are chosen so every set has one, or the build fails. Every pack was
    rebuilt under these rules, its `pack_version` raised by one (the Tes files are replaced: todo PACKS-V2-UPLOAD).
    The Heatwave Mutiny is plus-and-minus: its cube answers (1728 to 9261) cannot meet the rules with a
    multiplication.
    The shape is never printed for students (the build checks); "About this room" gives it, the target range and the
    intended route (estimation) for the teacher. Option B (one + and one -) is `"final_shape": "plus-and-minus"`.
+   Each shape in `final.py`'s `SHAPES` carries its own student hint card and key line on that route (contract
+   PADLOCK-EASIEST-HINT): one × and one + or −, "Is the target close to a round number? Which two of your answers
+   multiply to about that?"; plus-and-minus, "Which of your answers is closest to the target? Use the other two to
+   make up the difference." A shape with either missing stops the build by name, a shape with no × whose wording
+   speaks of multiplying or a product fails, and the build checks the printed hint card and key carry the pack's own
+   shape's wording and no other's.
 5. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
    figures printed on each object (asset tag, cable label, installation sheet, calibration log, instruction card)
    read clearly; the three red herrings (helpdesk ticket, emergency stop, firing screen) carry no number; the cover

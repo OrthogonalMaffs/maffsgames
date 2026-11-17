@@ -21,10 +21,16 @@ Every set in a pack is also the same DIFFICULTY (Jon, 17 Nov 2026: "all final lo
 difficulty"; contract FINAL-PADLOCK-FAIR). difficulty() gives a target's class: in a shape with a multiplication, the
 digit counts of the product's two factors (every set 1-digit x 3-digit, say), and every product in the pack lies in one
 window [lo, RATIO_MAX x lo], RATIO_MAX = 3; in "plus-and-minus", the number of digits in the largest term. build_pack.py
-choose() searches the classes in an order fixed by the seed, and each class's windows smallest first, for N sets that
-each have a target in the class and window; each set's target is then drawn from just those by the seeded choice below.
+choose() searches the classes easiest first (ease(); easiest class first, Jon, 17 Nov 2026, contract
+PADLOCK-EASIEST-HINT), and each class's windows smallest first, for N sets that each have a target in the class and
+window; the first class and window that reach N win, and each set's target is then drawn from just those by the
+seeded choice below.
 No class reaching N sets fails the build, naming the best class found. lockcheck.pack_problems() checks the printed
 pack again.
+
+Each shape carries its own wording (contract PADLOCK-EASIEST-HINT, Jon, 17 Nov 2026): the student's hint card and the
+answer key's line on the intended route, so a pack never prints another shape's advice (a plus-and-minus pack told to
+multiply). shape_wording() gives them, and refuses a shape with either missing, by name.
 
 tools/pack-generator/lockcheck.py checks every target again by its own evaluator, search and shape count.
 """
@@ -36,15 +42,73 @@ from fractions import Fraction
 PRODUCT_MAX = 10000     # no product in a final padlock above this (Jon, 17 Nov 2026, FINAL-PADLOCK-FAIR)
 RATIO_MAX = 3           # a pack's largest product at most this many times its smallest (the same contract)
 SYM = {"+": "+", "-": "−", "*": "×", "/": "÷"}
-SHAPES = {   # name: (the rule as the locks page says it, the operator counts it allows)
+SHAPES = {   # name: (the rule as the locks page says it, the operator counts it allows, the student's hint card,
+             #        the answer key's line on the intended route; the last two contract PADLOCK-EASIEST-HINT)
     "times-and-plus-or-minus": ("one &times; and one + or &minus;",
-                                lambda c: c["*"] == 1 and c["/"] == 0 and c["+"] + c["-"] == 1),
+                                lambda c: c["*"] == 1 and c["/"] == 0 and c["+"] + c["-"] == 1,
+                                "Is the target close to a round number? Which two of your answers multiply to about "
+                                "that?",
+                                "Estimation is the intended route: round the target, then find the two answers whose "
+                                "product is close."),
     "plus-and-minus": ("one + and one &minus;",
-                       lambda c: c["*"] == 0 and c["/"] == 0 and c["+"] == 1 and c["-"] == 1),
+                       lambda c: c["*"] == 0 and c["/"] == 0 and c["+"] == 1 and c["-"] == 1,
+                       "Which of your answers is closest to the target? Use the other two to make up the difference.",
+                       "Estimation is the intended route: find the answer closest to the target, then the two answers "
+                       "whose difference closes the gap."),
 }
+MULTIPLY_WORDS = ("multipl", "product")   # never in the wording of a shape with no &times; (PADLOCK-EASIEST-HINT)
 DEFAULT_SHAPE = "times-and-plus-or-minus"
 # Amendment 11: students are told only "each answer once, any of + - x /, no brackets, no calculator"; the shape is
 # never printed for them. Every product in a set's one solution must be friendly for mental or quick written methods.
+
+
+def shape_wording(shape, shapes=None):
+    """(the student's hint card, the answer key's line) for a shape, or ValueError naming the shape when either is
+    missing or empty (contract PADLOCK-EASIEST-HINT)."""
+    entry = (SHAPES if shapes is None else shapes).get(shape)
+    if entry is None:
+        raise ValueError("unknown final-padlock shape %r" % shape)
+    hint, key = (tuple(entry[2:4]) + (None, None))[:2]
+    missing = [what for what, text in (("student hint", hint), ("key line", key))
+               if not (isinstance(text, str) and text.strip())]
+    if missing:
+        raise ValueError("the final-padlock shape %r has no %s" % (shape, " and no ".join(missing)))
+    return hint, key
+
+
+def shape_wording_problems(shapes=None):
+    """Every shape whose wording is missing, or that has no &times; and yet speaks of multiplying (a product), or
+    that shares its wording with another shape (contract PADLOCK-EASIEST-HINT)."""
+    shapes = SHAPES if shapes is None else shapes
+    out, seen = [], {}
+    for name in sorted(shapes):
+        try:
+            hint, key = shape_wording(name, shapes)
+        except ValueError as e:
+            out.append(str(e))
+            continue
+        if "&times;" not in shapes[name][0]:
+            for what, text in (("student hint", hint), ("key line", key)):
+                said = [w for w in MULTIPLY_WORDS if w in text.lower()]
+                if said:
+                    out.append("the final-padlock shape %r has no &times;, yet its %s says %r: %r"
+                               % (name, what, said[0], text))
+        for what, text in (("student hint", hint), ("key line", key)):
+            if text in seen:
+                out.append("the final-padlock shapes %r and %r share their %s" % (seen[text], name, what))
+            seen[text] = name
+    return out
+
+
+def ease(klass):
+    """The sort key that puts the easiest difficulty class first (Jon, 17 Nov 2026, contract PADLOCK-EASIEST-HINT).
+    With a multiplication, the hardest product in the signature, compared by the digits of its smaller factor then of
+    its larger (1x1 < 1x2 < 1x3 < 1x4 < 2x2 < 2x3: short multiplication before long), then the number of products;
+    in plus-and-minus, the digits of the largest term."""
+    kind, sig = klass
+    if kind == "x":
+        return (max(sig), len(sig))
+    return sig
 
 
 def friendly(form):
