@@ -69,12 +69,19 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-17 (cloud): HEATWAVE-APPROVE (`docs/handover/contracts/2026-11-17-heatwave-approve.md`; Jon 17 Nov)
+## 2026-11-17 (cloud): SINE-NOT-SINE (`docs/handover/contracts/2026-11-17-sine-not-sine.md`; Jon 17 Nov)
+
+Agent Claude Code (cloud), branch `claude/blissful-heisenberg-lzfkax` from main 3349092 (after #809). Size: a new game in new files, unlisted.
+**Close-out carried (first commit):** HEATWAVE-APPROVE (#809, 862f7a6), recorded below; contract moved.
+Bank: all 120 answers recomputed independently by coordinates and vector addition before any build (scratch script): 120/120 agree, none within 0.005 of a 1 d.p. boundary, the eight ambiguous items each have two triangles and every other sine-angle item one.
+Next: build `games/its-a-sine/`, its verifier and the registrations; Gate; merge with merge-pr.py.
+
+## 2026-11-17 (cloud): HEATWAVE-APPROVE (`docs/history/contracts/2026-11-17-heatwave-approve.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/youthful-newton-86oz7b` restarted from main d23fe46 (after #808).
 **Close-out carried (first commit):** PADLOCK-EASIEST-HINT (#808), recorded below; contract moved.
 Done on the branch: `rooms/heatwave-mutiny/config.json` `"wording_approved": {"by": "Jon", "date": "2026-11-17"}` (Jon proofread the v2 PDF from main 58e4ea7: "approved, please remove the draft markings"); no other key changed. `build_pack.py heatwave-mutiny --final`: exit 0, "no page says DRAFT (--final)", page 1 178 words, `dist-packs/heatwave-mutiny-pack-v2.pdf` 36 pages (pypdf: no "DRAFT" on any page; title "The Heatwave Mutiny pack v2"); targets as #808 (A 1605, B 2587, C 3450, D 5949, E 6696, F 9380). Todo: HEATWAVE-PACK-APPROVE moved to `docs/history/todo-done.md`; PACKS-V2-UPLOAD no longer waits on #808 and lists heatwave-mutiny (v2) at £3. This file archived to under 16 KiB with check-context-size.py's own `archive()`.
-Next: Gate; merge with merge-pr.py.
+MERGED 17 Nov as 862f7a6 (#809; merged_by Vector52F; route merge-pr.py as this entry planned; this session cannot see that call's output). Main on the merge commit: check-site 44057701420 success, phone-fit-full 44057701474 success. Contract moved to `docs/history/contracts/`. Closed out by SINE-NOT-SINE's first commit.
 
 ## 2026-11-17 (cloud): PADLOCK-EASIEST-HINT (`docs/history/contracts/2026-11-17-padlock-easiest-hint.md`; Jon 17 Nov)
 
