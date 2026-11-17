@@ -4,6 +4,30 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-17 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/history/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
+
+Agent Claude Code (cloud), branch `claude/amazing-ptolemy-xiax6r` restarted from main 8af500e (#798 squash-merged). Tier not stated; treated as Medium (merge on green). Lane exception (Jon 18:06/18:08): tools/pack-generator/, scripts/test-pack-generator.py, scripts/gen-escape-variants.py, escape-rooms/variants.json, escape-rooms/hamster-heist/room.js.
+**Close-out carried (first commit):** HAMSTER-HEIST-PACK (#798, 5ee4713), recorded below; contract moved.
+Done on the branch: `miss_scale` (answer_units; `scale_of()`), `miss_is_answer()` in selection and `check_sets()` (every room), `lock_words` (`with_lock_words()`, validated, applied to the pack's copy of the lock so every word check reads it); lockcheck's heat-lamp printed miss is the rise; gen-escape-variants.py E3 appends three variants (runs 4, 5, 4: 50, 30, 45 per ten minutes; the seven existing unchanged; variants.json and room.js diffs heat-lamp only; check-escape-rooms passes). Hamster config: miss_scale 1, Jon's Hint 1 and missSays verbatim, wording approved 2026-11-16. `--final` build: 36 pages, no DRAFT, heat-lamp variants 9, 4, 3, 2, 6, 0 (no run of 10); targets 20897, 2120, 5544, 3310, 11080, 12000. Seven other packs: build_html's HTML byte-identical before/after, selection lines and targets identical. test-pack-generator.py: 67/67, then 21 plants caught and 8 controls pass. /updates/ line; todo HAMSTER-PACK-APPROVE closed, PI-FIGURE-BINDING added.
+**Merged** #799 as bf6cd95 via merge-pr.py, first attempt, last line "main bf6cd95 run 43930644204: GREEN", exit 0. Main's runs on bf6cd95 (push): check-site 43930644204 success 18:49:16 UTC, phone-fit-full 43930644108 success 18:49:07 UTC. Close-out carried by BEARING-BLITZ-GOAT's first commit (contract moved).
+
+## 2026-11-16 (cloud): HAMSTER-HEIST-PACK (`docs/history/contracts/2026-11-16-hamster-heist-pack.md`; Jon 16:41, 16:43, 16:53, 17:23)
+
+Agent Claude Code (cloud). Stopped twice on shared-code faults; Amendments 1 and 2 fixed them for every room: units matched as read (`as_read()`, `room_unit_spellings`); Amendment 11 refuses two factors of 100 or more (final.py, lockcheck); `fixed_penalties()` strict on the score sheet, penalty-worded on student pages. Seven other packs byte-identical, no target moved. Pack: 6 sets, seed 1, 36 pages; print-only overrides on five clue cards; printed unit "°C per ten minutes" (a digit is refused in a printed unit).
+**Merged (closed out by HAMSTER-PACK-FINAL's first commit):** #798 by merge-pr.py as 5ee4713 ("main 5ee4713 run 43921906834: GREEN", exit 0; the first attempt stopped on a one-off HTTP 502 during the Gate wait and the same script was re-run, no other route); main check-site 43921906834 success (17:58:50 UTC), phone-fit-full 43921906904 success (17:59:13 UTC), both push-triggered.
+Record: agent Claude Code; wall about 1:05; review cycles 0; amendments 2; usage n/a.
+
+## 2026-11-16 (cloud): BETTER-VALUE-GCSE-40 (`docs/handover/contracts/2026-11-16-better-value-gcse-40.md`; Jon 15:18)
+
+Agent Claude Code (cloud), branch `ccr-bd20fca4-euxido` restarted from main ef92245 (#795 squash-merged). Small; merges on green, by merge-pr.py only.
+**Close-out carried (first commit):** ANGLE-ACE-GCSE-45 (Amendments 1 and 2) merged #795 by merge-pr.py as 833f6e1 ("main 833f6e1 run 43882219345: GREEN", exit 0); main check-site 43882219345 success (14:19:57 UTC), phone-fit-full 43882219278 success (14:06:17 UTC), both push-triggered. Contract moved to docs/history/contracts/.
+Done on the branch: the twenty items appended verbatim (sliced from the saved contract; exact substring, 40 gcse ids); verify-better-value.py COUNTS gcse 40, docstring 90 items, the twenty REVIEW lines, BREAK_EVEN bv_gcse_038, MUST_SAY for 038-040; ledger B4 `better-value::gcse` gone (`extract-banks.py --only better-value`, `check-banks.py --write-ledger --only better-value`; the layer A flag goes violations to verified with it, as check-banks.py:1119 derives it from the entries); /updates/ line.
+Local: verify-better-value-claims.py "90 items, 360 conclusions; 0 known failure(s)" PASS, 7 self-tests caught; verify-better-value.py "90 items, every keyed and explanation figure recomputed, every card clicked in Chromium" PASS, 10 caught; verify-better-value-tax.py PASS; check-tax-year.py OK; check-banks --only better-value B1-B11 all 0; check-answer-count, check-question-id, check-levels, check-resit-page pass.
+**Merged (closed out by HAMSTER-HEIST-PACK's first commit):** #796 by merge-pr.py as fa88964 ("main fa88964 run 43903757375: GREEN", exit 0); main check-site 43903757375 success (16:20:15 UTC), phone-fit-full 43903757261 success (16:06:38 UTC), both push-triggered. Flake on the PR: run 43899954166 attempt 1, job "PR budget (measured times)" marked cancelled with every step succeeded, green on attempt 2. Contract moved to docs/history/contracts/.
+**For the home lane:** close todo LEDGER-B4-BETTER-VALUE; the roster row for Better Value (.claude/rules/game-roster.md) says "50 questions" and should say GCSE 40, Core 50.
+
 ## Moved 2026-11-16 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-16 (cloud): ANGLE-ACE-GCSE-45 (`docs/handover/contracts/2026-11-16-angle-ace-gcse-45.md`; Jon 11:15)
