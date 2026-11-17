@@ -286,6 +286,40 @@ SWEEP_JS = r"""(plan) => {
 }"""
 
 
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): every answer box is a text box; what is typed ("1,000") reaches MaffsAnswer
+# unchanged and is not marked ('unreadable'); and on a phone, where the shared keypad types (forced on here by its own
+# CONFIG.query), a minus key is offered and types a negative answer, since components and scalar products can be negative.
+BOXES_JS = r"""() => {
+  window.setTimeout = () => 0;
+  const out = [], raws = [], wrap = {};
+  for (const f of ['exact', 'decimal']) { wrap[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrap[f].apply(this, arguments); }; }
+  const q0 = MaffsKeypad.CONFIG.query; MaffsKeypad.CONFIG.query = '(min-width: 0px)';
+  try {
+    const all = []; for (const lv of ['gcse','alevel','level4']) for (const q of SCENARIOS[lv]) q.sqs.forEach((sq, i) => all.push([lv, q, i, sq]));
+    for (const type of ['vec2', 'vec3', 'num']) {
+      const hit = all.find(x => x[3].type === type);
+      if (!hit) { out.push('no ' + type + ' sub-question to test'); continue; }
+      const [lv, q, i, sq] = hit;
+      G.level = lv; G.questions = [q]; G.qIdx = 0; G.score = 0; G.total = 0; G.correct = 0; loadScenario(); G.sqIdx = i; loadSQ(q);
+      const boxes = [...document.querySelectorAll('#qBox .vec-input')];
+      boxes.forEach(b => { if (b.type !== 'text') out.push(q.id + '.' + (i + 1) + ' (' + type + '): a box is type="' + b.type + '", not a text box'); });
+      const minus = document.querySelector('#qBox .maffs-keypad-key[aria-label="Minus"]');
+      if (!minus) { out.push(q.id + '.' + (i + 1) + ' (' + type + '): no minus key on the phone keypad'); }
+      else {
+        minus.click(); document.querySelector('#qBox .maffs-keypad-key[data-val="3"]').click();
+        if (boxes[0].value !== '-3') out.push(q.id + '.' + (i + 1) + ' (' + type + '): the keypad typed ' + JSON.stringify(boxes[0].value) + ', not "-3"');
+      }
+      boxes.forEach(b => { b.value = '2'; }); boxes[0].value = '1,000';
+      raws.length = 0; const before = G.total;
+      if (type === 'num') checkNum(); else checkVec(boxes.length);
+      if (!raws.includes('1,000')) out.push(q.id + '.' + (i + 1) + ' (' + type + '): typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+      if (G.total !== before) out.push(q.id + '.' + (i + 1) + ' (' + type + '): "1,000" was marked');
+    }
+  } finally { MaffsKeypad.CONFIG.query = q0; for (const f in wrap) MaffsAnswer[f] = wrap[f]; }
+  return out;
+}"""
+
+
 KATEX_DIR = None   # --katex-dir: serve KaTeX from a local copy (a sandbox that refuses the CDN)
 
 
@@ -314,6 +348,7 @@ def check_page(fails, html):
             plan = check_bank(fails, scen)
             fails.extend(convention_fails(scen))
             res = page.evaluate(SWEEP_JS, plan)
+            fails.extend('BOX ' + f for f in page.evaluate(BOXES_JS))
             browser.close()
     finally:
         proc.terminate()
@@ -414,6 +449,9 @@ PLANTS = [
      "labels:['i','j','k'],anyMultiple:true}", "labels:['i','j','k']}"),
     ('AL2', 't4-004: the true option "C is on the perpendicular bisector"',
      "'C divides AB in the ratio 1 : 2'", "'C is on the perpendicular bisector'"),
+    ('BOX', 'ANSWER-BOX-TEXT: the single-number box back to type=number',
+     '<input type="text" class="vec-input" id="v0" placeholder="?" style="width:100px">', '<input type="number" class="vec-input" id="v0" placeholder="?" style="width:100px">'),
+    ('BOX', 'ANSWER-BOX-TEXT: the phone keypad without its minus key', "MaffsKeypad.mount(host,{targets:ins,keys:{minus:true},", "MaffsKeypad.mount(host,{targets:ins,keys:{},"),
 ]
 
 

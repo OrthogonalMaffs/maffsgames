@@ -590,6 +590,73 @@ PLAY_JS = """async (a) => {
 }"""
 
 
+# ANSWER-BOX-TEXT (Jon, 15 and 17 Nov 2026). Every answer box is a text box (a number box's arrows marked and wiped a
+# table cell). What is typed reaches MaffsAnswer unchanged: "1,000" and "12abc" are refused, never marked (a parseFloat
+# read would take them as 1 and 12), and for every string a number box could hold MaffsAnswer.parse gives parseFloat's
+# value. On a phone (the shared keypad forced on by its own CONFIG.query) the table, the reading and the turning point,
+# which can be negative, offer a minus key, and the table's Check button marks each typed cell as leaving it does.
+NUMBOX = ['0', '7', '-3', '12.5', '-0.25', '.5', '-.5', '1e3', '2.5E-2', '0012', '100.000', '-0']
+BOXES_JS = """(numbox) => {
+  const realTimeout = window.setTimeout; window.setTimeout = () => 0;
+  const out = [], raws = [], orig = MaffsAnswer.parse, q0 = MaffsKeypad.CONFIG.query;
+  for (const x of numbox) if (!Object.is(MaffsAnswer.parse(x), parseFloat(x))) out.push('MaffsAnswer.parse(' + JSON.stringify(x) + ') differs from parseFloat');
+  const wrapped = {};
+  for (const f of ['parse', 'exact', 'decimal']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  MaffsKeypad.CONFIG.query = '(min-width: 0px)';
+  const all = Object.values(SCENARIOS).flat();
+  const key = (sel, label) => document.querySelector(sel + ' .maffs-keypad-key[' + label + ']');
+  try {
+    // The table
+    const t = all.find(q => Object.keys(q.answers).length && !q.money && !/£/.test(q.yLabel));
+    G.questions = [t]; G.qIdx = 0; buildTable(t);
+    const cells = [...document.querySelectorAll('#tableBox input[data-x]')];
+    cells.forEach(c => { if (c.type !== 'text') out.push('table ' + t.id + ': a cell is type="' + c.type + '", not a text box'); });
+    if (!key('#tableKp', 'aria-label="Minus"')) out.push('table ' + t.id + ': no minus key on the phone keypad');
+    else {
+      key('#tableKp', 'aria-label="Minus"').click(); key('#tableKp', 'data-val="2"').click();
+      if (cells[0].value !== '-2') out.push('table ' + t.id + ': the keypad typed ' + JSON.stringify(cells[0].value) + ', not "-2"');
+    }
+    const btn = document.getElementById('tableCheck');
+    if (!btn || btn.hidden) out.push('table ' + t.id + ': no Check button in keypad mode');
+    else {
+      raws.length = 0; btn.click();
+      if (!raws.includes('-2')) out.push('table ' + t.id + ': Check did not mark the typed cell (MaffsAnswer read ' + JSON.stringify(raws) + ')');
+    }
+    for (const typed of ['1,000', '12abc']) {
+      buildTable(t); const c = document.querySelector('#tableBox input[data-x]');
+      raws.length = 0; c.value = typed; c.dispatchEvent(new Event('change'));
+      const td = c.closest('td');
+      if (!raws.includes(typed)) out.push('table ' + t.id + ': typed ' + JSON.stringify(typed) + ', MaffsAnswer read ' + JSON.stringify(raws));
+      if (td.classList.contains('correct-cell') || td.classList.contains('wrong-cell')) out.push('table ' + t.id + ': typed ' + JSON.stringify(typed) + ' was marked');
+    }
+    // The interpretation questions
+    document.getElementById('qBox').style.display = 'block';
+    for (const type of ['read', 'tp', 'extrap']) {
+      const q = all.find(s => s.iqs.some(iq => iq.type === type && !iq.money));
+      const i = q.iqs.findIndex(iq => iq.type === type && !iq.money);
+      G.questions = [q]; G.qIdx = 0; G.iqIdx = i; loadIQ(q);
+      const ids = type === 'tp' ? ['iqTpX', 'iqTpY'] : ['iqInput'];
+      ids.forEach(id => { const b = document.getElementById(id); if (b.type !== 'text') out.push(type + ' ' + q.id + ': ' + id + ' is type="' + b.type + '", not a text box'); });
+      const minus = key('#qBox', 'aria-label="Minus"');
+      if (type !== 'extrap' && !minus) out.push(type + ' ' + q.id + ': no minus key on the phone keypad');
+      if (type === 'extrap' && document.getElementById('iqInput').getAttribute('inputmode') !== 'decimal') out.push('extrap ' + q.id + ': the box has no inputmode="decimal"');
+      for (const typed of ['1,000', '12abc']) {
+        loadIQ(q); ids.forEach(id => { document.getElementById(id).value = '1'; });
+        document.getElementById(ids[0]).value = typed;
+        if (type === 'extrap') document.getElementById('iqReliable').value = 'yes';
+        raws.length = 0; const before = G.totalIQs;
+        if (type === 'tp') checkTPIQ(); else if (type === 'extrap') checkExtrapIQ(); else checkReadIQ();
+        if (!raws.includes(typed)) out.push(type + ' ' + q.id + ': typed ' + JSON.stringify(typed) + ', MaffsAnswer read ' + JSON.stringify(raws));
+        if (G.totalIQs !== before) out.push(type + ' ' + q.id + ': typed ' + JSON.stringify(typed) + ' was marked');
+      }
+    }
+  } finally {
+    MaffsKeypad.CONFIG.query = q0; for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; window.setTimeout = realTimeout;
+  }
+  return out;
+}"""
+
+
 def check_played(rep, scenarios, played):
     for s in scenarios:
         r = played.get(s['id'])
@@ -625,6 +692,7 @@ def load(patch_js=None, play=True):
                 page.evaluate(patch_js)
             bank = page.evaluate('JSON.parse(JSON.stringify(SCENARIOS))')
             fn_vals, played = {}, {}
+            played['__boxes__'] = page.evaluate(BOXES_JS, NUMBOX)
             for lvl, items in bank.items():
                 for s in items:
                     fn_vals[s['id']] = page.evaluate(FN_JS, s['id'])
@@ -767,6 +835,19 @@ def selftest(bank, fn_vals, played):
     caught = any(f.startswith('CM11 marking (iq') for f in rep.fails)
     ok = ok and caught
     lines.append('  self-test %-34s %s' % ('CM11 "Reliable" refused (old marking)', 'caught' if caught else '*** MISSED ***'))
+    # ANSWER-BOX-TEXT: each must fail the answer-box test (no scenario is played: the test runs on every load)
+    for name, patch in (
+            ('a table cell back to type=number', "(() => { const B = buildTable; buildTable = function (q) { B(q); "
+             "document.querySelectorAll('#tableBox input[data-x]').forEach(c => { c.type = 'number'; }); }; })()"),
+            ('a reading read by parseFloat again', "(() => { typedNum = function (raw) { return parseFloat(raw); }; })()"),
+            ('the phone keypad without its minus key', "(() => { const M = MaffsKeypad.mount; MaffsKeypad.mount = function (el, o) { "
+             "return M(el, Object.assign({}, o, {keys: {}})); }; })()"),
+            ('no table Check button in keypad mode', "(() => { const B = buildTable; buildTable = function (q) { B(q); "
+             "const b = document.getElementById('tableCheck'); if (b) b.remove(); }; })()")):
+        _, _, pl = load(patch, play=False)
+        caught = bool(pl.get('__boxes__'))
+        ok = ok and caught
+        lines.append('  self-test %-34s %s' % ('ANSWER-BOX-TEXT: ' + name, ('caught: ' + pl['__boxes__'][0][:90]) if caught else '*** MISSED ***'))
     allsc = [s for lvl in bank.values() for s in lvl]
     for name, sid, tag in (('old cell band (CM1, +0.1 accepted)', 'CM1', 'marking (cell'),
                            ('old roots (AL1, an extra root accepted)', 'AL1', 'marking (iq'),
@@ -792,6 +873,8 @@ def main():
     rep = Report()
     scenarios = check_bank(rep, bank, fn_vals, args.verbose)
     check_played(rep, scenarios, played)
+    for f in played.get('__boxes__', []):
+        rep.fail('BOX', 'answer box', f)
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails

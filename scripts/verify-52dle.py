@@ -171,7 +171,7 @@ SWEEP_JS = r"""(cases) => {
 
 # The guess box is a text box (contract ANSWER-BOX-TEXT, Jon 15 Nov 2026): a type="number" box empties on "1,000" or a
 # typed £, so MaffsAnswer would read "" instead of what the student typed. Each string must reach MaffsAnswer.parse
-# unchanged, and none is marked (the game asks for a valid number).
+# unchanged, and "1,000" is not marked (the game asks for a valid number).
 RAW_TYPED = ['1,000', '£52']
 RAW_JS = r"""(typedList) => {
   const out = [], input = document.getElementById('guess-input'), area = document.getElementById('input-area');
@@ -186,7 +186,8 @@ RAW_JS = r"""(typedList) => {
     seen.length = 0; input.value = typed;
     document.getElementById('submit-btn').click();
     if (seen[0] !== typed) out.push([typed, 'MaffsAnswer.parse read ' + JSON.stringify(seen[0]) + ', not the typed string']);
-    if (document.querySelectorAll('#guess-history .guess-row').length) out.push([typed, 'it was marked as a guess']);
+    // "1,000" is no number at all and is refused; "£52" is read by MaffsAnswer.parse's own rule (one leading £ is taken).
+    if (typed === '1,000' && document.querySelectorAll('#guess-history .guess-row').length) out.push([typed, 'it was marked as a guess']);
   }
   MaffsAnswer.parse = orig;
   return out;

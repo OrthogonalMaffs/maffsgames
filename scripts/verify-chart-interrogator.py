@@ -692,6 +692,51 @@ def check_readings(page, data, fails):
     return checks, len(cases)
 
 
+# ANSWER-BOX-TEXT (Jon, 15 and 17 Nov 2026): the answer boxes are text boxes, and what is typed reaches MaffsAnswer
+# unchanged. A number box turned "1,000" into "", and a parseFloat read would take "12abc" as 12: each must be refused
+# ("Please enter a number.", or not accepted), never marked. And for every string a number box could hold,
+# MaffsAnswer.parse gives parseFloat's value, so nothing a student could type before is read differently.
+NUMBOX = ['0', '7', '-3', '12.5', '-0.25', '.5', '-.5', '1e3', '2.5E-2', '0012', '100.000', '-0']
+BOXES = """(numbox) => {
+  window.setTimeout = function () { return 0; };
+  const out = [], raws = [], orig = MaffsAnswer.parse;
+  for (const x of numbox) if (!Object.is(MaffsAnswer.parse(x), parseFloat(x))) out.push('MaffsAnswer.parse(' + JSON.stringify(x) + ') differs from parseFloat');
+  MaffsAnswer.parse = function (raw) { raws.push(String(raw)); return orig.apply(this, arguments); };
+  try {
+    const s = STEM_LEAF[0];
+    for (const typed of ['1,000', '12abc']) {
+      selectedType = 'stemleaf'; selectedLevel = s.level; currentScenario = s; sessionAnswers = {};
+      buildPhase1Questions(); currentPhase = 1; currentQIndex = 0; showCurrentQuestion();
+      const inp = document.getElementById('qInput');
+      if (inp.type !== 'text') out.push('Phase 1: the answer box is type="' + inp.type + '", not a text box');
+      raws.length = 0; inp.value = typed; submitPhase1();
+      if (raws[0] !== typed) out.push('Phase 1: typed ' + JSON.stringify(typed) + ', MaffsAnswer.parse read ' + JSON.stringify(raws[0]));
+      const fb = document.getElementById('qFeedback').textContent;
+      if (fb !== 'Please enter a number.') out.push('Phase 1: typed ' + JSON.stringify(typed) + ' was marked (' + fb + ')');
+    }
+    const c = CUM_FREQ[0];
+    for (const typed of ['1,000', '12abc']) {
+      selectedType = 'cumfreq'; selectedLevel = c.level; currentScenario = c; sessionAnswers = {};
+      document.getElementById('gameContainer').style.display = 'block';
+      buildPhase1Questions(); phase1Questions.forEach(q => { sessionAnswers[q.key] = q.expected; });
+      currentPhase = 2; showPhase2();
+      document.querySelectorAll('.scaffold-text select').forEach(sel => { sel.value = sel.dataset.correct; });
+      const inp = document.querySelector('.scaffold-text input');
+      if (inp.type !== 'text') out.push('Phase 2: the count box is type="' + inp.type + '", not a text box');
+      raws.length = 0; inp.value = typed; submitPhase2();
+      if (!raws.includes(typed)) out.push('Phase 2: typed ' + JSON.stringify(typed) + ', MaffsAnswer.parse read ' + JSON.stringify(raws));
+      if (document.getElementById('p2Feedback').className.indexOf('correct') >= 0) out.push('Phase 2: typed ' + JSON.stringify(typed) + ' was accepted');
+    }
+  } finally { MaffsAnswer.parse = orig; }
+  return out;
+}"""
+
+
+def check_answer_boxes(page, fails):
+    fails.extend('answer box: ' + f for f in page.evaluate(BOXES, NUMBOX))
+    return 4
+
+
 def run(browser, base, mutate=None):
     """One full check of the page; `mutate` rewrites the game's source first (self-test)."""
     fails, errors = [], []
@@ -716,6 +761,7 @@ def run(browser, base, mutate=None):
     c_checks += check_cf_shape(page, data, fails)
     h_checks, split, report = check_histograms(page, data, fails)
     hr_checks, hr_cases, hr_report = check_hist_readings(page, data, fails)
+    hr_checks += check_answer_boxes(page, fails)
     h_checks += hr_checks + check_stemleaf_layout(page, data, fails)
     n_cases += hr_cases
     page.close()
@@ -756,6 +802,10 @@ FAULTS = [
     ("CF5's old data: a median band of +-0.34 (Amendment 1)",
      "data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:16},{lo:30,hi:40,f:32},{lo:40,hi:48,f:14},{lo:48,hi:60,f:14}]",
      "data:[{lo:0,hi:20,f:4},{lo:20,hi:30,f:10},{lo:30,hi:40,f:28},{lo:40,hi:48,f:24},{lo:48,hi:60,f:14}]", ": (e) "),
+    # ANSWER-BOX-TEXT (Jon, 15 and 17 Nov 2026): each must fail the answer-box check.
+    ("ANSWER-BOX-TEXT: the reading box back to type=number",
+     "<input type=\"text\" inputmode=\"decimal\" class=\"q-input\" id=\"qInput\"", "<input type=\"number\" class=\"q-input\" id=\"qInput\"", "answer box: "),
+    ("ANSWER-BOX-TEXT: the reading read by parseFloat again", "  var val=MaffsAnswer.parse(inp.value);\n", "  var val=parseFloat(inp.value);\n", "answer box: "),
 ]
 
 
