@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-# ci-shards: It's a SINE!! (all 120 answers recomputed by coordinate geometry and vector addition, never the sine or cosine rule; every item's rule and version from the pattern of what it gives; the ambiguous items' two triangles and every other sine-angle item's one; no answer within 0.005 of a 1 d.p. boundary; the bank against the saved contract, verbatim; every item marked in every stage by its key only, by dataset.val and MaffsAnswer; the working's angles and numbers; the calculator and the header badge in each mode; every diagram checked against an independent construction for its shape, its exact labels, no overlap and nothing cut off at 360 px; every mode played at every level: one board submission each, on <level>-<mode>; fault-injection self-test) | | 1
+# ci-shards: It's a SINE!! (all 120 answers recomputed by coordinate geometry and vector addition, never the sine or cosine rule; every item's rule and version from the pattern of what it gives; the ambiguous items' two triangles and every other sine-angle item's one; no answer within 0.005 of a 1 d.p. boundary; the bank against the saved contract, verbatim; every item marked in every stage by its key only, by dataset.val and MaffsAnswer; the working's angles and numbers; the calculator and the header badge in each mode; every diagram checked against an independent construction for its shape, its exact labels, no overlap and nothing cut off at 360 px; every mode played at every level: one board submission each, on <level>-<mode>; ITS-A-SINE-POLISH: the start picture, the Level 3 bank's two types only, level4_034 in mm, every drawn length's unit from its item, the four worked examples' numbers recomputed (each \ldots a truncation) and drawn, each wrong Stage 2 or 3 step's link to its version's example; fault-injection self-test) | | 1
 # ci-deps: games/its-a-sine/ docs/handover/contracts/ docs/history/contracts/
-r"""Independent verification for It's a SINE!! / No it's not (games/its-a-sine/), contract SINE-NOT-SINE, 17 Nov 2026.
+r"""Independent verification for It's a SINE!! / No it's not (games/its-a-sine/), contract SINE-NOT-SINE, 17 Nov 2026, and
+contract ITS-A-SINE-POLISH, 17 Nov 2026 (the start picture, the worked examples, the Level 3 bank, level4_034 in mm).
 SR-30: checked from its first PR.
 
 WHAT THIS DOES NOT TRUST
@@ -31,10 +32,24 @@ measures the answer off that construction:
             in proportion, north up for the bearings), and its labels are exactly the given values, the unknown's symbol and
             the names: no derived value (a third angle, the triangle's angle) is ever written. At 360 px no two labels
             overlap and none is outside the drawing.
+  Polish    (ITS-A-SINE-POLISH) the start picture right after the title, 1600 x 873 in its tag and in the file. Level 3 is
+            exactly 20 cosine-side and 20 sine-angle items (two sides and the angle between; two sides and an angle opposite
+            one, one triangle), none with bearings, an ambiguous case or a third angle first. level4_034's prompt is in mm.
+            Every drawn length's unit is the item's own unit when it is a length, else the length unit in its prompt, else
+            its level's (gcse cm, level3 mm, level4 m; the worked examples cm). The bank's contract lines: SINE-NOT-SINE's,
+            then ITS-A-SINE-POLISH's replacement lines by id and its "prompt only" change for level4_034.
+  Examples  the four worked examples, A to D, one per version in that order, none in the bank: each measured here off its
+            own construction (the side or angle; sin B; b^2 + c^2 - a^2 and a^2; cos A), every value printed before
+            \ldots a truncation (never a rounding) of the measured one, the printed answer the measured one to 1 d.p., the
+            setup's numbers the item's given values, each drawn (shape and labels as Diagrams) and its KaTeX without errors.
+            A wrong Stage 2 or Stage 3 step (alone, or in All three) offers "See the worked example" for its version's
+            example (sine-side A, sine-angle B, cosine-side C, cosine-angle D), closed until tapped and drawn when opened;
+            a right step and Stage 1 offer none.
   Play      every mode at every level played to the end at 360x640: ten different items, the score the steps right, one
             game_completed and one leaderboard submission on '<level>-<mode>', no sideways scroll.
 
-Work units: "bank" (no browser), "marking", "diagrams 360x640", "play 360x640" and "plant: <what>" (one per planted fault).
+Work units: "bank" (no browser), "marking", "diagrams 360x640", "examples 360x640", "play 360x640" and "plant: <what>" (one
+per planted fault).
 
     python scripts/verify-its-a-sine.py              # every unit, then the self-test
     python scripts/verify-its-a-sine.py --selftest   # the planted faults only
@@ -62,6 +77,7 @@ MODES = ['stage-1', 'stage-2', 'stage-3', 'all-three']
 CALC = {'stage-1': 'not allowed', 'stage-2': 'not allowed', 'stage-3': 'scientific', 'all-three': 'scientific'}
 BADGE = {'not allowed': 'not-allowed', 'scientific': 'scientific'}
 CONTRACT = 'sine-not-sine.md'
+POLISH = 'its-a-sine-polish.md'
 PHONE = (360, 640)
 
 
@@ -85,20 +101,45 @@ def bank_of(html):
     return out
 
 
-def contract_lines():
+def contract_file(name):
     for d in ('docs/handover/contracts', 'docs/history/contracts'):
-        for f in glob.glob(os.path.join(ROOT, d, '*' + CONTRACT)):
-            # The bank, then any amendment's replacement lines: a later line for an id replaces the earlier one, in place.
-            order, latest = [], {}
-            for ln in open(f, encoding='utf-8'):
-                if ln.startswith('{"id":'):
-                    ln = ln.rstrip('\n')
-                    iid = json.loads(ln)['id']
-                    if iid not in latest:
-                        order.append(iid)
-                    latest[iid] = ln
-            return [latest[i] for i in order], f
-    return None, None
+        for f in glob.glob(os.path.join(ROOT, d, '*' + name)):
+            return f
+    return None
+
+
+def contract_lines():
+    """SINE-NOT-SINE's bank, then ITS-A-SINE-POLISH's: a later line for an id replaces the earlier one, in place (its
+    amendments and the new Level 3 alike), and a numbered '<id> prompt only: "..."' line replaces that item's prompt."""
+    f, g = contract_file(CONTRACT), contract_file(POLISH)
+    if f is None or g is None:
+        return None, f or g
+    order, latest = [], {}
+    for path in (f, g):
+        for ln in open(path, encoding='utf-8'):
+            if ln.startswith('{"id":'):
+                ln = ln.rstrip('\n')
+                iid = json.loads(ln)['id']
+                if iid not in latest:
+                    order.append(iid)
+                latest[iid] = ln
+    for m in re.finditer(r'^\d+\. ([a-z0-9]+_\d{3}) prompt only: "(.*?)" given', open(g, encoding='utf-8').read(), re.M):
+        iid, new = m.group(1), m.group(2)
+        old = json.loads(latest[iid])['prompt']
+        latest[iid] = latest[iid].replace('"prompt":%s' % json.dumps(old, ensure_ascii=False), '"prompt":%s' % json.dumps(new, ensure_ascii=False))
+    return [latest[i] for i in order], g
+
+
+# The unit of a triangle's lengths (Jon's ruling, 17 Nov 2026): the item's own unit when it is a length; else the length
+# unit in its prompt; else its level's.
+LEVEL_LENGTH = {'gcse': 'cm', 'level3': 'mm', 'level4': 'm', 'example': 'cm'}
+
+
+def length_unit(q):
+    if q['unit'] in ('mm', 'cm', 'm', 'km'):
+        return q['unit']
+    m = re.search(r'\d\s*(mm|cm|km|m)\b', q.get('prompt', ''))
+    return m.group(1) if m else LEVEL_LENGTH[q['id'].split('_')[0]]
 
 
 # ---------------------------------------------------------------- independent geometry (no sine rule, no cosine rule)
@@ -336,8 +377,9 @@ def check_bank(html, out, info):
             tf = k in ('ext', 'light', 'survey') or (k == 'aas' and q['find'] == 'c')
             if q['third_angle_first'] != tf:
                 out.append('%s: third_angle_first is %s; finding %s from what is given needs it %s' % (q['id'], q['third_angle_first'], q['find'], tf))
+    check_polish(html, bank, out)
     if want is None:
-        out.append('the contract file (*%s) is in neither contracts folder' % CONTRACT)
+        out.append('a contract file (*%s or *%s) is in neither contracts folder' % (CONTRACT, POLISH))
     elif want != lines:
         diff = [i for i in range(max(len(want), len(lines))) if i >= len(want) or i >= len(lines) or want[i] != lines[i]]
         out.append('the page bank differs from the contract (%s) at item %d of %d' % (os.path.relpath(cfile, ROOT), diff[0] + 1, len(want)))
@@ -475,16 +517,64 @@ POINTS = {'aas': 'ABC', 'ext': 'ABC', 'ssa': 'ABC', 'sas': 'ABC', 'sss': 'ABC', 
           'fdir': ['O', 'A1', 'Q'], 'crank': 'OPQ', 'survey': 'ABP'}
 
 
+def webp_size(path):
+    """(width, height) from a WebP file's own header (VP8, VP8L or VP8X), without an image library."""
+    b = open(path, 'rb').read(64)
+    if b[:4] != b'RIFF' or b[8:12] != b'WEBP':
+        return None
+    kind = b[12:16]
+    if kind == b'VP8 ':
+        return int.from_bytes(b[26:28], 'little') & 0x3FFF, int.from_bytes(b[28:30], 'little') & 0x3FFF
+    if kind == b'VP8L':
+        v = int.from_bytes(b[21:25], 'little')
+        return (v & 0x3FFF) + 1, ((v >> 14) & 0x3FFF) + 1
+    if kind == b'VP8X':
+        return int.from_bytes(b[24:27], 'little') + 1, int.from_bytes(b[27:30], 'little') + 1
+    return None
+
+
+def check_polish(html, bank, out):
+    # The start picture: right after the title's header in #menu, its size in the tag, the file that size.
+    img = re.search(r'<div id="menu" class="screen active">\s*<div class="header">.*?</div>\s*(<img class="start-art"[^>]*>)', html, re.S)
+    if not img:
+        out.append('start picture: no img.start-art straight after the start screen\'s header')
+    else:
+        tag = img.group(1)
+        for attr in ('src="assets/start.webp"', 'width="1600"', 'height="873"', 'alt="'):
+            if attr not in tag:
+                out.append('start picture: the tag has no %s' % attr)
+    f = os.path.join(ROOT, 'games', SLUG, 'assets', 'start.webp')
+    size = webp_size(f) if os.path.exists(f) else None
+    if size != (1600, 873):
+        out.append('start picture: assets/start.webp is %s, not 1600 x 873' % (size,))
+    # Level 3: the assessment's two types only.
+    l3 = [q for q, _ in bank.get('level3', [])]
+    versions = [q['version'] for q in l3]
+    if versions.count('cosine-side') != 20 or versions.count('sine-angle') != 20:
+        out.append('level3: %d cosine-side and %d sine-angle items, not 20 and 20' % (versions.count('cosine-side'), versions.count('sine-angle')))
+    for q in l3:
+        k = kind_of(q)
+        if k not in ('sas', 'ssa') or q.get('ambiguous') or q['third_angle_first'] or any('bearing' in x for x in q['given']):
+            out.append('%s: not one of Level 3\'s two types (kind %s, ambiguous %s, third_angle_first %s)' % (q['id'], k, bool(q.get('ambiguous')), q['third_angle_first']))
+        elif k == 'ssa' and construct(q)[2]['triangles'] != 1:
+            out.append('%s: a sine-angle item with more than one triangle' % q['id'])
+        if length_unit(q) != 'mm':
+            out.append('%s: its lengths are in %s, not mm' % (q['id'], length_unit(q)))
+    q34 = [q for q, _ in bank.get('level4', []) if q['id'] == 'level4_034']
+    if not q34 or not re.search(r'380 mm and 520 mm .* 450 mm', q34[0]['prompt']) or length_unit(q34[0]) != 'mm':
+        out.append('level4_034: its prompt and drawing are not in mm (%s)' % (q34[0]['prompt'] if q34 else 'missing'))
+
+
 def b3(b):
     return '%03d°' % b
 
 
 def expected_labels(q):
-    g, k, u = q['given'], kind_of(q), q['unit']
+    g, k, lu = q['given'], kind_of(q), length_unit(q)
     if k in ('aas', 'ext', 'ssa', 'sas', 'sss'):
         L = ['A', 'B', 'C']
         for s in 'abc':
-            L.append('%s = %s cm' % (s, g[s]) if s in g else ('%s = x' % s if q['find'] == s else s))
+            L.append('%s = %s %s' % (s, g[s], lu) if s in g else ('%s = x' % s if q['find'] == s else s))
         for a in 'ABC':
             if a in g:
                 L.append('%s°' % g[a])
@@ -497,7 +587,7 @@ def expected_labels(q):
         L = ['A']
         for s in 'abc':
             if s in g:
-                L.append('%s m' % g[s])
+                L.append('%s %s' % (g[s], lu))
             elif q['find'] == s:
                 L.append('x')
         L.append('%s°' % g['A'] if 'A' in g else 'θ')
@@ -521,7 +611,8 @@ def expected_labels(q):
 def check_diagrams(page, html, out, info):
     bank = bank_of(html)
     n = 0
-    for lv in LEVELS:
+    bank['example'] = [(x['item'], None) for x in page.evaluate('SNS.examples()')]
+    for lv in LEVELS + ['example']:
         for q, _ in bank[lv]:
             iid, k = q['id'], kind_of(q)
             d = page.evaluate(DRAW_JS, iid)
@@ -564,6 +655,127 @@ def check_diagrams(page, html, out, info):
                 out.append('%s diagram: %.0f px wide in a %.0f px box' % (iid, d['svgw'], d['width']))
             n += 1
     info['diagrams'] = n
+
+
+# ---------------------------------------------------------------- the worked examples (ITS-A-SINE-POLISH)
+EXAMPLE_ORDER = [('A', 'sine-side'), ('B', 'sine-angle'), ('C', 'cosine-side'), ('D', 'cosine-angle')]
+
+
+def trunc(x, dp):
+    return math.floor(x * 10 ** dp + 1e-9) / 10 ** dp
+
+
+def example_truths(x):
+    """The values the example's working writes before \\ldots, in order, each measured off this script's construction."""
+    q, g = x['item'], x['item']['given']
+    got, T, _ = construct(q)
+    if x['letter'] == 'A':
+        return got, [dist(T, 'C', 'A')]
+    if x['letter'] == 'B':
+        return got, [math.sin(math.radians(ang(T, 'B', 'A', 'C')))]
+    if x['letter'] == 'C':
+        a2 = dist(T, 'B', 'C') ** 2
+        return got, [g['b'] ** 2 + g['c'] ** 2 - a2, a2]
+    return got, [math.cos(math.radians(ang(T, 'A', 'B', 'C')))]
+
+
+LINK_JS = r"""async ([mode, id, wrongAt]) => {
+  const tick = () => new Promise(r => setTimeout(r, 30));   // the panel draws on its toggle event, a task later
+  SNS.ui.preview(mode, id);
+  const seen = [];
+  for (let k = 0; k < 6 && SNS.ui.state() === 'asking'; k++) {
+    const s = SNS.ui.step();
+    SNS.ui.answer(s !== wrongAt);
+    const d = document.querySelector('#feedback .fb details.we');
+    seen.push({ step: s, right: s !== wrongAt, link: d ? d.dataset.example : null, open: d ? d.open : null,
+                text: d ? d.querySelector('summary').textContent : null });
+    if (d) {
+      d.querySelector('summary').click();
+      await tick();
+      seen[seen.length - 1].opened = d.open;
+      seen[seen.length - 1].drawn = !!d.querySelector('.we-fig svg');
+      seen[seen.length - 1].work = d.querySelector('.we-work').textContent;
+    }
+    SNS.ui.next();
+  }
+  return seen;
+}"""
+
+
+def check_examples(page, html, out, info):
+    bank = bank_of(html)
+    xs = page.evaluate('SNS.examples()')
+    if [(x['letter'], x['version']) for x in xs] != EXAMPLE_ORDER:
+        out.append('examples: %s, not A to D one per version in order' % [(x['letter'], x['version']) for x in xs])
+    givens = [q['given'] for lv in LEVELS for q, _ in bank[lv]]
+    for x in xs:
+        q, L = x['item'], x['letter']
+        k = kind_of(q)
+        if k is None or RULE[PATTERN[k]] + ('-angle' if q['unit'] == '°' else '-side') != x['version']:
+            out.append('example %s: its triangle (%s) is not a %s item' % (L, k, x['version']))
+            continue
+        if q['given'] in givens:
+            out.append('example %s: its triangle is in the bank' % L)
+        if sorted(numbers(x['setup'])) != sorted(float(v) for v in q['given'].values()):
+            out.append('example %s: the setup %r does not give %s' % (L, x['setup'], q['given']))
+        got, truths = example_truths(x)
+        if '%.1f' % half_up(got) != x['answer']:
+            out.append('example %s: answer %s, but the construction measures %.4f (%.1f)' % (L, x['answer'], got, half_up(got)))
+        nums = re.findall(r'(-?\d+\.\d+)\\ldots', x['work'])
+        if len(nums) != len(truths):
+            out.append('example %s: %d values before \\ldots, expected %d' % (L, len(nums), len(truths)))
+        for txt, t in zip(nums, truths):
+            dp = len(txt.split('.')[1])
+            if float(txt) != trunc(t, dp):
+                out.append('example %s: %s\\ldots is not %.8f cut to %d d.p. (%s)' % (L, txt, t, dp, ('%.' + str(dp) + 'f') % trunc(t, dp)))
+        last = numbers(x['work'])[-1:]
+        if not last or '%.1f' % last[0] != x['answer']:
+            out.append('example %s: the working ends on %s, not the answer %s' % (L, last, x['answer']))
+        g = q['given']
+        if L == 'C' and ('= %d - ' % (g['b'] ** 2 + g['c'] ** 2)) not in x['work']:
+            out.append('example C: b^2 + c^2 is not written as %d' % (g['b'] ** 2 + g['c'] ** 2))
+        if L == 'D' and ('\\frac{%d}{%d}' % (g['b'] ** 2 + g['c'] ** 2 - g['a'] ** 2, 2 * g['b'] * g['c'])) not in x['work']:
+            out.append('example D: the fraction is not %d/%d' % (g['b'] ** 2 + g['c'] ** 2 - g['a'] ** 2, 2 * g['b'] * g['c']))
+    # On the start screen: four closed panels, A to D; each drawn when opened, its labels exact, its KaTeX clean.
+    page.evaluate("document.getElementById('menuBtn').click()")
+    menu = page.evaluate("""async () => { const out = [];
+        for (const d of document.querySelectorAll('#examples details.we')) {
+          const was = d.open; d.querySelector('summary').click();
+          await new Promise(r => setTimeout(r, 30));   // drawn on the toggle event, a task later
+          out.push({ l: d.dataset.example, closed: !was, open: d.open, labels: [...d.querySelectorAll('.we-fig svg text')].map(t => t.textContent),
+                     kerr: d.querySelectorAll('.katex-error').length, katex: d.querySelectorAll('.katex').length }); }
+        return out; }""")
+    if [m['l'] for m in menu] != [l for l, _ in EXAMPLE_ORDER]:
+        out.append('examples on the start screen: %s, not A to D' % [m['l'] for m in menu])
+    kx = page.evaluate('!!window.katex')
+    for m, x in zip(menu, xs):
+        if not m['closed'] or not m['open']:
+            out.append('example %s on the start screen: not closed until tapped, then open' % m['l'])
+        if sorted(m['labels']) != sorted(expected_labels(x['item'])):
+            out.append('example %s on the start screen: labels %s, should be %s' % (m['l'], m['labels'], expected_labels(x['item'])))
+        if m['kerr'] or (kx and m['katex'] < 3):
+            out.append('example %s: KaTeX errors %d, KaTeX pieces %d' % (m['l'], m['kerr'], m['katex']))
+    # The links: a wrong Stage 2 or 3 step offers its version's example; a right step and Stage 1 offer none.
+    by_letter = {x['letter']: x for x in xs}
+    for version, letter in [(v, l) for l, v in EXAMPLE_ORDER]:
+        q = next(q for q, _ in bank['gcse'] if q['version'] == version)
+        for mode, wrong_at in (('stage-1', 1), ('stage-2', 2), ('stage-3', 3), ('all-three', 2), ('all-three', 3), ('stage-2', 0), ('stage-3', 0)):
+            for r in page.evaluate(LINK_JS, [mode, q['id'], wrong_at]):
+                tag = '%s %s step %d (%s)' % (q['id'], mode, r['step'], 'right' if r['right'] else 'wrong')
+                if r['right'] or r['step'] == 1:
+                    if r['link']:
+                        out.append('%s: offers worked example %s, should offer none' % (tag, r['link']))
+                    continue
+                if r['link'] != letter:
+                    out.append('link: %s, a %s item, opens example %s, not %s' % (tag, version, r['link'], letter))
+                    continue
+                if r['open'] or not r['opened'] or not r['drawn'] or r['text'] != 'See the worked example':
+                    out.append('%s: the link is %r, open before tapping %s, open after %s, drawn %s' % (tag, r['text'], r['open'], r.get('opened'), r.get('drawn')))
+                ref = page.evaluate("(L) => { const d = document.querySelector('#examples details.we[data-example=\"' + L + '\"]'); return d ? d.querySelector('.we-work').textContent : null; }", letter)
+                if r.get('work') != ref:
+                    out.append('%s: the panel\'s working is not example %s\'s' % (tag, letter))
+        page.evaluate("document.getElementById('menuBtn').click()")
+    info['examples'] = len(xs)
 
 
 # ---------------------------------------------------------------- play
@@ -634,6 +846,8 @@ def check(html, out, units, shard=None):
                             check_marking(page, html, out, info)
                         elif uid.startswith('diagrams'):
                             check_diagrams(page, html, out, info)
+                        elif uid.startswith('examples'):
+                            check_examples(page, html, out, info)
                         else:
                             for lv in LEVELS:
                                 for m in MODES:
@@ -660,6 +874,17 @@ PLANTS = [
      [("settle(b.dataset.val === keyOf(step()), b.dataset.val);",
        "settle((/SINE/.test(b.textContent) ? 'sine' : /not/.test(b.textContent) ? 'cosine' : b.dataset.val) === keyOf(step()), b.dataset.val);")],
      'marking', r'labels swapped'),
+    # ITS-A-SINE-POLISH
+    ('a worked example\'s answer 0.1 out', [("= 12.3\\\\text{ cm}\\\\).',", "= 12.4\\\\text{ cm}\\\\).',"), ("answer: '12.3',", "answer: '12.4',")],
+     'examples 360x640', r'example A: answer 12.4'),
+    ('a worked example\'s value rounded, not cut', [("= 12.266\\\\ldots", "= 12.267\\\\ldots")], 'examples 360x640', r'example A: 12.267'),
+    ('a feedback link opening the wrong example', [("'sine-angle': 'B', 'cosine-side'", "'sine-angle': 'A', 'cosine-side'")],
+     'examples 360x640', r'link: gcse_\d+ stage-2 step 2 \(wrong\), a sine-angle item, opens example A'),
+    ('the start picture without its height', [(' width="1600" height="873" alt="A building site with roof', ' width="1600" alt="A building site with roof')],
+     'bank', r'start picture: the tag has no height'),
+    ('level4_034 back in metres', [('members of 380 mm and 520 mm meeting at joint A, and a member of 450 mm', 'members of 380 m and 520 m meeting at joint A, and a member of 450 m')],
+     'bank', r'level4_034: its prompt and drawing are not in mm'),
+    ('a drawn length in a fixed unit', [("    var u = lengthUnit(q);", "    var u = 'cm';")], 'diagrams 360x640', r'level3_001 diagram: labels'),
 ]
 
 
@@ -693,7 +918,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'marking', 'diagrams %dx%d' % PHONE, 'play %dx%d' % PHONE]
+    units = ['bank', 'marking', 'diagrams %dx%d' % PHONE, 'examples %dx%d' % PHONE, 'play %dx%d' % PHONE]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -711,6 +936,8 @@ def main():
         print('%s: %d items marked in every stage (stage 1 two choices and a label swap, stage 2 four, stage 3 five answers); working checked' % (SLUG, info['marked']))
     if 'diagrams' in info:
         print('%s: %d diagrams to shape, labelled exactly, no overlap at %dx%d' % (SLUG, info['diagrams'], PHONE[0], PHONE[1]))
+    if 'examples' in info:
+        print('%s: %d worked examples recomputed (each \\ldots a truncation), drawn, and linked from every wrong Stage 2 and 3 step' % (SLUG, info['examples']))
     if 'played' in info:
         print('%s: %d runs played (every mode at every level)' % (SLUG, info['played']))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)

@@ -150,6 +150,24 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:600px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
+/* The worked examples (contract ITS-A-SINE-POLISH): one collapsed panel per version, on the start screen and, after a
+   wrong Stage 2 or 3 answer, the matching one in the feedback. */
+.stage-btn .n.word{font-size:.72rem;letter-spacing:0}
+.examples{margin-top:.9rem}
+.we{border:1px solid var(--border);border-radius:12px;background:var(--surface-alt);margin-top:.45rem}
+.we>summary{cursor:pointer;padding:.6rem .8rem;font-weight:700;font-size:.92rem;line-height:1.3;min-height:44px;box-sizing:border-box;display:flex;align-items:center}
+.we>summary::marker{color:var(--accent)}
+.we[open]>summary{border-bottom:1px solid var(--border)}
+.we-body{padding:.6rem .8rem .7rem;font-size:.92rem;line-height:1.5}
+.we-body p{margin:.3rem 0}
+.we-body .we-why{font-weight:700}
+.we-body .fig{margin:.3rem 0}
+.fb .we{margin-top:.6rem;background:var(--surface)}
+.fb .we>summary{color:var(--accent);text-decoration:underline;font-weight:600}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -185,6 +203,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1><span class="q-sine">“It's a SINE!!”</span> <span class="q-cos">“No it's not”</span></h1><div class="sub" id="tagline">The sine rule and the cosine rule: which one, which way round, and then the answer.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A building site with roof trusses being built and a mobile crane lifting timber, every triangle slanted">
     <div class="panel menu-info">
       <p>Every question is a triangle that is not right-angled. First decide: the <b class="q-sine">sine rule</b> or the <b class="q-cos">cosine rule</b>? Then which version of it: the one for a side, or the one for an angle? Then solve it, to 1 d.p.</p>
       <div class="mode-h">Level</div>
@@ -198,9 +217,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <button class="stage-btn" type="button" data-stage="1" data-mode="stage-1"><span class="n">1</span><span><span class="t">Which rule?</span><span class="d">Look at what you're given. Sine rule, or cosine rule?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></span></button>
         <button class="stage-btn" type="button" data-stage="2" data-mode="stage-2"><span class="n">2</span><span><span class="t">Which version?</span><span class="d">The version for a side, or the one rearranged for an angle?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></span></button>
         <button class="stage-btn" type="button" data-stage="3" data-mode="stage-3"><span class="n">3</span><span><span class="t">Solve it</span><span class="d">Find the side or the angle, to 1 d.p.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-3">Scientific calculator required</span></span></button>
-        <button class="stage-btn" type="button" data-stage="4" data-mode="all-three"><span class="n">∗</span><span><span class="t">All three</span><span class="d">The rule, the version, then the answer, on every question.</span><span class="calc-badge" data-calc="scientific" data-stage="all-three">Scientific calculator required</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4" data-mode="all-three"><span class="n word">All</span><span><span class="t">All three</span><span class="d">The rule, the version, then the answer, on every question.</span><span class="calc-badge" data-calc="scientific" data-stage="all-three">Scientific calculator required</span></span></button>
       </div>
       <p class="note">10 questions a run, 40 at each level. A point for each step right.</p>
+      <div class="examples" id="examples"><div class="mode-h">Worked examples</div></div>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
     <div class="maffs-start-note" data-maffs-start-note></div>
@@ -271,7 +291,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return t.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)').replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
       .replace(/\^\\circ/g, '°').replace(/\^\{-1\}/g, '⁻¹').replace(/\^2/g, '²').replace(/\\(sin|cos)/g, '$1')
       .replace(/\\theta/g, 'θ').replace(/\\alpha/g, 'α').replace(/\\varphi/g, 'φ').replace(/\\times/g, '×')
-      .replace(/\\approx/g, '≈').replace(/\\left|\\right|\\,/g, '').replace(/\\text\{([^{}]*)\}/g, '$1').replace(/[{}]/g, '');
+      .replace(/\\approx/g, '≈').replace(/\\ldots/g, '…').replace(/\\left|\\right|\\,/g, '').replace(/\\text\{([^{}]*)\}/g, '$1').replace(/[{}]/g, '');
   }
   function tex(t) {
     if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
@@ -281,7 +301,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function line(s) { return String(s).split(/\\\(|\\\)/).map(function (p, i) { return i % 2 ? tex(p) : esc(p); }).join(''); }
 
   /* =====================================================================================================
-     THE BANK: contract SINE-NOT-SINE, 17 Nov 2026, verbatim (40 items a level; ids give the level).
+     THE BANK: contract SINE-NOT-SINE, 17 Nov 2026, verbatim (40 items a level; ids give the level). Level 3 replaced and
+     level4_034's prompt put in mm by contract ITS-A-SINE-POLISH (17 Nov 2026), verbatim.
      scripts/verify-its-a-sine.py recomputes every answer by coordinates and vectors, never by these rules.
      ===================================================================================================== */
   var QUESTIONS = {
@@ -328,46 +349,46 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       {"id":"gcse_040","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":13,"b":8,"c":11},"find":"A","answer":84.8,"unit":"°","prompt":"Find angle A, to 1 d.p."}
     ],
     level3: [
-      {"id":"level3_001","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":42,"B_exterior":118,"a":9},"find":"b","answer":11.9,"unit":"cm","prompt":"The angle on the straight line at B is 118°. Find side b, to 1 d.p."},
-      {"id":"level3_002","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":37,"B_exterior":103,"a":12},"find":"b","answer":19.4,"unit":"cm","prompt":"The angle on the straight line at B is 103°. Find side b, to 1 d.p."},
-      {"id":"level3_003","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":55,"B_exterior":131,"a":8.5},"find":"b","answer":7.8,"unit":"cm","prompt":"The angle on the straight line at B is 131°. Find side b, to 1 d.p."},
-      {"id":"level3_004","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":48,"B_exterior":96,"a":14},"find":"b","answer":18.7,"unit":"cm","prompt":"The angle on the straight line at B is 96°. Find side b, to 1 d.p."},
-      {"id":"level3_005","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":33,"B_exterior":124,"a":10.6},"find":"b","answer":16.1,"unit":"cm","prompt":"The angle on the straight line at B is 124°. Find side b, to 1 d.p."},
-      {"id":"level3_006","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":61,"B_exterior":112,"a":7.4},"find":"b","answer":7.8,"unit":"cm","prompt":"The angle on the straight line at B is 112°. Find side b, to 1 d.p."},
-      {"id":"level3_007","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":16,"b":12,"A":71},"find":"B","answer":45.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
-      {"id":"level3_008","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9.8,"b":7,"A":62},"find":"B","answer":39.1,"unit":"°","prompt":"Find angle B, to 1 d.p."},
-      {"id":"level3_009","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":13,"b":9.5,"A":54},"find":"B","answer":36.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
-      {"id":"level3_010","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":20,"b":17,"A":77},"find":"B","answer":55.9,"unit":"°","prompt":"Find angle B, to 1 d.p."},
-      {"id":"level3_011","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":8,"b":11,"A":38},"find":"B","answer":122.2,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_012","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":10,"b":13,"A":42},"find":"B","answer":119.6,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_013","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":7,"b":9.5,"A":35},"find":"B","answer":128.9,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_014","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9,"b":12.4,"A":40},"find":"B","answer":117.7,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_015","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":7.5,"b":10,"A":37},"find":"B","answer":126.6,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_016","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":13,"b":16,"A":52},"find":"B","answer":104.1,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_017","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9.5,"b":12,"A":44},"find":"B","answer":118.7,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_018","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":14,"b":18,"A":41},"find":"B","answer":122.5,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
-      {"id":"level3_019","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":11,"c":14,"A":58},"find":"a","answer":12.4,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_020","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":9.5,"c":12,"A":104},"find":"a","answer":17.0,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_021","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":16,"c":13,"A":77},"find":"a","answer":18.2,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_022","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":7.8,"c":10,"A":131},"find":"a","answer":16.2,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_023","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":18,"c":21,"A":43},"find":"a","answer":14.6,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_024","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":15,"c":10,"A":84},"find":"a","answer":17.1,"unit":"cm","prompt":"Find side a, to 1 d.p."},
-      {"id":"level3_025","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":17,"b":12,"c":14},"find":"A","answer":81.3,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_026","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":21,"b":15,"c":18},"find":"A","answer":78.5,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_027","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":19,"b":11,"c":13},"find":"A","answer":104.4,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_028","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":14,"b":17,"c":6},"find":"A","answer":50.8,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_029","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":16,"b":10,"c":9},"find":"A","answer":114.6,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_030","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":22,"b":18,"c":13},"find":"A","answer":88.9,"unit":"°","prompt":"Find angle A, to 1 d.p."},
-      {"id":"level3_031","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":12,"bearing1":50,"leg2_km":9,"bearing2":130},"find":"distance","answer":16.2,"unit":"km","prompt":"A boat sails 12 km on a bearing of 050°, then 9 km on a bearing of 130°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":100}},
-      {"id":"level3_032","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":15,"bearing1":30,"leg2_km":11,"bearing2":145},"find":"distance","answer":14.4,"unit":"km","prompt":"A boat sails 15 km on a bearing of 030°, then 11 km on a bearing of 145°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":65}},
-      {"id":"level3_033","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":8,"bearing1":70,"leg2_km":14,"bearing2":160},"find":"distance","answer":16.1,"unit":"km","prompt":"A boat sails 8 km on a bearing of 070°, then 14 km on a bearing of 160°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":90}},
-      {"id":"level3_034","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":20,"bearing1":40,"leg2_km":13,"bearing2":110},"find":"distance","answer":27.3,"unit":"km","prompt":"A boat sails 20 km on a bearing of 040°, then 13 km on a bearing of 110°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":110}},
-      {"id":"level3_035","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":10,"bearing1":15,"leg2_km":16,"bearing2":95},"find":"distance","answer":20.3,"unit":"km","prompt":"A boat sails 10 km on a bearing of 015°, then 16 km on a bearing of 095°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":100}},
-      {"id":"level3_036","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":18,"bearing1":60,"leg2_km":7,"bearing2":170},"find":"distance","answer":16.9,"unit":"km","prompt":"A boat sails 18 km on a bearing of 060°, then 7 km on a bearing of 170°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":70}},
-      {"id":"level3_037","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":12,"bearing_A_to_L":30,"bearing_A_to_B":100,"bearing_B_to_L":350},"find":"BL","answer":17.5,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 030°. A boat sails 12 km from A to B on a bearing of 100°. From B, L is on a bearing of 350°. Find the distance BL, to 1 d.p.","working":{"angle_A":70,"angle_B":70,"angle_L":40}},
-      {"id":"level3_038","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":8,"bearing_A_to_L":60,"bearing_A_to_B":120,"bearing_B_to_L":10},"find":"BL","answer":9.0,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 060°. A boat sails 8 km from A to B on a bearing of 120°. From B, L is on a bearing of 010°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":70,"angle_L":50}},
-      {"id":"level3_039","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":14,"bearing_A_to_L":20,"bearing_A_to_B":80,"bearing_B_to_L":320},"find":"BL","answer":14.0,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 020°. A boat sails 14 km from A to B on a bearing of 080°. From B, L is on a bearing of 320°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":60,"angle_L":60}},
-      {"id":"level3_040","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":15,"bearing_A_to_L":25,"bearing_A_to_B":85,"bearing_B_to_L":315},"find":"BL","answer":13.8,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 025°. A boat sails 15 km from A to B on a bearing of 085°. From B, L is on a bearing of 315°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":50,"angle_L":70}}
+      {"id":"level3_001","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":84,"c":52,"A":112},"find":"a","answer":114.2,"unit":"mm","prompt":"A steel bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_002","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":80,"c":95,"A":35},"find":"a","answer":54.5,"unit":"mm","prompt":"A shelf bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_003","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":50,"c":120,"A":62},"find":"a","answer":106.1,"unit":"mm","prompt":"A triangular brace (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_004","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":75,"c":60,"A":48},"find":"a","answer":56.6,"unit":"mm","prompt":"A mounting plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_005","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":110,"c":90,"A":70},"find":"a","answer":115.9,"unit":"mm","prompt":"A jig plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_006","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":36,"c":58,"A":75},"find":"a","answer":59.8,"unit":"mm","prompt":"A frame corner plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_007","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":95,"c":140,"A":28},"find":"a","answer":71.7,"unit":"mm","prompt":"A sheet-metal blank (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_008","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":64,"c":72,"A":105},"find":"a","answer":108.0,"unit":"mm","prompt":"A support bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_009","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":40,"c":55,"A":118},"find":"a","answer":81.8,"unit":"mm","prompt":"A linkage plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_010","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":130,"c":85,"A":44},"find":"a","answer":90.7,"unit":"mm","prompt":"A steel bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_011","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":72,"c":48,"A":66},"find":"a","answer":68.4,"unit":"mm","prompt":"A gusset plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_012","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":88,"c":105,"A":52},"find":"a","answer":86.0,"unit":"mm","prompt":"A shelf bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_013","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":66,"c":44,"A":97},"find":"a","answer":83.7,"unit":"mm","prompt":"A jig plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_014","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":150,"c":110,"A":58},"find":"a","answer":130.8,"unit":"mm","prompt":"A frame corner plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_015","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":48,"c":64,"A":82},"find":"a","answer":74.5,"unit":"mm","prompt":"A sheet-metal blank (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_016","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":90,"c":75,"A":124},"find":"a","answer":145.9,"unit":"mm","prompt":"A support bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_017","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":100,"c":125,"A":46},"find":"a","answer":90.9,"unit":"mm","prompt":"A linkage plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_018","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":58,"c":82,"A":71},"find":"a","answer":83.6,"unit":"mm","prompt":"A steel bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_019","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":140,"c":96,"A":36},"find":"a","answer":84.1,"unit":"mm","prompt":"A gusset plate (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_020","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":70,"c":115,"A":88},"find":"a","answer":132.5,"unit":"mm","prompt":"A shelf bracket (not to scale). Find side a, to 1 d.p."},
+      {"id":"level3_021","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":120,"b":90,"A":55},"find":"B","answer":37.9,"unit":"°","prompt":"A mounting plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_022","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":95,"b":70,"A":65},"find":"B","answer":41.9,"unit":"°","prompt":"A jig plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_023","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":150,"b":110,"A":48},"find":"B","answer":33.0,"unit":"°","prompt":"A frame corner plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_024","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":75,"b":55,"A":82},"find":"B","answer":46.6,"unit":"°","prompt":"A sheet-metal blank (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_025","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":140,"b":100,"A":60},"find":"B","answer":38.2,"unit":"°","prompt":"A support bracket (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_026","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":68,"b":50,"A":77},"find":"B","answer":45.8,"unit":"°","prompt":"A linkage plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_027","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":110,"b":95,"A":58},"find":"B","answer":47.1,"unit":"°","prompt":"A steel bracket (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_028","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":90,"b":64,"A":46},"find":"B","answer":30.8,"unit":"°","prompt":"A gusset plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_029","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":100,"b":75,"A":52},"find":"B","answer":36.2,"unit":"°","prompt":"A triangular brace (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_030","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":58,"b":42,"A":88},"find":"B","answer":46.4,"unit":"°","prompt":"A mounting plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_031","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":125,"b":96,"A":63},"find":"B","answer":43.2,"unit":"°","prompt":"A jig plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_032","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":80,"b":72,"A":95},"find":"B","answer":63.7,"unit":"°","prompt":"A frame corner plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_033","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":72,"b":50,"A":104},"find":"B","answer":42.4,"unit":"°","prompt":"A support bracket (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_034","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":105,"b":78,"A":57},"find":"B","answer":38.5,"unit":"°","prompt":"A linkage plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_035","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":62,"b":45,"A":67},"find":"B","answer":41.9,"unit":"°","prompt":"A steel bracket (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_036","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":145,"b":120,"A":74},"find":"B","answer":52.7,"unit":"°","prompt":"A gusset plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_037","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":88,"b":66,"A":49},"find":"B","answer":34.5,"unit":"°","prompt":"A shelf bracket (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_038","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":98,"b":70,"A":85},"find":"B","answer":45.4,"unit":"°","prompt":"A triangular brace (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_039","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":135,"b":100,"A":43},"find":"B","answer":30.3,"unit":"°","prompt":"A mounting plate (not to scale). Find angle B, to 1 d.p."},
+      {"id":"level3_040","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":76,"b":60,"A":110},"find":"B","answer":47.9,"unit":"°","prompt":"A jig plate (not to scale). Find angle B, to 1 d.p."}
     ],
     level4: [
       {"id":"level4_001","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"F1":40,"F2":25,"angle_between":60},"find":"R","answer":56.8,"unit":"N","prompt":"Forces of 40 N and 25 N act at a point with 60° between them. Find the magnitude of the resultant, to 1 d.p.","working":{"triangle_angle":120}},
@@ -403,7 +424,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       {"id":"level4_031","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":60,"angle_A":79,"angle_B":53},"find":"AP","answer":64.5,"unit":"m","prompt":"A surveyor's baseline AB is 60 m. At A, the angle between the baseline and a mast P is 79°; at B it is 53°. Find AP, to 1 d.p."},
       {"id":"level4_032","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":230,"angle_A":61,"angle_B":47},"find":"AP","answer":176.9,"unit":"m","prompt":"A surveyor's baseline AB is 230 m. At A, the angle between the baseline and a mast P is 61°; at B it is 47°. Find AP, to 1 d.p."},
       {"id":"level4_033","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":2.4,"b":3.1,"c":3.8},"find":"A","answer":39.1,"unit":"°","prompt":"A triangular frame has members of 3.1 m and 3.8 m meeting at joint A, and a member of 2.4 m opposite A. Find the angle at A, to 1 d.p."},
-      {"id":"level4_034","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":450,"b":380,"c":520},"find":"A","answer":57.5,"unit":"°","prompt":"A triangular frame has members of 380 m and 520 m meeting at joint A, and a member of 450 m opposite A. Find the angle at A, to 1 d.p."},
+      {"id":"level4_034","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":450,"b":380,"c":520},"find":"A","answer":57.5,"unit":"°","prompt":"A triangular frame has members of 380 mm and 520 mm meeting at joint A, and a member of 450 mm opposite A. Find the angle at A, to 1 d.p."},
       {"id":"level4_035","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":1.8,"b":2.5,"c":2.2},"find":"A","answer":44.5,"unit":"°","prompt":"A triangular frame has members of 2.5 m and 2.2 m meeting at joint A, and a member of 1.8 m opposite A. Find the angle at A, to 1 d.p."},
       {"id":"level4_036","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":6,"b":7.5,"c":4.8},"find":"A","answer":53.0,"unit":"°","prompt":"A triangular frame has members of 7.5 m and 4.8 m meeting at joint A, and a member of 6 m opposite A. Find the angle at A, to 1 d.p."},
       {"id":"level4_037","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":2.8,"c":3.5,"A":64},"find":"a","answer":3.4,"unit":"m","prompt":"Two members of 2.8 m and 3.5 m meet at joint A at 64°. Find the length of the member that closes the triangle, to 1 d.p."},
@@ -595,6 +616,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
   function fmtV(x) { return String(x); }
   function sideText(v, u) { return fmtV(v) + ' ' + u; }
+  // The unit of a triangle's lengths (contract ITS-A-SINE-POLISH, Jon's ruling, 17 Nov 2026): the question's own unit when
+  // it is a length; else the length unit in its prompt; else its level's unit (from its id). Never fixed by the drawing.
+  var LENGTH_UNITS = ['mm', 'cm', 'm', 'km'];
+  var LEVEL_LENGTH = { gcse: 'cm', level3: 'mm', level4: 'm', example: 'cm' };
+  function lengthUnit(q) {
+    if (LENGTH_UNITS.indexOf(q.unit) !== -1) return q.unit;
+    var m = /\d\s*(mm|cm|km|m)\b/.exec(q.prompt || '');
+    if (m) return m[1];
+    return LEVEL_LENGTH[String(q.id).split('_')[0]];
+  }
 
   // A scene: { pts: {name: P}, lines: [], arrows: [], angles: [], sides: [], verts: [], norths: [], dots: [] } in world units.
   function scene() { return { pts: {}, segs: [], angles: [], sides: [], verts: [], norths: [], dots: [], joints: [], extra: [] }; }
@@ -603,7 +634,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var t = solvePlain(q), k = kindOf(q), g = q.given, S = scene(), frame = /^frame/.test(k);
     var B = P(0, 0), C = P(t.a, 0), A = P(t.c * cos(t.B), t.c * sin(t.B));
     S.pts = { A: A, B: B, C: C };
-    var u = frame ? 'm' : 'cm';
+    var u = lengthUnit(q);
     var cls = frame ? 'member' : 'line';
     var sides = { a: [B, C], b: [C, A], c: [A, B] };
     ['a', 'b', 'c'].forEach(function (s) {
@@ -837,6 +868,55 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
 
   /* =====================================================================================================
+     THE WORKED EXAMPLES (contract ITS-A-SINE-POLISH, 17 Nov 2026, verbatim): one for each version, A to D. None of these
+     triangles is in the bank. Each is drawn by draw(), the same way as a question, from its own "item" (ids example_*).
+     scripts/verify-its-a-sine.py recomputes every number in them and checks which one each feedback link opens.
+     ===================================================================================================== */
+  var EXAMPLES = [
+    { letter: 'A', version: 'sine-side', title: 'Sine rule, finding a side',
+      setup: '\\(A = 50^\\circ\\), \\(B = 70^\\circ\\), \\(a = 10\\text{ cm}\\). Find \\(b\\).',
+      why: 'Two angles and a side: it\'s a SINE.',
+      work: '\\(\\frac{b}{\\sin 70^\\circ} = \\frac{10}{\\sin 50^\\circ}\\), so \\(b = \\frac{10 \\sin 70^\\circ}{\\sin 50^\\circ} = 12.266\\ldots = 12.3\\text{ cm}\\).',
+      answer: '12.3',
+      item: { id: 'example_A', given: { A: 50, B: 70, a: 10 }, find: 'b', unit: 'cm', prompt: 'Worked example A: find side b.' } },
+    { letter: 'B', version: 'sine-angle', title: 'Sine rule, finding an angle',
+      setup: '\\(a = 12\\text{ cm}\\), \\(b = 8\\text{ cm}\\), \\(A = 70^\\circ\\). Find \\(B\\).',
+      why: 'Two sides and an angle opposite one of them: it\'s a SINE.',
+      work: '\\(\\frac{\\sin B}{8} = \\frac{\\sin 70^\\circ}{12}\\), so \\(\\sin B = \\frac{8 \\sin 70^\\circ}{12} = 0.62646\\ldots\\), \\(B = 38.8^\\circ\\).',
+      answer: '38.8',
+      item: { id: 'example_B', given: { a: 12, b: 8, A: 70 }, find: 'B', unit: '°', prompt: 'Worked example B: find angle B.' } },
+    { letter: 'C', version: 'cosine-side', title: 'Cosine rule, finding a side',
+      setup: '\\(b = 9\\text{ cm}\\), \\(c = 11\\text{ cm}\\), \\(A = 50^\\circ\\). Find \\(a\\).',
+      why: 'Two sides and the angle between them: no, it\'s not.',
+      work: '\\(a^2 = 9^2 + 11^2 - 2 \\times 9 \\times 11 \\times \\cos 50^\\circ = 202 - 127.271\\ldots = 74.728\\ldots\\), so \\(a = 8.6\\text{ cm}\\).',
+      answer: '8.6',
+      item: { id: 'example_C', given: { b: 9, c: 11, A: 50 }, find: 'a', unit: 'cm', prompt: 'Worked example C: find side a.' } },
+    { letter: 'D', version: 'cosine-angle', title: 'Cosine rule, finding an angle',
+      setup: '\\(a = 8\\text{ cm}\\), \\(b = 9\\text{ cm}\\), \\(c = 12\\text{ cm}\\). Find \\(A\\).',
+      why: 'All three sides: no, it\'s not.',
+      work: '\\(\\cos A = \\frac{9^2 + 12^2 - 8^2}{2 \\times 9 \\times 12} = \\frac{161}{216} = 0.74537\\ldots\\), so \\(A = 41.8^\\circ\\).',
+      answer: '41.8',
+      item: { id: 'example_D', given: { a: 8, b: 9, c: 12 }, find: 'A', unit: '°', prompt: 'Worked example D: find angle A.' } }
+  ];
+  // Which example a question's version opens.
+  var EXAMPLE_OF = { 'sine-side': 'A', 'sine-angle': 'B', 'cosine-side': 'C', 'cosine-angle': 'D' };
+  function example(letter) { for (var i = 0; i < EXAMPLES.length; i++) if (EXAMPLES[i].letter === letter) return EXAMPLES[i]; return null; }
+  // One collapsed panel: its summary, then the example, its diagram drawn the first time it opens (draw() measures labels,
+  // so it needs the panel on screen).
+  function examplePanel(letter, summary) {
+    var x = example(letter), d = document.createElement('details');
+    d.className = 'we'; d.dataset.example = letter;
+    d.innerHTML = '<summary>' + esc(summary) + '</summary><div class="we-body">' +
+      '<p class="we-setup">' + line(x.setup) + '</p><div class="fig we-fig"></div>' +
+      '<p class="we-why">' + line(x.why) + '</p><p class="we-work">' + line(x.work) + '</p></div>';
+    d.addEventListener('toggle', function () {
+      if (d.open && !d.dataset.drawn) { draw(d.querySelector('.we-fig'), x.item); d.dataset.drawn = '1'; }
+    });
+    return d;
+  }
+  EXAMPLES.forEach(function (x) { $('examples').appendChild(examplePanel(x.letter, x.letter + '. ' + x.title)); });
+
+  /* =====================================================================================================
      THE GAME
      ===================================================================================================== */
   var MODE_INFO = {
@@ -977,6 +1057,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var nextText = !last ? 'Next step →' : (qi >= PER ? 'See results →' : 'Next →');
     fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '" data-step="' + s + '"><div class="fb-head">' + esc(head) + '</div>' + body +
       '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button" data-maffs-lock-skip>' + nextText + '</button>' : '') + '</div></div>';
+    // After a wrong Stage 2 or 3 step: the worked example for this question's version, opened in place.
+    if (!right && s >= 2) fb.firstChild.insertBefore(examplePanel(EXAMPLE_OF[Q.version], 'See the worked example'), fb.querySelector('.fb-next'));
     if (right) { MaffsLock.fresh(fb); try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {} }
     else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('ask') });
@@ -1035,10 +1117,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 
   // Read-only views of the bank and live state, for scripts/verify-its-a-sine.py and the lock hint above.
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
-  function item(id) { for (var l in QUESTIONS) if (has(QUESTIONS, l)) for (var i = 0; i < QUESTIONS[l].length; i++) if (QUESTIONS[l][i].id === id) return QUESTIONS[l][i]; return null; }
+  function item(id) {
+    for (var l in QUESTIONS) if (has(QUESTIONS, l)) for (var i = 0; i < QUESTIONS[l].length; i++) if (QUESTIONS[l][i].id === id) return QUESTIONS[l][i];
+    for (var j = 0; j < EXAMPLES.length; j++) if (EXAMPLES[j].item.id === id) return EXAMPLES[j].item;   // the worked examples' drawings
+    return null;
+  }
   window.SNS = {
     SLUG: SLUG, LEVELS: LEVELS, MODES: MODES, BOARDS: BOARDS, VERSIONS: VERSIONS, VERSION_TEX: VERSION_TEX,
     bank: function () { return copy(QUESTIONS); },
+    examples: function () { return copy(EXAMPLES); },
+    exampleOf: function (version) { return EXAMPLE_OF[version] || null; },
+    lengthUnit: function (id) { var q = item(id); return q ? lengthUnit(q) : null; },
     kind: function (id) { var q = item(id); return q ? kindOf(q) : null; },
     pattern: function (id) { var q = item(id); return q ? PATTERN[kindOf(q)] : null; },
     patternRule: function (id) { var q = item(id); return q ? PATTERN_RULE[PATTERN[kindOf(q)]] : null; },
