@@ -229,6 +229,7 @@ nav {
 }
 .guess-input {
   flex: 1;
+  min-width: 0;   /* a text box's default width (20 characters) is wider than a number box's: let it shrink on a 320px phone (ANSWER-BOX-TEXT) */
   background: var(--surface2);
   border: 1px solid var(--border);
   border-radius: 3px;
