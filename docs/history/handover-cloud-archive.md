@@ -6,6 +6,32 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-17 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-16 (cloud): SHAPE-SHIFTER-FLAKE (`docs/history/contracts/2026-11-16-shape-shifter-flake.md`)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6e1f4e0. Size small; sent first, HEATWAVE-PACK (home) waits on it.
+**Close-out carried (first commit):** ANSWER-AUDIT-PILOT (#802, bbbab73), recorded below; contract moved.
+Done on the branch: verify-shape-shifter.py's rotation moving-on check picks the right or wrong option from `rotationOptions` as dealt after `loadQuestion()`, in the same call, taps its own letter point and requires `optionAt()` to resolve to it; `judge_wrong()` is shared with a new self-test unit, "plant: a stale rotation tap", which under a seeded Math.random finds a deal and re-deal where a stale wrong point reads "Correct! (B)" (main's exact failure) and must be reported, while the point read after the load reads "Not quite". `--loop-advance 50`: 0 of 50 runs failed. The P.E. Store's `stakes` now opens "The whistle goes"; check-escape-rooms passes. Sweep of the other verifiers: one real case, verify-modular-battle.py (coverage only, no false failure), todo row MODULAR-BATTLE-PRESS-ALL. Main's run 43961875130 failed only in this check (Content verifiers 86).
+**Merged** #805 as e91dd5e via merge-pr.py, fourth invocation (the first three refused on GitHub's 502 on GET actions/runs/43961875130/jobs?per_page=50&page=1, a re-run main run of 92 jobs, while the same request by hand succeeded 8/8: MERGE-PR-ROBUST), last line "main e91dd5e run 44025444710: GREEN", exit 0. Main's runs on e91dd5e (push): check-site 44025444710 success, phone-fit-full 44025444701 success. Main run 43961875130 (6e1f4e0) was red only on the Shape Shifter flake; its one rerun (attempt 2) passed. Close-out carried by MERGE-PR-ROBUST's first commit (contract moved).
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-16 (cloud): ANSWER-AUDIT-PILOT (`docs/history/contracts/2026-11-16-answer-audit-pilot.md`; Jon 19:52)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6f9498b (#800 and #801 merged). Size medium. Replaces ANSWER-AUDIT-SCRIPT, which STOPPED 19:51 (extract-banks.py holds source data, not the student's screen: 21 of 109 banks carry both a question and an answer field; full Opus run ~$200).
+**Close-out carried (first commit):** BEARING-BLITZ-GOAT (#800, 5a82f36), recorded below; contract moved.
+Done on the branch: `scripts/audit-answers.py` (FIELD_MAP for the 21; Sonnet 5.5 pass 1, Opus 5.5 pass 2 on DISAGREE/UNCLEAR, Message Batches; key only from a mode-600 file outside the repo; --max-usd guards both passes), `--selftest` PASS (25 checks, no network), todo row ANSWER-AUDIT-RUN, `data/audit/` gitignored. Dry run over the 21: 1,228 to send, 137 not audited for a figure (angle-ace 85 `fig`, normal-navigator 47 `shade`, core-maths 5 `svg`), 0 for shape; pass 1 ~$12.70 (assumed 2,000 output tokens a reply; ceiling at max_tokens $49.12), pass 2 worst case ~$49.97. Discoveries: the STOP's 3,073 counted banks once per serving level; unique questions are 1,365. The Batch API's custom_id allows only letters, digits, _ and -, so `<slug>--<level>--<index>` is sent and the manifest maps it to `<slug>|<level>|<index>`. Not verifiable here (no key): that both models and the Batch API answer as described; Jon's pilot of one game is that check.
+**Merged** #802 as bbbab73 via merge-pr.py, third invocation (the first refused on a red Gate: five text writes without newline='', check-text-writes, fixed in the script and main merged in; the second read the old head before GitHub registered the push), last line "main bbbab73 run 43950743520: GREEN", exit 0. Main's runs on bbbab73 (push): check-site 43950743520 success, phone-fit-full 43950743561 success. Close-out carried by SHAPE-SHIFTER-FLAKE's first commit (contract moved).
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0 (reissued once after the 19:51 STOP); usage n/a.
+
+## 2026-11-16 (cloud): BEARING-BLITZ-GOAT (`docs/history/contracts/2026-11-16-bearing-blitz-goat.md`; Jon 16 Nov)
+
+Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` from main d388414. Tier not stated; treated as Small (merge on green). Per-game fix, cloud lane's own.
+**Close-out carried (first commit):** HAMSTER-PACK-FINAL (#799, bf6cd95), recorded below; contract moved. Todo row LEDGER-B4-ANGLE-ACE closed to `docs/history/todo-done.md` (#795 made the GCSE bank 45; no B4 ledger entry remains).
+Done on the branch: the start screen's first line, bold, "20 enemy ships. Only 22 torpedoes. Can you become a legend?", built from MAX_TARGETS and MAX_TARGETS + 2; the counter "n / 20" (one `showSunk()` sets it everywhere); 0° off scores 200 with the GOAT message verbatim, 1° 150 and the rest unchanged. verify-bearing-blitz.py: the new model (points, GOAT, counter at start, after every marked shot and after each of the twenty winning hits, the start line), dead-on shots pressed through the real compass at seven bearings; PASS, all 16 plants caught (12 old, 4 new). /updates/ line.
+**Merged** #800 as 5a82f36 via merge-pr.py (second invocation: the first was stopped by the session's own 10-minute background limit while still waiting for the Gate, nothing merged), last line "main 5a82f36 run 43938279199: GREEN", exit 0. Main's runs on 5a82f36 (push): check-site 43938279199 success, phone-fit-full 43938279490 success. Close-out carried by ANSWER-AUDIT-PILOT's first commit (contract moved).
+Record: agent Claude Code; wall n/a; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-17 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-16 (cloud): HAMSTER-PACK-FINAL (`docs/history/contracts/2026-11-16-hamster-pack-final.md`; Jon 18:06, 18:08)
 
 Agent Claude Code (cloud), branch `claude/amazing-ptolemy-xiax6r` restarted from main 8af500e (#798 squash-merged). Tier not stated; treated as Medium (merge on green). Lane exception (Jon 18:06/18:08): tools/pack-generator/, scripts/test-pack-generator.py, scripts/gen-escape-variants.py, escape-rooms/variants.json, escape-rooms/hamster-heist/room.js.
