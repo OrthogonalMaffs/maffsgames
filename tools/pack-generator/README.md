@@ -14,7 +14,8 @@ From the repo root, in the WSL venv (it needs only Playwright and its Chromium, 
 python -X utf8 tools/pack-generator/build_pack.py kiln-disaster
 ```
 
-It writes `dist-packs/kiln-disaster-pack.pdf` (35 pages, about 8 MB) and prints what it checked. The same command
+It writes `dist-packs/kiln-disaster-pack-v3.pdf` (35 pages, about 8 MB; the file name carries the room's `pack_version`, as the
+footer and the PDF's title do, so two versions of a pack never share a name: Jon, 17 Nov 2026, contract FINAL-PADLOCK-FAIR) and prints what it checked. The same command
 with the same seed gives the same sets every time; `--seed 2` gives a different choice, `--sets 5` fewer sets,
 `--target 67` one final-padlock target for every set (the build fails, naming each set and why, if any cannot make it). Any
 failed check prints `BUILD FAILED` with the reason, and no PDF is written.
@@ -31,8 +32,11 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
 ## What to proofread
 
 1. **Page 1, Run it (DRAFT badge until the room's `wording_approved` is set, above):** Project Claude's draft, verbatim, with each set's pages
-   (generated: "Each set is 4 pages: A 6-9 ... G 30-33.") and Amendment 11's final-padlock line; at most 150 words
-   (the build counts them; it is exactly 150 for Kiln, so the play-online line is on page 2). Send your wording to Code Claude: it goes into `run_it()` in `build_pack.py`; your approval goes into
+   (generated: "Each set is 4 pages: A 6-9 ... G 30-33.") and Amendment 11's final-padlock line; at most 180 words
+   (the build counts them; Amendment 9's 150, raised to 180 by Jon on 17 Nov 2026, FINAL-PADLOCK-FAIR Amendment 2, for
+   step 5's line on skipping the final padlock: "Short of time, or a class that will struggle? Skip the final
+   padlock: tell teams before you start, and note the time when Lock 3 is ticked instead." Most packs' page 1 is now
+   178 words, so there is little room for more; the play-online line is on page 2). Send your wording to Code Claude: it goes into `run_it()` in `build_pack.py`; your approval goes into
    the room's config, and the badge follows it.
 2. **Page 2, Read-outs (DRAFT badge until approved):** three boxed scripts, each for its moment: the start (hook, brief and one line to the
    students; the hook is read aloud here and printed nowhere else, WARMUP-PACKS Ruling 2, 12 Nov 2026), a team finishing (room.js `win`) and calling time (room.js `stakes`, the timeout outcome, which is read
@@ -45,7 +49,8 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    page is still too long then. Car Trap's prints at 10 pt on one page; Prom Budget's (798 words) on two at 10.5 pt.
 3. **Page 3, Score sheet (landscape):** two blanks you fill in first ("Each wrong answer adds ___ min", "Each hint
    adds ___ min"); one row per set; for each lock and for the final padlock an Opened box and five wrong-answer boxes;
-   finishing time, the counts of wrong answers and hints, penalty (min) and total time; the rule in two lines under it.
+   "Finished (final padlock, or Lock 3 if skipped)" (the final padlock is the teacher's choice: FINAL-PADLOCK-FAIR
+   Amendment 1), the counts of wrong answers and hints, penalty (min) and total time; the rule in two lines under it.
    No fixed penalty figure is printed on it or on any student page.
 4. **Pages 4-5, Answer key and worked solutions:** the "About this room" box (contents, each lock's topic and time,
    the level, the final padlock's shape and target range); every answer, common wrong answer and worked line was
@@ -55,9 +60,17 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    brackets, no calculator, make the target. Behind the scenes every set's one solution has the same shape (one x and
    one + or -), is the only expression of any shape that makes the target, works out in whole steps, and its product
    has a factor that is a multiple of 5 or 12 or less, and never two factors of 100 or more (Jon, 16 Nov 2026,
-   HAMSTER-HEIST-PACK: three-digit answers had let 420 × 812 through; rebuilding the seven earlier packs under it
-   changed none of their pages, so the PDFs on Tes still match a fresh build); the sets are chosen so every set has
-   one, or the build fails.
+   HAMSTER-HEIST-PACK: three-digit answers had let 420 × 812 through), and no product is above 10,000 (Jon, 17 Nov
+   2026, contract FINAL-PADLOCK-FAIR: "10,000 should be the ceiling"). Every set in a pack is also the same
+   difficulty (the same contract: "all final locks on a room should be of a similar difficulty"): with a
+   multiplication, every set's product has the same digit counts (every set 1-digit × 2-digit, say) and the largest
+   product is at most 3 × the smallest; in plus-and-minus, every set's largest term has the same number of digits.
+   The build searches the classes in an order fixed by the seed (each class's product windows smallest first) for
+   enough sets, then draws each set's target from that class and window; no class reaching the set count fails the
+   build, naming the best class found. The sets are chosen so every set has one, or the build fails. Every pack was
+   rebuilt under these rules, its `pack_version` raised by one (the Tes files are replaced: todo PACKS-V2-UPLOAD).
+   The Heatwave Mutiny is plus-and-minus: its cube answers (1728 to 9261) cannot meet the rules with a
+   multiplication.
    The shape is never printed for students (the build checks); "About this room" gives it, the target range and the
    intended route (estimation) for the teacher. Option B (one + and one -) is `"final_shape": "plus-and-minus"`.
 5. **Each set (cover, evidence pages 1-2, locks page):** the set letter is in the top-right box of every page; the
@@ -67,7 +80,8 @@ Page 1 carries the room's win image from `docs/art/<art>-win.webp`; a room witho
    leaves too little room prints its picture smaller, never below 60% of its width; still too long at 60%, it
    prints no picture (CORE-PACKS-ROLL-PROM Amendment 1; Prom Budget's covers), and the build fails only if it is
    too long even then; the cover's answer boxes show only each instrument's picture, label and unit (no digit slots, range or maximum); the locks page
-   ends with the final padlock's target, its rules, a working box and the expression line.
+   ends with the final padlock's target, its rules, a working box and the expression line, under the heading "The
+   final padlock (if your teacher says so)" (FINAL-PADLOCK-FAIR Amendment 1).
    **The answer boxes (contract ANSWER-BOX-CHECK, Jon, 14 Nov 2026).** Each is the dashed box on its instrument's
    picture (the answer image's `label_box`), and a student writes in it on a black-and-white print. Two rules, both
    the build's, never a room's:
@@ -122,7 +136,8 @@ Then, in order, any failure stopping the build:
    `clue_strings()` are the rules the room engine serves draws by.
 2. **Selection:** every joint draw (one variant per lock) is judged VALID or not; from the VALID ones, a seeded
    search picks the sets so that no lock's answer repeats across them, no lock's printed common wrong answer is its
-   printed answer, and every set has a final padlock with a friendly product; then `final.py` gives each set its final padlock in the pack's one shape.
+   printed answer, and every set has a final padlock with a friendly product of at most 10,000 in the pack's one
+   difficulty class and product window (FINAL-PADLOCK-FAIR); then `final.py` gives each set its final padlock in the pack's one shape, from that class and window.
 3. **Verification:** `lockcheck.py` recomputes every answer, common wrong answer and worked-solution figure from each
    variant's givens, by its own method (it imports neither the variant generator nor its set checks), and re-reads
    every final expression with its own parser: its value, its shape, and that no other expression makes its target.
@@ -137,7 +152,7 @@ Then, in order, any failure stopping the build:
    16 Nov 2026); `stakes` is only in its read-out and, prefixed, on the covers; the hook is in the
    start read-out and on no cover, and a hook or brief with a `{{token}}` fails the build (the start read-out is
    filled once, from set A); page 1 is at most
-   150 words and no rule is stated on more than one teacher page; no student page prints the final padlock's
+   180 words and no rule is stated on more than one teacher page; no student page prints the final padlock's
    shape or allows a calculator; every answer box over dark art is filled white and no other is, and none is under
    20 × 4.5 mm on an approved or `--final` build (item 5, above); every figure on every page is bound to its
    unit. The PDF's page count must equal the pages built.
@@ -151,7 +166,7 @@ every room with a config and plants faults, each of which must be caught (the ru
 an invalid joint draw, a wrong recomputed answer, a printed URL with no room page, a missing score-sheet row, a final
 target two expressions reach and one no expression reaches, a fixed penalty figure, a pack whose sets use different
 final-padlock shapes, a range and digit slots on answer boxes, `stakes` unprefixed on a cover and inside the start
-read-out, page 1 over 150 words, a rule stated on two teacher pages, the final padlock's shape or a calculator allowance on
+read-out, page 1 over its word cap, a rule stated on two teacher pages, the final padlock's shape or a calculator allowance on
 a student page, a set whose product has no factor a multiple of 5 or 12 or less, a wrong recomputed answer in each of The
 Comic Caper and The Library Jam, a cover printing the hook, a start read-out without it and a hook with a token, a
 clue whose caption is left with an orphan full stop, a caption override with a space before its full stop, a

@@ -728,6 +728,47 @@ def _ops(tree):
     return (kinds.count(_ast.Mult), kinds.count(_ast.Div), kinds.count(_ast.Add), kinds.count(_ast.Sub))
 
 
+FINAL_PRODUCT_MAX = 10000   # Jon, 17 Nov 2026 (contract FINAL-PADLOCK-FAIR): no final-padlock product above this
+FINAL_RATIO_MAX = 3         # the same contract: a pack's largest product at most 3 x its smallest
+
+
+def _digits(x):
+    return len(str(abs(int(x))))
+
+
+def pack_problems(finals, shape):
+    """Problems with a pack's final padlocks taken together (contract FINAL-PADLOCK-FAIR), read from the printed
+    expressions alone: [(letter, expr)]. With a multiplication, every set's product must have the same digit counts
+    for its two factors, and the largest product be at most FINAL_RATIO_MAX x the smallest; with none (plus-and-minus),
+    every set's largest term must have the same number of digits."""
+    out, sigs, prods, bigs = [], {}, {}, {}
+    for letter, expr in finals:
+        try:
+            tree = _parse(expr)
+        except (ValueError, SyntaxError) as e:
+            out.append("set %s: expression %r cannot be read (%s)" % (letter, expr, e))
+            continue
+        muls = [n for n in _ast.walk(tree) if isinstance(n, _ast.BinOp) and isinstance(n.op, _ast.Mult)
+                and isinstance(n.left, _ast.Constant) and isinstance(n.right, _ast.Constant)]
+        if muls:
+            sigs[letter] = tuple(sorted(tuple(sorted((_digits(m.left.value), _digits(m.right.value)))) for m in muls))
+            prods[letter] = max(Fraction(str(m.left.value)) * Fraction(str(m.right.value)) for m in muls)
+        else:
+            bigs[letter] = max(_digits(n.value) for n in _ast.walk(tree) if isinstance(n, _ast.Constant))
+    if sigs and bigs:
+        out.append("sets %s multiply and sets %s do not: not one difficulty" % ("".join(sorted(sigs)), "".join(sorted(bigs))))
+    if len(set(sigs.values())) > 1:
+        out.append("the sets' products are not one digit signature: %s" % ", ".join(
+            "%s %s" % (k, " and ".join("x".join(str(d) for d in m) for m in v)) for k, v in sorted(sigs.items())))
+    if prods and max(prods.values()) > FINAL_RATIO_MAX * min(prods.values()):
+        out.append("the largest product (%s) is more than %d x the smallest (%s)"
+                   % (max(prods.values()), FINAL_RATIO_MAX, min(prods.values())))
+    if len(set(bigs.values())) > 1:
+        out.append("the sets' largest terms differ in digit count: %s"
+                   % ", ".join("%s %d" % (k, v) for k, v in sorted(bigs.items())))
+    return out
+
+
 def final_problems(letter, nums, final, shape):
     """Problems with one set's final padlock, checked from its printed target and expression alone: a whole number,
     each answer once, the pack's shape, the value, and exactly one expression of any shape reaching it."""
@@ -755,6 +796,8 @@ def final_problems(letter, nums, final, shape):
                 out.append("set %s: product %s x %s has no factor a multiple of 5 or 12 or less" % (letter, a, b))
             if a >= 100 and b >= 100:                # Jon, 16 Nov 2026: never two factors of 100 or more
                 out.append("set %s: product %s x %s multiplies two numbers of 100 or more" % (letter, a, b))
+            if a * b > FINAL_PRODUCT_MAX:           # Jon, 17 Nov 2026 (FINAL-PADLOCK-FAIR): the ceiling
+                out.append("set %s: product %s x %s = %s is above %d" % (letter, a, b, a * b, FINAL_PRODUCT_MAX))
     if used != sorted(Fraction(str(n)) for n in nums):
         out.append("set %s: expression %r does not use each answer %s exactly once" % (letter, expr, list(nums)))
     if got != t:
