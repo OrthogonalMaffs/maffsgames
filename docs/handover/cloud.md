@@ -69,6 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-17 (cloud): MERGE-PR-ROBUST (`docs/handover/contracts/2026-11-17-merge-pr-robust.md`; Jon 17 Nov)
+
+Agent Claude Code (cloud), branch `claude/gallant-allen-2f8ehb` from main cf4687e. Size medium; gate file (merge-pr.py).
+**Close-out carried (first commit):** SHAPE-SHIFTER-FLAKE (#805, e91dd5e), recorded below; contract moved. ANSWER-AUDIT-PILOT's had already ridden on #805.
+Done on the branch: `scripts/merge-pr.py`: `gh_raw()` + `classify()` (5xx, "Server Error", connection reset are `Transient(Refused)`; a 4xx never is) and `with_retry()` (GET only, 4 tries, 5/15/45 s; a Transient on PUT/POST becomes a plain Refused, never re-sent); `run_jobs()` steps 50 → 25 → 13 a page on a Transient; `guard()` waits on a Transient within --wait, never judging it; `--head` (default: this checkout's HEAD when on the PR's branch) skips judging until GitHub reports it; the post-merge watch has a 180 s registration grace; a failed read of main's head after the merge no longer hides the report. `--selftest`: 97 PASS, all 66 of main's lines unchanged, five plants caught (gh_api before, 50 a page only, a naive retry of PUT/POST/4xx, no expected head, no grace). Todo rows MERGE-PR-VERDICT and MERGE-PR-GRACE updated, both still open (the guard's (b') refusal is unchanged by contract).
+Next: Gate; merge with this branch's script, `--watch --wait 3600`; main's two runs.
+
 ## 2026-11-16 (cloud): SHAPE-SHIFTER-FLAKE (`docs/history/contracts/2026-11-16-shape-shifter-flake.md`)
 
 Agent Claude Code (cloud), branch `claude/adoring-babbage-drm3uj` restarted from main 6e1f4e0. Size small; sent first, HEATWAVE-PACK (home) waits on it.

@@ -6,6 +6,7 @@
     python scripts/merge-pr.py <number> --wait 600           # while a check is still running, poll up to 600 s, then refuse
     python scripts/merge-pr.py <number> --override "<Jon's ruling and date>"
     python scripts/merge-pr.py <number> --watch --wait 3600  # merge, then watch main's run on the squash commit
+    python scripts/merge-pr.py <number> --head <sha> ...     # judge nothing until GitHub reports <sha> as the PR's head
     python scripts/merge-pr.py --watch-main [<sha>] [--wait <s>]   # watch main's run on <sha> (default: main's newest merge)
     python scripts/merge-pr.py --selftest                    # recorded API fixtures; no network
 
@@ -49,6 +50,23 @@ run, and prints ONE line, exit 0 for GREEN and 1 for anything else. With no <sha
 A run or job still going, or one that cannot be read yet, is NOT FINISHED, never green; a red run is never waited out; a
 commit with no run is waited for (a new merge's run takes seconds to register), then NO RUN FOUND. A merge given --watch
 runs the same watch on its squash commit, prints its line last and exits with its status.
+
+GitHub's timing (MERGE-PR-ROBUST, 17 Nov 2026) changes none of the rules above; it stops a lane being refused by GitHub
+rather than by a red Gate or red main:
+
+  Retries. A read (GET) that fails with an HTTP 5xx, gh's "Server Error" or a connection reset is tried 4 times in all,
+      5, 15 and 45 s apart (RETRY_BACKOFF_S), then raised as Transient, naming the status. A 4xx is never retried. A PUT
+      or POST is never re-sent (a 502 on the merge PUT can come back after GitHub merged): it is refused, saying so. A
+      jobs page that still fails is asked for at 25, then 13 a page (JOBS_SIZES), and paging goes on at that size.
+      The guard counts a Transient as not finished: it waits within --wait ("waiting: GitHub <status> reading <what>"),
+      and refuses, naming it, when --wait runs out. A Transient is never judged red or green.
+  --head SHA. The commit expected at the PR's head. Until GitHub reports it nothing is judged (a stale head's Gate, red
+      or green, never counts): the guard waits within --wait ("waiting: PR head <old7> has not caught up with <new7>"),
+      then refuses. Without --head, when this checkout's branch is the PR's head branch, its `git rev-parse HEAD` is the
+      expected head, said in the first log line; on any other branch nothing is expected, as before.
+  Registration grace. After a merge with --watch, the watch waits at least REGISTER_GRACE_S (180 s) for main's run on
+      the squash commit to register, whatever --wait is; NO RUN FOUND only after both. Once the run exists, --wait alone
+      bounds the wait for it to finish. --watch-main has no grace.
 """
 import argparse
 import json
@@ -83,14 +101,70 @@ class Refused(Exception):
     pass
 
 
-def gh_api(method, path, **fields):
+class Transient(Refused):
+    """GitHub failed in a way that says nothing about the PR or main: an HTTP 5xx, gh's "Server Error", a connection
+    reset. A Refused, so every caller that stops on Refused still stops; the guard alone treats it as "not finished"."""
+    def __init__(self, msg, status="", what=""):
+        Refused.__init__(self, msg)
+        self.status, self.what = status, what
+
+
+# MERGE-PR-ROBUST (17 Nov 2026): a read (GET) that fails transiently is tried 4 times in all, these seconds apart.
+# PUT and POST are never re-sent: a 502 on the merge PUT can come back after GitHub has merged.
+RETRY_BACKOFF_S = (5, 15, 45)
+_HTTP4 = re.compile(r"HTTP 4\d\d")
+_HTTP5 = re.compile(r"HTTP (5\d\d)")
+_TRANSIENT = re.compile(r"server error|connection reset", re.I)
+
+
+def classify(method, path, text):
+    """-> the exception for a failed gh call: Transient for a 5xx/Server Error/connection reset, else Refused.
+    A 4xx is never transient."""
+    text = (text or "").strip()[:300]
+    msg = "gh api %s %s failed: %s" % (method, path, text)
+    if _HTTP4.search(text):
+        return Refused(msg)
+    m5, mt = _HTTP5.search(text), _TRANSIENT.search(text)
+    if not (m5 or mt):
+        return Refused(msg)
+    return Transient(msg, ("HTTP " + m5.group(1)) if m5 else mt.group(0).lower(), "%s %s" % (method, path))
+
+
+def gh_raw(method, path, **fields):
+    """One `gh api` call, no retry. Raises Transient or Refused (classify())."""
     cmd = ["gh", "api", "-X", method, path]
     for k, v in fields.items():
         cmd += ["-f", "%s=%s" % (k, v)]
     p = subprocess.run(cmd, capture_output=True, text=True, encoding="utf-8")
     if p.returncode != 0:
-        raise Refused("gh api %s %s failed: %s" % (method, path, (p.stderr or p.stdout).strip()[:300]))
+        raise classify(method, path, p.stderr or p.stdout)
     return json.loads(p.stdout) if p.stdout.strip() else {}
+
+
+def with_retry(call, sleep=time.sleep, log=None):
+    """`call` with GETs retried on Transient (RETRY_BACKOFF_S between tries). After the last try, Transient again, its
+    message naming the status and the attempts. A Transient on a PUT or POST is not retried and becomes a plain
+    Refused, so nothing downstream waits on it or sends it again."""
+    def api(method, path, **fields):
+        attempt = 0
+        while True:
+            try:
+                return call(method, path, **fields)
+            except Transient as e:
+                if method != "GET":
+                    raise Refused("%s (not retried: a %s is never re-sent; check the PR on GitHub before running again)"
+                                  % (e, method))
+                if attempt >= len(RETRY_BACKOFF_S):
+                    raise Transient("GitHub %s reading %s after %d attempts: %s" % (e.status, path, attempt + 1, e),
+                                    e.status, path)
+                if log:
+                    log("retrying in %ds: GitHub %s reading %s" % (RETRY_BACKOFF_S[attempt], e.status, path))
+                sleep(RETRY_BACKOFF_S[attempt])
+                attempt += 1
+    return api
+
+
+gh_api = with_retry(gh_raw)
 
 
 R = "repos/{owner}/{repo}"   # gh fills these from the current checkout
@@ -117,14 +191,30 @@ def main_runs(api):
     return sorted(runs, key=lambda r: r["created_at"], reverse=True)
 
 
-JOBS_PER_PAGE = 50   # GitHub answered 502 at 100 a page for a re-run main run of 71 jobs, every time (27 Oct 2026); 50 read it
+JOBS_PER_PAGE = 50   # GitHub answered 502 at 100 a page for a re-run main run of 71 jobs, every time (27 Oct 2026); 50 read it.
+# 16-17 Nov 2026: 502 again at 50 a page on a re-run main run of 92 jobs (43961875130), three merge-pr.py runs on #805, while
+# the same request by hand answered 8 of 8. So a page that still fails after gh_api's retries is asked for at half the size.
+JOBS_SIZES = (JOBS_PER_PAGE, 25, 13)   # never lower than 13 (contract MERGE-PR-ROBUST)
 
 
-def run_jobs(api, run_id):
-    """Every job of the run's latest attempt, all pages. Raises Refused if the call fails."""
-    jobs, page, total = [], 1, None
-    while page <= 40:
-        d = api("GET", "%s/actions/runs/%s/jobs?per_page=%d&page=%d" % (R, run_id, JOBS_PER_PAGE, page))
+def run_jobs(api, run_id, sizes=JOBS_SIZES):
+    """Every job of the run's latest attempt, all pages. A page that fails with Transient is asked for again at the next
+    smaller size in `sizes`, and paging goes on at that size; Transient at the smallest size, or any Refused, is raised."""
+    jobs, page, total, i = [], 1, None, 0
+    while page <= 200:
+        per = sizes[i]
+        try:
+            d = api("GET", "%s/actions/runs/%s/jobs?per_page=%d&page=%d" % (R, run_id, per, page))
+        except Transient:
+            if i + 1 >= len(sizes):
+                raise
+            i += 1
+            # go on from the same job at the smaller size; if that offset is not a whole page of it, start again
+            if len(jobs) % sizes[i] == 0:
+                page = len(jobs) // sizes[i] + 1
+            else:
+                jobs, page = [], 1
+            continue
         got = d.get("jobs", [])
         jobs += got
         total = d.get("total_count", len(jobs)) if total is None else total
@@ -143,6 +233,8 @@ def newest_merge(api, runs=None):
     """(sha, why): the newest commit on main that is not a bot skip-marker commit, or (None, why) if none can be read."""
     try:
         commits = api("GET", "%s/commits?sha=main&per_page=50" % R)
+    except Transient:
+        raise   # not "unreadable, so red": the guard waits on it (MERGE-PR-ROBUST)
     except Refused as e:
         return None, "main's commits could not be read (%s)" % e
     for c in commits if isinstance(commits, list) else []:
@@ -154,9 +246,9 @@ def newest_merge(api, runs=None):
     return None, "no commit on main in the last 50 that is not a bot skip-marker commit"
 
 
-def check_main(api, merge_of=newest_merge):
+def check_main(api, merge_of=newest_merge, jobs_of=run_jobs):
     """(b) -> (ok, why, run). Never guesses: an unfinished run or job, or no run at all, is not green; nor is a merge
-    with no run of its own (b')."""
+    with no run of its own (b'). A Transient read is raised, not judged: the guard counts it as not finished."""
     runs = main_runs(api)
     if not runs:
         return False, "no check-site run on main (push or manual) in the last 50 runs", None
@@ -176,7 +268,9 @@ def check_main(api, merge_of=newest_merge):
         return False, "main's last full run %s (%s, %s, finished %s) is %s" % (
             r["id"], r["event"], r["head_sha"][:7], r["updated_at"], r["conclusion"]), r
     try:
-        jobs = run_jobs(api, r["id"])
+        jobs = jobs_of(api, r["id"])
+    except Transient:
+        raise
     except Refused as e:
         return False, "main's run %s reads success but its jobs could not be read (%s)" % (r["id"], e), r
     if not jobs:
@@ -193,25 +287,69 @@ def check_main(api, merge_of=newest_merge):
         r["id"], len(jobs), r["head_sha"][:7], r["updated_at"]), r
 
 
-def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print, clean=disarm):
-    """Merge or raise Refused. Returns (merge_response, judged_run)."""
+def no_local(ref):
+    """The default for guard()'s `local`: no checkout to compare with."""
+    return None
+
+
+def git_local(ref):
+    """`git rev-parse HEAD` if the checkout's current branch is `ref` (the PR's head branch), else None."""
+    try:
+        br = subprocess.run(["git", "rev-parse", "--abbrev-ref", "HEAD"], capture_output=True, text=True, encoding="utf-8")
+        if br.returncode != 0 or br.stdout.strip() != ref:
+            return None
+        sha = subprocess.run(["git", "rev-parse", "HEAD"], capture_output=True, text=True, encoding="utf-8")
+        return sha.stdout.strip().lower() if sha.returncode == 0 and sha.stdout.strip() else None
+    except OSError:
+        return None
+
+
+def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print, clean=disarm,
+          head=None, local=no_local, clock=time.time):
+    """Merge or raise Refused. Returns (merge_response, judged_run).
+
+    MERGE-PR-ROBUST: `head` is the commit expected at the PR's head (--head, or `local(<the PR's head ref>)`, the
+    checkout's HEAD when it is on that branch). Until GitHub reports it, nothing is judged: a stale head's Gate, red or
+    green, never counts; the guard waits within `wait`, then refuses. A Transient read is waited on the same way."""
     if override is not None and not override.strip():
         raise Refused("--override needs Jon's ruling and its date as text")
-    deadline = time.time() + wait
+    deadline = clock() + wait
+    head = head.strip().lower() if head else None
+    asked = head is not None
     while True:
-        pr = api("GET", "%s/pulls/%d" % (R, number))
-        if pr["state"] != "open" or pr.get("merged"):
-            raise Refused("PR #%d is not open (%s)" % (number, "merged" if pr.get("merged") else pr["state"]))
-        if pr["base"]["ref"] != "main":
-            raise Refused("PR #%d targets %s, not main" % (number, pr["base"]["ref"]))
-        ok_a, why_a = check_gate(api, pr)
-        ok_b, why_b, run = main_check(api) if override is None else (True, "waived by --override", None)
+        try:
+            pr = api("GET", "%s/pulls/%d" % (R, number))
+            if pr["state"] != "open" or pr.get("merged"):
+                raise Refused("PR #%d is not open (%s)" % (number, "merged" if pr.get("merged") else pr["state"]))
+            if pr["base"]["ref"] != "main":
+                raise Refused("PR #%d targets %s, not main" % (number, pr["base"]["ref"]))
+            if not asked:
+                asked, head = True, local(pr["head"].get("ref"))
+                if head:
+                    log("expected head %s: this checkout's HEAD on %s (--head names another)" % (head[:7], pr["head"]["ref"]))
+            got = pr["head"]["sha"]
+            if head and not got.lower().startswith(head):
+                stale = "PR head %s has not caught up with %s" % (got[:7], head[:7])
+                if clock() >= deadline:
+                    raise Refused(stale + (" after %ds" % wait if wait else "") + "; nothing judged")
+                log("waiting: " + stale)
+                sleep(POLL_S)
+                continue
+            ok_a, why_a = check_gate(api, pr)
+            ok_b, why_b, run = main_check(api) if override is None else (True, "waived by --override", None)
+        except Transient as e:
+            what = "GitHub %s reading %s" % (e.status, e.what)
+            if clock() >= deadline:
+                raise   # its message names the status, the read and the attempts
+            log("waiting: " + what)
+            sleep(POLL_S)
+            continue
         if ok_a and ok_b:
             break
         # a thing that is merely unfinished may be waited for; a red one never is
         unfinished = ("not finished" in why_a or "no %r" % GATE in why_a or "not finished" in why_b)
         red = (not ok_a and not unfinished) or (not ok_b and "not finished" not in why_b)
-        if red or time.time() >= deadline:
+        if red or clock() >= deadline:
             raise Refused("; ".join(w for ok, w in ((ok_a, why_a), (ok_b, why_b)) if not ok))
         log("waiting: " + "; ".join(w for ok, w in ((ok_a, why_a), (ok_b, why_b)) if not ok))
         sleep(POLL_S)
@@ -262,8 +400,12 @@ def watch_state(api, sha):
     return "green", r, "%d jobs, all finished, none failed" % len(jobs)
 
 
-def watch_main(api, sha, wait=0, state=watch_state, sleep=time.sleep, clock=time.time, log=None):
-    """-> (exit code, the one line). Polls every POLL_S while the run is missing or unfinished, up to `wait` seconds."""
+REGISTER_GRACE_S = 180   # a fresh merge's push runs register within seconds to a minute (#803: NO RUN FOUND at --wait 0)
+
+
+def watch_main(api, sha, wait=0, state=watch_state, sleep=time.sleep, clock=time.time, log=None, grace=0):
+    """-> (exit code, the one line). Polls every POLL_S while the run is missing or unfinished, up to `wait` seconds;
+    while no run has registered, up to max(wait, grace) (the post-merge watch passes REGISTER_GRACE_S)."""
     start = clock()
     while True:
         st, r, detail = state(api, sha)
@@ -272,30 +414,40 @@ def watch_main(api, sha, wait=0, state=watch_state, sleep=time.sleep, clock=time
         if st == "red":
             return 1, "main %s run %s: RED: %s" % (sha[:7], r["id"], detail)
         elapsed = clock() - start
-        if elapsed >= wait:
+        limit = max(wait, grace) if st == "none" else wait
+        if elapsed >= limit:
             if st == "none":
                 return 1, "main %s: NO RUN FOUND" % sha[:7]
             return 1, "main %s: NOT FINISHED after %ds" % (sha[:7], int(round(elapsed)))
         if log:
             log("waiting: main %s: %s" % (sha[:7], detail))
-        sleep(min(POLL_S, wait - elapsed))
+        sleep(min(POLL_S, limit - elapsed))
 
 
 def merge_and_report(api, number, override=None, wait=0, watch=False, out=print, note=None, sleep=time.sleep,
-                     clock=time.time, state=watch_state):
-    """The merge command: guard() unchanged, then its report; with `watch`, the watch on the squash commit last."""
+                     clock=time.time, state=watch_state, head=None, local=no_local, log=print, grace=REGISTER_GRACE_S):
+    """The merge command: guard(), then its report; with `watch`, the watch on the squash commit last, which waits at
+    least `grace` seconds for that commit's run to register, whatever `wait` is."""
     try:
-        res, run = guard(api, number, override, wait)
+        res, run = guard(api, number, override, wait, sleep=sleep, clock=clock, head=head, local=local, log=log)
     except Refused as e:
         out("REFUSED #%d: %s" % (number, e))
         return 1
-    head = api("GET", "%s/git/ref/heads/main" % R)["object"]["sha"]
+    try:   # the merge has happened: a failed read here must not hide it (no traceback in place of the report)
+        main_head = api("GET", "%s/git/ref/heads/main" % R)["object"]["sha"]
+        shown = main_head[:7]
+    except Refused as e:
+        main_head, shown = "", "unread (%s)" % e
     judged = ("run %s (%s)" % (run["id"], run["html_url"] if "html_url" in run else run["conclusion"])) if run else "waived by --override"
-    out("MERGED #%d (squash, %s). main head %s. Judged: %s." % (number, res.get("sha", "")[:7], head[:7], judged))
+    out("MERGED #%d (squash, %s). main head %s. Judged: %s." % (number, res.get("sha", "")[:7], shown, judged))
     if not watch:
         out("Now wait for main's run on that commit and report it (CLAUDE.md), then end-task.py.")
         return 0
-    code, line = watch_main(api, res.get("sha") or head, wait, state=state, sleep=sleep, clock=clock, log=note)
+    sha = res.get("sha") or main_head
+    if not sha:
+        out("main: NOT FINISHED after 0s (neither the squash commit nor main's head could be read; use --watch-main)")
+        return 1
+    code, line = watch_main(api, sha, wait, state=state, sleep=sleep, clock=clock, log=note, grace=grace)
     out(line)
     return code
 
@@ -305,7 +457,10 @@ def watch_cmd(api, sha="", wait=0, pick=newest_merge, **kw):
     newest_merge(): the bot's skip-marker commits (timings, register, answer counts) have no run and are passed over
     (Amendment 2, Jon 3 Nov 2026). If main's commits cannot be read, exit 2 and say why on stderr."""
     if not sha:
-        sha, why = pick(api)
+        try:
+            sha, why = pick(api)
+        except Transient as e:   # newest_merge() raises it for the guard to wait on; here it is unreadable, as before
+            sha, why = None, "main's commits could not be read (%s)" % e
         if sha is None:
             return 2, "--watch-main: %s" % why, True
     code, line = watch_main(api, sha, wait, **kw)
@@ -366,8 +521,13 @@ JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
 
 class Fake:
     def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False,
-                 max_per_page=None, commits=None, commits_error=False):
+                 max_per_page=None, commits=None, commits_error=False, faults=None, pr_script=None, gates=None):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
+        # MERGE-PR-ROBUST: faults are [method, path substring, times (None: every time), gh's text]; each call that
+        # matches raises classify()'s exception, as gh_raw would. pr_script: successive PR reads (the last repeats);
+        # gates: the Gate's check-runs by head sha.
+        self.faults = [list(f) for f in (faults or [])]
+        self.pr_script, self.gates = list(pr_script or []), gates
         self.commits = COMMITS if commits is None else commits   # main's commits, newest first (GATE-FIX b')
         self.commits_error = commits_error
         self.max_per_page = max_per_page   # GitHub's 502 for a page too large (27 Oct 2026)
@@ -378,7 +538,14 @@ class Fake:
 
     def __call__(self, method, path, **fields):
         self.calls.append((method, path, fields))
+        for f in self.faults:
+            if f[0] == method and f[1] in path and (f[2] is None or f[2] > 0):
+                if f[2] is not None:
+                    f[2] -= 1
+                raise classify(method, path, f[3])
         if method == "GET" and "/check-runs" in path:
+            if self.gates is not None:
+                return self.gates[path.split("/commits/", 1)[1].split("/", 1)[0]]
             return self.gate
         if method == "GET" and "/actions/runs/" in path and "/jobs" in path:
             if self.jobs_error:
@@ -399,6 +566,8 @@ class Fake:
             runs = self.script.pop(0) if len(self.script) > 1 else (self.script[0] if self.script else self.runs)
             return {"workflow_runs": runs}
         if method == "GET" and "/pulls/" in path:
+            if self.pr_script:
+                return self.pr_script.pop(0) if len(self.pr_script) > 1 else self.pr_script[0]
             return self.pr
         if method == "POST" and path.endswith("/comments"):
             return {"id": 1}
@@ -742,6 +911,191 @@ def watch_cases(state=watch_state, pick=newest_merge):
     return out
 
 
+# ---- MERGE-PR-ROBUST (17 Nov 2026): GitHub's 5xx, a PR head that has not caught up with a push, a run not registered yet ----
+E502 = "gh: Server Error (HTTP 502)"
+E404 = "gh: Not Found (HTTP 404)"
+OLD = "c08a613" + "0" * 33   # #802: the head GitHub still reported, its Gate failed, after the fix was pushed
+PR_OLD = dict(PR_OPEN, head={"sha": OLD, "ref": "claude/x"})
+PR_NEW = dict(PR_OPEN, head={"sha": HEAD, "ref": "claude/x"})
+M_GOING = [_wrun("in_progress", None, sha=SQUASH)] + GREEN
+
+
+def old_api(call, sleep=None, log=None):
+    """The planted fault: gh_api before MERGE-PR-ROBUST. One try, and every failure a plain Refused."""
+    def api(method, path, **fields):
+        try:
+            return call(method, path, **fields)
+        except Refused as e:
+            raise Refused(str(e))
+    return api
+
+
+def naive_retry(call, sleep=time.sleep, log=None):
+    """The planted fault: a retry that re-sends any call (PUT and POST too) on any failure (4xx too)."""
+    def api(method, path, **fields):
+        for attempt in range(len(RETRY_BACKOFF_S) + 1):
+            try:
+                return call(method, path, **fields)
+            except Refused:
+                if attempt == len(RETRY_BACKOFF_S):
+                    raise
+                sleep(RETRY_BACKOFF_S[attempt])
+    return api
+
+
+def robust_cases(retry=with_retry, sizes=JOBS_SIZES, use_head=True, grace=REGISTER_GRACE_S):
+    """-> list of (name, ok, detail, plants): `plants` names the planted faults the case must catch (selftest())."""
+    out = []
+
+    def case(name, ok, detail, *plants):
+        out.append((name, bool(ok), detail, set(plants)))
+
+    def main_check(api):
+        return check_main(api, jobs_of=lambda a, rid: run_jobs(a, rid, sizes=sizes))
+
+    def try_guard(fake, wait=0, head=None, local=no_local):
+        c, logs = Clock(), []
+        if not use_head:
+            head, local = None, no_local
+        try:
+            guard(retry(fake, sleep=c.sleep), 473, wait=wait, main_check=main_check, sleep=c.sleep, clock=c,
+                  log=logs.append, head=head, local=local)
+            return None, c, logs
+        except Refused as e:
+            return str(e), c, logs
+
+    def jobs_calls(fake, per=None):
+        return [x for x in fake.calls if "/jobs" in x[1] and (per is None or "per_page=%d&" % per in x[1])]
+
+    f = Fake(faults=[["GET", "/jobs?per_page=50&page=1", 1, E502]])
+    err, c, _ = try_guard(f)
+    case("[robust] one 502 on the jobs' page 1, then success: retried after 5 s, merges", err is None and len(f.merged()) == 1
+         and len(jobs_calls(f)) == 2 and c.t == 5, err or "jobs calls %d, t %s" % (len(jobs_calls(f)), c.t), "retry")
+
+    f = Fake(faults=[["GET", "/jobs?per_page=50&", None, E502]])
+    err, c, _ = try_guard(f)
+    case("[robust] 502 on every try at 50 a page, success at 25: read at 25, merges", err is None and len(f.merged()) == 1
+         and len(jobs_calls(f, 50)) == 4 and len(jobs_calls(f, 25)) == 1 and not jobs_calls(f, 13),
+         err or "calls %s" % [x[1] for x in jobs_calls(f)], "retry", "sizes")
+
+    f = Fake(faults=[["GET", "/jobs", None, E502]])
+    err, c, _ = try_guard(f)
+    case("[robust] 502 forever on the jobs: 4 tries at each of 50, 25 and 13, then refused naming the 502, nothing merged",
+         err and "HTTP 502" in err and "after 4 attempts" in err and len(jobs_calls(f)) == 12
+         and [int(x[1].split("per_page=")[1].split("&")[0]) for x in jobs_calls(f)] == [50] * 4 + [25] * 4 + [13] * 4
+         and not f.merged(), err or "MERGED", "retry", "sizes")
+
+    f = Fake(faults=[["GET", "/check-runs", 4, E502]])
+    err, c, logs = try_guard(f, wait=600)
+    case("[robust] a 502 that outlasts the retries on one poll is waited on within --wait (never red), then merges",
+         err is None and len(f.merged()) == 1 and any(l.startswith("waiting: GitHub HTTP 502 reading ") for l in logs),
+         err or repr(logs), "retry")
+
+    f = Fake(faults=[["GET", "/check-runs", None, E502]])
+    err, c, _ = try_guard(f, wait=0)
+    case("[robust] --wait 0 and a 502 that outlasts the retries: refused, naming it", err and "HTTP 502" in err
+         and not f.merged(), err or "MERGED")
+
+    f = Fake(faults=[["GET", "/actions/workflows/", 1, E502]], runs=RED)
+    err, c, _ = try_guard(f, wait=600)
+    case("[robust] a 502, then a red main: still refused red, not waited out", err and "failure" in err and not f.merged()
+         and c.t == 5, err or "MERGED")
+
+    f = Fake(faults=[["PUT", "/merge", None, E502]])
+    err, c, _ = try_guard(f)
+    case("[robust] a 502 on the merge PUT: sent once, never retried, refused", err and "not retried" in err
+         and len(f.merged()) == 1, err or "MERGED", "naive")
+
+    f = Fake(runs=RED, faults=[["POST", "/comments", None, E502]])
+    c = Clock()
+    try:
+        guard(retry(f, sleep=c.sleep), 473, override="Jon, 17 Nov 2026: x", main_check=main_check, sleep=c.sleep, clock=c,
+              log=lambda *a: None)
+        err = None
+    except Refused as e:
+        err = str(e)
+    case("[robust] a 502 on the override's POST: sent once, never retried, refused, nothing merged",
+         err and len(f.comments()) == 1 and not f.merged(), err or "MERGED", "naive")
+
+    f = Fake(faults=[["GET", "/jobs", None, E404]])
+    err, c, _ = try_guard(f, wait=600)
+    case("[robust] a 404 on the jobs: never retried, refused at once", err and "HTTP 404" in err and len(jobs_calls(f)) == 1
+         and c.t == 0 and not f.merged(), err or "MERGED", "naive")
+
+    f = Fake(pr_script=[PR_OLD, PR_OLD, PR_NEW], gates={OLD: GATE_OK, HEAD: GATE_OK})
+    err, c, logs = try_guard(f, wait=600, head=HEAD)
+    m = f.merged()
+    case("[robust] --head: PR head stale for two polls, then caught up: waits, merges on the new head's green Gate",
+         err is None and len(m) == 1 and m[0][2]["sha"] == HEAD and c.slept == 2
+         and "waiting: PR head c08a613 has not caught up with 0ba5dc1" in logs
+         and not [x for x in f.calls if OLD in x[1]], err or repr(logs), "head")
+
+    f = Fake(pr_script=[PR_OLD, PR_OLD, PR_NEW], gates={OLD: GATE_RED, HEAD: GATE_OK})
+    err, c, logs = try_guard(f, wait=600, head=HEAD[:7])
+    m = f.merged()
+    case("[robust] --head: a red Gate on the stale head is never judged: waits, merges on the new head",
+         err is None and len(m) == 1 and m[0][2]["sha"] == HEAD, err or repr(logs), "head")
+
+    f = Fake(pr_script=[PR_OLD], gates={OLD: GATE_OK})
+    err, c, _ = try_guard(f, wait=120, head=HEAD)
+    case("[robust] --head: a head that never catches up is refused when --wait runs out, nothing judged or merged",
+         err and "has not caught up with 0ba5dc1" in err and c.t >= 120 and not f.merged()
+         and not [x for x in f.calls if "/check-runs" in x[1]], err or "MERGED", "head")
+
+    f = Fake(pr_script=[PR_OLD, PR_NEW], gates={OLD: GATE_RED, HEAD: GATE_OK})
+    err, c, logs = try_guard(f, wait=600, local=lambda ref: HEAD if ref == "claude/x" else None)
+    m = f.merged()
+    case("[robust] no --head, the checkout on the PR's branch: its HEAD is expected, said in the first log line",
+         err is None and len(m) == 1 and m[0][2]["sha"] == HEAD and logs and logs[0].startswith("expected head 0ba5dc1"),
+         err or repr(logs), "head")
+
+    f = Fake(pr_script=[PR_NEW])
+    err, c, logs = try_guard(f, local=lambda ref: None)
+    case("[robust] no --head, the checkout on another branch: nothing expected, as before",
+         err is None and len(f.merged()) == 1 and not [l for l in logs if l.startswith("expected head")], err or repr(logs))
+
+    def watch_merge(script, wait=0):
+        f, lines, c = Fake(script=script), [], Clock()
+        code = merge_and_report(retry(f, sleep=c.sleep), 473, wait=wait, watch=True, out=lines.append, sleep=c.sleep,
+                                clock=c, log=lambda *a: None, grace=grace)
+        return code, lines, c, f
+
+    code, lines, c, f = watch_merge([GREEN, GREEN, GREEN, M_GREEN])
+    case("[robust] merge --watch, --wait 0: the squash commit's run registers after 60 s: GREEN, not NO RUN FOUND",
+         code == 0 and len(f.merged()) == 1 and lines[-1] == "main mmmmmmm run 41615387944: GREEN" and c.t == 60,
+         "%s %s t %s" % (code, lines, c.t), "grace")
+
+    code, lines, c, f = watch_merge([GREEN])
+    case("[robust] merge --watch, --wait 0: no run after the %d s grace: NO RUN FOUND" % REGISTER_GRACE_S,
+         code == 1 and lines[-1] == "main mmmmmmm: NO RUN FOUND" and c.t == REGISTER_GRACE_S,
+         "%s %s t %s" % (code, lines, c.t), "grace")
+
+    code, lines, c, f = watch_merge([GREEN, GREEN, M_GOING])
+    case("[robust] the grace waits for a run to register, never for it to finish (--wait governs that)",
+         code == 1 and lines[-1] == "main mmmmmmm: NOT FINISHED after 30s", "%s %s t %s" % (code, lines, c.t))
+
+    code, lines, c, f = watch_merge([GREEN, GREEN, M_GREEN], wait=3600)
+    case("[robust] a --wait longer than the grace is unchanged", code == 0 and c.t == 30, "%s %s t %s" % (code, lines, c.t))
+
+    f = Fake(faults=[["GET", "/git/ref/heads/main", None, E502]], runs=M_GREEN)
+    lines, c = [], Clock()
+    code = merge_and_report(retry(f, sleep=c.sleep), 473, wait=0, watch=True, out=lines.append, sleep=c.sleep, clock=c,
+                            log=lambda *a: None, grace=grace)
+    case("[robust] main's head unreadable after the merge: the merge is still reported, then the watch's line",
+         code == 0 and lines[0].startswith("MERGED #473") and "unread" in lines[0]
+         and lines[-1] == "main mmmmmmm run 41615387944: GREEN", "%s %s" % (code, lines))
+
+    for text, want in ((E502, "HTTP 502"), ("gh: HTTP 503: Service Unavailable", "HTTP 503"),
+                       ("Post https://api.github.com/x: read tcp: connection reset by peer", "connection reset"),
+                       ("gh: Server Error", "server error")):
+        e = classify("GET", "p", text)
+        case("[robust] classify: %r is Transient (%s)" % (text, want), isinstance(e, Transient) and e.status == want, repr(e))
+    for text in (E404, "gh: Forbidden (HTTP 403)", "gh: Validation Failed (HTTP 422)", "unknown flag"):
+        e = classify("GET", "p", text)
+        case("[robust] classify: %r is not Transient" % text, isinstance(e, Refused) and not isinstance(e, Transient), repr(e))
+    return out
+
+
 def watch_state_run_only(api, sha):
     """The planted fault: trusts the run's own status and conclusion and never reads its jobs, so a run that reads
     completed success while a job still runs is called green."""
@@ -815,6 +1169,24 @@ def selftest():
     print("  %s  planted fault (a default that takes main's head as it is, a bot skip-marker commit): %s" % (
         "PASS" if caught else "FAIL", "CAUGHT" if caught else "NOT CAUGHT"))
     bad += not caught
+    # MERGE-PR-ROBUST: the new cases pass, and each planted fault (the behaviour before, or a naive fix) is caught
+    for name, ok, detail, _ in robust_cases():
+        print("  %s  %s%s" % ("PASS" if ok else "FAIL", name, "" if ok else "   -> " + detail))
+        bad += not ok
+    plants = (("retry", "gh_api before (one try, every failure plain Refused)", dict(retry=old_api)),
+              ("sizes", "run_jobs before (50 a page only)", dict(sizes=(JOBS_PER_PAGE,))),
+              ("naive", "a naive retry (re-sends PUT and POST, retries a 4xx)", dict(retry=naive_retry)),
+              ("head", "the guard before (no expected head: GitHub's stale head judged)", dict(use_head=False)),
+              ("grace", "the watch before (no registration grace)", dict(grace=0)))
+    want = robust_cases()
+    for key, label, kw in plants:
+        must = [n for n, _, _, ps in want if key in ps]
+        failed = {n for n, ok, _, _ in robust_cases(**kw) if not ok}
+        missed = [n for n in must if n not in failed]
+        print("  %s  planted fault (%s): %d of %d case(s) catch it%s" % (
+            "PASS" if not missed else "FAIL", label, len(must) - len(missed), len(must),
+            "" if not missed else "; NOT caught by " + str(missed)))
+        bad += bool(missed) or not must
     print("%s" % ("selftest FAILED" if bad else "selftest passed"))
     return 1 if bad else 0
 
@@ -828,23 +1200,32 @@ def main():
     ap.add_argument("--watch-main", nargs="?", const="", metavar="SHA",
                     help="watch main's run on SHA (default: main's newest merge, bot skip-marker commits passed over); "
                          "one line, exit 0 only if GREEN")
+    ap.add_argument("--head", metavar="SHA",
+                    help="the commit expected at the PR's head (default: this checkout's HEAD when it is on the PR's "
+                         "branch); until GitHub reports it nothing is judged, and --wait is the ceiling")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
     note = lambda m: print(m, file=sys.stderr)   # progress to stderr: stdout carries the one line
+    api = with_retry(gh_raw, log=note)
     if a.watch_main is not None:
         if a.number or a.override is not None or a.watch:
             ap.error("--watch-main takes no PR number, --override or --watch")
         sha = a.watch_main.strip().lower()
         if sha and not re.fullmatch(r"[0-9a-f]{7,40}", sha):
             ap.error("--watch-main takes a commit sha (7 to 40 hex digits)")
-        code, line, to_stderr = watch_cmd(gh_api, sha, a.wait, log=note)
+        if a.head:
+            ap.error("--watch-main takes no --head")
+        code, line, to_stderr = watch_cmd(api, sha, a.wait, log=note)
         print(line, file=sys.stderr if to_stderr else sys.stdout)
         return code
     if not a.number:
         ap.error("a PR number is required")
-    return merge_and_report(gh_api, a.number, a.override, a.wait, a.watch, note=note)
+    head = (a.head or "").strip().lower()
+    if a.head is not None and not re.fullmatch(r"[0-9a-f]{7,40}", head):
+        ap.error("--head takes a commit sha (7 to 40 hex digits)")
+    return merge_and_report(api, a.number, a.override, a.wait, a.watch, note=note, head=head or None, local=git_local)
 
 
 if __name__ == "__main__":
