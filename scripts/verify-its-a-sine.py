@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: It's a SINE!! (all 120 answers recomputed by coordinate geometry and vector addition, never the sine or cosine rule; every item's rule and version from the pattern of what it gives; the ambiguous items' two triangles and every other sine-angle item's one; no answer within 0.005 of a 1 d.p. boundary; the bank against the saved contract, verbatim; every item marked in every stage by its key only, by dataset.val and MaffsAnswer; the working's angles and numbers; the calculator and the header badge in each mode; every diagram checked against an independent construction for its shape, its exact labels, no overlap and nothing cut off at 360 px; every mode played at every level: one board submission each, on <level>-<mode>; ITS-A-SINE-POLISH: the start picture, the Level 3 bank's two types only, level4_034 in mm, every drawn length's unit from its item, the four worked examples' numbers recomputed (each \ldots a truncation) and drawn, each wrong Stage 2 or 3 step's link to its version's example; fault-injection self-test) | | 1
+# ci-shards: It's a SINE!! (all 120 answers recomputed by coordinate geometry and vector addition, never the sine or cosine rule; every item's rule and version from the pattern of what it gives; the ambiguous items' two triangles and every other sine-angle item's one; no answer within 0.005 of a 1 d.p. boundary; the bank against the saved contract, verbatim; every item marked in every stage by its key only, by dataset.val and MaffsAnswer; the working's angles and numbers; the calculator and the header badge in each mode; every diagram checked against an independent construction for its shape, its exact labels, no overlap and nothing cut off at 360 px; every mode played at every level: one board submission each, on <level>-<mode>; ITS-A-SINE-POLISH: the start picture, the Level 3 bank's two types only, level4_034 in mm, every drawn length's unit from its item, the four worked examples' numbers recomputed (each \ldots a truncation), none near a right angle, and drawn, each wrong Stage 2 or 3 step's link to its version's example; fault-injection self-test) | | 1
 # ci-deps: games/its-a-sine/ docs/handover/contracts/ docs/history/contracts/
 r"""Independent verification for It's a SINE!! / No it's not (games/its-a-sine/), contract SINE-NOT-SINE, 17 Nov 2026, and
 contract ITS-A-SINE-POLISH, 17 Nov 2026 (the start picture, the worked examples, the Level 3 bank, level4_034 in mm).
@@ -719,6 +719,12 @@ def check_examples(page, html, out, info):
         if sorted(numbers(x['setup'])) != sorted(float(v) for v in q['given'].values()):
             out.append('example %s: the setup %r does not give %s' % (L, x['setup'], q['given']))
         got, truths = example_truths(x)
+        # Jon, 17 Nov 2026, 10:48: each example "obviously NOT a right angle": no angle within 10 degrees of 90 (contract
+        # ITS-A-SINE-EXAMPLE-D replaced D's 8, 9, 12, whose C is 89.6 degrees).
+        T = construct(q)[1]
+        near = [(v, a) for v, a in (('A', ang(T, 'A', 'B', 'C')), ('B', ang(T, 'B', 'A', 'C')), ('C', ang(T, 'C', 'A', 'B'))) if abs(a - 90) < 10]
+        if near:
+            out.append('example %s: angle %s is %.1f degrees, too near a right angle to read as not one' % (L, near[0][0], near[0][1]))
         if '%.1f' % half_up(got) != x['answer']:
             out.append('example %s: answer %s, but the construction measures %.4f (%.1f)' % (L, x['answer'], got, half_up(got)))
         nums = re.findall(r'(-?\d+\.\d+)\\ldots', x['work'])
@@ -878,6 +884,10 @@ PLANTS = [
     ('a worked example\'s answer 0.1 out', [("= 12.3\\\\text{ cm}\\\\).',", "= 12.4\\\\text{ cm}\\\\).',"), ("answer: '12.3',", "answer: '12.4',")],
      'examples 360x640', r'example A: answer 12.4'),
     ('a worked example\'s value rounded, not cut', [("= 12.266\\\\ldots", "= 12.267\\\\ldots")], 'examples 360x640', r'example A: 12.267'),
+    ('worked example D\'s answer 0.1 out', [("so \\\\(A = 35.1^\\\\circ\\\\).',", "so \\\\(A = 35.2^\\\\circ\\\\).',"), ("answer: '35.1',", "answer: '35.2',")],
+     'examples 360x640', r'example D: answer 35.2'),
+    ('worked example D back on a near-right-angled triangle', [("given: { a: 7, b: 6, c: 11 }", "given: { a: 8, b: 9, c: 12 }")],
+     'examples 360x640', r'example D: angle C is 89\.6 degrees'),
     ('a feedback link opening the wrong example', [("'sine-angle': 'B', 'cosine-side'", "'sine-angle': 'A', 'cosine-side'")],
      'examples 360x640', r'link: gcse_\d+ stage-2 step 2 \(wrong\), a sine-angle item, opens example A'),
     ('the start picture without its height', [(' width="1600" height="873" alt="A building site with roof', ' width="1600" alt="A building site with roof')],
