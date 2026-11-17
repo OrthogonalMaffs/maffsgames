@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty) and FINAL-PADLOCK-FAIR plants (a product of 10,001, a pack whose sets mix digit signatures, a largest product over 3 x the smallest, a plus-and-minus pack whose largest terms differ in digits, a PDF name without its version); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed, a product of exactly 10,000, Hamster Heist's and Heatwave's packs as built, the build's versioned PDF name; no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, its final padlocks in the easiest class that reaches N (no easier class reaches N, every room) and its shape's own hint card and key line, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty) and FINAL-PADLOCK-FAIR plants (a product of 10,001, a pack whose sets mix digit signatures, a largest product over 3 x the smallest, a plus-and-minus pack whose largest terms differ in digits, a PDF name without its version) and PADLOCK-EASIEST-HINT plants (the classes tried in #807's seeded order, a SHAPES entry with no hint or no key line, a plus-and-minus shape whose hint says multiply, a plus-and-minus pack whose hint card or key says multiply or product, as the other shape's line or in words of its own); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed, a product of exactly 10,000, Hamster Heist's and Heatwave's packs as built, the build's versioned PDF name, ease() ordering 1x1 < 1x2 < 1x3 < 1x4 < 2x2 < 2x3 and +- 3 < +- 4, Car Trap as built with no easier class reaching N, Hamster Heist's hint card and key as built (the x text, unchanged) and Heatwave's (the plus-and-minus text); no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
@@ -9,7 +9,8 @@ so this file is the line. It runs `build_pack.py --selftest`, then the plants of
 locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words), then those of PE-SHED-FINAL
 (readout_voice, the line naming whose voice the start read-out is in), then those of HEATWAVE-PACK (its three
 recomputes, a clue with no bold part, a lock's print-only instrument label), then those of FINAL-PADLOCK-FAIR (the 10,000
-ceiling, one difficulty per pack, the version in the PDF's name). Each plant must be caught by the check named beside it; each control must pass. A plant whose
+ceiling, one difficulty per pack, the version in the PDF's name), then those of PADLOCK-EASIEST-HINT (the easiest class
+first, each shape's own hint card and key line). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -462,6 +463,121 @@ def hamster_plants():
                     lambda: B.pdf_name_problems(B.pdf_name(SLUG, cfg), SLUG, cfg)
                     + ([] if B.pdf_name(SLUG, cfg).endswith("-pack-v%s.pdf" % cfg["pack_version"]) else ["no version"]),
                     "pdf_name / pdf_name_problems"))
+
+    # ---- PADLOCK-EASIEST-HINT (17 Nov 2026): the easiest class first; each shape's own hint card and key line -------
+    OLD_HINT = "Is the target close to a round number? Which two of your answers multiply to about that?"
+    OLD_KEY = "Estimation is the intended route: round the target, then find the two answers whose product is close."
+    NEW_HINT = "Which of your answers is closest to the target? Use the other two to make up the difference."
+    NEW_KEY = ("Estimation is the intended route: find the answer closest to the target, then the two answers whose "
+               "difference closes the gap.")
+    c_checker, c_cfg, c_locks, c_valid, c_n, c_seed = car[0], car[1], car[5], car[7], car[9], car[10]
+    c_shape = c_cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
+
+    def plant_seeded_order():
+        """choose() with the classes in #807's seeded order: Car Trap gets a harder class while an easier one reaches
+        N, which easiest_class_problems must name."""
+        import random
+        grades = B.grader(c_checker, c_locks, c_shape)
+        good = B.class_order
+        B.class_order = lambda classes, seed: (lambda c: (random.Random("%s-class" % seed).shuffle(c), c)[1])(list(classes))
+        try:
+            planted = B.choose(c_checker, c_valid, c_locks, c_n, c_seed, grades)[1]
+        finally:
+            B.class_order = good
+        built = car[6][0]["grade"]
+        if finalpad.ease(planted[0]) <= finalpad.ease(built[0]):
+            raise pc.StalePlant("the seeded class order", "car-trap's seeded order no longer picks a harder class")
+        return B.easiest_class_problems(c_checker, c_valid, c_locks, c_n, c_seed, grades, planted)[0]
+    results.append(("the classes tried in #807's seeded order (Car Trap given a harder class)", "plant",
+                    plant_seeded_order, "class_order / easiest_class_problems"))
+
+    def control_ease():
+        x = lambda a, b: ("x", ((a, b),))
+        order = [x(1, 1), x(1, 2), x(1, 3), x(1, 4), x(2, 2), x(2, 3)]
+        out = ["ease() puts %s before %s" % (finalpad.describe(b), finalpad.describe(a))
+               for a, b in zip(order, order[1:]) if not finalpad.ease(a) < finalpad.ease(b)]
+        if not finalpad.ease(("+-", 3)) < finalpad.ease(("+-", 4)):
+            out.append("ease() does not put largest term 3 digits before 4")
+        if B.class_order(list(reversed(order)), 1) != order:
+            out.append("class_order() does not try the classes easiest first")
+        return out
+    results.append(("ease() orders 1x1 < 1x2 < 1x3 < 1x4 < 2x2 < 2x3, and +- 3 < +- 4", "control", control_ease,
+                    "final.ease / class_order"))
+
+    def control_car_easiest():
+        return B.easiest_class_problems(c_checker, c_valid, c_locks, c_n, c_seed, B.grader(c_checker, c_locks, c_shape),
+                                        car[6][0]["grade"])[0]
+    results.append(("Car Trap as built: no easier class reaches N", "control", control_car_easiest,
+                    "easiest_class_problems"))
+
+    def no_hint(which):
+        shapes = copy.deepcopy(finalpad.SHAPES)
+        entry = list(shapes["plus-and-minus"])
+        entry[which] = ""
+        shapes["plus-and-minus"] = tuple(entry)
+        good = finalpad.SHAPES
+        finalpad.SHAPES = shapes
+        try:
+            said = finalpad.shape_wording_problems()
+            stopped = refused(lambda: B.final_hint("plus-and-minus")) + refused(lambda: B.final_key_line("plus-and-minus"))
+        finally:
+            finalpad.SHAPES = good
+        return said if said and stopped and all("plus-and-minus" in m for m in said + stopped) else []
+    results.append(("a SHAPES entry with no hint (plus-and-minus)", "plant", lambda: no_hint(2),
+                    "final.shape_wording_problems / final_hint"))
+    results.append(("a SHAPES entry with no key line (plus-and-minus)", "plant", lambda: no_hint(3),
+                    "final.shape_wording_problems / final_key_line"))
+
+    def multiply_in_shape():
+        shapes = copy.deepcopy(finalpad.SHAPES)
+        entry = list(shapes["plus-and-minus"])
+        entry[2] = "Which two of your answers multiply to the gap?"
+        shapes["plus-and-minus"] = tuple(entry)
+        return [m for m in finalpad.shape_wording_problems(shapes) if "multipl" in m]
+    results.append(("a plus-and-minus SHAPES entry whose hint says multiply", "plant", multiply_in_shape,
+                    "final.shape_wording_problems"))
+
+    def pages_of(prep, slug):
+        """(kind, text) of every page build_html prints for a prepared room (no PDF)."""
+        r_checker, r_cfg, r_room, r_teach, _, r_locks, r_sets = prep[:7]
+        doc = B.build_html(slug, r_room, r_teach, r_locks, r_sets, r_cfg, prep[10], "2026-11-17", B.room_url(slug),
+                           prep[11], greys={l["id"]: 255 for l in r_locks})[0]
+        kinds = re.findall(r'<section class="page[^"]*" data-kind="(\w+)"', doc)
+        pages = re.split(r'(?=<section class="page)', doc)[1:]
+        return [(k, " ".join(B.text_of(pg).split())) for k, pg in zip(kinds, pages)]
+
+    h_pages = pages_of(heat, HW)
+
+    def swapped(kind, old, new):
+        pages = [(k, t.replace(old, new)) if k == kind else (k, t) for k, t in h_pages]
+        if pages == h_pages:
+            raise pc.StalePlant("a plus-and-minus wording plant", "Heatwave's %s page has no %r" % (kind, old))
+        return B.final_wording_problems(h_shape, pages)
+    results.append(("a plus-and-minus pack whose hint card says multiply (Heatwave given the x hint)", "plant",
+                    lambda: swapped("hints", NEW_HINT, OLD_HINT), "final_wording_problems"))
+    results.append(("a plus-and-minus pack whose key says product (Heatwave given the x key line)", "plant",
+                    lambda: swapped("key", NEW_KEY, OLD_KEY), "final_wording_problems"))
+    results.append(("a plus-and-minus pack whose hint card says multiply in words of its own", "plant",
+                    lambda: [m for m in swapped("hints", "make up the difference", "multiply up the difference")
+                             if "says" in m], "final_wording_problems"))
+    results.append(("a plus-and-minus pack whose key says product in words of its own", "plant",
+                    lambda: [m for m in swapped("key", "whose difference closes", "whose product closes")
+                             if "says" in m], "final_wording_problems"))
+
+    def as_built(pages, the_shape, hint, key):
+        out = B.final_wording_problems(the_shape, pages)
+        cards = [B.final_part("hints", t).replace("Hint 1 of 1", "").strip() for k, t in pages if k == "hints"]
+        keys = [B.final_part("key", t) for k, t in pages if k == "key"]
+        if not cards or any(not c.startswith(hint) for c in cards):
+            out.append("the hint card reads %r, not %r" % (cards[:1], hint))
+        if not keys or any(key not in k for k in keys):
+            out.append("the key's final padlock reads %r, without %r" % (keys[:1], key))
+        return out
+    results.append(("Hamster Heist's hint card and key as built (the x text, unchanged)", "control",
+                    lambda: as_built(pages_of((checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed,
+                                               rating), SLUG), shape, OLD_HINT, OLD_KEY), "final_wording_problems"))
+    results.append(("Heatwave Mutiny's hint card and key as built (the plus-and-minus text)", "control",
+                    lambda: as_built(h_pages, h_shape, NEW_HINT, NEW_KEY), "final_wording_problems"))
 
     failures = 0
     for name, kind, run, check in results:
