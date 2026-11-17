@@ -406,6 +406,15 @@ for a, b, c in cands:
          {"a": a, "b": b, "c": c, "answer": l, "miss": miss}, minsep=14)
     if len(store) >= WANT:
         break
+# A sixth variant, appended after the five above (which are unchanged), so the print pack can choose six sets with
+# distinct answers (HEATWAVE-PACK, Jon 16 Nov 2026). At minsep 14 none fits: check() holds the answer to 101-192
+# (one slider setting only, off the travel's ends), and 112-126-140-154 are 14 apart with 154-180 only 26. 168 is
+# 12 from 180 and 14 from 154, so this pass alone admits at 12; check() is unchanged.
+for a, b, c in [(4, 8, 21)]:
+    l = a * b // gcd(a, b)
+    l = l * c // gcd(l, c)
+    keep(store, "patrol-lcm-timer",
+         {"a": a, "b": b, "c": c, "answer": l, "miss": a + b + c}, minsep=12)
 V["patrol-lcm-timer"] = store
 
 # ---------------------------------------------------- H2 cube SA -> V (keypad 4)

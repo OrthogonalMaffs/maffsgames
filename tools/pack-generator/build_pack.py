@@ -16,7 +16,8 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
     print-only "printed" and "caption" (contract CAPTION-GAPS, 13 Nov 2026), a lock's optional print-only answer
     unit ("answer_units", contract CAR-TRAP-PACK, 14 Nov 2026; its common wrong answer scaled by "miss_scale" when
     that differs, contract HAMSTER-PACK-FINAL, 16 Nov 2026), a lock's optional print-only hint and common-wrong-answer
-    words ("lock_words", HAMSTER-PACK-FINAL), an optional line naming whose voice the start read-out is in
+    words and answer-box label ("lock_words", HAMSTER-PACK-FINAL; "label", HEATWAVE-PACK), an optional line naming
+    whose voice the start read-out is in
     ("readout_voice", contract PE-SHED-FINAL, 16 Nov 2026; printed in italics above the hook), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
     --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
@@ -526,7 +527,12 @@ def with_lock_words(cfg, locks, slug):
     on the built pages) reads them exactly as it reads the room's. Each must be a lock of the room, a hint number the
     room's hints have, a non-empty string whose every {{token}} is one the room's own strings for that lock use, and,
     filled with the lock's first variant, must read as a sentence (caption_problems()). With no entry the locks come
-    back as they are."""
+    back as they are.
+
+    "label" (contract HEATWAVE-PACK, 16 Nov 2026) replaces the instrument's label on the lock's answer box and "opens
+    at" line, where the room's own gives something away on paper (The Heatwave Mutiny's "Door keypad — four digits"
+    names the code's length, which Amendment 4 forbids on a student page). It is checked as the other words are, and
+    then by instrument_hints() and answer_caption() on the built pages, as the room's own label is."""
     words = cfg.get(LOCK_WORDS)
     if words is None:
         return locks
@@ -542,8 +548,9 @@ def with_lock_words(cfg, locks, slug):
         if w is None:
             out.append(l)
             continue
-        if not isinstance(w, dict) or not w or not set(w) <= {"hints", "missSays"}:
-            raise BuildError('%s/%s: "%s" takes "hints" and "missSays" only, not %r' % (slug, l["id"], LOCK_WORDS, w))
+        if not isinstance(w, dict) or not w or not set(w) <= {"hints", "missSays", "label"}:
+            raise BuildError('%s/%s: "%s" takes "hints", "missSays" and "label" only, not %r'
+                             % (slug, l["id"], LOCK_WORDS, w))
         own = {t for x in lock_strings(l) for t in TOKEN_RE.findall(x)}
         first = {"%s.%s" % (l["key"], k): format_token(v) for k, v in l["variants"][0].items()}
         new = dict(l)
@@ -576,6 +583,11 @@ def with_lock_words(cfg, locks, slug):
             if "missSays" not in l:
                 raise BuildError('%s/%s: "%s" replaces missSays, which this lock does not have' % (slug, l["id"], LOCK_WORDS))
             new["missSays"] = checked("missSays", w["missSays"])
+        if "label" in w:
+            if not (l.get("instrument") or {}).get("label"):
+                raise BuildError('%s/%s: "%s" replaces the instrument\'s label, which this lock does not have'
+                                 % (slug, l["id"], LOCK_WORDS))
+            new["instrument"] = dict(l["instrument"], label=checked("label", w["label"]))
         out.append(new)
     return out
 
@@ -1054,10 +1066,15 @@ def split_clue(clue, room="", ident="", printed=None, caption=None):
     empty, the caption's first letter is capitalised; an empty segment (two <b> parts side by side, or a <b> part at
     the clue's end) adds nothing. A config's "printed" and "caption" (already filled for the set) replace either
     part, after the parts are counted. The caption, tidied or overridden, must pass caption_problems(), or the build
-    stops, naming the room, the object and the caption."""
+    stops, naming the room, the object and the caption. A clue with no <b> part (the whole clue is narration, or the
+    whole clue is the words on the object) is printed only when the config gives both "printed" (non-empty) and
+    "caption": the config then says what goes on the art and what goes under it (contract HEATWAVE-PACK, 16 Nov
+    2026); with either missing it is a BuildError, as before."""
     parts = re.findall(r"<b>(.*?)</b>", clue, re.S)
     if not parts:
-        raise BuildError("a clue needs at least one <b>...</b> part (the words on the object): %r" % clue[:80])
+        if printed is None or caption is None or not text_of(printed).strip():
+            raise BuildError("a clue needs at least one <b>...</b> part (the words on the object), or its image's "
+                             "\"printed\" and \"caption\" both: %r" % clue[:80])
     if caption is None:
         segments = [x.strip() for x in re.split(r"<b>.*?</b>", clue, flags=re.S)]
         caption = segments[0]

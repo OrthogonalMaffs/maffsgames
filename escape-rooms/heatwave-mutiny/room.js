@@ -173,6 +173,15 @@ window.ROOM = {
           "miss": 32,
           "factors": "7 = 7, 11 = 11, 14 = 2 &times; 7",
           "lcmfactors": "2 &times; 7 &times; 11"
+        },
+        {
+          "a": 4,
+          "b": 8,
+          "c": 21,
+          "answer": 168,
+          "miss": 33,
+          "factors": "4 = 2<sup>2</sup>, 8 = 2<sup>3</sup>, 21 = 3 &times; 7",
+          "lcmfactors": "2<sup>3</sup> &times; 3 &times; 7"
         }
       ],
       missTitle: '{{lcm.miss}} minutes, and the corridor is full of Supervisors.',

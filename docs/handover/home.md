@@ -16,6 +16,19 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-16 (home): HEATWAVE-PACK (The Heatwave Mutiny print pack, DRAFT; a sixth patrol variant)
+
+Claude Code (home lane), worktree `~/mg-heatwave-pack`, branch `claude/heatwave-pack`; contract `docs/handover/contracts/2026-11-16-heatwave-pack.md` (the reissue; the first HEATWAVE-PACK stopped on 5 patrol variants). The first commit carries PE-SHED-FINAL's close-out (#803, 6e1f4e0; its entry below).
+
+- **Patrol variant:** the reissue's first STOP IF was met too: no sixth patrol-lcm-timer variant passes keep()'s spread at minsep 14 (check() holds answers to 101-192; 112-126-140-154 are 14 apart; the widest gap left is 12). Jon chose in session (16 Nov) to append laps 4, 8, 21 (LCM 168, common wrong answer 33) in an append-only second pass at minsep 12. The five existing variants are unchanged; variants.json and room.js gain that one variant only. check-escape-rooms: heatwave-mutiny VALID 270 of 360, variant 0 VALID. /updates/ line added (the Hamster Heist precedent of the same day).
+- **Pack:** `rooms/heatwave-mutiny/config.json` (6 sets, seed 1, DRAFT, certificate "Cold air, already paid for", no answer_units, no readout_voice: the hook is the narrator's) and the eleven WebPs (hw-01-rota ... hw-11-disruptor-dial). Label boxes measured by pixel as in #801 (grown blank rectangle, 26 px inside; the sticky note's blank is its own yellow). Print-only words on all six clues; fan and jacket print no words (the plug's label is 109 x 81 px; the jacket has no blank surface).
+- **Generator (general, other packs byte-identical):** split_clue() accepts a clue with no `<b>` part when the image gives both "printed" and "caption" (the clock and sticky note have none); lock_words takes a "label" for the answer box (the keypad's "four digits" breaks Amendment 4 on paper; the slider's label printed "... set off min").
+- **lockcheck.py:** LCM by counting up in the longest lap, with the prime-factor lines; cube by face, edge counted up, edge cubed; inequality by trying every dial setting, the one prime, the band's largest. All 22 library variants agree.
+- **Checks:** see the PR. Other packs compared with ~/pe-tools/dump.py before (origin/main) and after: 28 files identical once date fields and worktree paths are normalised.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-16 (home): PE-SHED-FINAL (P.E. Store Rebellion pack approved; readout_voice; teacher page's variant 0)
 
 Claude Code (home lane), worktree `~/mg-pe-shed-final`, branch `claude/pe-shed-final`; contract `docs/handover/contracts/2026-11-16-pe-shed-final.md`. The first commit carries PE-SHED-PACK's close-out (#801, 6f9498b; its entry below).
@@ -24,7 +37,7 @@ Claude Code (home lane), worktree `~/mg-pe-shed-final`, branch `claude/pe-shed-f
 - **Room:** pe-shed-rebellion's config has Jon's readout_voice text, as given (apostrophes as `&rsquo;`, as the room writes them), and `"wording_approved": {"by": "Jon", "date": "2026-11-16"}`. teacher.html's clueMap and notes now quote variant 0 as it is: 27π limit, 9 m reach, 27π over 81π, 84.823... over 254.469... (27π = 84.8230..., 81π = 254.4690...). Nothing in the repo generates those lines (only test-pack-generator.py reads clueMap, for Hamster Heist).
 - **Todo:** PE-SHED-PACK-APPROVE closed to todo-done; new row PACK-READOUT-VOICE (the other eight rooms' read-outs, any fix needs Jon's go-ahead, as those packs are on Tes).
 - **Checks:** see the PR. Other packs compared with ~/pe-tools/dump.py before (origin/main) and after.
-- MERGED: pending.
+- MERGED 16 Nov as 6e1f4e0 (#803) via merge-pr.py on its second call (the first was refused: no Gate check yet). The second's last line was "main 6e1f4e0: NO RUN FOUND", exit 1: it looked before main's push runs registered; the merge itself succeeded. Main on the merge commit: check-site 43961875130 FAILURE (the Shape Shifter verifier's rotation "moving on" check only, a flake in scripts/verify-shape-shifter.py fixed by SHAPE-SHIFTER-FLAKE; nothing #803 touched), phone-fit-full 43961875121 success (both push runs). Jon ruled "merge at 37 pages" in session (recorded on the PR). Contract moved to `docs/history/contracts/`.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 

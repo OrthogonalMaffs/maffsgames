@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice; no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed; no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
@@ -7,7 +7,8 @@ CI finds its lines only in scripts/*.py headers (scripts/ci-groups.py), and the 
 so this file is the line. It runs `build_pack.py --selftest`, then the plants of contract HAMSTER-HEIST-PACK
 (Amendments 1 and 2, 16 Nov 2026), which import the generator and plant faults against The Great Hamster Heist's own
 locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words), then those of PE-SHED-FINAL
-(readout_voice, the line naming whose voice the start read-out is in). Each plant must be caught by the check named beside it; each control must pass. A plant whose
+(readout_voice, the line naming whose voice the start read-out is in), then those of HEATWAVE-PACK (its three
+recomputes, a clue with no bold part, a lock's print-only instrument label). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -84,6 +85,7 @@ def hamster_plants():
             pg = B.offline_context(browser).new_page()
             checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = B.prepare(SLUG, None, None, pg)
             car = B.prepare("car-trap", None, None, pg)       # the control room: a scaled lock with no miss_scale
+            heat = B.prepare("heatwave-mutiny", None, None, pg)  # HEATWAVE-PACK: no-bold clues, a keypad label
         finally:
             browser.close()
     shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
@@ -316,6 +318,78 @@ def hamster_plants():
                     lambda: voiced(B.load_config("pe-shed-rebellion").get("readout_voice")) or
                     ([] if B.load_config("pe-shed-rebellion").get("readout_voice") else ["pe-shed-rebellion has none"]),
                     "readout_voice"))
+
+    # ---- HEATWAVE-PACK (16 Nov 2026): its recomputes, a clue with no <b> part, a lock's print-only label ------------
+    HW = "heatwave-mutiny"
+    h_checker, h_cfg, h_room, h_teach, h_js, h_locks, h_sets = heat[:7]
+    for lock_id in ("patrol-lcm-timer", "cube-surface-volume", "canteen-freezer-inequality"):
+        for key in ("answer", "miss"):
+            def plant_hw(lock_id=lock_id, key=key):
+                i = next((k for k, l in enumerate(h_locks) if l["id"] == lock_id), None)
+                if i is None:
+                    raise pc.StalePlant("a %s plant" % lock_id, "%s has no lock %s" % (HW, lock_id))
+                s = copy.deepcopy(h_sets)
+                s[0]["vars"][i][key] = s[0]["vars"][i][key] + 1
+                return [x for x in B.verify_sets(h_locks, s)[0] if "%s: %s is " % (lock_id, key) in x]
+            results.append(("a wrong recomputed %s for %s" % (key, lock_id), "plant", plant_hw,
+                            "verify_sets / lockcheck.RECOMPUTE"))
+    results.append(("Heatwave Mutiny's six sets as chosen", "control", lambda: B.verify_sets(h_locks, h_sets)[0],
+                    "verify_sets / lockcheck.RECOMPUTE"))
+
+    NO_BOLD = "The note says: “Back <i>at the same time</i>. Not before.”"
+
+    def split(printed, caption):
+        return refused(lambda: B.split_clue(NO_BOLD, "plant", "clock", printed, caption))
+    for label, printed, caption in (('only "printed"', "At the same time.", None),
+                                    ('only "caption"', None, "The note says it."),
+                                    ('an empty "printed"', "  ", "The note says it.")):
+        results.append(("a clue with no <b> part given %s" % label, "plant",
+                        lambda printed=printed, caption=caption: split(printed, caption), "split_clue"))
+
+    def control_no_bold_both():
+        got = B.split_clue(NO_BOLD, "control", "clock", "At the same time.", "The note says it.")
+        return [] if got == ("At the same time.", "The note says it.") else ["split_clue returned %r" % (got,)]
+    results.append(("a clue with no <b> part given both overrides", "control", control_no_bold_both, "split_clue"))
+
+    def control_heatwave_no_bold():
+        # the room's own clock and sticky note, as configured, through split_clue for every set
+        by_obj = {im.get("object"): im for im in h_cfg["images"]}
+        out, seen = [], 0
+        for x in h_sets:
+            f = B.filler(h_locks, x)
+            for o in h_room["objects"]:
+                if o.get("clue") and "<b>" not in o["clue"]:
+                    seen += 1
+                    im = by_obj[o["id"]]
+                    out += refused(lambda: B.split_clue(f(o["clue"]), HW, o["id"],
+                                                        *(f(im[k]) if k in im else None for k in B.OVERRIDES)))
+        if not seen:
+            raise pc.StalePlant("Heatwave's no-bold clues", "%s has no clue without a <b> part" % HW)
+        return out
+    results.append(("Heatwave Mutiny's clock and sticky note (no <b> part, both overrides)", "control",
+                    control_heatwave_no_bold, "split_clue"))
+
+    KEYPAD = "cube-surface-volume"
+    h_base = B.with_answer_units(h_cfg, B.room_locks(h_room, HW), HW)
+
+    def labelled(label):
+        locks2 = B.with_lock_words(dict(h_cfg, lock_words={KEYPAD: {"label": label}}), h_base, HW)
+        return B.instrument_hints([B.answer_caption(l) for l in locks2])
+    room_label = next(l for l in h_room["locks"] if l["id"] == KEYPAD)["instrument"]["label"]
+    results.append(("a lock_words label that still gives the code's length (the room's own)", "plant",
+                    lambda: labelled(B.text_of(room_label)), "with_lock_words / instrument_hints"))
+    results.append(("an empty lock_words label", "plant", lambda: refused(lambda: labelled("  ")), "with_lock_words"))
+
+    def control_keypad_label():
+        lock = next(l for l in h_locks if l["id"] == KEYPAD)
+        out = [] if B.answer_caption(lock) == "Door keypad" else ["the keypad's box says %r" % B.answer_caption(lock)]
+        if next(l for l in h_room["locks"] if l["id"] == KEYPAD)["instrument"]["label"] == lock["instrument"]["label"]:
+            out.append("the pack's keypad label is the room's own")
+        if "four digits" not in B.text_of(room_label):
+            raise pc.StalePlant("the keypad label control", "the room's keypad label no longer names its length")
+        return out + B.instrument_hints([B.answer_caption(l) for l in h_locks])
+    results.append(("Heatwave Mutiny's keypad label as printed, the room's own untouched", "control",
+                    control_keypad_label, "with_lock_words / answer_caption"))
 
     # item 9: fixed penalty figures (Amendment 6), strict on the score sheet, penalty-worded on student pages
     for label, kind, text in (("each hint adds 1 minute, on a hints page", "hints", "Each hint adds 1 minute."),
