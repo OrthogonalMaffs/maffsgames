@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="robots" content="noindex">
-<meta name="description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle.">
+<meta name="description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle, to 1 d.p. For GCSE, Level 3 and Level 4. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/its-a-sine/">
 <meta property="og:title" content="Sine and Cosine Rules Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle.">
+<meta property="og:description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle, to 1 d.p. For GCSE, Level 3 and Level 4. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/its-a-sine/">
 <meta property="og:type" content="website">
@@ -23,13 +22,13 @@
 <link rel="stylesheet" href="/schools/assets/fold.css">
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
-/* Theme: schools/assets/theme.css (canon §7.5), dark row: the lowest level served is GCSE (Higher), with L3 and L4.
-   This game's own tokens. --sine is the site's teal family and --cos a warm coral (Jon, 17 Nov 2026). The site's #0d9488
-   is 4.34:1 on the dark card and 3.77:1 on --surface-alt, under 4.5:1 where the buttons sit, so the lighter teal-400 is
-   used: 9.9:1 on --bg, 7.6:1 on --surface-alt. The coral is 7.5:1 on --bg, 5.7:1 on --surface-alt. Dark text on either
-   fill is the same ratio. */
-:root{--sine:#2dd4bf;--sine-dim:#113c39;--cos:#ff7f6b;--cos-dim:#43211d;--accent:#2dd4bf;--accent-dim:#113c39;--on-accent:#0f1420;
-  --line:#e8ecf4;--arc:#a3adc2;--unk:#fbbf24;--north:#93c5fd}
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster levels include GCSE (the palette rule; L3 and L4 too).
+   This game's own tokens. --sine is the site's teal family and --cos a warm coral (Jon, 17 Nov 2026). The site's own teal
+   is 3.4 to 3.7:1 on the light surfaces, under 4.5:1, so its darker shade (teal-700) is used: 5.0:1 on --surface-alt and on
+   the Aa cream, 5.5:1 on white. The coral is 4.9:1 on --surface-alt, 5.4:1 on white. White text on either fill is the same
+   ratio as the fill on white. The diagram's lines are the text colour, its unknown the hint colour. */
+:root{--sine:#0f766e;--sine-dim:#ccfbf1;--cos:#b8432c;--cos-dim:#fde3dc;--accent:#0f766e;--accent-dim:#ccfbf1;--on-accent:#ffffff;
+  --line:#1a2744;--arc:#526077;--unk:#a14a05;--north:#1d4ed8}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
@@ -196,10 +195,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       </div>
       <div class="mode-h">Stages</div>
       <div class="stages" id="stageList">
-        <button class="stage-btn" type="button" data-stage="stage-1"><span class="n">1</span><span><span class="t">Which rule?</span><span class="d">Look at what you're given. Sine rule, or cosine rule?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></span></button>
-        <button class="stage-btn" type="button" data-stage="stage-2"><span class="n">2</span><span><span class="t">Which version?</span><span class="d">The version for a side, or the one rearranged for an angle?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></span></button>
-        <button class="stage-btn" type="button" data-stage="stage-3"><span class="n">3</span><span><span class="t">Solve it</span><span class="d">Find the side or the angle, to 1 d.p.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-3">Scientific calculator required</span></span></button>
-        <button class="stage-btn" type="button" data-stage="all-three"><span class="n">∗</span><span><span class="t">All three</span><span class="d">The rule, the version, then the answer, on every question.</span><span class="calc-badge" data-calc="scientific" data-stage="all-three">Scientific calculator required</span></span></button>
+        <button class="stage-btn" type="button" data-stage="1" data-mode="stage-1"><span class="n">1</span><span><span class="t">Which rule?</span><span class="d">Look at what you're given. Sine rule, or cosine rule?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2" data-mode="stage-2"><span class="n">2</span><span><span class="t">Which version?</span><span class="d">The version for a side, or the one rearranged for an angle?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3" data-mode="stage-3"><span class="n">3</span><span><span class="t">Solve it</span><span class="d">Find the side or the angle, to 1 d.p.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-3">Scientific calculator required</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4" data-mode="all-three"><span class="n">∗</span><span><span class="t">All three</span><span class="d">The rule, the version, then the answer, on every question.</span><span class="calc-badge" data-calc="scientific" data-stage="all-three">Scientific calculator required</span></span></button>
       </div>
       <p class="note">10 questions a run, 40 at each level. A point for each step right.</p>
     </div>
@@ -1015,7 +1014,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 
   /* ---------- wiring ---------- */
   $('levelList').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) setLevel(b.dataset.level); });
-  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startMode(b.dataset.stage); });
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-mode]'); if (b) startMode(b.dataset.mode); });
   $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) onOption(b); });
   $('typeRow').addEventListener('submit', function (e) { e.preventDefault(); onCheck(); });
   $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });

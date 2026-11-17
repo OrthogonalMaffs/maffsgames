@@ -173,7 +173,9 @@ const NOT_ON_HUB = {
   // New (contract AS-YOU-CAN-SEE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'as-you-can-see': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract POSSIBLY-MAYBE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing'
+  'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing',
+  // New (contract SINE-NOT-SINE, 17 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
+  'its-a-sine': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
 // The levels a game submits under are read from its source by submittedLevels() below

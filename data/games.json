@@ -1895,6 +1895,24 @@
     "a level",
     "level 3"
    ]
+  },
+  {
+   "slug": "its-a-sine",
+   "search_phrase": "Sine and Cosine Rules",
+   "description": "Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle, to 1 d.p.",
+   "keywords": [
+    "sine rule",
+    "cosine rule",
+    "non right-angled triangles",
+    "ambiguous case",
+    "bearings",
+    "resultant forces",
+    "phasors",
+    "triangle of forces",
+    "gcse higher",
+    "level 3",
+    "level 4"
+   ]
   }
  ],
  "rooms": [

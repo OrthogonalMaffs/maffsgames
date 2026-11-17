@@ -74,7 +74,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 Agent Claude Code (cloud), branch `claude/blissful-heisenberg-lzfkax` from main 3349092 (after #809). Size: a new game in new files, unlisted.
 **Close-out carried (first commit):** HEATWAVE-APPROVE (#809, 862f7a6), recorded below; contract moved.
 Bank: all 120 answers recomputed independently by coordinates and vector addition before any build (scratch script): 120/120 agree, none within 0.005 of a 1 d.p. boundary, the eight ambiguous items each have two triangles and every other sine-angle item one.
-Next: build `games/its-a-sine/`, its verifier and the registrations; Gate; merge with merge-pr.py.
+Done on the branch: `games/its-a-sine/index.html` (the bank verbatim; level picker gcse/level3/level4; modes stage-1, stage-2, stage-3, all-three, 10 items a run; true-shape SVG diagrams with a label-spacing pass; calculator by stage; boards `<level>-<mode>`); `scripts/verify-its-a-sine.py` (bank, marking, diagrams 360x640, play 360x640; the five plants caught; PASS); the 12 board labels in `schools/assets/firebase-leaderboard.js` (Jon's lane exception, 17 Nov, additive only); roster row #111 (Unlisted); `data/games.json` and apply-meta; the findings file; check-answer-lock, check-levels, check-theme, check-teacher-invite, check-start-mount, audit-register, verify-stage-exit and the coverage check's NOT_ON_HUB; `schools/assets/launch-dates.json` (one line; check-ugh-stats needs every game page dated); todo ITS-A-SINE-LIST.
+Decided against the contract, with evidence: the palette is light, not dark (canon §7.5: a game whose levels include GCSE is light; check-theme fails dark, and an exemption is a STOP IF); so the teal is `#0f766e` and the coral `#b8432c` (each over 4.5:1 on every light surface). The stage buttons carry `data-stage="1"`..`"4"` and `data-mode`, the shared stage-exit verifier's convention.
+Local: measure-phone-fit cannot run in this sandbox (its footer pre-check fails on untouched main too, 1 px at 810 px, fonts); CI's phone-fit is the evidence.
+Next: Gate; merge with merge-pr.py.
 
 ## 2026-11-17 (cloud): HEATWAVE-APPROVE (`docs/history/contracts/2026-11-17-heatwave-approve.md`; Jon 17 Nov)
 
