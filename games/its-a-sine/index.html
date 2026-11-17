@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/its-a-sine/">
+<meta property="og:title" content="Sine and Cosine Rules Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Sine rule or cosine rule? Pick the rule, pick the version, then solve the triangle.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/its-a-sine/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Sine and Cosine Rules Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), dark row: the lowest level served is GCSE (Higher), with L3 and L4.
+   This game's own tokens. --sine is the site's teal family and --cos a warm coral (Jon, 17 Nov 2026). The site's #0d9488
+   is 4.34:1 on the dark card and 3.77:1 on --surface-alt, under 4.5:1 where the buttons sit, so the lighter teal-400 is
+   used: 9.9:1 on --bg, 7.6:1 on --surface-alt. The coral is 7.5:1 on --bg, 5.7:1 on --surface-alt. Dark text on either
+   fill is the same ratio. */
+:root{--sine:#2dd4bf;--sine-dim:#113c39;--cos:#ff7f6b;--cos-dim:#43211d;--accent:#2dd4bf;--accent-dim:#113c39;--on-accent:#0f1420;
+  --line:#e8ecf4;--arc:#a3adc2;--unk:#fbbf24;--north:#93c5fd}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15}
+.q-sine{color:var(--sine)}.q-cos{color:var(--cos)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.45rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.6}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .35rem}
+.levels{display:flex;gap:.4rem;flex-wrap:wrap}
+.lvl-btn{flex:1 1 0;min-width:92px;min-height:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;font-weight:600;font-size:.9rem;cursor:pointer}
+.lvl-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.stage-btn .calc-badge{margin-top:.2rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.badge-row{text-align:center}
+.badge-row .calc-badge:empty{display:none}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem .7rem;display:flex;flex-direction:column;gap:.4rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.ask{font-size:1rem;line-height:1.4;text-align:center}
+.prompt{font-size:.9rem;color:var(--muted);text-align:center;line-height:1.35}
+
+/* The diagram: inline SVG drawn to the true shape (the viewBox is 340 wide; its height follows the shape). */
+.fig svg{display:block;width:100%;height:auto;max-height:34vh;margin:0 auto}
+@media (max-width:600px){.fig svg{max-height:30vh}}
+.d-line{stroke:var(--line);stroke-width:2.2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.d-member{stroke:var(--line);stroke-width:4;fill:none;stroke-linecap:round}
+.d-dash{stroke:var(--unk);stroke-width:2.2;fill:none;stroke-dasharray:7 5}
+.d-faint{stroke:var(--arc);stroke-width:1.4;fill:none;stroke-dasharray:4 4}
+.d-north{stroke:var(--north);stroke-width:1.6;fill:none}
+.d-arc{stroke:var(--arc);stroke-width:1.6;fill:none}
+.d-arc.unk{stroke:var(--unk)}
+.d-dot{fill:var(--line)}
+.d-joint{fill:var(--surface);stroke:var(--line);stroke-width:2}
+.d-head{fill:var(--line)}
+.d-head.unk{fill:var(--unk)}
+.d-head.north{fill:var(--north)}
+.d-t{font-family:var(--font-num);font-size:13px;fill:var(--text);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;text-anchor:middle;dominant-baseline:central}
+.d-t.v{font-family:var(--font-text);font-weight:700;font-size:15px}
+.d-t.unk{fill:var(--unk);font-weight:700}
+.d-t.n{fill:var(--north);font-size:11px}
+.d-t.nm{fill:var(--muted)}
+
+.opts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.45rem}
+.opt{min-height:52px;padding:.35rem .4rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1rem;cursor:pointer;font-family:inherit}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt.sine{background:var(--sine);border-color:var(--sine);color:var(--on-accent);font-weight:700;font-size:1.05rem}
+.opt.cos{background:var(--cos);border-color:var(--cos);color:var(--on-accent);font-weight:700;font-size:1.05rem}
+.opt.key{outline:3px solid var(--correct);outline-offset:2px}
+.opt.miss{opacity:.55}
+.opts.ver .opt{font-size:.95rem}
+.ans-row{display:flex;gap:.35rem;justify-content:center;align-items:center}
+.ans-box{display:flex;align-items:center;gap:.25rem}
+.ans-box input{width:6.4em;min-height:44px;padding:.3rem .4rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.05rem;text-align:center}
+.ans-box input:focus{outline:none;border-color:var(--accent)}
+.ans-box .unit{font-family:var(--font-num);color:var(--muted);min-width:1.4em}
+.msg{font-size:.9rem;color:var(--hint);text-align:center}
+.msg:empty{display:none}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.4rem}
+.fb-head{font-weight:700;font-size:1.02rem}
+.fb.right .fb-head{color:var(--correct)}
+.fb.wrong .fb-head{color:var(--wrong)}
+.fb-line{font-size:.94rem;line-height:1.45}
+.fb-next{display:flex;justify-content:center}
+.worked{margin:0 0 0 1.2rem;font-size:.92rem;line-height:1.5}
+.worked li+li{margin-top:.15rem}
+.feedback:empty{display:none}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.stats{color:var(--muted);line-height:1.8;font-size:.95rem;margin:.4rem 0 .7rem}
+.stats b{color:var(--text)}
+
+/* The phone rule (canon §7.6.1): once a step is resolved, the controls that cannot be used go and the feedback takes their place. */
+.qcard.fb-open #ansBlock,.qcard.fb-open .prompt,.qcard.fb-open .msg{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .5rem;gap:.3rem}
+  .ask{font-size:.95rem}
+}
+@media (max-height:620px){.hud-label{display:none}.prompt{display:none}.stage-label{display:none}}
+@media (min-width:1024px){
+  .container{max-width:clamp(760px,74vw,1000px)}
+  .ask{font-size:clamp(1rem,2.4vh,1.4rem)}
+  .fig svg{max-height:38vh}
+}
+body.accessible p,body.accessible .fb-line,body.accessible .worked{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 answers the step on screen right; with i >= 1 it answers it wrong, so the step is marked wrong and waits on Next.
+{
+  "start": "SNS.ui.start('stage-1')",
+  "ready": "!!window.SNS && SNS.ui.state() === 'asking'",
+  "answer": [
+    "SNS.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The calculator, stage by stage (canon §4.4, `by stage`; contract SINE-NOT-SINE): not allowed in Stages 1 and 2 (choosing
+     a rule and a version needs no arithmetic), scientific in Stage 3 and All three, where the student solves with sin, cos and
+     their inverses. The calculator is mounted the first time a calculator stage is played and hidden in the other two. -->
+<script type="application/json" id="maffs-calc-stages">{"stage-1": "not allowed", "stage-2": "not allowed", "stage-3": "scientific", "all-three": "scientific"}</script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1><span class="q-sine">“It's a SINE!!”</span> <span class="q-cos">“No it's not”</span></h1><div class="sub" id="tagline">The sine rule and the cosine rule: which one, which way round, and then the answer.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel menu-info">
+      <p>Every question is a triangle that is not right-angled. First decide: the <b class="q-sine">sine rule</b> or the <b class="q-cos">cosine rule</b>? Then which version of it: the one for a side, or the one for an angle? Then solve it, to 1 d.p.</p>
+      <div class="mode-h">Level</div>
+      <div class="levels" id="levelList">
+        <button class="lvl-btn" type="button" data-level="gcse" aria-pressed="false">GCSE Higher</button>
+        <button class="lvl-btn" type="button" data-level="level3" aria-pressed="false">Level 3</button>
+        <button class="lvl-btn" type="button" data-level="level4" aria-pressed="false">Level 4</button>
+      </div>
+      <div class="mode-h">Stages</div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="stage-1"><span class="n">1</span><span><span class="t">Which rule?</span><span class="d">Look at what you're given. Sine rule, or cosine rule?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-1">Non-calculator</span></span></button>
+        <button class="stage-btn" type="button" data-stage="stage-2"><span class="n">2</span><span><span class="t">Which version?</span><span class="d">The version for a side, or the one rearranged for an angle?</span><span class="calc-badge" data-calc="not-allowed" data-stage="stage-2">Non-calculator</span></span></button>
+        <button class="stage-btn" type="button" data-stage="stage-3"><span class="n">3</span><span><span class="t">Solve it</span><span class="d">Find the side or the angle, to 1 d.p.</span><span class="calc-badge" data-calc="scientific" data-stage="stage-3">Scientific calculator required</span></span></button>
+        <button class="stage-btn" type="button" data-stage="all-three"><span class="n">∗</span><span><span class="t">All three</span><span class="d">The rule, the version, then the answer, on every question.</span><span class="calc-badge" data-calc="scientific" data-stage="all-three">Scientific calculator required</span></span></button>
+      </div>
+      <p class="note">10 questions a run, 40 at each level. A point for each step right.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="badge-row"><span class="calc-badge" id="calcBadge"></span></div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="ask" id="ask"></div>
+      <div class="fig" id="fig"></div>
+      <div class="prompt" id="prompt"></div>
+      <div id="ansBlock">
+        <div class="opts maffs-options" id="opts" role="group" aria-label="Your answer" hidden></div>
+        <form class="ans-row" id="typeRow" autocomplete="off" hidden>
+          <span class="ans-box"><input id="ans" type="text" inputmode="decimal" aria-label="Your answer, to 1 decimal place" autocomplete="off"><span class="unit" id="unit"></span></span>
+          <button class="btn solid" type="submit" id="checkBtn">Check</button>
+        </form>
+        <div id="calcWrap" hidden><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'its-a-sine', PER = 10, NS = 'http://www.w3.org/2000/svg';
+  var LEVELS = ['gcse', 'level3', 'level4'];
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'all-three'];
+  // One board for each level and stage (Jon's ruling, 17 Nov 2026): '<level>-<mode>', every key named in firebase-leaderboard.js.
+  var BOARDS = [];
+  LEVELS.forEach(function (l) { MODES.forEach(function (m) { BOARDS.push(l + '-' + m); }); });
+  var level = MaffsLevel.resolve({ slug: 'its-a-sine', levels: ['gcse', 'level3', 'level4'], fallback: 'gcse',
+    boards: ['gcse-stage-1', 'gcse-stage-2', 'gcse-stage-3', 'gcse-all-three',
+      'level3-stage-1', 'level3-stage-2', 'level3-stage-3', 'level3-all-three',
+      'level4-stage-1', 'level4-stage-2', 'level4-stage-3', 'level4-all-three'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* ---------- maths on screen: KaTeX, with a readable fallback if the CDN is unreachable ---------- */
+  function plain(t) {
+    return t.replace(/\\frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)').replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
+      .replace(/\^\\circ/g, '°').replace(/\^\{-1\}/g, '⁻¹').replace(/\^2/g, '²').replace(/\\(sin|cos)/g, '$1')
+      .replace(/\\theta/g, 'θ').replace(/\\alpha/g, 'α').replace(/\\varphi/g, 'φ').replace(/\\times/g, '×')
+      .replace(/\\approx/g, '≈').replace(/\\left|\\right|\\,/g, '').replace(/\\text\{([^{}]*)\}/g, '$1').replace(/[{}]/g, '');
+  }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(plain(t));
+  }
+  // A line with its maths between \( and \), each piece KaTeX.
+  function line(s) { return String(s).split(/\\\(|\\\)/).map(function (p, i) { return i % 2 ? tex(p) : esc(p); }).join(''); }
+
+  /* =====================================================================================================
+     THE BANK: contract SINE-NOT-SINE, 17 Nov 2026, verbatim (40 items a level; ids give the level).
+     scripts/verify-its-a-sine.py recomputes every answer by coordinates and vectors, never by these rules.
+     ===================================================================================================== */
+  var QUESTIONS = {
+    gcse: [
+      {"id":"gcse_001","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":40,"B":65,"a":8},"find":"b","answer":11.3,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_002","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":35,"B":80,"a":12},"find":"b","answer":20.6,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_003","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":52,"B":71,"a":9.5},"find":"b","answer":11.4,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_004","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":28,"B":63,"a":15},"find":"b","answer":28.5,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_005","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":47,"B":58,"a":6.4},"find":"b","answer":7.4,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_006","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":61,"B":44,"a":11},"find":"b","answer":8.7,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_007","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":33,"B":72,"a":7.8},"find":"b","answer":13.6,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_008","rule":"sine","version":"sine-side","third_angle_first":false,"given":{"A":55,"B":38,"a":14},"find":"b","answer":10.5,"unit":"cm","prompt":"Find side b, to 1 d.p."},
+      {"id":"gcse_009","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":48,"B":67,"a":10},"find":"c","answer":12.2,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_010","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":41,"B":82,"a":12},"find":"c","answer":15.3,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_011","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":66,"B":49,"a":9},"find":"c","answer":8.9,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_012","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":29,"B":57,"a":16},"find":"c","answer":32.9,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_013","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":53,"B":64,"a":7.5},"find":"c","answer":8.4,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_014","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":44,"B":46,"a":11.2},"find":"c","answer":16.1,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_015","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":39,"B":71,"a":12},"find":"c","answer":17.9,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_016","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":57,"B":48,"a":10.4},"find":"c","answer":12.0,"unit":"cm","prompt":"Find side c, to 1 d.p."},
+      {"id":"gcse_017","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":12,"b":9,"A":64},"find":"B","answer":42.4,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_018","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":15,"b":11,"A":72},"find":"B","answer":44.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_019","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9,"b":7.2,"A":81},"find":"B","answer":52.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_020","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":14,"b":10,"A":47},"find":"B","answer":31.5,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_021","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":13,"b":12,"A":66},"find":"B","answer":57.5,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_022","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":8.4,"b":6,"A":75},"find":"B","answer":43.6,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_023","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":11,"b":7.5,"A":53},"find":"B","answer":33.0,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_024","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":16,"b":13,"A":68},"find":"B","answer":48.9,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"gcse_025","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":7,"c":9,"A":48},"find":"a","answer":6.8,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_026","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":12,"c":10,"A":65},"find":"a","answer":11.9,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_027","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":8.5,"c":11,"A":37},"find":"a","answer":6.6,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_028","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":15,"c":13,"A":82},"find":"a","answer":18.4,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_029","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":10,"c":14,"A":123},"find":"a","answer":21.2,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_030","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":13,"c":16,"A":71},"find":"a","answer":17.0,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_031","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":11,"c":8,"A":62},"find":"a","answer":10.1,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_032","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":14,"c":12,"A":105},"find":"a","answer":20.7,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"gcse_033","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":9,"b":7,"c":8},"find":"A","answer":73.4,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_034","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":15,"b":11,"c":13},"find":"A","answer":76.9,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_035","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":6,"b":8,"c":9},"find":"A","answer":40.8,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_036","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":14,"b":9,"c":10},"find":"A","answer":94.8,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_037","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":10,"b":13,"c":15},"find":"A","answer":41.1,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_038","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":7.5,"b":6,"c":8},"find":"A","answer":62.9,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_039","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":11,"b":12,"c":5},"find":"A","answer":66.4,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"gcse_040","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":13,"b":8,"c":11},"find":"A","answer":84.8,"unit":"°","prompt":"Find angle A, to 1 d.p."}
+    ],
+    level3: [
+      {"id":"level3_001","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":42,"B_exterior":118,"a":9},"find":"b","answer":11.9,"unit":"cm","prompt":"The angle on the straight line at B is 118°. Find side b, to 1 d.p."},
+      {"id":"level3_002","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":37,"B_exterior":103,"a":12},"find":"b","answer":19.4,"unit":"cm","prompt":"The angle on the straight line at B is 103°. Find side b, to 1 d.p."},
+      {"id":"level3_003","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":55,"B_exterior":131,"a":8.5},"find":"b","answer":7.8,"unit":"cm","prompt":"The angle on the straight line at B is 131°. Find side b, to 1 d.p."},
+      {"id":"level3_004","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":48,"B_exterior":96,"a":14},"find":"b","answer":18.7,"unit":"cm","prompt":"The angle on the straight line at B is 96°. Find side b, to 1 d.p."},
+      {"id":"level3_005","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":33,"B_exterior":124,"a":10.6},"find":"b","answer":16.1,"unit":"cm","prompt":"The angle on the straight line at B is 124°. Find side b, to 1 d.p."},
+      {"id":"level3_006","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"A":61,"B_exterior":112,"a":7.4},"find":"b","answer":7.8,"unit":"cm","prompt":"The angle on the straight line at B is 112°. Find side b, to 1 d.p."},
+      {"id":"level3_007","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":16,"b":12,"A":71},"find":"B","answer":45.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"level3_008","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9.8,"b":7,"A":62},"find":"B","answer":39.1,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"level3_009","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":13,"b":9.5,"A":54},"find":"B","answer":36.2,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"level3_010","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":20,"b":17,"A":77},"find":"B","answer":55.9,"unit":"°","prompt":"Find angle B, to 1 d.p."},
+      {"id":"level3_011","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":8,"b":11,"A":38},"find":"B","answer":122.2,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_012","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":10,"b":13,"A":42},"find":"B","answer":119.6,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_013","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":7,"b":9.5,"A":35},"find":"B","answer":128.9,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_014","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9,"b":12.4,"A":40},"find":"B","answer":117.7,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_015","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":6.5,"b":8,"A":46},"find":"B","answer":117.7,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_016","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":13,"b":16,"A":52},"find":"B","answer":104.1,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_017","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":9.5,"b":12,"A":44},"find":"B","answer":118.7,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_018","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":14,"b":18,"A":41},"find":"B","answer":122.5,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true},
+      {"id":"level3_019","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":11,"c":14,"A":58},"find":"a","answer":12.4,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_020","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":9.5,"c":12,"A":104},"find":"a","answer":17.0,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_021","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":16,"c":13,"A":77},"find":"a","answer":18.2,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_022","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":7.8,"c":10,"A":131},"find":"a","answer":16.2,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_023","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":18,"c":21,"A":43},"find":"a","answer":14.6,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_024","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":15,"c":10,"A":84},"find":"a","answer":17.1,"unit":"cm","prompt":"Find side a, to 1 d.p."},
+      {"id":"level3_025","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":17,"b":12,"c":14},"find":"A","answer":81.3,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_026","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":21,"b":15,"c":18},"find":"A","answer":78.5,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_027","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":19,"b":11,"c":13},"find":"A","answer":104.4,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_028","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":14,"b":17,"c":6},"find":"A","answer":50.8,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_029","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":16,"b":10,"c":9},"find":"A","answer":114.6,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_030","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":22,"b":18,"c":13},"find":"A","answer":88.9,"unit":"°","prompt":"Find angle A, to 1 d.p."},
+      {"id":"level3_031","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":12,"bearing1":50,"leg2_km":9,"bearing2":130},"find":"distance","answer":16.2,"unit":"km","prompt":"A boat sails 12 km on a bearing of 050°, then 9 km on a bearing of 130°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":100}},
+      {"id":"level3_032","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":15,"bearing1":30,"leg2_km":11,"bearing2":145},"find":"distance","answer":14.4,"unit":"km","prompt":"A boat sails 15 km on a bearing of 030°, then 11 km on a bearing of 145°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":65}},
+      {"id":"level3_033","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":8,"bearing1":70,"leg2_km":14,"bearing2":160},"find":"distance","answer":16.1,"unit":"km","prompt":"A boat sails 8 km on a bearing of 070°, then 14 km on a bearing of 160°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":90}},
+      {"id":"level3_034","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":20,"bearing1":40,"leg2_km":13,"bearing2":110},"find":"distance","answer":27.3,"unit":"km","prompt":"A boat sails 20 km on a bearing of 040°, then 13 km on a bearing of 110°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":110}},
+      {"id":"level3_035","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":10,"bearing1":15,"leg2_km":16,"bearing2":95},"find":"distance","answer":20.3,"unit":"km","prompt":"A boat sails 10 km on a bearing of 015°, then 16 km on a bearing of 095°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":100}},
+      {"id":"level3_036","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"leg1_km":18,"bearing1":60,"leg2_km":7,"bearing2":170},"find":"distance","answer":16.9,"unit":"km","prompt":"A boat sails 18 km on a bearing of 060°, then 7 km on a bearing of 170°. How far is it from its start, to 1 d.p.?","working":{"angle_at_turn":70}},
+      {"id":"level3_037","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":12,"bearing_A_to_L":30,"bearing_A_to_B":100,"bearing_B_to_L":350},"find":"BL","answer":17.5,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 030°. A boat sails 12 km from A to B on a bearing of 100°. From B, L is on a bearing of 350°. Find the distance BL, to 1 d.p.","working":{"angle_A":70,"angle_B":70,"angle_L":40}},
+      {"id":"level3_038","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":8,"bearing_A_to_L":60,"bearing_A_to_B":120,"bearing_B_to_L":10},"find":"BL","answer":9.0,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 060°. A boat sails 8 km from A to B on a bearing of 120°. From B, L is on a bearing of 010°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":70,"angle_L":50}},
+      {"id":"level3_039","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":14,"bearing_A_to_L":20,"bearing_A_to_B":80,"bearing_B_to_L":320},"find":"BL","answer":14.0,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 020°. A boat sails 14 km from A to B on a bearing of 080°. From B, L is on a bearing of 320°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":60,"angle_L":60}},
+      {"id":"level3_040","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_km":15,"bearing_A_to_L":25,"bearing_A_to_B":85,"bearing_B_to_L":315},"find":"BL","answer":13.8,"unit":"km","prompt":"From A, a lighthouse L is on a bearing of 025°. A boat sails 15 km from A to B on a bearing of 085°. From B, L is on a bearing of 315°. Find the distance BL, to 1 d.p.","working":{"angle_A":60,"angle_B":50,"angle_L":70}}
+    ],
+    level4: [
+      {"id":"level4_001","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"F1":40,"F2":25,"angle_between":60},"find":"R","answer":56.8,"unit":"N","prompt":"Forces of 40 N and 25 N act at a point with 60° between them. Find the magnitude of the resultant, to 1 d.p.","working":{"triangle_angle":120}},
+      {"id":"level4_002","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"F1":120,"F2":85,"angle_between":45},"find":"R","answer":189.9,"unit":"N","prompt":"Forces of 120 N and 85 N act at a point with 45° between them. Find the magnitude of the resultant, to 1 d.p.","working":{"triangle_angle":135}},
+      {"id":"level4_003","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"F1":18,"F2":30,"angle_between":75},"find":"R","answer":38.8,"unit":"N","prompt":"Forces of 18 N and 30 N act at a point with 75° between them. Find the magnitude of the resultant, to 1 d.p.","working":{"triangle_angle":105}},
+      {"id":"level4_004","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"F1":250,"F2":180,"angle_between":110},"find":"R","answer":253.2,"unit":"N","prompt":"Forces of 250 N and 180 N act at a point with 110° between them. Find the magnitude of the resultant, to 1 d.p.","working":{"triangle_angle":70}},
+      {"id":"level4_005","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"V1":230,"V2":110,"phase":30},"find":"V","answer":329.9,"unit":"V","prompt":"Two sinusoidal voltages of peak 230 V and 110 V have a phase difference of 30°. Find the peak of their sum, to 1 d.p.","working":{"triangle_angle":150}},
+      {"id":"level4_006","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"V1":12,"V2":8,"phase":60},"find":"V","answer":17.4,"unit":"V","prompt":"Two sinusoidal voltages of peak 12 V and 8 V have a phase difference of 60°. Find the peak of their sum, to 1 d.p.","working":{"triangle_angle":120}},
+      {"id":"level4_007","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"V1":48,"V2":36,"phase":90},"find":"V","answer":60.0,"unit":"V","prompt":"Two sinusoidal voltages of peak 48 V and 36 V have a phase difference of 90°. Find the peak of their sum, to 1 d.p.","working":{"triangle_angle":90}},
+      {"id":"level4_008","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"V1":5.5,"V2":3.2,"phase":120},"find":"V","answer":4.8,"unit":"V","prompt":"Two sinusoidal voltages of peak 5.5 V and 3.2 V have a phase difference of 120°. Find the peak of their sum, to 1 d.p.","working":{"triangle_angle":60}},
+      {"id":"level4_009","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":120,"F2":85,"R":190},"find":"alpha","answer":18.4,"unit":"°","prompt":"Two forces of 120 N and 85 N have a resultant of 190 N. Find the angle between the resultant and the 120 N force, to 1 d.p."},
+      {"id":"level4_010","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":300,"F2":220,"R":480},"find":"alpha","answer":19.2,"unit":"°","prompt":"Two forces of 300 N and 220 N have a resultant of 480 N. Find the angle between the resultant and the 300 N force, to 1 d.p."},
+      {"id":"level4_011","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":65,"F2":65,"R":110},"find":"alpha","answer":32.2,"unit":"°","prompt":"Two forces of 65 N and 65 N have a resultant of 110 N. Find the angle between the resultant and the 65 N force, to 1 d.p."},
+      {"id":"level4_012","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":250,"F2":180,"R":300},"find":"alpha","answer":36.8,"unit":"°","prompt":"Two forces of 250 N and 180 N have a resultant of 300 N. Find the angle between the resultant and the 250 N force, to 1 d.p."},
+      {"id":"level4_013","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":90,"F2":40,"R":105},"find":"alpha","answer":22.0,"unit":"°","prompt":"Two forces of 90 N and 40 N have a resultant of 105 N. Find the angle between the resultant and the 90 N force, to 1 d.p."},
+      {"id":"level4_014","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"F1":75,"F2":50,"R":110},"find":"alpha","answer":22.7,"unit":"°","prompt":"Two forces of 75 N and 50 N have a resultant of 110 N. Find the angle between the resultant and the 75 N force, to 1 d.p."},
+      {"id":"level4_015","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":75,"rod_mm":300,"crank_angle":65},"find":"phi","answer":13.1,"unit":"°","prompt":"A crank of 75 mm drives a connecting rod of 300 mm. The crank is 65° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_016","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":50,"rod_mm":180,"crank_angle":120},"find":"phi","answer":13.9,"unit":"°","prompt":"A crank of 50 mm drives a connecting rod of 180 mm. The crank is 120° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_017","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":90,"rod_mm":350,"crank_angle":30},"find":"phi","answer":7.4,"unit":"°","prompt":"A crank of 90 mm drives a connecting rod of 350 mm. The crank is 30° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_018","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":80,"rod_mm":280,"crank_angle":55},"find":"phi","answer":13.5,"unit":"°","prompt":"A crank of 80 mm drives a connecting rod of 280 mm. The crank is 55° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_019","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":100,"rod_mm":420,"crank_angle":75},"find":"phi","answer":13.3,"unit":"°","prompt":"A crank of 100 mm drives a connecting rod of 420 mm. The crank is 75° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_020","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":45,"rod_mm":200,"crank_angle":140},"find":"phi","answer":8.3,"unit":"°","prompt":"A crank of 45 mm drives a connecting rod of 200 mm. The crank is 140° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_021","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":70,"rod_mm":260,"crank_angle":85},"find":"phi","answer":15.6,"unit":"°","prompt":"A crank of 70 mm drives a connecting rod of 260 mm. The crank is 85° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_022","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":55,"rod_mm":220,"crank_angle":110},"find":"phi","answer":13.6,"unit":"°","prompt":"A crank of 55 mm drives a connecting rod of 220 mm. The crank is 110° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_023","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"crank_mm":85,"rod_mm":330,"crank_angle":50},"find":"phi","answer":11.4,"unit":"°","prompt":"A crank of 85 mm drives a connecting rod of 330 mm. The crank is 50° from the line of stroke. Find the angle the rod makes with the line of stroke, to 1 d.p."},
+      {"id":"level4_024","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":120,"angle_A":52,"angle_B":63},"find":"AP","answer":118.0,"unit":"m","prompt":"A surveyor's baseline AB is 120 m. At A, the angle between the baseline and a mast P is 52°; at B it is 63°. Find AP, to 1 d.p."},
+      {"id":"level4_025","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":85,"angle_A":48,"angle_B":71},"find":"AP","answer":91.9,"unit":"m","prompt":"A surveyor's baseline AB is 85 m. At A, the angle between the baseline and a mast P is 48°; at B it is 71°. Find AP, to 1 d.p."},
+      {"id":"level4_026","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":200,"angle_A":35,"angle_B":80},"find":"AP","answer":217.3,"unit":"m","prompt":"A surveyor's baseline AB is 200 m. At A, the angle between the baseline and a mast P is 35°; at B it is 80°. Find AP, to 1 d.p."},
+      {"id":"level4_027","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":150,"angle_A":66,"angle_B":58},"find":"AP","answer":153.4,"unit":"m","prompt":"A surveyor's baseline AB is 150 m. At A, the angle between the baseline and a mast P is 66°; at B it is 58°. Find AP, to 1 d.p."},
+      {"id":"level4_028","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":64,"angle_A":41,"angle_B":77},"find":"AP","answer":70.6,"unit":"m","prompt":"A surveyor's baseline AB is 64 m. At A, the angle between the baseline and a mast P is 41°; at B it is 77°. Find AP, to 1 d.p."},
+      {"id":"level4_029","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":95,"angle_A":73,"angle_B":49},"find":"AP","answer":84.5,"unit":"m","prompt":"A surveyor's baseline AB is 95 m. At A, the angle between the baseline and a mast P is 73°; at B it is 49°. Find AP, to 1 d.p."},
+      {"id":"level4_030","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":175,"angle_A":44,"angle_B":68},"find":"AP","answer":175.0,"unit":"m","prompt":"A surveyor's baseline AB is 175 m. At A, the angle between the baseline and a mast P is 44°; at B it is 68°. Find AP, to 1 d.p."},
+      {"id":"level4_031","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":60,"angle_A":79,"angle_B":53},"find":"AP","answer":64.5,"unit":"m","prompt":"A surveyor's baseline AB is 60 m. At A, the angle between the baseline and a mast P is 79°; at B it is 53°. Find AP, to 1 d.p."},
+      {"id":"level4_032","rule":"sine","version":"sine-side","third_angle_first":true,"given":{"AB_m":230,"angle_A":61,"angle_B":47},"find":"AP","answer":176.9,"unit":"m","prompt":"A surveyor's baseline AB is 230 m. At A, the angle between the baseline and a mast P is 61°; at B it is 47°. Find AP, to 1 d.p."},
+      {"id":"level4_033","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":2.4,"b":3.1,"c":3.8},"find":"A","answer":39.1,"unit":"°","prompt":"A triangular frame has members of 3.1 m and 3.8 m meeting at joint A, and a member of 2.4 m opposite A. Find the angle at A, to 1 d.p."},
+      {"id":"level4_034","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":450,"b":380,"c":520},"find":"A","answer":57.5,"unit":"°","prompt":"A triangular frame has members of 380 m and 520 m meeting at joint A, and a member of 450 m opposite A. Find the angle at A, to 1 d.p."},
+      {"id":"level4_035","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":1.8,"b":2.5,"c":2.2},"find":"A","answer":44.5,"unit":"°","prompt":"A triangular frame has members of 2.5 m and 2.2 m meeting at joint A, and a member of 1.8 m opposite A. Find the angle at A, to 1 d.p."},
+      {"id":"level4_036","rule":"cosine","version":"cosine-angle","third_angle_first":false,"given":{"a":6,"b":7.5,"c":4.8},"find":"A","answer":53.0,"unit":"°","prompt":"A triangular frame has members of 7.5 m and 4.8 m meeting at joint A, and a member of 6 m opposite A. Find the angle at A, to 1 d.p."},
+      {"id":"level4_037","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":2.8,"c":3.5,"A":64},"find":"a","answer":3.4,"unit":"m","prompt":"Two members of 2.8 m and 3.5 m meet at joint A at 64°. Find the length of the member that closes the triangle, to 1 d.p."},
+      {"id":"level4_038","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":4.2,"c":3.1,"A":112},"find":"a","answer":6.1,"unit":"m","prompt":"Two members of 4.2 m and 3.1 m meet at joint A at 112°. Find the length of the member that closes the triangle, to 1 d.p."},
+      {"id":"level4_039","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":1.6,"c":2.4,"A":48},"find":"a","answer":1.8,"unit":"m","prompt":"Two members of 1.6 m and 2.4 m meet at joint A at 48°. Find the length of the member that closes the triangle, to 1 d.p."},
+      {"id":"level4_040","rule":"cosine","version":"cosine-side","third_angle_first":false,"given":{"b":5,"c":6.5,"A":97},"find":"a","answer":8.7,"unit":"m","prompt":"Two members of 5 m and 6.5 m meet at joint A at 97°. Find the length of the member that closes the triangle, to 1 d.p."}
+    ]
+  };
+
+  /* =====================================================================================================
+     WHAT EACH ITEM IS: its context (from the keys of "given"), the pattern of what is given, and from that the
+     rule and its reason. The item's own "rule" and "version" are the keys; the verifier checks they agree.
+     ===================================================================================================== */
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+  function kindOf(q) {
+    var g = q.given;
+    if (has(g, 'B_exterior')) return 'ext';
+    if (has(g, 'leg1_km')) return 'bear';
+    if (has(g, 'AB_km')) return 'light';
+    if (has(g, 'angle_between')) return 'force';
+    if (has(g, 'phase')) return 'phasor';
+    if (has(g, 'F1') && has(g, 'R')) return 'fdir';
+    if (has(g, 'crank_mm')) return 'crank';
+    if (has(g, 'AB_m')) return 'survey';
+    var k = Object.keys(g).sort().join(',');
+    var frame = q.unit === 'm' || (q.unit === '°' && /frame/.test(q.prompt));
+    if (k === 'A,B,a') return 'aas';
+    if (k === 'A,a,b') return 'ssa';
+    if (k === 'A,b,c') return frame ? 'frame-sas' : 'sas';
+    if (k === 'a,b,c') return frame ? 'frame-sss' : 'sss';
+    return null;
+  }
+  var PATTERN = { aas: 'AAS', ext: 'AAS', light: 'AAS', survey: 'AAS', ssa: 'SSA', crank: 'SSA',
+    sas: 'SAS', 'frame-sas': 'SAS', bear: 'SAS', force: 'SAS', phasor: 'SAS', sss: 'SSS', 'frame-sss': 'SSS', fdir: 'SSS' };
+  var PATTERN_RULE = { AAS: 'sine', SSA: 'sine', SAS: 'cosine', SSS: 'cosine' };
+  var RULE_REASON = {
+    AAS: 'Two angles and a side: pair each side with its opposite angle. Sine rule.',
+    SSA: 'Two sides and an angle opposite one of them: sine rule.',
+    SAS: 'Two sides and the angle between them: cosine rule.',
+    SSS: 'All three sides: cosine rule.'
+  };
+  // What the context's triangle is, said before the rule's reason (an item with no context says nothing more).
+  var CONTEXT_NOTE = {
+    ext: 'The angle on the straight line gives angle B (180° minus it), so you have two angles and a side. ',
+    light: 'The bearings give two angles of the triangle ABL, and you know AB. ',
+    survey: 'You know the baseline AB and the angles at both ends of it. ',
+    crank: 'The crank and the rod are two sides, and the crank angle is opposite the rod. ',
+    bear: 'The two legs are two sides, and the angle at the turn is between them. ',
+    force: 'Draw the second force on the end of the first: the two forces are two sides, with the angle between them. ',
+    phasor: 'Draw the second voltage on the end of the first: two sides, with the angle between them. ',
+    fdir: 'The two forces and the resultant are the three sides of the triangle of forces. ',
+    'frame-sas': 'Two members meet at A, at a known angle. ',
+    'frame-sss': 'You know all three members. '
+  };
+  var VERSIONS = ['sine-side', 'sine-angle', 'cosine-side', 'cosine-angle'];
+  var VERSION_TEX = {
+    'sine-side': '\\frac{a}{\\sin A} = \\frac{b}{\\sin B}',
+    'sine-angle': '\\frac{\\sin A}{a} = \\frac{\\sin B}{b}',
+    'cosine-side': 'a^2 = b^2 + c^2 - 2bc\\cos A',
+    'cosine-angle': '\\cos A = \\frac{b^2 + c^2 - a^2}{2bc}'
+  };
+  var VERSION_REASON = {
+    'sine-side': 'You want a side, so use the version with the sides on top: \\(' + VERSION_TEX['sine-side'] + '\\).',
+    'sine-angle': 'You want an angle, so use the version rearranged with the sines on top: \\(' + VERSION_TEX['sine-angle'] + '\\).',
+    'cosine-side': 'You want a side, so use the version that gives a side: \\(' + VERSION_TEX['cosine-side'] + '\\).',
+    'cosine-angle': 'You want an angle, so use the version rearranged for the angle: \\(' + VERSION_TEX['cosine-angle'] + '\\).'
+  };
+  function wantsAngle(q) { return q.unit === '°'; }
+  function ruleReason(q) { var k = kindOf(q); return (CONTEXT_NOTE[k] || '') + RULE_REASON[PATTERN[k]]; }
+
+  /* =====================================================================================================
+     THE GAME'S OWN WORKING (stage 3's feedback): the method the game teaches, worked from "given".
+     ===================================================================================================== */
+  var R = Math.PI / 180;
+  function sin(d) { return Math.sin(d * R); }
+  function cos(d) { return Math.cos(d * R); }
+  function asin(x) { return Math.asin(x) / R; }
+  function acos(x) { return Math.acos(x) / R; }
+  function n(x, dp) { var s = (Math.round(x * Math.pow(10, dp)) / Math.pow(10, dp)).toFixed(dp); return s.replace(/-/g, '−'); }
+  function d1(x) { return n(x, 1); }
+  function deg(x) { return String(x) + '^\\circ'; }
+  function unitTex(u) { return u === '°' ? '^\\circ' : '\\text{ ' + u + '}'; }
+  function ans(q) { return d1(q.answer) + unitTex(q.unit); }
+  // The triangle's sides and angles (degrees) for the plain and frame items, by the rules (for the drawing and the working).
+  function solvePlain(q) {
+    var g = q.given, t = {};
+    if (has(g, 'B_exterior')) { t.A = g.A; t.B = 180 - g.B_exterior; t.a = g.a; }
+    else if (has(g, 'B')) { t.A = g.A; t.B = g.B; t.a = g.a; }
+    if (t.B !== undefined) { t.C = 180 - t.A - t.B; t.b = t.a * sin(t.B) / sin(t.A); t.c = t.a * sin(t.C) / sin(t.A); return t; }
+    if (has(g, 'a') && has(g, 'b') && has(g, 'A')) {
+      t.a = g.a; t.b = g.b; t.A = g.A;
+      var sB = t.b * sin(t.A) / t.a, B1 = asin(Math.min(1, sB));
+      t.B = q.ambiguous ? 180 - B1 : B1; t.C = 180 - t.A - t.B; t.c = t.a * sin(t.C) / sin(t.A); return t;
+    }
+    if (has(g, 'b') && has(g, 'c') && has(g, 'A')) {
+      t.b = g.b; t.c = g.c; t.A = g.A; t.a = Math.sqrt(t.b * t.b + t.c * t.c - 2 * t.b * t.c * cos(t.A));
+    } else { t.a = g.a; t.b = g.b; t.c = g.c; t.A = acos((t.b * t.b + t.c * t.c - t.a * t.a) / (2 * t.b * t.c)); }
+    t.B = acos((t.a * t.a + t.c * t.c - t.b * t.b) / (2 * t.a * t.c)); t.C = 180 - t.A - t.B;
+    return t;
+  }
+  function working(q) {
+    var g = q.given, k = kindOf(q), L = [], u = q.unit, t, v, s;
+    var U = unitTex(u);
+    if (k === 'aas' || k === 'ext') {
+      t = solvePlain(q);
+      if (k === 'ext') L.push('First the missing angle: angles on a straight line add to \\(180^\\circ\\), so \\(B = 180^\\circ - ' + deg(g.B_exterior) + ' = ' + deg(t.B) + '\\).');
+      if (q.find === 'c') {
+        L.push('First the missing angle: \\(C = 180^\\circ - ' + deg(g.A) + ' - ' + deg(g.B) + ' = ' + deg(t.C) + '\\).');
+        L.push('Pair c with C, and a with A: \\(\\frac{c}{\\sin C} = \\frac{a}{\\sin A}\\).');
+        L.push('\\(c = \\frac{' + g.a + '\\sin ' + deg(t.C) + '}{\\sin ' + deg(g.A) + '} = ' + n(t.c, 3) + '\\ldots\\)');
+      } else {
+        L.push('Pair b with B, and a with A: \\(\\frac{b}{\\sin B} = \\frac{a}{\\sin A}\\).');
+        L.push('\\(b = \\frac{' + g.a + '\\sin ' + deg(t.B) + '}{\\sin ' + deg(g.A) + '} = ' + n(t.b, 3) + '\\ldots\\)');
+      }
+    } else if (k === 'ssa') {
+      t = solvePlain(q);
+      s = g.b * sin(g.A) / g.a; v = asin(s);
+      L.push('\\(\\frac{\\sin B}{b} = \\frac{\\sin A}{a}\\), so \\(\\sin B = \\frac{' + g.b + '\\sin ' + deg(g.A) + '}{' + g.a + '} = ' + n(s, 4) + '\\ldots\\)');
+      if (q.ambiguous) {
+        L.push('\\(\\sin^{-1}\\) gives \\(B = ' + n(v, 3) + '\\ldots^\\circ\\). But sine is positive in two places: \\(B = 180^\\circ - ' + n(v, 3) + '\\ldots^\\circ = ' + n(180 - v, 3) + '\\ldots^\\circ\\) works too.');
+        L.push('Both make a triangle (each leaves room for C). The question says B is obtuse, so B is the one over \\(90^\\circ\\): \\(' + n(180 - v, 3) + '\\ldots^\\circ\\).');
+      } else {
+        L.push('\\(B = \\sin^{-1}(' + n(s, 4) + '\\ldots) = ' + n(v, 3) + '\\ldots^\\circ\\). (b is shorter than a, so B is smaller than A: it cannot be obtuse.)');
+      }
+    } else if (k === 'sas' || k === 'frame-sas') {
+      v = g.b * g.b + g.c * g.c - 2 * g.b * g.c * cos(g.A);
+      L.push('\\(a^2 = ' + g.b + '^2 + ' + g.c + '^2 - 2 \\times ' + g.b + ' \\times ' + g.c + ' \\cos ' + deg(g.A) + ' = ' + n(v, 3) + '\\ldots\\)');
+      L.push('\\(a = \\sqrt{' + n(v, 3) + '\\ldots} = ' + n(Math.sqrt(v), 3) + '\\ldots\\)');
+    } else if (k === 'sss' || k === 'frame-sss') {
+      v = (g.b * g.b + g.c * g.c - g.a * g.a) / (2 * g.b * g.c);
+      L.push('\\(\\cos A = \\frac{' + g.b + '^2 + ' + g.c + '^2 - ' + g.a + '^2}{2 \\times ' + g.b + ' \\times ' + g.c + '} = ' + n(v, 4) + '\\ldots\\)');
+      L.push('\\(A = \\cos^{-1}(' + n(v, 4) + '\\ldots) = ' + n(acos(v), 3) + '\\ldots^\\circ\\)');
+    } else if (k === 'bear') {
+      var turn = q.working.angle_at_turn;
+      L.push('The angle at the turn: the first leg\'s back bearing is \\(' + deg(g.bearing1 + 180) + '\\), and \\(' + deg(g.bearing1 + 180) + ' - ' + deg(g.bearing2) + ' = ' + deg(turn) + '\\).');
+      v = g.leg1_km * g.leg1_km + g.leg2_km * g.leg2_km - 2 * g.leg1_km * g.leg2_km * cos(turn);
+      L.push('\\(d^2 = ' + g.leg1_km + '^2 + ' + g.leg2_km + '^2 - 2 \\times ' + g.leg1_km + ' \\times ' + g.leg2_km + ' \\cos ' + deg(turn) + ' = ' + n(v, 3) + '\\ldots\\)');
+      L.push('\\(d = \\sqrt{' + n(v, 3) + '\\ldots} = ' + n(Math.sqrt(v), 3) + '\\ldots\\)');
+    } else if (k === 'light') {
+      var w = q.working;
+      L.push('At A, between the bearings to B and to L: \\(' + deg(g.bearing_A_to_B) + ' - ' + deg(g.bearing_A_to_L) + ' = ' + deg(w.angle_A) + '\\).');
+      L.push('At B, the bearing back to A is \\(' + deg(g.bearing_A_to_B) + ' + 180^\\circ = ' + deg(g.bearing_A_to_B + 180) + '\\); from there round to L is \\(' + deg(w.angle_B) + '\\).');
+      L.push('The missing angle: \\(L = 180^\\circ - ' + deg(w.angle_A) + ' - ' + deg(w.angle_B) + ' = ' + deg(w.angle_L) + '\\).');
+      v = g.AB_km * sin(w.angle_A) / sin(w.angle_L);
+      L.push('BL is opposite A, and AB is opposite L: \\(BL = \\frac{' + g.AB_km + '\\sin ' + deg(w.angle_A) + '}{\\sin ' + deg(w.angle_L) + '} = ' + n(v, 3) + '\\ldots\\)');
+    } else if (k === 'force' || k === 'phasor') {
+      var p1 = k === 'force' ? g.F1 : g.V1, p2 = k === 'force' ? g.F2 : g.V2, th = k === 'force' ? g.angle_between : g.phase, ta = q.working.triangle_angle;
+      L.push('Draw the second on the end of the first. The triangle\'s angle is \\(180^\\circ - ' + deg(th) + ' = ' + deg(ta) + '\\), not \\(' + deg(th) + '\\): that is the slip to watch.');
+      v = p1 * p1 + p2 * p2 - 2 * p1 * p2 * cos(ta);
+      L.push('\\(' + (k === 'force' ? 'R' : 'V') + '^2 = ' + p1 + '^2 + ' + p2 + '^2 - 2 \\times ' + p1 + ' \\times ' + p2 + ' \\cos ' + deg(ta) + ' = ' + n(v, 3) + '\\ldots\\)');
+      L.push('\\(' + (k === 'force' ? 'R' : 'V') + ' = \\sqrt{' + n(v, 3) + '\\ldots} = ' + n(Math.sqrt(v), 3) + '\\ldots\\)');
+    } else if (k === 'fdir') {
+      v = (g.F1 * g.F1 + g.R * g.R - g.F2 * g.F2) / (2 * g.F1 * g.R);
+      L.push('In the triangle of forces, \\(\\alpha\\) is between ' + g.F1 + ' N and ' + g.R + ' N, opposite the ' + g.F2 + ' N side.');
+      L.push('\\(\\cos\\alpha = \\frac{' + g.F1 + '^2 + ' + g.R + '^2 - ' + g.F2 + '^2}{2 \\times ' + g.F1 + ' \\times ' + g.R + '} = ' + n(v, 4) + '\\ldots\\)');
+      L.push('\\(\\alpha = \\cos^{-1}(' + n(v, 4) + '\\ldots) = ' + n(acos(v), 3) + '\\ldots^\\circ\\)');
+    } else if (k === 'crank') {
+      s = g.crank_mm * sin(g.crank_angle) / g.rod_mm;
+      L.push('The rod is opposite the crank angle, and the crank is opposite \\(\\varphi\\): \\(\\frac{\\sin\\varphi}{' + g.crank_mm + '} = \\frac{\\sin ' + deg(g.crank_angle) + '}{' + g.rod_mm + '}\\).');
+      L.push('\\(\\sin\\varphi = \\frac{' + g.crank_mm + '\\sin ' + deg(g.crank_angle) + '}{' + g.rod_mm + '} = ' + n(s, 4) + '\\ldots\\)');
+      L.push('\\(\\varphi = \\sin^{-1}(' + n(s, 4) + '\\ldots) = ' + n(asin(s), 3) + '\\ldots^\\circ\\). (The rod is longer than the crank, so \\(\\varphi\\) is acute.)');
+    } else if (k === 'survey') {
+      var P = 180 - g.angle_A - g.angle_B;
+      L.push('First the missing angle: \\(P = 180^\\circ - ' + deg(g.angle_A) + ' - ' + deg(g.angle_B) + ' = ' + deg(P) + '\\).');
+      v = g.AB_m * sin(g.angle_B) / sin(P);
+      L.push('AP is opposite B, and AB is opposite P: \\(AP = \\frac{' + g.AB_m + '\\sin ' + deg(g.angle_B) + '}{\\sin ' + deg(P) + '} = ' + n(v, 3) + '\\ldots\\)');
+    }
+    L.push('To 1 d.p.: \\(' + ans(q) + '\\).');
+    return L;
+  }
+
+  /* =====================================================================================================
+     THE DIAGRAM: points in world coordinates (y up), from "given"; fitted to a 340-wide viewBox; labels placed in
+     screen units so their size never changes. Only what the prompt gives is labelled, the unknown as x, θ, α or φ.
+     ===================================================================================================== */
+  var VW = 340;
+  function P(x, y) { return { x: x, y: y }; }
+  function add(p, q) { return P(p.x + q.x, p.y + q.y); }
+  function sub(p, q) { return P(p.x - q.x, p.y - q.y); }
+  function mul(p, k) { return P(p.x * k, p.y * k); }
+  function len(p) { return Math.hypot(p.x, p.y); }
+  function unit(p) { var l = len(p) || 1; return P(p.x / l, p.y / l); }
+  function dirDeg(d) { return P(Math.cos(d * R), Math.sin(d * R)); }   // math angle, anticlockwise from east
+  function bearDir(b) { return P(Math.sin(b * R), Math.cos(b * R)); }  // a bearing, clockwise from north
+  function meet(p, d, q, e) {   // the point where p + t d meets q + s e
+    var det = d.x * (-e.y) - d.y * (-e.x), rx = q.x - p.x, ry = q.y - p.y;
+    var t = (rx * (-e.y) - ry * (-e.x)) / det;
+    return add(p, mul(d, t));
+  }
+  function fmtV(x) { return String(x); }
+  function sideText(v, u) { return fmtV(v) + ' ' + u; }
+
+  // A scene: { pts: {name: P}, lines: [], arrows: [], angles: [], sides: [], verts: [], norths: [], dots: [] } in world units.
+  function scene() { return { pts: {}, segs: [], angles: [], sides: [], verts: [], norths: [], dots: [], joints: [], extra: [] }; }
+  // Plain and frame triangles: B at the origin, C along the x-axis, A above it (sides a, b, c opposite A, B, C).
+  function triScene(q) {
+    var t = solvePlain(q), k = kindOf(q), g = q.given, S = scene(), frame = /^frame/.test(k);
+    var B = P(0, 0), C = P(t.a, 0), A = P(t.c * cos(t.B), t.c * sin(t.B));
+    S.pts = { A: A, B: B, C: C };
+    var u = frame ? 'm' : 'cm';
+    var cls = frame ? 'member' : 'line';
+    var sides = { a: [B, C], b: [C, A], c: [A, B] };
+    ['a', 'b', 'c'].forEach(function (s) {
+      var unk = q.find === s;
+      S.segs.push({ p: sides[s][0], q: sides[s][1], cls: cls });
+      var txt = null;
+      if (has(g, s)) txt = frame ? sideText(g[s], u) : s + ' = ' + sideText(g[s], u);
+      else if (unk) txt = frame ? 'x' : s + ' = x';
+      else if (!frame) txt = s;
+      if (txt) S.sides.push({ p: sides[s][0], q: sides[s][1], text: txt, unk: unk, muted: !has(g, s) && !unk });
+    });
+    var at = { A: [A, B, C], B: [B, C, A], C: [C, A, B] };
+    ['A', 'B', 'C'].forEach(function (V) {
+      var unk = q.find === V;
+      if (has(g, V) || unk) S.angles.push({ v: at[V][0], p: at[V][1], q: at[V][2], text: unk ? 'θ' : g[V] + '°', unk: unk });
+    });
+    if (frame) { S.joints = [A, B, C]; S.verts.push({ p: A, text: 'A' }); }
+    else ['A', 'B', 'C'].forEach(function (V) { S.verts.push({ p: S.pts[V], text: V }); });
+    if (k === 'ext') {
+      var E = add(B, mul(unit(sub(B, C)), Math.max(t.a, t.c) * 0.45));
+      S.segs.push({ p: B, q: E, cls: 'line' });
+      S.angles.push({ v: B, p: E, q: A, text: g.B_exterior + '°' });
+      S.pts.E = E;
+    }
+    return S;
+  }
+  function bearScene(q) {
+    var g = q.given, S = scene(), O = P(0, 0), T = add(O, mul(bearDir(g.bearing1), g.leg1_km)), E = add(T, mul(bearDir(g.bearing2), g.leg2_km));
+    S.pts = { O: O, T: T, E: E };
+    S.segs.push({ p: O, q: T, cls: 'line', arrow: true }, { p: T, q: E, cls: 'line', arrow: true }, { p: O, q: E, cls: 'dash' });
+    S.sides.push({ p: O, q: T, text: sideText(g.leg1_km, 'km') }, { p: T, q: E, text: sideText(g.leg2_km, 'km') }, { p: O, q: E, text: 'x', unk: true });
+    S.norths.push({ p: O, bearing: g.bearing1 }, { p: T, bearing: g.bearing2 }, { p: E });
+    S.dots.push(O, E);
+    S.verts.push({ p: O, text: 'Start', nm: true });
+    return S;
+  }
+  function lightScene(q) {
+    var g = q.given, S = scene(), A = P(0, 0), B = mul(bearDir(g.bearing_A_to_B), g.AB_km);
+    var L = meet(A, bearDir(g.bearing_A_to_L), B, bearDir(g.bearing_B_to_L));
+    S.pts = { A: A, B: B, L: L };
+    S.segs.push({ p: A, q: B, cls: 'line' }, { p: A, q: L, cls: 'line' }, { p: B, q: L, cls: 'line' });
+    S.sides.push({ p: A, q: B, text: sideText(g.AB_km, 'km') }, { p: B, q: L, text: 'x', unk: true });
+    S.norths.push({ p: A, bearings: [g.bearing_A_to_L, g.bearing_A_to_B] }, { p: B, bearing: g.bearing_B_to_L });
+    S.verts.push({ p: A, text: 'A' }, { p: B, text: 'B' }, { p: L, text: 'L' });
+    return S;
+  }
+  function vecScene(q) {
+    var g = q.given, k = kindOf(q), S = scene(), O = P(0, 0);
+    var m1 = k === 'force' ? g.F1 : g.V1, m2 = k === 'force' ? g.F2 : g.V2, th = k === 'force' ? g.angle_between : g.phase, u = k === 'force' ? 'N' : 'V';
+    var A1 = P(m1, 0), A2 = mul(dirDeg(th), m2), Rr = add(A1, A2);
+    S.pts = { O: O, A1: A1, A2: A2, R: Rr };
+    S.segs.push({ p: O, q: A1, cls: 'line', arrow: true }, { p: O, q: A2, cls: 'line', arrow: true }, { p: O, q: Rr, cls: 'dash', arrow: true, unk: true });
+    S.segs.push({ p: A1, q: Rr, cls: 'faint' }, { p: A2, q: Rr, cls: 'faint' });
+    S.sides.push({ p: O, q: A1, text: sideText(m1, u), below: true }, { p: O, q: A2, text: sideText(m2, u) });
+    S.extra.push({ at: Rr, from: O, text: '?', unk: true });
+    S.angles.push({ v: O, p: A1, q: A2, text: th + '°' });
+    S.dots.push(O);
+    return S;
+  }
+  function fdirScene(q) {
+    var g = q.given, S = scene(), O = P(0, 0), A1 = P(g.F1, 0);
+    var x = (g.F1 * g.F1 + g.R * g.R - g.F2 * g.F2) / (2 * g.F1), Q = P(x, Math.sqrt(Math.max(0, g.R * g.R - x * x)));
+    S.pts = { O: O, A1: A1, Q: Q };
+    S.segs.push({ p: O, q: A1, cls: 'line', arrow: true }, { p: A1, q: Q, cls: 'line', arrow: true }, { p: O, q: Q, cls: 'line', arrow: true, double: true });
+    S.sides.push({ p: O, q: A1, text: sideText(g.F1, 'N') }, { p: A1, q: Q, text: sideText(g.F2, 'N') }, { p: O, q: Q, text: 'R = ' + sideText(g.R, 'N') });
+    S.angles.push({ v: O, p: A1, q: Q, text: 'α', unk: true });
+    S.dots.push(O);
+    return S;
+  }
+  function crankScene(q) {
+    var g = q.given, S = scene(), O = P(0, 0), Pp = mul(dirDeg(g.crank_angle), g.crank_mm);
+    var Q = P(Pp.x + Math.sqrt(g.rod_mm * g.rod_mm - Pp.y * Pp.y), 0);
+    var back = P(-g.crank_mm * 1.1, 0), fwd = P(Q.x + g.crank_mm * 0.5, 0);
+    S.pts = { O: O, P: Pp, Q: Q, back: back, fwd: fwd };
+    S.segs.push({ p: back, q: fwd, cls: 'faint' }, { p: O, q: Pp, cls: 'member' }, { p: Pp, q: Q, cls: 'member' });
+    S.sides.push({ p: O, q: Pp, text: sideText(g.crank_mm, 'mm') }, { p: Pp, q: Q, text: sideText(g.rod_mm, 'mm') });
+    S.angles.push({ v: O, p: Q, q: Pp, text: g.crank_angle + '°' }, { v: Q, p: O, q: Pp, text: 'φ', unk: true });
+    S.joints = [O, Pp, Q];
+    S.extra.push({ at: P((back.x + 0) / 2, 0), text: 'line of stroke', nm: true, below: true });
+    return S;
+  }
+  function surveyScene(q) {
+    var g = q.given, S = scene(), A = P(0, 0), B = P(g.AB_m, 0);
+    var M = meet(A, dirDeg(g.angle_A), B, dirDeg(180 - g.angle_B));
+    S.pts = { A: A, B: B, P: M };
+    S.segs.push({ p: A, q: B, cls: 'line' }, { p: A, q: M, cls: 'line' }, { p: B, q: M, cls: 'line' });
+    S.sides.push({ p: A, q: B, text: sideText(g.AB_m, 'm') }, { p: A, q: M, text: 'x', unk: true });
+    S.angles.push({ v: A, p: B, q: M, text: g.angle_A + '°' }, { v: B, p: A, q: M, text: g.angle_B + '°' });
+    S.verts.push({ p: A, text: 'A' }, { p: B, text: 'B' }, { p: M, text: 'P (mast)' });
+    return S;
+  }
+  function sceneOf(q) {
+    var k = kindOf(q);
+    if (k === 'bear') return bearScene(q);
+    if (k === 'light') return lightScene(q);
+    if (k === 'force' || k === 'phasor') return vecScene(q);
+    if (k === 'fdir') return fdirScene(q);
+    if (k === 'crank') return crankScene(q);
+    if (k === 'survey') return surveyScene(q);
+    return triScene(q);
+  }
+
+  // Render: fit the scene's points into the viewBox, then draw; labels in screen units.
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var a in attrs) if (has(attrs, a)) e.setAttribute(a, attrs[a]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  var NORTH = 30, PADX = 58, PADY = 40, HMAX = 250;
+  // Labels never overlap: while two labels' boxes meet, the one that holds less firmly moves 3 units its own way (a bounded
+  // loop). Then the viewBox grows, if it must, to hold every label, so none is cut off at the edge. Needs the drawing on
+  // screen (getBBox); a hidden one is left as placed and spaced the next time it is drawn.
+  function put(L, w, h) {
+    var r = L.gap + (w / 2) * Math.abs(L.dir.x) + (h / 2) * Math.abs(L.dir.y);
+    L.el.setAttribute('x', (L.base.x + L.dir.x * r).toFixed(1));
+    L.el.setAttribute('y', (L.base.y + L.dir.y * r).toFixed(1));
+  }
+  function boxOf(t) { var b = t.getBBox(); return { x: b.x - 3, y: b.y - 2, w: b.width + 6, h: b.height + 4 }; }
+  function meets(a, b) { return Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x) > 0 && Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y) > 0; }
+  function space(svg, labels, H) {
+    var probe; try { probe = labels.length ? labels[0].el.getBBox() : null; } catch (e) { probe = null; }
+    if (!probe || !(probe.width > 0)) return;
+    labels.forEach(function (l) { var b = l.el.getBBox(); put(l, b.width, b.height); });
+    for (var pass = 0; pass < 40; pass++) {
+      var moved = false, boxes = labels.map(function (l) { return boxOf(l.el); });
+      for (var i = 0; i < labels.length; i++) for (var j = i + 1; j < labels.length; j++) {
+        if (!meets(boxes[i], boxes[j])) continue;
+        var m = labels[i].pri < labels[j].pri ? labels[i] : labels[j];
+        m.el.setAttribute('x', (parseFloat(m.el.getAttribute('x')) + m.dir.x * 3).toFixed(1));
+        m.el.setAttribute('y', (parseFloat(m.el.getAttribute('y')) + m.dir.y * 3).toFixed(1));
+        moved = true;
+      }
+      if (!moved) break;
+    }
+    var bb = svg.getBBox(), x0 = Math.min(0, bb.x - 4), y0 = Math.min(0, bb.y - 4);
+    var x1 = Math.max(VW, bb.x + bb.width + 4), y1 = Math.max(H, bb.y + bb.height + 4);
+    svg.setAttribute('viewBox', x0.toFixed(1) + ' ' + y0.toFixed(1) + ' ' + (x1 - x0).toFixed(1) + ' ' + (y1 - y0).toFixed(1));
+  }
+  function draw(host, q) {
+    var S = sceneOf(q), names = Object.keys(S.pts), xs = [], ys = [];
+    names.forEach(function (k) { xs.push(S.pts[k].x); ys.push(S.pts[k].y); });
+    var minx = Math.min.apply(null, xs), maxx = Math.max.apply(null, xs), miny = Math.min.apply(null, ys), maxy = Math.max.apply(null, ys);
+    var w = Math.max(maxx - minx, 1e-9), h = Math.max(maxy - miny, 1e-9);
+    var top = S.norths.length ? NORTH + 16 : 0;
+    var sc = Math.min((VW - 2 * PADX) / w, (HMAX - 2 * PADY - top) / h);
+    var H = Math.max(140, h * sc + 2 * PADY + top);
+    var ox = (VW - w * sc) / 2 - minx * sc, oy = PADY + top + (H - 2 * PADY - top - h * sc) / 2 + maxy * sc;
+    function T(p) { return P(ox + p.x * sc, oy - p.y * sc); }
+    var cen = P(0, 0); names.forEach(function (k) { cen = add(cen, T(S.pts[k])); }); cen = mul(cen, 1 / names.length);
+    if (S.verts.length >= 3) { cen = P(0, 0); S.verts.slice(0, 3).forEach(function (v) { cen = add(cen, T(v.p)); }); cen = mul(cen, 1 / 3); }
+    var svg = el('svg', { viewBox: '0 0 ' + VW + ' ' + Math.round(H), role: 'img', 'aria-label': 'Diagram for the question: ' + q.prompt });
+    var gl = el('g', {}, svg), ga = el('g', {}, svg), gt = el('g', {}, svg);
+    // Every label is kept, with the way it may move (dir) and how firmly it stays put (pri), for the spacing pass below.
+    // A label is centred on base + dir * (gap + the distance from its box's centre to the box's edge along dir), so its whole
+    // box clears the point or line it labels, however wide the text. The box is placed once the drawing is on screen
+    // (place(), below); until then an estimate of the text's size stands in.
+    var labels = [];
+    function text(p, s, cls, anchor, dir, pri, gap) {
+      var t = el('text', { class: 'd-t' + (cls ? ' ' + cls : '') }, gt);
+      t.textContent = s;
+      var L = { el: t, base: p, dir: dir ? unit(dir) : P(0, 0), gap: gap || 0, pri: pri || 0 };
+      labels.push(L);
+      put(L, s.length * (cls && /\bv\b/.test(cls) ? 9.5 : 7.9), 14);
+      return t;
+    }
+    function head(tip, from, cls) {
+      var d = unit(sub(tip, from)), nrm = P(-d.y, d.x), b = sub(tip, mul(d, 11));
+      el('path', { class: 'd-head' + (cls ? ' ' + cls : ''), d: 'M' + tip.x.toFixed(1) + ',' + tip.y.toFixed(1) + 'L' + add(b, mul(nrm, 5)).x.toFixed(1) + ',' + add(b, mul(nrm, 5)).y.toFixed(1) + 'L' + sub(b, mul(nrm, 5)).x.toFixed(1) + ',' + sub(b, mul(nrm, 5)).y.toFixed(1) + 'Z' }, ga);
+    }
+    S.segs.forEach(function (s) {
+      var a = T(s.p), b = T(s.q), end = b;
+      if (s.arrow) end = sub(b, mul(unit(sub(b, a)), 9));
+      el('line', { x1: a.x.toFixed(1), y1: a.y.toFixed(1), x2: end.x.toFixed(1), y2: end.y.toFixed(1), class: 'd-' + s.cls }, gl);
+      if (s.arrow) head(b, a, s.unk ? 'unk' : '');
+    });
+    S.joints.forEach(function (p) { var a = T(p); el('circle', { cx: a.x.toFixed(1), cy: a.y.toFixed(1), r: 4.5, class: 'd-joint' }, ga); });
+    S.dots.forEach(function (p) { var a = T(p); el('circle', { cx: a.x.toFixed(1), cy: a.y.toFixed(1), r: 3.5, class: 'd-dot' }, ga); });
+    // North lines, each with its bearing arcs (clockwise from north).
+    S.norths.forEach(function (nl) {
+      var a = T(nl.p), tip = P(a.x, a.y - NORTH);
+      el('line', { x1: a.x.toFixed(1), y1: a.y.toFixed(1), x2: tip.x.toFixed(1), y2: (tip.y + 6).toFixed(1), class: 'd-north' }, gl);
+      head(tip, a, 'north');
+      text(tip, 'N', 'n', null, P(0, -1), 5, 3);
+      var bs = nl.bearings || (nl.bearing !== undefined ? [nl.bearing] : []);
+      bs.slice().sort(function (x, y) { return x - y; }).forEach(function (b, i) {
+        var r = 16 + i * 11, st = P(a.x, a.y - r), en = P(a.x + r * Math.sin(b * R), a.y - r * Math.cos(b * R));
+        el('path', { class: 'd-arc', d: 'M' + st.x.toFixed(1) + ',' + st.y.toFixed(1) + 'A' + r + ',' + r + ' 0 ' + (b > 180 ? 1 : 0) + ' 1 ' + en.x.toFixed(1) + ',' + en.y.toFixed(1) }, ga);
+        var mid = b / 2, lr = r + 15 + (String(b).length > 2 ? 4 : 0);
+        var bd = P(Math.sin(mid * R), -Math.cos(mid * R));
+        text(a, (b < 100 ? (b < 10 ? '00' : '0') : '') + b + '°', 'nm', null, bd, 1, r + 3);
+      });
+    });
+    // Angles: an arc at the vertex between the two rays, its label on the bisector (further out for a narrow angle).
+    S.angles.forEach(function (an) {
+      var v = T(an.v), d1v = unit(sub(T(an.p), v)), d2v = unit(sub(T(an.q), v));
+      var a1 = Math.atan2(d1v.y, d1v.x), a2 = Math.atan2(d2v.y, d2v.x), diff = a2 - a1;
+      while (diff <= -Math.PI) diff += 2 * Math.PI;
+      while (diff > Math.PI) diff -= 2 * Math.PI;
+      // A narrow angle (under 20°) gets a long arc, and its label just outside the wedge beside the arc's middle, on the first
+      // ray's side: inside so thin a wedge the label would sit on both lines, far from its vertex.
+      var half = Math.abs(diff) / 2, narrow = half * 2 < 20 * R, r = narrow ? 46 : 20;
+      var s0 = add(v, mul(d1v, r)), s1 = add(v, mul(d2v, r));
+      el('path', { class: 'd-arc' + (an.unk ? ' unk' : ''), d: 'M' + s0.x.toFixed(1) + ',' + s0.y.toFixed(1) + 'A' + r + ',' + r + ' 0 0 ' + (diff > 0 ? 1 : 0) + ' ' + s1.x.toFixed(1) + ',' + s1.y.toFixed(1) }, ga);
+      var bis = unit(add(d1v, d2v)), lr = Math.min(Math.max(r + 4, 9 / Math.max(Math.sin(half), 0.05)), 60);
+      if (len(add(d1v, d2v)) < 1e-6) bis = P(-d1v.y, d1v.x);
+      if (narrow) text(add(v, mul(bis, r)), an.text, an.unk ? 'unk' : '', null, unit(sub(d1v, d2v)), 2, 4);
+      else text(v, an.text, an.unk ? 'unk' : '', null, bis, 2, lr);
+    });
+    // Sides: the label off the side's midpoint, away from the middle of the figure.
+    S.sides.forEach(function (sd) {
+      var a = T(sd.p), b = T(sd.q), m = mul(add(a, b), 0.5), d = unit(sub(b, a)), nrm = P(-d.y, d.x);
+      var out = sub(m, cen);
+      if (nrm.x * out.x + nrm.y * out.y < 0) nrm = mul(nrm, -1);
+      if (sd.below && nrm.y < 0) nrm = mul(nrm, -1);
+      text(m, sd.text, sd.unk ? 'unk' : (sd.muted ? 'nm' : ''), null, nrm, 3, 5);
+    });
+    S.verts.forEach(function (vx) {
+      var a = T(vx.p), d = unit(sub(a, cen));
+      if (len(sub(a, cen)) < 1e-6) d = P(0, 1);
+      text(a, vx.text, vx.nm ? 'nm' : 'v', null, d, 4, 6);
+    });
+    S.extra.forEach(function (x) {
+      var a = T(x.at), dir = x.from ? unit(sub(a, T(x.from))) : P(0, x.below ? 1 : -1);
+      text(a, x.text, x.unk ? 'unk' : (x.nm ? 'nm' : ''), null, dir, 2, 6);
+    });
+    host.innerHTML = '';
+    host.appendChild(svg);
+    space(svg, labels, H);
+    return { svg: svg, sc: sc, T: T, scene: S };
+  }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var MODE_INFO = {
+    'stage-1': { n: '1', name: 'Which rule?', calc: 'not allowed', steps: [1] },
+    'stage-2': { n: '2', name: 'Which version?', calc: 'not allowed', steps: [2] },
+    'stage-3': { n: '3', name: 'Solve it', calc: 'scientific', steps: [3] },
+    'all-three': { n: 'All', name: 'All three', calc: 'scientific', steps: [1, 2, 3] }
+  };
+  var LEVEL_NAME = { gcse: 'GCSE Higher', level3: 'Level 3', level4: 'Level 4' };
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, si = 0, state = 'menu', score = 0, marks = 0, rightCount = 0, itemRight = true, calc = null;
+
+  // A run: PER items from the level's 40, without repeats (a Fisher-Yates shuffle, then the first PER).
+  function run() { return MaffsOptions.shuffle(QUESTIONS[level].slice()).slice(0, PER); }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function stageBadge() {
+    var src = document.querySelector('.calc-badge[data-stage="' + mode + '"]'), b = $('calcBadge');
+    b.setAttribute('data-calc', src.getAttribute('data-calc'));
+    b.textContent = src.textContent;
+  }
+  // The scientific calculator: Stage 3 and All three only. Mounted the first time one is played; hidden in Stages 1 and 2.
+  function calculator() {
+    var on = MODE_INFO[mode].calc === 'scientific';
+    if (on && !calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { keys: 'scientific', dock: $('qcard'), answer: $('ans') });
+    $('calcWrap').hidden = !on;
+  }
+  function setLevel(l) {
+    if (LEVELS.indexOf(l) === -1) return;
+    level = l;
+    var bs = $('levelList').querySelectorAll('.lvl-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].dataset.level === level));
+  }
+  function board() { return level + '-' + mode; }
+  function startMode(m) {
+    if (!MODE_INFO[m]) return;
+    MaffsLock.newSession();
+    mode = m; qs = run(); qi = 0; score = 0; marks = 0; rightCount = 0;
+    stageBadge();
+    calculator();
+    if (calc) { calc.close(); calc.clear(); }
+    show('game');
+    $('hudStage').textContent = MODE_INFO[mode].n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++]; si = 0; itemRight = true;
+    $('hudQ').textContent = qi + '/' + PER;
+    draw($('fig'), Q);
+    ask();
+  }
+  function step() { return MODE_INFO[mode].steps[si]; }
+  function ask() {
+    var s = step();
+    $('hudScore').textContent = score;
+    $('stageLabel').textContent = (mode === 'all-three' ? 'All three · step ' + s + ' · ' : 'Stage ' + s + ' · ') + ['', 'Which rule?', 'Which version?', 'Solve it'][s] + ' · ' + LEVEL_NAME[level];
+    $('ask').innerHTML = esc(Q.prompt);
+    $('msg').textContent = ''; delete $('msg').dataset.why;
+    $('opts').hidden = s === 3; $('typeRow').hidden = s !== 3;
+    var o = $('opts');
+    o.innerHTML = ''; o.classList.toggle('ver', s === 2);
+    if (s === 1) {
+      $('prompt').textContent = 'Sine rule or cosine rule?';
+      [['sine', 'sine', '“It\'s a SINE!!”'], ['cosine', 'cos', '“No it\'s not”']].forEach(function (x) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'opt ' + x[1]; b.dataset.val = x[0]; b.textContent = x[2];
+        b.setAttribute('aria-label', x[2] + ': the ' + x[0] + ' rule');
+        o.appendChild(b);
+      });
+    } else if (s === 2) {
+      $('prompt').textContent = 'Which version do you use?';
+      VERSIONS.forEach(function (v) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'opt'; b.dataset.val = v; b.innerHTML = tex(VERSION_TEX[v]);
+        o.appendChild(b);
+      });
+    } else {
+      $('prompt').textContent = 'Type your answer to 1 decimal place.';
+      $('ans').value = '';
+      $('unit').textContent = Q.unit;
+      $('ans').setAttribute('aria-label', 'Your answer, to 1 decimal place, in ' + (Q.unit === '°' ? 'degrees' : Q.unit));
+    }
+    MaffsLock.fresh($('ansBlock'));
+    state = 'asking';
+  }
+  function keyOf(s) { return s === 1 ? Q.rule : s === 2 ? Q.version : Q.answer; }
+  // Choices are marked by the button's dataset.val against the item's key, never by what the button shows.
+  function onOption(b) {
+    if (state !== 'asking' || step() === 3) return;
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    settle(b.dataset.val === keyOf(step()), b.dataset.val);
+  }
+  // Typed answers by MaffsAnswer.decimal to 1 d.p.: an answer that is right but not to 1 d.p., or unreadable, is never marked.
+  function onCheck() {
+    if (state !== 'asking' || step() !== 3) return;
+    var raw = $('ans').value, r = MaffsAnswer.decimal(raw, Q.answer, 1);
+    if (r === 'unreadable' || r === 'format') {
+      $('msg').textContent = r === 'format' ? MaffsAnswer.message('format', raw, { dp: 1 }) : MaffsAnswer.message('unreadable', raw);
+      $('msg').dataset.why = r; return;
+    }
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    settle(r === 'correct', raw);
+  }
+  function settle(right, got) {
+    var s = step(), last = si === MODE_INFO[mode].steps.length - 1;
+    state = right ? 'done' : 'wrong';
+    marks++;
+    if (right) score++; else itemRight = false;
+    $('hudScore').textContent = score;
+    // The keys shown on the buttons: the right one ringed, the rest dimmed.
+    var bs = $('opts').querySelectorAll('.opt');
+    for (var i = 0; i < bs.length; i++) { bs[i].disabled = true; bs[i].classList.add(bs[i].dataset.val === String(keyOf(s)) ? 'key' : 'miss'); }
+    if (last) {
+      if (itemRight) rightCount++;
+      ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: itemRight });
+    }
+    $('qcard').classList.add('fb-open');
+    var fb = $('feedback'), head, body;
+    if (s === 1) {
+      head = right ? '✓ Right: the ' + Q.rule + ' rule' : '✗ It\'s the ' + Q.rule + ' rule';
+      body = '<div class="fb-line">' + line(ruleReason(Q)) + '</div>';
+    } else if (s === 2) {
+      head = right ? '✓ Right version' : '✗ Not that version';
+      body = '<div class="fb-line">' + line(VERSION_REASON[Q.version]) + '</div>';
+    } else {
+      head = right ? '✓ Right: ' + d1(Q.answer) + ' ' + Q.unit : '✗ The answer is ' + d1(Q.answer) + ' ' + Q.unit;
+      body = '<ol class="worked">' + working(Q).map(function (l) { return '<li>' + line(l) + '</li>'; }).join('') + '</ol>';
+    }
+    var nextText = !last ? 'Next step →' : (qi >= PER ? 'See results →' : 'Next →');
+    fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '" data-step="' + s + '"><div class="fb-head">' + esc(head) + '</div>' + body +
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button" data-maffs-lock-skip>' + nextText + '</button>' : '') + '</div></div>';
+    if (right) { MaffsLock.fresh(fb); try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {} }
+    else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('ask') });
+  }
+  // On: the next step of this item (All three), or the next item.
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    if (si < MODE_INFO[mode].steps.length - 1) {
+      si++;
+      $('feedback').innerHTML = '';
+      $('qcard').classList.remove('fb-open');
+      ask();
+      return;
+    }
+    nextQuestion();
+  }
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var b = board(), outOf = PER * MODE_INFO[mode].steps.length;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
+    var pbKey = 'sns_best_' + b, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = MODE_INFO[mode].name + ' done';
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + outOf + ' · ' + LEVEL_NAME[level];
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> of <b>' + qs.length + '</b> questions with every step right' + (pb ? '<br>New personal best' : '');
+    var i = MODES.indexOf(mode);
+    $('nextStageBtn').hidden = i >= MODES.length - 1;
+    $('nextStageBtn').textContent = i === 2 ? 'Next: All three' : 'Next: Stage ' + (i + 2);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('levelList').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) setLevel(b.dataset.level); });
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('[data-stage]'); if (b) startMode(b.dataset.stage); });
+  $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) onOption(b); });
+  $('typeRow').addEventListener('submit', function (e) { e.preventDefault(); onCheck(); });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+  setLevel(level);
+
+  // Read-only views of the bank and live state, for scripts/verify-its-a-sine.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var l in QUESTIONS) if (has(QUESTIONS, l)) for (var i = 0; i < QUESTIONS[l].length; i++) if (QUESTIONS[l][i].id === id) return QUESTIONS[l][i]; return null; }
+  window.SNS = {
+    SLUG: SLUG, LEVELS: LEVELS, MODES: MODES, BOARDS: BOARDS, VERSIONS: VERSIONS, VERSION_TEX: VERSION_TEX,
+    bank: function () { return copy(QUESTIONS); },
+    kind: function (id) { var q = item(id); return q ? kindOf(q) : null; },
+    pattern: function (id) { var q = item(id); return q ? PATTERN[kindOf(q)] : null; },
+    patternRule: function (id) { var q = item(id); return q ? PATTERN_RULE[PATTERN[kindOf(q)]] : null; },
+    ruleReason: function (id) { var q = item(id); return q ? ruleReason(q) : null; },
+    working: function (id) { var q = item(id); return q ? working(q) : null; },
+    // Draw one item's diagram into a host element; returns the scene's points in screen units, for the verifier's shape check.
+    drawInto: function (host, id) {
+      var q = item(id), d = draw(host, q), out = {};
+      Object.keys(d.scene.pts).forEach(function (k) { var p = d.T(d.scene.pts[k]); out[k] = [p.x, p.y]; });
+      return { pts: out, sc: d.sc };
+    },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      step: function () { return state === 'menu' || state === 'over' ? null : step(); },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      board: board,
+      calcMounted: function () { return !!calc; },
+      calcShown: function () { return !$('calcWrap').hidden; },
+      setLevel: setLevel,
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in a mode, so a verifier can see any item.
+      preview: function (m, id) {
+        var q = item(id);
+        if (!q || !MODE_INFO[m]) return;
+        setLevel(q.id.split('_')[0]);
+        MaffsLock.newSession(); mode = m; qs = [q]; qi = 0; score = 0; marks = 0; rightCount = 0;
+        stageBadge(); calculator(); show('game'); $('hudStage').textContent = MODE_INFO[mode].n;
+        ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+        nextQuestion();
+      },
+      // Answer the step on screen: right, or wrong.
+      answer: function (right) {
+        if (state !== 'asking') return;
+        MaffsLock.fresh($('ansBlock'), 0);
+        var s = step();
+        if (s === 3) { $('ans').value = right ? d1(Q.answer) : d1(Q.answer + 5); $('checkBtn').click(); return; }
+        var key = String(keyOf(s)), bs = $('opts').querySelectorAll('.opt'), pick = null;
+        for (var i = 0; i < bs.length; i++) if ((bs[i].dataset.val === key) === right) { pick = bs[i]; break; }
+        if (pick) pick.click();
+      },
+      next: function () { var b = $('nextBtn') || document.querySelector('#feedback .maffs-next, #feedback .fb-next button'); if (b && !b.disabled) b.click(); else if (state === 'done' || state === 'wrong') advance(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'its-a-sine');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
