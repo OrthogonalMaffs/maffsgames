@@ -911,6 +911,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'opt ' + x[1]; b.dataset.val = x[0]; b.textContent = x[2];
         b.setAttribute('aria-label', x[2] + ': the ' + x[0] + ' rule');
+        b.addEventListener('click', function () { onOption(b); });
         o.appendChild(b);
       });
     } else if (s === 2) {
@@ -918,6 +919,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       VERSIONS.forEach(function (v) {
         var b = document.createElement('button');
         b.type = 'button'; b.className = 'opt'; b.dataset.val = v; b.innerHTML = tex(VERSION_TEX[v]);
+        b.addEventListener('click', function () { onOption(b); });
         o.appendChild(b);
       });
     } else {
@@ -1015,7 +1017,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   /* ---------- wiring ---------- */
   $('levelList').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) setLevel(b.dataset.level); });
   $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-mode]'); if (b) startMode(b.dataset.mode); });
-  $('opts').addEventListener('click', function (e) { var b = e.target.closest('.opt'); if (b) onOption(b); });
+  // Each answer button carries its own click handler (set where it is made, in ask()), not one delegated to #opts: the
+  // site's option probe (check-site.py's __mfgProbe, which phone-fit uses) finds an option group only by its buttons' own
+  // handlers, and main's phone-fit-full read this page as having none (run 44078857810).
   $('typeRow').addEventListener('submit', function (e) { e.preventDefault(); onCheck(); });
   $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
   $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
