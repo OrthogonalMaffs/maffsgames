@@ -130,3 +130,11 @@ STOP IF:
 - A worked example's or a Level 3 item's value disagrees with your independent recomputation (report the id and both values).
 - The picture pushes the first stage button below the fold at 375 x 667 when it was above it before (report both measurements).
 - merge-pr.py refuses for a reason other than a transient 5xx it already retries.
+
+AMENDMENT 1 (Jon, 17 Nov 2026, after the STOP IF 3 report), verbatim:
+
+1. PICTURE: keep it under the title, as the contract says. Waive STOP IF 3 for the first stage button; the level buttons must stay above the fold at 375 × 667 (record their measured top/bottom in the handover).
+
+2. UNITS: yes, include the drawing fix. At games/its-a-sine/index.html:606 replace the hard-coded `frame ? 'm' : 'cm'` with: the question's own unit when it is a length unit; else the length unit in its prompt; else its level's unit. Do NOT change how kindOf (line 432) decides frame vs plain: frame detection must give the same result for every existing item. The verifier checks every drawn label's unit against the same rule. Success adds: every Level 3 drawing shows mm, level4_034 shows mm, and every other item's labels are unchanged (list any that change and why).
+
+Then finish the rest of the contract as written, open the PR and merge on green.
