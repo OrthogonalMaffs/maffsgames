@@ -619,7 +619,52 @@ def _canteen_freezer_inequality(v):
             "high": _two_places(Fraction(hi + k, m))}
 
 
+def _canteen_mean_calories(v):
+    """canteen-mean-calories: every slider setting x from 0 to 1000 kcal is tried, and the answer is the one whose
+    mean with the four logged specials, (e1 + e2 + e3 + e4 + x) / 5 as an exact fraction, is the target T. The
+    common wrong answer, by the room's rule (its missTitle, "the target mean, not the missing item"): T itself. The
+    worked line's figures: the day's total, five specials at T, and the four logged added together."""
+    logged = [v["e1"], v["e2"], v["e3"], v["e4"]]
+    hits = [x for x in range(0, 1001) if Fraction(sum(logged) + x, 5) == v["T"]]
+    if len(hits) != 1:
+        raise ValueError("%d slider settings make the mean %s, not one" % (len(hits), v["T"]))
+    total = 0
+    for _ in range(5):                                         # five specials at the target mean
+        total += v["T"]
+    return {"answer": hits[0], "miss": v["T"], "total": total, "sum4": sum(logged)}
+
+
+def _cookie_price_simultaneous(v):
+    """cookie-price-simultaneous: the two receipt lines, a1 C + b1 P = t1 and a2 C + b2 P = t2, solved by
+    elimination: the second line scaled by mult = a1 / a2 (whole) so both buy the same cookies, the first taken
+    away, leaving pcoef P = ptot; then C from the first line. Both prices are put back into both lines and must be
+    whole pounds on the dials (0 to 10). The answer is the ORDERED pair [Cookie, Pizza]; the common wrong answer, by
+    the room's rule (its missTitle, "the right pair, swapped"): [Pizza, Cookie]."""
+    a1, b1, t1, a2, b2, t2 = (v[k] for k in ("a1", "b1", "t1", "a2", "b2", "t2"))
+    mult = _whole(Fraction(a1, a2), "the scale for the second line")
+    eC, eP, eT = a2 * mult, b2 * mult, t2 * mult
+    pcoef, ptot = eP - b1, eT - t1
+    P = _whole(Fraction(ptot, pcoef), "the pizza's price")
+    C = _whole(Fraction(t1 - b1 * P, a1), "the cookie's price")
+    if a1 * C + b1 * P != t1 or a2 * C + b2 * P != t2 or not (0 <= C <= 10 and 0 <= P <= 10):
+        raise ValueError("C = %d, P = %d does not satisfy both lines on the dials" % (C, P))
+    return {"answer": [C, P], "miss": [P, C], "C": C, "P": P, "mult": mult, "eC": eC, "eP": eP, "eT": eT,
+            "pcoef": pcoef, "ptot": ptot}
+
+
+def _kale_fraction_drain(v):
+    """kale-fraction-drain: n/d of the N portions must stay on the shelf; one d-th is N / d (whole), so n/d is that
+    times n, and the chute takes the rest, N minus what stays. The common wrong answer, by the room's rule (its
+    missTitle, "the amount that was supposed to survive"): what stays, sent down the chute."""
+    one = _whole(Fraction(v["N"], v["d"]), "one %dth of %d" % (v["d"], v["N"]))
+    kept = one * v["n"]
+    return {"answer": v["N"] - kept, "miss": kept, "kept": kept, "one": one}
+
+
 RECOMPUTE = {
+    "canteen-mean-calories": _canteen_mean_calories,
+    "cookie-price-simultaneous": _cookie_price_simultaneous,
+    "kale-fraction-drain": _kale_fraction_drain,
     "patrol-lcm-timer": _patrol_lcm_timer,
     "cube-surface-volume": _cube_surface_volume,
     "canteen-freezer-inequality": _canteen_freezer_inequality,

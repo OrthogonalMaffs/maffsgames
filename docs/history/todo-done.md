@@ -3315,6 +3315,15 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 
 **Closed 17 Nov 2026 (HEATWAVE-APPROVE).** Row HEATWAVE-PACK-APPROVE, moved word for word above. Jon proofread the v2 PDF built from main 58e4ea7 and approved it ("approved, please remove the draft markings"). The config now has `"wording_approved": {"by": "Jon", "date": "2026-11-17"}`; the `--final` build writes `dist-packs/heatwave-mutiny-pack-v2.pdf`, 36 pages, no DRAFT on any page. Listing it on Tes (£3) is in PACKS-V2-UPLOAD.
 
+## Closed by CANTEEN-PACK (17 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| COMIC-CAPER-REUPLOAD | **The Comic Caper's sold pack has changed: its covers print white answer boxes** (ANSWER-BOX-CHECK, 14 Nov 2026; pages 6, 10, 14, 18, 22 and 26, nothing else). Rebuild with `python -X utf8 tools/pack-generator/build_pack.py comic-caper --final` and replace the Tes file. | Jon |
+| CHRISTMAS-LIBRARY-KILN-REUPLOAD | **The Christmas Tree Fiasco's sold pack has changed: its hint cards (pages 30 to 35) keep "50 cm" on one line** (ANSWER-BOX-CHECK, 14 Nov 2026: a figure no longer parts from its unit; the same words, one line break moved). Rebuild with `python -X utf8 tools/pack-generator/build_pack.py christmas-tree-fiasco --final` and replace the Tes file. Library Jam's and Kiln Disaster's packs came out pixel-identical: nothing to do. | Jon |
+
+**Closed 17 Nov 2026 (CANTEEN-PACK), superseded.** Rows COMIC-CAPER-REUPLOAD and CHRISTMAS-LIBRARY-KILN-REUPLOAD, moved word for word above. Both asked Jon to replace a Tes file with a 14 Nov rebuild; PACKS-V2-UPLOAD (17 Nov 2026) now has him replace every approved pack on Tes with its FINAL-PADLOCK-FAIR rebuild (christmas-tree-fiasco v3, comic-caper v2, kiln-disaster v3, library-jam v2), which carries the 14 Nov changes, so these two have nothing left of their own. Moved to keep docs/todo.md under its cap before CANTEEN-PACK-APPROVE and CORE-BUNDLES-2 were added.
+
 ## Closed by ITS-A-SINE-LIST (17 Nov 2026)
 
 | # | Item | Owner |

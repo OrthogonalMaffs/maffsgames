@@ -20,7 +20,14 @@ Room-agnostic. Everything about a room comes from three places, none of them typ
     whose voice the start read-out is in
     ("readout_voice", contract PE-SHED-FINAL, 16 Nov 2026; printed in italics above the hook), and whether Jon has
     approved the room's printed wording ("wording_approved"; while it is null, pages 1 and 2 carry a DRAFT badge and
-    --final refuses the room; contract PACK-APPROVED, 11 Nov 2026).
+    --final refuses the room; contract PACK-APPROVED, 11 Nov 2026). A "pair" lock's answer image gives its two answer
+    boxes as "label_boxes" and their two labels' boxes as "part_label_boxes" (contract CANTEEN-PACK, 17 Nov 2026).
+
+A lock whose instrument is kind "pair" (two dials set together, as The Canteen Hack's price tags) has an ORDERED pair
+[a, b] as its answer and common wrong answer, never a set of alternatives: its cover has two labelled answer boxes,
+the key and worked solution give both values with their labels, it is compared as (a, b) wherever answers are
+compared, and it counts in the final padlock as a + b (Jon, 17 Nov 2026, 19:25: "I agree that you add the 2 numbers
+for cookie."), which the locks page and the key say in words. Every other lock is read exactly as before.
 
 The build, in order; any failure stops it before a PDF exists:
   1. scripts/check-escape-rooms.py is imported (run in full, unchanged): its draw_is_valid() and clue_strings() are the
@@ -211,6 +218,15 @@ def load_config(slug):
             if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
                 raise BuildError("%s: %r is not a label box" % (im["file"], box))
         check_overrides(im)
+        if PART_LABEL_BOXES in im:               # CANTEEN-PACK: a pair lock's two box labels
+            parts = im[PART_LABEL_BOXES]
+            if im.get("role") != "answer" or not isinstance(parts, list) or "label_boxes" not in im \
+                    or len(parts) != len(im["label_boxes"]):
+                raise BuildError('%s: "%s" is for a pair lock\'s answer image, one box per entry of its "label_boxes", '
+                                 'not %r' % (im["file"], PART_LABEL_BOXES, parts))
+            for box in parts:
+                if not isinstance(box, list) or len(box) != 4 or not (0 <= box[0] < box[2] and 0 <= box[1] < box[3]):
+                    raise BuildError("%s: %r is not a label box" % (im["file"], box))
     wording_approved(cfg, slug)
     answer_units(cfg, slug)
     readout_voice(cfg, slug)
@@ -288,6 +304,8 @@ def with_answer_units(cfg, locks, slug):
         if l["id"] not in units:
             out.append(l)
             continue
+        if is_pair(l):                           # CANTEEN-PACK: a pair's two values are not scaled
+            raise BuildError('%s/%s: a pair lock cannot take "answer_units"' % (slug, l["id"]))
         for v, tv in zip(l["variants"], as_text[l["id"]]):
             for k in ("answer", "miss"):
                 if v.get(k) is not None and text_decimal(v[k]) != tv[k]:
@@ -329,7 +347,10 @@ def printed_number(lock, value, which="answer"):
 
 def printed_figure(lock, value, which="answer"):
     """The key's figure for a lock's answer or common wrong answer: the token as students read it, and for a lock
-    with a printed unit the scaled value with that unit, since the room's own words beside it use the room's unit."""
+    with a printed unit the scaled value with that unit, since the room's own words beside it use the room's unit.
+    For a pair lock, both values with their labels (pair_figure)."""
+    if is_pair(lock):
+        return pair_figure(lock, value, which)
     au = lock.get("answer_unit")
     if not au:
         return format_token(value)
@@ -408,7 +429,12 @@ def both_units_problems(lock, v, template, filled, where):
 def solution_line(lock, v, solved):
     """A lock's worked solution, already filled. A lock with a printed unit must end up giving its answer in that
     unit: the room's words normally name the answer, so both_units() has already written "<b>2.35 m = 235 cm</b>";
-    a solution that does not name it has " = <b>235 cm</b>." added at its end."""
+    a solution that does not name it has " = <b>235 cm</b>." added at its end. A pair lock's solution ends with both
+    values with their labels and the number it gives the final padlock, a + b (CANTEEN-PACK)."""
+    if is_pair(lock):
+        a, b = pair_value(lock, v["answer"])
+        return "%s Answer: <b>%s</b>; for the final padlock, %s + %s = %s." % (
+            solved.rstrip(), pair_figure(lock, v["answer"]), format_token(a), format_token(b), format_token(a + b))
     au = lock.get("answer_unit")
     if not au:
         return solved
@@ -417,6 +443,16 @@ def solution_line(lock, v, solved):
         return solved
     body = solved.rstrip()
     return "%s = <b>%s</b>." % (body[:-1] if body.endswith(".") else body, figure)
+
+
+def key_cell(l, v):
+    """A lock's cell in the answer key's table: its answer and, small, its common wrong answer. A pair lock's
+    common wrong answer, where it is the pair swapped, says so (CANTEEN-PACK)."""
+    miss = printed_figure(l, v["miss"], "miss") if v.get("miss") is not None else "none"
+    if is_pair(l) and v.get("miss") is not None and pair_value(l, v["miss"], "miss") == pair_value(l, v["answer"])[::-1]:
+        miss += ": the two swapped"
+    return ("<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
+            % (printed_figure(l, v["answer"]), miss))
 
 
 def answer_unit_problems(locks, cover_texts):
@@ -535,7 +571,12 @@ def with_lock_words(cfg, locks, slug):
     "label" (contract HEATWAVE-PACK, 16 Nov 2026) replaces the instrument's label on the lock's answer box and "opens
     at" line, where the room's own gives something away on paper (The Heatwave Mutiny's "Door keypad — four digits"
     names the code's length, which Amendment 4 forbids on a student page). It is checked as the other words are, and
-    then by instrument_hints() and answer_caption() on the built pages, as the room's own label is."""
+    then by instrument_hints() and answer_caption() on the built pages, as the room's own label is.
+
+    "parts" (contract CANTEEN-PACK, 17 Nov 2026), for a pair lock only: {"a": "<label>", "b": "<label>"}, the two
+    answer boxes' labels in place of the instrument's a.label and b.label ("Cookie £" for the room's "Cookie", the
+    pounds being in the pair's own label). A label, not a sentence: words with no {{token}}, tag or lowercase start,
+    then instrument_hints() on the built pages."""
     words = cfg.get(LOCK_WORDS)
     if words is None:
         return locks
@@ -551,8 +592,8 @@ def with_lock_words(cfg, locks, slug):
         if w is None:
             out.append(l)
             continue
-        if not isinstance(w, dict) or not w or not set(w) <= {"hints", "missSays", "label"}:
-            raise BuildError('%s/%s: "%s" takes "hints", "missSays" and "label" only, not %r'
+        if not isinstance(w, dict) or not w or not set(w) <= {"hints", "missSays", "label", "parts"}:
+            raise BuildError('%s/%s: "%s" takes "hints", "missSays", "label" and "parts" only, not %r'
                              % (slug, l["id"], LOCK_WORDS, w))
         own = {t for x in lock_strings(l) for t in TOKEN_RE.findall(x)}
         first = {"%s.%s" % (l["key"], k): format_token(v) for k, v in l["variants"][0].items()}
@@ -591,6 +632,24 @@ def with_lock_words(cfg, locks, slug):
                 raise BuildError('%s/%s: "%s" replaces the instrument\'s label, which this lock does not have'
                                  % (slug, l["id"], LOCK_WORDS))
             new["instrument"] = dict(l["instrument"], label=checked("label", w["label"]))
+        if "parts" in w:                         # CANTEEN-PACK: a pair's two box labels, print-only
+            if not is_pair(l):
+                raise BuildError('%s/%s: "%s" parts is for a pair lock\'s two labels, and this lock is not a pair'
+                                 % (slug, l["id"], LOCK_WORDS))
+            if not isinstance(w["parts"], dict) or set(w["parts"]) != set(PAIR_PARTS):
+                raise BuildError('%s/%s: "%s" parts must be {"a": "<label>", "b": "<label>"}, not %r'
+                                 % (slug, l["id"], LOCK_WORDS, w["parts"]))
+            ins = dict(new["instrument"])
+            for k in PAIR_PARTS:
+                # a box label, not a sentence: it may end in a sign ("Cookie £"), so caption_problems() is not its
+                # rule; it must be words, with no {{token}} or tag and no lowercase start (instrument_hints() then
+                # holds it to no digit, range or maximum on the built pages)
+                part = w["parts"][k]
+                if not isinstance(part, str) or not part.strip() or part != part.strip() or TOKEN_RE.search(part)                         or TAG_RE.search(part) or part[:1].islower():
+                    raise BuildError('%s/%s: "%s" part %s must be a label in words (no {{token}}, tag or lowercase '
+                                     'start), not %r' % (slug, l["id"], LOCK_WORDS, k, part))
+                ins[k] = dict(ins[k], label=part)
+            new["instrument"] = ins
         out.append(new)
     return out
 
@@ -690,6 +749,16 @@ def answer_box_greys(page, cfg, slug):
             continue
         f = HERE / "rooms" / slug / im["file"]
         src = "data:image/%s;base64,%s" % (f.suffix.lstrip(".").lower(), base64.b64encode(f.read_bytes()).decode("ascii"))
+        if PART_LABEL_BOXES in im:               # CANTEEN-PACK: a pair's two boxes; the darker decides the fill
+            greys = []
+            for box in im["label_boxes"]:
+                s = page.evaluate(GREY_JS, [src, box])
+                if s["a"] != 255 * s["n"]:
+                    raise BuildError("%s: %s is not opaque inside its label_boxes, so the grey under its answer boxes "
+                                     "cannot be measured" % (slug, im["file"]))
+                greys.append((0.299 * s["r"] + 0.587 * s["g"] + 0.114 * s["b"]) / s["n"])
+            out[im["lock"]] = min(greys)
+            continue
         s = page.evaluate(GREY_JS, [src, im["label_box"]])
         if s["a"] != 255 * s["n"]:
             raise BuildError("%s: %s is not opaque inside its label_box, so the grey under its answer box cannot be "
@@ -728,8 +797,9 @@ def write_fill_problems(writes, greys, locks, sets):
     for s in sets:
         for l in locks:
             n = sum(1 for w in writes if w["kind"] == "cover" and w["set"] == s["letter"] and w["lock"] == l["id"])
-            if n != 1:
-                out.append("set %s, %s: its cover has %d answer boxes, not one" % (s["letter"], l["id"], n))
+            if n != (2 if is_pair(l) else 1):    # CANTEEN-PACK: a pair lock has two
+                out.append("set %s, %s: its cover has %d answer boxes, not %s"
+                           % (s["letter"], l["id"], n, "two" if is_pair(l) else "one"))
     return out
 
 
@@ -836,6 +906,10 @@ def miss_is_answer(locks, pick_or_vars):
         v = l["variants"][x] if isinstance(x, int) else x
         if v.get("miss") is None:
             continue
+        if is_pair(l):                           # CANTEEN-PACK: (a, b), so the swap [b, a] is not the answer
+            if pair_value(l, v["answer"]) == pair_value(l, v["miss"], "miss"):
+                out.append("%s (prints %s for both)" % (l["id"], text_of(pair_figure(l, v["answer"]))))
+            continue
         try:
             a, m = printed_number(l, v["answer"], "answer"), printed_number(l, v["miss"], "miss")
         except BuildError:
@@ -848,6 +922,15 @@ def miss_is_answer(locks, pick_or_vars):
 def checker_flat(x):
     """A printed answer as a set of numbers (a lock with several accepted answers gives each)."""
     return frozenset(x if isinstance(x, list) else [x])
+
+
+def answer_atoms(checker, lock, value):
+    """A lock's answer as the set two sets' answers are compared by (distinct across sets when the sets share
+    nothing): a pair lock's ordered pair as one element, (a, b), so [2, 3] and [3, 4] differ and [2, 3] and [3, 2]
+    differ (CANTEEN-PACK); any other lock's accepted answers as check-escape-rooms.py's flat() gives them, as before."""
+    if is_pair(lock):
+        return frozenset([pair_value(lock, value)])
+    return frozenset(checker.flat(value))
 
 
 def class_order(classes, seed):
@@ -873,7 +956,7 @@ def choose(checker, valid, locks, n, seed, grades=None, only=None):
     usable = [p for p in usable if g[p]]
     order0 = list(usable)
     random.Random(seed).shuffle(order0)
-    ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order0}
+    ans = {p: [answer_atoms(checker, l, l["variants"][i]["answer"]) for l, i in zip(locks, p)] for p in order0}
     classes = class_order(sorted({k for p in usable for k, _ in g[p].values()}, key=repr), seed)
     if only is not None:
         classes = [k for k in classes if k == only]
@@ -963,10 +1046,15 @@ def grader(checker, locks, shape, target=None):
 def answers_of(checker, locks, s):
     """The set's lock answers as numbers, in lock order: the final padlock's numbers. A lock with several accepted
     answers cannot take part, so it stops the build. A lock with a printed unit gives the number the pack asks for
-    (printed_number)."""
+    (printed_number). A pair lock gives its two values added together, a + b (Jon, 17 Nov 2026, contract
+    CANTEEN-PACK: "I agree that you add the 2 numbers for cookie.")."""
     out = []
     for l, v in zip(locks, s["vars"]):
         a = v["answer"]
+        if is_pair(l):
+            x, y = pair_value(l, a)
+            out.append(x + y)
+            continue
         if isinstance(a, list) or isinstance(a, bool) or not isinstance(a, (int, float)):
             raise BuildError("%s: the final padlock needs one number per lock, and this answer is %r" % (l["id"], a))
         if l.get("answer_unit"):                 # the number the pack asks for (contract CAR-TRAP-PACK)
@@ -1033,6 +1121,159 @@ def caption_unit_problems(caption, unit):
     return unit and len(re.findall(r"(?<!\w)%s(?!\w)" % re.escape(unit), caption, re.I)) > 1
 
 
+# ---- a "pair" lock (contract CANTEEN-PACK, 17 Nov 2026) --------------------------------------------------------------
+#
+# Two values set together, as The Canteen Hack's price tags: instrument {"kind": "pair", "a": {...}, "b": {...}}, the
+# answer [a, b] and the common wrong answer an ordered pair too. check-escape-rooms.py's flat() reads a list as
+# several ACCEPTED answers, which is right for those locks and wrong here, so a pair is never passed to it for a
+# comparison: answer_atoms(), miss_is_answer() and lockcheck's own comparison (list equality, which is ordered) read it
+# as (a, b). In the final padlock it counts as a + b (answers_of).
+
+PAIR = "pair"
+PAIR_PARTS = ("a", "b")
+PART_LABEL_BOXES = "part_label_boxes"
+
+
+def is_pair(lock):
+    return (lock.get("instrument") or {}).get("kind") == PAIR
+
+
+def pair_value(lock, value, which="answer"):
+    """A pair lock's answer or common wrong answer as the tuple (a, b), or BuildError if it is not two numbers."""
+    if not (isinstance(value, list) and len(value) == 2
+            and all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in value)):
+        raise BuildError("%s: a pair lock's %s must be two numbers [a, b], not %r" % (lock["id"], which, value))
+    return tuple(int(x) if float(x).is_integer() else x for x in value)
+
+
+def pair_labels(lock):
+    """A pair lock's two box labels: each part's label (a config's lock_words "parts" may give a print-only one),
+    with the part's unit after it unless the label names it."""
+    ins = lock.get("instrument") or {}
+    out = []
+    for k in PAIR_PARTS:
+        part = ins.get(k) or {}
+        label, unit = (text_of(part.get(x, "")).strip() for x in ("label", "unit"))
+        if not label:
+            raise BuildError("%s: part %s of its pair has no label" % (lock["id"], k))
+        if unit and not re.search(r"(?<!\w)%s(?!\w)" % re.escape(unit), label):
+            label = "%s %s" % (label, unit)
+        out.append(label)
+    return out
+
+
+def pair_figure(lock, value, which="answer"):
+    """Both values with their labels, as the key prints them: "Cookie £2, Pizza £3" (a label ending in a sign, such
+    as £, takes the figure straight after it; any other takes a no-break space)."""
+    return ", ".join("%s%s%s" % (esc(label), "" if re.search(r"[^\w\s]$", label) else "&nbsp;", format_token(x))
+                     for label, x in zip(pair_labels(lock), pair_value(lock, value, which)))
+
+
+def pair_names(lock):
+    """The two parts' labels as names, without a trailing sign: "Cookie" and "Pizza"."""
+    return [re.sub(r"[^\w)]+$", "", x).strip() for x in pair_labels(lock)]
+
+
+def pair_final_lines(locks):
+    """(the locks page's words, the key's words) on each pair lock in the final padlock: its two numbers added
+    together. Both "" when the room has no pair lock, so every other pack's pages are as they were."""
+    pairs = [(i + 1, l) for i, l in enumerate(locks) if is_pair(l)]
+    student = "".join("<p class='pairnote'>For Lock %d (%s), use its two numbers added together.</p>" % (n, l["name"])
+                      for n, l in pairs)
+    key = "".join(" For Lock %d (%s), the final padlock uses its two numbers added together: %s." % (
+        n, l["name"], " + ".join(pair_names(l))) for n, l in pairs)
+    return student, key
+
+
+def pair_image_problems(locks, by_lock):
+    """A pair lock whose answer image does not give two answer boxes and two label boxes, or another lock's image
+    that gives label boxes for parts it does not have."""
+    out = []
+    for l in locks:
+        im = by_lock.get(l["id"])
+        if im is None:
+            continue
+        if is_pair(l) and not (PART_LABEL_BOXES in im and len(im.get("label_boxes") or []) == len(PAIR_PARTS)):
+            out.append('%s: a pair lock\'s answer image needs "label_boxes" (its two answer boxes) and "%s" (their '
+                       'labels)' % (l["id"], PART_LABEL_BOXES))
+        if not is_pair(l) and (PART_LABEL_BOXES in im or "label_boxes" in im):
+            out.append("%s: its answer image gives two boxes, and it is not a pair lock" % l["id"])
+    return out
+
+
+def pair_art_block(img_path, im, lock, set_letter, fill=False):
+    """A pair lock's answer picture: each part's label, fitted to its box as every printed label is (MIN_PT), and
+    its dashed answer box, filled white where the art is dark (write_filled)."""
+    inner = ""
+    for label_box, box, label in zip(im[PART_LABEL_BOXES], im["label_boxes"], pair_labels(lock)):
+        inner += ('<div class="lbl label" data-box="%s" data-id="%s" data-set="%s" data-max="%s"><div>%s</div></div>'
+                  % (esc(json.dumps(label_box)), esc(lock["id"]), esc(set_letter), MAX_PT, esc(label)))
+        inner += ('<div class="write%s" data-box="%s" data-lock="%s"></div>'
+                  % (" fill" if fill else "", esc(json.dumps(box)), esc(lock["id"])))
+    return '<div class="art"><img src="%s" alt="">%s</div>' % (img_path.as_uri(), inner)
+
+
+def pair_final_problems(checker, locks, sets):
+    """Each pair lock's number in each set's final padlock (answers_of, which the target and expression are made and
+    checked from) against lockcheck's own answer for that variant, added: a + b (CANTEEN-PACK). [] for a room with no
+    pair lock."""
+    out = []
+    for s in sets:
+        nums = None
+        for j, (l, v) in enumerate(zip(locks, s["vars"])):
+            if not is_pair(l):
+                continue
+            fn = lockcheck.RECOMPUTE.get(l["id"])
+            if not fn:
+                out.append("%s: no independent recomputation in tools/pack-generator/lockcheck.py" % l["id"])
+                continue
+            want = fn(v)["answer"]
+            if not (isinstance(want, list) and len(want) == 2):
+                out.append("set %s, %s: lockcheck's answer %r is not a pair" % (s["letter"], l["id"], want))
+                continue
+            nums = answers_of(checker, locks, s) if nums is None else nums
+            if nums[j] != want[0] + want[1]:
+                out.append("set %s, %s: the final padlock uses %r for this pair, not %s + %s = %s"
+                           % (s["letter"], l["id"], nums[j], want[0], want[1], want[0] + want[1]))
+    return out
+
+
+def pair_key_problems(locks, sets, pages_text):
+    """The pages a pair lock prints on, as printed ((kind, text), AUDIT_JS): for every set, the key gives its answer
+    and common wrong answer with both labels, the worked solutions give its answer with both labels, and the locks
+    page and the key say in words that it counts as its two numbers added together (CANTEEN-PACK). [] for a room
+    with no pair lock."""
+    pairs = [l for l in locks if is_pair(l)]
+    if not pairs:
+        return []
+    norm = lambda t: " ".join(text_of(t).replace(chr(160), " ").split())
+    texts = {k: [norm(t) for kind, t in pages_text if kind == k] for k in ("key", "solutions", "locks")}
+    student, key = (norm(x) for x in pair_final_lines(locks))
+    out = []
+    for k in ("key", "solutions", "locks"):
+        if not texts[k]:
+            out.append("no %s page to check the pair lock's words on" % k)
+    for s in sets:
+        for l, v in zip(locks, s["vars"]):
+            if not is_pair(l):
+                continue
+            ans = norm(pair_figure(l, v["answer"]))
+            if not any(ans in t for t in texts["key"]):
+                out.append("set %s, %s: the key does not give %r" % (s["letter"], l["id"], ans))
+            if not any(ans in t for t in texts["solutions"]):
+                out.append("set %s, %s: the worked solutions do not give %r" % (s["letter"], l["id"], ans))
+            if v.get("miss") is not None:
+                miss = norm(pair_figure(l, v["miss"], "miss"))
+                if not any("common wrong answer " + miss in t for t in texts["key"]):
+                    out.append("set %s, %s: the key does not give its common wrong answer %r"
+                               % (s["letter"], l["id"], miss))
+    if not all(student in t for t in texts["locks"]):
+        out.append("a locks page does not say %r" % student)
+    if not any(key.strip() in t for t in texts["key"]):
+        out.append("the key does not say %r" % key.strip())
+    return out
+
+
 def check_sets(checker, room_js, locks, sets):
     """Problems with a choice of sets: a joint draw that is not VALID, or a lock whose answer repeats across sets."""
     clues = checker.clue_strings(room_js)
@@ -1045,7 +1286,7 @@ def check_sets(checker, room_js, locks, sets):
             out.append("set %s: %s: its common wrong answer prints as its answer" % (s["letter"], x))
     for j, l in enumerate(locks):
         for a, b in itertools.combinations(sets, 2):
-            if checker.flat(a["vars"][j]["answer"]) & checker.flat(b["vars"][j]["answer"]):
+            if answer_atoms(checker, l, a["vars"][j]["answer"]) & answer_atoms(checker, l, b["vars"][j]["answer"]):
                 out.append("%s: sets %s and %s share an answer (%s)" % (l["id"], a["letter"], b["letter"],
                                                                         a["vars"][j]["answer"]))
     return out
@@ -1437,6 +1678,15 @@ AUDIT_JS = """
     const m = p.querySelector('.main');
     if (m.scrollHeight > m.clientHeight + 1 || m.scrollWidth > m.clientWidth + 1)
       out.overflow.push((i + 1) + ' ' + p.dataset.kind + ' ' + (p.dataset.set || '') + ' (' + m.scrollHeight + ' > ' + m.clientHeight + ')');
+    // CANTEEN-PACK: a card hides what overflows it, so a caption cut off at the card's foot never overflows the page;
+    // its words must end inside the card's padding box
+    p.querySelectorAll('.card').forEach(c => {
+      const cap = c.querySelector('.cap'), box = c.getBoundingClientRect();
+      const inner = box.bottom - parseFloat(getComputedStyle(c).paddingBottom) - parseFloat(getComputedStyle(c).borderBottomWidth);
+      if (cap && cap.getBoundingClientRect().bottom > inner + 1)
+        out.overflow.push((i + 1) + ' ' + p.dataset.kind + ' ' + (p.dataset.set || '') + ' card ' + c.dataset.id +
+                          ' (its words run ' + Math.round(cap.getBoundingClientRect().bottom - inner) + ' px past the card)');
+    });
     if (p.dataset.set !== undefined) {
       out.studentPages++;
       const box = p.querySelector('.head .setbox');
@@ -1803,14 +2053,14 @@ def about_box(room, teach, locks, sets, rating):
             "read-outs, score sheet, this key, worked solutions, hint cards, certificate.</p>"
             "<p><b>Locks:</b> %s.</p>%s"
             "<p><b>Final padlock (for you only):</b> every set&rsquo;s one solution is %s; targets %d to %d. "
-            "%s</p>"
+            "%s%s</p>"
             "<p>The common wrong answers below are for the debrief.</p>"
             "<p>Students are told: Not every note will help you. Part of the puzzle is working out which ones do.</p></div>"
             % (len(sets), letters[0], letters[-1], topics,
                "<p><b>Level:</b> %s (%d of 3 stars), grades %s, set by the hardest lock.</p>"
                % (esc(rating["name"]), rating["stars"], esc(rating["grades"])),
                finalpad.SHAPES[sets[0]["final"]["shape"]][0], min(targets), max(targets),
-               final_key_line(sets[0]["final"]["shape"])))
+               final_key_line(sets[0]["final"]["shape"]), pair_final_lines(locks)[1]))
 
 
 TEACHER_KINDS = ("run", "key", "solutions")   # the teacher's reference pages; the read-outs are spoken to students and
@@ -1838,13 +2088,14 @@ def teacher_page_problems(pages_text):
     return out
 
 
-def final_section(letter, n, target):
-    """The locks page's final padlock (Amendment 11): the rules students are told, and nothing about the shape."""
+def final_section(letter, n, target, pair_line=""):
+    """The locks page's final padlock (Amendment 11): the rules students are told, and nothing about the shape.
+    pair_line: the words on a pair lock's number, a + b (pair_final_lines; "" for a room with none)."""
     return ("<div class='final' data-final-set='%s'><h2>The final padlock (if your teacher says so)</h2><p>Use each of your %d answers exactly "
             "once, with any of +, &minus;, &times; and &divide; and no brackets, to make the target. &times; and "
-            "&divide; come before + and &minus;. <b>No calculator.</b></p><div class='target'>Target:<b>%s</b></div>"
+            "&divide; come before + and &minus;. <b>No calculator.</b></p>%s<div class='target'>Target:<b>%s</b></div>"
             "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
-            % (letter, n, target, target))
+            % (letter, n, pair_line, target, target))
 
 
 def final_hint(shape):
@@ -2064,6 +2315,9 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     for l in locks:
         if l["id"] not in by_lock:
             raise BuildError("config has no answer image for lock %r" % l["id"])
+    pairs = pair_image_problems(locks, by_lock)
+    if pairs:
+        raise BuildError("%s: %s" % (slug, "; ".join(pairs)))
     for im in images:
         if im["role"] == "herring":
             words = im.get("text", "")
@@ -2120,9 +2374,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     head = "".join("<th>%s<br><span class='wrong'>%s</span></th>" % (l["name"], esc(m.get("topic", "")))
                    for l, m in zip(locks, meta)) + "<th>Final padlock<br><span class='wrong'>target: its one expression</span></th>"
     rows = "".join("<tr><th style='white-space:nowrap'>Set %s</th>%s<td class='n'>%s <span class='wrong'>= %s</span></td></tr>" % (s["letter"], "".join(
-        "<td class='n'>%s <span class='wrong'>(common wrong answer %s)</span></td>"
-        % (printed_figure(l, v["answer"]), printed_figure(l, v["miss"], "miss") if v.get("miss") is not None else "none")
-        for l, v in zip(locks, s["vars"])), s["final"]["target"], s["final"]["expr"]) for s in sets)
+        key_cell(l, v) for l, v in zip(locks, s["vars"])), s["final"]["target"], s["final"]["expr"]) for s in sets)
     legend = "".join("<li><b>%s</b> %s %s</li>" % (lock_name_label(l["name"]), fill_a(l.get("missTitle", "")),
                                                      fill_a(l.get("missSays", "")))
                      for l in locks)
@@ -2154,6 +2406,12 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
         for l in locks:
             im = by_lock[l["id"]]
             box_texts.append(answer_caption(l))
+            if is_pair(l):                       # CANTEEN-PACK: two labelled boxes
+                box_texts += pair_labels(l)
+                answers += ("<div><div class='cap'><b>%s</b></div>%s</div>"
+                            % (esc(answer_caption(l)), pair_art_block(rdir / im["file"], im, l, L,
+                                                                      fill=write_filled(greys or {}, l["id"]))))
+                continue
             answers += ("<div><div class='cap'><b>%s</b></div>%s</div>"
                         % (esc(answer_caption(l)), art_block(rdir / im["file"], im["label_box"], "write", ident=l["id"],
                                                              fill=write_filled(greys or {}, l["id"]))))
@@ -2192,7 +2450,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
                      for i, l in enumerate(locks))
         box_texts += ["Opens at: " + text_of((l.get("instrument") or {}).get("label", "")) for l in locks]
         fin = s["final"]
-        lk += final_section(L, len(locks), fin["target"])
+        lk += final_section(L, len(locks), fin["target"], pair_final_lines(locks)[0])
         pages.append(page("locks", lk, title, "The locks and the final padlock: working space", set_letter=L))
 
     # d. hint cards (one page for all sets unless a hint uses a set's figures) and the certificate
@@ -2324,7 +2582,7 @@ def build(slug, n, seed, target=None, final=False):
             print("every joint draw VALID; every lock's answers distinct across the %d sets" % n)
             print("verification: %d values recomputed independently (%d answers), all agree" % (checked, answers))
             shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
-            fp = verify_finals(checker, locks, sets, shape)
+            fp = verify_finals(checker, locks, sets, shape) + pair_final_problems(checker, locks, sets)
             if fp:
                 raise BuildError("the final padlock fails its independent check:\n  " + "\n  ".join(fp))
             print("final padlock (%s; shape %s, the same for every set): every target re-evaluated from its "
@@ -2399,7 +2657,8 @@ def build(slug, n, seed, target=None, final=False):
                            + final_wording_problems(shape, audit["text"])
                            + draft_problems(audit["draft"], bool(wording_approved(cfg, slug)), slug, readout_pages)
                            + answer_unit_problems(locks, [t for k, t in audit["text"] if k == "cover"])
-                           + draft_notes_problems(audit["notes"], notes))
+                           + draft_notes_problems(audit["notes"], notes)
+                           + pair_key_problems(locks, sets, audit["text"]))
                 if printed:
                     raise BuildError("what the pages print fails its checks:\n  " + "\n  ".join(printed))
                 bad = audit["overflow"] + audit["setLetters"] + audit["herringDigits"] + audit["tokens"] + audit["logo"]
@@ -2418,6 +2677,11 @@ def build(slug, n, seed, target=None, final=False):
                         print("  " + line)
                 print("every figure on every page is bound to its unit (no break in \"2 m\" or \"1 : 500\", true minus)")
                 for l in locks:
+                    if is_pair(l):                 # CANTEEN-PACK; no line for a room with no pair lock
+                        print("pair lock: %s prints two labelled boxes on every cover (%s); the key and worked "
+                              "solutions give both values; it counts in the final padlock as a + b, checked against "
+                              "lockcheck's own answer, and the locks page and key say so"
+                              % (l["id"], " and ".join(repr(x) for x in pair_labels(l))))
                     if l.get("answer_unit"):
                         print("printed unit: %s is asked for in %s (x %d): every figure whole, and every cover's "
                               "answer box says %r" % (l["id"], l["answer_unit"]["unit"], l["answer_unit"]["scale"],
@@ -2555,7 +2819,8 @@ def selftest():
 
     def plant_wrong_answer():
         s = copy.deepcopy(sets)
-        s[2]["vars"][1]["answer"] = s[2]["vars"][1]["answer"] + 1
+        a = s[2]["vars"][1]["answer"]
+        s[2]["vars"][1]["answer"] = [a[0] + 1, a[1]] if isinstance(a, list) else a + 1   # a pair: its first value
         return [x for x in verify_sets(locks, s)[0] if ": answer is " in x]
 
     def wrong_answer_in(slug, lock_id):
