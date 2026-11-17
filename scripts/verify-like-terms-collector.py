@@ -144,6 +144,30 @@ DEFERRED = ('function showFeedback(correct,detail){setTimeout(function(){_showFe
             'function _showFeedbackNow(correct,detail){' % DEFER)
 
 
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): the typed boxes are text boxes (inputmode="decimal": no key in Stages 1-2 is
+# negative), and what is typed reaches MaffsAnswer unchanged: "1,000" is read as typed and marks nothing (a number box
+# turned it into "").
+BOXES_JS = """async () => {
+  const out = [], raws = [], orig = MaffsAnswer.exact;
+  MaffsAnswer.exact = function (raw) { raws.push(String(raw)); return orig.apply(this, arguments); };
+  try {
+    currentStage = 0; currentQ = 0; loadQuestion();
+    for (const id of ['ans0', 'ans1']) {
+      const b = document.getElementById(id);
+      if (b.type !== 'text') out.push(id + ' is type="' + b.type + '", not a text box');
+      if (b.getAttribute('inputmode') !== 'decimal') out.push(id + ' has no inputmode="decimal"');
+    }
+    document.getElementById('ans0').value = '1,000'; document.getElementById('ans1').value = '6';
+    document.getElementById('checkBtn').click();
+    await new Promise(r => setTimeout(r, 400));
+    if (!raws.includes('1,000')) out.push('typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+    if (MARK() !== null) out.push('typed "1,000" was marked');
+  } finally { MaffsAnswer.exact = orig; }
+  return out;
+}"""
+BOX_SWAP = ("inp.type='text';inp.setAttribute('inputmode','decimal');", "inp.type='number';")
+
+
 def read_mark(page, timeout=5000):
     """The game's mark once it has landed; None if Check marked nothing within the timeout. The mark is taken
     from the same page task that saw it land (MAIN-RED, 8 Oct 2026), never from a second call after it."""
@@ -155,7 +179,7 @@ def read_mark(page, timeout=5000):
     return h.json_value()['m']
 
 
-def play(fails, against=None, planted=False, deferred=None):
+def play(fails, against=None, planted=False, deferred=None, swap=None):
     """deferred: a list; when given, showFeedback is served DEFER ms late and each item-1 read made straight
     off the click is appended to it."""
     from playwright.sync_api import sync_playwright
@@ -170,6 +194,11 @@ def play(fails, against=None, planted=False, deferred=None):
             fails.append('self-test: the marking call %s is not in the page, so nothing could be planted' % FIXED)
             return None
         html = html.replace(FIXED, PLANTED)
+    if swap:
+        if html.count(swap[0]) != 1:
+            fails.append('self-test: %s is not in the page once, so nothing could be planted' % swap[0])
+            return None
+        html = html.replace(swap[0], swap[1])
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
@@ -235,6 +264,7 @@ def play(fails, against=None, planted=False, deferred=None):
             for (where, typed, want), g in zip(labels, got):
                 if g is not want:
                     fails.append('%s: typed %s, marked correct=%s, expected %s' % (where, typed, g, want))
+            fails.extend('answer box: ' + f for f in page.evaluate(BOXES_JS))
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors))
@@ -266,6 +296,12 @@ def main():
         ok = caught
         print('  self-test %-40s %s' % ('parseInt marking planted back',
                                         ('caught: ' + planted[0][:100]) if caught else '*** MISSED ***'))
+        boxed = []
+        play(boxed, swap=BOX_SWAP)
+        caught = any(f.startswith('answer box: ') for f in boxed)
+        ok = ok and caught
+        print('  self-test %-40s %s' % ('ANSWER-BOX-TEXT: boxes back to type=number',
+                                        ('caught: ' + [f for f in boxed if f.startswith('answer box: ')][0][:100]) if caught else '*** MISSED ***'))
         late, early = [], []
         play(late, deferred=early)
         held = not late and early and all(e is None for e in early)
