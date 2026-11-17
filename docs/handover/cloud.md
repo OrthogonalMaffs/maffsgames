@@ -69,7 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-17 (cloud): PADLOCK-EASIEST-HINT (`docs/handover/contracts/2026-11-17-padlock-easiest-hint.md`; Jon 17 Nov)
+## 2026-11-17 (cloud): HEATWAVE-APPROVE (`docs/handover/contracts/2026-11-17-heatwave-approve.md`; Jon 17 Nov)
+
+Agent Claude Code (cloud), branch `claude/youthful-newton-86oz7b` restarted from main d23fe46 (after #808).
+**Close-out carried (first commit):** PADLOCK-EASIEST-HINT (#808), recorded below; contract moved.
+Next: `wording_approved` set for heatwave-mutiny, `--final` build, todo rows, handover archive, merge.
+
+## 2026-11-17 (cloud): PADLOCK-EASIEST-HINT (`docs/history/contracts/2026-11-17-padlock-easiest-hint.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/youthful-newton-86oz7b` from main a017ee9 (after #807). Lane exception: Jon, 17 Nov (started while the home lane's merge-pr.py waited on #807).
 **Close-outs carried (first commit):**
@@ -77,7 +83,9 @@ Agent Claude Code (cloud), branch `claude/youthful-newton-86oz7b` from main a017
 - MERGE-PR-ROBUST (#806, below): MERGED 17 Nov as 3797bf8 (merged_by Vector52F; route merge-pr.py as its entry planned; this session cannot see that call's output). Main on the merge commit: check-site 44030827845 success, phone-fit-full 44030827838 success. Contract moved to `docs/history/contracts/`.
 Done on the branch: `final.py` `ease()` (x: the hardest product's (smaller, larger) digits, then the count; +-: the largest term's digits); `SHAPES` entries carry their student hint and key line (x text unchanged; plus-and-minus new), `shape_wording()` refuses a missing one by name, `shape_wording_problems()` fails a no-x shape that says multiply/product. `build_pack.py`: `class_order()` = easiest first (was the seeded shuffle), `choose(only=)`, `grader()`, `easiest_class_problems()` (every easier class re-searched on its own must stay below N), `final_hint()`/`final_key_line()` from the shape, `final_wording_problems()` on the printed hint card and key (in the build and the self-test). Tests: self-test 67/67, every room's easier classes below N; test-pack-generator 48 plants caught, 21 controls (new: seeded order, no hint, no key line, multiply in a shape, four Heatwave wording plants; ease order, Car Trap as built, both packs' wording as built). check-escape-rooms exit 0. All ten built (nine --final, Heatwave DRAFT); page 1 178 words (Kiln 175).
 Changed classes: car-trap 1x3 (645-1935) -> 1x2 (120-360); library-jam 1x3 (268-804) -> 1x2 (72-216); pe-shed-rebellion 2x3 (1800-5400) -> 2x2 (690-2070); the other seven unchanged (each with its easier classes' best below N, in the self-test log). Canon has no #807 ruling to update (#807 did not touch canon): for the home lane's next docs PR, "easiest class first (Jon, 17 Nov 2026)" beside the final-padlock rules.
-Next: Gate; merge with merge-pr.py.
+MERGED 17 Nov as 58e4ea7 (#808) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main 58e4ea7 run 44052013877: GREEN". Main on the merge commit: check-site 44052013877 success, phone-fit-full 44052013837 success. Closed out by HEATWAVE-APPROVE's first commit.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-17 (cloud): MERGE-PR-ROBUST (`docs/history/contracts/2026-11-17-merge-pr-robust.md`; Jon 17 Nov)
 
