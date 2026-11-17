@@ -1,0 +1,11 @@
+# Findings register for its-a-sine (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract SINE-NOT-SINE, 17 Nov 2026; SR-30: checked from its first PR by scripts/verify-its-a-sine.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: its-a-sine
+audited:
+  tranche: none (not yet audited)
+  head: 3349092d
+  date: 2026-11-17
+  served: {}
+findings: []

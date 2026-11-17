@@ -131,6 +131,10 @@
     'stage-1':'Stage 1','stage-2':'Stage 2','stage-3':'Stage 3','stage-4':'Stage 4',
     // Football Pitches per Squared Squirrel's fifth stage (contract FOOTBALL-PITCHES, 23 Oct 2026; Jon's lane exception, 23:05).
     'stage-5':'Stage 5',
+    // It's a SINE!!: one board per level and stage (contract ITS-A-SINE; Jon's lane exception, 17 Nov 2026).
+    'gcse-stage-1':'GCSE · Stage 1','gcse-stage-2':'GCSE · Stage 2','gcse-stage-3':'GCSE · Stage 3','gcse-all-three':'GCSE · All three',
+    'level3-stage-1':'Level 3 · Stage 1','level3-stage-2':'Level 3 · Stage 2','level3-stage-3':'Level 3 · Stage 3','level3-all-three':'Level 3 · All three',
+    'level4-stage-1':'Level 4 · Stage 1','level4-stage-2':'Level 4 · Stage 2','level4-stage-3':'Level 4 · Stage 3','level4-all-three':'Level 4 · All three',
     // Prisoner's Dilemma: one board per level, tournament totals only (SR-22).
     'ks3-tournament':'KS3 · Tournament','gcse-tournament':'GCSE · Tournament',
     'alevel-tournament':'A-Level · Tournament','core-tournament':'Core Maths · Tournament'
