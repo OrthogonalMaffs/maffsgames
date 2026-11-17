@@ -405,7 +405,7 @@ function loadInputQuestion(q){
   row.innerHTML='';
   q.labels.forEach((label,i)=>{
     const g=document.createElement('div');g.className='input-group';
-    const inp=document.createElement('input');inp.type='number';inp.id='ans'+i;inp.setAttribute('aria-label',label);inp.autocomplete='off';
+    const inp=document.createElement('input');inp.type='text';inp.setAttribute('inputmode','decimal');inp.id='ans'+i;inp.setAttribute('aria-label',label);inp.autocomplete='off';
     const lbl=document.createElement('span');lbl.className='input-label';lbl.textContent=label;
     g.appendChild(inp);g.appendChild(lbl);
     row.appendChild(g);

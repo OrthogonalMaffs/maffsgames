@@ -1049,7 +1049,7 @@ function renderMeanQ(q,area){
     <div class="q-label">Question 3 of 4</div>
     <div class="q-prompt">Calculate an estimate of the mean. Give your answer to 3 significant figures.</div>
     <div style="font-size:.78rem;color:var(--muted);margin-bottom:.5rem">${K('\\text{Mean} = \\frac{\\Sigma fx}{\\Sigma f}')}</div>
-    <input type="number" class="num-input" id="meanInput" placeholder="e.g. 46.4" step="any">
+    <input type="text" inputmode="decimal" class="num-input" id="meanInput" placeholder="e.g. 46.4">
     <button class="check-btn" onclick="checkMean()">Check</button>
     <div id="meanFb"></div>
   `;
@@ -1099,7 +1099,7 @@ function renderSD_midpoints(q,area){
     <div class="sd-inputs">`;
   for(let i=0;i<n;i++){
     html+=`<div class="sd-row-label">${q.classes[i]}</div>`;
-    html+=`<input type="number" class="num-input sm" id="mp${i}" placeholder="x" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input sm" id="mp${i}" placeholder="x">`;
   }
   html+=`</div>
     <button class="check-btn" onclick="checkMidpoints()">Check</button>
@@ -1134,7 +1134,7 @@ function renderSD_fx(q,area){
     <div class="sd-inputs">`;
   for(let i=0;i<n;i++){
     html+=`<div class="sd-row-label">${q.midpoints[i]} × ${q.freqs[i]}</div>`;
-    html+=`<input type="number" class="num-input sm" id="fx${i}" placeholder="fx" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input sm" id="fx${i}" placeholder="fx">`;
   }
   html+=`</div>
     <button class="check-btn" onclick="checkFx()">Check</button>
@@ -1169,7 +1169,7 @@ function renderSD_x2(q,area){
     <div class="sd-inputs">`;
   for(let i=0;i<n;i++){
     html+=`<div class="sd-row-label">${q.midpoints[i]}²</div>`;
-    html+=`<input type="number" class="num-input sm" id="x2_${i}" placeholder="x²" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input sm" id="x2_${i}" placeholder="x²">`;
   }
   html+=`</div>
     <button class="check-btn" onclick="checkX2()">Check</button>
@@ -1203,7 +1203,7 @@ function renderSD_fx2(q,area){
     <div class="sd-inputs">`;
   for(let i=0;i<n;i++){
     html+=`<div class="sd-row-label">${q.freqs[i]} × ${fmt(q.x2[i])}</div>`;
-    html+=`<input type="number" class="num-input sm" id="fx2_${i}" placeholder="fx²" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input sm" id="fx2_${i}" placeholder="fx²">`;
   }
   html+=`</div>
     <button class="check-btn" onclick="checkFx2()">Check</button>
@@ -1240,7 +1240,7 @@ function renderSD_variance(q,area){
       <br>
       ${K(`= \\frac{${fmt(q.sumFx2)}}{${sumF}} - \\left(\\frac{${fmt(q.sumFx)}}{${sumF}}\\right)^2`)}
     </div>
-    <input type="number" class="num-input" id="varInput" placeholder="Variance" step="any">
+    <input type="text" inputmode="decimal" class="num-input" id="varInput" placeholder="Variance">
     <button class="check-btn" onclick="checkVariance()">Check</button>
     <div id="sdFb"></div>
   `;
@@ -1275,7 +1275,7 @@ function renderSD_final(q,area){
     <div class="q-label">Question 4 — Step F</div>
     <div class="q-prompt">Calculate the standard deviation to 3 significant figures. Use your unrounded variance.</div>
     <div style="font-size:.82rem;color:var(--muted);margin-bottom:.5rem">${K('\\sigma = \\sqrt{\\sigma^2} = \\;?')}</div>
-    <input type="number" class="num-input" id="sdInput" placeholder="σ" step="any">
+    <input type="text" inputmode="decimal" class="num-input" id="sdInput" placeholder="σ">
     <button class="check-btn" onclick="checkSD()">Check</button>
     <div id="sdFb"></div>
   `;

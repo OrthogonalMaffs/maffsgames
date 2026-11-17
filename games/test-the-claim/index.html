@@ -20,6 +20,8 @@
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<!-- The shared phone keypad's styles (MaffsKeypad, for answers that can be negative; contract ANSWER-BOX-TEXT). -->
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -28,6 +30,8 @@
   --accent:#fb923c;--correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
   --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
   --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  /* for the shared phone keypad (calculator.css, tokens only; contract ANSWER-BOX-TEXT) */
+  --surface-alt:var(--surface2);--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;--on-accent:#000;
   --step-done:#22c55e;--step-active:#f97316;--step-pending:#2a3654;
 }
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -182,6 +186,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. Binomial, one-tailed, 5%. A test is marked once, at Step 6: the answer works Steps 1-5 right (each Check waits for the next step to render), then i = 0 gives the right conclusion and i >= 1 a wrong context.
 {
   "start": "selectMode(document.querySelector('.mode-btn[data-mode=binomial]')); selectPill(document.querySelector('.pill[data-tail=one]'), 'tail'); selectPill(document.querySelector('.pill[data-sig=\"5\"]'), 'sig'); startGame();",
@@ -1479,6 +1484,16 @@ function buildStep(q, step) {
   }
 
   panel.innerHTML = html;
+  // Typed answers are text boxes (contract ANSWER-BOX-TEXT). A z value or a critical value can be negative (z = -2.05,
+  // a lower tail at -1.6449, a negative correlation's -0.5140), so on a phone the shared keypad, with a minus key, types
+  // them; the iPhone's decimal keypad has none. A scaled parameter and a p-value are never negative (inputmode="decimal").
+  const neg = ['zInput', 'crInput', 'crLowerInput', 'crUpperInput'].map(id => $(id)).filter(Boolean);
+  if (neg.length && window.MaffsKeypad) {
+    const host = document.createElement('div'); host.className = 'kp-host';
+    const fb = panel.querySelector('#step3Feedback');
+    panel.insertBefore(host, fb ? fb.nextSibling : null);
+    MaffsKeypad.mount(host, { targets: neg, keys: { minus: true }, keepInView: neg[0].closest('.step-input-group') });
+  }
   // Bind custom select dropdowns
   bindRenderedSelects();
   MaffsLock.fresh(panel);   // a new step: a double-click on Check cannot answer it
@@ -1580,7 +1595,7 @@ function buildStep2(q) {
     let html = stepHeader(2, 'Scale the parameter');
     html += `<div class="step-instruction">${PQ(q.scalingPrompt)}</div>`;
     html += '<div class="step-input-group"><div class="step-input-label">Scaled λ</div>';
-    html += '<input type="number" class="num-input" id="scalingInput" placeholder="e.g. 12" step="any">';
+    html += '<input type="text" inputmode="decimal" class="num-input" id="scalingInput" placeholder="e.g. 12">';
     html += '</div>';
     html += '<button class="check-btn" onclick="checkScaling()">Check</button>';
     html += '<div id="step2Feedback"></div>';
@@ -1600,9 +1615,14 @@ function buildStep2(q) {
   return html;
 }
 
+// A typed value read without MaffsAnswer's marking is read by MaffsAnswer.parse() (Jon, 17 Nov 2026, ANSWER-BOX-TEXT Amendment 1): the boxes are
+// text boxes now, so "1,250" or "12abc" must be refused, as the old number boxes refused them, not read by parseFloat as
+// 1 or 12. For every string a number box could hold it gives parseFloat's value; blank stays NaN.
+function typedNum(raw) { const v = MaffsAnswer.parse(raw); return v === null ? NaN : v; }
+
 function checkScaling() {
   const q = state.questions[state.qIdx];
-  const val = parseFloat($('scalingInput').value);
+  const val = typedNum($('scalingInput').value);
   const fb = $('step2Feedback');
   if (isNaN(val)) return;
   if (!stepLock()) return;
@@ -1654,7 +1674,7 @@ function buildStep3(q) {
       'z = \\frac{\\bar{x} - \\mu_0}{\\sigma / \\sqrt{n}}'
     )}</div>`;
     html += '<div class="step-input-group"><div class="step-input-label">z-statistic (2 d.p.)</div>';
-    html += '<input type="number" class="num-input" id="zInput" placeholder="e.g. -2.00" step="any">';
+    html += '<input type="text" class="num-input" id="zInput" placeholder="e.g. -2.00">';
     html += '</div>';
     html += '<button class="check-btn" onclick="checkZStat()">Check z</button>';
     html += '<div id="step3Feedback"></div>';
@@ -1665,20 +1685,20 @@ function buildStep3(q) {
     html += '<div class="step-instruction">State the critical region boundary value.</div>';
     if (state.mode === 'correlation') {
       html += '<div class="step-input-group"><div class="step-input-label">Critical value from table</div>';
-      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 0.5140" step="any">';
+      html += '<input type="text" class="num-input" id="crInput" placeholder="e.g. 0.5140">';
     } else if (q.crDirection === 'two') {
       // A discrete two-tailed test can have no lower critical region (B11, P3, P9).
       // The label says so on every discrete item, so it never hints at the answer.
       html += `<div class="step-input-group"><div class="step-input-label">Lower boundary${state.mode==='normal'?'':' (leave blank if there is none)'}</div>`;
-      html += `<input type="number" class="num-input" id="crLowerInput" placeholder="e.g. ${state.mode==='normal'?'-1.96':'3'}" step="any">`;
+      html += `<input type="text" class="num-input" id="crLowerInput" placeholder="e.g. ${state.mode==='normal'?'-1.96':'3'}">`;
       html += '</div><div class="step-input-group"><div class="step-input-label">Upper boundary</div>';
-      html += `<input type="number" class="num-input" id="crUpperInput" placeholder="e.g. ${state.mode==='normal'?'1.96':'15'}" step="any">`;
+      html += `<input type="text" class="num-input" id="crUpperInput" placeholder="e.g. ${state.mode==='normal'?'1.96':'15'}">`;
     } else if (state.mode === 'normal') {
       html += '<div class="step-input-group"><div class="step-input-label">Critical value (2 d.p.)</div>';
-      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 1.6449" step="any">';
+      html += '<input type="text" class="num-input" id="crInput" placeholder="e.g. 1.6449">';
     } else {
       html += '<div class="step-input-group"><div class="step-input-label">Boundary value (integer)</div>';
-      html += '<input type="number" class="num-input" id="crInput" placeholder="e.g. 3" step="1">';
+      html += '<input type="text" class="num-input" id="crInput" placeholder="e.g. 3">';
     }
     html += '</div>';
   } else {
@@ -1694,7 +1714,7 @@ function buildStep3(q) {
     }
     html += `<div class="step-instruction">State the ${pvName}.</div>`;
     html += `<div class="step-input-group"><div class="step-input-label">${pvName[0].toUpperCase() + pvName.slice(1)} (4 d.p.)</div>`;
-    html += '<input type="number" class="num-input" id="pvInput" placeholder="e.g. 0.0424" step="any">';
+    html += '<input type="text" inputmode="decimal" class="num-input" id="pvInput" placeholder="e.g. 0.0424">';
     html += '</div>';
   }
 
@@ -1763,13 +1783,13 @@ function checkStep3() {
     } else {
       // Discrete distributions: an integer boundary, exactly
       if (q.crDirection === 'two') {
-        const lo = parseFloat($('crLowerInput')?.value);
-        const hi = parseFloat($('crUpperInput')?.value);
+        const lo = typedNum($('crLowerInput')?.value);
+        const hi = typedNum($('crUpperInput')?.value);
         if (isNaN(hi)) return;
         // A blank Lower box means "no lower critical region", which the bank stores as -1.
         res = ((isNaN(lo) ? -1 : lo) === q.crBoundaryLower && hi === q.crBoundaryUpper) ? 'correct' : 'wrong';
       } else {
-        const val = parseFloat($('crInput').value);
+        const val = typedNum($('crInput').value);
         if (isNaN(val)) return;
         res = val === q.crBoundary ? 'correct' : 'wrong';
       }

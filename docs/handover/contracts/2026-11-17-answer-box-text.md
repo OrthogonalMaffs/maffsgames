@@ -90,3 +90,10 @@ STOP IF:
 - The check cannot tell a comment from an input without editing answer.js.
 - Wiring the check needs a Gate file changed beyond the existing pattern.
 - merge-pr.py refuses for a reason other than a transient 5xx it already retries.
+
+AMENDMENT 1 (Jon, 17 Nov 2026, in session, answering two questions from the implementer):
+1. Q: "ANSWER-BOX-TEXT premise gap: 9 answer boxes in 3 games read the typed value with parseFloat, not MaffsAnswer: chart-interrogator's Phase 1 reading (non-money) and Phase 2 count; graph-sketcher's read, extrapolate and turning-point x/y boxes; test-the-claim's scaled λ and the discrete critical-region boxes. [...] How should these boxes read the typed value?"
+   A: "Read via MaffsAnswer.parse (Recommended)": swap parseFloat(x) for MaffsAnswer.parse(x) (null → NaN, the existing 'not a number' path) at those reads only; keys and tolerances untouched; proven by test that every string a number box accepts reads the same, and "1,250"/"12abc" are refused, not marked.
+   (Correction by the implementer: the question also said a typed Unicode minus "−" would be read. It is not: MaffsAnswer.parse takes the ASCII hyphen only, which is what MaffsKeypad types. One new acceptance: a leading £ or € in these boxes is read, e.g. "£5" as 5.)
+2. Q: "Graph Sketcher's table on a phone [...] in keypad mode only (touch screens; never drawn with a mouse), a Check button under the table sends each typed cell that same change event, so checkCell marks it exactly as before. Accept?"
+   A: "Yes, Check in keypad mode (Recommended)".

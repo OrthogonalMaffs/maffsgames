@@ -750,14 +750,14 @@ function loadSQ(q){
     panel._opts=opts;
   } else if(sqNum===4){
     let html=`<div class="sq-label">${sqLabel}</div><div class="sq-prompt">${sq.prompt}</div>`;
-    html+=`<input type="number" class="num-input" id="sqInput" placeholder="Answer" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input" id="sqInput" placeholder="Answer">`;
     html+=`<button class="check-btn" onclick="checkSQ4()">Check</button>`;
     html+=`<button class="hint-btn" id="hintBtn" onclick="useHint(4)">Hint (−${G.hintPenalty} pts)</button>`;
     html+=`<div id="sqFb"></div><div id="hintBox"></div>`;
     panel.innerHTML=html;
   } else {
     let html=`<div class="sq-label">${sqLabel}</div><div class="sq-prompt">${sq.prompt}</div>`;
-    html+=`<input type="number" class="num-input" id="sqInput" placeholder="Answer" step="any">`;
+    html+=`<input type="text" inputmode="decimal" class="num-input" id="sqInput" placeholder="Answer">`;
     html+=`<button class="check-btn" onclick="checkNumSQ(${sqNum})">Check</button>`;
     html+=`<button class="hint-btn" id="hintBtn" onclick="useHint(${sqNum})">Hint (−${G.hintPenalty} pts)</button>`;
     html+=`<div id="sqFb"></div><div id="hintBox"></div>`;
