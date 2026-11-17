@@ -331,7 +331,45 @@ def check_played(rep, scenarios, played):
                      % (want, r['medianWrong'].strip()[:100]))
 
 
-def load(patch_js=None):
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): every answer box is a text box with inputmode="decimal" (no class in the bank is
+# negative, so no midpoint, product, mean, variance or SD is), and what is typed reaches MaffsAnswer unchanged. "1,000"
+# in the mean, variance or SD box gets the unreadable message and is not marked; in a column it is read as typed (a
+# column with an unreadable entry is checked as before). A number box turned it into "".
+BOXES_JS = """() => {
+  const realTimeout = window.setTimeout; window.setTimeout = () => 0;
+  const out = [], raws = [], wrapped = {};
+  for (const f of ['exact', 'decimal']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  try {
+    const q = Object.values(SCENARIOS).flat()[0], area = document.getElementById('qArea');
+    G.questions = [q]; G.qIdx = 0;
+    const single = [['mean', renderMeanQ, 'meanInput', checkMean], ['variance', renderSD_variance, 'varInput', checkVariance], ['SD', renderSD_final, 'sdInput', checkSD]];
+    const cols = [['midpoints', renderSD_midpoints, 'mp', checkMidpoints], ['fx', renderSD_fx, 'fx', checkFx], ['x²', renderSD_x2, 'x2_', checkX2], ['fx²', renderSD_fx2, 'fx2_', checkFx2]];
+    for (const [what, render, id, check] of single) {
+      render(q, area); MaffsLock.fresh(area, 0);
+      const b = document.getElementById(id);
+      if (b.type !== 'text') out.push(what + ': the box is type="' + b.type + '", not a text box');
+      if (b.getAttribute('inputmode') !== 'decimal') out.push(what + ': the box has no inputmode="decimal"');
+      raws.length = 0; b.value = '1,000'; const pen = G.penalties; check();
+      if (!raws.includes('1,000')) out.push(what + ': typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+      if (G.penalties !== pen || MaffsLock.isLocked(area)) out.push(what + ': typed "1,000" was marked');
+    }
+    for (const [what, render, id, check] of cols) {
+      render(q, area); MaffsLock.fresh(area, 0);
+      const boxes = q.classes.map((_, i) => document.getElementById(id + i));
+      boxes.forEach(b => {
+        if (!b || b.type !== 'text') out.push(what + ': a column box is ' + (b ? 'type="' + b.type + '"' : 'missing') + ', not a text box');
+        else if (b.getAttribute('inputmode') !== 'decimal') out.push(what + ': a column box has no inputmode="decimal"');
+      });
+      if (!boxes[0]) continue;
+      raws.length = 0; boxes[0].value = '1,000'; check();
+      if (!raws.includes('1,000')) out.push(what + ': typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+    }
+  } finally { for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; window.setTimeout = realTimeout; }
+  return out;
+}"""
+
+
+def load(patch_js=None, play=True):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -346,8 +384,8 @@ def load(patch_js=None):
                 page.evaluate(patch_js)
             bank = page.evaluate('JSON.parse(JSON.stringify(SCENARIOS))')
             scenarios = [s for lvl in bank.values() for s in lvl]
-            played = {}
-            for s in scenarios:
+            played = {'__boxes__': page.evaluate(BOXES_JS)}
+            for s in scenarios if play else []:
                 a = answers_for(s)
                 if a:
                     played[s['id']] = page.evaluate(PLAY_JS, a)
@@ -434,6 +472,12 @@ def selftest(bank, played):
         renderMedianQ = function (q, area) { orig(q, area); area.querySelector('.q-prompt').textContent =
           'Identify the class interval containing the median. (n = ' + q.freqs.reduce((a, b) => a + b, 0) + ')'; };
       })()""")[1]
+    # ANSWER-BOX-TEXT: a box back to a number box must fail the answer-box test (nothing else is played)
+    nb = load("""(() => { const R = renderMeanQ; renderMeanQ = function (q, area) { R(q, area);
+        document.getElementById('meanInput').type = 'number'; }; })()""", play=False)[1]
+    caught = bool(nb.get('__boxes__'))
+    ok = ok and caught
+    lines.append('  self-test %-36s %s' % ('ANSWER-BOX-TEXT: the mean box back to type=number', ('caught: ' + nb['__boxes__'][0][:80]) if caught else '*** MISSED ***'))
     all_s = [s for lvl in bank.values() for s in lvl]
     for name, pick in (('old mean band (G10, 106 rejected)', 'G10 marking (mean_right)'),
                        ('old SD band (G10, 54.5 accepted)', 'G10 marking (sd_up)'),
@@ -462,6 +506,8 @@ def main():
     rep = Report()
     scenarios = check_bank(rep, bank, args.verbose)
     check_played(rep, scenarios, played)
+    for f in played.get('__boxes__', []):
+        rep.fail('BOX', 'answer box', f)
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails

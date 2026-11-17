@@ -93,6 +93,37 @@ SETUP = """() => {
 }"""
 
 
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): every answer box is a text box with inputmode="decimal" (no answer is negative:
+# parts, shares, scaled amounts), and what is typed reaches MaffsAnswer unchanged: "1,000" in the first box is read as
+# typed and marks nothing (no point, no penalty, no event). A number box turned it into "".
+BOXES = """([modes, levels]) => {
+  (%s)(4242);
+  const out = [], raws = [], wrapped = {}, seen = new Set();
+  for (const f of ['exact', 'decimal', 'money', 'parse']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  try {
+    for (const mode of modes) for (const level of levels) for (let i = 0; i < 60; i++) {
+      const q = generators[mode](level);
+      if (q.type === 'bestvalue' || seen.has(q.type + (q.money ? ' money' : ''))) continue;
+      seen.add(q.type + (q.money ? ' money' : ''));
+      renderQ(q); S._currentQ = q; $('fbArea').innerHTML = '';
+      const boxes = [...document.querySelectorAll('#qCard .ratio-input')];
+      boxes.forEach(b => {
+        if (b.type !== 'text') out.push(q.type + ': a box is type="' + b.type + '", not a text box');
+        if (b.getAttribute('inputmode') !== 'decimal') out.push(q.type + ': a box has no inputmode="decimal"');
+      });
+      boxes.forEach((b, k) => { b.value = k === 0 ? '1,000' : String(q.answers[k]); });
+      raws.length = 0;
+      const before = {c: S.correct, p: S.penalties, e: window.__qa.length};
+      checkAnswer();
+      if (!raws.includes('1,000')) out.push(q.type + (q.money ? ' (money)' : '') + ': typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+      if (S.correct !== before.c || S.penalties !== before.p || window.__qa.length !== before.e) out.push(q.type + (q.money ? ' (money)' : '') + ': typed "1,000" was marked');
+    }
+    out.push('__types:' + [...seen].sort().join(','));
+  } finally { for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; }
+  return out;
+}""" % SEEDED
+
+
 # --- exact arithmetic -------------------------------------------------------------------------
 
 def half_up(x, dp):
@@ -392,6 +423,11 @@ def run(args):
                     status=200, content_type='text/html; charset=utf-8', body=body))
             page.goto(f'{base.rstrip("/")}/games/{SLUG}/')
             page.evaluate(SETUP)
+            for f in page.evaluate(BOXES, [MODES, LEVELS]):
+                if f.startswith('__types:'):
+                    counts['answer boxes probed: ' + f[8:]] += 0
+                else:
+                    rep[('answer box', f.split(':')[0])].append(f)
             for mode in MODES:
                 for level in LEVELS:
                     qs = page.evaluate(GENERATE, [mode, level, args.per, 1000 + 17 * MODES.index(mode) + LEVELS.index(level)])
@@ -420,6 +456,8 @@ def run(args):
 PLANTS = [
     ('equal parts in a Foundation fraction', 'let b=rInt(1,6);if(b>=a)b++;', 'let b=rInt(1,7);'),
     ('a tied largest part at GCSE', 'const L=rInt(2,5),u=rInt(1,L-1),w=rInt(1,L-1);', 'const L=rInt(2,5),u=rInt(1,L),w=rInt(1,L);'),
+    ('ANSWER-BOX-TEXT: a ratio box back to type=number', 'type="text" inputmode="decimal" class="ratio-input" id="in0" placeholder="?" autofocus',
+     'type="number" class="ratio-input" id="in0" placeholder="?" autofocus'),
     ('a unitary question for the amount just given', 'let m=rInt(2,11);if(m>=n)m++;', 'let m=rInt(2,12);'),
     ('a speed question for the hours just given', 'let t2=rInt(2,7);if(t2>=t)t2++;', 'let t2=rInt(2,8);'),
     ('a concrete mix scaled for people', "{name:'Concrete mix',who:'wheelbarrows',items:", "{name:'Concrete mix',items:"),

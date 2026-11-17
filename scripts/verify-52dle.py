@@ -169,6 +169,31 @@ SWEEP_JS = r"""(cases) => {
 }"""
 
 
+# The guess box is a text box (contract ANSWER-BOX-TEXT, Jon 15 Nov 2026): a type="number" box empties on "1,000" or a
+# typed £, so MaffsAnswer would read "" instead of what the student typed. Each string must reach MaffsAnswer.parse
+# unchanged, and "1,000" is not marked (the game asks for a valid number).
+RAW_TYPED = ['1,000', '£52']
+RAW_JS = r"""(typedList) => {
+  const out = [], input = document.getElementById('guess-input'), area = document.getElementById('input-area');
+  if (input.type !== 'text') out.push(['box', 'the guess box is type="' + input.type + '", not a text box']);
+  const seen = [], orig = MaffsAnswer.parse;
+  MaffsAnswer.parse = function (raw) { seen.push(raw); return orig.apply(this, arguments); };
+  for (const typed of typedList) {
+    try { localStorage.clear(); } catch (e) {}
+    puzzle = PUZZLES[0]; state = defaultState(); renderGuesses();
+    area.style.pointerEvents = ''; area.style.opacity = ''; document.getElementById('submit-btn').disabled = false;
+    MaffsLock.fresh(area);
+    seen.length = 0; input.value = typed;
+    document.getElementById('submit-btn').click();
+    if (seen[0] !== typed) out.push([typed, 'MaffsAnswer.parse read ' + JSON.stringify(seen[0]) + ', not the typed string']);
+    // "1,000" is no number at all and is refused; "£52" is read by MaffsAnswer.parse's own rule (one leading £ is taken).
+    if (typed === '1,000' && document.querySelectorAll('#guess-history .guess-row').length) out.push([typed, 'it was marked as a guess']);
+  }
+  MaffsAnswer.parse = orig;
+  return out;
+}"""
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -189,6 +214,8 @@ def play(fails, html):
             puzzles = page.evaluate('() => PUZZLES')
             for k, typed, what in page.evaluate(SWEEP_JS, [cases(p['a']) for p in puzzles]):
                 fails.append('puzzle %d (%s): typed %r: %s' % (k, puzzles[k]['a'], typed, what))
+            for typed, what in page.evaluate(RAW_JS, RAW_TYPED):
+                fails.append('answer box: typed %r: %s' % (typed, what))
             browser.close()
             errors = [e for e in errors if 'firebase' not in e.lower()]
             if errors:
@@ -207,6 +234,7 @@ PLANTS = [
     ('puzzle ', 't2-001: the guess read by parseInt()',
      'const raw = input.value.trim();', 'const raw = String(parseInt(input.value.trim()));'),
     ('puzzle 1 (88)', 'a wrong number: 88 for the 11th Fibonacci', '{a:89,', '{a:88,'),
+    ('answer box: ', 'ANSWER-BOX-TEXT: the guess box back to type="number"', 'id="guess-input" type="text" inputmode="decimal"', 'id="guess-input" type="number"'),
 ]
 
 
@@ -222,8 +250,8 @@ def main():
     if puzzles is not None:
         check_facts(fails, puzzles)
         check_wording(fails, html, puzzles)
-    print('%s: %d puzzles, every number recomputed from its words, %d guesses marked in Chromium'
-          % (SLUG, len(puzzles or []), sum(len(cases(p['a'])) for p in puzzles or [])))
+    print('%s: %d puzzles, every number recomputed from its words, %d guesses marked in Chromium; the guess box a text box, %s reaching MaffsAnswer unchanged'
+          % (SLUG, len(puzzles or []), sum(len(cases(p['a'])) for p in puzzles or []), ' and '.join(RAW_TYPED)))
     ok = True
     if not args.no_selftest and not args.against:
         for tag, what, new, old in PLANTS:

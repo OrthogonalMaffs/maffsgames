@@ -994,6 +994,84 @@ FAULTS = [
 ]
 
 
+# ---------------------------------------------------------------- ANSWER-BOX-TEXT (Jon, 15 and 17 Nov 2026)
+# The one browser check here: every typed box is a text box. What is typed reaches MaffsAnswer unchanged: "1,000" is
+# refused and marks nothing (the step panel is not locked), where a number box turned it into "" and a parseFloat read
+# would take it as 1. The z value and the critical values can be negative (z = -2.05, a lower tail at -1.6449, a
+# negative correlation's -0.5140), so on a phone (the shared keypad forced on by its own CONFIG.query) they offer a minus
+# key that types one; a scaled parameter and a p-value are never negative and take inputmode="decimal".
+BOXES_JS = r"""() => {
+  const realTimeout = window.setTimeout; window.setTimeout = () => 0;
+  const out = [], raws = [], wrapped = {}, q0 = MaffsKeypad.CONFIG.query, panel = document.getElementById('stepPanel');
+  for (const f of ['parse', 'decimal', 'exact']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  MaffsKeypad.CONFIG.query = '(min-width: 0px)';
+  const probe = (what, ids, neg, check) => {
+    const boxes = ids.map(id => document.getElementById(id));
+    if (boxes.some(b => !b)) { out.push(what + ': no box ' + ids.join('/')); return; }
+    boxes.forEach(b => { if (b.type !== 'text') out.push(what + ': ' + b.id + ' is type="' + b.type + '", not a text box'); });
+    const minus = panel.querySelector('.maffs-keypad-key[aria-label="Minus"]');
+    if (neg) {
+      if (!minus) out.push(what + ': no minus key on the phone keypad');
+      else { minus.click(); panel.querySelector('.maffs-keypad-key[data-val="3"]').click();
+        if (boxes[0].value !== '-3') out.push(what + ': the keypad typed ' + JSON.stringify(boxes[0].value) + ', not "-3"'); }
+    } else boxes.forEach(b => { if (b.getAttribute('inputmode') !== 'decimal') out.push(what + ': ' + b.id + ' has no inputmode="decimal"'); });
+    boxes.forEach(b => { b.value = '1'; }); boxes[boxes.length - 1].value = '1,000';
+    raws.length = 0; const pen = state.penalties; check();
+    if (!raws.includes('1,000')) out.push(what + ': typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+    if (MaffsLock.isLocked(panel) || state.penalties !== pen) out.push(what + ': typed "1,000" was marked');
+  };
+  const at = (mode, pick, method, step) => {
+    const q = QUESTIONS[mode].find(pick); state.mode = mode; state.questions = [q]; state.qIdx = 0; state.method = method;
+    if (mode === 'normal') q._zCalcDone = true;   // past the z step, to the critical value or p-value
+    buildStep(q, step); return q;
+  };
+  try {
+    let q = at('normal', x => true, 'cr', 3); delete q._zCalcDone; buildStep(q, 3);
+    probe('normal z', ['zInput'], true, checkZStat);
+    at('normal', x => x.tail === 'one' && x.tailDir === 'lower', 'cr', 3); probe('normal one-tail critical value', ['crInput'], true, checkStep3);
+    at('normal', x => x.tail === 'two', 'cr', 3); probe('normal two-tail critical value', ['crInput'], true, checkStep3);
+    at('normal', x => true, 'pv', 3); probe('normal p-value', ['pvInput'], false, checkStep3);
+    at('correlation', x => true, 'cr', 3); probe('correlation critical value', ['crInput'], true, checkStep3);
+    at('binomial', x => x.crDirection !== 'two', 'cr', 3); probe('binomial critical value', ['crInput'], true, checkStep3);
+    at('binomial', x => x.crDirection === 'two', 'cr', 3); probe('binomial two-tail critical region', ['crLowerInput', 'crUpperInput'], true, checkStep3);
+    q = at('poisson', x => x.requiresScaling, 'cr', 2); delete q._scalingDone; buildStep(q, 2);
+    probe('Poisson scaled parameter', ['scalingInput'], false, checkScaling);
+    for (const x of ['0', '7', '-3', '12.5', '-0.25', '.5', '-.5', '1e3', '2.5E-2', '0012', '100.000', '-0'])
+      if (!Object.is(typedNum(x), parseFloat(x))) out.push('typedNum(' + JSON.stringify(x) + ') differs from parseFloat');
+  } catch (e) { out.push('threw: ' + e.message); }
+  finally { MaffsKeypad.CONFIG.query = q0; for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; window.setTimeout = realTimeout; }
+  return out;
+}"""
+
+
+def box_fails(html):
+    """The answer-box check, in Chromium, on this copy of the page."""
+    sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+    import bank_common as bc
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: each probe answers at once
+            bc.offline(ctx, base)
+            page_url = re.compile(r'/games/test-the-claim/(\?[^/]*)?$')
+            ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                status=200, content_type='text/html; charset=utf-8', body=html))
+            page = ctx.new_page()
+            errors = []
+            page.on('pageerror', lambda e: errors.append(str(e)))
+            page.goto(base + '/games/test-the-claim/?cb=verify', wait_until='load', timeout=20000)
+            page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof buildStep === "function"', timeout=8000)
+            out = page.evaluate(BOXES_JS)
+            browser.close()
+            return out + ['page error: %s' % e for e in errors]
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 def selftest(data, page):
     for iid in SELFTEST_ITEMS:
         q = find(data, iid)
@@ -1062,7 +1140,20 @@ def main():
         print()
     rep = verify(data, args.verbose)
     print_report(rep, data)
-    sys.exit(1 if rep.fails else 0)
+    html = open(args.file, encoding='utf-8').read()
+    boxes = box_fails(html)
+    for f in boxes:
+        print('FAIL  answer box: ' + f)
+    print('answer boxes: %s' % ('every typed box a text box; "1,000" reaches MaffsAnswer and is not marked; a minus key on the '
+                                'phone keypad wherever the answer can be negative' if not boxes else '%d FAIL(s)' % len(boxes)))
+    if not args.no_selftest:
+        planted = html.replace("""'<input type="text" class="num-input" id="zInput" placeholder="e.g. -2.00">'""",
+                               """'<input type="number" class="num-input" id="zInput" placeholder="e.g. -2.00">'""")
+        caught = planted != html and any('zInput is type="number"' in f for f in box_fails(planted))
+        print('  fault injection ANSWER-BOX-TEXT: the z box back to type=number -> %s' % ('caught' if caught else 'MISSED'))
+        if not caught:
+            sys.exit('SELF-TEST FAILED: the answer-box check missed a planted number box')
+    sys.exit(1 if rep.fails or boxes else 0)
 
 
 if __name__ == '__main__':

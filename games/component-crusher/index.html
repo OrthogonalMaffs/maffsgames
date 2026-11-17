@@ -21,6 +21,8 @@
 <script src="../../schools/assets/burst.js" defer></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<!-- The shared phone keypad's styles (MaffsKeypad, for answers that can be negative; contract ANSWER-BOX-TEXT). -->
+<link rel="stylesheet" href="../../schools/assets/calculator.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
@@ -30,6 +32,8 @@
   --correct:#22c55e;--correct-dim:rgba(34,197,94,.12);
   --wrong:#f43f5e;--wrong-dim:rgba(244,63,94,.12);
   --text:#e4e8f0;--muted:#687890;--hint:#94a3b8;
+  /* for the shared phone keypad (calculator.css, tokens only; contract ANSWER-BOX-TEXT) */
+  --surface-alt:var(--surface2);--font-text:'Outfit',sans-serif;--font-num:'JetBrains Mono',monospace;--on-accent:#000;
 }
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .mono{font-family:'JetBrains Mono',monospace}
@@ -112,6 +116,8 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
 <script src="../../schools/assets/answer.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
@@ -726,21 +732,21 @@ function loadSQ(q){
   if(sq.type==='vec2'){
     box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
       <div class="input-row">
-        <span class="vec-label">${sq.labels[0]}:</span><input type="number" class="vec-input" id="v0" step="any" placeholder="?">
-        <span class="vec-label">${sq.labels[1]}:</span><input type="number" class="vec-input" id="v1" step="any" placeholder="?">
+        <span class="vec-label">${sq.labels[0]}:</span><input type="text" class="vec-input" id="v0" placeholder="?">
+        <span class="vec-label">${sq.labels[1]}:</span><input type="text" class="vec-input" id="v1" placeholder="?">
       </div>
       <button class="check-btn" onclick="checkVec(2)">Check</button><div id="sqFb"></div>`;
   } else if(sq.type==='vec3'){
     box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
       <div class="input-row">
-        <span class="vec-label">${sq.labels[0]}:</span><input type="number" class="vec-input" id="v0" step="any" placeholder="?">
-        <span class="vec-label">${sq.labels[1]}:</span><input type="number" class="vec-input" id="v1" step="any" placeholder="?">
-        <span class="vec-label">${sq.labels[2]}:</span><input type="number" class="vec-input" id="v2" step="any" placeholder="?">
+        <span class="vec-label">${sq.labels[0]}:</span><input type="text" class="vec-input" id="v0" placeholder="?">
+        <span class="vec-label">${sq.labels[1]}:</span><input type="text" class="vec-input" id="v1" placeholder="?">
+        <span class="vec-label">${sq.labels[2]}:</span><input type="text" class="vec-input" id="v2" placeholder="?">
       </div>
       <button class="check-btn" onclick="checkVec(3)">Check</button><div id="sqFb"></div>`;
   } else if(sq.type==='num'){
     box.innerHTML=`<div class="sq-label">${label}</div><div class="sq-prompt">${PQ(sq.prompt)}</div>
-      <div class="input-row"><input type="number" class="vec-input" id="v0" step="any" placeholder="?" style="width:100px"></div>
+      <div class="input-row"><input type="text" class="vec-input" id="v0" placeholder="?" style="width:100px"></div>
       <button class="check-btn" onclick="checkNum()">Check</button><div id="sqFb"></div>`;
   } else if(sq.type==='mcq'){
     const opts=[{text:sq.correct,c:true},...sq.wrong.map(w=>({text:w,c:false}))];
@@ -749,6 +755,13 @@ function loadSQ(q){
     opts.forEach((o,i)=>{html+=`<button class="mcq-btn" id="mc${i}" onclick="checkMCQ(${i},${o.c})">${OPT(o.text)}</button>`;});
     html+=`</div><div id="sqFb"></div>`;
     box.innerHTML=html;box._opts=opts;
+  }
+  // Typed answers are text boxes (contract ANSWER-BOX-TEXT): components, scalar products and the like can be negative,
+  // so on a phone the shared keypad, with a minus key, types them (the iPhone's decimal keypad has none).
+  const ins=[...box.querySelectorAll('.vec-input')];
+  if(ins.length&&window.MaffsKeypad){
+    const host=document.createElement('div');host.className='kp-host';box.appendChild(host);
+    MaffsKeypad.mount(host,{targets:ins,keys:{minus:true},keepInView:box.querySelector('.input-row')});
   }
   MaffsLock.fresh(box);   // a new sub-question: a double-click or second Enter cannot mark it (canon 7.6.0)
   const first=box.querySelector('input');if(first)MaffsLock.timer(()=>first.focus(),50);

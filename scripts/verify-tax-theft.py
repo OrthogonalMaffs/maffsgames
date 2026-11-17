@@ -54,6 +54,7 @@ unless --no-selftest, and only when the main check passes.
 """
 import argparse
 import os
+import re
 import sys
 from decimal import Decimal, ROUND_HALF_UP
 from fractions import Fraction as F
@@ -61,6 +62,7 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+ROOT = bc.ROOT
 import uk_rates as ur  # noqa: E402  (canon §7.1.4: the one copy of the rates)
 
 SLUG = 'tax-theft'
@@ -171,6 +173,43 @@ STATE = """() => ({
   done: document.getElementById('completionScreen').style.display === 'block',
   completed: Array.from(document.querySelectorAll('#completedSteps .completed-step')).map(e => e.textContent)
 })"""
+
+
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): the step box is a text box in the page's own markup (inputmode="decimal": every
+# amount is money, never negative), not only once moneyInput has run, and what is typed reaches MaffsAnswer unchanged:
+# "1,000" is read as typed and is not marked ("Please enter a number."). A number box turned it into "".
+STEP_TAG = re.compile(r'<input\b[^>]*\bid="stepInput"[^>]*>')
+
+
+def markup_fails(html):
+    m = STEP_TAG.search(html)
+    if not m:
+        return ['the page has no stepInput box']
+    tag = m.group(0)
+    out = []
+    if 'type="text"' not in tag:
+        out.append('the stepInput box is not type="text" in the markup: %s' % tag)
+    if 'inputmode="decimal"' not in tag:
+        out.append('the stepInput box has no inputmode="decimal" in the markup: %s' % tag)
+    return out
+
+
+BOXES_JS = """() => {
+  const out = [], raws = [], wrapped = {};
+  for (const f of ['money', 'parse']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  try {
+    const g = SALARIES.easy[0]; usedSalaries.easy = [g]; startGame('easy');
+    const b = document.getElementById('stepInput');
+    if (b.type !== 'text') out.push('the step box is type="' + b.type + '", not a text box');
+    const idx = currentStepIndex, ev = window.__mfg.length, ok = _ttCorrectCount;
+    raws.length = 0; b.value = '1,000'; checkAnswer();
+    if (!raws.includes('1,000')) out.push('typed "1,000", MaffsAnswer read ' + JSON.stringify(raws));
+    const said = document.getElementById('feedback').textContent;
+    if (currentStepIndex !== idx || window.__mfg.length !== ev || _ttCorrectCount !== ok || said !== 'Please enter a number.')
+      out.push('typed "1,000" was marked, or not refused: ' + JSON.stringify(said));
+  } finally { for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; }
+  return out;
+}"""
 
 
 def submit(page, raw):
@@ -340,6 +379,8 @@ def run(patch_js=None, only=None, verbose=False):
             year = page.evaluate("Array.from(document.querySelectorAll('.payslip-meta dt')).find(d => d.textContent === 'Tax Year').nextElementSibling.textContent")
             if only is None:
                 check_params(rep, sal, rules, year)
+                for f in page.evaluate(BOXES_JS):
+                    rep.fail('BOX', 'answer box', f)
             for diff in ('easy', 'medium', 'hard'):
                 for g in sal[diff]:
                     if only and (diff, g) not in only:
@@ -387,6 +428,13 @@ def selftest():
         return real(v, e, s); }; })(getHint); })()""", only=[('hard', 130000)])
     expect('the old Easy closing line', "WRY_LINES.easy = 'Welcome to adulthood.'", only=[('easy', 14000)])
     expect('"You Keep" with no period', "sumKeep.parentElement.querySelector('.stat-label').textContent = 'You Keep'")
+    # ANSWER-BOX-TEXT: the markup back to a number box (moneyInput would hide it at run time) must fail the markup check
+    page_html = open(os.path.join(ROOT, 'games', SLUG, 'index.html'), encoding='utf-8').read()
+    planted = page_html.replace('<input type="text" inputmode="decimal" class="step-input" id="stepInput"',
+                                '<input type="number" class="step-input" id="stepInput"')
+    caught = planted != page_html and bool(markup_fails(planted))
+    ok = ok and caught
+    lines.append('  self-test %-40s %s' % ('ANSWER-BOX-TEXT: the step box back to type=number', ('caught: ' + markup_fails(planted)[0][:90]) if caught else '*** MISSED ***'))
     return ok, lines
 
 
@@ -400,6 +448,8 @@ def main():
     ap.add_argument('--no-selftest', action='store_true')
     args = ap.parse_args()
     rep, played = run(verbose=args.verbose)
+    for f in markup_fails(open(os.path.join(ROOT, 'games', SLUG, 'index.html'), encoding='utf-8').read()):
+        rep.fail('BOX', 'answer box', f)
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails

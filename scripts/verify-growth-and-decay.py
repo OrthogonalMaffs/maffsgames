@@ -334,7 +334,40 @@ def check_played(rep, scenarios, played):
                          'message, unmarked (SR-3); the game said %r' % text.strip()[:100])
 
 
-def load(patch_js=None):
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026): the answer box is a text box (inputmode="decimal": no answer in the bank is
+# negative), and what is typed reaches MaffsAnswer unchanged: "1,000" gets the 'unreadable' message and is not marked;
+# a money answer typed with its £ is read as money. A number box turned both into "".
+BOXES_JS = """() => {
+  const realTimeout = window.setTimeout; window.setTimeout = () => 0;
+  const out = [], raws = [], wrapped = {};
+  for (const f of ['exact', 'decimal', 'money', 'parse']) { wrapped[f] = MaffsAnswer[f]; MaffsAnswer[f] = function (raw) { raws.push(String(raw)); return wrapped[f].apply(this, arguments); }; }
+  try {
+    MaffsLock.FRESH_MS = 0;
+    const all = Object.entries(Q).flatMap(([lv, items]) => items.map(q => [lv, q]));
+    const plain = all.find(([lv, q]) => !sqCur(q.sq1)), money = all.find(([lv, q]) => sqCur(q.sq1));
+    for (const [what, hit, typed] of [['a reading', plain, '1,000'], ['a money answer', money, null]]) {
+      if (!hit) { out.push('no ' + what + ' to test'); continue; }
+      const [lv, q] = hit;
+      G.questions = [q]; G.qIdx = 0; G.level = lv; G.sqIdx = q.sq_order.indexOf(1); loadSQ(q);
+      const b = document.getElementById('sqInput');
+      if (b.type !== 'text') out.push(q.id + ' sq1: the box is type="' + b.type + '", not a text box');
+      if (b.getAttribute('inputmode') !== 'decimal') out.push(q.id + ' sq1: the box has no inputmode="decimal"');
+      const t = typed !== null ? typed : sqCur(q.sq1) + q.sq1.answer;
+      document.getElementById('sqFb').innerHTML = ''; raws.length = 0; b.value = t;
+      const before = G.totalSQs; checkNumSQ(1);
+      if (!raws.includes(t)) out.push(q.id + ' sq1: typed ' + JSON.stringify(t) + ', MaffsAnswer read ' + JSON.stringify(raws));
+      const fb = document.getElementById('sqFb').textContent;
+      if (typed !== null) {
+        if (G.totalSQs !== before) out.push(q.id + ' sq1: typed ' + JSON.stringify(t) + ' was marked');
+        if (fb.indexOf(MaffsAnswer.message('unreadable', t).replace(/<[^>]*>/g, '').slice(0, 20)) < 0) out.push(q.id + ' sq1: typed ' + JSON.stringify(t) + ', no unreadable message (' + fb + ')');
+      } else if (!/Correct/.test(fb)) out.push(q.id + ' sq1: the key typed with its £ (' + t + ') was not marked correct (' + fb + ')');
+    }
+  } finally { for (const f in wrapped) MaffsAnswer[f] = wrapped[f]; window.setTimeout = realTimeout; }
+  return out;
+}"""
+
+
+def load(patch_js=None, play=True):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -349,8 +382,11 @@ def load(patch_js=None):
                 page.evaluate(patch_js)
             bank = page.evaluate('JSON.parse(JSON.stringify(Q))')
             graphs, played = {}, {}
+            played['__boxes__'] = page.evaluate(BOXES_JS)
             for lvl, items in bank.items():
                 for s in items:
+                    if not play:
+                        continue
                     graphs[s['id']] = page.evaluate(GRAPH_JS, s['id'])
                     played[s['id']] = page.evaluate(PLAY_JS, dict(id=s['id'], level=lvl, values=typed_values(s)))
             browser.close()
@@ -447,6 +483,12 @@ def selftest(bank, graphs, played):
     _, _, old = load("""(() => { window.sqMark = function (sq, raw) { const v = parseFloat(raw);
         const tol = sq === G.questions[G.qIdx].sq4 ? 0.15 : 0.02 * Math.abs(sq.answer) + 0.01;
         return {res: Math.abs(v - sq.answer) <= tol ? 'correct' : 'wrong', key: String(sq.answer), opts: {}}; }; })()""")
+    # ANSWER-BOX-TEXT: the box back to a number box must fail the answer-box test
+    _, _, nb = load("""(() => { const L = loadSQ; loadSQ = function (q) { L(q); const b = document.getElementById('sqInput');
+        if (b) b.type = 'number'; }; })()""", play=False)
+    caught = bool(nb.get('__boxes__'))
+    ok = ok and caught
+    lines.append('  self-test %-34s %s' % ('ANSWER-BOX-TEXT: the box back to type=number', ('caught: ' + nb['__boxes__'][0][:90]) if caught else '*** MISSED ***'))
     scen = [s for lvl in bank.values() for s in lvl]
     for name, sid, tag in (('old sq1 band (CM1 735, 736 accepted)', 'CM1', 'marking (sq1 up)'),
                            ('old sq4 band (L4_1, 0 accepted)', 'L4_1', 'marking (sq4 zero)')):
@@ -472,6 +514,8 @@ def main():
     sweep_fails(rep, bank, open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'games', 'growth-and-decay', 'index.html'), encoding='utf-8').read())
     scenarios = check_bank(rep, bank, graphs, args.verbose)
     check_played(rep, scenarios, played)
+    for f in played.get('__boxes__', []):
+        rep.fail('BOX', 'answer box', f)
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails

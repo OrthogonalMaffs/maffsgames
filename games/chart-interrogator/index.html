@@ -934,7 +934,7 @@ function showCurrentQuestion(){
     html+='<div class="q-text">'+q.text+'</div>';
 
     if(q.type==='number'){
-      html+='<div class="q-input-row"><input type="number" class="q-input" id="qInput" placeholder="Enter value" autocomplete="off">';
+      html+='<div class="q-input-row"><input type="text" inputmode="decimal" class="q-input" id="qInput" placeholder="Enter value" autocomplete="off">';
       if(q.suffix)html+='<span style="color:var(--muted);font-weight:600;">'+q.suffix+'</span>';
       html+='<button class="q-submit" onclick="submitPhase1()">Check</button></div>';
     }else if(q.type==='mc'){
@@ -960,7 +960,10 @@ function submitPhase1(){
   var inp=document.getElementById('qInput');
   // A reading in pounds is read by MaffsAnswer.parse(), which takes one leading £ (MONEY-ANSWERS, 11 Nov 2026); the
   // tolerance and the key are unchanged. Any other reading is read as before.
-  var val=moneyReading()?MaffsAnswer.parse(inp.value):parseFloat(inp.value);
+  // Every reading is read by MaffsAnswer.parse() (Jon, 17 Nov 2026, ANSWER-BOX-TEXT Amendment 1): the box is a text box now, so "1,250" or
+  // "12abc" must be refused here, as the old number box refused it, not read by parseFloat as 1 or 12. For every string
+  // a number box could hold it gives parseFloat's value; it also takes the one leading £ of a reading in pounds.
+  var val=MaffsAnswer.parse(inp.value);
   if(val===null)val=NaN;
   var fb=document.getElementById('qFeedback');
 
@@ -1114,7 +1117,7 @@ function cfParts(s,show){
 function buildCFScaffold(s){
   return cfParts(s,filled).map(function(c,i){
     if(c.options)return c.lead+dd('d'+i,c.options,c.correct)+'.';
-    if(c.number)return c.lead+'<input type="number" id="num_'+i+'" data-expected="'+c.number.expected+
+    if(c.number)return c.lead+'<input type="text" inputmode="decimal" id="num_'+i+'" data-expected="'+c.number.expected+
       '" data-tolerance="'+c.number.tolerance+'" data-alt-expected="'+c.number.alt.expected+'" data-alt-tolerance="'+c.number.alt.tolerance+'" aria-label="Your answer" autocomplete="off">';
     return c.lead;
   }).join(' ');
@@ -1210,7 +1213,7 @@ function submitPhase2(){
 
   // A typed answer in the scaffold (cumfreq's benchmark count) is marked on its tolerance
   inputs.forEach(function(inp){
-    var v=parseFloat(inp.value);
+    var v=MaffsAnswer.parse(inp.value);if(v===null)v=NaN;   // a text box: "1,250" refused, not read as 1 (ANSWER-BOX-TEXT)
     var altOk=inp.dataset.altExpected!==undefined&&Math.abs(v-parseFloat(inp.dataset.altExpected))<=parseFloat(inp.dataset.altTolerance);
     if(!isNaN(v)&&(Math.abs(v-parseFloat(inp.dataset.expected))<=parseFloat(inp.dataset.tolerance)||altOk)){
       inp.style.borderColor='var(--green)';inp.style.color='var(--green)';
