@@ -69,7 +69,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-17 (cloud): SINE-NOT-SINE (`docs/handover/contracts/2026-11-17-sine-not-sine.md`; Jon 17 Nov)
+## 2026-11-17 (cloud): SINE-NOT-SINE (`docs/history/contracts/2026-11-17-sine-not-sine.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/blissful-heisenberg-lzfkax` from main 3349092 (after #809). Size: a new game in new files, unlisted.
 **Close-out carried (first commit):** HEATWAVE-APPROVE (#809, 862f7a6), recorded below; contract moved.
@@ -78,7 +78,9 @@ Done on the branch: `games/its-a-sine/index.html` (the bank verbatim; level pick
 Decided against the contract, with evidence: the palette is light, not dark (canon §7.5: a game whose levels include GCSE is light; check-theme fails dark, and an exemption is a STOP IF); so the teal is `#0f766e` and the coral `#b8432c` (each over 4.5:1 on every light surface). The stage buttons carry `data-stage="1"`..`"4"` and `data-mode`, the shared stage-exit verifier's convention.
 Local: measure-phone-fit cannot run in this sandbox (its footer pre-check fails on untouched main too, 1 px at 810 px, fonts); CI's phone-fit is the evidence.
 PR #810. Gate red only on Tier 4 layer A: `its-a-sine::B3`, a false duplicate (level3_014 and level3_015: same prompt, both 117.7, different triangles). Jon ruled (17 Nov): change the bank, Project Claude's Amendment 1 (level3_015 now a 7.5, b 10, A 37°, answer 126.6; recomputed here independently, 126.638°, two triangles); no ledger entry; todo BANK-LINT-GIVEN for the lint itself. The amendment is appended to the saved contract, and the verifier takes an amendment's line in place of the original's.
-Next: Gate; merge with merge-pr.py.
+MERGED 17 Nov as f5df4b9 (#810) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main f5df4b9 run 44078857846: GREEN". Main on the merge commit: check-site 44078857846 success; phone-fit-full 44078857810 FAILURE, caused by this game: its probe (check-site.py's `__mfgProbe`) finds an option group only from buttons with their own click handler, and the page delegated its answer buttons' clicks to #opts, so phone-fit read it as "no option group, input or submit" and it is on no list. Also: #810 carried a regenerated `docs/audits/REGISTER.md` (a local check wrote it and `git add -A` took it; the same content main generates), against the rule that no PR edits it.
+Fix (follow-up PR, branch restarted from main 1a708d5): each answer button gets its own click handler, the delegated one goes; checked with the probe's own addEventListener tracking (both Stage 1 buttons now register; none did before); verify-its-a-sine.py PASS. Contract moved to `docs/history/contracts/`.
+Next: the fix PR's Gate; merge with merge-pr.py; confirm phone-fit-full green on main.
 
 ## 2026-11-17 (cloud): HEATWAVE-APPROVE (`docs/history/contracts/2026-11-17-heatwave-approve.md`; Jon 17 Nov)
 
