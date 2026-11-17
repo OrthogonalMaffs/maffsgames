@@ -182,8 +182,8 @@
   "Split It (every generator's keys recomputed + marking at the stated precision)": "49",
   "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 125 played in Chromium)": "30",
   "Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "28",
-  "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 2": "25",
-  "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 2 of 2": "59",
+  "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; the four Core Maths papers' two-tap Exit paper, in play and on the section banner only, back to the start with nothing recorded and a fresh run after; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 2": "59",
+  "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; the four Core Maths papers' two-tap Exit paper, in play and on the section banner only, back to the start with nothing recorded and a fresh run after; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 2 of 2": "25",
   "Standard Form Blitz (all 100 keys recomputed exactly from the question's own TeX; every option classified; every option pressed in Chromium)": "70",
   "Start-screen back link (every game page, as loaded at 390x844, shows a visible link back to the games list; planted faults caught: a link only in a hidden header, only on a hidden results screen, invisible, see-through, to another page; four controls pass)": "22",
   "Stat Attack (keys recomputed from each question's table)": "27",
@@ -335,7 +335,7 @@
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 2,
    "tier": "content"
@@ -366,7 +366,7 @@
   },
   "verify-stage-exit.py": {
    "how": "kept from the pack (2 needed)",
-   "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
+   "label": "Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; the four Core Maths papers' two-tap Exit paper, in play and on the section banner only, back to the start with nothing recorded and a fresh run after; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught)",
    "parts": 2,
    "tier": "content"
   },
