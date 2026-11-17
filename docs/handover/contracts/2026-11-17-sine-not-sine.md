@@ -240,3 +240,10 @@ STOP IF:
 - A diagram cannot be drawn to shape at 360 px without hiding a label.
 - A shared check needs an exemption for this game.
 - merge-pr.py refuses for a reason other than a transient 5xx it already retries.
+
+AMENDMENT 1 (Project Claude; Jon's ruling, 17 Nov 2026, "Change the bank (Jon, 17 Nov 2026)"), verbatim:
+Replace level3_015's given and answer, everything else in the item unchanged:
+{"id":"level3_015","rule":"sine","version":"sine-angle","third_angle_first":false,"given":{"a":7.5,"b":10,"A":37},"find":"B","answer":126.6,"unit":"°","prompt":"Angle B is obtuse. Find angle B, to 1 d.p.","ambiguous":true}
+(was a 6.5, b 8, A 46°, answer 117.7). Recomputed by coordinate geometry: B = 126.638°, and two triangles exist. Your verifier must agree independently; STOP if it does not. No ledger entry.
+Also add a todo row, BANK-LINT-GIVEN: check-banks.py's question_signature() ignores numbers held outside the prompt (diagram data such as its-a-sine's "given"), so different items can read as duplicates. Fix it in its own contract.
+Then let merge-pr.py carry on as before.

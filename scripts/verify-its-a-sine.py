@@ -18,7 +18,8 @@ measures the answer off that construction:
             context forms (a bearing journey's two legs and the turn between them, two forces drawn nose to tail, ...). An
             "ambiguous" item has two triangles and asks for the obtuse angle; every other sine-angle item has one. Forty items
             a level, ids unique and naming their level, and every item line equal, character for character, to the bank in
-            the contract file (docs/handover/contracts/ or, once merged, docs/history/contracts/).
+            the contract file (docs/handover/contracts/ or, once merged, docs/history/contracts/), an amendment's
+            replacement line for an id taking the original's place.
   Marking   in the page, for every item: Stage 1 marks only the rule's button right, Stage 2 only the version's, Stage 3
             only the answer (a value 0.1 out is wrong; the right value to 2 d.p. and an unreadable answer are never marked).
             The Stage 1 key is read by dataset.val: with the two buttons' labels swapped, the key's button is still right.
@@ -87,7 +88,16 @@ def bank_of(html):
 def contract_lines():
     for d in ('docs/handover/contracts', 'docs/history/contracts'):
         for f in glob.glob(os.path.join(ROOT, d, '*' + CONTRACT)):
-            return [ln.rstrip('\n') for ln in open(f, encoding='utf-8') if ln.startswith('{"id":')], f
+            # The bank, then any amendment's replacement lines: a later line for an id replaces the earlier one, in place.
+            order, latest = [], {}
+            for ln in open(f, encoding='utf-8'):
+                if ln.startswith('{"id":'):
+                    ln = ln.rstrip('\n')
+                    iid = json.loads(ln)['id']
+                    if iid not in latest:
+                        order.append(iid)
+                    latest[iid] = ln
+            return [latest[i] for i in order], f
     return None, None
 
 
