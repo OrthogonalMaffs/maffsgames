@@ -13,8 +13,18 @@ is a whole number of any size, never one of the set's own answers, never the pla
 in whole, non-negative steps (the generator's two rules, kept by Amendment 7); its product has a factor that is a
 multiple of 5 or 12 or less, and at most one of its factors is 100 or more (Amendment 11; the second half is Jon's
 ruling of 16 Nov 2026, contract HAMSTER-HEIST-PACK Amendment 1: three-digit answers had let 420 x 812 through; the
-packs already on Tes are not rebuilt), and students are never told the shape. A set with no such target fails the
-build: there is no fallback to an easier shape.
+packs already on Tes are not rebuilt), no product is above PRODUCT_MAX = 10,000 (Jon, 17 Nov 2026, contract
+FINAL-PADLOCK-FAIR: "10,000 should be the ceiling"), and students are never told the shape. A set with no such target
+fails the build: there is no fallback to an easier shape.
+
+Every set in a pack is also the same DIFFICULTY (Jon, 17 Nov 2026: "all final locks on a room should be of a similar
+difficulty"; contract FINAL-PADLOCK-FAIR). difficulty() gives a target's class: in a shape with a multiplication, the
+digit counts of the product's two factors (every set 1-digit x 3-digit, say), and every product in the pack lies in one
+window [lo, RATIO_MAX x lo], RATIO_MAX = 3; in "plus-and-minus", the number of digits in the largest term. build_pack.py
+choose() searches the classes in an order fixed by the seed, and each class's windows smallest first, for N sets that
+each have a target in the class and window; each set's target is then drawn from just those by the seeded choice below.
+No class reaching N sets fails the build, naming the best class found. lockcheck.pack_problems() checks the printed
+pack again.
 
 tools/pack-generator/lockcheck.py checks every target again by its own evaluator, search and shape count.
 """
@@ -23,6 +33,8 @@ import random
 from collections import defaultdict
 from fractions import Fraction
 
+PRODUCT_MAX = 10000     # no product in a final padlock above this (Jon, 17 Nov 2026, FINAL-PADLOCK-FAIR)
+RATIO_MAX = 3           # a pack's largest product at most this many times its smallest (the same contract)
 SYM = {"+": "+", "-": "−", "*": "×", "/": "÷"}
 SHAPES = {   # name: (the rule as the locks page says it, the operator counts it allows)
     "times-and-plus-or-minus": ("one &times; and one + or &minus;",
@@ -36,15 +48,54 @@ DEFAULT_SHAPE = "times-and-plus-or-minus"
 
 
 def friendly(form):
-    """True when every product in the class has a factor that is a multiple of 5 or is 12 or less, and at most one
-    factor of 100 or more (Amendment 11; the second rule Jon's, 16 Nov 2026)."""
+    """True when every product in the class has a factor that is a multiple of 5 or is 12 or less, at most one
+    factor of 100 or more (Amendment 11; the second rule Jon's, 16 Nov 2026), and is at most PRODUCT_MAX (Jon, 17 Nov
+    2026)."""
     for _, factors in form:
         mult = [x for e, x in factors if e == 1]
+        if len(mult) > 1 and product(mult) > PRODUCT_MAX:
+            return False
         if len(mult) > 1 and not any(x % 5 == 0 or x <= 12 for x in mult):
             return False
         if len(mult) > 1 and sum(1 for x in mult if x >= 100) > 1:
             return False
     return True
+
+
+def product(xs):
+    out = Fraction(1)
+    for x in xs:
+        out *= x
+    return out
+
+
+def digits(x):
+    """The digits of a whole number's size (a fraction's whole part), as a student writes it."""
+    return len(str(abs(int(x))))
+
+
+def difficulty(form):
+    """(the class, the product) of one target's expression (contract FINAL-PADLOCK-FAIR). With a multiplication the
+    class is ("x", the sorted digit counts of each product's factors) and the product is the largest product; without
+    one it is ("+-", the digits of the largest term) and the product is None."""
+    prods = [[x for e, x in factors if e == 1] for _, factors in form]
+    prods = [m for m in prods if len(m) > 1]
+    if prods:
+        return ("x", tuple(sorted(tuple(sorted(digits(x) for x in m)) for m in prods))), max(product(m) for m in prods)
+    return ("+-", max(digits(product([x for _, x in factors])) for _, factors in form)), None
+
+
+def describe(klass):
+    """A class in words: "1-digit x 3-digit" or "largest term 4 digits"."""
+    kind, sig = klass
+    if kind == "x":
+        return "; ".join(" × ".join("%d-digit" % d for d in m) for m in sig)
+    return "largest term %d digit%s" % (sig, "" if sig == 1 else "s")
+
+
+def in_window(lo, p):
+    """A product p is in the window that starts at lo (no window, lo None, takes every target)."""
+    return lo is None or (p is not None and lo <= p <= RATIO_MAX * lo)
 
 
 def canon(perm, ops):
@@ -179,17 +230,24 @@ def why_not(nums, t, shape):
     if not SHAPES[shape][1](op_counts(next(iter(fs)))):
         return "the one expression that makes %s is not the pack's shape" % t
     if not friendly(next(iter(fs))):
-        return "the one expression that makes %s has a product with no factor a multiple of 5 or 12 or less" % t
+        return ("the one expression that makes %s has a product above %d, of two factors of 100 or more, or with no "
+                "factor a multiple of 5 or 12 or less" % (t, PRODUCT_MAX))
     return "the one expression that makes %s needs a fraction or a negative step" % t
 
 
-def choose(nums, seed, letter, shape=DEFAULT_SHAPE, forced=None):
-    """The set's final padlock {target, tokens, expr, steps, shape}, or (None, reason)."""
+def choose(nums, seed, letter, shape=DEFAULT_SHAPE, forced=None, klass=None, lo=None):
+    """The set's final padlock {target, tokens, expr, steps, shape}, or (None, reason). With klass (and lo), only targets
+    of that difficulty class (and in that product window) are drawn from (contract FINAL-PADLOCK-FAIR)."""
     if shape not in SHAPES:
         return None, "unknown final-padlock shape %r (one of %s)" % (shape, sorted(SHAPES))
     if len(nums) != 3:
         return None, "the final padlock's shapes need exactly 3 lock answers, and this room has %d" % len(nums)
     c = candidates(nums, shape)
+    if klass is not None:
+        c = {t: v for t, v in c.items() if difficulty(v[0])[0] == klass and in_window(lo, difficulty(v[0])[1])}
+        if not c and forced is None:
+            return None, "no target in the pack's class (%s%s)" % (
+                describe(klass), "" if lo is None else ", products %s to %s" % (fmt(lo), fmt(RATIO_MAX * lo)))
     if forced is not None:
         if forced not in c:
             return None, why_not(nums, forced, shape)

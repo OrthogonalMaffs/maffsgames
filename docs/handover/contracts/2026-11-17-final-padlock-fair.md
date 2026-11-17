@@ -39,3 +39,7 @@ STOP IF:
 ## Amendment 1 (Jon, 17 Nov 06:31, via session: the final padlock should be optional for the teacher)
 
 Follow-up to FINAL-PADLOCK-FAIR (Jon, 17 Nov 06:31: the final padlock should be optional for the teacher): in the same PR, in the generator so every pack gets it: (1) under the teacher run sheet’s step 5 add “Short of time, or a class that will struggle? Skip the final padlock: tell teams before you start, and note the time when Lock 3 is ticked instead.”; (2) the score sheet’s finish column reads “Finished (final padlock, or Lock 3 if skipped)”; (3) each student set’s heading “The final padlock” becomes “The final padlock (if your teacher says so)”. These count as a change for every pack’s version bump. All existing wording checks apply to the new lines.
+
+## Amendment 2 (Jon, 17 Nov 2026, in session, answering Code Claude's question)
+
+Amendment 1's run-sheet sentence takes page 1 past its 150-word cap (Amendment 9; page 1 is about 147 words and the sentence is 28). Jon chose: "Raise the cap to 180". RUN_IT_WORDS goes from 150 to 180, the ruling recorded in the code and README; the sentence goes under step 5 word for word; page 1 must still fit its sheet, or the build stops.

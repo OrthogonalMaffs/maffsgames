@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a printable A4 group-race pack (PDF) of an escape room from its checked data (contract PACK-GENERATOR, 4 Nov 2026).
 
-    python -X utf8 tools/pack-generator/build_pack.py kiln-disaster              # -> dist-packs/kiln-disaster-pack.pdf
+    python -X utf8 tools/pack-generator/build_pack.py kiln-disaster              # -> dist-packs/kiln-disaster-pack-v3.pdf
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --sets 7 --seed 1
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --target 67   # one final-padlock target for all
     python -X utf8 tools/pack-generator/build_pack.py kiln-disaster --final       # the copy for Tes: approved wording only
@@ -27,7 +27,9 @@ The build, in order; any failure stops it before a PDF exists:
      rules the room engine serves draws by. If that check fails, nothing is built.
   2. Selection: every joint draw (one variant per lock) is judged by draw_is_valid(); from the VALID ones, N are chosen
      with every lock's answers distinct across the N sets, and no set where a lock's printed common wrong answer is
-     its printed answer (HAMSTER-PACK-FINAL). Deterministic for a seed (a seeded shuffle, then a search).
+     its printed answer (HAMSTER-PACK-FINAL), and every set's final padlock of one difficulty class with its product
+     in one window (contract FINAL-PADLOCK-FAIR; final.py's docstring). Deterministic for a seed (a seeded shuffle,
+     then a search).
   3. Verification: lockcheck.py recomputes every answer, common wrong answer and worked-solution figure from each
      variant's givens, by a method independent of the generator that made them. Any mismatch stops the build.
   4. Render: one HTML page per A4 page, printed to PDF by Playwright's Chromium with the network shut (fonts from the
@@ -40,7 +42,7 @@ The build, in order; any failure stops it before a PDF exists:
      box under 20 x 4.5 mm stops an approved room's build and any --final build (a DRAFT build goes on and lists
      it on page 1). Every figure in the words filled for print is bound to its unit (bind_figures).
 
-The PDF goes to dist-packs/ (gitignored) and nowhere else. It is the product: never commit it, never upload it.
+The PDF goes to dist-packs/<slug>-pack-v<pack_version>.pdf (gitignored) and nowhere else. It is the product: never commit it, never upload it.
 """
 import argparse
 import base64
@@ -847,43 +849,70 @@ def checker_flat(x):
     return frozenset(x if isinstance(x, list) else [x])
 
 
-def choose(checker, valid, locks, n, seed, final_ok=None):
-    """N VALID draws with every lock's answers distinct across them, each with a final padlock final_ok accepts
-    (Amendment 11: a target whose product is friendly), or BuildError naming the most found. The draws are shuffled by
-    the seed, then searched in that order (depth first), so a seed gives one pack."""
+def choose(checker, valid, locks, n, seed, grades=None):
+    """(N VALID draws with every lock's answers distinct across them, the pack's (class, lo)), or BuildError naming
+    the best class found. grades(draw) gives {target: (class, product)} for every final-padlock target the draw allows
+    (finalpad.difficulty; Amendment 11's friendly product and the 10,000 ceiling already applied). Every set must have
+    a target of ONE class, its product in one window [lo, finalpad.RATIO_MAX x lo] (contract FINAL-PADLOCK-FAIR, Jon,
+    17 Nov 2026). The classes are tried in an order fixed by the seed, each class's windows smallest product first;
+    for each, the draws are shuffled by the seed and searched in that order (depth first), so a seed gives one pack.
+    With no grades, any draw is usable and there is no class (lo and class None)."""
     refused = [p for p in valid if miss_is_answer(locks, p)]          # HAMSTER-PACK-FINAL; none in most rooms
-    usable = [p for p in valid if (final_ok is None or final_ok(p)) and not miss_is_answer(locks, p)]
-    order = list(usable)
-    random.Random(seed).shuffle(order)
-    ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order}
-    chosen, best, budget = [], [], [200000]
+    usable = [p for p in valid if not miss_is_answer(locks, p)]
+    g = {p: grades(p) for p in usable} if grades else {p: {None: (None, None)} for p in usable}
+    usable = [p for p in usable if g[p]]
+    order0 = list(usable)
+    random.Random(seed).shuffle(order0)
+    ans = {p: [frozenset(checker.flat(l["variants"][i]["answer"])) for l, i in zip(locks, p)] for p in order0}
+    classes = sorted({k for p in usable for k, _ in g[p].values()}, key=repr)
+    random.Random("%s-class" % seed).shuffle(classes)
+    best = (0, None, None)
 
-    def fits(p):
-        return all(not (ans[p][j] & ans[q][j]) for q in chosen for j in range(len(locks)))
+    def search_n(order):
+        chosen, most, budget = [], [0], [200000]
 
-    def search(start):
-        nonlocal best
-        if len(chosen) > len(best):
-            best = list(chosen)
-        if len(chosen) == n:
-            return True
-        for k in range(start, len(order)):
-            budget[0] -= 1
-            if budget[0] < 0:
-                return False
-            if fits(order[k]):
-                chosen.append(order[k])
-                if search(k + 1):
-                    return True
-                chosen.pop()
-        return False
+        def fits(p):
+            return all(not (ans[p][j] & ans[q][j]) for q in chosen for j in range(len(locks)))
 
-    if not search(0):
-        raise BuildError("only %d sets can be chosen (VALID, every lock's answers distinct, a final padlock with a "
-                         "friendly product, no common wrong answer printed as the answer), fewer than the %d asked for "
-                         "(%d VALID draws, %d refused as a common wrong answer prints as the answer, %d usable)"
-                         % (len(best), n, len(valid), len(refused), len(usable)))
-    return [make_set(chr(ord("A") + i), p, locks) for i, p in enumerate(chosen)]
+        def search(start):
+            most[0] = max(most[0], len(chosen))
+            if len(chosen) == n:
+                return True
+            for k in range(start, len(order)):
+                budget[0] -= 1
+                if budget[0] < 0:
+                    return False
+                if fits(order[k]):
+                    chosen.append(order[k])
+                    if search(k + 1):
+                        return True
+                    chosen.pop()
+            return False
+        return (chosen if search(0) else None), most[0]
+
+    for klass in classes:
+        los = sorted({pr for p in usable for k, pr in g[p].values() if k == klass and pr is not None}) or [None]
+        for lo in los:
+            order = [p for p in order0 if any(k == klass and finalpad.in_window(lo, pr) for k, pr in g[p].values())]
+            bound = min([len({ans[p][j] for p in order}) for j in range(len(locks))] + [len(order)])
+            if bound < n:                        # too few distinct answers for some lock: no search can reach N
+                found = bound
+            else:
+                chosen, found = search_n(order)
+                if chosen:
+                    return [make_set(chr(ord("A") + i), p, locks) for i, p in enumerate(chosen)], (klass, lo)
+            if found > best[0]:
+                best = (found, klass, lo)
+    named = ("the best class found, %s%s, gives %d" % (
+        finalpad.describe(best[1]), "" if best[2] is None else " with products %s to %s"
+        % (finalpad.fmt(best[2]), finalpad.fmt(finalpad.RATIO_MAX * best[2])), best[0])
+        if best[1] is not None else "the most found is %d" % best[0])
+    raise BuildError("only %d sets can be chosen (VALID, every lock's answers distinct, every set's final padlock one "
+                     "difficulty class with a friendly product of at most %d, the largest at most %d x the smallest, no "
+                     "common wrong answer printed as the answer), fewer than the %d asked for: %s (%d VALID draws, %d "
+                     "refused as a common wrong answer prints as the answer, %d usable)"
+                     % (best[0], finalpad.PRODUCT_MAX, finalpad.RATIO_MAX, n, named, len(valid), len(refused),
+                        len(usable)))
 
 
 def answers_of(checker, locks, s):
@@ -902,12 +931,13 @@ def answers_of(checker, locks, s):
     return tuple(out)
 
 
-def add_finals(checker, locks, sets, seed, shape, target=None):
-    """Give every set its final padlock in the pack's one shape (Amendments 5 and 7), or BuildError naming every set
-    that has none: there is no fallback to an easier shape."""
+def add_finals(checker, locks, sets, seed, shape, target=None, grade=(None, None)):
+    """Give every set its final padlock in the pack's one shape (Amendments 5 and 7) and, with grade (choose()'s
+    (class, lo)), the pack's one difficulty class and product window (contract FINAL-PADLOCK-FAIR), or BuildError
+    naming every set that has none: there is no fallback to an easier shape."""
     bad = []
     for s in sets:
-        f, why = finalpad.choose(answers_of(checker, locks, s), seed, s["letter"], shape, target)
+        f, why = finalpad.choose(answers_of(checker, locks, s), seed, s["letter"], shape, target, *grade)
         if f is None:
             bad.append("set %s (answers %s): %s" % (s["letter"], list(answers_of(checker, locks, s)), why))
         s["final"] = f
@@ -921,7 +951,7 @@ def verify_finals(checker, locks, sets, shape):
     out = []
     for s in sets:
         out += lockcheck.final_problems(s["letter"], answers_of(checker, locks, s), s["final"], shape)
-    return out
+    return out + lockcheck.pack_problems([(s["letter"], s["final"]["expr"]) for s in sets], shape)
 
 
 INSTRUMENT_HINT = re.compile(r"\d|_\s*_|\u25a1|\u25a2|\b(?:digits?|max|maximum|minimum|range|between|up to)\b", re.I)
@@ -1568,11 +1598,11 @@ def score_sheet(locks, sets):
             "<col style='width:15mm'><col style='width:13mm'><col style='width:15mm'><col style='width:16mm'></colgroup>"
             % "".join("<col style='width:12mm'><col style='width:%dmm'>" % round(WRONG_BOXES * 4.2 + 3) for _ in locks))
     head = ("<tr><th rowspan='2'>Team name</th><th rowspan='2'>Set</th>%s"
-            "<th rowspan='2'>Finishing time</th>"
+            "<th rowspan='2'>Finished (final padlock, or Lock %d if skipped)</th>"
             "<th rowspan='2' data-col='wrong'>Wrong answers<br><span class='wrong'>(count)</span></th>"
             "<th rowspan='2' data-col='hints'>Hints<br><span class='wrong'>(count)</span></th>"
             "<th rowspan='2' data-col='penalty'>Penalty (min)</th><th rowspan='2' data-col='total'>Total time</th></tr>"
-            "<tr>%s</tr>" % (groups, subs))
+            "<tr>%s</tr>" % (groups, len(locks) - 1, subs))
     tables = []
     for k in range(0, len(sets), SCORE_ROWS):
         rows = "".join("<tr class='row' data-set='%s'><td></td><td class='set'>%s</td>%s"
@@ -1654,7 +1684,8 @@ def check_score_sheet(tables, locks, sets):
     return out
 
 
-RUN_IT_WORDS = 150        # page 1's cap (Amendment 9)
+RUN_IT_WORDS = 180        # page 1's cap (Amendment 9's 150; 180 by Jon's ruling of 17 Nov 2026, FINAL-PADLOCK-FAIR
+                          # Amendment 2, for the line on skipping the final padlock)
 
 
 SET_PAGES = "{SETPAGES}"    # page 1's line of each set's pages (Amendment 10), filled once the pages are numbered
@@ -1683,11 +1714,12 @@ def set_pages_line(numbered, hint_pages=()):
     return line
 
 
-def run_it(letters, url, set_pages=SET_PAGES):
+def run_it(letters, url, set_pages, last_lock):
     """Page 1 (Amendments 9, 10, 11; CHRISTMAS-PACK Amendment 3): Project Claude's draft with its three approved
     trims, the set letters (from the pack), each set's pages (from the build) and Amendment 11's final-padlock line.
     Amendment 1's play-online line is on page 2:
-    with it, page 1 would pass its 150 words."""
+    with it, page 1 would pass its 150 words. Step 5's second line, skipping the final padlock (Jon, 17 Nov 2026,
+    FINAL-PADLOCK-FAIR Amendment 1), names the last lock (last_lock) and took the cap to 180 (Amendment 2)."""
     return ("<h2>Before the lesson</h2><ol>"
             "<li>Print one set per team (%s-%s). Cut out the hint cards.<br>%s</li>"
             "<li>Choose your penalties. We suggest 1 minute per wrong answer and 1 per hint.</li></ol>"
@@ -1697,11 +1729,13 @@ def run_it(letters, url, set_pages=SET_PAGES):
             "<li>Teams bring each answer to you. Check it against their set in the key.<br>"
             "Right: tick it. Wrong: check a box and say &ldquo;not yet&rdquo;.</li>"
             "<li>A team wants a hint? Hand over the card; add one to Hints.</li>"
-            "<li>Final padlock ticked: note the time.</li>"
+            "<li>Final padlock ticked: note the time.<br>"
+            "Short of time, or a class that will struggle? Skip the final padlock: tell teams before you start, and "
+            "note the time when Lock %d is ticked instead.</li>"
             "<li>Call time when you choose. Read the ending that fits. Lowest total time wins.</li></ol>"
             "<p><b>Final padlock:</b> No calculator. Any calculation that uses each answer once, with + &minus; "
             "&times; &divide; and no brackets, and makes the target counts (only one does).</p>"
-            % (letters[0], letters[-1], set_pages))
+            % (letters[0], letters[-1], set_pages, last_lock))
 
 
 def lock_name_label(name):
@@ -1760,7 +1794,7 @@ def teacher_page_problems(pages_text):
 
 def final_section(letter, n, target):
     """The locks page's final padlock (Amendment 11): the rules students are told, and nothing about the shape."""
-    return ("<div class='final' data-final-set='%s'><h2>The final padlock</h2><p>Use each of your %d answers exactly "
+    return ("<div class='final' data-final-set='%s'><h2>The final padlock (if your teacher says so)</h2><p>Use each of your %d answers exactly "
             "once, with any of +, &minus;, &times; and &divide; and no brackets, to make the target. &times; and "
             "&divide; come before + and &minus;. <b>No calculator.</b></p><div class='target'>Target:<b>%s</b></div>"
             "<div class='work'></div><div class='answerline'>Your expression: <span></span> = %s</div></div>"
@@ -1953,7 +1987,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     shape = sets[0]["final"]["shape"]
     if draft_notes and wording_approved(cfg, slug):
         raise BuildError("%s: the wording is approved, so page 1 carries no DRAFT notes: %r" % (slug, list(draft_notes)))
-    pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url)),
+    pages.append(page("run", '<img class="run-win" src="%s" alt="">%s' % (win.as_uri(), run_it(letters, url, SET_PAGES, len(locks))),
                       "%s: run it" % title, "Group race pack, %d sets" % len(sets),
                       badge=draft_badge(cfg, slug), notes=draft_notes_block(draft_notes)))
     reads = readouts(room, fill_a, readout_voice(cfg, slug))
@@ -2093,7 +2127,7 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
                     % (fam, (HERE / "fonts" / fn).as_uri(), w) for fam, fn, w, _ in FONTS.values())
     foot = ('<span class="brand"><span class="logo"><img src="%s" alt=""></span><b>MaffsGames</b>'
             '<span>%s &middot; pack v%s &middot; seed %s &middot; built %s</span></span>'
-            % (LOGO.as_uri(), slug, esc(cfg.get("pack_version", "?")), seed, built))
+            % (LOGO.as_uri(), slug, pack_version(cfg, slug), seed, built))
     pages = [p.replace("{{FOOT}}", "%s<span>page %d of %d</span>" % (foot, i + 1, len(pages))) for i, p in enumerate(pages)]
     # ANSWER-BOX-CHECK, the binding's net. A room's words are bound as they are filled (filler()); here every finished
     # page is bound whole, so the generator's own lines ("1 minute", "about 4 min") and a room's names are held to
@@ -2104,9 +2138,31 @@ def build_html(slug, room, teach, locks, sets, cfg, seed, built, url, rating, re
     if unbound:
         raise BuildError("%s: a figure is not bound to its unit, or has a hyphen-minus:\n  %s" % (slug, "\n  ".join(unbound)))
     doc = "".join(pages)
-    return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><title>%s pack</title>"
+    return ("<!doctype html><html lang='en'><head><meta charset='utf-8'><title>%s pack v%s</title>"
             "<link rel='stylesheet' href='%s'><style>%s%s</style></head><body>%s</body></html>"
-            % (esc(title), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts, reads["start"]
+            % (esc(title), pack_version(cfg, slug), GOOGLE_FONTS, fonts, CSS, doc)), len(pages), box_texts, reads["start"]
+
+
+def pack_version(cfg, slug):
+    """The room's "pack_version", a whole number from 1 (contract FINAL-PADLOCK-FAIR): the footer, the PDF's title and
+    its file name all carry it, so two versions of a pack can never share a name (Jon, 17 Nov 2026)."""
+    v = cfg.get("pack_version")                  # the configs write it as a string, "2"
+    if not (isinstance(v, str) and re.fullmatch(r"[1-9][0-9]*", v)) and not (type(v) is int and v >= 1):
+        raise BuildError("%s: pack_version must be a whole number from 1, not %r" % (slug, v))
+    return int(v)
+
+
+def pdf_name(slug, cfg):
+    """The PDF's file name: <slug>-pack-v<pack_version>.pdf (contract FINAL-PADLOCK-FAIR)."""
+    return "%s-pack-v%d.pdf" % (slug, pack_version(cfg, slug))
+
+
+def pdf_name_problems(name, slug, cfg):
+    """A PDF file name that is not <slug>-pack-v<the config's pack_version>.pdf."""
+    want = pdf_name(slug, cfg)
+    if name != want:
+        return ["%s: the PDF is named %s, not %s (the pack's version must be in its file name)" % (slug, name, want)]
+    return []
 
 
 def pdf_page_count(path):
@@ -2129,9 +2185,16 @@ def prepare(slug, n, seed, page, target=None):
     seed = cfg.get("seed", 1) if seed is None else seed
     valid, total = valid_picks(checker, room_js, locks)
     shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
-    sets = choose(checker, valid, locks, n, seed,
-                  final_ok=lambda pk: bool(finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)))
-    add_finals(checker, locks, sets, seed, cfg.get("final_shape", finalpad.DEFAULT_SHAPE), target)
+
+    def grades(pk):                              # FINAL-PADLOCK-FAIR: every target's difficulty class and product
+        c = finalpad.candidates(answers_of(checker, locks, make_set("?", pk, locks)), shape)
+        if target is not None:                   # --target: only that target, in whatever class it is
+            c = {target: c[target]} if target in c else {}
+        return {t: finalpad.difficulty(v[0]) for t, v in c.items()}
+    sets, grade = choose(checker, valid, locks, n, seed, grades)
+    add_finals(checker, locks, sets, seed, shape, target, grade)
+    for s in sets:
+        s["grade"] = grade
     return checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating
 
 
@@ -2139,7 +2202,10 @@ def build(slug, n, seed, target=None, final=False):
     from playwright.sync_api import sync_playwright
     if final:
         check_final(load_config(slug), slug)
-    out = OUT_DIR / ("%s-pack.pdf" % slug)
+    out = OUT_DIR / pdf_name(slug, load_config(slug))
+    named = pdf_name_problems(out.name, slug, load_config(slug))
+    if named:
+        raise BuildError(named[0])
     if not ignored_by_git(out):
         raise BuildError("%s is not ignored by git: refusing to write the product where it could be committed"
                          % out.relative_to(ROOT))
@@ -2339,7 +2405,7 @@ def selftest():
                 probs += teacher_page_problems(
                     [("run", text_of(run_it([x["letter"] for x in sets], room_url(slug),
                                             set_pages_line([(x["letter"], list(range(5 + 4 * i, 9 + 4 * i)))
-                                                            for i, x in enumerate(sets)])))),
+                                                            for i, x in enumerate(sets)]), len(locks)))),
                      ("key", text_of(about_box(room, teach, locks, sets, rating)))])
                 if "Students are told: Not every note will help you. Part of the puzzle is working out which ones do." not in text_of(about_box(room, teach, locks, sets, rating)):
                     failures.append("answer key does not tell teachers about the red herrings")
@@ -2784,12 +2850,13 @@ def selftest():
         letters = [x["letter"] for x in sets]
         return [("run", text_of(run_html or run_it(letters, room_url(slug0),
                                                    set_pages_line([(x, list(range(5 + 4 * i, 9 + 4 * i)))
-                                                                   for i, x in enumerate(letters)])))),
+                                                                   for i, x in enumerate(letters)]), len(locks)))),
                 ("key", text_of(about_html or about_box(room, teach, locks, sets, rating)))]
 
     def plant_long_page_one():
-        run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0)), "<p><b>Final padlock:</b>",
-                             "<p>%s</p><p><b>Final padlock:</b>" % " ".join(["more"] * 60), name="page 1 over 150 words")
+        run = pc.apply_plant(run_it([x["letter"] for x in sets], room_url(slug0), SET_PAGES, len(locks)),
+                             "<p><b>Final padlock:</b>",
+                             "<p>%s</p><p><b>Final padlock:</b>" % " ".join(["more"] * 60), name="page 1 over its word cap")
         return [x for x in teacher_page_problems(teacher_texts(run_html=run)) if "words, over" in x]
 
     def plant_repeated_rule():
@@ -2864,7 +2931,9 @@ def selftest():
             for v, fs in sorted(finalpad.forms(nums).items()):
                 form = next(iter(fs))
                 if (v.denominator == 1 and v >= 0 and len(fs) == 1 and int(v) not in nums and v != sum(nums)
-                        and finalpad.SHAPES[shape][1](finalpad.op_counts(form)) and not finalpad.friendly(form)):
+                        and finalpad.SHAPES[shape][1](finalpad.op_counts(form)) and not finalpad.friendly(form)
+                        and any(len(m) > 1 and not any(x % 5 == 0 or x <= 12 for x in m)    # the factor rule, not
+                                for m in ([x for e, x in f if e == 1] for _, f in form))):  # the 10,000 ceiling
                     w = finalpad.writing(form)
                     if w:
                         planted = {"target": int(v), "expr": finalpad.show(w[0])}
@@ -3205,7 +3274,7 @@ def selftest():
               ("read-outs too long for one page and left on it", plant_readouts_left_on_one_page),
               ("a start read-out without the hook", plant_start_without_hook),
               ("a hook with a token", plant_hook_token),
-              ("page 1 over 150 words", plant_long_page_one),
+              ("page 1 over its word cap", plant_long_page_one),
               ("a rule stated on two teacher pages", plant_repeated_rule),
               ("the final padlock's shape on a student page", plant_shape_on_student_page),
               ("a calculator allowance on a student page", plant_calculator_on_student_page),

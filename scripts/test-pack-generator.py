@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed; no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty) and FINAL-PADLOCK-FAIR plants (a product of 10,001, a pack whose sets mix digit signatures, a largest product over 3 x the smallest, a plus-and-minus pack whose largest terms differ in digits, a PDF name without its version); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed, a product of exactly 10,000, Hamster Heist's and Heatwave's packs as built, the build's versioned PDF name; no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
@@ -8,7 +8,8 @@ so this file is the line. It runs `build_pack.py --selftest`, then the plants of
 (Amendments 1 and 2, 16 Nov 2026), which import the generator and plant faults against The Great Hamster Heist's own
 locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer/miss rule, lock_words), then those of PE-SHED-FINAL
 (readout_voice, the line naming whose voice the start read-out is in), then those of HEATWAVE-PACK (its three
-recomputes, a clue with no bold part, a lock's print-only instrument label). Each plant must be caught by the check named beside it; each control must pass. A plant whose
+recomputes, a clue with no bold part, a lock's print-only instrument label), then those of FINAL-PADLOCK-FAIR (the 10,000
+ceiling, one difficulty per pack, the version in the PDF's name). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -403,6 +404,64 @@ def hamster_plants():
     results.append(("Hamster Heist's own art and hints, every set", "control",
                     lambda: [x for s in sets for x in unit_words_on_art(B, cfg, room, teach, locks, s)],
                     "unit_words_on_art"))
+
+    # ---- FINAL-PADLOCK-FAIR (17 Nov 2026): the 10,000 ceiling, one difficulty per pack, the version in the name ----
+    def ceiling(nums, ops, expr):
+        form = finalpad.canon(nums, ops)
+        return (finalpad.friendly(form),
+                [x for x in lockcheck.final_problems("A", list(nums), {"target": int(finalpad.value(form)), "expr": expr},
+                                                     shape) if "is above" in x])
+
+    def plant_over_ceiling():
+        ok, said = ceiling((1, 10001, 7), ("*", "+"), "1 × 10001 + 7")
+        return [] if ok else said                        # caught only when both refuse it
+    results.append(("a product of 10,001 (1 x 10001 + 7), in final.py and lockcheck.py", "plant", plant_over_ceiling,
+                    "final.friendly / lockcheck.final_problems"))
+
+    def control_at_ceiling():
+        ok, said = ceiling((5, 2000, 7), ("*", "+"), "5 × 2000 + 7")
+        return ([] if ok else ["final.py refuses 5 x 2000 = 10,000"]) + said
+    results.append(("a product of exactly 10,000 (5 x 2000 + 7)", "control", control_at_ceiling,
+                    "final.friendly / lockcheck.final_problems"))
+
+    def replaced(the_sets, expr, the_shape, want):
+        """The pack's printed padlocks with the last set's expression replaced, judged together (lockcheck), and
+        through the build's own verify_finals (filtered to the pack-wide finding)."""
+        finals = [(x["letter"], x["final"]["expr"]) for x in the_sets]
+        finals[-1] = (finals[-1][0], expr)
+        if lockcheck.pack_problems([(x["letter"], x["final"]["expr"]) for x in the_sets], the_shape):
+            raise pc.StalePlant("a FINAL-PADLOCK-FAIR plant", "the pack as built is not one difficulty")
+        return [x for x in lockcheck.pack_problems(finals, the_shape) if want in x]
+
+    h_shape = heat[1].get("final_shape", finalpad.DEFAULT_SHAPE)
+    results.append(("a pack whose sets mix digit signatures (set F 9 x 500 + 1, 1-digit x 3-digit)", "plant",
+                    lambda: replaced(sets, "9 × 500 + 1", shape, "not one digit signature"), "lockcheck.pack_problems"))
+    results.append(("a pack whose largest product is more than 3 x its smallest (set F 11 x 100 + 1)", "plant",
+                    lambda: replaced(sets, "11 × 100 + 1", shape, "more than 3 x"), "lockcheck.pack_problems"))
+    results.append(("a plus-and-minus pack whose largest terms differ in digits (Heatwave set F 999 + 31 − 154)",
+                    "plant", lambda: replaced(heat[6], "999 + 31 − 154", h_shape, "largest terms differ"),
+                    "lockcheck.pack_problems"))
+
+    def control_uniform():
+        out = []
+        for the_sets, the_shape in ((sets, shape), (heat[6], h_shape)):
+            out += lockcheck.pack_problems([(x["letter"], x["final"]["expr"]) for x in the_sets], the_shape)
+        if h_shape != "plus-and-minus":
+            out.append("Heatwave Mutiny's final_shape is %r, not plus-and-minus" % h_shape)
+        return out
+    results.append(("Hamster Heist's and Heatwave Mutiny's packs as built (one class each)", "control", control_uniform,
+                    "lockcheck.pack_problems"))
+
+    def plant_unversioned_name():
+        if B.pdf_name_problems(B.pdf_name(SLUG, cfg), SLUG, cfg):
+            return []                                    # the control: the build's own name passes
+        return B.pdf_name_problems("%s-pack.pdf" % SLUG, SLUG, cfg)
+    results.append(("a PDF name without its version (hamster-heist-pack.pdf)", "plant", plant_unversioned_name,
+                    "pdf_name_problems"))
+    results.append(("the build's PDF name, %s" % B.pdf_name(SLUG, cfg), "control",
+                    lambda: B.pdf_name_problems(B.pdf_name(SLUG, cfg), SLUG, cfg)
+                    + ([] if B.pdf_name(SLUG, cfg).endswith("-pack-v%s.pdf" % cfg["pack_version"]) else ["no version"]),
+                    "pdf_name / pdf_name_problems"))
 
     failures = 0
     for name, kind, run, check in results:

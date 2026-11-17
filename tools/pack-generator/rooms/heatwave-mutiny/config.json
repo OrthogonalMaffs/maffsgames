@@ -1,8 +1,9 @@
 {
   "room": "heatwave-mutiny",
-  "pack_version": "1",
+  "pack_version": "2",
   "sets": 6,
   "seed": 1,
+  "final_shape": "plus-and-minus",
   "certificate_title": "Cold air, already paid for",
   "wording_approved": null,
   "lock_words": {"patrol-lcm-timer": {"label": "Corridor release"}, "cube-surface-volume": {"label": "Door keypad"}},
