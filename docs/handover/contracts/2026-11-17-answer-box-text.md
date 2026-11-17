@@ -97,3 +97,10 @@ AMENDMENT 1 (Jon, 17 Nov 2026, in session, answering two questions from the impl
    (Correction by the implementer: the question also said a typed Unicode minus "−" would be read. It is not: MaffsAnswer.parse takes the ASCII hyphen only, which is what MaffsKeypad types. One new acceptance: a leading £ or € in these boxes is read, e.g. "£5" as 5.)
 2. Q: "Graph Sketcher's table on a phone [...] in keypad mode only (touch screens; never drawn with a mouse), a Check button under the table sends each typed cell that same change event, so checkCell marks it exactly as before. Accept?"
    A: "Yes, Check in keypad mode (Recommended)".
+
+AMENDMENT 2 (Jon, 17 Nov 2026, in session, answering two questions from the implementer about PR 2):
+1. Q: "PR 2 of ANSWER-BOX-TEXT hits Amendment 1's issue again. estimation-golf reads its box with parseFloat, so as a text box an estimate typed "1,000,000" would be read as 1 and scored as a wild miss. glorious-gantt reads with parseInt, so "12abc" would be read as 12. Today a number box empties both. How should PR 2 read the typed value? (Marking itself is untouched either way.)"
+   A: "Refuse junk, keep each read (Recommended)": if MaffsAnswer.parse(raw) is null, treat it as not a number (the existing return); otherwise keep the game's own read (estimation-golf parseFloat(raw); glorious-gantt parseInt(raw)). Every string a number box could hold marks exactly as today, "2.5" (read as 2) included. Proven by test over every pool item.
+2. Q: "glorious-gantt has no verifier [...] What should hold the proof?"
+   A: "New narrow test, not a verifier (Recommended)": scripts/test-answer-box-gantt.py, in CI by its ci-line: boxes are text boxes; for every node and question in the pool, the same typed strings mark identically on the old and the new page. Its name and docstring say it is not the game's verifier, so SR-21 is not met by it.
+PR 1 was re-tiered Shared (Jon, 17 Nov: "please merge" after the architect-review stop); PR 2 is Shared for the same reason.
