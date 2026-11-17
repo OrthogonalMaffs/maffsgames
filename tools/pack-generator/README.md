@@ -254,6 +254,30 @@ away on paper: The Heatwave Mutiny's door keypad is labelled "Door keypad — fo
 may not give a code's length (Amendment 4), so its pack prints "Door keypad". The answer-box checks apply to it as to
 the room's own label.
 
+**A lock with two answers set together, a "pair" (contract CANTEEN-PACK, 17 Nov 2026).** A lock whose instrument is
+kind `"pair"` (The Canteen Hack's price tags: a Cookie dial and a Pizza dial, set together) stores its answer and its
+common wrong answer as an ORDERED pair, `[2, 3]` and its swap `[3, 2]`. The pack never reads it as a set of accepted
+answers, as `check-escape-rooms.py`'s `flat()` does for a lock with several: it is compared as (a, b) when answers
+must differ across sets, when a common wrong answer must not print as the answer, and in lockcheck's comparison. Its
+answer image gives two answer boxes as `"label_boxes"` and the box for each one's label as `"part_label_boxes"`, in
+the same order (a, then b); each label is fitted like any printed label (11 pt at least) and each box is held to the
+same 20 x 4.5 mm floor and white-fill rule. The labels are the instrument's `a.label` and `b.label`, or the config's
+`"lock_words": {"<lock id>": {"parts": {"a": "Cookie £", "b": "Pizza £"}}}` (a label, not a sentence: it may end in a
+sign, and has no `{{token}}`, tag, digit or lowercase start). The key and the worked solution give both values with
+their labels ("Cookie £3, Pizza £7"); the key's common wrong answer adds "the two swapped" when it is the swap. In
+the final padlock the pair counts as its two values added together, a + b (Jon, 17 Nov 2026: "I agree that you add
+the 2 numbers for cookie."), and every final-padlock rule applies to that number. The locks page says so ("For Lock 2
+(The price tags), use its two numbers added together.") and so does the key; the worked solution ends with the sum.
+The build checks it independently (`pair_final_problems()`: each set's number against lockcheck's own answer, added;
+`pair_key_problems()`: both labels in the key and solutions, and the words on the locks page and key). A pair takes no
+`"answer_units"`. Every other lock is read exactly as before.
+
+**An evidence card's words must end inside the card (contract CANTEEN-PACK).** A card hides whatever runs past its
+foot, so a long caption under a tall picture was cut off without the page overflowing. The page audit now stops the
+build when any card's words end below its padding, naming the page, set and object. The Canteen Hack's kale was the
+first: its picture is cropped (100 px of wall above the lamp and 100 px of counter below the tray) so its flavour text
+fits. No other pack had a clipped card.
+
 **Who is speaking the start read-out (contract PE-SHED-FINAL, 16 Nov 2026).** A room's hook may be spoken in a
 character's voice (The P.E. Store Rebellion's is the PE teacher's), and a teacher reading it aloud from paper needs to
 know whose voice it is and why before they start. A room's config may then give `"readout_voice": "<words>"`, printed

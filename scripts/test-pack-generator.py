@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, its final padlocks in the easiest class that reaches N (no easier class reaches N, every room) and its shape's own hint card and key line, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty) and FINAL-PADLOCK-FAIR plants (a product of 10,001, a pack whose sets mix digit signatures, a largest product over 3 x the smallest, a plus-and-minus pack whose largest terms differ in digits, a PDF name without its version) and PADLOCK-EASIEST-HINT plants (the classes tried in #807's seeded order, a SHAPES entry with no hint or no key line, a plus-and-minus shape whose hint says multiply, a plus-and-minus pack whose hint card or key says multiply or product, as the other shape's line or in words of its own); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed, a product of exactly 10,000, Hamster Heist's and Heatwave's packs as built, the build's versioned PDF name, ease() ordering 1x1 < 1x2 < 1x3 < 1x4 < 2x2 < 2x3 and +- 3 < +- 4, Car Trap as built with no easier class reaching N, Hamster Heist's hint card and key as built (the x text, unchanged) and Heatwave's (the plus-and-minus text); no PDF is ever built in CI) |
+# ci-line: Pack generator (tools/pack-generator/build_pack.py --selftest: every room with a pack config gets VALID sets, distinct answers per lock and one final-padlock shape, its final padlocks in the easiest class that reaches N (no easier class reaches N, every room) and its shape's own hint card and key line, every value recomputed independently; sixty-seven planted faults caught (answers, draws, URL, score sheet, final padlock, penalties, answer-box hints, stakes placement, page-1 length, repeated rules, shape or calculator on a student page, an unfriendly product, DRAFT and approval, a broken caption or caption override, a multi-part clue's broken caption, a clue with no bold part, a caption starting with punctuation, a print override on a red herring, an ungraded lock, a printed unit's scale that is not whole or is wrong, an answer box left in the room's unit, a hint giving a scaled answer in the room's unit only, a cover, certificate or read-outs too long past their last fitting rule, read-outs left on one page, a dark answer box without its white fill, an answer box under 20 mm wide or under 4.5 mm high, a DRAFT pack with a small answer box built with --final, a hint card whose figure is not bound to its unit; multi-part, long-story, longest-story, answer-box and binding controls pass); then this file's HAMSTER-HEIST-PACK plants (a wrong recomputed answer for each Hamster Heist lock, its heat-lamp scale removed, its manual left in the room's unit, a product of two factors of 100 or more in final.py and lockcheck.py, fixed penalty figures on a hints page, a cover and the score sheet) and HAMSTER-PACK-FINAL plants (a miss_scale of 0, 1.5 or true, lockcheck's printed miss disagreeing, a set whose printed common wrong answer is its answer, lock_words for an unknown lock, hint number or token or empty, an override with an unbound figure) and PE-SHED-FINAL plants (a readout_voice that is empty, holds a {{token}} or is not a string) and HEATWAVE-PACK plants (a wrong recomputed answer and common wrong answer for each Heatwave Mutiny lock, a clue with no bold part given only "printed", only "caption" or an empty "printed", a lock_words label that still gives the code's length or is empty) and FINAL-PADLOCK-FAIR plants (a product of 10,001, a pack whose sets mix digit signatures, a largest product over 3 x the smallest, a plus-and-minus pack whose largest terms differ in digits, a PDF name without its version) and PADLOCK-EASIEST-HINT plants (the classes tried in #807's seeded order, a SHAPES entry with no hint or no key line, a plus-and-minus shape whose hint says multiply, a plus-and-minus pack whose hint card or key says multiply or product, as the other shape's line or in words of its own) and CANTEEN-PACK plants (a pair lock compared as a set, a pair whose common wrong answer is its answer in order, a pair's final-padlock number that is a x b or its first value instead of a + b, a pair answer box missing one of its two boxes, a pair key line or worked solution missing a label, a locks page that does not say the pair counts as a + b); controls: an entity-written and an other-spelling unit each converted, time maths on a hints page, the room's own lock_words, the heat lamp as printed, car-trap with no miss_scale, a readout_voice printed in italics above the hook on the read-out page, the P.E. Store Rebellion's own readout_voice, a clue with no bold part given both overrides, Heatwave's own clock and sticky note, Heatwave's keypad label as printed, a product of exactly 10,000, Hamster Heist's and Heatwave's packs as built, the build's versioned PDF name, ease() ordering 1x1 < 1x2 < 1x3 < 1x4 < 2x2 < 2x3 and +- 3 < +- 4, Car Trap as built with no easier class reaching N, Hamster Heist's hint card and key as built (the x text, unchanged) and Heatwave's (the plus-and-minus text), The Canteen Hack's pair lock as built, single-value and multi-accepted locks read as before; no PDF is ever built in CI) |
 # ci-deps: tools/pack-generator/ escape-rooms/ escape-rooms/variants.json scripts/check-escape-rooms.py scripts/escape_set_checks.py scripts/plant_common.py scripts/bank_common.py CNAME
 """CI's entry to the printable-pack generator's self-test (contract PACK-GENERATOR, 4 Nov 2026).
 
@@ -10,7 +10,8 @@ locks, sets and config, then those of HAMSTER-PACK-FINAL (miss_scale, the answer
 (readout_voice, the line naming whose voice the start read-out is in), then those of HEATWAVE-PACK (its three
 recomputes, a clue with no bold part, a lock's print-only instrument label), then those of FINAL-PADLOCK-FAIR (the 10,000
 ceiling, one difficulty per pack, the version in the PDF's name), then those of PADLOCK-EASIEST-HINT (the easiest class
-first, each shape's own hint card and key line). Each plant must be caught by the check named beside it; each control must pass. A plant whose
+first, each shape's own hint card and key line), then those of CANTEEN-PACK (a "pair" lock: an ordered pair, two
+labelled boxes, both labels in the key, a + b in the final padlock). Each plant must be caught by the check named beside it; each control must pass. A plant whose
 target has gone is a STALE PLANT, which fails the run (plant_common). The self-test builds no PDF: the pack is the
 product, and never a CI artifact.
 """
@@ -88,6 +89,7 @@ def hamster_plants():
             checker, cfg, room, teach, room_js, locks, sets, valid, total, n, seed, rating = B.prepare(SLUG, None, None, pg)
             car = B.prepare("car-trap", None, None, pg)       # the control room: a scaled lock with no miss_scale
             heat = B.prepare("heatwave-mutiny", None, None, pg)  # HEATWAVE-PACK: no-bold clues, a keypad label
+            cant = B.prepare("canteen-hack", None, None, pg)     # CANTEEN-PACK: a "pair" lock
         finally:
             browser.close()
     shape = cfg.get("final_shape", finalpad.DEFAULT_SHAPE)
@@ -578,6 +580,134 @@ def hamster_plants():
                                                rating), SLUG), shape, OLD_HINT, OLD_KEY), "final_wording_problems"))
     results.append(("Heatwave Mutiny's hint card and key as built (the plus-and-minus text)", "control",
                     lambda: as_built(h_pages, h_shape, NEW_HINT, NEW_KEY), "final_wording_problems"))
+
+    # ---- CANTEEN-PACK (17 Nov 2026): a "pair" lock, an ORDERED pair that counts a + b in the final padlock --------
+    CH, PAIR_ID = "canteen-hack", "cookie-price-simultaneous"
+    k_checker, k_cfg, k_room, k_teach, k_js, k_locks, k_sets = cant[:7]
+
+    def pair_index():
+        j = next((k for k, l in enumerate(k_locks) if l["id"] == PAIR_ID and B.is_pair(l)), None)
+        if j is None:
+            raise pc.StalePlant("a pair plant", "%s has no pair lock %s" % (CH, PAIR_ID))
+        return j
+
+    def swapped_miss_everywhere():
+        j = pair_index()
+        if any(x["vars"][j]["miss"] != x["vars"][j]["answer"][::-1] for x in k_sets):
+            raise pc.StalePlant("the pair-as-set plant", "a set's common wrong answer is not its pair swapped")
+        return j
+
+    def plant_pair_as_set():
+        # the generator forgetting the pair: check-escape-rooms.py's flat() then reads [2, 3] and its swap [3, 2] as
+        # the same set of accepted answers, and every set's common wrong answer as its answer
+        swapped_miss_everywhere()
+        real = B.is_pair
+        B.is_pair = lambda l: False
+        try:
+            return [x for x in B.check_sets(k_checker, k_js, k_locks, k_sets) if PAIR_ID in x]
+        finally:
+            B.is_pair = real
+    results.append(("a pair compared as a set (its swapped common wrong answer read as the answer)", "plant",
+                    plant_pair_as_set, "check_sets / miss_is_answer / answer_atoms"))
+
+    def plant_pair_miss_in_order():
+        j = pair_index()
+        v = copy.deepcopy(k_sets[0]["vars"])
+        v[j]["miss"] = list(v[j]["answer"])                # the wrong answer printed as the answer, in order
+        return B.miss_is_answer(k_locks, v)
+    results.append(("a pair whose common wrong answer is its answer, in order", "plant", plant_pair_miss_in_order,
+                    "miss_is_answer"))
+
+    for label, wrong in (("the product a x b", lambda a, b: a * b), ("its first value only", lambda a, b: a)):
+        def plant_not_sum(wrong=wrong):
+            j = pair_index()
+            real = B.answers_of
+
+            def bad(checker, locks, s):
+                nums = list(real(checker, locks, s))
+                nums[j] = wrong(*s["vars"][j]["answer"])
+                return tuple(nums)
+            B.answers_of = bad
+            try:
+                return B.pair_final_problems(k_checker, k_locks, k_sets)
+            finally:
+                B.answers_of = real
+        results.append(("a pair's final-padlock number that is %s, not a + b" % label, "plant", plant_not_sum,
+                        "pair_final_problems / answers_of"))
+
+    def cover_writes(drop=None):
+        out = []
+        for x in k_sets:
+            for l in k_locks:
+                for k in range(2 if B.is_pair(l) else 1):
+                    if (x["letter"], l["id"], k) == drop:
+                        continue
+                    out.append({"kind": "cover", "set": x["letter"], "lock": l["id"], "wMm": 21.4, "hMm": 5.3,
+                                "background": B.WRITE_CLEAR})
+        return out
+    k_greys = {l["id"]: 254 for l in k_locks}
+
+    def plant_one_pair_box():
+        pair_index()
+        return B.write_fill_problems(cover_writes(("C", PAIR_ID, 1)), k_greys, k_locks, k_sets)
+    results.append(("a pair answer box missing one of its two boxes (set C's cover)", "plant", plant_one_pair_box,
+                    "write_fill_problems"))
+
+    k_pages = pages_of(cant, CH)
+
+    def plant_key_label(kind, part):
+        def run():
+            j = pair_index()
+            x = k_sets[0]
+            full = B.text_of(B.pair_figure(k_locks[j], x["vars"][j]["answer"])).replace(chr(160), " ")
+            name = B.pair_labels(k_locks[j])[part]
+            cut = full.replace(name, "", 1).replace(", ,", ",").strip(", ")
+            pages = [(k, t.replace(full, cut)) if k == kind else (k, t) for k, t in k_pages]
+            if pages == k_pages:
+                raise pc.StalePlant("a pair key-label plant", "the %s page has no %r" % (kind, full))
+            return B.pair_key_problems(k_locks, k_sets, pages)
+        return run
+    results.append(("a pair key line missing a label (the key, Set A's Pizza)", "plant", plant_key_label("key", 1),
+                    "pair_key_problems"))
+    results.append(("a pair worked solution missing a label (Set A's Cookie)", "plant",
+                    plant_key_label("solutions", 0), "pair_key_problems"))
+
+    def plant_no_sum_words():
+        student = " ".join(B.text_of(B.pair_final_lines(k_locks)[0]).split())
+        pages = [(k, t.replace(student, "")) if k == "locks" else (k, t) for k, t in k_pages]
+        if pages == k_pages:
+            raise pc.StalePlant("the pair's final-padlock words", "no locks page says %r" % student)
+        return B.pair_key_problems(k_locks, k_sets, pages)
+    results.append(("a locks page that does not say the pair counts as a + b", "plant", plant_no_sum_words,
+                    "pair_key_problems"))
+
+    def control_pair_as_built():
+        pair_index()
+        return (B.check_sets(k_checker, k_js, k_locks, k_sets) + B.verify_sets(k_locks, k_sets)[0]
+                + B.pair_final_problems(k_checker, k_locks, k_sets) + B.pair_key_problems(k_locks, k_sets, k_pages)
+                + B.write_fill_problems(cover_writes(), k_greys, k_locks, k_sets))
+    results.append(("The Canteen Hack's pair lock as built (sets, recompute, a + b, key, two boxes)", "control",
+                    control_pair_as_built, "check_sets / verify_sets / pair_final_problems / pair_key_problems"))
+
+    def control_other_locks_unchanged():
+        out = []
+        single = locks[0]                                # Hamster Heist's first lock: one value
+        v = single["variants"][0]
+        if B.is_pair(single) or B.answer_atoms(checker, single, v["answer"]) != frozenset(checker.flat(v["answer"])):
+            out.append("a single-value lock is not compared as before")
+        multi = {"id": "two-roots", "instrument": {"kind": "dial", "label": "Current"},
+                 "variants": [{"answer": [2, 3], "miss": [3, 2]}]}
+        if B.answer_atoms(checker, multi, [2, 3]) != frozenset({2.0, 3.0}):
+            out.append("a multi-accepted lock's answers are no longer read as a set")
+        if not B.miss_is_answer([multi], [0]):
+            out.append("a multi-accepted lock whose wrong answer is an accepted answer is no longer refused")
+        if not refused(lambda: B.answers_of(checker, [multi], {"vars": [{"answer": [2, 3]}]})):
+            out.append("a multi-accepted lock now takes part in the final padlock")
+        if B.pair_final_problems(checker, locks, sets) or B.pair_key_problems(locks, sets, []):
+            out.append("a room with no pair lock is held to the pair checks")
+        return out
+    results.append(("single-value and multi-accepted locks read as before", "control", control_other_locks_unchanged,
+                    "answer_atoms / miss_is_answer / answers_of"))
 
     failures = 0
     for name, kind, run, check in results:
