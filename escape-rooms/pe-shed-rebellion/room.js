@@ -76,7 +76,7 @@ window.ROOM = {
          'staff are allowed on that square you have not made a diversion, you have made an incident. Then get ' +
          'the compressor set so the arena inflates instead of splitting, and get the equipment locker open. The ' +
          'dodgeballs are in the locker. Without them this is just a very large empty room.',
-  stakes: 'the whistle goes and cross-country happens exactly as timetabled. Six kilometres, sideways rain, and ' +
+  stakes: 'The whistle goes and cross-country happens exactly as timetabled. Six kilometres, sideways rain, and ' +
           'kit that will not be dry by Thursday. Lungey stands at the gate in the waxed coat with a flask and ' +
           'counts you through, then counts you through again, because he always counts twice. He is not smug ' +
           'about it. That is somehow worse.',

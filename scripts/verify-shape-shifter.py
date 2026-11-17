@@ -54,7 +54,9 @@ Checks, independent of the game's code (the maths is integer-exact, so no Fracti
     each mode and 0/10 when every answer is wrong.
   Moving on (canon 7.6), for a vertex mode and for rotation: a right answer mounts no Next and moves on by itself after
     RIGHT_ADVANCE_MS (1000); a wrong answer shows its feedback and MaffsNext's Next, stays put, and moves on once when
-    Next is pressed.
+    Next is pressed. The rotation option tapped is chosen from the options as dealt AFTER the question is loaded, in the
+    same call (the deal reshuffles them, and where each letter sits depends on the deal), and the tap must resolve to the
+    option meant; the self-test's stale-tap unit proves a point read before a re-deal is caught (main run 43961875130).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 Colour (t3-001, fixed in ESSENTIALS-FALSE-TEXT 4/4): after an answer the correct shape is stroked in the page's own
@@ -64,9 +66,12 @@ canvas background (WCAG 1.4.11), and the wrong-answer feedback names that colour
 Not asserted (open finding, left open): the shared board and no keyboard path (t3-005).
 
     python scripts/verify-shape-shifter.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
+    python scripts/verify-shape-shifter.py --loop-advance 50     # the moving-on check alone, 50 times, real Math.random
 
 Work units (contract SHARD): "checks" (every check above, on one page), then one per planted fault ("plant: <fault>"),
-each a full play on its planted page. A full run skips the plants with --no-selftest or --against; a --shard run (CI)
+each a full play on its planted page, and "plant: a stale rotation tap ..." (a driver plant, not a page edit: under a
+seeded Math.random it finds a deal and re-deal where a wrong option's point read before the re-deal lands on the true
+image, and the moving-on judgement must report it while the point read after the load passes). A full run skips the plants with --no-selftest or --against; a --shard run (CI)
 runs its slice of every unit, the plants included, as the hand-made parts 2-5 did.
 """
 import argparse
@@ -86,6 +91,7 @@ GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 DEALS = 5
 ROT_DEALS = 8
 RIGHT_ADVANCE_MS = 1000
+STALE_TAP = 'a stale rotation tap (a point read before the re-deal)'   # the self-test's driver plant (stale_tap_proof): the old moving-on bug
 LETTER_GAP = 0.8   # grid units between two option letters, in every lettering order
 MODES = ('translation', 'reflection', 'rotation', 'enlargement', 'mix')
 # Expected failures: items that break a rule and whose finding stays open. The check fails on any other item that does,
@@ -585,6 +591,31 @@ ADVANCE_JS = r"""([m, item, taps]) => {
     canvas.dispatchEvent(new MouseEvent('click', {clientX: r.left + p[0], clientY: r.top + p[1], bubbles: true, cancelable: true})); }
   return {fb: document.getElementById('feedbackBar').textContent, q: qIndex,
           next: document.querySelectorAll('#gameScreen .maffs-next').length}; }"""
+# The rotation half of the moving-on check. loadQuestion() deals the options with Math.random, and where each option's
+# letter sits (placeLabels) depends on that deal; the options overlap, and optionAt() takes the shape whose letter is
+# nearest. So the point tapped is read in the same call, AFTER the load: the chosen option's own letter, which resolves
+# to that option (distance 0). A point read before a reload can resolve to another option (main run 43961875130, 16 Nov
+# 2026: the "wrong" tap read "Correct! (B)"). `stale` taps a given point instead: the self-test's stale-tap proof only.
+ROT_ADVANCE_JS = r"""([item, trueKeys, right, stale]) => {
+  selectedMode = 'rotation'; mode = 'rotation'; questions = [item, item]; qIndex = 0; mixModes = []; loadQuestion();
+  const key = s => s.map(p => p[0] + ',' + p[1]).sort().join(';');
+  const T = trueKeys.slice().sort().join(';');
+  let idx, at;
+  if (stale) { at = stale; idx = optionAt(at[0], at[1]); }
+  else {
+    idx = rotationOptions.findIndex(o => (key(o.shape) === T) === right);
+    if (idx < 0) return {missing: true};
+    at = rotationOptions[idx].at;
+  }
+  const hit = optionAt(at[0], at[1]);
+  const shape = idx >= 0 ? rotationOptions[idx].shape : null;
+  const r = canvas.getBoundingClientRect(), p = gridToPixel(at[0], at[1]);
+  canvas.dispatchEvent(new MouseEvent('click', {clientX: r.left + p[0], clientY: r.top + p[1], bubbles: true, cancelable: true}));
+  return {fb: document.getElementById('feedbackBar').textContent, q: qIndex, idx: idx, hit: hit, shape: shape, at: at,
+          next: document.querySelectorAll('#gameScreen .maffs-next').length}; }"""
+SEED_JS = r"""(seed) => { if (!window.__rnd) window.__rnd = Math.random;
+  if (seed === null) { Math.random = window.__rnd; return; }
+  let s = seed >>> 0; Math.random = () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }"""
 
 def play_session(page, m, wrong):
     """Play one whole session of mode m from this script's own answers; return the final score text."""
@@ -735,6 +766,58 @@ def letter_checks(fails, page):
     return closest
 
 
+def true_keys(o, true):
+    return ['%s,%s' % (x, y) for x, y in sorted(true)]
+
+
+def judge_wrong(fails, name, st):
+    """A wrong answer must read "Not quite ..." (shared by the check and the self-test's stale-tap proof)."""
+    if not st['fb'].startswith('Not quite'):
+        fails.append('moving on: %s: the wrong answer reads %r' % (name, st['fb']))
+        return False
+    return True
+
+
+def stale_tap_proof(page, oq):
+    """Self-test unit: a stale rotation tap (a wrong option's point read before a re-deal) is caught, and the point read
+    after the load is not fooled. Math.random is seeded so that it is deterministic: the search finds a question and a
+    pair of deals where the stale wrong point resolves to the true image, then judges the stale tap (must be reported)
+    and the fresh tap under the same deal (must pass). Returns (ok, note)."""
+    page.evaluate('() => { startGame("rotation"); MaffsLock.clearTimers(); }')
+    for qi, o in enumerate(oq):
+        kind, cx, cy = parse_rotation(o['desc'])
+        true = fs(turn(o['shape'], cx, cy, kind))
+        keys = true_keys(o, true)
+        for s1 in range(1, 40):
+            page.evaluate(SEED_JS, s1)
+            page.evaluate('(item) => { selectedMode = "rotation"; mode = "rotation"; questions = [item, item]; qIndex = 0; mixModes = []; loadQuestion(); }', o)
+            ats = page.evaluate('() => rotationOptions.map(o => ({shape: o.shape, at: o.at}))')
+            wrong = [a['at'] for a in ats if fs(a['shape']) != true]
+            for s2 in range(s1 + 1, s1 + 40):
+                for at in wrong:
+                    page.evaluate(SEED_JS, s2)
+                    st = page.evaluate(ROT_ADVANCE_JS, [o, keys, False, at])
+                    page.evaluate('() => MaffsLock.clearTimers()')
+                    if not st['fb'].startswith('Correct'):
+                        continue
+                    caught = []
+                    judge_wrong(caught, 'rotation', st)
+                    page.evaluate(SEED_JS, s2)
+                    fresh = page.evaluate(ROT_ADVANCE_JS, [o, keys, False, None])
+                    page.evaluate('() => MaffsLock.clearTimers()')
+                    passed = []
+                    if fs(fresh['shape']) == true or fresh['hit'] != fresh['idx']:
+                        passed.append('fresh tap chose the wrong option')
+                    judge_wrong(passed, 'rotation', fresh)
+                    page.evaluate(SEED_JS, None)
+                    note = 'rotation %d, deals %d then %d: stale point %r read %r' % (qi + 1, s1, s2, at, st['fb'])
+                    if caught and not passed:
+                        return True, 'caught: %s; the point read after the load read %r' % (caught[0][:90], fresh['fb'][:40])
+                    return False, '%s; check %s, fresh %s' % (note, caught or 'silent', passed or 'passed')
+    page.evaluate(SEED_JS, None)
+    return False, 'no deal found where a stale wrong point lands on the true image'
+
+
 def advance_checks(fails, page, tq, oq):
     """Canon 7.6: a right answer moves on by itself, a wrong one waits on MaffsNext; a vertex mode and rotation."""
     got = page.evaluate('RIGHT_ADVANCE_MS')
@@ -747,19 +830,25 @@ def advance_checks(fails, page, tq, oq):
     kind, cx, cy = parse_rotation(o['desc'])
     true = fs(turn(o['shape'], cx, cy, kind))
 
-    def rotation_taps(right):
-        page.evaluate('(item) => { selectedMode = "rotation"; mode = "rotation"; questions = [item, item]; qIndex = 0; loadQuestion(); }', o)
-        ats = page.evaluate('() => rotationOptions.map(o => ({shape: o.shape, at: o.at}))')
-        at = next((a['at'] for a in ats if (fs(a['shape']) == true) == right), None)
-        return None if at is None else [at]      # None: no option is the true image (a wrong key); reported, not a crash
+    keys = true_keys(o, true)
 
-    for name, m, item, taps in (('translation', 'translation', t, lambda right: image if right else [list(p) for p in t['shape']]),
-                                ('rotation', 'rotation', o, rotation_taps)):
-        right_taps, wrong_taps = taps(True), taps(False)
-        if right_taps is None or wrong_taps is None:
+    def tap(name, right):
+        """Load the question and tap a right or a wrong answer; for rotation the option is chosen after the load."""
+        if name == 'translation':
+            return page.evaluate(ADVANCE_JS, ['translation', t, image if right else [list(p) for p in t['shape']]])
+        st = page.evaluate(ROT_ADVANCE_JS, [o, keys, right, None])
+        if st.get('missing'):
+            return st
+        if (fs(st['shape']) == true) != right or st['hit'] != st['idx']:
+            st['fb'] = 'TAP MISSED: meant the %s option (index %d) at %r, which resolves to option %d' % (
+                'true' if right else 'wrong', st['idx'], st['at'], st['hit'])
+        return st
+
+    for name, m, item in (('translation', 'translation', t), ('rotation', 'rotation', o)):
+        st = tap(name, True)
+        if st.get('missing'):
             fails.append('moving on: %s: no option is the true image (or none is wrong), so the rule cannot be played' % name)
             continue
-        st = page.evaluate(ADVANCE_JS, [m, item, right_taps])
         if not st['fb'].startswith('Correct!'):
             fails.append('moving on: %s: the right answer reads %r' % (name, st['fb']))
         if st['next']:
@@ -770,9 +859,11 @@ def advance_checks(fails, page, tq, oq):
             page.wait_for_function('qIndex === 1', timeout=RIGHT_ADVANCE_MS + 4000)
         except Exception:
             fails.append('moving on: %s: a right answer did not move on by itself within %d ms (canon 7.6)' % (name, RIGHT_ADVANCE_MS + 4000))
-        st = page.evaluate(ADVANCE_JS, [m, item, wrong_taps])
-        if not st['fb'].startswith('Not quite'):
-            fails.append('moving on: %s: the wrong answer reads %r' % (name, st['fb']))
+        st = tap(name, False)
+        if st.get('missing'):
+            fails.append('moving on: %s: no option is the true image (or none is wrong), so the rule cannot be played' % name)
+            continue
+        judge_wrong(fails, name, st)
         if st['next'] != 1:
             fails.append('moving on: %s: %d MaffsNext controls after a wrong answer, expected 1 (canon 7.6)' % (name, st['next']))
             continue
@@ -904,7 +995,7 @@ def mode_card_checks(fails, html, browser, base):
             ctx.close()
 
 
-def play(fails, html, expected_hit, cards=True):
+def play(fails, html, expected_hit, cards=True, only=None, loops=0):
     from playwright.sync_api import sync_playwright
     colour_checks(fails, html)
     proc, base = bc.start_stub_server()
@@ -928,6 +1019,22 @@ def play(fails, html, expected_hit, cards=True):
             rq = page.evaluate('() => JSON.parse(JSON.stringify(REFLECTION_QUESTIONS))')
             oq = page.evaluate('() => JSON.parse(JSON.stringify(ROTATION_QUESTIONS))')
             eq = page.evaluate('() => JSON.parse(JSON.stringify(ENLARGEMENT_QUESTIONS))')
+            if only == 'stale':
+                ok, note = stale_tap_proof(page, oq)
+                stats = {'stale': (ok, note)}
+                browser.close()
+                return stats
+            if only == 'loop':
+                wrong_hits = 0
+                for k in range(loops):
+                    rep = []
+                    page.evaluate('() => MaffsLock.clearTimers()')
+                    advance_checks(rep, page, tq, oq)
+                    wrong_hits += any('moving on' in f for f in rep)
+                    fails.extend(rep)
+                stats = {'loops': loops, 'failed_loops': wrong_hits}
+                browser.close()
+                return stats
             check_banks(fails, expected_hit, tq, rq, oq, eq)
             session_checks(fails, page, (len(tq), len(rq), len(oq)))
             closest = letter_checks(fails, page)
@@ -1038,14 +1145,25 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--against', help='serve this file as the game page')
+    ap.add_argument('--loop-advance', type=int, metavar='N',
+                    help='run only the moving-on check N times on one page (with the real Math.random) and report')
     bc.shard_args(ap)
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
     # The units: the checks on one page, then each plant. CI's parts ran every plant whatever the flags (the old parts 2-5
     # ignored --no-selftest and --against), so a --shard run keeps them; a full run drops them as before.
+    if args.loop_advance:
+        fails = []
+        st = play(fails, open(args.against or GAME, encoding='utf-8').read(), set(), only='loop', loops=args.loop_advance)
+        print('%s: the moving-on check (translation and rotation, right then wrong) run %d times on one page: %d run(s) failed'
+              % (SLUG, st['loops'], st['failed_loops']))
+        for f in fails[:20]:
+            print('FAIL  ' + f[:400])
+        print('FAILED' if fails else 'PASS')
+        return 1 if fails else 0
     units = ['checks']
     if args.shard is not None or not (args.no_selftest or args.against):
-        units += ['plant: ' + what for what, _, _ in PLANTS]
+        units += ['plant: ' + what for what, _, _ in PLANTS] + ['plant: ' + STALE_TAP]
     shard = bc.Shard(__file__, args)
     mine = shard.pick(units)
     html = open(args.against or GAME, encoding='utf-8').read()
@@ -1072,6 +1190,11 @@ def main():
                       % (st['closest'], LETTER_GAP))
             print('  not asserted (open): board and keyboard (t3-005)')
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
+    if 'plant: ' + STALE_TAP in mine:
+        with shard.unit('plant: ' + STALE_TAP):
+            good, note = play([], html, set(), only='stale')['stale']
+            print('  self-test %-58s %s' % (STALE_TAP, note[:160] if good else '*** MISSED *** ' + note[:160]))
+            ok = ok and good
     for f in fails[:40]:
         print('FAIL  ' + f[:400])
     if not ok:
