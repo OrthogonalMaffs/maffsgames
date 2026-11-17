@@ -84,7 +84,7 @@ UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has pla
                          'as-you-can-see': 'new, unlisted until Jon has played and approved it (contract AS-YOU-CAN-SEE)',
                          'possibly-maybe': 'new, unlisted until Jon has played and approved it (contract POSSIBLY-MAYBE)',
                          'cast-away': 'new, unlisted until Jon has played and approved it (contract CAST-AWAY-BUILD)',
-                         'its-a-sine': 'new, unlisted until Jon has played and approved it (contract SINE-NOT-SINE)'}
+                         'its-a-sine': 'new (contract SINE-NOT-SINE); listed 17 Nov 2026 (Jon approved 17 Nov 2026)'}
 
 # A verifier named for something other than its game, or one that covers only part of a game.
 VERIFIER_GAME = {'verify-six-sevens.py': 'six-sevens-bruv'}
