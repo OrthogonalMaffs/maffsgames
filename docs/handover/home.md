@@ -27,7 +27,7 @@ Claude Code (home lane, cloud session), branch `claude/inspiring-einstein-jylil1
 - **Builds (this machine, all ten, Roll for Initiative included):** nine `--final`, Heatwave DRAFT; every PDF's title, every footer and every name checked with pypdf. Targets in the PR.
 - **Tests:** a plant that tested the old factor rule found a ceiling case first; its search now asks for the factor rule. test-pack-generator.py: self-test 67/67; its own 40 plants caught, 17 controls pass (new: 10,001; mixed signatures; ratio over 3; plus-and-minus digits; unversioned name; controls 10,000, two packs as built, the versioned name). check-escape-rooms.py exit 0.
 - **Todo:** PACKS-V2-UPLOAD added; HEATWAVE-PACK-APPROVE updated (v2 name, the shape, the wording question).
-- MERGED: pending.
+- MERGED 17 Nov as 65c7ebd (#807). Main on the merge commit: check-site 44044387029 success, phone-fit-full 44044386836 success (both push runs). Contract already in `docs/history/contracts/` (closed out by CANTEEN-PACK's first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 2; usage n/a.
 
