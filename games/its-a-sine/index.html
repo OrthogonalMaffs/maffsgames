@@ -868,7 +868,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
 
   /* =====================================================================================================
-     THE WORKED EXAMPLES (contract ITS-A-SINE-POLISH, 17 Nov 2026, verbatim): one for each version, A to D. None of these
+     THE WORKED EXAMPLES (contract ITS-A-SINE-POLISH, 17 Nov 2026, verbatim; D's triangle replaced by contract
+     ITS-A-SINE-EXAMPLE-D, 17 Nov 2026, so that it is plainly not right-angled: C = 115.4°): one for each version, A to D. None of these
      triangles is in the bank. Each is drawn by draw(), the same way as a question, from its own "item" (ids example_*).
      scripts/verify-its-a-sine.py recomputes every number in them and checks which one each feedback link opens.
      ===================================================================================================== */
@@ -892,11 +893,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       answer: '8.6',
       item: { id: 'example_C', given: { b: 9, c: 11, A: 50 }, find: 'a', unit: 'cm', prompt: 'Worked example C: find side a.' } },
     { letter: 'D', version: 'cosine-angle', title: 'Cosine rule, finding an angle',
-      setup: '\\(a = 8\\text{ cm}\\), \\(b = 9\\text{ cm}\\), \\(c = 12\\text{ cm}\\). Find \\(A\\).',
+      setup: '\\(a = 7\\text{ cm}\\), \\(b = 6\\text{ cm}\\), \\(c = 11\\text{ cm}\\). Find \\(A\\).',
       why: 'All three sides: no, it\'s not.',
-      work: '\\(\\cos A = \\frac{9^2 + 12^2 - 8^2}{2 \\times 9 \\times 12} = \\frac{161}{216} = 0.74537\\ldots\\), so \\(A = 41.8^\\circ\\).',
-      answer: '41.8',
-      item: { id: 'example_D', given: { a: 8, b: 9, c: 12 }, find: 'A', unit: '°', prompt: 'Worked example D: find angle A.' } }
+      work: '\\(\\cos A = \\frac{6^2 + 11^2 - 7^2}{2 \\times 6 \\times 11} = \\frac{108}{132} = 0.81818\\ldots\\), so \\(A = 35.1^\\circ\\).',
+      answer: '35.1',
+      item: { id: 'example_D', given: { a: 7, b: 6, c: 11 }, find: 'A', unit: '°', prompt: 'Worked example D: find angle A.' } }
   ];
   // Which example a question's version opens.
   var EXAMPLE_OF = { 'sine-side': 'A', 'sine-angle': 'B', 'cosine-side': 'C', 'cosine-angle': 'D' };

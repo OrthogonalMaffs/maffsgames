@@ -74,6 +74,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 Agent Claude Code (cloud), branch `claude/trusting-davinci-flf28z` restarted from main 054cd6b (after #812). Size: one example's data, one keyword list, the verifier's plant.
 **Close-out carried (first commit):** #812 ITS-A-SINE-POLISH: merge 0b4461d via merge-pr.py `--watch --wait 3600`, exit 0, last line "main 0b4461d run 44093875390: GREEN". The PR's Gate first failed only in Content verifiers 52 (job 134066468830: the Playwright image pull from mcr.microsoft.com timed out three times, no test ran); failed jobs rerun once, attempt 2 of run 44090604947 green: a flake. Main on 0b4461d: check-site 44093875390 success, phone-fit-full 44093875297 success. Contract moved to `docs/history/contracts/`.
 STOP IF checks: the triangle 7, 6, 11 is in no bank item; check-meta.py's keyword minimum is 4 (KW_MIN), and the entry keeps 9.
+Done on the branch: example D is 7, 6, 11 cm (verbatim; C = 115.4 degrees, screenshot checked); games.json drops "ambiguous case" and "bearings" (9 keywords left); verify-its-a-sine.py now fails any example with an angle within 10 degrees of 90 (Jon's 10:48 rule; the old D's 89.6 would fail) and has two new plants (D's answer 0.1 out; D back on 8, 9, 12). Verifier PASS, 13 of 13 plants caught; check-meta OK. D's numbers come from the verifier's own construction, so no expected values were hard-coded: A = 35.0968 degrees, cos A = 0.818181... cut to 0.81818, fraction 108/132.
+Next: the Gate; merge with merge-pr.py; record the merge commit and main's run IDs in the next task's close-out.
 
 ## 2026-11-17 (cloud): ITS-A-SINE-POLISH (`docs/history/contracts/2026-11-17-its-a-sine-polish.md`; Jon 17 Nov)
 
