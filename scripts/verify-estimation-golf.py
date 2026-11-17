@@ -201,6 +201,79 @@ SWEEP_JS = r"""(old) => {
 }"""
 
 
+# ANSWER-BOX-TEXT (Jon, 15 Nov 2026; Amendment 2, 17 Nov). The box is a text box with inputmode="decimal" (no key is
+# negative). PROOF that marking is unchanged: every item is played with the same typed strings on this page and on the
+# OLD page (this page with the box set back to type="number" and the read back to plain parseFloat, so the browser
+# itself empties what a number box cannot hold). For every string a number box can hold the two must give the same
+# result; every string it cannot (junk) must be refused by this page, never scored.
+READ_NEW = '  const guess = MaffsAnswer.parse(raw) === null ? NaN : parseFloat(raw);\n'
+READ_OLD = '  const guess = parseFloat(raw);\n'
+BOX_NEW = '<input type="text" inputmode="decimal" id="answerInput"'
+BOX_OLD = '<input type="number" id="answerInput"'
+JUNK = ['1,000', '12abc', '\u00a35', '5 m', '1.2.3']
+ANSWERS_JS = r"""(junk) => {
+  window.setTimeout = () => 0;
+  const box = document.getElementById('answerInput'), out = {type: box.type, inputmode: box.getAttribute('inputmode'), marks: {}};
+  const play = (q, typed) => {
+    roundQuestions = [q]; hole = 0; scores = []; hintUsed = [false];
+    buildScorecard(); loadHole();
+    box.value = typed; submitAnswer();
+    return box.disabled ? document.getElementById('resultGrade').textContent + ' | ' + document.getElementById('resultDetail').textContent.replace(/\s+/g, ' ') : 'not marked';
+  };
+  for (const lv of Object.keys(QUESTIONS)) QUESTIONS[lv].forEach((q, i) => {
+    const k = q.answer, valid = [String(k), k.toFixed(2), String(+(k * 1.05).toPrecision(4)), String(+(k * 0.7).toPrecision(3)),
+      String(-k), '0', '1e3', '.5', '-0', String(k) + '0', (k * 10).toExponential(2)];
+    out.marks[lv + '|' + i] = {valid: valid.map(v => [v, play(q, v)]), junk: junk.map(v => [v, play(q, v)])};
+  });
+  return out;
+}"""
+
+
+def answer_marks(html):
+    """{type, inputmode, marks} from the page, played in Chromium."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            ctx = browser.new_context(viewport={'width': 390, 'height': 844})
+            ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+            page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+            ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+            ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                status=200, content_type='text/html; charset=utf-8', body=html))
+            page = ctx.new_page()
+            page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
+            page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=15000)
+            out = page.evaluate(ANSWERS_JS, JUNK)
+            browser.close()
+            return out
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
+def check_answer_box(fails, html):
+    if html.count(READ_NEW) != 1 or html.count(BOX_NEW) != 1:
+        fails.append('answer box: the old page cannot be rebuilt from this one (the junk-check read and the text box, once '
+                     'each): the comparison would prove nothing')
+    new = answer_marks(html)
+    old = answer_marks(html.replace(READ_NEW, READ_OLD).replace(BOX_NEW, BOX_OLD))
+    if new['type'] != 'text' or new['inputmode'] != 'decimal':
+        fails.append('answer box: type="%s" inputmode="%s", not a text box with inputmode="decimal"' % (new['type'], new['inputmode']))
+    n = 0
+    for item, m in new['marks'].items():
+        for (typed, got), (_, was) in zip(m['valid'], old['marks'][item]['valid']):
+            n += 1
+            if got != was:
+                fails.append('answer box: %s typed %r: now %r, before %r' % (item, typed, got, was))
+        for typed, got in m['junk']:
+            n += 1
+            if got != 'not marked':
+                fails.append('answer box: %s typed %r (no number) was scored: %r' % (item, typed, got))
+    return n
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -239,6 +312,7 @@ def run(html):
     bank = play(fails, html)
     if bank is not None:
         check_bank(fails, bank)
+    run.box_strings = check_answer_box(fails, html)
     return fails, sum(len(bank[k]) for k in COUNTS) if bank else 0
 
 
@@ -252,6 +326,9 @@ PLANTS = [
     ('level4[3]', 'R2: the beam with no stated support', "A simply supported beam of length 4 m", "A beam of length 4 m"),
     ('level4[7]', 'r-001: the cylinder keyed 565.2 (pi = 3.14)', 'answer: 565.49,', 'answer: 565.2,'),
     ('alevel[1]', 'r-002: the gradient keyed 27 (the limit)', 'answer: 27.009,', 'answer: 27,'),
+    ('answer box: type="number"', 'ANSWER-BOX-TEXT: the box back to type=number', BOX_NEW, '<input type="number" inputmode="decimal" id="answerInput"'),
+    ('answer box: year6|0 typed', 'ANSWER-BOX-TEXT: junk read by parseFloat (Amendment 2 undone)',
+     'MaffsAnswer.parse(raw) === null ? NaN : parseFloat(raw)', 'false ? NaN : parseFloat(raw)'),
 ]
 
 
@@ -263,7 +340,8 @@ def main():
     sys.stdout.reconfigure(encoding='utf-8')
     html = open(args.against or GAME, encoding='utf-8').read()
     fails, count = run(html)
-    print('%s: %d items, every key recomputed, every key typed in Chromium' % (SLUG, count))
+    print('%s: %d items, every key recomputed, every key typed in Chromium; answer box: %d typed strings marked as on the old number box, junk refused'
+          % (SLUG, count, getattr(run, 'box_strings', 0)))
     ok = True
     if not args.no_selftest and not args.against:
         for tag, what, old, new in PLANTS:
