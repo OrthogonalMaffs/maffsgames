@@ -939,9 +939,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     disguiseOn(true);
     setSay('');
     $('blocksNote').innerHTML = '';
-    // The regrouping, shown by the blocks: each group's value under it (the tens, then the ones; a tens item has no ones).
+    // The regrouping, shown by the blocks: each group's value under it (the tens, then the ones). A group with no blocks is
+    // not drawn and gets no label (ONE-EQUALS Amendment 1): a tens item has no ones, nor has a crossing item with c = 10.
     if (Q.type === 'tens') drawBlocks([{ sticks: c, label: 10 * c }]);
-    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }, { cubes: c - 10, label: c - 10 }]);
+    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }].concat(c - 10 ? [{ cubes: c - 10, label: c - 10 }] : []));
     else drawBlocks([{ sticks: t, label: 10 * t }, { cubes: c, label: c }]);
     askBig();
   }

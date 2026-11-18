@@ -242,7 +242,7 @@ def back_labels(q):
     if q['type'] == 'tens':
         return [str(10 * c)]
     if q['type'] == 'cross':
-        return [str(t10 + 10), str(c - 10)]
+        return [str(t10 + 10)] + ([str(c - 10)] if c > 10 else [])   # no group, no label, where no blocks are left
     return [str(t10), str(c)]
 
 
@@ -280,7 +280,7 @@ def blocks_at(q, step):
     if step == 'exchanged':
         return ([(0, c - 10)] if c > 10 else []), t + 1
     if step == 'back':
-        return ([(c, 0)] if tens else [(t + 1, 0), (0, c - 10)] if q['type'] == 'cross' else [(t, 0), (0, c)]), 0
+        return ([(c, 0)] if tens else [(t + 1, 0)] + ([(0, c - 10)] if c > 10 else []) if q['type'] == 'cross' else [(t, 0), (0, c)]), 0
 
 
 def strings(d):
@@ -555,6 +555,7 @@ ITEM_JS = r"""([q]) => {
       SID.ui.putBack(via);
       out['back_' + via] = { before: before, state: SID.ui.state(), on: on(), blocks: blocks(), ask: ann($('sum')),
                              labels: [...$('blocks').querySelectorAll('.glabel')].map(x => x.dataset.label),
+                             emptyLabelled: [...$('blocks').querySelectorAll('.grp')].filter(g => g.querySelector('.glabel') && !g.querySelector('.stk, .cubes i')).length,
                              labelMaths: [...$('blocks').querySelectorAll('.glabel annotation')].map(x => x.textContent),
                              say: $('say').textContent, opts: opts() };
       maths('after put-back');
@@ -687,6 +688,8 @@ def check_marking(page, html, look, out, info):
                     out.append('%s %s: after put-back (%s) the blocks are %s, expected %s' % (tagl, i, via, bk['blocks'], want_b))
                 if bk['ask'] != '%d + %d = {?}' % tuple(q['big']):
                     out.append('%s %s: after put-back the question is %r, not the plain big sum' % (tagl, i, bk['ask']))
+                if bk['emptyLabelled']:
+                    out.append('%s %s: after put-back a value label is drawn under a group with no blocks' % (tagl, i))
                 if bk['labels'] != back_labels(q) or bk['labelMaths'] != back_labels(q):
                     out.append('%s %s: after put-back the blocks are labelled %s, expected %s' % (tagl, i, bk['labels'], back_labels(q)))
         if st == 3:
@@ -1211,6 +1214,10 @@ PLANTS = [
           "    else drawBlocks([{ sticks: t, label: 10 * t - 10 }, { cubes: c, label: c }]);"),
      'marking grown', r'after put-back the blocks are labelled'),
     # ONE-EQUALS.
+    ('a "0" label under an empty cubes group',
+     edit("drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }].concat(c - 10 ? [{ cubes: c - 10, label: c - 10 }] : []));",
+          "drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }, { cubes: c - 10, label: c - 10 }]);"),
+     'marking grown', r'a value label is drawn under a group with no blocks'),
     ('"81 + 9 = 90 + 0 = ?"',
      edit("      // After put-back: the plain big sum (ONE-EQUALS); the blocks under it show the regrouping.\n      askSum(Q.big);",
           "      askSum(Q.big);\n      $('sum').innerHTML = tex(Q.big[0] + ' + ' + Q.big[1] + ' = ' + (Q.big[0] - Q.little[0] + (Q.type === 'cross' ? 10 : 0)) + ' + ' + (Q.type === 'cross' ? Q.little_answer - 10 : Q.little_answer) + ' = {?}');"),

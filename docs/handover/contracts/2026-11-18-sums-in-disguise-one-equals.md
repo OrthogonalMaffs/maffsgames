@@ -27,3 +27,6 @@ DO NOT TOUCH: the bank, the marking (dataset.val), the blocks' counts and steps,
 SUCCESS CONDITION: No rendered maths anywhere in the game has two equals signs or a sum after "="; the verifier passes with the new plants failing; the Gate and phone-fit (dispatched on the branch) pass at 360 px in both looks; merged by merge-pr.py with its last line and main's run IDs reported.
 
 STOP IF: merge-pr.py refuses for a reason other than a transient 5xx.
+
+AMENDMENT 1 (Jon, 18 Nov 2026; verbatim):
+FOLLOW-UP to SUMS-IN-DISGUISE-ONE-EQUALS (#823): "Empty group" meant ANY group with no blocks in it. When a group has no blocks (e.g. the cubes after 81 + 9, where c = 10 leaves none), show no group and no label: under 81 + 9 only "90" shows. If #823 has not merged, add it there; if it has, add it as the first change of the next PR in this lane, recorded in the handover. Verifier: no value label is drawn where its group has zero blocks; one new plant that must fail, a "0" label under an empty cubes group. Everything else in #823 stands.
