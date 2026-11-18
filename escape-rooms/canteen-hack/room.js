@@ -75,7 +75,7 @@ window.ROOM = {
 
   hook: 'Healthy Week started at eight this morning. Nobody was asked. The chips are gone, the heat lamps are ' +
         'holding trays of baked kale, and the last chocolate cookie in the building is under a glass dome at ' +
-        '&pound;8.40. Ms Cinnamon is in her room across the corridor, explaining. The smart till on the counter ' +
+        '&pound;8.40. Last term it cost a fraction of that. Ms Cinnamon is in her room across the corridor, explaining. The smart till on the counter ' +
         'is still logged in as an administrator — as the catering manager, who does not get in until eight.',
   brief: 'Fifteen minutes before the bell. Get a day of specials past the nutrition check she built, put last ' +
          'term&rsquo;s prices back on the tags, and clear the shelf space the pizza delivery needs — in whatever ' +
