@@ -515,34 +515,44 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   // ══════════════════════════════════════
   //  TABLE 5: Daily Activity (30 days)
   // ══════════════════════════════════════
-  var monthStarts = monthRows.filter(function(x){return x[col['event']]==='game_started';});
-  var dailyCounts = rptMap();
-  monthStarts.forEach(function(x) {
-    rptAdd(dailyCounts, Utilities.formatDate(new Date(x[col['timestamp']]), TIMEZONE, 'yyyy-MM-dd'));
+  // Games started (every game) and questions answered (question games only, marked or not: a count of answers, not
+  // accuracy; rooms and shot games left out by rptKind, as in rptBuild). Contract DAILY-ANSWERS, Jon 17 Nov 2026.
+  var dayKinds = kinds || rptLoadKinds();
+  var dailyStarts = rptMap(), dailyAnswers = rptMap();
+  monthRows.forEach(function(x) {
+    var ev = x[col['event']];
+    if (ev !== 'game_started' && ev !== 'question_answered') return;
+    var day = Utilities.formatDate(new Date(x[col['timestamp']]), TIMEZONE, 'yyyy-MM-dd');
+    if (ev === 'game_started') rptAdd(dailyStarts, day);
+    else if (rptKind(String(x[col['game_slug']]), dayKinds) === 'question') rptAdd(dailyAnswers, day);
   });
-  var days = Object.keys(dailyCounts).sort();
+  var days = Object.keys(dailyStarts).concat(Object.keys(dailyAnswers).filter(function(d) {
+    return !rptHas(dailyStarts, d);
+  })).sort();
 
   var t5Start = r;
   dash.getRange(r, 1).setValue('Daily Activity — Last 30 Days').setFontWeight('bold').setFontSize(11);
   r++;
-  dash.getRange(r, 1, 1, 2).setValues([['Date', 'Games Started']]).setFontWeight('bold').setBackground('#f0f0f0');
+  dash.getRange(r, 1, 1, 3).setValues([['Date', 'Games Started', 'Questions Answered']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
   days.forEach(function(d) {
-    dash.getRange(r, 1, 1, 2).setValues([[d, dailyCounts[d]].map(cellValue)]);
+    dash.getRange(r, 1, 1, 3).setValues([[d, rptGet(dailyStarts, d, 0), rptGet(dailyAnswers, d, 0)].map(cellValue)]);
     r++;
   });
 
-  // Chart 5: Daily activity line chart
+  // Chart 5: Daily activity line chart, games started on the left axis, questions answered on the right
   if (days.length > 1) {
-    var lineRange = dash.getRange(t5Start+1, 1, days.length+1, 2);
+    var lineRange = dash.getRange(t5Start+1, 1, days.length+1, 3);
     var chart5 = dash.newChart()
       .setChartType(Charts.ChartType.LINE)
       .addRange(lineRange)
       .setPosition(t5Start, 6, 0, 0)
-      .setOption('title', 'Daily Games Started — Last 30 Days')
-      .setOption('legend', {position: 'none'})
+      .setOption('title', 'Daily Games Started and Questions Answered — Last 30 Days')
+      .setOption('legend', {position: 'bottom'})
       .setOption('width', 500).setOption('height', 280)
-      .setOption('colors', ['#0ea5e9'])
+      .setOption('colors', ['#0ea5e9', '#0d9488'])
+      .setOption('series', {0: {targetAxisIndex: 0}, 1: {targetAxisIndex: 1}})
+      .setOption('vAxes', {0: {title: 'Games started'}, 1: {title: 'Questions answered'}})
       .setOption('curveType', 'function')
       .build();
     dash.insertChart(chart5);

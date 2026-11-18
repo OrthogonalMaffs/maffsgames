@@ -16,6 +16,20 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-18 (home): DAILY-ANSWERS (the Dashboard's Daily Activity shows games started and questions answered)
+
+Claude Code (home lane), worktree `~/mg-daily-answers`, branch `claude/daily-answers`; contract `docs/handover/contracts/2026-11-18-daily-answers.md`. The first commit carries CANTEEN-APPROVE's close-out (#819, 6f2d29c). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
+
+- **Table 5 (`docs/apps-script-endpoint.js`, rebuildDashboard):** one pass over monthRows tallies, by day (`Utilities.formatDate(..., TIMEZONE, 'yyyy-MM-dd')` as before), game_started rows and question_answered rows whose `rptKind(String(slug), kinds)` is 'question' (marked or not; rooms and shot games left out). Both are rptMap tallies. Days are the sorted union of both; a missing count is 0. Header `Date | Games Started | Questions Answered` (bold, #f0f0f0, 3 columns); every row through cellValue. Section title unchanged.
+- **Chart 5:** LINE over 3 columns, same position and 500 × 280, curveType kept; colours #0ea5e9 (starts) and #0d9488 (answers); series 0 on axis 0, series 1 on axis 1; vAxes 'Games started' / 'Questions answered'; legend bottom; title 'Daily Games Started and Questions Answered — Last 30 Days'. Column 3 width stays 80 (its header overflows into the empty column 4 cell).
+- **rptKind vs rptBuild:** the same call on the same String(game_slug), so no slug is classed differently. rptBuild drops unmarked rows for accuracy; this count keeps them, by Jon's decision.
+- **Test (`scripts/test-apps-script-report.py`, section i):** five days of hand-written rows (a day with answers and no starts, a day of room answers only that must have no row, room and shot answers, one row with correct null); expected table and chart options written by hand. The chart stub now records its calls per newChart and a range keeps its size, so the chart can be read; nothing else in the stubs changed. Three new plants caught: room answers counted, shot answers counted, a day with no starts dropped. Every earlier check passes unchanged; test-apps-script-counts.py PASS (38).
+- **Gate flake (for the cloud lane):** the first Gate, check-site 44342334459 on 4e3413d1, went red only because "PR budget (measured times)" was cancelled at its 5-minute timeout: its timing-files step took 3 minutes while GitHub returned 502s (that job usually takes about 2 minutes); the other 89 jobs passed. The token cannot rerun jobs (403), so an empty commit started a fresh run. Project Claude approved the diff, 18 Nov.
+- **For Jon, before the Dashboard changes:** paste the updated `docs/apps-script-endpoint.js` into Apps Script per `docs/apps-script-redeploy.md`, with your own address in REPORT_EMAIL (the repo keeps the placeholder), as a new version of the existing deployment.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-18 (home): CANTEEN-APPROVE (The Canteen Hack's opening names the Healthy Week price; pack approved, v2)
 
 Claude Code (home lane), worktree `~/mg-canteen-approve`, branch `claude/canteen-approve`; contract `docs/handover/contracts/2026-11-18-canteen-approve.md`. The first commit carries CANTEEN-PACK's close-out (#817, 236e9ae).
@@ -24,7 +38,7 @@ Claude Code (home lane), worktree `~/mg-canteen-approve`, branch `claude/canteen
 - **Pack:** config `"wording_approved": {"by": "Jon", "date": "2026-11-18"}`, `"pack_version": "2"` (a string, as every other pack's). `build_pack.py canteen-hack --final` exit 0: `dist-packs/canteen-hack-pack-v2.pdf`, 36 pages, no DRAFT on any page, the sentence on page 2 (the start read-out), which still fits. Finals unchanged: A 1928, B 2340, C 2960, D 2000, E 1510, F 3508.
 - **Checks:** check-escape-rooms exit 0; test-pack-generator exit 0 (self-test 67/67 on 11 rooms; 56 plants caught, 23 controls pass). No generator or other config changed, so the other ten packs are unchanged.
 - **Docs:** /updates/ line (18 Nov); CANTEEN-PACK-APPROVE closed to todo-done; CORE-BUNDLES-2 stays open.
-- MERGED: pending.
+- MERGED 18 Nov as 6f2d29c (#819) via merge-pr.py, exit 0, last line "main 6f2d29c run 44235030804: GREEN". Main on the merge commit: check-site 44235030804 success, phone-fit-full 44235030742 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-canteen-approve.md` (closed out by DAILY-ANSWERS' first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 

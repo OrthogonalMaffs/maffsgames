@@ -39,6 +39,11 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     levels and question ids read back from the Sheet, does the same and writes no cell that could be a formula.
     What Sheets does with the apostrophe is modelled here (it is not part of the value read back), not run.
     Two planted faults: cellValue passing the string through, and a Dashboard row written without it.
+  - i. daily activity (DAILY-ANSWERS, Jon 17 Nov 2026): the Dashboard's last table is Date | Games Started | Questions
+    Answered, one row for every day with either count (a missing count is 0). Questions answered counts question games
+    only (rptKind 'question'), marked or not; rooms and shot games are left out. Its chart is one LINE chart over the 3
+    columns, starts on the left axis and answers on the right, with a legend. Figures written by hand. Three planted
+    faults: room answers counted, shot answers counted, a day with no starts dropped.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -100,23 +105,23 @@ HARNESS = r"""
   rows.push(row('2026-09-29T20:01:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // after: not marked
 
   function load(fetchMode, eventsHead, dataRows) {
-    const env = { fetches: 0, mails: [], cells: {}, sheets: {} };
+    const env = { fetches: 0, mails: [], cells: {}, sheets: {}, charts: [] };
     const UrlFetchApp = { fetch(url) {
       env.fetches++; env.url = url;
       if (fetchMode === 'throw') throw new Error('DNS error');
       if (fetchMode === '404') return { getResponseCode: () => 404, getContentText: () => 'Not Found' };
       return { getResponseCode: () => 200, getContentText: () => JSON.stringify(fixtureGames) };
     } };
-    const chain = new Proxy({}, { get: (t, k) => k === 'build' ? () => ({}) : () => chain });
+    const chain = new Proxy({}, { get: (t, k) => k === 'build' ? () => ({}) : (...a) => { env.charts[env.charts.length - 1].push([k, a]); return chain; } });
     function sheetFake(name, data) {
       const sh = { name, cells: {},
         clear() { sh.cells = {}; }, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
-        setTabColor() {}, setFrozenRows() {}, newChart: () => chain,
+        setTabColor() {}, setFrozenRows() {}, newChart: () => { env.charts.push([]); return chain; },
         getDataRange: () => ({ getValues: () => data }),
         getLastRow: () => data.length,
         appendRow(r) { data.push(r); },
         getRange(r, c, nr, nc) {
-          const rg = { setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
+          const rg = { dims: [r, c, nr || 1, nc || 1], setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
             setValues(vs) { vs.forEach((line, i) => line.forEach((v, j) => sh.cells[(r + i) + ',' + (c + j)] = v)); return rg; },
             getValues: () => [data[r - 1].slice(c - 1, c - 1 + (nc || 1))] };
           ['setFontSize', 'setFontWeight', 'setFontStyle', 'setBackground', 'setNumberFormat'].forEach(m => rg[m] = () => rg);
@@ -349,6 +354,58 @@ HARNESS = r"""
       const stray = Object.keys(builtins).filter(b => ['total', 'correct', 'starts'].some(k => Object.prototype.hasOwnProperty.call(builtins[b], k)));
       ok('g. no tally was written onto a built-in object', stray.length === 0, stray.join(', '));
     }
+
+    // ---- i. daily activity: games started and questions answered (DAILY-ANSWERS, Jon 17 Nov 2026). Rows of their
+    // own over five days; the expected table is written by hand below.
+    {
+      const day = (d, h) => d + 'T' + (h || '10') + ':00:00.000Z';
+      const dr = [];
+      const n = (k, f) => { for (let i = 0; i < k; i++) dr.push(f(i)); };
+      // 30 Oct: 3 starts (two question, one room); 4 question answers, one of them correct: null (not marked, still
+      // an answer); 5 room answers and 3 shot answers, left out
+      n(2, () => row(day('2026-10-30'), 'game_started', 'alpha-q', 'gcse'));
+      dr.push(row(day('2026-10-30'), 'game_started', 'escape-alpha', 'all'));
+      n(3, i => row(day('2026-10-30', '11'), 'question_answered', 'alpha-q', 'gcse', i < 2, 'h00000001'));
+      { const r = row(day('2026-10-30', '11'), 'question_answered', 'alpha-q', 'gcse', '', 'h00000001'); r[6] = null; dr.push(r); }
+      n(5, i => row(day('2026-10-30', '12'), 'question_answered', 'escape-alpha', 'all', i < 1, 'h0000000a'));
+      n(3, i => row(day('2026-10-30', '12'), 'question_answered', 'trig-wars', 'gcse', i < 1));
+      // 31 Oct: answers but no starts (a game begun before midnight): 0 starts, 6 answers
+      n(6, i => row(day('2026-10-31', '00'), 'question_answered', 'beta-q', 'gcse', i < 3));
+      // 1 Nov: 2 starts (a question game and a shot game), only shot answers: 2 starts, 0 answers
+      dr.push(row(day('2026-11-01'), 'game_started', 'beta-q', 'gcse'), row(day('2026-11-01'), 'game_started', 'trig-wars', 'gcse'));
+      n(2, () => row(day('2026-11-01', '11'), 'question_answered', 'trig-wars', 'gcse', true));
+      // 2 Nov: room answers only: neither count, so no row
+      n(4, i => row(day('2026-11-02'), 'question_answered', 'escape-beta', 'all', i < 2));
+      // 3 Nov: 1 start, 3 question answers and 2 room answers
+      dr.push(row(day('2026-11-03'), 'game_started', 'alpha-q', 'gcse'));
+      n(3, i => row(day('2026-11-03', '11'), 'question_answered', 'alpha-q', 'gcse', i < 1, 'h00000002'));
+      n(2, () => row(day('2026-11-03', '11'), 'question_answered', 'escape-beta', 'all', false));
+      ({ api, env } = load('ok', null, dr));
+      api.rebuildDashboard(dr, dr, col, api.rptLoadKinds());
+      const di = env.sheets['Dashboard'] ? dashText(env.sheets['Dashboard']).split('\n') : [];
+      const at5 = di.indexOf('Daily Activity — Last 30 Days');
+      const t5 = at5 < 0 ? [] : di.slice(at5 + 1);
+      while (t5.length && t5[t5.length - 1] === '') t5.pop();
+      ok('i. the table: Date, Games Started, Questions Answered; a row for every day with either count, 0 where missing',
+         JSON.stringify(t5) === JSON.stringify(['Date | Games Started | Questions Answered', '2026-10-30 | 3 | 4', '2026-10-31 | 0 | 6',
+           '2026-11-01 | 2 | 0', '2026-11-03 | 1 | 3']), JSON.stringify(t5));
+      const c5 = env.charts.find(c => c.some(([k, a]) => k === 'setOption' && a[0] === 'title' && /^Daily/.test(a[1]))) || [];
+      const opt = {}; c5.forEach(([k, a]) => { if (k === 'setOption') opt[a[0]] = a[1]; });
+      const call = name => (c5.find(([k]) => k === name) || [null, []])[1];
+      const rng = (call('addRange')[0] || {}).dims || [];
+      ok('i. the chart: a LINE over Date and two series, one row per day plus the header, where it was',
+         call('setChartType')[0] === 'LINE' && rng[1] === 1 && rng[2] === 5 && rng[3] === 3 && rng[0] === at5 + 2 &&
+         JSON.stringify(call('setPosition')) === JSON.stringify([at5 + 1, 6, 0, 0]), JSON.stringify(c5.filter(([k]) => k !== 'setOption')));
+      ok('i. the chart: starts on axis 0, answers on axis 1, both axes titled, a legend at the bottom, size and colours',
+         opt.title === 'Daily Games Started and Questions Answered — Last 30 Days' && JSON.stringify(opt.legend) === '{"position":"bottom"}' &&
+         opt.series && opt.series[1] && opt.series[1].targetAxisIndex === 1 && (!opt.series[0] || (opt.series[0].targetAxisIndex || 0) === 0) &&
+         opt.vAxes && opt.vAxes[0].title === 'Games started' && opt.vAxes[1].title === 'Questions answered' &&
+         opt.width === 500 && opt.height === 280 && opt.curveType === 'function' && JSON.stringify(opt.colors) === '["#0ea5e9","#0d9488"]',
+         JSON.stringify(opt));
+      const cells = env.sheets['Dashboard'] ? env.sheets['Dashboard'].cells : {};
+      ok('i. no cell in the table is undefined, NaN or text where a count belongs',
+         t5.slice(1).every(l => /^\d{4}-\d\d-\d\d \| \d+ \| \d+$/.test(l)) && Object.keys(cells).every(k => cells[k] !== undefined), t5.join(' / '));
+    }
   } catch (e) {
     ok('the harness ran', false, e.stack || e);
   }
@@ -375,6 +432,12 @@ PLANTS = [
     ("cellValue writes a posted formula as it came", "))) return \"'\" + v;\n", "))) return v;\n"),
     ("the Dashboard writes a posted slug without cellValue", "setValues([[slug, gc[slug], comp, frac].map(cellValue)]);",
      "setValues([[slug, gc[slug], comp, frac]]);"),
+    ("Daily Activity counts room answers", "dayKinds) === 'question') rptAdd(dailyAnswers, day);",
+     "dayKinds) !== 'shot') rptAdd(dailyAnswers, day);"),
+    ("Daily Activity counts shot answers", "dayKinds) === 'question') rptAdd(dailyAnswers, day);",
+     "dayKinds) !== 'room') rptAdd(dailyAnswers, day);"),
+    ("Daily Activity drops a day with no starts", "  var days = Object.keys(dailyStarts).concat(",
+     "  var days = Object.keys(dailyStarts).sort(); var unused = [].concat("),
     # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
     ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
      "function rptMap() { return {}; }"),
