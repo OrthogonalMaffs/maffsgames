@@ -38,6 +38,15 @@ numbers to check the page's numbers:
             sum in KaTeX), no other words; the working stacked in KaTeX, its rows and highlighted tens recomputed here from
             the item and read from the rendered source; feedback never holds two LINES strings; every LINES.kids string 6
             words or fewer; the disguise and the button both take it off; the pointing hand on question 1 of a kid run only.
+  Amendment 3 (tens on show; SUMS-IN-DISGUISE-ART, replacing its Amendment 2): for every Stage 1, 2 and 5 item in both
+            looks, the blocks at every step, counted from the item: at the start t sticks and a cubes + b cubes (a sticks +
+            b sticks on a tens item); after take-off (by the button and by the disguise) t sticks held by the disguise, its
+            tag 10t ("0" on a tens item, no sticks leaving), the disguise in view beside the little sum; the ones on tiles;
+            in Stage 5 the exchange (by the button and by the cubes): t + 1 sticks held, the tag 10t + 10, c - 10 cubes,
+            "c = 10 + (c - 10)", Stage 5's reveal line only now; put-back (by the button and by the disguise): the regrouped
+            blocks and question ("64 + 3 = 60 + 7 = ?", "40 + 20 = 6 tens = ?", "27 + 5 = 30 + 2 = ?"); no options before
+            it; the working's rows and highlighted tens; the read-aloud for each step; the hand on each step's button on
+            question 1 of a kid run.
   Read aloud against a mocked speechSynthesis: no speaker without speechSynthesis, with no voice or with only a voice
             that is not local; a speaker once a local voice arrives (voiceschanged); only that voice passed to speak();
             nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
@@ -73,6 +82,11 @@ SLUG = 'sums-in-disguise'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 CONTRACT = 'sums-in-disguise.md'
 SHA = '19e415561cb6baecdaf01d2bde6f23f367a6aff2802d33b8d152dce6561068a8'
+# The start picture (contract SUMS-IN-DISGUISE-ART, 18 Nov 2026): Jon's, from branch art/sums-in-disguise, byte for byte.
+PICTURE = os.path.join(ROOT, 'games', SLUG, 'assets', 'start.webp')
+PICTURE_SHA = 'bfdd4ecd1d99f714387c8030e6dfc500ba1d0e18cbe1ebadc26a59fef4484645'
+PICTURE_ALT = ('Five disguises hanging on coat hooks in a cloakroom: a fake moustache, round glasses, a wig, a rubber duck '
+               'and a top hat, above an empty bench')
 MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5']
 COUNTS = {1: 50, 2: 36, 3: 50, 4: 40, 5: 50}
 TYPES = {3: {'ones': 25, 'tens': 25}, 4: {'ones': 25, 'tens': 15}}
@@ -106,6 +120,23 @@ def contract_lines():
         out['kids'] = new['kids']
         add = re.search(r'^ADD to the grown: block: (.*)$', amend, re.M).group(1)
         out['grown'].update(dict(re.findall(r'([a-z_]+): ' + q, add)))
+    # SUMS-IN-DISGUISE-ART's Amendment 1 (Jon, 18 Nov 2026, 10:38): LINES.kids.find, its "!" no longer after the sum.
+    for d in ('docs/handover/contracts', 'docs/history/contracts'):
+        for f in glob.glob(os.path.join(ROOT, d, '*sums-in-disguise-art.md')):
+            for look, key, old, new in re.findall(r'LINES\.(kids|grown)\.([a-z_]+) ' + q + r' \u2192 ' + q, open(f, encoding='utf-8').read()):
+                if out[look].get(key) == old:
+                    out[look][key] = new
+            # Amendment 2: lines it adds (kids.ten_in_hat "...", grown.ten_in_hat "...").
+            amend2 = open(f, encoding='utf-8').read().split('AMENDMENT 2', 1)
+            if len(amend2) == 2:
+                for look, key, val in re.findall(r'(kids|grown)\.([a-z_]+) ' + q, amend2[1]):
+                    out[look].setdefault(key, val)
+            # Amendment 3: "add to kids: put_back "...", ten_in_hat "...". Add to grown: ..."
+            amend3 = open(f, encoding='utf-8').read().split('AMENDMENT 3', 1)
+            if len(amend3) == 2:
+                for look, adds in re.findall(r'[Aa]dd to (kids|grown): (.*?)(?=\. Add to|\. Change no)', amend3[1]):
+                    for key, val in re.findall(r'([a-z_]+) ' + q, adds):
+                        out[look].setdefault(key, val)
     return out
 
 
@@ -161,13 +192,19 @@ def hl_tens(n, typ):
 
 
 def working(q):
-    """Amendment 1: the two rows of the stacked working, and its highlighted pieces, from the item alone."""
+    """The two rows of the stacked working, and its highlighted pieces, from the item alone. Stages 1, 2 and 5 (Amendment 3
+    of SUMS-IN-DISGUISE-ART): the tens put back as the blocks show them; Stages 3 and 4 as Amendment 1 left them."""
     a, b = q['little']
     c, (p, r), n, typ = a + b, big_of(q), sum(big_of(q)), q['type']
-    cross = typ == 'cross' and q['stage'] != 4
-    rows = ['%d + %d = %d' % (a, b, c),
-            '%d + %d = %s%d' % (p, r, ('%d + %d = ' % (p - a, c)) if cross else '', n)]
-    hl = hl_tens(p, typ) + (hl_tens(r, typ) if typ == 'tens' else []) + ([str(p - a)] if cross else []) + hl_tens(n, typ)
+    if q['stage'] in (1, 2, 5):
+        t10, nt = p - a, str(n)[:-1]
+        if typ == 'tens':
+            return ['%d + %d = %d' % (a, b, c), '%d tens = %d' % (c, n)], [str(c), nt]
+        if typ == 'cross':
+            return ['%d + %d = %d = 10 + %d' % (a, b, c, c - 10), '%d + 10 + %d = %d' % (t10, c - 10, n)], ['10', str(t10), '10', nt]
+        return ['%d + %d = %d' % (a, b, c), '%d + %d = %d' % (t10, c, n)], [str(t10), nt]
+    rows = ['%d + %d = %d' % (a, b, c), '%d + %d = %d' % (p, r, n)]
+    hl = hl_tens(p, typ) + (hl_tens(r, typ) if typ == 'tens' else []) + hl_tens(n, typ)
     return rows, hl
 
 
@@ -177,15 +214,49 @@ HL = re.compile(r'\\htmlClass\{hl\}\{\\mathbf\{([^{}]*)\}\}')
 def tex_rows(t):
     """The rows and highlighted pieces of the working's KaTeX source, as rendered."""
     hl = HL.findall(t or '')
-    plain = HL.sub(lambda m: m.group(1), t or '').replace('\\begin{aligned}', '').replace('\\end{aligned}', '').replace('&', '')
+    plain = HL.sub(lambda m: m.group(1), t or '')
+    plain = re.sub(r'\\text\{([^{}]*)\}', lambda m: m.group(1), plain).replace('\\begin{aligned}', '').replace('\\end{aligned}', '').replace('&', '')
     return [re.sub(r'\s+', ' ', x).strip() for x in plain.split('\\\\')], hl
 
 
 def spoken_working(q):
     a, b = q['little']
     c, (p, r), n = a + b, big_of(q), sum(big_of(q))
-    w = '%d plus %d is %d, so %d plus %d is ' % (a, b, c, p, r)
-    return w + ('%d plus %d, which is %d' % (p - a, c, n) if q['type'] == 'cross' and q['stage'] != 4 else str(n))
+    if q['stage'] in (1, 2, 5):
+        if q['type'] == 'tens':
+            return '%d plus %d is %d. %d tens is %d.' % (a, b, c, c, n)
+        if q['type'] == 'cross':
+            return '%d plus %d is %d, which is 10 and %d. %d plus 10 plus %d is %d.' % (a, b, c, c - 10, p - a, c - 10, n)
+        return '%d plus %d is %d. %d plus %d is %d.' % (a, b, c, p - a, c, n)
+    return '%d plus %d is %d, so %d plus %d is %d' % (a, b, c, p, r, n)
+
+
+def regroup(q):
+    """The question after put-back, from the item: (KaTeX source, plain)."""
+    a, b = q['little']
+    c, (p, r) = a + b, q['big']
+    if q['type'] == 'tens':
+        return '%d + %d = %d\\text{ tens} = {?}' % (p, r, c), '%d + %d = %d tens = ?' % (p, r, c)
+    if q['type'] == 'cross':
+        return '%d + %d = %d + %d = {?}' % (p, r, p - a + 10, c - 10), '%d + %d = %d + %d = ?' % (p, r, p - a + 10, c - 10)
+    return '%d + %d = %d + %d = {?}' % (p, r, p - a, c), '%d + %d = %d + %d = ?' % (p, r, p - a, c)
+
+
+def blocks_at(q, step):
+    """The blocks, from the item: a list of (sticks, cubes) groups, and the sticks the disguise holds."""
+    a, b = q['little']
+    c, t = a + b, (q['big'][0] - a) // 10
+    tens = q['type'] == 'tens'
+    if step == 'start':
+        return ([(a, 0), (b, 0)] if tens else [(t, a), (0, b)]), 0
+    if step == 'little':
+        return ([(a, 0), (b, 0)] if tens else [(0, a), (0, b)]), (0 if tens else t)
+    if step == 'counted':
+        return [(c, 0)] if tens else [(0, c)], (0 if tens else t)
+    if step == 'exchanged':
+        return ([(0, c - 10)] if c > 10 else []), t + 1
+    if step == 'back':
+        return ([(c, 0)] if tens else [(t + 1, c - 10)] if q['type'] == 'cross' else [(t, c)]), 0
 
 
 def strings(d):
@@ -312,9 +383,50 @@ def check_bank(html, out, info):
     info['bank'] = len(items)
 
 
+def webp_size(path):
+    b = open(path, 'rb').read(64)
+    if b[:4] != b'RIFF' or b[8:12] != b'WEBP':
+        return None
+    kind = b[12:16]
+    if kind == b'VP8 ':
+        return int.from_bytes(b[26:28], 'little') & 0x3fff, int.from_bytes(b[28:30], 'little') & 0x3fff
+    if kind == b'VP8L':
+        v = int.from_bytes(b[21:25], 'little')
+        return (v & 0x3fff) + 1, ((v >> 14) & 0x3fff) + 1
+    if kind == b'VP8X':
+        return int.from_bytes(b[24:27], 'little') + 1, int.from_bytes(b[27:30], 'little') + 1
+    return None
+
+
+def check_picture(html, out):
+    """The start picture: straight after the start screen's header, its src, size and alt in the tag; the file that size
+    and that SHA-256 (contract SUMS-IN-DISGUISE-ART)."""
+    img = re.search(r'<div id="menu" class="screen active">\s*<div class="header">.*?</div>\s*(<img class="start-art"[^>]*>)', html, re.S)
+    if not img:
+        out.append('start picture: no img.start-art straight after the start screen\'s header')
+    else:
+        tag = img.group(1)
+        for attr in ('src="assets/start.webp"', 'width="1600"', 'height="873"', 'alt="%s"' % PICTURE_ALT):
+            if attr not in tag:
+                out.append('start picture: the tag has no %s' % attr)
+    if not os.path.exists(PICTURE):
+        out.append('start picture: assets/start.webp is missing')
+        return
+    size = webp_size(PICTURE)
+    if size != (1600, 873):
+        out.append('start picture: assets/start.webp is %s, not 1600 x 873' % (size,))
+    got = hashlib.sha256(open(PICTURE, 'rb').read()).hexdigest()
+    if got != PICTURE_SHA:
+        out.append('start picture: assets/start.webp has SHA-256 %s, not %s' % (got, PICTURE_SHA))
+
+
 def check_source(html, out):
     """The fragment, the look and the class name stay in the page."""
     js = '\n'.join(re.findall(r'<script>(.*?)</script>', html, re.S))
+    # No line puts "!" or "?" straight after a sum: "Find {little}!" read as a factorial (Jon, 18 Nov 2026, 10:38).
+    lines_src = re.search(r'var LINES = \{(.*?)\n  \};', js, re.S)
+    for m in re.finditer(r'\{(little|big)\}[!?]', lines_src.group(1) if lines_src else ''):
+        out.append('a LINES string puts %r straight after a sum' % m.group(0))
     if re.search(r'innerHTML\s*=[^;\n]*(greeting\(|CLASS_NAME|\bfrag\b|\bnm\b)', js):
         out.append('the greeting (the class name) is written with innerHTML')
     if js.count('location.hash') != 1:
@@ -350,6 +462,7 @@ def open_page(pw, base, html, size, frag='', query='?cb=verify'):
     page.on('pageerror', lambda e: errors.append(str(e)))
     page.goto(base + '/games/%s/%s%s' % (SLUG, query, frag), wait_until='load', timeout=30000)
     page.wait_for_function('!!window.SID && !!SID.ui', timeout=15000)
+    page.emulate_media(reduced_motion='reduce')   # the split's hop is then at once: the marking checks run without waiting
     page.evaluate("""() => { window.__sub = [];
         window.MaffsLeaderboard = window.MaffsLeaderboard || {};
         MaffsLeaderboard.submitScore = (g, l, s, n) => { window.__sub.push([g, l, s, n]); return Promise.resolve(); }; }""")
@@ -364,24 +477,52 @@ ITEM_JS = r"""([q]) => {
   const ann = (el) => { const a = el.querySelector('annotation'); return a ? a.textContent : null; };
   const words = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.katex').forEach(k => k.remove()); return c.textContent; };
   const on = () => !$('suspect').classList.contains('unmasked');
+  const blocks = () => ({ groups: [...$('blocks').querySelectorAll('.grp')].map(g => [g.querySelectorAll('.stk').length, g.querySelectorAll('.cubes i').length]),
+                          held: $('held').querySelectorAll('.stk').length });
+  const opts = () => $('opts').children.length > 0 && !$('opts').hidden;
+  const beside = () => { const d = $('disguise').getBoundingClientRect(), k = ($('sum').querySelector('.katex') || $('sum')).getBoundingClientRect();
+    const cs = getComputedStyle($('disguise'));
+    return { shown: d.width > 0 && d.height > 0 && cs.visibility !== 'hidden' && cs.opacity !== '0' && cs.display !== 'none',
+             beside: d.left >= k.right - 2 && d.top < k.bottom && d.bottom > k.top }; };
   if (flow === 'unmask') {
     SID.ui.preview(q.id);
     out.mask = { state: SID.ui.state(), sum: sumOf(), on: on(), pop: !$('pop67').hidden, button: $('unmaskBtn').textContent,
-                 aria: $('disguise').getAttribute('aria-label'), disabled: $('disguise').disabled };
+                 aria: $('disguise').getAttribute('aria-label'), disabled: $('disguise').disabled, blocks: blocks(), opts: opts() };
     SID.ui.unmask('disguise');
     out.viaDisguise = SID.ui.state();
     SID.ui.preview(q.id);
     SID.ui.unmask('button');
     out.little = { state: SID.ui.state(), sum: sumOf(), on: on(), tag: $('tag').textContent, ask: ann($('sum')), prompt: $('prompt').textContent,
-                   tagShown: getComputedStyle($('tag')).display !== 'none', say: $('say').textContent };
+                   tagShown: getComputedStyle($('tag')).display !== 'none', say: $('say').textContent, blocks: blocks(), park: beside(), opts: opts() };
     out.tileVals = [...$('tiles').querySelectorAll('.tile')].map(b => b.dataset.val);
     for (const v of out.tileVals) {
       window.__ev = [];
       SID.ui.preview(q.id); SID.ui.unmask();
       $('tiles').querySelectorAll('.tile').forEach(b => { b.textContent = '?'; });
       SID.ui.tile(v);
-      out.tiles[v] = { little: $('clue').dataset.little || null, state: SID.ui.state(), sum: sumOf(), on: on(),
+      out.tiles[v] = { little: $('clue').dataset.little || null, state: SID.ui.state(), sum: sumOf(), on: on(), opts: opts(),
                        answered: (window.__ev || []).filter(e => e[0] === 'question_answered').length };
+    }
+    // After the ones: counted; Stage 5's exchange by the button and by the cubes; put-back by the button and by the disguise.
+    SID.ui.preview(q.id); SID.ui.unmask(); SID.ui.tile(q.little_answer);
+    out.counted = { state: SID.ui.state(), blocks: blocks(), note: ann($('blocksNote')), say: $('say').textContent, opts: opts(),
+                    ten: $('tenBtn').textContent, tenShown: !$('tenRow').hidden, put: $('putBtn').textContent, putShown: !$('putRow').hidden,
+                    cubeBtn: !!$('cubeBtn'), cubeAria: $('cubeBtn') ? $('cubeBtn').getAttribute('aria-label') : null };
+    if (q.stage === 5) {
+      for (const via of ['button', 'cubes']) {
+        SID.ui.preview(q.id); SID.ui.unmask(); SID.ui.tile(q.little_answer);
+        SID.ui.exchange(via);
+        out['ex_' + via] = { state: SID.ui.state(), tag: $('tag').textContent, blocks: blocks(), note: ann($('blocksNote')), say: $('say').textContent,
+                             opts: opts(), park: beside(), putShown: !$('putRow').hidden, aria: $('disguise').getAttribute('aria-label') };
+      }
+    }
+    for (const via of ['button', 'disguise']) {
+      SID.ui.preview(q.id); SID.ui.unmask(); SID.ui.tile(q.little_answer);
+      if (q.stage === 5) SID.ui.exchange();
+      const before = { opts: opts(), state: SID.ui.state(), aria: $('disguise').getAttribute('aria-label') };
+      SID.ui.putBack(via);
+      out['back_' + via] = { before: before, state: SID.ui.state(), on: on(), blocks: blocks(), ask: ann($('sum')), regroup: $('sum').dataset.regroup || null,
+                             say: $('say').textContent, opts: opts() };
     }
   }
   if (flow === 'wig') {
@@ -390,7 +531,7 @@ ITEM_JS = r"""([q]) => {
     SID.ui.peek();
     out.peek = { sum: sumOf(), on: on(), say: $('say').textContent, tag: $('tag').textContent };
   }
-  const toBig = () => { SID.ui.preview(q.id); if (flow === 'unmask') { SID.ui.unmask(); SID.ui.tile(q.little_answer); } };
+  const toBig = () => { SID.ui.preview(q.id); if (flow === 'unmask') { SID.ui.unmask(); SID.ui.tile(q.little_answer); if (q.stage === 5) SID.ui.exchange(); SID.ui.putBack(); } };
   toBig();
   out.big = { state: SID.ui.state(), sum: sumOf(), on: on(), ask: ann($('sum')), prompt: words($('prompt')), promptMath: ann($('prompt')),
               line: $('prompt').dataset.line || null };
@@ -439,27 +580,77 @@ def check_marking(page, html, look, out, info):
         little = '%d+%d' % (a, b)
         mode = 'stage-%d' % st
         if st in (1, 2, 5):
+            c, t = a + b, (big_of(q)[0] - a) // 10
+            tens = q['type'] == 'tens'
             m = r['mask']
             if m['state'] != 'mask' or m['sum'] != big or not m['on'] or m['pop']:
                 out.append('%s %s: the big sum is not shown in its disguise first (%s)' % (tagl, i, m))
             if m['button'] != L['take_off'] or m['aria'] != L['take_off'] or m['disabled']:
                 out.append('%s %s: the take-off button reads %r and the disguise %r (disabled %s)' % (tagl, i, m['button'], m['aria'], m['disabled']))
+            want_b = blocks_at(q, 'start')
+            if [tuple(g) for g in m['blocks']['groups']] != want_b[0] or m['blocks']['held'] != want_b[1]:
+                out.append('%s %s: the blocks at the start are %s, expected %s' % (tagl, i, m['blocks'], want_b))
+            if m['opts']:
+                out.append('%s %s: options exist before put-back (at the start)' % (tagl, i))
             if r['viaDisguise'] != 'little':
                 out.append('%s %s: tapping the disguise does not take it off' % (tagl, i))
             lt = r['little']
             if lt['ask'] != '%d + %d = {?}' % (a, b) or lt['prompt'].strip():
                 out.append('%s %s: the little sum is asked as %r with the words %r' % (tagl, i, lt['ask'], lt['prompt']))
-            if lt['state'] != 'little' or lt['sum'] != little or lt['on'] or not lt['tagShown'] or lt['tag'] != tag_of(q):
-                out.append('%s %s: taking the disguise off does not show %s with the tag %s (%s)' % (tagl, i, little, tag_of(q), lt))
-            if lt['say'] != L['reveal'][mode]:
-                out.append('%s %s: the reveal line is %r' % (tagl, i, lt['say']))
+            want_tag = '0' if tens else str(10 * t)
+            if lt['state'] != 'little' or lt['sum'] != little or lt['on'] or not lt['tagShown'] or lt['tag'] != want_tag:
+                out.append('%s %s: taking the disguise off does not show %s with the tag %s (%s)' % (tagl, i, little, want_tag, lt))
+            want_b = blocks_at(q, 'little')
+            if [tuple(g) for g in lt['blocks']['groups']] != want_b[0] or lt['blocks']['held'] != want_b[1]:
+                out.append('%s %s: after take-off the blocks are %s, expected %s' % (tagl, i, lt['blocks'], want_b))
+            if not lt['park']['shown'] or not lt['park']['beside']:
+                out.append('%s %s: at take-off the disguise is not in view beside the sum (%s)' % (tagl, i, lt['park']))
+            if lt['say'] != ('' if st == 5 else L['reveal'][mode]):
+                out.append('%s %s: at take-off the line is %r' % (tagl, i, lt['say']))
+            if lt['opts']:
+                out.append('%s %s: options exist before put-back (after take-off)' % (tagl, i))
             n = 20 if st == 5 else 10
             if r['tileVals'] != [str(v) for v in range(n + 1)]:
                 out.append('%s %s: tiles %s, not 0 to %d' % (tagl, i, r['tileVals'], n))
-            for v, t in r['tiles'].items():
-                ok = 'right' if int(v) == a + b else 'wrong'
-                if t['little'] != ok or t['state'] != 'big' or t['sum'] != big or not t['on'] or t['answered']:
-                    out.append('%s %s: tile %s marked %s, expected %s, then the disguise back on the big sum (%s)' % (tagl, i, v, t['little'], ok, t))
+            next_state = 'exchange' if st == 5 else 'putback'
+            for v, tt in r['tiles'].items():
+                ok = 'right' if int(v) == c else 'wrong'
+                if tt['little'] != ok or tt['state'] != next_state or tt['sum'] != little or tt['on'] or tt['answered'] or tt['opts']:
+                    out.append('%s %s: tile %s marked %s, expected %s, then %s (%s)' % (tagl, i, v, tt['little'], ok, next_state, tt))
+            ct = r['counted']
+            want_b = blocks_at(q, 'counted')
+            if [tuple(g) for g in ct['blocks']['groups']] != want_b[0] or ct['note'] != str(c):
+                out.append('%s %s: the ones are not shown counted (%s, %r), expected %s and %d' % (tagl, i, ct['blocks'], ct['note'], want_b, c))
+            if st == 5:
+                if not ct['tenShown'] or ct['ten'] != L['ten_in_hat'] or not ct['cubeBtn'] or ct['cubeAria'] != L['ten_in_hat'] or ct['putShown'] or ct['say']:
+                    out.append('%s %s: the exchange step is not offered by its button and the cubes alone (%s)' % (tagl, i, ct))
+                for via in ('button', 'cubes'):
+                    ex = r['ex_' + via]
+                    want_b = blocks_at(q, 'exchanged')
+                    if [tuple(g) for g in ex['blocks']['groups']] != want_b[0] or ex['blocks']['held'] != want_b[1]:
+                        out.append('%s %s: after the exchange (%s) the blocks are %s, expected %s' % (tagl, i, via, ex['blocks'], want_b))
+                    if ex['tag'] != str(10 * t + 10):
+                        out.append('%s %s: after the exchange (%s) the tag reads %s, not %d' % (tagl, i, via, ex['tag'], 10 * t + 10))
+                    if ex['note'] != '%d = 10 + %d' % (c, c - 10):
+                        out.append('%s %s: the exchange reads %r, not "%d = 10 + %d"' % (tagl, i, ex['note'], c, c - 10))
+                    if ex['say'] != L['reveal'][mode]:
+                        out.append('%s %s: at the exchange the line is %r, not the Stage 5 reveal' % (tagl, i, ex['say']))
+                    if ex['state'] != 'putback' or ex['opts'] or not ex['putShown'] or not ex['park']['shown']:
+                        out.append('%s %s: after the exchange (%s) it does not wait for put-back with the hat in view (%s)' % (tagl, i, via, ex))
+            elif not ct['putShown'] or ct['put'] != L['put_back'] or ct['tenShown'] or ct['cubeBtn'] or ct['state'] != 'putback':
+                out.append('%s %s: after the ones, put-back is not offered alone (%s)' % (tagl, i, ct))
+            rg = regroup(q)
+            want_b = blocks_at(q, 'back')
+            for via in ('button', 'disguise'):
+                bk = r['back_' + via]
+                if bk['before']['opts'] or bk['before']['state'] != 'putback' or bk['before']['aria'] != L['put_back']:
+                    out.append('%s %s: before put-back (%s) %s' % (tagl, i, via, bk['before']))
+                if bk['state'] != 'big' or not bk['on'] or not bk['opts'] or bk['say']:
+                    out.append('%s %s: putting it back (%s) does not put the disguise on and ask (%s)' % (tagl, i, via, bk))
+                if [tuple(g) for g in bk['blocks']['groups']] != want_b[0] or bk['blocks']['held'] != want_b[1]:
+                    out.append('%s %s: after put-back (%s) the blocks are %s, expected %s' % (tagl, i, via, bk['blocks'], want_b))
+                if bk['ask'] != rg[0] or bk['regroup'] != rg[1]:
+                    out.append('%s %s: the regrouped question is %r, expected %r' % (tagl, i, bk['ask'], rg[0]))
         if st == 3:
             if r['wigOn']['state'] != 'big' or r['wigOn']['sum'] != big or not r['wigOn']['on']:
                 out.append('%s %s: the wig is not on the big sum at the question (%s)' % (tagl, i, r['wigOn']))
@@ -478,7 +669,7 @@ def check_marking(page, html, look, out, info):
         else:
             key = str(q['answer'])
             want_opts = {key} | {str(v) for v in q['decoys'].values()}
-            if bg['ask'] != '%d + %d = {?}' % tuple(big_of(q)) or bg['prompt'].strip():
+            if bg['ask'] != (regroup(q)[0] if st in (1, 2, 5) else '%d + %d = {?}' % tuple(big_of(q))) or bg['prompt'].strip():
                 out.append('%s %s: the big sum is asked as %r with the words %r' % (tagl, i, bg['ask'], bg['prompt']))
             names = {str(v): k for k, v in q['decoys'].items()}
         if set(r['optVals']) != want_opts or len(r['optVals']) != len(want_opts):
@@ -594,16 +785,40 @@ def play(page, look, m, out):
         s = page.evaluate('SID.ui.state()')
         if s == 'over':
             break
+        # Stages 1, 2 and 5, step by step with the real buttons (the hops and flights run at full motion here).
         if s == 'mask':
             q = page.evaluate('SID.ui.question()')
             seen.append(q['id'])
-            hand(page, look, len(seen), 'disguise', tag, out)
+            hand(page, look, len(seen), 'unmaskBtn', tag, out)
             if k < 2:
-                fit(page, '#unmaskBtn', '%s %s (the disguise)' % (tag, q['id']), out)
-            page.evaluate('SID.ui.unmask()')
+                fit(page, '#unmaskBtn, #blocks', '%s %s (the blocks and take off)' % (tag, q['id']), out)
+            page.evaluate("document.getElementById('unmaskBtn').click()")
+            page.wait_for_function("SID.ui.state() === 'little'", timeout=5000)
+            continue
+        if s == 'little':
+            q = page.evaluate('SID.ui.question()')
             if k < 2:
-                fit(page, '#tiles .tile', '%s %s (the tiles)' % (tag, q['id']), out)
+                fit(page, '#tiles .tile, #blocks, #disguise', '%s %s (the tiles)' % (tag, q['id']), out)
             page.evaluate('(v) => SID.ui.tile(v)', q['little_answer'] if k % 2 == 0 else q['little_answer'] + 1)
+            continue
+        if s == 'exchange':
+            q = page.evaluate('SID.ui.question()')
+            hand(page, look, len(seen), 'tenBtn', tag, out)
+            if k < 2:
+                fit(page, '#tenBtn, #blocks', '%s %s (the exchange)' % (tag, q['id']), out)
+            page.evaluate("document.getElementById('tenBtn').click()")
+            page.wait_for_function("SID.ui.state() === 'putback'", timeout=5000)
+            continue
+        if s == 'putback':
+            q = page.evaluate('SID.ui.question()')
+            hand(page, look, len(seen), 'putBtn', tag, out)
+            if k < 2:
+                fit(page, '#putBtn, #blocks', '%s %s (put it back)' % (tag, q['id']), out)
+            page.evaluate("document.getElementById('putBtn').click()")
+            page.wait_for_function("SID.ui.state() === 'big'", timeout=5000)
+            continue
+        if s in ('taking', 'exchanging'):
+            page.wait_for_timeout(100)
             continue
         if s == 'big':
             q = page.evaluate('SID.ui.question()')
@@ -735,6 +950,10 @@ def check_speech(pw, base, html, out, info):
             page.evaluate('(id) => { SID.ui.preview(id); SID.ui.unmask(); }', q5['id'])
             fit(page, '#speakBtn, #tiles .tile', 'read aloud (%s) %s (the speaker and tiles)' % (look, q5['id']), out)
             page.evaluate('(v) => SID.ui.tile(v)', sum(q5['little']))
+            fit(page, '#speakBtn, #blocks, #tenBtn', 'read aloud (%s) %s (the speaker and the exchange)' % (look, q5['id']), out)
+            page.evaluate('SID.ui.exchange()')
+            fit(page, '#speakBtn, #blocks, #putBtn', 'read aloud (%s) %s (the speaker and put-back)' % (look, q5['id']), out)
+            page.evaluate('SID.ui.putBack()')
             fit(page, '#speakBtn, #opts .opt', 'read aloud (%s) %s (the speaker and options)' % (look, q5['id']), out)
             page.evaluate('SID.ui.answer(false)')
             fit(page, '#feedback .maffs-next', 'read aloud (%s) %s (Next)' % (look, q5['id']), out)
@@ -748,13 +967,32 @@ def check_speech(pw, base, html, out, info):
                     page.evaluate('(id) => SID.ui.preview(id)', q['id'])
                     if spoken():
                         out.append('read aloud (%s) %s: spoke without a tap' % (look, q['id']))
-                    want = ['Find %d plus %d' % (a, b)] if st == 4 else ['%d plus %d equals what?' % (p, r)]
+                    noun = {1: 'moustache', 2: 'glasses', 5: 'hat'}.get(st)
+                    t = (p - a) // 10
+                    if st == 4:
+                        want = [L[look]['find'].replace('{little}', '%d plus %d' % (a, b))]
+                    elif st == 3:
+                        want = ['%d plus %d equals what?' % (p, r)]
+                    elif q['type'] == 'tens':
+                        want = ['%d is %d tens and %d is %d tens.' % (p, a, r, b)]
+                    else:
+                        want = ['%d is %d tens and %d ones. The tens go in the %s.' % (p, t, a, noun)]
                     tap()
                     if st in (1, 2, 5):
                         page.evaluate('SID.ui.unmask()')
                         tap()
                         want.append('%d plus %d equals what?' % (a, b))
                         page.evaluate('(v) => SID.ui.tile(v)', a + b)
+                        if st == 5:
+                            tap()
+                            want.append('10 ones make a ten. Put the ten in the hat.')
+                            page.evaluate('SID.ui.exchange()')
+                        tap()
+                        c = a + b
+                        want.append('%d tens. Put it back on.' % c if q['type'] == 'tens' else
+                                    '%d and 10. Put it back on.' % (10 * t) if q['type'] == 'cross' else
+                                    '%d and %d. Put it back on.' % (10 * t, c))
+                        page.evaluate('SID.ui.putBack()')
                     page.evaluate('SID.ui.answer(false)')
                     line = page.evaluate("document.getElementById('say').textContent")
                     tap()
@@ -801,6 +1039,7 @@ def check(html, out, units, shard=None):
             try:
                 check_bank(html, out, info)
                 check_source(html, out)
+                check_picture(html, out)
             except Exception as e:  # noqa: BLE001
                 out.append('the bank checks threw: %s' % str(e).splitlines()[0][:200])
     browser = [u for u in units if u != 'bank']
@@ -906,6 +1145,41 @@ PLANTS = [
      edit("var row1 = [[a + ' + ' + b, false], [' = ', false], [String(c), false]];",
           "var row1 = [[a + ' + ' + b, false], [' = ', false], [String(9), false]];"),
      'marking grown', r'the working (is|shown is)'),
+    # SUMS-IN-DISGUISE-ART and its Amendment 1.
+    ('the start picture with no alt',
+     edit('width="1600" height="873" alt="%s">' % PICTURE_ALT, 'width="1600" height="873">'),
+     'bank', r'start picture: the tag has no alt='),
+    # Amendment 3: tens on show (Stages 1, 2 and 5).
+    ('a wrong stick count',
+     edit("else drawBlocks([{ sticks: tensOf(Q), cubes: Q.little[0] }, { cubes: Q.little[1] }]);",
+          "else drawBlocks([{ sticks: tensOf(Q) + 1, cubes: Q.little[0] }, { cubes: Q.little[1] }]);"),
+     'marking grown', r'the blocks at the start are'),
+    ('a wrong cube count',
+     edit("else drawBlocks([{ sticks: tensOf(Q), cubes: Q.little[0] }, { cubes: Q.little[1] }]);",
+          "else drawBlocks([{ sticks: tensOf(Q), cubes: Q.little[0] }, { cubes: Q.little[1] + 1 }]);"),
+     'marking grown', r'the blocks at the start are'),
+    ('the disguise hidden at take-off',
+     edit("      state = 'little';\n      disguiseOn(false);\n", "      state = 'little';\n      disguiseOn(false);\n      $('disguise').style.visibility = 'hidden';\n"),
+     'marking grown', r'at take-off the disguise is not in view beside the sum'),
+    ('the options before put-back',
+     edit("    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();",
+          "    askBig();\n    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();"),
+     'marking grown', r'options exist before put-back|before put-back \('),
+    ('a wrong regrouped number (50 + 7 for 64 + 3)',
+     edit("    return [p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = ?'];",
+          "    return [p + ' + ' + r + ' = ' + (t10 - 10) + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + (t10 - 10) + ' + ' + c + ' = ?'];"),
+     'marking grown', r'the regrouped question is'),
+    ('the Stage 5 reveal at take-off',
+     edit("      if (!S.exchange) setSay(L.reveal[mode], 'reveal.' + mode); else setSay('');",
+          "      setSay(L.reveal[mode], 'reveal.' + mode);"),
+     'marking grown', r's5_\d+: at take-off the line is'),
+    ('the exchange skipped',
+     edit("    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();",
+          "    showPutBack();"),
+     'marking grown', r's5_\d+: tile \d+ marked \w+, expected \w+, then exchange'),
+    ('"Find {little}!"',
+     edit('find: "Find {little} in disguise!",', 'find: "Find {little}!",'),
+     'bank', r"a LINES string puts '\{little\}!' straight after a sum"),
 ]
 
 
