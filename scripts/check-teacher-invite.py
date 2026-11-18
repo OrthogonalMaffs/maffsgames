@@ -90,6 +90,7 @@ RESULTS = {
     "squared-squirrel": "results", "i-found-a-mark": "results", "hc-factor": "results", "y-so-steep": "results", "whose-side-are-you-on": "results", "who-ate-all-the-pies": "results", "its-on-sale": "results", "as-you-can-see": "results", "possibly-maybe": "results",
     "cast-away": "results",
     "its-a-sine": "results",
+    "i-dropped-my-ice-cream": "results",
 }
 
 START_SCREEN = {

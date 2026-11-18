@@ -1911,6 +1911,21 @@
     "level 3",
     "level 4"
    ]
+  },
+  {
+   "slug": "i-dropped-my-ice-cream",
+   "search_phrase": "Circles and Cones",
+   "description": "From a circumference back to the radius and area, then a cone's volume, slant height and total surface area.",
+   "keywords": [
+    "circumference",
+    "radius from circumference",
+    "area of a circle",
+    "volume of a cone",
+    "slant height",
+    "surface area of a cone",
+    "gcse",
+    "level 3"
+   ]
   }
  ],
  "rooms": [
