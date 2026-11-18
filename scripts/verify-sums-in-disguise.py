@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/sums-in-disguise/ docs/handover/contracts/ docs/history/contracts/
 r"""Independent verification for Sums in Disguise (games/sums-in-disguise/), contract SUMS-IN-DISGUISE, 18 Nov 2026.
 SR-30: checked from its first PR.
@@ -34,12 +34,21 @@ numbers to check the page's numbers:
   Greeting  "#kids/Maple" and "#kids/Maple%20Class" -> "Welcome, Maple Class!"; "#KIDS" and "#kids" -> the kid look
             and its welcome; "#kids/<script>" -> the kid look, no class greeting, nothing injected; no hash or "#kidsx"
             -> the grown-up look; a bad ?level= rewritten by MaffsLevel keeps the fragment.
+  Amendment 1 (Jon, 18 Nov 2026, 09:19): every question is the sum and "= ?" (Stage 4: LINES' find, with the little
+            sum in KaTeX), no other words; the working stacked in KaTeX, its rows and highlighted tens recomputed here from
+            the item and read from the rendered source; feedback never holds two LINES strings; every LINES.kids string 6
+            words or fewer; the disguise and the button both take it off; the pointing hand on question 1 of a kid run only.
+  Read aloud against a mocked speechSynthesis: no speaker without speechSynthesis, with no voice or with only a voice
+            that is not local; a speaker once a local voice arrives (voiceschanged); only that voice passed to speak();
+            nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
+            item; never the greeting; cancel() on Next and on leaving the play screen; nothing in an mfg() payload or
+            storage; the speaker, Stage 5's tiles, options and Next above the fold at 360 x 640.
   Play      every stage in each look at 360 x 640 (the kid look from #kids/Maple): 10 different items of the stage, the
             unmask button, tiles, options and Next above the fold, no sideways scroll; one game_completed with the score,
             one board submission [slug, 'stage-N', score, 10]; Stage 3's "Done without peeking"; the end line; no mfg()
             payload, localStorage or sessionStorage value containing "kids", "Maple" or "#".
 
-Work units: "bank" (no browser), "marking grown", "marking kids", "greeting", "play grown 360x640", "play kids 360x640",
+Work units: "bank" (no browser), "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640", "play kids 360x640",
 and "plant: <what>" (one per planted fault).
 
     python scripts/verify-sums-in-disguise.py              # every unit, then the self-test
@@ -88,9 +97,20 @@ def contract_lines():
     if f is None:
         raise ValueError('no contract file *%s in docs/handover/contracts or docs/history/contracts' % CONTRACT)
     text = open(f, encoding='utf-8').read()
-    block = text.split('THE PLACEHOLDER LINES', 1)[1].split('\nShared, both looks', 1)[0]
-    out, look = {}, None
     q = r'"((?:[^"\\]|\\.)*)"'
+    out = parse_lines(text.split('THE PLACEHOLDER LINES', 1)[1].split('\nShared, both looks', 1)[0], q)
+    # Amendment 1: the kid set replaced, verbatim; take_off and find added to the grown set.
+    if 'AMENDMENT 1' in text:
+        amend = text.split('AMENDMENT 1', 1)[1]
+        new = parse_lines(amend.split('THE NEW KID PLACEHOLDER SET', 1)[1].split('\nADD to the grown', 1)[0], q)
+        out['kids'] = new['kids']
+        add = re.search(r'^ADD to the grown: block: (.*)$', amend, re.M).group(1)
+        out['grown'].update(dict(re.findall(r'([a-z_]+): ' + q, add)))
+    return out
+
+
+def parse_lines(block, q):
+    out, look = {}, None
     for ln in block.split('\n'):
         m = re.match(r'^(grown|kids):$', ln)
         if m:
@@ -136,14 +156,49 @@ def tag_of(q):
     return '0 0' if q['type'] == 'tens' else str(big_of(q)[0] - q['little'][0])
 
 
-def learning(q):
+def hl_tens(n, typ):
+    return ['0' for ch in str(n) if ch == '0'] if typ == 'tens' else [str(n)[:-1]]
+
+
+def working(q):
+    """Amendment 1: the two rows of the stacked working, and its highlighted pieces, from the item alone."""
+    a, b = q['little']
+    c, (p, r), n, typ = a + b, big_of(q), sum(big_of(q)), q['type']
+    cross = typ == 'cross' and q['stage'] != 4
+    rows = ['%d + %d = %d' % (a, b, c),
+            '%d + %d = %s%d' % (p, r, ('%d + %d = ' % (p - a, c)) if cross else '', n)]
+    hl = hl_tens(p, typ) + (hl_tens(r, typ) if typ == 'tens' else []) + ([str(p - a)] if cross else []) + hl_tens(n, typ)
+    return rows, hl
+
+
+HL = re.compile(r'\\htmlClass\{hl\}\{\\mathbf\{([^{}]*)\}\}')
+
+
+def tex_rows(t):
+    """The rows and highlighted pieces of the working's KaTeX source, as rendered."""
+    hl = HL.findall(t or '')
+    plain = HL.sub(lambda m: m.group(1), t or '').replace('\\begin{aligned}', '').replace('\\end{aligned}', '').replace('&', '')
+    return [re.sub(r'\s+', ' ', x).strip() for x in plain.split('\\\\')], hl
+
+
+def spoken_working(q):
     a, b = q['little']
     c, (p, r), n = a + b, big_of(q), sum(big_of(q))
-    if q['stage'] == 4:
-        return '%d + %d = %d, so %d + %d = %d is %d + %d in disguise.' % (a, b, c, p, r, n, a, b)
-    if q['type'] == 'cross':
-        return '%d + %d = %d, so %d + %d = %d + %d = %d.' % (a, b, c, p, r, p - a, c, n)
-    return '%d + %d = %d, so %d + %d = %d.' % (a, b, c, p, r, n)
+    w = '%d plus %d is %d, so %d plus %d is ' % (a, b, c, p, r)
+    return w + ('%d plus %d, which is %d' % (p - a, c, n) if q['type'] == 'cross' and q['stage'] != 4 else str(n))
+
+
+def strings(d):
+    """Every string in a LINES set, flattened."""
+    if isinstance(d, str):
+        return [d]
+    if isinstance(d, dict):
+        return [x for v in d.values() for x in strings(v)]
+    return [x for v in d for x in strings(v)]
+
+
+def words(t):
+    return len(t.replace('{name}', '').replace('{little}', '').split())
 
 
 def check_item(q, out):
@@ -306,12 +361,18 @@ ITEM_JS = r"""([q]) => {
   const out = { tiles: {}, opts: {} };
   const flow = q.stage === 3 ? 'wig' : q.stage === 4 ? 'duck' : 'unmask';
   const sumOf = () => $('sum').dataset.sum;
+  const ann = (el) => { const a = el.querySelector('annotation'); return a ? a.textContent : null; };
+  const words = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.katex').forEach(k => k.remove()); return c.textContent; };
   const on = () => !$('suspect').classList.contains('unmasked');
   if (flow === 'unmask') {
     SID.ui.preview(q.id);
-    out.mask = { state: SID.ui.state(), sum: sumOf(), on: on(), pop: !$('pop67').hidden };
-    SID.ui.unmask();
-    out.little = { state: SID.ui.state(), sum: sumOf(), on: on(), tag: $('tag').textContent,
+    out.mask = { state: SID.ui.state(), sum: sumOf(), on: on(), pop: !$('pop67').hidden, button: $('unmaskBtn').textContent,
+                 aria: $('disguise').getAttribute('aria-label'), disabled: $('disguise').disabled };
+    SID.ui.unmask('disguise');
+    out.viaDisguise = SID.ui.state();
+    SID.ui.preview(q.id);
+    SID.ui.unmask('button');
+    out.little = { state: SID.ui.state(), sum: sumOf(), on: on(), tag: $('tag').textContent, ask: ann($('sum')), prompt: $('prompt').textContent,
                    tagShown: getComputedStyle($('tag')).display !== 'none', say: $('say').textContent };
     out.tileVals = [...$('tiles').querySelectorAll('.tile')].map(b => b.dataset.val);
     for (const v of out.tileVals) {
@@ -331,7 +392,8 @@ ITEM_JS = r"""([q]) => {
   }
   const toBig = () => { SID.ui.preview(q.id); if (flow === 'unmask') { SID.ui.unmask(); SID.ui.tile(q.little_answer); } };
   toBig();
-  out.big = { state: SID.ui.state(), sum: sumOf(), on: on(), prompt: $('prompt').textContent };
+  out.big = { state: SID.ui.state(), sum: sumOf(), on: on(), ask: ann($('sum')), prompt: words($('prompt')), promptMath: ann($('prompt')),
+              line: $('prompt').dataset.line || null };
   out.optVals = [...$('opts').querySelectorAll('.opt')].map(b => b.dataset.val);
   for (const v of out.optVals) {
     toBig();
@@ -343,6 +405,8 @@ ITEM_JS = r"""([q]) => {
     const qa = window.__ev.filter(e => e[0] === 'question_answered');
     out.opts[v] = { popBefore: popBefore, why: fb ? fb.dataset.why : null, pick: fb ? (fb.dataset.pick || null) : null,
       say: $('say').textContent, learn: ln ? ln.dataset.learn : null, katex: !!(ln && ln.querySelector('.katex')),
+      tex: ln ? ann(ln) : null, hlShown: ln ? ln.querySelectorAll('.hl').length : 0,
+      shown: $('say').textContent + ' || ' + words($('feedback')) + ' || ' + words($('prompt')),
       pop: $('pop67').hidden ? null : $('pop67').textContent.trim(), score: SID.ui.score(),
       next: !!document.querySelector('#feedback .maffs-next, #nextBtn'),
       qa: qa.map(e => [e[1].correct, e[1].question_id]) };
@@ -359,7 +423,12 @@ def check_marking(page, html, look, out, info):
             keys = sorted(set(got.get(lk, {})) | set(want.get(lk, {})))
             bad = [k for k in keys if got.get(lk, {}).get(k) != want.get(lk, {}).get(k)]
             out.append('LINES.%s differs from the contract at %s' % (lk, bad))
+    for k, v in got.get('kids', {}).items():
+        for t in strings(v):
+            if words(t) > 6:
+                out.append('LINES.kids.%s has %d words (6 at most): %r' % (k, words(t), t))
     L = want[look]
+    every = set(strings(L))
     tagl = look
     fired = {}
     for q in bank_of(html):
@@ -373,7 +442,13 @@ def check_marking(page, html, look, out, info):
             m = r['mask']
             if m['state'] != 'mask' or m['sum'] != big or not m['on'] or m['pop']:
                 out.append('%s %s: the big sum is not shown in its disguise first (%s)' % (tagl, i, m))
+            if m['button'] != L['take_off'] or m['aria'] != L['take_off'] or m['disabled']:
+                out.append('%s %s: the take-off button reads %r and the disguise %r (disabled %s)' % (tagl, i, m['button'], m['aria'], m['disabled']))
+            if r['viaDisguise'] != 'little':
+                out.append('%s %s: tapping the disguise does not take it off' % (tagl, i))
             lt = r['little']
+            if lt['ask'] != '%d + %d = {?}' % (a, b) or lt['prompt'].strip():
+                out.append('%s %s: the little sum is asked as %r with the words %r' % (tagl, i, lt['ask'], lt['prompt']))
             if lt['state'] != 'little' or lt['sum'] != little or lt['on'] or not lt['tagShown'] or lt['tag'] != tag_of(q):
                 out.append('%s %s: taking the disguise off does not show %s with the tag %s (%s)' % (tagl, i, little, tag_of(q), lt))
             if lt['say'] != L['reveal'][mode]:
@@ -398,15 +473,17 @@ def check_marking(page, html, look, out, info):
             key = big
             want_opts = {key} | {'%d+%d' % tuple(d['sum']) for d in q['decoys']}
             names = {'%d+%d' % tuple(d['sum']): d['kind'] for d in q['decoys']}
-            if bg['prompt'].replace(' ', '').find('Whichoneis') != 0:
-                out.append('%s %s: the Stage 4 question reads %r' % (tagl, i, bg['prompt']))
+            if bg['line'] != 'find' or bg['promptMath'] != '%d + %d' % (a, b) or bg['prompt'] != L['find'].replace('{little}', ''):
+                out.append('%s %s: the Stage 4 question reads %r with %r' % (tagl, i, bg['prompt'], bg['promptMath']))
         else:
             key = str(q['answer'])
             want_opts = {key} | {str(v) for v in q['decoys'].values()}
+            if bg['ask'] != '%d + %d = {?}' % tuple(big_of(q)) or bg['prompt'].strip():
+                out.append('%s %s: the big sum is asked as %r with the words %r' % (tagl, i, bg['ask'], bg['prompt']))
             names = {str(v): k for k, v in q['decoys'].items()}
         if set(r['optVals']) != want_opts or len(r['optVals']) != len(want_opts):
             out.append('%s %s: options %s, expected %s' % (tagl, i, r['optVals'], sorted(want_opts)))
-        lr = learning(q)
+        rows, hl = working(q)
         for v, o in r['opts'].items():
             right = v == key
             if o['why'] != ('right' if right else 'wrong') or o['score'] != (1 if right else 0):
@@ -417,12 +494,18 @@ def check_marking(page, html, look, out, info):
                 out.append('%s %s: the 67 shows before marking' % (tagl, i))
             if (o['pop'] == '67') != has67(q) or (o['pop'] not in (None, '67')):
                 out.append('%s %s: after marking the 67 is %r, expected %s' % (tagl, i, o['pop'], 'shown' if has67(q) else 'hidden'))
-            if o['learn'] != lr or not o['katex']:
-                out.append('%s %s: the learning line is %r (KaTeX %s), expected %r' % (tagl, i, o['learn'], o['katex'], lr))
+            if o['learn'] != '|'.join(rows) or not o['katex']:
+                out.append('%s %s: the working is %r (KaTeX %s), expected %r' % (tagl, i, o['learn'], o['katex'], '|'.join(rows)))
+            tr, th = tex_rows(o['tex'])
+            if tr != rows or th != hl or o['hlShown'] != len(hl):
+                out.append('%s %s: the working shown is %s with %s highlighted, expected %s with %s' % (tagl, i, tr, th, rows, hl))
+            hits = {t for t in every if t in o['shown']}
+            if len(hits) > 1:
+                out.append('%s %s: option %s: feedback holds %d LINES strings: %s' % (tagl, i, v, len(hits), sorted(hits)))
             if not o['next']:
                 out.append('%s %s: no Next after option %s' % (tagl, i, v))
             if st == 4:
-                line = (L['duck_right'] if right else L['duck_wrong']) + ' ' + L['reveal'][mode]
+                line = L['duck_right'] if right else L['duck_wrong']
                 if o['say'] != line:
                     out.append('%s %s: option %s: the duck says %r' % (tagl, i, v, o['say']))
             elif right:
@@ -514,6 +597,7 @@ def play(page, look, m, out):
         if s == 'mask':
             q = page.evaluate('SID.ui.question()')
             seen.append(q['id'])
+            hand(page, look, len(seen), 'disguise', tag, out)
             if k < 2:
                 fit(page, '#unmaskBtn', '%s %s (the disguise)' % (tag, q['id']), out)
             page.evaluate('SID.ui.unmask()')
@@ -525,6 +609,9 @@ def play(page, look, m, out):
             q = page.evaluate('SID.ui.question()')
             if not seen or seen[-1] != q['id']:
                 seen.append(q['id'])
+                hand(page, look, len(seen), 'opts', tag, out)
+            elif page.evaluate("!document.getElementById('hand').hidden"):
+                out.append('%s: the hand is still showing after the disguise came off' % tag)
             if k < 2:
                 fit(page, '#opts .opt', '%s %s (the options)' % (tag, q['id']), out)
             ok = k % 3 != 1
@@ -576,6 +663,129 @@ def play(page, look, m, out):
     page.evaluate("document.getElementById('menuBtn').click()")
 
 
+def hand(page, look, n, at, tag, out):
+    h = page.evaluate("(() => { const h = document.getElementById('hand'); return { shown: !h.hidden, at: h.dataset.at || null }; })()")
+    want = look == 'kids' and n == 1
+    if h['shown'] != want or (want and h['at'] != at):
+        out.append('%s question %d: the hand is %s%s, expected %s' % (tag, n, 'shown' if h['shown'] else 'hidden',
+                   ' on ' + str(h['at']) if h['shown'] else '', ('shown on ' + at) if want else 'hidden'))
+
+
+# ---------------------------------------------------------------- read aloud, against a mocked speechSynthesis
+SPEECH_MOCK = """(() => { const cfg = %s; window.__spoken = []; window.__cancels = 0;
+  if (cfg === 'none') { try { delete window.speechSynthesis; } catch (e) {} Object.defineProperty(window, 'speechSynthesis', { value: undefined, configurable: true }); return; }
+  const voices = cfg.slice(), listeners = [];
+  const synth = { getVoices() { return voices.slice(); },
+    speak(u) { window.__spoken.push({ text: u.text, local: !!(u.voice && u.voice.localService === true), name: u.voice ? u.voice.name : null }); },
+    cancel() { window.__cancels++; }, addEventListener(t, f) { if (t === 'voiceschanged') listeners.push(f); }, removeEventListener() {} };
+  window.__setVoices = (vs) => { voices.length = 0; vs.forEach(v => voices.push(v)); listeners.forEach(f => f()); };
+  Object.defineProperty(window, 'speechSynthesis', { value: synth, configurable: true });
+  window.SpeechSynthesisUtterance = function (t) { this.text = t; this.voice = null; this.lang = ''; };
+})();"""
+REMOTE = {'name': 'Cloud UK', 'lang': 'en-GB', 'localService': False}
+LOCAL = {'name': 'Device US', 'lang': 'en-US', 'localService': True}
+
+
+def speech_page(pw, base, html, cfg, frag=''):
+    br = pw.chromium.launch()
+    ctx = br.new_context(viewport={'width': PHONE[0], 'height': PHONE[1]})
+    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    ctx.add_init_script(SPEECH_MOCK % json.dumps(cfg))
+    ctx.add_init_script("""(() => { window.__ev = []; Object.defineProperty(window, 'mfg', { configurable: true,
+        get() { return function (n, p) { window.__ev.push([n, JSON.parse(JSON.stringify(p || {}))]); }; }, set(v) {} }); })();""")
+    bc.offline(ctx, base)
+    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+        status=200, content_type='text/html; charset=utf-8', body=html))
+    page = ctx.new_page()
+    page.goto(base + '/games/%s/?cb=verify%s' % (SLUG, frag), wait_until='load', timeout=30000)
+    page.wait_for_function('!!window.SID && !!SID.ui', timeout=15000)
+    page.evaluate("() => { window.MaffsLeaderboard = window.MaffsLeaderboard || {}; MaffsLeaderboard.submitScore = () => Promise.resolve(); }")
+    return br, page
+
+
+def check_speech(pw, base, html, out, info):
+    L = contract_lines()
+    shown = "!document.getElementById('speakBtn').hidden && getComputedStyle(document.getElementById('speakBtn')).display !== 'none'"
+    for cfg, what in (('none', 'no speechSynthesis'), ([], 'no voices'), ([REMOTE], 'only a voice that is not local')):
+        br, page = speech_page(pw, base, html, cfg)
+        try:
+            page.evaluate("SID.ui.start('stage-1')")
+            if page.evaluate(shown):
+                out.append('read aloud: the speaker shows with %s' % what)
+        finally:
+            br.close()
+    bank = bank_of(html)
+    for frag, look in (('', 'grown'), ('#kids/Maple', 'kids')):
+        br, page = speech_page(pw, base, html, [], frag)
+        try:
+            spoken = lambda: page.evaluate('window.__spoken')
+            if page.evaluate(shown):
+                out.append('read aloud (%s): the speaker shows before any voice has arrived' % look)
+            page.evaluate('(v) => window.__setVoices(v)', [REMOTE, LOCAL])
+            page.evaluate("SID.ui.start('stage-1')")
+            if not page.evaluate(shown):
+                out.append('read aloud (%s): no speaker after a local voice arrived' % look)
+                continue
+            if spoken():
+                out.append('read aloud (%s): spoke %r before any tap' % (look, spoken()[0]['text']))
+            # It fits at 360 px with the speaker showing: the tallest screen, Stage 5's 21 tiles, and its options and Next.
+            q5 = [x for x in bank if x['stage'] == 5][0]
+            page.evaluate('(id) => { SID.ui.preview(id); SID.ui.unmask(); }', q5['id'])
+            fit(page, '#speakBtn, #tiles .tile', 'read aloud (%s) %s (the speaker and tiles)' % (look, q5['id']), out)
+            page.evaluate('(v) => SID.ui.tile(v)', sum(q5['little']))
+            fit(page, '#speakBtn, #opts .opt', 'read aloud (%s) %s (the speaker and options)' % (look, q5['id']), out)
+            page.evaluate('SID.ui.answer(false)')
+            fit(page, '#feedback .maffs-next', 'read aloud (%s) %s (Next)' % (look, q5['id']), out)
+            page.evaluate('SID.ui.next()')
+            page.evaluate("() => { window.__spoken = []; }")
+            tap = lambda: page.evaluate("document.getElementById('speakBtn').click()")
+            for st in (1, 2, 3, 4, 5):
+                for q in [x for x in bank if x['stage'] == st][:4]:
+                    a, b = q['little']
+                    p, r = big_of(q)
+                    page.evaluate('(id) => SID.ui.preview(id)', q['id'])
+                    if spoken():
+                        out.append('read aloud (%s) %s: spoke without a tap' % (look, q['id']))
+                    want = ['Find %d plus %d' % (a, b)] if st == 4 else ['%d plus %d equals what?' % (p, r)]
+                    tap()
+                    if st in (1, 2, 5):
+                        page.evaluate('SID.ui.unmask()')
+                        tap()
+                        want.append('%d plus %d equals what?' % (a, b))
+                        page.evaluate('(v) => SID.ui.tile(v)', a + b)
+                    page.evaluate('SID.ui.answer(false)')
+                    line = page.evaluate("document.getElementById('say').textContent")
+                    tap()
+                    want.append(line + ' ' + spoken_working(q))
+                    got = spoken()
+                    if [x['text'] for x in got] != want:
+                        out.append('read aloud (%s) %s: spoke %s, expected %s' % (look, q['id'], [x['text'] for x in got], want))
+                    if any(not x['local'] for x in got):
+                        out.append('read aloud (%s) %s: a voice that is not local was passed to speak()' % (look, q['id']))
+                    if any('Maple' in x['text'] or 'Welcome' in x['text'] for x in got):
+                        out.append('read aloud (%s): it read the greeting' % look)
+                    before = page.evaluate('window.__cancels')
+                    page.evaluate('SID.ui.next()')
+                    if page.evaluate('window.__cancels') <= before:
+                        out.append('read aloud (%s) %s: no speechSynthesis.cancel() on Next' % (look, q['id']))
+                    page.evaluate('() => { window.__spoken = []; }')
+            before = page.evaluate('window.__cancels')
+            page.evaluate("document.getElementById('menuBtn').click()")
+            if page.evaluate('window.__cancels') <= before:
+                out.append('read aloud (%s): no speechSynthesis.cancel() on leaving the play screen' % look)
+            blob = json.dumps(page.evaluate('window.__ev'))
+            if re.search(r'speak|speech|voice|read', blob, re.I):
+                out.append('read aloud (%s): an mfg() payload mentions it' % look)
+            dump = page.evaluate("""() => JSON.stringify(Object.assign({}, ...[localStorage, sessionStorage].map(s => Object.fromEntries(Object.keys(s).map(k => [k, s.getItem(k)])))))""")
+            if re.search(r'speak|speech|voice|read', dump, re.I):
+                out.append('read aloud (%s): browser storage mentions it' % look)
+        finally:
+            br.close()
+    info['speech'] = 2
+
+
 def bad_in_storage(page):
     dump = page.evaluate("""() => { const o = {};
       for (const s of [localStorage, sessionStorage]) for (let i = 0; i < s.length; i++) o[s.key(i)] = s.getItem(s.key(i));
@@ -602,6 +812,12 @@ def check(html, out, units, shard=None):
         with sync_playwright() as pw:
             for uid in browser:
                 with unit(uid):
+                    if uid == 'read aloud':
+                        try:
+                            check_speech(pw, base, html, out, info)
+                        except Exception as e:  # noqa: BLE001
+                            out.append('read aloud threw: %s' % str(e).splitlines()[0][:220])
+                        continue
                     if uid == 'greeting':
                         try:
                             check_greeting(pw, base, html, out)
@@ -671,6 +887,25 @@ PLANTS = [
      edit("ev('game_started', { game_slug: SLUG, level: level, mode: mode });",
           "ev('game_started', { game_slug: SLUG, level: level, mode: mode, cls: CLASS_NAME || '' });"),
      'play kids %dx%d' % PHONE, r"an mfg\(\) payload contains 'Maple'"),
+    # Amendment 1's five.
+    ('feedback showing two LINES strings',
+     edit("      sayText = L[sayKey];\n", "      sayText = L[sayKey] + ' ' + L.reveal[mode];\n"),
+     'marking grown', r'feedback holds 2 LINES strings'),
+    ('a kid line of 7 words',
+     edit('end: "All sums unmasked!"', 'end: "All of the sums are now unmasked!"'),
+     'marking grown', r'LINES\.kids\.end has 7 words'),
+    ('a non-local voice used',
+     lambda html, what: pc.apply_plant(pc.apply_plant(html,
+         "if (all[i] && all[i].localService === true) local.push(all[i]);", "if (all[i]) local.push(all[i]);", name=what),
+         "if (!canSpeak || !voice || voice.localService !== true || !text) return;", "if (!canSpeak || !voice || !text) return;", name=what),
+     'read aloud', r'a voice that is not local was passed to speak\(\)|the speaker shows with only a voice that is not local'),
+    ('speech on load without a tap',
+     edit("    $('speakBtn').hidden = !voice;\n", "    $('speakBtn').hidden = !voice;\n    if (voice) speak(L.title);\n"),
+     'read aloud', r'spoke .* before any tap'),
+    ('a working number typed rather than taken from the item',
+     edit("var row1 = [[a + ' + ' + b, false], [' = ', false], [String(c), false]];",
+          "var row1 = [[a + ' + ' + b, false], [' = ', false], [String(9), false]];"),
+     'marking grown', r'the working (is|shown is)'),
 ]
 
 
@@ -702,7 +937,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE]
+    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -720,6 +955,8 @@ def main():
         print('%s: %d item plays marked (every tile and option by dataset.val, the aha and learning lines, the 67 after marking)' % (SLUG, info['marked']))
     if 'greeting' in info:
         print('%s: %d fragments read for the look and the greeting' % (SLUG, info['greeting']))
+    if 'speech' in info:
+        print('%s: read aloud against a mocked speechSynthesis: hidden without a local voice, local voices only, nothing before a tap, words from the item, cancel on Next and on leaving, nothing sent or stored' % SLUG)
     if 'played' in info:
         print('%s: %d runs played at %dx%d (every stage, the looks in this shard)' % (SLUG, info['played'], PHONE[0], PHONE[1]))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)

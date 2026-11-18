@@ -332,3 +332,82 @@ STOP IF:
 - Tiles 0 to 20 or the disguises cannot fit phone-fit at 360 px.
 - todo.md's two rows cannot fit under TODO_LIMIT without moving an open row.
 - merge-pr.py refuses for a reason other than a transient 5xx it already retries.
+
+AMENDMENT 1 to SUMS-IN-DISGUISE (Jon, 18 Nov 2026, 09:19: "all 4 please"). Record it verbatim in the saved contract (docs/handover/contracts/2026-11-18-sums-in-disguise.md) and in the PR body, and build it into this same PR. Where it differs from the contract, this wins.
+
+WHY (Jon, 09:17): "the students in the class are not the best at reading (they're getting better), we need to be careful with long instructions. It will be introduced by the teacher, so she will be able to talk them through when they first meet it, but they may want to play it at home." The same applies to weak readers among resit students, so changes 1, 2 and 4 apply to both looks.
+
+1. MATHS INSTEAD OF WORDS (both looks).
+   - The big-sum question is the sum itself, in KaTeX: "64 + 3 = ?". It never says "So what is 64 + 3?". The same in Stages 1, 2, 3 and 5.
+   - The learning line (contract step 4) is no longer a sentence. It is the sums stacked in KaTeX, aligned on the first "=", with the tens digit(s) of the big sum and of its answer in bold and the accent colour:
+       ones:   4 + 3 = 7
+              64 + 3 = 67      (the 6 of 64 and the 6 of 67 highlighted)
+       tens:   4 + 2 = 6
+              40 + 20 = 60     (the 0s highlighted)
+       cross:  7 + 5 = 12
+              27 + 5 = 20 + 12 = 32   (the 2 of 27, the 20 and the 3 of 32 highlighted)
+       Stage 4: 2 + 6 = 8
+               32 + 6 = 38
+     Every number comes from the item (little, big or answer_sum, answer), never typed.
+   - The Stage 4 question comes from LINES: grown.find "Find {little} in disguise." and kids.find "Find {little}!", where {little} renders as the KaTeX sum, e.g. "2 + 6".
+
+2. ONE FEEDBACK LINE AT A TIME (both looks).
+   - Feedback shows at most ONE string from LINES, then the stacked sums. Never two LINES strings together.
+   - Stage 4 wrong: duck_wrong only. Stage 4 right: duck_right only. The reveal lines are shown only when a disguise comes off (step 2 of Stages 1, 2 and 5, and Stage 3's Peek), never with answer feedback.
+   - Kid look: every LINES.kids string is 6 words or fewer, not counting {name} or {little}. The new kid set below meets this. The grown set is unchanged.
+
+3. SHORTER INSTRUCTIONS AND A POINTING HAND (kid look).
+   - Button labels come from LINES: kids.take_off "Take it off!", grown.take_off "Take off the disguise". Peek stays "Peek" in both.
+   - The disguise itself is also tappable (it does what the button does), as a real button with its own click handler and an aria-label.
+   - Kid look: on the FIRST question of every run, a pointing hand (inline SVG, no emoji) pulses on the disguise until it is tapped. Stage 4 has no take-off, so the hand points at the options instead. With prefers-reduced-motion, the hand is shown still.
+
+4. READ ALOUD (both looks).
+   - A speaker button (inline SVG icon, aria-label "Read aloud") on the play screen, with its own click handler. It speaks only when tapped, never by itself.
+   - It uses window.speechSynthesis with a voice whose localService is true, so the speech is made on the device. If the browser has no speechSynthesis or no local voice (check after voiceschanged), the button is not shown. Never use a voice whose localService is false.
+   - What it reads is built from the item, with sums spoken in words ("64 plus 3 equals what?"):
+     - before answering: the question;
+     - after answering: the one feedback line, then the working ("4 plus 3 is 7, so 64 plus 3 is 67");
+     - Stage 4: "Find 2 plus 6".
+     It never reads the class greeting.
+   - speechSynthesis.cancel() on Next, on leaving the play screen and on stage exit.
+   - Nothing about it is sent or stored: no mfg() event or parameter, no storage. No new collection.
+   - It fits phone-fit at 360 px.
+
+THE NEW KID PLACEHOLDER SET (replaces the contract's kids: block, verbatim; Jon will still rewrite):
+kids:
+  title: "Every sum is in disguise!"
+  welcome: "Welcome, sum detectives!"
+  welcome_class: "Welcome, {name} Class!"
+  take_off: "Take it off!"
+  find: "Find {little}!"
+  reveal: { stage-1: "Noooo! My moustache!", stage-2: "Hey! My glasses!", stage-3: "My hair! Give it back!", stage-4: "Quack! You found me!", stage-5: "Hey! A ten in my hat!" }
+  right: ["Unmasked!", "Caught you!", "Gotcha!", "You saw through it!", "Disguise destroyed!", "Nobody fools you!"]
+  aha: { tens: "Aha! I tricked your tens!", concat: "Aha! Too many digits!", off_by_one: "Aha! Missed by one!", forgot_disguise: "Aha! You forgot my disguise!", extra_zero: "Aha! One zero too many!", ones: "Aha! Those were tens!", forgot_ten: "Aha! You missed my ten!", concat_cross: "Aha! Too many digits!" }
+  duck_wrong: "Quack! Wrong duck!"
+  duck_right: "Quack! You found me!"
+  end: "All sums unmasked!"
+ADD to the grown: block: take_off: "Take off the disguise", find: "Find {little} in disguise."
+
+VERIFIER (add to scripts/verify-sums-in-disguise.py):
+- In play, in both looks:
+  - the question shows the sum and "= ?", with no other words;
+  - the stacked working's numbers match the item;
+  - feedback never holds two LINES strings;
+  - every LINES.kids string is 6 words or fewer;
+  - the hand shows on question 1 of a kid run only;
+  - the disguise and the button both take it off.
+- Read aloud, against a mocked speechSynthesis:
+  - the button is hidden when there is no local voice;
+  - only a localService voice is ever passed to speak();
+  - nothing is spoken before a tap;
+  - the spoken text is built from the item's numbers;
+  - cancel() is called on Next;
+  - no mfg() payload or storage write mentions it.
+- New plants that must fail:
+  - feedback showing two LINES strings;
+  - a kid line of 7 words;
+  - a non-local voice used;
+  - speech on load without a tap;
+  - a working number typed rather than taken from the item.
+
+STOP IF (added): any part of read-aloud would send text off the device, or cannot be tested without a real voice even with a mocked speechSynthesis.

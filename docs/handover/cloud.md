@@ -74,8 +74,9 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` from main 5e1c236. Tier Medium: merge on green.
 **Close-out carried (first commit):** #820 I-DROPPED-MY-ICE-CREAM, recorded in its entry below; contract moved.
 Bank: the generator reproduces SHA-256 19e41556…068a8; recomputed independently before building: 0 disagreements.
-Done on the branch: the page (five stages, two looks from the fragment, LINES verbatim, the 67 after marking, boards `stage-1`..`stage-5`); `scripts/verify-sums-in-disguise.py` (PASS, 9/9 plants); roster row #113 in Unlisted (9); games.json and apply-meta; findings file; every list #820 touched; NOT_ON_HUB; launch date; todo SUMS-IN-DISGUISE-LIST and NUMBER-BONDS.
-Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+Done on the branch: the page (five stages, two looks from the fragment, LINES verbatim, the 67 after marking, boards `stage-1`..`stage-5`); `scripts/verify-sums-in-disguise.py` (PASS, 14/14 plants); roster row #113 in Unlisted (9); games.json and apply-meta; findings file; every list #820 touched; NOT_ON_HUB; launch date; todo SUMS-IN-DISGUISE-LIST and NUMBER-BONDS.
+**Amendment 1 (Jon, 18 Nov, 09:19, "all 4 please"), in the saved contract:** questions as maths ("64 + 3 = ?"), the working stacked in KaTeX with the tens highlighted, one LINES string in feedback, the new kid set (6 words or fewer), take_off/find from LINES, the disguise a button, the kid hand on question 1, Read aloud on on-device voices only (hidden without one; tested against a mocked speechSynthesis). Built into #821.
+PR #821 open. Next: Gate and phone-fit-full on the amended head, merge with merge-pr.py.
 
 ## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/history/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
 
