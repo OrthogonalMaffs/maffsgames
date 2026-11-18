@@ -1,7 +1,8 @@
 # GA4 country figures in the events Sheet: setup
 
-`docs/apps-script-ga4-country.js` copies GA4's daily figures by country into two new tabs of the
-**MaffsGames Events** spreadsheet, once a day. Jon's ruling (8 Oct 2026): aggregates from GA4's Data
+`docs/apps-script-ga4-country.js` copies GA4's daily figures by country into two tabs of the
+**MaffsGames Events** spreadsheet, and since 18 Nov 2026 a third, **GA4 sources daily** (where visits came
+from; see "The GA4 sources tab" below), once a day. Jon's ruling (8 Oct 2026): aggregates from GA4's Data
 API only. Nothing new is collected from students, and the site, `analytics.js`, the events endpoint and
 the privacy page do not change. GA4 already works out each visit's country from its IP address; this
 script only reads the totals GA4 already holds.
@@ -76,6 +77,20 @@ eventCount. A country with no `question_answered` row that day had no answered q
 script fetches the **last three complete days** and replaces those days' rows outright: running it twice
 never duplicates anything, and no older day is ever changed. (`ga4CountryBackfill` can be re-run at any
 time on the same terms: it replaces 1 Sep to yesterday.)
+
+## The GA4 sources tab (18 Nov 2026, DASHBOARD-GLANCE)
+
+A third tab, **GA4 sources daily**, holds one row per date, traffic source, medium, device and landing page:
+date, sessionSource, sessionMedium, deviceCategory, landingPage, sessions, engagedSessions, activeUsers. Jon's
+ruling (18 Nov 2026): aggregates only, and **never city, region or any location finer than country**
+(`scripts/test-ga4-country.py` fails if one is asked for). The endpoint's Dashboard reads it for "Did my posts
+bring visitors?" (by channel: Google search, other search, LinkedIn, Facebook, Tes, direct, other) and for the
+device split. It is fetched and replaced with the other two tabs (the same three-day settle window, trigger and
+backfill), so nothing new needs scheduling, and no new permission is asked for.
+
+**One extra step, once:** replace the `ga4-country` file's contents with the repo's current
+`docs/apps-script-ga4-country.js`, **Save**, then **re-run `ga4CountryBackfill` once**. That fills the new tab
+from 1 Sep 2026 (and re-replaces the two country tabs with the same figures). Do not use Deploy.
 
 ## The GA4 summary tab (weekly figures and three charts)
 

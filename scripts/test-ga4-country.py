@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ci-line: GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught) |
-"""Tests for docs/apps-script-ga4-country.js, the Apps Script that copies GA4's daily country figures into two
-tabs of the events Sheet (Jon's ruling, 8 Oct 2026). No network: the script runs in Node's vm module against
+"""Tests for docs/apps-script-ga4-country.js, the Apps Script that copies GA4's daily figures into three tabs of
+the events Sheet (Jon's rulings, 8 Oct 2026; the third tab, 'GA4 sources daily', 18 Nov 2026, DASHBOARD-GLANCE). No network: the script runs in Node's vm module against
 mocks of AnalyticsData, SpreadsheetApp, DriveApp, Utilities, LockService, ScriptApp and Logger.
 
     python scripts/test-ga4-country.py
@@ -22,9 +22,12 @@ overwritten; a failed API call writes nothing; dates stay text; the property che
 stream and fails on another; the trigger setup replaces only its own trigger; and no top-level name collides
 with docs/apps-script-endpoint.js (both may share one Apps Script project).
 
-Then four planted faults, each a one-line change to the script, and each must make its check fail: keeping
-the window's old rows (a), dropping every old row (b), adding a tab at the front (c), and writing dates
-without the text format.
+The sources tab asks for exactly date, sessionSource, sessionMedium, deviceCategory and landingPage, with
+sessions, engagedSessions and activeUsers, and no request asks for a location finer than country.
+
+Then five planted faults, each a one-line change to the script, and each must make its check fail: keeping
+the window's old rows (a), dropping every old row (b), adding a tab at the front (c), writing dates
+without the text format, and 'city' added to the sources table's dimensions.
 
 Node: the runner's, or the copy the Playwright package ships (as verify-test-the-claim.py's CI line uses).
 """
@@ -44,7 +47,11 @@ PROPERTY = "properties/528531831"
 EVENTS = ["page_view", "game_started", "question_answered", "game_completed"]
 DAILY_HEAD = ["date", "country", "activeUsers", "sessions", "engagedSessions", "eventCount"]
 EVENTS_HEAD = ["date", "country", "eventName", "activeUsers", "eventCount"]
-TABS = ("GA4 country daily", "GA4 country events")
+SOURCES_DIMS = ["date", "sessionSource", "sessionMedium", "deviceCategory", "landingPage"]
+SOURCES_HEAD = SOURCES_DIMS + ["sessions", "engagedSessions", "activeUsers"]
+TABS = ("GA4 country daily", "GA4 country events", "GA4 sources daily")
+# every dimension a data request may name: country is the finest location (no city, region or the like)
+ALLOWED_DIMS = {"date", "country", "eventName"} | set(SOURCES_DIMS)
 
 HARNESS = r"""
 'use strict';
@@ -62,6 +69,12 @@ function countriesOn(date) {
   // which countries visit on a date; version 2 drops India everywhere (a revised day can lose a row)
   return COUNTRIES.filter(c => (hash(date + c) % 5 !== 0) && !(VERSION === 2 && c === 'India'));
 }
+// the sources table: (source, medium, device, landing page); version 2 drops the Facebook row likewise
+const SOURCES = [['google', 'organic', 'desktop', '/'], ['(direct)', '(none)', 'mobile', '/games/a/'],
+                 ['lnkd.in', 'referral', 'mobile', '/'], ['m.facebook.com', 'referral', 'tablet', '/games/b/']];
+function sourcesOn(date) {
+  return SOURCES.filter(k => (hash(date + k.join('|')) % 5 !== 0) && !(VERSION === 2 && k[0] === 'm.facebook.com'));
+}
 function n(seed, max) { return 1 + hash(seed + ':' + VERSION) % max; }
 function dataRows(req) {
   const start = req.dateRanges[0].startDate, end = req.dateRanges[0].endDate;
@@ -72,11 +85,14 @@ function dataRows(req) {
   for (let d = new Date(start + 'T00:00:00Z'); d <= new Date(end + 'T00:00:00Z'); d.setUTCDate(d.getUTCDate() + 1))
     dates.push(d.toISOString().slice(0, 10));
   if (ROGUE) dates.push('2026-09-15');       // GA4 answering for a date it was not asked for
-  for (const date of dates) for (const c of countriesOn(date)) {
+  const bySource = dims.includes('sessionSource');
+  for (const date of dates) for (const k of (bySource ? sourcesOn(date) : countriesOn(date))) {
+    const c = bySource ? k.join('|') : k;
+    const base = bySource ? { sessionSource: k[0], sessionMedium: k[1], deviceCategory: k[2], landingPage: k[3] } : { country: k };
     const evs = dims.includes('eventName') ? ALL_EVENTS : [null];
     for (const ev of evs) {
       if (ev !== null && filt && !filt.includes(ev)) continue;
-      const vals = { date: date.replace(/-/g, ''), country: c, eventName: ev };
+      const vals = Object.assign({ date: date.replace(/-/g, ''), eventName: ev }, base);
       rows.push({
         dimensionValues: dims.map(x => ({ value: String(vals[x]) })),
         metricValues: mets.map(m => ({ value: String(n(date + c + ev + m, 900)) }))
@@ -334,6 +350,8 @@ def checks(R):
         f.append("daily tab row 1 is %r" % (tab(bf, TABS[0])[:1],))
     if tab(bf, TABS[1])[:1] != [EVENTS_HEAD]:
         f.append("events tab row 1 is %r" % (tab(bf, TABS[1])[:1],))
+    if tab(bf, TABS[2])[:1] != [SOURCES_HEAD]:
+        f.append("sources tab row 1 is %r" % (tab(bf, TABS[2])[:1],))
     for i, t in enumerate(TABS):
         got = sorted(map(json.dumps, body(tab(bf, t))))
         want = sorted(map(json.dumps, R["expectBackfill"][i]))
@@ -358,12 +376,13 @@ def checks(R):
             if (dr["startDate"], dr["endDate"]) != window:
                 f.append("%s asked %s..%s, not %s..%s" % ((st_name, dr["startDate"], dr["endDate"]) + window))
         dims = {tuple(d["name"] for d in q["req"]["dimensions"]) for q in reqs}
-        if dims != {("date", "country"), ("date", "country", "eventName")}:
+        if dims != {("date", "country"), ("date", "country", "eventName"), tuple(SOURCES_DIMS)}:
             f.append("%s dimensions %r" % (st_name, dims))
         for q in reqs:
             mets = [m["name"] for m in q["req"]["metrics"]]
             ev = [d["name"] for d in q["req"]["dimensions"]] == ["date", "country", "eventName"]
-            if mets != (EVENTS_HEAD[3:] if ev else DAILY_HEAD[2:]):
+            src = [d["name"] for d in q["req"]["dimensions"]] == SOURCES_DIMS
+            if mets != (EVENTS_HEAD[3:] if ev else SOURCES_HEAD[5:] if src else DAILY_HEAD[2:]):
                 f.append("%s metrics %r" % (st_name, mets))
             if ev and q["req"].get("dimensionFilter", {}).get("filter", {}).get("inListFilter", {}).get("values") != EVENTS:
                 f.append("%s event filter %r" % (st_name, q["req"].get("dimensionFilter")))
@@ -379,7 +398,7 @@ def checks(R):
     for t in TABS:
         if tab(d1, t) != tab(d2, t):
             f.append("%s: a second daily run on the same day changed the tab" % t)
-        keyw = 3 if t == TABS[1] else 2
+        keyw = {TABS[1]: 3, TABS[2]: 5}.get(t, 2)
         keys = [json.dumps(r[:keyw]) for r in body(tab(d2, t))]
         if len(keys) != len(set(keys)):
             f.append("%s: %d rows duplicate a (date, country[, event])" % (t, len(keys) - len(set(keys))))
@@ -388,9 +407,30 @@ def checks(R):
         want = sorted(map(json.dumps, R["expectDailyWindow"][i]))
         if got != want:
             f.append("%s: window rows after the daily run are not GA4's revised rows (%d vs %d)" % (t, len(got), len(want)))
-        if any(r[1] == "India" for r in inside(tab(d1, t), w1)):
-            f.append("%s: a country GA4 no longer reports in the window was left behind" % t)
+        if any(r[1] in ("India", "m.facebook.com") for r in inside(tab(d1, t), w1)):
+            f.append("%s: a row GA4 no longer reports in the window was left behind" % t)
     out["(a) a re-run for the same dates leaves one set of rows"] = f
+
+    # the sources table asks for exactly the approved dimensions and metrics; no request asks for a location
+    # finer than country (Jon, 18 Nov 2026: no city or region)
+    f = []
+    for st_name in ("backfill", "daily1", "daily3"):
+        reqs = s[st_name]["requests"]
+        srcq = [q for q in reqs if "sessionSource" in [d["name"] for d in q["req"]["dimensions"]]]
+        if not srcq:
+            f.append("%s made no sources request" % st_name)
+        for q in srcq:
+            dims = [d["name"] for d in q["req"]["dimensions"]]
+            mets = [m["name"] for m in q["req"]["metrics"]]
+            if dims != SOURCES_DIMS or mets != SOURCES_HEAD[5:]:
+                f.append("%s sources request asks for %r / %r" % (st_name, dims, mets))
+            if "dimensionFilter" in q["req"]:
+                f.append("%s filtered the sources table" % st_name)
+        for q in reqs:
+            extra = [d["name"] for d in q["req"]["dimensions"] if d["name"] not in ALLOWED_DIMS]
+            if extra:
+                f.append("%s asked GA4 for %r" % (st_name, extra))
+    out["sources: exactly the approved dimensions and metrics; nothing finer than country"] = f
 
     # (b) dates outside the window untouched
     f = []
@@ -480,6 +520,10 @@ FAULTS = [
      "ss.insertSheet(table.tab, 0)", "(c) the events tab is never referenced"),
     ("write dates without the text format",
      "tab.getRange(1, 1, Math.max(last, merged.length + 1), 1).setNumberFormat('@');", "", "dates stay text"),
+    ("'city' added to the sources table's dimensions",
+     "dimensions: ['date', 'sessionSource', 'sessionMedium', 'deviceCategory', 'landingPage'],",
+     "dimensions: ['date', 'sessionSource', 'sessionMedium', 'deviceCategory', 'landingPage', 'city'],",
+     "sources: exactly the approved dimensions and metrics; nothing finer than country"),
 ]
 
 

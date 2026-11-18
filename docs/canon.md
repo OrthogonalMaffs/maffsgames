@@ -169,17 +169,19 @@ Crawlers still reach GA4 from the live host; filtering them is a separate decisi
 
 ### 1.2.1 GA4 country tabs (8 Oct 2026, Jon's ruling)
 
-Two tabs in the **MaffsGames Events** spreadsheet hold GA4's daily figures by country, read from the Google Analytics Data API (advanced service `AnalyticsData`, property `properties/528531831`, the property of stream 13898555479). They are aggregates GA4 already holds. Nothing new is collected, and the site, `analytics.js`, the events endpoint and the privacy page are unchanged. **Live only once Jon has installed it** (`docs/ga4-country-setup.md`).
+Three tabs in the **MaffsGames Events** spreadsheet hold GA4's daily figures (two by country, one by traffic source; DASHBOARD-GLANCE, Jon, 18 Nov 2026), read from the Google Analytics Data API (advanced service `AnalyticsData`, property `properties/528531831`, the property of stream 13898555479). They are aggregates GA4 already holds. Nothing new is collected, and the site, `analytics.js`, the events endpoint and the privacy page are unchanged. **Live only once Jon has installed it** (`docs/ga4-country-setup.md`).
 
 | Tab | Columns |
 | --- | --- |
 | GA4 country daily | date, country, activeUsers, sessions, engagedSessions, eventCount |
 | GA4 country events | date, country, eventName, activeUsers, eventCount, for page_view, game_started, question_answered, game_completed |
+| GA4 sources daily | date, sessionSource, sessionMedium, deviceCategory, landingPage, sessions, engagedSessions, activeUsers (from 18 Nov 2026; never city, region or any location finer than country) |
 
 - **Code:** `docs/apps-script-ga4-country.js`, a script file in the Sheet's bound Apps Script project beside the endpoint's `Code.gs`. Its names are prefixed `GA4C_`/`ga4c`/`ga4Country` so the two cannot clash. It is not part of the web app deployment. Setup is in `docs/ga4-country-setup.md`; the test is `scripts/test-ga4-country.py` (CI, B3).
 - **Schedule:** `ga4CountryDaily`, between 06:00 and 07:00 UK time, before the 07:00 report.
 - **The 48-hour settle window:** GA4 revises a day's figures for about 48 hours. So each run fetches the last **three** complete days and **replaces** those dates' rows. Re-runs never duplicate, and no other date changes. `ga4CountryBackfill` replaces 1 Sep 2026 to yesterday and is safe to re-run.
-- **The events tab is never read or written.** Sheets are reached only by the two tab names, and new tabs are added at the end.
+- **The events tab is never read or written.** Sheets are reached only by the three tab names, and new tabs are added at the end.
+- **Read by the Dashboard** (`docs/apps-script-endpoint.js`, read only): engaged sessions, channels, landing pages, the UK share, top countries and devices (§1.4).
 - **Reading: "users" are not people here.** GA4 runs cookieless, so activeUsers and sessions count visits, not people. Real use is the game events and engagedSessions. A crawler shows page_view with no question_answered. GA4 sees less than the Sheet (blockers), so the country split is a share, not a full count.
 
 ## 1.3 Events — Required on ALL Games
@@ -320,7 +322,9 @@ after that date is the redirect stub (a hop, not a visit).
 3. **Accuracy by Game** — bar chart, question games only, at least 30 marked answers, sorted lowest first; overall accuracy from question games only
 4. **Hardest Questions** — table, question games only, by game + level + `question_id` (decode with `scripts/decode-question-ids.py`), at least 10 attempts; rows without a `question_id` left out, and the heading counts the games that send one
 5. **Escape Rooms** — table, per room: started, escaped (`game_completed`), escape rate, attempts per lock opened (marked answers ÷ correct answers), lowest escape rate first
-6. **Daily Activity** — line chart, 30-day trend
+6. **Daily Activity** — line chart, 30-day trend: games started (left axis) and questions answered (right axis), series named from the header row, straight lines
+
+**At a glance (contract DASHBOARD-GLANCE, Jon, 18 Nov 2026).** Before the tables above, the Dashboard answers Jon's weekly questions, in this order: **is it growing** (the last 7 days against the previous 7: games started, questions answered, % correct in points and always grey, different games played, GA4 engaged sessions); **is anything broken** (questions under 10% right on 10+ marked answers, last 30 days, on red; where students quit, by `game_abandoned`'s question_index); **are teachers using it** (probable classes: 10+ starts of one game, each within 30 minutes of the one before; starts by school day, evening and weekend; portal filters); **did my posts bring visitors** (GA4 sources by channel: Google search, other search, LinkedIn, Facebook, Tes, direct, other; top landing pages); **who uses it** (UK share, top 5 countries, devices); **is my newest game landing** (games in `schools/assets/launch-dates.json` from the last 14 days, read from GitHub); then escape rooms (item 5 above, hints by lock, time per lock from `game_completed`'s `locks:`) and Misunderstood Maths. Order after that: Top Games, Accuracy by Game, Hardest Questions, Level Split, Daily Activity last. A missing GA4 tab or launch-dates file gives one line, never a failed Dashboard.
 
 The daily email carries the same answer sections for yesterday. **Each kind of game by its own measure** (contract DASHBOARD-METRICS, Jon, 3 Nov 2026; reason in §12): a game's kind is its optional `"answer_kind"` in `data/games.json`, `"question"` (the default) or `"shot"` (`correct` means an attempt hit, not that an answer was right: Trig Wars and Bearing Blitz); an escape room is any slug starting `escape-`. Shot games are named on one line and left out of accuracy. The script reads games.json from `https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/data/games.json` once per run (Jon, Amendment 2: `data/` stays unpublished, §7.7); if that fails, every game counts as a question game and the email and Dashboard say so in one line. A blank `correct` written before 2026-09-29 20:00 UTC counts as wrong (the falsy bug stored wrong answers blank); after it a blank is not marked (Prisoner's Dilemma sends `correct: null`). Tested by `scripts/test-apps-script-report.py` (CI).
 
