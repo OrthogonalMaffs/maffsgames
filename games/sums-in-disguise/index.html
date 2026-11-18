@@ -34,7 +34,7 @@
   --d-eye:#111827;--d-hat:#1f2937;--d-band:#6d28d9;--d-tag:#fef3c7;
   --kid-accent:#a21caf;--kid-accent-dim:#fae8ff;--kid-bg:#fff7d6;--kid-edge:#f0abfc;
   --kid-wig:#ec4899;--kid-wig-2:#be185d;--kid-band:#16a34a;--kid-lens:#fde68a;--kid-frame:#7e22ce;
-  --pop:#be185d;--pop-edge:#ffffff;--hand-fill:#fde68a;--hand-ink:#3b2416
+  --pop:#be185d;--pop-edge:#ffffff;--stick:#6d28d9;--cube:#f59e0b;--kid-stick:#a21caf;--kid-cube:#0284c7;--hand-fill:#fde68a;--hand-ink:#3b2416
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -111,6 +111,32 @@ button.disguise:disabled{cursor:default;opacity:1}
 .hand svg{width:100%;height:100%;display:block}
 .hand .h-fill{fill:var(--hand-fill);stroke:var(--hand-ink);stroke-width:2.2;stroke-linejoin:round}
 @keyframes handPulse{from{transform:translate(0,0) scale(1)}to{transform:translate(-5px,-7px) scale(1.12)}}
+/* Base-10 blocks (SUMS-IN-DISGUISE-ART, Amendment 3): Stages 1, 2 and 5 show the sum as ten-sticks and cubes, the tens
+   taken off into the disguise, the ones added, (Stage 5) ten ones exchanged for a ten, and the tens put back. */
+.blocks{display:flex;align-items:flex-end;justify-content:center;gap:.45rem;min-height:24px;margin:.2rem 0 .1rem;max-width:100%}
+.blocks:empty{display:none}
+.grp{display:flex;align-items:flex-end;gap:3px}
+.plus{font-family:var(--font-num);font-weight:700;font-size:1.1rem;align-self:center;color:var(--muted)}
+.stk{display:flex;flex-direction:column;gap:1px;padding:1px;border-radius:2px}
+.stk i{display:block;width:9px;height:7px;border-radius:1px;background:var(--stick)}
+.cubes{display:grid;grid-template-columns:repeat(3,10px);gap:2px;align-content:end}
+.cubes i{display:block;width:10px;height:10px;border-radius:2px;background:var(--cube)}
+button.cubebtn{border:2px dashed var(--accent);border-radius:8px;background:none;padding:4px;cursor:pointer;display:flex;align-items:flex-end;gap:3px;min-height:44px;min-width:44px}
+.blocks-note{text-align:center;font-size:1.05rem;min-height:0}
+.blocks-note:empty{display:none}
+.held{display:none;position:absolute;right:8px;gap:2px;z-index:2}
+.held .stk i{width:5px;height:4px}
+.fly{animation:fly .55s ease-in forwards}
+@keyframes fly{to{transform:translate(var(--dx,80px),var(--dy,-80px)) scale(.4);opacity:0}}
+/* Parked beside the sum, and staying visible: Stages 1, 2 and 5 only (.blocky). */
+.suspect.blocky.unmasked{padding-top:8px;padding-right:100px;min-height:140px}
+.suspect.blocky.unmasked .disguise{top:6px;left:100%;height:40px;transform:translateX(-100%) translateX(-4px)}
+.suspect.blocky.unmasked .tag{top:50px;right:8px}
+.suspect.blocky.unmasked .held{display:flex;top:78px}
+body.look-kids .suspect.blocky.unmasked{padding-right:110px;min-height:150px}
+body.look-kids .suspect.blocky.unmasked .disguise{height:46px}
+body.look-kids .suspect.blocky.unmasked .tag{top:56px}
+body.look-kids .suspect.blocky.unmasked .held{top:86px}
 /* The working: the sums stacked, the tens in the accent. */
 .work{text-align:center;font-size:1.15rem}
 .work .hl,.work .hl *{color:var(--accent);font-weight:700}
@@ -159,7 +185,7 @@ button.disguise:disabled{cursor:default;opacity:1}
 
 /* The kid look: brighter and rounder, bigger disguises; the same layout, items, marking and boards. */
 body.look-kids{background:var(--kid-bg);--accent:var(--kid-accent);--accent-dim:var(--kid-accent-dim);
-  --d-wig:var(--kid-wig);--d-wig-2:var(--kid-wig-2);--d-band:var(--kid-band);--d-lens:var(--kid-lens);--d-frame:var(--kid-frame)}
+  --stick:var(--kid-stick);--cube:var(--kid-cube);--d-wig:var(--kid-wig);--d-wig-2:var(--kid-wig-2);--d-band:var(--kid-band);--d-lens:var(--kid-lens);--d-frame:var(--kid-frame)}
 body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid var(--kid-edge);border-radius:22px}
 body.look-kids .btn,body.look-kids .stage-btn,body.look-kids .opt,body.look-kids .tile{border-radius:999px}
 body.look-kids .stage-btn{border-radius:20px}
@@ -236,12 +262,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <button class="disguise" id="disguise" type="button" disabled><span class="art" id="disguiseArt"></span></button>
         <div class="tag" id="tag" aria-hidden="true"></div>
         <div class="sum" id="sum"></div>
+        <div class="blocks" id="blocks" aria-hidden="true"></div>
+        <div class="blocks-note" id="blocksNote"></div>
+        <div class="held" id="held" aria-hidden="true"></div>
         <div class="clue" id="clue"></div>
         <div class="say" id="say" aria-live="polite"></div>
       </div>
       <div class="prompt" id="prompt"></div>
       <div class="unmask-row" id="unmaskRow" hidden><button class="btn solid" id="unmaskBtn" type="button"></button></div>
       <div class="tiles" id="tiles" hidden></div>
+      <div class="unmask-row" id="tenRow" hidden><button class="btn solid" id="tenBtn" type="button"></button></div>
+      <div class="unmask-row" id="putRow" hidden><button class="btn solid" id="putBtn" type="button"></button></div>
       <div class="opts-wrap" id="optsWrap"><div class="choices maffs-options" id="opts" hidden></div></div>
       <div class="peek-row" id="peekRow" hidden><button class="btn" id="peekBtn" type="button"></button></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
@@ -288,7 +319,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       duck_right: "The duck concedes.",
       end: "Every disguise removed. The fancy dress shop has filed for bankruptcy.",
       take_off: "Take off the disguise",
-      find: "Find {little} in disguise."
+      find: "Find {little} in disguise.",
+      ten_in_hat: "Put the ten in the hat",
+      put_back: "Put the disguise back on"
     },
     kids: {
       title: "Every sum is in disguise!",
@@ -296,6 +329,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       welcome_class: "Welcome, {name} Class!",
       take_off: "Take it off!",
       find: "Find {little} in disguise!",
+      ten_in_hat: "Put the ten in my hat!",
+      put_back: "Put it back on!",
       reveal: { 'stage-1': "Noooo! My moustache!", 'stage-2': "Hey! My glasses!", 'stage-3': "My hair! Give it back!", 'stage-4': "Quack! You found me!", 'stage-5': "Hey! A ten in my hat!" },
       right: ["Unmasked!", "Caught you!", "Gotcha!", "You saw through it!", "Disguise destroyed!", "Nobody fools you!"],
       aha: { tens: "Aha! I tricked your tens!", concat: "Aha! Too many digits!", off_by_one: "Aha! Missed by one!", forgot_disguise: "Aha! You forgot my disguise!", extra_zero: "Aha! One zero too many!", ones: "Aha! Those were tens!", forgot_ten: "Aha! You missed my ten!", concat_cross: "Aha! Too many digits!" },
@@ -313,7 +348,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     'stage-2': { n: 2, name: 'The Glasses', disguise: 'glasses', flow: 'unmask', tiles: 10, about: 'Tens in disguise. Take the glasses off: 40 + 20 is 4 + 2 underneath.' },
     'stage-3': { n: 3, name: 'The Wig', disguise: 'wig', flow: 'wig', about: 'Ones and tens, wig on. Answer straight away, or peek underneath first.' },
     'stage-4': { n: 4, name: 'The Duck', disguise: 'duck', flow: 'duck', about: 'Spot the disguise: which big sum is the little one dressed up?' },
-    'stage-5': { n: 5, name: 'The Top Hat', disguise: 'hat', flow: 'unmask', tiles: 20, about: 'Crossing a ten. Take the hat off: 27 + 5 is 7 + 5 underneath, and the 20 waits on the tag.' }
+    'stage-5': { n: 5, name: 'The Top Hat', disguise: 'hat', flow: 'unmask', tiles: 20, exchange: true, about: 'Crossing a ten. Take the hat off: 27 + 5 is 7 + 5 underneath, and the 20 waits on the tag.' }
   };
   var MENU_NOTE = '10 questions a run. A point for each big sum right.';
 
@@ -605,7 +640,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var a = q.little[0], b = q.little[1], c = q.little_answer, s = bigOf(q), p = s[0], r = s[1], n = q.answer, typ = q.type;
     var row1 = [[a + ' + ' + b, false], [' = ', false], [String(c), false]];
     var row2 = hlTens(p, typ).concat([[' + ', false]], typ === 'tens' ? hlTens(r, typ) : [[String(r), false]], [[' = ', false]]);
-    if (typ === 'cross' && q.stage !== 4) row2 = row2.concat([[String(p - a), true], [' + ' + c + ' = ', false]]);
+    if (q.stage === 1 || q.stage === 2 || q.stage === 5) {
+      // Amendment 3: the tens put back, as the blocks show them; the tens highlighted in the sticks' colour.
+      var nt = [[String(n).slice(0, -1), true], [String(n).slice(-1), false]];
+      if (typ === 'tens') return [row1, [[String(c), true], [' tens', false, '\\text{ tens}'], [' = ', false]].concat(nt)];
+      if (typ === 'cross') {
+        row1 = row1.concat([[' = ', false], ['10', true], [' + ' + (c - 10), false]]);
+        return [row1, [[String(p - a), true], [' + ', false], ['10', true], [' + ' + (c - 10), false], [' = ', false]].concat(nt)];
+      }
+      return [row1, [[String(p - a), true], [' + ' + c, false], [' = ', false]].concat(nt)];
+    }
     row2 = row2.concat(hlTens(n, typ));
     return [row1, row2];
   }
@@ -620,7 +664,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var t = '\\begin{aligned}' + rows.map(function (row) {
         var first = true;
         return row.map(function (x) {
-          var piece = x[0].replace(/ = /, function (m) { if (first) { first = false; return ' &= '; } return m; });
+          var piece = (x[2] || x[0]).replace(/ = /, function (m) { if (first) { first = false; return ' &= '; } return m; });
           return x[1] ? '\\htmlClass{hl}{\\mathbf{' + piece + '}}' : piece;
         }).join('');
       }).join(' \\\\ ') + '\\end{aligned}';
@@ -634,8 +678,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function words(sm) { return sm[0] + ' plus ' + sm[1]; }
   function spokenWorking(q) {
     var a = q.little[0], b = q.little[1], c = q.little_answer, s = bigOf(q), n = q.answer;
-    var w = a + ' plus ' + b + ' is ' + c + ', so ' + words(s) + ' is ';
-    return w + (q.type === 'cross' && q.stage !== 4 ? (s[0] - a) + ' plus ' + c + ', which is ' + n : String(n));
+    if (q.stage === 1 || q.stage === 2 || q.stage === 5) {
+      if (q.type === 'tens') return a + ' plus ' + b + ' is ' + c + '. ' + c + ' tens is ' + n + '.';
+      if (q.type === 'cross') return a + ' plus ' + b + ' is ' + c + ', which is 10 and ' + (c - 10) + '. ' + (s[0] - a) + ' plus 10 plus ' + (c - 10) + ' is ' + n + '.';
+      return a + ' plus ' + b + ' is ' + c + '. ' + (s[0] - a) + ' plus ' + c + ' is ' + n + '.';
+    }
+    return a + ' plus ' + b + ' is ' + c + ', so ' + words(s) + ' is ' + n;
   }
   // The 67: a 6 and a 7 anywhere in the big sum's two numbers (Stage 4: answer_sum) and its answer, written as digits.
   function has67(q) { var d = String(bigOf(q)[0]) + String(bigOf(q)[1]) + String(q.answer); return d.indexOf('6') !== -1 && d.indexOf('7') !== -1; }
@@ -724,11 +772,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('stageLabel').textContent = 'Stage ' + S.n + ' · ' + S.name;
     $('tag').textContent = tagOf(Q);
     disguiseOn(true);
-    $('disguise').disabled = S.flow !== 'unmask';
-    $('disguise').setAttribute('aria-label', S.flow === 'unmask' ? L.take_off : '');
+    $('suspect').classList.toggle('blocky', S.flow === 'unmask');
+    $('disguise').disabled = true;
+    $('disguise').setAttribute('aria-label', '');
     setSay('');
     $('clue').innerHTML = '';
-    ['unmaskRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
+    $('blocks').innerHTML = ''; $('blocksNote').innerHTML = ''; drawHeld(0);
+    delete $('sum').dataset.regroup;
+    ['unmaskRow', 'tenRow', 'putRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
     if (S.flow === 'duck') {
       showSum(Q.little);
       $('sum').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer);
@@ -739,55 +790,164 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (S.flow === 'unmask') {
         state = 'mask';
         $('prompt').textContent = '';
-        $('unmaskBtn').textContent = L.take_off;
-        $('unmaskRow').hidden = false;
-        MaffsLock.fresh($('unmaskRow'));
-        if (handHere()) pointAt($('disguise'));
+        startBlocks();
+        showRow('unmaskRow', L.take_off, L.take_off);
       } else {
         askBig();
       }
     }
   }
 
-  // Step 2: the disguise comes off with the tens on its tag; the little sum shows; the tiles.
-  function unmask() {
-    if (state !== 'mask') return;
-    state = 'little';
-    $('unmaskRow').hidden = true;
-    $('disguise').disabled = true;
-    pointAt(null);
-    disguiseOn(false);
-    askSum(Q.little);
-    setSay(L.reveal[mode], 'reveal.' + mode);
-    var box = $('tiles');
-    box.innerHTML = '';
-    box.classList.toggle('wide', S.tiles > 10);
-    for (var v = 0; v <= S.tiles; v++) {
-      var t = document.createElement('button');
-      t.type = 'button'; t.className = 'tile'; t.dataset.val = String(v); t.textContent = String(v);
-      // Each tile its own handler (check-site's option probe sees only buttons with their own; contract, from PR 811).
-      t.addEventListener('click', onTile);
-      box.appendChild(t);
+  /* ---------- Stages 1, 2 and 5: tens on show (Amendment 3) ----------
+     take off (the tens into the disguise) -> the ones on tiles -> (Stage 5) ten ones for a ten -> put it back -> the answer.
+     Every block count comes from the item: (10t + a) + b, or 10a + 10b on a tens item. */
+  function tensOf(q) { return (q.big[0] - q.little[0]) / 10; }          // t, on a ones or crossing item
+  function stickHtml(n) { var h = ''; for (var i = 0; i < n; i++) h += '<span class="stk">' + new Array(11).join('<i></i>') + '</span>'; return h; }
+  function cubeHtml(n) { return '<span class="cubes">' + new Array(n + 1).join('<i></i>') + '</span>'; }
+  // groups: [{sticks, cubes}, ...], a "+" between them. cubeButton: the ones as one button (the exchange).
+  function drawBlocks(groups, cubeButton) {
+    var box = $('blocks');
+    box.innerHTML = groups.map(function (g) {
+      var inner = stickHtml(g.sticks || 0) + (g.cubes ? cubeHtml(g.cubes) : '');
+      return '<span class="grp" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + inner + '</span>';
+    }).join('<span class="plus">+</span>');
+    if (cubeButton) {
+      var g = box.querySelector('.grp'), b = document.createElement('button');
+      b.type = 'button'; b.className = 'cubebtn'; b.id = 'cubeBtn'; b.setAttribute('aria-label', L.ten_in_hat);
+      while (g.firstChild) b.appendChild(g.firstChild);
+      g.appendChild(b);
+      // Its own handler, where it is built (PR 811).
+      b.addEventListener('click', function () { exchange(false); });
     }
-    box.hidden = false;
-    MaffsLock.fresh(box);
   }
-  // Step 3: the little sum, marked by the tile's dataset.val; no score either way. A wrong tile shows the right one.
+  function drawHeld(n) { $('held').innerHTML = stickHtml(n); $('held').dataset.sticks = String(n); }
+  function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+  // Move elements towards a target with the fly animation, then run done (at once with reduced motion, or now).
+  var stepTimer = null;
+  function flyThen(els, target, now, done) {
+    if (now || reduced() || !els.length) { done(); return; }
+    var t = target.getBoundingClientRect();
+    els.forEach(function (el) {
+      var r = el.getBoundingClientRect();
+      el.style.setProperty('--dx', Math.round(t.left + t.width / 2 - (r.left + r.width / 2)) + 'px');
+      el.style.setProperty('--dy', Math.round(t.top + t.height / 2 - (r.top + r.height / 2)) + 'px');
+      el.classList.add('fly');
+    });
+    stepTimer = MaffsLock.timer(function () { stepTimer = null; done(); }, 600);
+  }
+  function startBlocks() {
+    if (Q.type === 'tens') drawBlocks([{ sticks: Q.little[0] }, { sticks: Q.little[1] }]);
+    else drawBlocks([{ sticks: tensOf(Q), cubes: Q.little[0] }, { cubes: Q.little[1] }]);
+    drawHeld(0);
+    $('blocksNote').innerHTML = '';
+  }
+  function showRow(id, text, aria) {
+    ['unmaskRow', 'tenRow', 'putRow'].forEach(function (r) { $(r).hidden = r !== id; });
+    if (id) {
+      $(id).querySelector('button').textContent = text;
+      MaffsLock.fresh($(id));
+      if (handHere()) pointAt($(id).querySelector('button'));
+    }
+    $('disguise').disabled = !aria;
+    $('disguise').setAttribute('aria-label', aria || '');
+  }
+
+  // Step 2, take off: the t sticks fly into the disguise (its tag 10t); on a tens item none leave and it holds "0".
+  // The disguise parks beside the sum and stays in view.
+  function unmask(now) {
+    if (state !== 'mask') return;
+    state = 'taking';
+    showRow(null);
+    pointAt(null);
+    var els = Q.type === 'tens' ? [] : Array.prototype.slice.call($('blocks').querySelectorAll('.stk'));
+    flyThen(els, $('disguise'), now, function () {
+      state = 'little';
+      disguiseOn(false);
+      if (Q.type === 'tens') { $('tag').textContent = '0'; drawHeld(0); }
+      else {
+        $('tag').textContent = String(10 * tensOf(Q));
+        drawHeld(tensOf(Q));
+        drawBlocks([{ cubes: Q.little[0] }, { cubes: Q.little[1] }]);
+      }
+      askSum(Q.little);
+      // Stages 1 and 2 say their reveal line here; Stage 5's waits for the exchange.
+      if (!S.exchange) setSay(L.reveal[mode], 'reveal.' + mode); else setSay('');
+      var box = $('tiles');
+      box.innerHTML = '';
+      box.classList.toggle('wide', S.tiles > 10);
+      for (var v = 0; v <= S.tiles; v++) {
+        var t = document.createElement('button');
+        t.type = 'button'; t.className = 'tile'; t.dataset.val = String(v); t.textContent = String(v);
+        // Each tile its own handler (check-site's option probe sees only buttons with their own; contract, from PR 811).
+        t.addEventListener('click', onTile);
+        box.appendChild(t);
+      }
+      box.hidden = false;
+      MaffsLock.fresh(box);
+    });
+  }
+  // Step 3, the ones: marked by the tile's dataset.val; no score either way. A wrong tile shows the right one. Then
+  // the blocks show c counted.
   function onTile(e) {
     if (state !== 'little') return;
     if (!MaffsLock.lock($('tiles'))) return;
     var b = e.currentTarget, right = b.dataset.val === String(Q.little_answer);
     b.classList.add(right ? 'is-right' : 'is-wrong');
-    var c = $('tiles').querySelector('[data-val="' + Q.little_answer + '"]');
-    if (c) c.classList.add('is-right');
+    var k = $('tiles').querySelector('[data-val="' + Q.little_answer + '"]');
+    if (k) k.classList.add('is-right');
     $('tiles').dataset.picked = b.dataset.val;
     $('clue').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer) + (right ? ' ✓' : '');
     $('clue').dataset.little = right ? 'right' : 'wrong';
-    // Step 4: the disguise goes back on, and the big sum.
     $('tiles').hidden = true;
+    var c = Q.little_answer;
+    showSum(Q.little);
+    if (Q.type === 'tens') drawBlocks([{ sticks: c }]); else drawBlocks([{ cubes: c }], S.exchange);
+    $('blocksNote').innerHTML = tex(String(c));
+    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }
+    else showPutBack();
+  }
+  // Step 4 (Stage 5), the exchange: ten cubes join into a stick that hops into the hat (tag 10t + 10), c - 10 cubes stay.
+  function exchange(now) {
+    if (state !== 'exchange') return;
+    state = 'exchanging';
+    showRow(null);
+    pointAt(null);
+    var c = Q.little_answer, cubes = Array.prototype.slice.call($('blocks').querySelectorAll('.cubes i')).slice(0, 10);
+    flyThen(cubes, $('disguise'), now, function () {
+      $('tag').textContent = String(10 * tensOf(Q) + 10);
+      drawHeld(tensOf(Q) + 1);
+      drawBlocks(c - 10 ? [{ cubes: c - 10 }] : []);
+      $('blocksNote').innerHTML = tex(c + ' = 10 + ' + (c - 10));
+      $('blocksNote').dataset.split = c + ' = 10 + ' + (c - 10);
+      setSay(L.reveal[mode], 'reveal.' + mode);
+      showPutBack();
+    });
+  }
+  function showPutBack() {
+    state = 'putback';
+    showRow('putRow', L.put_back, L.put_back);
+  }
+  // Step 5, put it back: the disguise and its sticks go back beside the cubes; the question shows the regrouping.
+  function putBack() {
+    if (state !== 'putback') return;
+    showRow(null);
+    pointAt(null);
+    var c = Q.little_answer, t = Q.type === 'tens' ? 0 : tensOf(Q);
+    drawHeld(0);
     disguiseOn(true);
     setSay('');
+    $('blocksNote').innerHTML = '';
+    if (Q.type === 'tens') drawBlocks([{ sticks: c }]);
+    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, cubes: c - 10 }]);
+    else drawBlocks([{ sticks: t, cubes: c }]);
     askBig();
+  }
+  // The question after put-back, as maths: the regrouping the blocks show.
+  function regroup(q) {
+    var p = q.big[0], r = q.big[1], c = q.little_answer, t10 = p - q.little[0];
+    if (q.type === 'tens') return [p + ' + ' + r + ' = ' + c + '\\text{ tens} = {?}', p + ' + ' + r + ' = ' + c + ' tens = ?'];
+    if (q.type === 'cross') return [p + ' + ' + r + ' = ' + (t10 + 10) + ' + ' + (c - 10) + ' = {?}', p + ' + ' + r + ' = ' + (t10 + 10) + ' + ' + (c - 10) + ' = ?'];
+    return [p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = ?'];
   }
 
   function askBig() {
@@ -798,6 +958,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('prompt').innerHTML = L.find.split('{little}').map(esc).join(tex(sumTex(Q.little)));
       $('prompt').dataset.line = 'find';
       opts = MaffsOptions.shuffle([Q.answer_sum].concat(Q.decoys.map(function (d) { return d.sum; })));
+    } else if (S.flow === 'unmask') {
+      // After put-back (Amendment 3): the regrouping the blocks show, as maths.
+      var rg = regroup(Q);
+      $('prompt').textContent = ''; delete $('prompt').dataset.line;
+      $('sum').innerHTML = tex(rg[0]);
+      $('sum').dataset.sum = Q.big[0] + '+' + Q.big[1]; $('sum').dataset.ask = '1'; $('sum').dataset.regroup = rg[1];
+      var vals = [Q.answer];
+      for (var k2 in Q.decoys) if (Object.prototype.hasOwnProperty.call(Q.decoys, k2)) vals.push(Q.decoys[k2]);
+      opts = MaffsOptions.shuffle(vals);
     } else {
       askSum(Q.big);
       var vals = [Q.answer];
@@ -863,6 +1032,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('peekRow').hidden = true;
     pointAt(null);
     hush();
+    // The little sum is the working's first row now, so its line under the sum goes (room for Next on a phone).
+    $('clue').innerHTML = '';
     state = right ? 'done' : 'wrong';
     if (right) { score++; if (!peeked) unpeekedRight++; }
     $('hudScore').textContent = String(score);
@@ -956,8 +1127,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // What the speaker reads now, built from the item.
   function toRead() {
     if (!Q) return '';
-    if (state === 'mask') return words(Q.big) + ' equals what?';
+    var NOUN = { moustache: 'moustache', glasses: 'glasses', hat: 'hat' };
+    if (state === 'mask') {
+      if (Q.type === 'tens') return Q.big[0] + ' is ' + Q.little[0] + ' tens and ' + Q.big[1] + ' is ' + Q.little[1] + ' tens.';
+      return Q.big[0] + ' is ' + tensOf(Q) + ' tens and ' + Q.little[0] + ' ones. The tens go in the ' + NOUN[S.disguise] + '.';
+    }
     if (state === 'little') return words(Q.little) + ' equals what?';
+    if (state === 'exchange') return '10 ones make a ten. Put the ten in the hat.';
+    if (state === 'putback') {
+      if (Q.type === 'tens') return Q.little_answer + ' tens. Put it back on.';
+      if (Q.type === 'cross') return 10 * tensOf(Q) + ' and 10. Put it back on.';
+      return 10 * tensOf(Q) + ' and ' + Q.little_answer + '. Put it back on.';
+    }
     if (state === 'big') return S.flow === 'duck' ? L.find.split('{little}').join(words(Q.little)) : words($('sum').dataset.ask === '1' && peekTimer !== null ? Q.little : Q.big) + ' equals what?';
     if (state === 'done' || state === 'wrong') return lastLine + ' ' + spokenWorking(Q);
     return '';
@@ -983,11 +1164,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   });
 
   /* ---------- wiring ---------- */
-  $('unmaskBtn').addEventListener('click', unmask);
+  $('unmaskBtn').addEventListener('click', function () { unmask(false); });
   // The disguise is a button too: it does what the take-off button does.
-  $('disguise').addEventListener('click', function () { if (state === 'mask') unmask(); });
+  $('disguise').addEventListener('click', function () { if (state === 'mask') unmask(false); else if (state === 'putback') putBack(); });
   $('speakBtn').addEventListener('click', function () { speak(toRead()); });
-  window.addEventListener('resize', function () { var h = $('hand'); if (!h.hidden) pointAt(h.dataset.at === 'disguise' ? $('disguise') : $('opts')); });
+  $('tenBtn').addEventListener('click', function () { exchange(false); });
+  $('putBtn').addEventListener('click', putBack);
+  window.addEventListener('resize', function () { var h = $('hand'); if (!h.hidden) pointAt(document.getElementById(h.dataset.at) || $('opts')); });
   $('peekBtn').addEventListener('click', peek);
   $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
   $('againBtn').addEventListener('click', function () { startMode(mode); });
@@ -1012,7 +1195,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     working: function (id) { var q = item(id); return q ? stacked(q).slice(0, 2) : null; },
     ui: {
       state: function () { return state; },
-      ready: function () { return state === 'mask' || state === 'little' || state === 'big'; },
+      ready: function () { return state === 'mask' || state === 'little' || state === 'exchange' || state === 'putback' || state === 'big'; },
       mode: function () { return mode; },
       question: function () { return Q ? copy(Q) : null; },
       score: function () { return score; },
@@ -1022,7 +1205,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       preview: function (id) { var q = item(id); if (q) begin('stage-' + q.stage, [q]); },
       // Taking the disguise off marks nothing, so it is called directly (a fresh window on the screen cannot swallow it).
       // via 'disguise' or 'button' taps that control instead.
-      unmask: function (via) { if (via === 'disguise') { MaffsLock.fresh($('suspect'), 0); $('disguise').click(); } else if (via === 'button') { MaffsLock.fresh($('unmaskRow'), 0); $('unmaskBtn').click(); } else unmask(); },
+      unmask: function (via) { if (via === 'disguise') { MaffsLock.fresh($('suspect'), 0); $('disguise').click(); } else if (via === 'button') { MaffsLock.fresh($('unmaskRow'), 0); $('unmaskBtn').click(); } else unmask(true); },
+      // Stage 5's exchange: via 'cubes' or 'button' taps that control; with no via, at once.
+      exchange: function (via) { if (via === 'cubes') { MaffsLock.fresh($('suspect'), 0); var b = $('cubeBtn'); if (b) b.click(); } else if (via === 'button') { MaffsLock.fresh($('tenRow'), 0); $('tenBtn').click(); } else exchange(true); },
+      // Put it back: via 'disguise' or 'button'; with no via, at once.
+      putBack: function (via) { if (via === 'disguise') { MaffsLock.fresh($('suspect'), 0); $('disguise').click(); } else if (via === 'button') { MaffsLock.fresh($('putRow'), 0); $('putBtn').click(); } else putBack(); },
       toRead: toRead,
       tile: function (v) { return state === 'little' && click($('tiles'), '[data-val="' + v + '"]'); },
       pick: function (v) { return state === 'big' && click($('opts'), '[data-val="' + v + '"]'); },
@@ -1031,6 +1218,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       answer: function (right) {
         if (state === 'mask') this.unmask();
         if (state === 'little') this.tile(Q.little_answer);
+        if (state === 'exchange') exchange(true);
+        if (state === 'putback') putBack();
         if (state !== 'big') return;
         var key = S.flow === 'duck' ? Q.answer_sum[0] + '+' + Q.answer_sum[1] : String(Q.answer);
         if (right) { this.pick(key); return; }
