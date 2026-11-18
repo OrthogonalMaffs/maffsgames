@@ -76,7 +76,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-14-b';
+const SCRIPT_VERSION = '2026-11-18-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -273,6 +273,9 @@ function sendDailyReport() {
   var yesterdayRows = allRows.filter(function(r) { var t = new Date(r[col['timestamp']]); return t >= yesterday && t < today; });
   var weekRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= weekAgo; });
   var monthRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= monthAgo; });
+  // The 7 days before weekAgo: the Dashboard's "previous 7 days" (DASHBOARD-GLANCE).
+  var prevWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 14);
+  var prevWeekRows = allRows.filter(function(r) { var t = new Date(r[col['timestamp']]); return t >= prevWeekAgo && t < weekAgo; });
 
   // ── Email from yesterday's data ──
   // The dashboard is deliberately rebuilt AFTER the email is sent. It used to
@@ -280,7 +283,7 @@ function sendDailyReport() {
   // before MailApp was ever reached — the report is the point, the charts are
   // decoration. See safeRebuildDashboard.
   var kinds = rptLoadKinds();
-  if (yesterdayRows.length === 0) { safeRebuildDashboard(weekRows, monthRows, col, kinds); return; }
+  if (yesterdayRows.length === 0) { safeRebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows); return; }
 
   var starts = yesterdayRows.filter(function(r) { return r[col['event']] === 'game_started'; });
   var completions = yesterdayRows.filter(function(r) { return r[col['event']] === 'game_completed'; });
@@ -327,7 +330,7 @@ function sendDailyReport() {
 
   MailApp.sendEmail(REPORT_EMAIL, subject, body);
 
-  safeRebuildDashboard(weekRows, monthRows, col, kinds);
+  safeRebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows);
 }
 
 // Chart operations (removeChart / newChart / insertChart) sporadically fail with
@@ -339,18 +342,541 @@ function sendDailyReport() {
 // and rebuilt from scratch on every run, so a failed or half-built dashboard
 // repairs itself within 24 hours. The daily email does not — it happens once and
 // is gone. Never let the decoration take down the report.
-function safeRebuildDashboard(weekRows, monthRows, col, kinds) {
+function safeRebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   try {
-    rebuildDashboard(weekRows, monthRows, col, kinds);
+    rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows);
   } catch (err) {
     console.error('rebuildDashboard failed (dashboard will rebuild on the next run): ' + err);
   }
 }
 
 // ============================================================
+//  DASHBOARD AT A GLANCE (contract DASHBOARD-GLANCE, Jon, 18 Nov 2026)
+// ============================================================
+// The Dashboard answers the questions Jon asks most weeks, in this order: is it growing (A), is anything broken (B),
+// are teachers using it (C), did my posts bring visitors (D), who uses it (E), is my newest game landing (F), then
+// escape rooms (G), Misunderstood Maths (H), the older tables (I) and Daily Activity (J). Sheet rows are classed by
+// rptKind exactly as rptBuild classes them. The GA4 tabs (docs/apps-script-ga4-country.js) are read by name and never
+// written; a missing or empty one gives one line, RPT_GA4_MISSING, in each section that uses it. GA4 figures run to
+// the last complete day: "7 days" there is the 7 dates before today, and the previous 7 the dates before those.
+const RPT_CHECK_MIN = 10;          // B1: marked answers before a question can be flagged
+const RPT_CHECK_PCT = 0.10;        // B1: flagged when under this share right
+const RPT_QUIT_MIN = 10;           // B2: game_abandoned rows before a game is listed
+const RPT_CLASS_STARTS = 10;       // C1: starts of one game in one run
+const RPT_CLASS_GAP_MIN = 30;      // C1: minutes allowed between one start and the next
+const RPT_NEW_GAME_DAYS = 14;      // F
+const RPT_LAUNCH_URL = 'https://raw.githubusercontent.com/OrthogonalMaffs/maffsgames/main/schools/assets/launch-dates.json';
+const RPT_GA4_DAILY = 'GA4 country daily';
+const RPT_GA4_SOURCES = 'GA4 sources daily';
+const RPT_GA4_MISSING = 'GA4 figures not available yet.';
+// D1's channels, matched in RPT_CHANNELS order, case-insensitive: a source "contains" one of these words.
+const RPT_CH_GOOGLE = ['google'];
+const RPT_CH_LINKEDIN = ['linkedin', 'lnkd'];
+const RPT_CH_FACEBOOK = ['facebook', 'fb'];
+const RPT_CH_TES = ['tes.com'];
+const RPT_CH_DIRECT = '(direct)';
+const RPT_CH_ORGANIC = 'organic';
+const RPT_CHANNELS = ['Google search', 'Other search', 'LinkedIn', 'Facebook', 'Tes', 'Direct', 'Other'];
+const RPT_UP = '#15803d', RPT_DOWN = '#b91c1c', RPT_GREY = '#6b7280', RPT_FLAG_BG = '#fee2e2';
+var rptLaunchCache = null;
+
+function rptDay(d) { return Utilities.formatDate(d, TIMEZONE, 'yyyy-MM-dd'); }
+
+// Day keys: today, 7 days ago (weekRows' start), 14 days ago (prevWeekRows' start), and F's launch cut-off.
+function rptWindows() {
+  var now = new Date();
+  var at = function(n) { return rptDay(new Date(now.getFullYear(), now.getMonth(), now.getDate() - n)); };
+  return {today: at(0), week: at(7), prev: at(14), launch: at(RPT_NEW_GAME_DAYS)};
+}
+
+// Cells, every one through cellValue.
+function rptTitle(dash, r, text) { dash.getRange(r, 1).setValue(cellValue(text)).setFontWeight('bold').setFontSize(11); return r + 1; }
+function rptHead(dash, r, cells) {
+  dash.getRange(r, 1, 1, cells.length).setValues([cells.map(cellValue)]).setFontWeight('bold').setBackground('#f0f0f0');
+  return r + 1;
+}
+function rptLine(dash, r, text) { dash.getRange(r, 1).setValue(cellValue(text)).setFontStyle('italic'); return r + 1; }
+function rptRow(dash, r, cells) { return dash.getRange(r, 1, 1, cells.length).setValues([cells.map(cellValue)]); }
+
+// ▲, ▼ or ▬ and the % change against the earlier figure, "new" when that was 0. dir: 1 up, -1 down, 0 neither.
+function rptChange(cur, prev) {
+  if (prev === 0) return cur === 0 ? {text: '▬ 0%', dir: 0} : {text: '▲ new', dir: 1};
+  var dir = cur > prev ? 1 : cur < prev ? -1 : 0;
+  return {text: (dir > 0 ? '▲ ' : dir < 0 ? '▼ ' : '▬ ') + Math.abs(Math.round(100 * (cur - prev) / prev)) + '%', dir: dir};
+}
+// % correct moves in percentage points (a rate's own % change would read as a second rate).
+function rptPointsChange(cur, prev) {
+  if (cur === null) return {text: 'n/a', dir: 0};
+  if (prev === null) return {text: '▲ new', dir: 1};
+  var p = Math.round(100 * cur) - Math.round(100 * prev);
+  return {text: (p > 0 ? '▲ ' : p < 0 ? '▼ ' : '▬ ') + Math.abs(p) + ' pts', dir: p > 0 ? 1 : p < 0 ? -1 : 0};
+}
+function rptDirColour(dir) { return dir > 0 ? RPT_UP : dir < 0 ? RPT_DOWN : RPT_GREY; }
+
+// One GA4 tab as objects keyed by its row-1 headings, each date as 'yyyy-MM-dd'; null when the tab is missing or
+// holds no rows. Read only.
+function rptGa4Tab(ss, name) {
+  var tab = ss.getSheetByName(name);
+  if (!tab) return null;
+  var v = tab.getDataRange().getValues();
+  if (v.length < 2) return null;
+  var head = v[0].map(String);
+  var rows = v.slice(1).filter(function(row) { return row.join('') !== ''; }).map(function(row) {
+    var o = rptMap();
+    head.forEach(function(h, i) { o[h] = row[i]; });
+    var d = o['date'];
+    o['date'] = Object.prototype.toString.call(d) === '[object Date]' ? rptDay(d) :
+      String(d).replace(/^(\d{4})(\d{2})(\d{2})$/, '$1-$2-$3');
+    return o;
+  });
+  return rows.length ? rows : null;
+}
+function rptInWeek(o, win) { return o['date'] >= win.week && o['date'] < win.today; }
+function rptInPrev(o, win) { return o['date'] >= win.prev && o['date'] < win.week; }
+
+function rptContains(s, words) {
+  s = String(s).toLowerCase();
+  return words.some(function(w) { return s.indexOf(w) >= 0; });
+}
+function rptChannel(source, medium) {
+  var organic = String(medium).toLowerCase() === RPT_CH_ORGANIC;
+  if (organic && rptContains(source, RPT_CH_GOOGLE)) return 'Google search';
+  if (organic) return 'Other search';
+  if (rptContains(source, RPT_CH_LINKEDIN)) return 'LinkedIn';
+  if (rptContains(source, RPT_CH_FACEBOOK)) return 'Facebook';
+  if (rptContains(source, RPT_CH_TES)) return 'Tes';
+  if (String(source).toLowerCase() === RPT_CH_DIRECT) return 'Direct';
+  return 'Other';
+}
+
+// schools/assets/launch-dates.json ({slug: 'yyyy-MM-dd'}; a room's key has no "escape-"), fetched once per run as
+// games.json is. ok is false when it could not be read; the Dashboard says so in one line and carries on.
+function rptLoadLaunches() {
+  if (rptLaunchCache) return rptLaunchCache;
+  var dates = rptMap(), ok = false;
+  try {
+    var res = UrlFetchApp.fetch(RPT_LAUNCH_URL, {muteHttpExceptions: true});
+    if (res.getResponseCode() === 200) {
+      var j = JSON.parse(res.getContentText());
+      Object.keys(j).forEach(function(k) { if (/^\d{4}-\d\d-\d\d$/.test(String(j[k]))) dates[k] = String(j[k]); });
+      ok = true;
+    }
+  } catch (err) {
+    console.error('launch-dates.json could not be read: ' + err);
+  }
+  rptLaunchCache = {ok: ok, dates: dates};
+  return rptLaunchCache;
+}
+
+// A: one week's headline figures. Questions answered and % correct are question games only (rptKind).
+function rptWeekFigures(rows, col, kinds) {
+  var f = {starts: 0, answers: 0, marked: 0, right: 0}, games = rptMap();
+  rows.forEach(function(x) {
+    var ev = x[col['event']], slug = String(x[col['game_slug']]);
+    if (ev === 'game_started') { f.starts++; games[slug] = true; return; }
+    if (ev !== 'question_answered' || rptKind(slug, kinds) !== 'question') return;
+    f.answers++;
+    var m = rptMarked(x, col);
+    if (m !== null) { f.marked++; if (m) f.right++; }
+  });
+  f.games = Object.keys(games).length;
+  return f;
+}
+
+// A. IS IT GROWING?
+function rptGrowing(dash, r, weekRows, prevWeekRows, col, kinds, ga4Daily, win) {
+  r = rptTitle(dash, r, 'Is it growing? Last 7 days against the previous 7');
+  var cur = rptWeekFigures(weekRows, col, kinds), prev = rptWeekFigures(prevWeekRows, col, kinds);
+  var rate = cur.marked ? cur.right / cur.marked : null;
+  var ch = [rptChange(cur.starts, prev.starts), rptChange(cur.answers, prev.answers),
+    rptPointsChange(rate, prev.marked ? prev.right / prev.marked : null), rptChange(cur.games, prev.games)];
+  var values = [cur.starts, cur.answers, rate === null ? 'n/a' : rate, cur.games];
+  if (ga4Daily) {
+    var e = 0, pe = 0;
+    ga4Daily.forEach(function(o) {
+      if (rptInWeek(o, win)) e += Number(o['engagedSessions']) || 0;
+      else if (rptInPrev(o, win)) pe += Number(o['engagedSessions']) || 0;
+    });
+    values.push(e);
+    ch.push(rptChange(e, pe));
+  } else {
+    values.push('–');
+    ch.push({text: '–', dir: 0});
+  }
+  r = rptHead(dash, r, ['Games started', 'Questions answered', '% correct', 'Different games played', 'Engaged sessions']);
+  rptRow(dash, r, values);
+  if (rate !== null) dash.getRange(r, 3).setNumberFormat('0%');
+  r++;
+  rptRow(dash, r, ch.map(function(c) { return c.text; }));
+  var colours = [rptDirColour(ch[0].dir), rptDirColour(ch[1].dir), RPT_GREY /* % correct: neutral whichever way it moves */,
+    rptDirColour(ch[3].dir), rptDirColour(ch[4].dir)];
+  colours.forEach(function(c, i) { dash.getRange(r, i + 1).setFontColor(c); });
+  r++;
+  if (!ga4Daily) r = rptLine(dash, r, RPT_GA4_MISSING);
+  return r + 1;
+}
+
+// B. IS ANYTHING BROKEN?
+function rptBroken(dash, r, weekRows, monthRows, col, kinds) {
+  r = rptTitle(dash, r, 'Is anything broken?');
+  // B1: a question almost nobody gets right may have a wrong answer key.
+  r = rptTitle(dash, r, 'Check these questions — possible wrong answer key (last 30 days)');
+  var chk = rptMap();
+  monthRows.forEach(function(x) {
+    if (x[col['event']] !== 'question_answered') return;
+    var slug = String(x[col['game_slug']]);
+    if (rptKind(slug, kinds) !== 'question') return;   // B1: question games only, never a room's lock
+    var m = rptMarked(x, col), qid = col['question_id'] === undefined ? '' : String(x[col['question_id']]);
+    if (m === null || !qid) return;
+    var level = String(x[col['level']]), key = slug + '|' + level + '|' + qid;
+    if (!rptHas(chk, key)) chk[key] = {slug: slug, level: level, qid: qid, total: 0, correct: 0};
+    chk[key].total++;
+    if (m) chk[key].correct++;
+  });
+  var flagged = Object.keys(chk).map(function(k) { return chk[k]; }).filter(function(q) {
+    return q.total >= RPT_CHECK_MIN && q.correct / q.total < RPT_CHECK_PCT;
+  }).sort(function(a, b) {
+    return a.correct / a.total - b.correct / b.total || b.total - a.total ||
+      (a.slug + '|' + a.level + '|' + a.qid < b.slug + '|' + b.level + '|' + b.qid ? -1 : 1);
+  });
+  if (!flagged.length) {
+    r = rptLine(dash, r, 'None: every question answered ' + RPT_CHECK_MIN + '+ times has at least ' +
+      Math.round(100 * RPT_CHECK_PCT) + '% right.');
+  } else {
+    r = rptHead(dash, r, ['Game', 'Level', 'Question id', 'Marked answers', '% right']);
+    flagged.forEach(function(q) {
+      rptRow(dash, r, [q.slug, q.level, q.qid, q.total, q.correct / q.total]).setBackground(RPT_FLAG_BG);
+      dash.getRange(r, 5).setNumberFormat('0%');
+      r++;
+    });
+    r = rptLine(dash, r, 'Decode an id: python scripts/decode-question-ids.py <game> --id <id>');
+  }
+  r++;
+
+  // B2: where students quit.
+  r = rptTitle(dash, r, 'Where students quit (last 7 days, games with ' + RPT_QUIT_MIN + '+ quits)');
+  var quit = rptMap(), qStarts = rptMap();
+  weekRows.forEach(function(x) {
+    var ev = x[col['event']], slug = String(x[col['game_slug']]);
+    if (ev === 'game_started') rptAdd(qStarts, slug);
+    else if (ev === 'game_abandoned') {
+      if (!rptHas(quit, slug)) quit[slug] = {slug: slug, n: 0, at: rptMap()};
+      quit[slug].n++;
+      rptAdd(quit[slug].at, String(x[col['question_index']]));
+    }
+  });
+  var lower = function(a, b) { var x = Number(a), y = Number(b); return isNaN(x) || isNaN(y) ? a < b : x < y; };
+  var quits = Object.keys(quit).map(function(k) { return quit[k]; }).filter(function(q) { return q.n >= RPT_QUIT_MIN; })
+    .map(function(q) {
+      q.starts = rptGet(qStarts, q.slug, 0);
+      q.rate = q.starts > 0 ? q.n / q.starts : null;
+      var best = null;
+      Object.keys(q.at).forEach(function(k) {
+        if (best === null || q.at[k] > q.at[best] || (q.at[k] === q.at[best] && lower(k, best))) best = k;
+      });
+      q.pos = /^\d+$/.test(best) ? Number(best) : best;
+      q.posN = q.at[best];
+      return q;
+    }).sort(function(a, b) {
+      return (b.rate === null ? -1 : b.rate) - (a.rate === null ? -1 : a.rate) || b.n - a.n || (a.slug < b.slug ? -1 : 1);
+    }).slice(0, 10);
+  if (!quits.length) {
+    r = rptLine(dash, r, 'None: no game was quit ' + RPT_QUIT_MIN + ' or more times this week.');
+  } else {
+    r = rptHead(dash, r, ['Game', 'Starts', 'Abandoned', '% abandoned', 'Most quit at position', 'Quit there']);
+    quits.forEach(function(q) {
+      rptRow(dash, r, [q.slug, q.starts, q.n, q.rate === null ? '' : q.rate, q.pos, q.posN]);
+      dash.getRange(r, 4).setNumberFormat('0%');
+      r++;
+    });
+    r = rptLine(dash, r, 'Position in the run, not which question: game_abandoned carries question_index only.');
+  }
+  return r + 1;
+}
+
+// C. ARE TEACHERS USING IT?
+function rptTeachers(dash, r, weekRows, monthRows, col, kinds) {
+  r = rptTitle(dash, r, 'Are teachers using it?');
+  // C1: a run of starts of one game, each close to the one before, is probably a class.
+  r = rptTitle(dash, r, 'Probably a class (estimate: ' + RPT_CLASS_STARTS + ' or more starts of one game, each within ' +
+    RPT_CLASS_GAP_MIN + ' minutes of the one before; last 7 days)');
+  var gap = RPT_CLASS_GAP_MIN * 60000, starts = rptMap(), ans = rptMap();
+  weekRows.forEach(function(x) {
+    var ev = x[col['event']], slug = String(x[col['game_slug']]), t = new Date(x[col['timestamp']]).getTime();
+    if (ev === 'game_started') {
+      if (!rptHas(starts, slug)) starts[slug] = [];
+      starts[slug].push(t);
+    } else if (ev === 'question_answered' && rptKind(slug, kinds) === 'question') {
+      if (!rptHas(ans, slug)) ans[slug] = [];
+      ans[slug].push(t);
+    }
+  });
+  var classes = [];
+  Object.keys(starts).forEach(function(slug) {
+    var ts = starts[slug].sort(function(a, b) { return a - b; }), run = [];
+    var close = function() {
+      if (run.length < RPT_CLASS_STARTS) return;
+      var first = run[0], last = run[run.length - 1];
+      var n = rptKind(slug, kinds) !== 'question' ? '–' :
+        rptGet(ans, slug, []).filter(function(t) { return t >= first && t <= last + gap; }).length;
+      classes.push({slug: slug, first: first, last: last, starts: run.length, answers: n});
+    };
+    ts.forEach(function(t, i) {
+      if (i > 0 && t - ts[i - 1] > gap) { close(); run = []; }
+      run.push(t);
+    });
+    close();
+  });
+  classes.sort(function(a, b) { return b.first - a.first || (a.slug < b.slug ? -1 : 1); });
+  if (!classes.length) {
+    r = rptLine(dash, r, 'None this week.');
+  } else {
+    r = rptHead(dash, r, ['Game', 'Date', 'First start', 'Last start', 'Starts', 'Questions answered']);
+    classes.forEach(function(c) {
+      rptRow(dash, r, [c.slug, rptDay(new Date(c.first)), Utilities.formatDate(new Date(c.first), TIMEZONE, 'HH:mm'),
+        Utilities.formatDate(new Date(c.last), TIMEZONE, 'HH:mm'), c.starts, c.answers]);
+      r++;
+    });
+  }
+  r++;
+
+  // C2: when in the week and the day games are started.
+  r = rptTitle(dash, r, 'When it is used (game starts, last 30 days)');
+  var slots = {wd: [0, 0, 0, 0, 0], we: [0, 0, 0, 0, 0]};
+  monthRows.forEach(function(x) {
+    if (x[col['event']] !== 'game_started') return;
+    var d = new Date(x[col['timestamp']]), hm = Utilities.formatDate(d, TIMEZONE, 'HH:mm');
+    var s = hm < '09:00' ? 0 : hm < '15:30' ? 1 : hm < '18:00' ? 2 : hm < '22:00' ? 3 : 4;
+    slots[Number(Utilities.formatDate(d, TIMEZONE, 'u')) >= 6 ? 'we' : 'wd'][s]++;
+  });
+  r = rptHead(dash, r, ['Days', 'Before 09:00', '09:00-15:30', '15:30-18:00', '18:00-22:00', 'After 22:00']);
+  rptRow(dash, r, ['Mon-Fri'].concat(slots.wd)); r++;
+  rptRow(dash, r, ['Sat-Sun'].concat(slots.we)); r++;
+  r = rptLine(dash, r, 'School day = 09:00-15:30, Mon-Fri. Term dates not applied.');
+  r++;
+
+  // C3: what people filter the portal by.
+  r = rptTitle(dash, r, 'What people look for on the portal (filters, last 7 days)');
+  var looks = rptMap();
+  weekRows.forEach(function(x) {
+    if (x[col['event']] !== 'filter_applied') return;
+    var type = String(x[col['filter_type']]), value = String(x[col['filter_value']]), key = type + '\u0001' + value;
+    if (!rptHas(looks, key)) looks[key] = {type: type, value: value, n: 0};
+    looks[key].n++;
+  });
+  var lookList = Object.keys(looks).map(function(k) { return looks[k]; }).sort(function(a, b) {
+    return b.n - a.n || (a.type + '\u0001' + a.value < b.type + '\u0001' + b.value ? -1 : 1);
+  }).slice(0, 10);
+  if (!lookList.length) {
+    r = rptLine(dash, r, 'None this week.');
+  } else {
+    r = rptHead(dash, r, ['Filter', 'Value', 'Times']);
+    lookList.forEach(function(l) { rptRow(dash, r, [l.type, l.value, l.n]); r++; });
+  }
+  return r + 1;
+}
+
+// D. DID MY POSTS BRING VISITORS? (GA4 sources daily)
+function rptVisitors(dash, r, src, win) {
+  r = rptTitle(dash, r, 'Did my posts bring visitors? (GA4, last 7 complete days against the previous 7)');
+  if (!src) { r = rptLine(dash, r, RPT_GA4_MISSING); return r + 1; }
+  r = rptTitle(dash, r, 'Visitors by channel');
+  var ch = rptMap(), pages = rptMap();
+  RPT_CHANNELS.forEach(function(n) { ch[n] = {s: 0, e: 0, pe: 0}; });
+  src.forEach(function(o) {
+    var c = ch[rptChannel(o['sessionSource'], o['sessionMedium'])];
+    var s = Number(o['sessions']) || 0, e = Number(o['engagedSessions']) || 0;
+    if (rptInWeek(o, win)) {
+      c.s += s; c.e += e;
+      var p = String(o['landingPage']);
+      if (!rptHas(pages, p)) pages[p] = {page: p, s: 0, e: 0};
+      pages[p].s += s; pages[p].e += e;
+    } else if (rptInPrev(o, win)) {
+      c.pe += e;
+    }
+  });
+  r = rptHead(dash, r, ['Channel', 'Sessions', 'Engaged sessions', '% engaged', 'Change in engaged sessions']);
+  RPT_CHANNELS.forEach(function(n) {
+    var c = ch[n], chg = rptChange(c.e, c.pe);
+    rptRow(dash, r, [n, c.s, c.e, c.s > 0 ? c.e / c.s : '', chg.text]);
+    dash.getRange(r, 4).setNumberFormat('0%');
+    dash.getRange(r, 5).setFontColor(rptDirColour(chg.dir));
+    r++;
+  });
+  r++;
+  r = rptTitle(dash, r, 'Top landing pages (by engaged sessions)');
+  var top = Object.keys(pages).map(function(k) { return pages[k]; }).sort(function(a, b) {
+    return b.e - a.e || b.s - a.s || (a.page < b.page ? -1 : 1);
+  }).slice(0, 10);
+  if (!top.length) {
+    r = rptLine(dash, r, 'No visits in these 7 days.');
+  } else {
+    r = rptHead(dash, r, ['Landing page', 'Engaged sessions', 'Sessions']);
+    top.forEach(function(p) { rptRow(dash, r, [p.page, p.e, p.s]); r++; });
+  }
+  return r + 1;
+}
+
+// E. WHO USES IT? (GA4 engaged sessions; no location finer than country)
+function rptWho(dash, r, daily, src, win) {
+  r = rptTitle(dash, r, 'Who uses it? (GA4 engaged sessions, last 7 complete days)');
+  if (!daily || !src) r = rptLine(dash, r, RPT_GA4_MISSING);
+  if (!daily && !src) return r + 1;
+  if (daily) {
+    var by = rptMap(), total = 0;
+    daily.forEach(function(o) {
+      if (!rptInWeek(o, win)) return;
+      var e = Number(o['engagedSessions']) || 0, c = String(o['country']);
+      total += e;
+      by[c] = rptGet(by, c, 0) + e;
+    });
+    var uk = rptGet(by, 'United Kingdom', 0);
+    rptRow(dash, r, ['UK share of engaged sessions', total > 0 ? uk / total : 'n/a', uk + ' of ' + total]);
+    dash.getRange(r, 2).setNumberFormat('0%');
+    r += 2;
+    r = rptTitle(dash, r, 'Top 5 countries');
+    var countries = Object.keys(by).sort(function(a, b) { return by[b] - by[a] || (a < b ? -1 : 1); }).slice(0, 5);
+    r = rptHead(dash, r, ['Country', 'Engaged sessions', 'Share']);
+    countries.forEach(function(c) {
+      rptRow(dash, r, [c, by[c], total > 0 ? by[c] / total : '']);
+      dash.getRange(r, 3).setNumberFormat('0%');
+      r++;
+    });
+    r++;
+  }
+  if (src) {
+    r = rptTitle(dash, r, 'Devices');
+    var dev = {mobile: 0, desktop: 0, tablet: 0}, all = 0;
+    src.forEach(function(o) {
+      if (!rptInWeek(o, win)) return;
+      var e = Number(o['engagedSessions']) || 0, d = String(o['deviceCategory']).toLowerCase();
+      all += e;
+      if (Object.prototype.hasOwnProperty.call(dev, d)) dev[d] += e;
+    });
+    r = rptHead(dash, r, ['Device', 'Engaged sessions', 'Share']);
+    ['mobile', 'desktop', 'tablet'].forEach(function(d) {
+      rptRow(dash, r, [d, dev[d], all > 0 ? dev[d] / all : '']);
+      dash.getRange(r, 3).setNumberFormat('0%');
+      r++;
+    });
+    r++;
+  }
+  return r;
+}
+
+// F. IS MY NEWEST GAME LANDING? Everything since its launch date (all within monthRows: launches are 14 days back).
+function rptNewGames(dash, r, monthRows, col, kinds, win) {
+  r = rptTitle(dash, r, 'Is my newest game landing?');
+  r = rptTitle(dash, r, 'New games (launched in the last ' + RPT_NEW_GAME_DAYS + ' days), since launch');
+  var L = rptLoadLaunches();
+  if (!L.ok) { r = rptLine(dash, r, 'Launch dates could not be read today.'); return r + 1; }
+  var fresh = Object.keys(L.dates).filter(function(k) { return L.dates[k] >= win.launch && L.dates[k] <= win.today; })
+    .sort(function(a, b) { return L.dates[a] < L.dates[b] ? 1 : L.dates[a] > L.dates[b] ? -1 : (a < b ? -1 : 1); });
+  if (!fresh.length) { r = rptLine(dash, r, 'None launched in the last ' + RPT_NEW_GAME_DAYS + ' days.'); return r + 1; }
+  var stats = rptMap();
+  fresh.forEach(function(k) { stats[k] = {starts: 0, answers: 0, marked: 0, right: 0, done: 0, escaped: 0, room: false}; });
+  monthRows.forEach(function(x) {
+    var slug = String(x[col['game_slug']]), key = slug.indexOf('escape-') === 0 ? slug.slice(7) : slug;
+    if (!rptHas(stats, key) || rptDay(new Date(x[col['timestamp']])) < L.dates[key]) return;
+    var st = stats[key], kind = rptKind(slug, kinds), ev = x[col['event']];
+    if (kind === 'room') st.room = true;
+    if (ev === 'game_started') st.starts++;
+    else if (ev === 'game_completed') { st.done++; if (kind === 'room' && rptEscaped(x, col)) st.escaped++; }
+    else if (ev === 'question_answered' && kind === 'question') {
+      st.answers++;
+      var m = rptMarked(x, col);
+      if (m !== null) { st.marked++; if (m) st.right++; }
+    }
+  });
+  r = rptHead(dash, r, ['Game', 'Launched', 'Starts', 'Questions answered', '% correct', 'Completed']);
+  fresh.forEach(function(k) {
+    var st = stats[k], kind = st.room ? 'room' : rptKind(k, kinds);
+    var pct = kind === 'room' ? st.escaped + ' escaped (' + rptPct(st.escaped, st.starts) + ')' :
+      kind === 'shot' ? '–' : st.marked ? st.right / st.marked : 'n/a';
+    rptRow(dash, r, [k, L.dates[k], st.starts, kind === 'question' ? st.answers : '–', pct, st.done]);
+    if (typeof pct === 'number') dash.getRange(r, 5).setNumberFormat('0%');
+    r++;
+  });
+  return r + 1;
+}
+
+// G (after Table 4b). Hints by lock, and time per lock from game_completed's "locks:" list. engine.js finish()
+// writes st.openAt for each lock in room.js order: st.played (seconds the room's clock had run) when it opened, "-"
+// if it never did. Opened locks sorted by that time give the seconds spent since the previous one opened.
+function rptRoomExtras(dash, r, monthRows, col, kinds) {
+  r = rptTitle(dash, r, 'Hints by lock (last 30 days, most first)');
+  var hints = rptMap();
+  monthRows.forEach(function(x) {
+    var slug = String(x[col['game_slug']]);
+    if (x[col['event']] !== 'hint_used' || rptKind(slug, kinds) !== 'room') return;
+    var lock = String(x[col['detail']]).split(':')[0], key = slug + '\u0001' + lock;
+    if (!rptHas(hints, key)) hints[key] = {room: slug, lock: lock, n: 0};
+    hints[key].n++;
+  });
+  var hintList = Object.keys(hints).map(function(k) { return hints[k]; }).sort(function(a, b) {
+    return b.n - a.n || (a.room + '\u0001' + a.lock < b.room + '\u0001' + b.lock ? -1 : 1);
+  });
+  if (!hintList.length) {
+    r = rptLine(dash, r, 'No hints used.');
+  } else {
+    r = rptHead(dash, r, ['Room', 'Lock', 'Hints']);
+    hintList.forEach(function(h) { rptRow(dash, r, [h.room, h.lock, h.n]); r++; });
+  }
+  r++;
+
+  r = rptTitle(dash, r, 'Time per lock (last 30 days; lock N is the room\'s Nth lock in room.js; time since the previous lock opened, or the start)');
+  var times = rptMap();
+  monthRows.forEach(function(x) {
+    var slug = String(x[col['game_slug']]);
+    if (x[col['event']] !== 'game_completed' || rptKind(slug, kinds) !== 'room') return;
+    var m = /(?:^|\s)locks:(\S+)/.exec(String(x[col['detail']]));
+    if (!m) return;
+    var opened = m[1].split(',').map(function(v, i) { return {pos: i + 1, t: /^\d+$/.test(v) ? Number(v) : null}; })
+      .filter(function(o) { return o.t !== null; }).sort(function(a, b) { return a.t - b.t || a.pos - b.pos; });
+    var prev = 0;
+    opened.forEach(function(o) {
+      var key = slug + '\u0001' + o.pos;
+      if (!rptHas(times, key)) times[key] = {room: slug, pos: o.pos, runs: 0, sum: 0};
+      times[key].runs++;
+      times[key].sum += o.t - prev;
+      prev = o.t;
+    });
+  });
+  var timeList = Object.keys(times).map(function(k) { return times[k]; }).sort(function(a, b) {
+    return a.room < b.room ? -1 : a.room > b.room ? 1 : a.pos - b.pos;
+  });
+  if (!timeList.length) {
+    r = rptLine(dash, r, 'No room finished in these 30 days.');
+  } else {
+    r = rptHead(dash, r, ['Room', 'Lock', 'Runs that opened it', 'Average time']);
+    timeList.forEach(function(t) {
+      var s = Math.round(t.sum / t.runs);
+      rptRow(dash, r, [t.room, 'lock ' + t.pos, t.runs, Math.floor(s / 60) + ' min ' + (s % 60) + ' s']);
+      r++;
+    });
+  }
+  return r + 1;
+}
+
+// H. MISUNDERSTOOD MATHS (the homepage's weekly fact)
+function rptFacts(dash, r, weekRows, col) {
+  r = rptTitle(dash, r, 'Misunderstood Maths (last 7 days)');
+  var n = {fact_viewed: 0, fact_expanded: 0, fact_game_clicked: 0, fact_shared: 0};
+  weekRows.forEach(function(x) {
+    var ev = String(x[col['event']]);
+    if (Object.prototype.hasOwnProperty.call(n, ev)) n[ev]++;
+  });
+  r = rptHead(dash, r, ['Facts viewed', 'Expanded', 'Game links clicked', 'Shared', 'Game clicks % of views']);
+  rptRow(dash, r, [n.fact_viewed, n.fact_expanded, n.fact_game_clicked, n.fact_shared,
+    n.fact_viewed > 0 ? n.fact_game_clicked / n.fact_viewed : 'n/a']);
+  dash.getRange(r, 5).setNumberFormat('0%');
+  return r + 2;
+}
+
+// ============================================================
 //  DASHBOARD — auto-rebuilds with charts
 // ============================================================
-function rebuildDashboard(weekRows, monthRows, col, kinds) {
+function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   var ss = SpreadsheetApp.open(DriveApp.getFilesByName(SHEET_NAME).next());
   var dash = ss.getSheetByName(DASH_NAME);
   if (dash) {
@@ -362,6 +888,8 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   }
 
   var r = 1; // current row pointer
+  kinds = kinds || rptLoadKinds();
+  prevWeekRows = prevWeekRows || [];
 
   // ── TITLE ──
   dash.getRange(r, 1).setValue('MaffsGames Dashboard').setFontSize(16).setFontWeight('bold');
@@ -373,6 +901,38 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   });
   if (rptKindsLine(rep) || rptShotsLine(rep)) r++;
 
+  var win = rptWindows();
+  var ga4Daily = rptGa4Tab(ss, RPT_GA4_DAILY), ga4Sources = rptGa4Tab(ss, RPT_GA4_SOURCES);
+  r = rptGrowing(dash, r, weekRows, prevWeekRows, col, kinds, ga4Daily, win);   // A
+  r = rptBroken(dash, r, weekRows, monthRows, col, kinds);                      // B
+  r = rptTeachers(dash, r, weekRows, monthRows, col, kinds);                    // C
+  r = rptVisitors(dash, r, ga4Sources, win);                                    // D
+  r = rptWho(dash, r, ga4Daily, ga4Sources, win);                               // E
+  r = rptNewGames(dash, r, monthRows, col, kinds, win);                         // F
+
+  // G: escape rooms (Table 4b), then hints and time by lock
+  // ══════════════════════════════════════
+  //  TABLE 4b: Escape Rooms (7 days) — escapes, not accuracy
+  // ══════════════════════════════════════
+  var t4bStart = r;
+  dash.getRange(r, 1).setValue('Escape Rooms — Last 7 Days (lowest escape rate first)').setFontWeight('bold').setFontSize(11);
+  r++;
+  dash.getRange(r, 1, 1, 6).setValues([['Room', 'Started', 'Escaped', 'Escape %', 'Timed out', 'Attempts per lock']]).setFontWeight('bold').setBackground('#f0f0f0');
+  r++;
+  rep.rooms.forEach(function(rm) {
+    dash.getRange(r, 1, 1, 6).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate, rm.timedOut,
+      rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10].map(cellValue)]);
+    r++;
+  });
+  formatPercentColumn(dash, t4bStart+2, rep.rooms.length);
+  r += 2;
+
+  r = rptRoomExtras(dash, r, monthRows, col, kinds);
+
+  // H: Misunderstood Maths
+  r = rptFacts(dash, r, weekRows, col);
+
+  // I: the earlier tables, unchanged: Top games, Accuracy by game, Hardest questions, Levels
   // ══════════════════════════════════════
   //  TABLE 1: Top Games (7 days)
   // ══════════════════════════════════════
@@ -411,38 +971,6 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
       .build();
     dash.insertChart(chart1);
     r = rowBelowChart(r, t1Start, 300);
-  }
-
-  // ══════════════════════════════════════
-  //  TABLE 2: Level Breakdown (7 days)
-  // ══════════════════════════════════════
-  var t2Start = r;
-  var lc = rptMap();
-  weekStarts.forEach(function(x){ rptAdd(lc, x[col['level']]||'unknown'); });
-  dash.getRange(r, 1).setValue('Level Breakdown — Last 7 Days').setFontWeight('bold').setFontSize(11);
-  r++;
-  dash.getRange(r, 1, 1, 2).setValues([['Level', 'Starts']]).setFontWeight('bold').setBackground('#f0f0f0');
-  r++;
-  var levels = Object.keys(lc).sort();
-  levels.forEach(function(lv) {
-    dash.getRange(r, 1, 1, 2).setValues([[lv, lc[lv]].map(cellValue)]);
-    r++;
-  });
-  r++;
-
-  // Chart 2: Level pie chart
-  if (levels.length > 0) {
-    var pieRange = dash.getRange(t2Start+1, 1, levels.length+1, 2);
-    var chart2 = dash.newChart()
-      .setChartType(Charts.ChartType.PIE)
-      .addRange(pieRange)
-      .setPosition(t2Start, 6, 0, 0)
-      .setOption('title', 'Level Split — Last 7 Days')
-      .setOption('width', 400).setOption('height', 280)
-      .setOption('colors', ['#22c55e','#3b82f6','#f97316','#8b5cf6','#ef4444','#0ea5e9'])
-      .build();
-    dash.insertChart(chart2);
-    r = rowBelowChart(r, t2Start, 280);
   }
 
   // ══════════════════════════════════════
@@ -497,21 +1025,38 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
   r += 2;
 
   // ══════════════════════════════════════
-  //  TABLE 4b: Escape Rooms (7 days) — escapes, not accuracy
+  //  TABLE 2: Level Breakdown (7 days)
   // ══════════════════════════════════════
-  var t4bStart = r;
-  dash.getRange(r, 1).setValue('Escape Rooms — Last 7 Days (lowest escape rate first)').setFontWeight('bold').setFontSize(11);
+  var t2Start = r;
+  var lc = rptMap();
+  weekStarts.forEach(function(x){ rptAdd(lc, x[col['level']]||'unknown'); });
+  dash.getRange(r, 1).setValue('Level Breakdown — Last 7 Days').setFontWeight('bold').setFontSize(11);
   r++;
-  dash.getRange(r, 1, 1, 6).setValues([['Room', 'Started', 'Escaped', 'Escape %', 'Timed out', 'Attempts per lock']]).setFontWeight('bold').setBackground('#f0f0f0');
+  dash.getRange(r, 1, 1, 2).setValues([['Level', 'Starts']]).setFontWeight('bold').setBackground('#f0f0f0');
   r++;
-  rep.rooms.forEach(function(rm) {
-    dash.getRange(r, 1, 1, 6).setValues([[rm.slug, rm.starts, rm.escaped, rm.rate === null ? '' : rm.rate, rm.timedOut,
-      rm.perLock === null ? '' : Math.round(rm.perLock * 10) / 10].map(cellValue)]);
+  var levels = Object.keys(lc).sort();
+  levels.forEach(function(lv) {
+    dash.getRange(r, 1, 1, 2).setValues([[lv, lc[lv]].map(cellValue)]);
     r++;
   });
-  formatPercentColumn(dash, t4bStart+2, rep.rooms.length);
-  r += 2;
+  r++;
 
+  // Chart 2: Level pie chart
+  if (levels.length > 0) {
+    var pieRange = dash.getRange(t2Start+1, 1, levels.length+1, 2);
+    var chart2 = dash.newChart()
+      .setChartType(Charts.ChartType.PIE)
+      .addRange(pieRange)
+      .setPosition(t2Start, 6, 0, 0)
+      .setOption('title', 'Level Split — Last 7 Days')
+      .setOption('width', 400).setOption('height', 280)
+      .setOption('colors', ['#22c55e','#3b82f6','#f97316','#8b5cf6','#ef4444','#0ea5e9'])
+      .build();
+    dash.insertChart(chart2);
+    r = rowBelowChart(r, t2Start, 280);
+  }
+
+  // J: Daily Activity, last
   // ══════════════════════════════════════
   //  TABLE 5: Daily Activity (30 days)
   // ══════════════════════════════════════
@@ -540,12 +1085,15 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
     r++;
   });
 
-  // Chart 5: Daily activity line chart, games started on the left axis, questions answered on the right
+  // Chart 5: Daily activity line chart, games started on the left axis, questions answered on the right. The
+  // series are named from the header row (setNumHeaders), and the lines are straight: a smoothed curve
+  // overshot the real points and dipped below zero near a trough (DASHBOARD-GLANCE).
   if (days.length > 1) {
     var lineRange = dash.getRange(t5Start+1, 1, days.length+1, 3);
     var chart5 = dash.newChart()
       .setChartType(Charts.ChartType.LINE)
       .addRange(lineRange)
+      .setNumHeaders(1)
       .setPosition(t5Start, 6, 0, 0)
       .setOption('title', 'Daily Games Started and Questions Answered — Last 30 Days')
       .setOption('legend', {position: 'bottom'})
@@ -553,7 +1101,6 @@ function rebuildDashboard(weekRows, monthRows, col, kinds) {
       .setOption('colors', ['#0ea5e9', '#0d9488'])
       .setOption('series', {0: {targetAxisIndex: 0}, 1: {targetAxisIndex: 1}})
       .setOption('vAxes', {0: {title: 'Games started'}, 1: {title: 'Questions answered'}})
-      .setOption('curveType', 'function')
       .build();
     dash.insertChart(chart5);
     r = rowBelowChart(r, t5Start, 280);
@@ -609,7 +1156,9 @@ function testDashboard() {
   var allRows = data.slice(1);
   var weekRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= weekAgo; });
   var monthRows = allRows.filter(function(r) { return new Date(r[col['timestamp']]) >= monthAgo; });
-  rebuildDashboard(weekRows, monthRows, col, rptLoadKinds());
+  var prevWeekAgo = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 14);
+  var prevWeekRows = allRows.filter(function(r) { var t = new Date(r[col['timestamp']]); return t >= prevWeekAgo && t < weekAgo; });
+  rebuildDashboard(weekRows, monthRows, col, rptLoadKinds(), prevWeekRows);
 }
 
 // ============================================================

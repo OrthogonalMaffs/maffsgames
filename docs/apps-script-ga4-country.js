@@ -6,11 +6,14 @@
 //  its own script file, add the "Google Analytics Data API" advanced service, run ga4CountryCheckProperty,
 //  then ga4CountryBackfill (once), then ga4CountrySetupTrigger (once).
 //
-//  What it does. Reads aggregate figures by country from GA4's Data API (Jon's ruling, 8 Oct 2026) and
-//  writes them into two tabs of the 'MaffsGames Events' spreadsheet:
+//  What it does. Reads aggregate figures from GA4's Data API (Jon's rulings, 8 Oct 2026 and 18 Nov 2026) and
+//  writes them into three tabs of the 'MaffsGames Events' spreadsheet:
 //    'GA4 country daily'   date, country, activeUsers, sessions, engagedSessions, eventCount
 //    'GA4 country events'  date, country, eventName, activeUsers, eventCount
 //                          (eventName in page_view, game_started, question_answered, game_completed)
+//    'GA4 sources daily'   date, sessionSource, sessionMedium, deviceCategory, landingPage, sessions,
+//                          engagedSessions, activeUsers (DASHBOARD-GLANCE: where visits came from; read by the
+//                          endpoint's Dashboard). Never city, region or any location finer than country.
 //  Nothing new is collected from anyone: these are figures GA4 already holds. The site, analytics.js,
 //  the events endpoint and the privacy page are unchanged.
 //
@@ -19,7 +22,7 @@
 //  duplicates a row, and rows for every other date are left exactly as they were.
 //
 //  What it never touches. The events tab (the spreadsheet's first tab, which the endpoint writes) and
-//  every tab other than the two above: it reads and writes sheets only by those two names, never by
+//  every tab other than the three above: it reads and writes sheets only by those three names, never by
 //  position, never deletes a tab, and adds a missing tab at the END so the events tab stays first.
 //  It never creates a spreadsheet.
 //
@@ -55,6 +58,14 @@ const GA4C_TABLES = [
     eventFilter: true,
     // newest date first; within a date, by country, then the events in GA4C_EVENTS order
     order: [['date', -1], ['country', 1], ['eventName', 1]]
+  },
+  {
+    tab: 'GA4 sources daily',
+    dimensions: ['date', 'sessionSource', 'sessionMedium', 'deviceCategory', 'landingPage'],
+    metrics: ['sessions', 'engagedSessions', 'activeUsers'],
+    eventFilter: false,
+    // newest date first; within a date, most sessions first (then by the dimensions, so ties keep one order)
+    order: [['date', -1], ['sessions', -1], ['sessionSource', 1], ['sessionMedium', 1], ['deviceCategory', 1], ['landingPage', 1]]
   }
 ];
 
@@ -120,8 +131,8 @@ function ga4CountrySetupTrigger() {
 //  FETCH AND WRITE
 // ============================================================
 
-// Fetch both tables for these dates, then write both. Every API call happens before any write, so a
-// failed request (quota, authorisation) leaves both tabs exactly as they were.
+// Fetch every table for these dates, then write them. Every API call happens before any write, so a
+// failed request (quota, authorisation) leaves every tab exactly as it was.
 function ga4cRefresh_(dates) {
   if (!dates.length) throw new Error('No complete days to fetch.');
   var lock = LockService.getScriptLock();

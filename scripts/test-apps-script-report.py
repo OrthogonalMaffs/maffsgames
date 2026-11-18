@@ -44,6 +44,18 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     only (rptKind 'question'), marked or not; rooms and shot games are left out. Its chart is one LINE chart over the 3
     columns, starts on the left axis and answers on the right, with a legend. Figures written by hand. Three planted
     faults: room answers counted, shot answers counted, a day with no starts dropped.
+  - j. the Dashboard at a glance (DASHBOARD-GLANCE, Jon 18 Nov 2026), sections A to H on hand-written Sheet rows and
+    hand-written GA4 tab rows, through sendDailyReport (so its weekRows, monthRows and prevWeekRows): A the week
+    against the previous 7 ("new" from 0, % correct in points and always grey); B1 questions under 10% right on 10+
+    marked answers (9% of 11 in, 10% of 10 and 0 of 9 out, a room's lock never); B2 where students quit (9 quits
+    out); C1 a probable class (10 starts 29 minutes apart in, a 31-minute gap splits, 9 out); C2 when it is used
+    (15:29 Tuesday school day, 15:30 not, Saturday 10:00 Sat-Sun); C3 portal filters; D GA4 channels (lnkd.in,
+    m.facebook.com, google / organic, bing / organic, (direct)) and landing pages; E the UK share, top countries and
+    devices; a missing GA4 tab giving one line in A, D and E, never an error; F new games (13 and 14 days in, 15
+    out, a failed launch-dates fetch giving its line); G hints and time by lock; H Misunderstood Maths; the order of
+    every section, Daily Activity last; the chart's series named from its header row, with straight lines.
+    Plants: the 10% threshold made <=, the class gap made 60 minutes, % correct coloured green or red, lnkd.in falling
+    into Other, a missing GA4 tab throwing, a room counted in check-these, curveType back.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -104,18 +116,21 @@ HARNESS = r"""
   rows.push(row('2026-09-29T19:59:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // a minute before: wrong
   rows.push(row('2026-09-29T20:01:00.000Z', 'question_answered', 'delta-q', 'gcse', '', ''));    // after: not marked
 
-  function load(fetchMode, eventsHead, dataRows) {
+  function load(fetchMode, eventsHead, dataRows, opts) {
+    opts = opts || {};
     const env = { fetches: 0, mails: [], cells: {}, sheets: {}, charts: [] };
     const UrlFetchApp = { fetch(url) {
       env.fetches++; env.url = url;
       if (fetchMode === 'throw') throw new Error('DNS error');
       if (fetchMode === '404') return { getResponseCode: () => 404, getContentText: () => 'Not Found' };
+      if (/launch-dates\.json$/.test(url)) return opts.launch === 'fail' ? { getResponseCode: () => 404, getContentText: () => 'Not Found' }
+        : { getResponseCode: () => 200, getContentText: () => JSON.stringify(opts.launch || {}) };
       return { getResponseCode: () => 200, getContentText: () => JSON.stringify(fixtureGames) };
     } };
     const chain = new Proxy({}, { get: (t, k) => k === 'build' ? () => ({}) : (...a) => { env.charts[env.charts.length - 1].push([k, a]); return chain; } });
     function sheetFake(name, data) {
-      const sh = { name, cells: {},
-        clear() { sh.cells = {}; }, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
+      const sh = { name, cells: {}, fmt: {},
+        clear() { sh.cells = {}; sh.fmt = {}; }, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
         setTabColor() {}, setFrozenRows() {}, newChart: () => { env.charts.push([]); return chain; },
         getDataRange: () => ({ getValues: () => data }),
         getLastRow: () => data.length,
@@ -124,19 +139,33 @@ HARNESS = r"""
           const rg = { dims: [r, c, nr || 1, nc || 1], setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
             setValues(vs) { vs.forEach((line, i) => line.forEach((v, j) => sh.cells[(r + i) + ',' + (c + j)] = v)); return rg; },
             getValues: () => [data[r - 1].slice(c - 1, c - 1 + (nc || 1))] };
-          ['setFontSize', 'setFontWeight', 'setFontStyle', 'setBackground', 'setNumberFormat'].forEach(m => rg[m] = () => rg);
+          ['setFontSize', 'setFontWeight', 'setFontStyle', 'setNumberFormat'].forEach(m => rg[m] = () => rg);
+          ['setBackground', 'setFontColor'].forEach(m => rg[m] = v => {
+            for (let i = 0; i < (nr || 1); i++) for (let j = 0; j < (nc || 1); j++) {
+              const k = (r + i) + ',' + (c + j); sh.fmt[k] = Object.assign(sh.fmt[k] || {}, { [m]: v }); }
+            return rg; });
           return rg;
         } };
       return sh;
     }
     const events = sheetFake('events', [eventsHead || HEAD].concat(eventsHead ? [] : (dataRows || rows)));
+    Object.keys(opts.ga4 || {}).forEach(n => { env.sheets[n] = sheetFake(n, opts.ga4[n]); });
     env.events = events;
     const ss = { getActiveSheet: () => events, getSheetByName: n => env.sheets[n] || null,
       insertSheet: n => (env.sheets[n] = sheetFake(n, [])) };
     const DriveApp = { getFilesByName: () => ({ hasNext: () => true, next: () => ({}) }) };
     const SpreadsheetApp = { open: () => ss, create: () => ss };
     const MailApp = { sendEmail: (to, subject, body) => env.mails.push({ to, subject, body }) };
-    const Utilities = { formatDate: (d, tz, f) => f === 'yyyy-MM-dd' ? d.toISOString().slice(0, 10) : d.toISOString().slice(0, 16) };
+    // formatDate in the zone it is given, as Apps Script's does (a day key at midnight in BST is that day, not the
+    // UTC day before). 'u' is the day of the week, Monday 1.
+    const zoned = (d, tz, o) => new Intl.DateTimeFormat('en-GB', Object.assign({ timeZone: tz }, o)).formatToParts(d)
+      .reduce((a, p) => (a[p.type] = p.value, a), {});
+    const Utilities = { formatDate: (d, tz, f) => {
+      if (f === 'yyyy-MM-dd') { const z = zoned(d, tz, { year: 'numeric', month: '2-digit', day: '2-digit' }); return z.year + '-' + z.month + '-' + z.day; }
+      if (f === 'HH:mm') { const z = zoned(d, tz, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }); return z.hour + ':' + z.minute; }
+      if (f === 'u') return String(['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].indexOf(zoned(d, tz, { weekday: 'short' }).weekday) + 1);
+      return d.toISOString().slice(0, 16);
+    } };
     const Charts = { ChartType: { BAR: 'BAR', PIE: 'PIE', LINE: 'LINE' } };
     const ContentService = { MimeType: { JSON: 'JSON' }, createTextOutput: t => ({ setMimeType: () => JSON.parse(t) }) };
     const api = new Function('UrlFetchApp', 'DriveApp', 'SpreadsheetApp', 'MailApp', 'Utilities', 'Charts', 'Date', 'ContentService', 'ScriptApp',
@@ -400,11 +429,211 @@ HARNESS = r"""
          opt.title === 'Daily Games Started and Questions Answered — Last 30 Days' && JSON.stringify(opt.legend) === '{"position":"bottom"}' &&
          opt.series && opt.series[1] && opt.series[1].targetAxisIndex === 1 && (!opt.series[0] || (opt.series[0].targetAxisIndex || 0) === 0) &&
          opt.vAxes && opt.vAxes[0].title === 'Games started' && opt.vAxes[1].title === 'Questions answered' &&
-         opt.width === 500 && opt.height === 280 && opt.curveType === 'function' && JSON.stringify(opt.colors) === '["#0ea5e9","#0d9488"]',
+         opt.width === 500 && opt.height === 280 && JSON.stringify(opt.colors) === '["#0ea5e9","#0d9488"]',
          JSON.stringify(opt));
+      ok('i. the chart: series named from the header row (setNumHeaders 1) and straight lines (no curveType)',
+         JSON.stringify(call('setNumHeaders')) === '[1]' && !('curveType' in opt), JSON.stringify([call('setNumHeaders'), opt]));
       const cells = env.sheets['Dashboard'] ? env.sheets['Dashboard'].cells : {};
       ok('i. no cell in the table is undefined, NaN or text where a count belongs',
          t5.slice(1).every(l => /^\d{4}-\d\d-\d\d \| \d+ \| \d+$/.test(l)) && Object.keys(cells).every(k => cells[k] !== undefined), t5.join(' / '));
+    }
+
+    // ---- j. DASHBOARD-GLANCE (Jon, 18 Nov 2026): sections A to H on rows of their own, every figure worked out by
+    // hand. NOW is Wed 4 Nov 2026 07:00 UTC (London is on UTC in November, as the fake formatDate assumes): this week
+    // is from Wed 28 Oct, the previous week from Wed 21 Oct, GA4's last complete day is 3 Nov, and the launch cut-off
+    // (14 days) is 21 Oct. Each run goes through sendDailyReport, so its real weekRows, monthRows and prevWeekRows.
+    {
+      const at = (d, hm) => d + 'T' + hm + ':00.000Z';
+      const QI = 5, COR = 6, QA = 9, QC = 10, FT = 13, FV = 14, QID = 17, DET = 18;
+      const ev = (ts, event, slug, f) => Object.assign(row(ts, event, slug, 'gcse'), f || {});
+      const lines = sh => sh ? dashText(sh).split('\n') : [];
+      const block = (ls, title) => {
+        const i = ls.findIndex(l => l.indexOf(title) === 0);
+        if (i < 0) return null;
+        const out = [];
+        for (let k = i + 1; k < ls.length && ls[k] !== ''; k++) out.push(ls[k]);
+        return out;
+      };
+      const same = (got, want) => JSON.stringify(got) === JSON.stringify(want);
+      const fmtOf = (sh, ls, line, c) => { const r = ls.indexOf(line) + 1; return r > 0 ? (sh.fmt[r + ',' + c] || {}) : {}; };
+      const runDash = (rowsIn, opts) => {
+        ({ api, env } = load('ok', null, rowsIn, opts));
+        api.sendDailyReport();
+        const sh = env.sheets['Dashboard'];
+        return { sh, ls: lines(sh) };
+      };
+      const GA4D_HEAD = ['date', 'country', 'activeUsers', 'sessions', 'engagedSessions', 'eventCount'];
+      const GA4S_HEAD = ['date', 'sessionSource', 'sessionMedium', 'deviceCategory', 'landingPage', 'sessions', 'engagedSessions', 'activeUsers'];
+      const MISSING = 'GA4 figures not available yet.';
+
+      // ---- A. Is it growing? This week (2 Nov): 5 starts of 3 games; quiz-a answers right, right, wrong and one
+      // unmarked (4 answers, 2 of 3 marked right = 67%); shot and room answers left out. Previous week (22 Oct): 4
+      // starts of 1 game, 2 answers both right (100%). GA4: 10 + 5 engaged sessions this week; today's row and a row
+      // before the previous week are outside both, so the previous week is 0: "new".
+      const W = '2026-11-02', P = '2026-10-22';
+      const ra = [];
+      ['quiz-a', 'quiz-a', 'quiz-a', 'quiz-b', 'escape-gamma'].forEach(s => ra.push(ev(at(W, '10:00'), 'game_started', s)));
+      [true, true, false].forEach(c => ra.push(ev(at(W, '10:05'), 'question_answered', 'quiz-a', { [COR]: c })));
+      ra.push(ev(at(W, '10:06'), 'question_answered', 'quiz-a', { [COR]: '' }));
+      ra.push(ev(at(W, '10:07'), 'question_answered', 'trig-wars', { [COR]: true }), ev(at(W, '10:07'), 'question_answered', 'trig-wars', { [COR]: false }));
+      for (let i = 0; i < 3; i++) ra.push(ev(at(W, '10:08'), 'question_answered', 'escape-gamma', { [COR]: i === 0 }));
+      for (let i = 0; i < 4; i++) ra.push(ev(at(P, '10:00'), 'game_started', 'quiz-a'));
+      ra.push(ev(at(P, '10:05'), 'question_answered', 'quiz-a', { [COR]: true }), ev(at(P, '10:05'), 'question_answered', 'quiz-a', { [COR]: true }));
+      const ga4dA = [GA4D_HEAD, ['2026-10-30', 'United Kingdom', 5, 10, 10, 99], ['2026-11-03', 'United States', 1, 5, 5, 9],
+        ['2026-11-04', 'United Kingdom', 1, 100, 100, 1], ['2026-10-20', 'United Kingdom', 1, 50, 50, 1]];
+      let d = runDash(ra, { ga4: { 'GA4 country daily': ga4dA } });
+      const headA = 'Games started | Questions answered | % correct | Different games played | Engaged sessions';
+      const chA = '▲ 25% | ▲ 100% | ▼ 33 pts | ▲ 200% | ▲ new';
+      ok('j. A: this week against the previous 7, % correct in points, "new" when the earlier week is 0',
+         same(block(d.ls, 'Is it growing?'), [headA, '5 | 4 | 67% | 3 | 15', chA]), JSON.stringify(block(d.ls, 'Is it growing?')));
+      ok('j. A: up is green; % correct is grey though it fell',
+         fmtOf(d.sh, d.ls, chA, 1).setFontColor === '#15803d' && fmtOf(d.sh, d.ls, chA, 5).setFontColor === '#15803d' &&
+         fmtOf(d.sh, d.ls, chA, 3).setFontColor === '#6b7280', JSON.stringify([1, 2, 3, 4, 5].map(c => fmtOf(d.sh, d.ls, chA, c))));
+      // ---- no GA4 tabs at all: one line in A, D and E, and the rest of the Dashboard is still built
+      d = runDash(ra, {});
+      ok('j. a missing GA4 tab gives the line in A, D and E, never an error',
+         same(block(d.ls, 'Is it growing?'), [headA, '5 | 4 | 67% | 3 | –', '▲ 25% | ▲ 100% | ▼ 33 pts | ▲ 200% | –', MISSING]) &&
+         same(block(d.ls, 'Did my posts bring visitors?'), [MISSING]) && same(block(d.ls, 'Who uses it?'), [MISSING]) &&
+         d.ls.filter(l => l === MISSING).length === 3 && d.ls.indexOf('Daily Activity — Last 30 Days') > 0, d.ls.join(' / '));
+
+      // ---- B and C1
+      const rb = [];
+      const D2 = '2026-11-02', D3 = '2026-11-03';
+      const answersOf = (slug, n, right, qid) => { for (let i = 0; i < n; i++) rb.push(ev(at(D2, '10:00'), 'question_answered', slug, { [COR]: i < right, [QID]: qid })); };
+      answersOf('quiz-c', 11, 1, 'q1');          // 1 of 11 = 9%: listed
+      answersOf('quiz-c', 10, 1, 'q2');          // 1 of 10 = 10%: not under 10%
+      answersOf('quiz-c', 9, 0, 'q3');           // 0 of 9: too few answers
+      answersOf('quiz-c', 12, 0, 'q4');          // 0 of 12: listed first
+      for (let i = 0; i < 3; i++) rb.push(ev(at(D2, '10:00'), 'question_answered', 'quiz-c', { [COR]: '', [QID]: 'q4' }));   // unmarked
+      answersOf('escape-gamma', 12, 0, 'lock-1');   // a room's lock, 0 of 12: never listed
+      // B2: starts an hour apart (never a class); quits by question_index
+      const hourly = (slug, n, day) => { for (let i = 0; i < n; i++) rb.push(ev(at(day, String(8 + i).padStart(2, '0') + ':00'), 'game_started', slug)); };
+      const quits = (slug, day, positions) => positions.forEach(q => rb.push(ev(at(day, '20:00'), 'game_abandoned', slug, { [QI]: q })));
+      hourly('quiz-d', 12, '2026-10-29'); quits('quiz-d', '2026-10-29', [3, 3, 3, 3, 3, 3, 5, 5, 5, 5]);   // 10 of 12, most at 3 (6)
+      hourly('quiz-f', 10, '2026-10-30'); quits('quiz-f', '2026-10-30', [2, 2, 2, 2, 2, 4, 4, 4, 4, 4]);   // 10 of 10, a tie: 2 (5)
+      hourly('quiz-e', 9, '2026-10-31'); quits('quiz-e', '2026-10-31', [1, 1, 1, 1, 1, 1, 1, 1, 1]);       // 9 quits: left out
+      // C1: class-a, 10 starts 29 minutes apart from 09:00 (last 13:21); answers at 09:05 x5 and 13:50 x2 are in, 13:52
+      // (31 minutes after the last) and 08:59 (before the first) are out: 7. class-b, 6 + 6 starts with a 31-minute gap
+      // between: two runs of 6, none counted. class-c, 9 starts 10 minutes apart: not counted.
+      const stepped = (slug, day, first, n, step) => { const t0 = Date.parse(at(day, first)); for (let i = 0; i < n; i++) rb.push(ev(new Date(t0 + i * step * 60000).toISOString(), 'game_started', slug)); };
+      stepped('class-a', D2, '09:00', 10, 29);
+      [['09:05', 5], ['13:50', 2], ['13:52', 1], ['08:59', 1]].forEach(([hm, n]) => { for (let i = 0; i < n; i++) rb.push(ev(at(D2, hm), 'question_answered', 'class-a', { [COR]: true })); });
+      stepped('class-b', D3, '09:00', 6, 29); stepped('class-b', D3, '11:56', 6, 29);
+      stepped('class-c', D3, '14:00', 9, 10);
+      d = runDash(rb, {});
+      const b1 = block(d.ls, 'Check these questions');
+      ok('j. B1: under 10% right on 10+ marked answers, lowest first; 10% of 10, 0 of 9 and a room\'s lock not listed',
+         same(b1, ['Game | Level | Question id | Marked answers | % right', 'quiz-c | gcse | q4 | 12 | 0', 'quiz-c | gcse | q1 | 11 | 9%',
+           'Decode an id: python scripts/decode-question-ids.py <game> --id <id>']), JSON.stringify(b1));
+      ok('j. B1: each flagged row on a red background',
+         fmtOf(d.sh, d.ls, 'quiz-c | gcse | q4 | 12 | 0', 1).setBackground === '#fee2e2' && fmtOf(d.sh, d.ls, 'quiz-c | gcse | q1 | 11 | 9%', 5).setBackground === '#fee2e2');
+      const b2 = block(d.ls, 'Where students quit');
+      ok('j. B2: 10+ quits, highest % first, the position most quit at; 9 quits left out',
+         same(b2, ['Game | Starts | Abandoned | % abandoned | Most quit at position | Quit there', 'quiz-f | 10 | 10 | 1 | 2 | 5',
+           'quiz-d | 12 | 10 | 83% | 3 | 6', 'Position in the run, not which question: game_abandoned carries question_index only.']), JSON.stringify(b2));
+      const c1 = block(d.ls, 'Probably a class');
+      ok('j. C1: 10 starts 29 minutes apart counted; a 31-minute gap splits a run; 9 starts not counted',
+         same(c1, ['Game | Date | First start | Last start | Starts | Questions answered', 'class-a | 2026-11-02 | 09:00 | 13:21 | 10 | 7']), JSON.stringify(c1));
+
+      // ---- C2, C3 and H
+      const rm = [];
+      [at('2026-11-03', '15:29'), at('2026-11-03', '15:30'), at('2026-10-31', '10:00'), at('2026-11-02', '08:59'), at('2026-11-01', '22:00'),
+        at('2026-10-28', '18:00')].forEach(t => rm.push(ev(t, 'game_started', 'quiz-w')));
+      for (let i = 0; i < 3; i++) rm.push(ev(at(W, '11:00'), 'filter_applied', '', { [FT]: 'search', [FV]: 'v1|page=games;q=ratio' }));
+      rm.push(ev(at(W, '11:00'), 'filter_applied', '', { [FT]: 'chip', [FV]: 'v1|page=games;level=gcse' }));
+      rm.push(ev(at(P, '11:00'), 'filter_applied', '', { [FT]: 'search', [FV]: 'v1|page=games;q=ratio' }));   // the week before: out
+      [['fact_viewed', 8], ['fact_expanded', 3], ['fact_game_clicked', 2], ['fact_shared', 1]].forEach(([e, n]) => {
+        for (let i = 0; i < n; i++) rm.push(ev(at(W, '12:00'), e, 'misunderstood-maths')); });
+      rm.push(ev(at(P, '12:00'), 'fact_viewed', 'misunderstood-maths'));   // the week before: out
+      d = runDash(rm, {});
+      const c2 = block(d.ls, 'When it is used');
+      ok('j. C2: Tue 15:29 is the school day, 15:30 is not; Saturday 10:00 is Sat-Sun',
+         same(c2, ['Days | Before 09:00 | 09:00-15:30 | 15:30-18:00 | 18:00-22:00 | After 22:00', 'Mon-Fri | 1 | 1 | 1 | 1 | 0',
+           'Sat-Sun | 0 | 1 | 0 | 0 | 1', 'School day = 09:00-15:30, Mon-Fri. Term dates not applied.']), JSON.stringify(c2));
+      const c3 = block(d.ls, 'What people look for on the portal');
+      ok('j. C3: filters by type and value, most first, this week only',
+         same(c3, ['Filter | Value | Times', 'search | v1|page=games;q=ratio | 3', 'chip | v1|page=games;level=gcse | 1']), JSON.stringify(c3));
+      const h = block(d.ls, 'Misunderstood Maths');
+      ok('j. H: facts viewed, expanded, game links, shared, clicks as % of views',
+         same(h, ['Facts viewed | Expanded | Game links clicked | Shared | Game clicks % of views', '8 | 3 | 2 | 1 | 25%']), JSON.stringify(h));
+
+      // ---- D and E (GA4). Sources this week: lnkd.in (LinkedIn), m.facebook.com (Facebook), google / organic (Google
+      // search), bing / organic (Other search), (direct) (Direct), www.tes.com (Tes), duckduckgo / referral (Other);
+      // today's row is out. The week before: LinkedIn 2 and Google 20 engaged. Countries this week: UK 30 + 20 of 72.
+      const ga4s = [GA4S_HEAD,
+        ['2026-10-30', 'lnkd.in', 'referral', 'mobile', '/games/a/', 10, 6, 9],
+        ['2026-11-02', 'm.facebook.com', 'referral', 'mobile', '/', 4, 1, 4],
+        ['2026-11-02', 'google', 'organic', 'desktop', '/', 20, 15, 18],
+        ['2026-11-02', 'bing', 'organic', 'desktop', '/games/b/', 5, 4, 5],
+        ['2026-11-02', '(direct)', '(none)', 'tablet', '/', 8, 2, 8],
+        ['2026-11-03', 'www.tes.com', 'referral', 'desktop', '/games/a/', 3, 3, 3],
+        ['2026-11-03', 'duckduckgo', 'referral', 'mobile', '/games/c/', 2, 1, 2],
+        ['2026-11-04', 'google', 'organic', 'desktop', '/', 99, 99, 99],
+        ['2026-10-22', 'lnkd.in', 'referral', 'mobile', '/', 4, 2, 4],
+        ['2026-10-22', 'google', 'organic', 'desktop', '/', 30, 20, 25]];
+      const ga4d = [GA4D_HEAD, ['2026-10-30', 'United Kingdom', 5, 10, 30, 99], ['2026-11-02', 'United Kingdom', 5, 10, 20, 99],
+        ['2026-11-02', 'United States', 1, 5, 10, 9], ['2026-11-03', 'India', 1, 9, 6, 9], ['2026-11-03', 'Ireland', 1, 2, 3, 9],
+        ['2026-11-03', 'Germany', 1, 2, 2, 9], ['2026-11-03', 'France', 1, 1, 1, 9], ['2026-10-22', 'United Kingdom', 1, 1, 40, 1],
+        ['2026-11-04', 'France', 1, 500, 500, 1]];
+      d = runDash([], { ga4: { 'GA4 country daily': ga4d, 'GA4 sources daily': ga4s } });
+      const d1 = block(d.ls, 'Visitors by channel');
+      ok('j. D1: lnkd.in is LinkedIn, m.facebook.com Facebook, google/organic Google search, bing/organic Other search, (direct) Direct',
+         same(d1, ['Channel | Sessions | Engaged sessions | % engaged | Change in engaged sessions', 'Google search | 20 | 15 | 75% | ▼ 25%',
+           'Other search | 5 | 4 | 80% | ▲ new', 'LinkedIn | 10 | 6 | 60% | ▲ 200%', 'Facebook | 4 | 1 | 25% | ▲ new', 'Tes | 3 | 3 | 1 | ▲ new',
+           'Direct | 8 | 2 | 25% | ▲ new', 'Other | 2 | 1 | 50% | ▲ new']), JSON.stringify(d1));
+      ok('j. D1: a fall is red, a rise green', fmtOf(d.sh, d.ls, 'Google search | 20 | 15 | 75% | ▼ 25%', 5).setFontColor === '#b91c1c' &&
+         fmtOf(d.sh, d.ls, 'LinkedIn | 10 | 6 | 60% | ▲ 200%', 5).setFontColor === '#15803d');
+      const d2 = block(d.ls, 'Top landing pages');
+      ok('j. D2: landing pages by engaged sessions, this week only',
+         same(d2, ['Landing page | Engaged sessions | Sessions', '/ | 18 | 32', '/games/a/ | 9 | 13', '/games/b/ | 4 | 5', '/games/c/ | 1 | 2']), JSON.stringify(d2));
+      ok('j. E: the UK share of engaged sessions', same(block(d.ls, 'Who uses it?'), ['UK share of engaged sessions | 69% | 50 of 72']),
+         JSON.stringify(block(d.ls, 'Who uses it?')));
+      const e5 = block(d.ls, 'Top 5 countries'), dv = block(d.ls, 'Devices');
+      ok('j. E: top 5 countries and the device split, by engaged sessions',
+         same(e5, ['Country | Engaged sessions | Share', 'United Kingdom | 50 | 69%', 'United States | 10 | 14%', 'India | 6 | 8%',
+           'Ireland | 3 | 4%', 'Germany | 2 | 3%']) &&
+         same(dv, ['Device | Engaged sessions | Share', 'mobile | 8 | 25%', 'desktop | 22 | 69%', 'tablet | 2 | 6%']), JSON.stringify([e5, dv]));
+      ok('j. A: engaged sessions summed from GA4 country daily, 72 against 40',
+         same((block(d.ls, 'Is it growing?') || []).slice(1), ['0 | 0 | n/a | 0 | 72', '▬ 0% | ▬ 0% | n/a | ▬ 0% | ▲ 80%']), JSON.stringify(block(d.ls, 'Is it growing?')));
+
+      // ---- F and G. Launches: 13 days ago in, 15 days ago out, exactly 14 in, a future date out.
+      const launch = { 'quiz-new': '2026-10-22', 'old-game': '2026-10-20', 'gamma': '2026-10-25', 'trig-wars': '2026-11-01',
+        'edge-game': '2026-10-21', 'future-game': '2026-11-20' };
+      const rf = [];
+      ['2026-10-21', '2026-10-23', '2026-10-30', W].forEach(day => rf.push(ev(at(day, '10:00'), 'game_started', 'quiz-new')));   // 21 Oct is before its launch
+      [true, true, true, false, ''].forEach(c => rf.push(ev(at(W, '10:05'), 'question_answered', 'quiz-new', { [COR]: c })));
+      rf.push(ev(at(W, '10:30'), 'game_completed', 'quiz-new'), ev(at(W, '10:31'), 'game_completed', 'quiz-new'));
+      rf.push(ev(at(W, '10:00'), 'game_started', 'old-game'));
+      for (let i = 0; i < 4; i++) rf.push(ev(at(W, String(10 + i) + ':00'), 'game_started', 'escape-gamma'));
+      rf.push(ev(at(W, '11:00'), 'game_completed', 'escape-gamma', { [QA]: 3, [QC]: 3, [DET]: 'escaped wrongs:0 hints:1 used:600 played:580 locks:100,250,400' }));
+      rf.push(ev(at(W, '12:00'), 'game_completed', 'escape-gamma', { [QA]: 3, [QC]: 2, [DET]: 'timeout wrongs:2 hints:0 used:900 played:900 locks:300,-,120' }));
+      for (let i = 0; i < 6; i++) rf.push(ev(at(W, '11:30'), 'question_answered', 'escape-gamma', { [COR]: i < 2 }));
+      for (let i = 0; i < 2; i++) rf.push(ev(at(W, String(14 + i) + ':00'), 'game_started', 'trig-wars'));
+      for (let i = 0; i < 3; i++) rf.push(ev(at(W, '14:05'), 'question_answered', 'trig-wars', { [COR]: true }));
+      rf.push(ev(at(W, '14:30'), 'game_completed', 'trig-wars'));
+      ['lock-a:1', 'lock-a:2', 'lock-b:1'].forEach(x => rf.push(ev(at(W, '11:10'), 'hint_used', 'escape-gamma', { [DET]: x })));
+      rf.push(ev(at(W, '11:10'), 'hint_used', 'escape-delta', { [DET]: 'lock-z:1' }));
+      d = runDash(rf, { launch });
+      const f = block(d.ls, 'New games');
+      ok('j. F: launched 13 and 14 days ago in, 15 days ago out; rooms by escapes, shot games "–", newest first',
+         same(f, ['Game | Launched | Starts | Questions answered | % correct | Completed', 'trig-wars | 2026-11-01 | 2 | – | – | 1',
+           'gamma | 2026-10-25 | 4 | – | 1 escaped (25%) | 2', 'quiz-new | 2026-10-22 | 3 | 5 | 75% | 2', 'edge-game | 2026-10-21 | 0 | 0 | n/a | 0']),
+         JSON.stringify(f));
+      const gh = block(d.ls, 'Hints by lock');
+      ok('j. G: hints by room and lock (the lock id before ":"), most first',
+         same(gh, ['Room | Lock | Hints', 'escape-gamma | lock-a | 2', 'escape-delta | lock-z | 1', 'escape-gamma | lock-b | 1']), JSON.stringify(gh));
+      const gt = block(d.ls, 'Time per lock');
+      ok('j. G: time per lock from "locks:" (seconds since the previous lock opened), averaged over the runs that opened it',
+         same(gt, ['Room | Lock | Runs that opened it | Average time', 'escape-gamma | lock 1 | 2 | 2 min 20 s', 'escape-gamma | lock 2 | 1 | 2 min 30 s',
+           'escape-gamma | lock 3 | 2 | 2 min 15 s']), JSON.stringify(gt));
+      ok('j. G: Table 4b first, then hints and time per lock; the older tables follow and Daily Activity is last',
+         ['Escape Rooms — Last 7 Days', 'Hints by lock', 'Time per lock', 'Misunderstood Maths', 'Top Games — Last 7 Days', 'Accuracy by Game',
+           'Hardest Questions', 'Level Breakdown', 'Daily Activity — Last 30 Days'].map(t => d.ls.findIndex(l => l.indexOf(t) === 0))
+           .every((v, i, a) => v > 0 && (i === 0 || v > a[i - 1])), d.ls.join(' / '));
+      d = runDash(rf, { launch: 'fail' });
+      ok('j. F: a failed launch-dates fetch gives the line and the Dashboard carries on',
+         same(block(d.ls, 'New games'), ['Launch dates could not be read today.']) && d.ls.indexOf('Daily Activity — Last 30 Days') > 0,
+         JSON.stringify(block(d.ls, 'New games')));
     }
   } catch (e) {
     ok('the harness ran', false, e.stack || e);
@@ -438,6 +667,15 @@ PLANTS = [
      "dayKinds) !== 'room') rptAdd(dailyAnswers, day);"),
     ("Daily Activity drops a day with no starts", "  var days = Object.keys(dailyStarts).concat(",
      "  var days = Object.keys(dailyStarts).sort(); var unused = [].concat("),
+    ("check-these: the 10% threshold made <=", "q.correct / q.total < RPT_CHECK_PCT;", "q.correct / q.total <= RPT_CHECK_PCT;"),
+    ("a class: the gap made 60 minutes", "const RPT_CLASS_GAP_MIN = 30;", "const RPT_CLASS_GAP_MIN = 60;"),
+    ("the headline's % correct coloured green or red", "RPT_GREY /* % correct: neutral whichever way it moves */",
+     "rptDirColour(ch[2].dir)"),
+    ("lnkd.in falling into Other", "const RPT_CH_LINKEDIN = ['linkedin', 'lnkd'];", "const RPT_CH_LINKEDIN = ['linkedin'];"),
+    ("a missing GA4 tab throwing", "  if (!tab) return null;\n  var v = tab.getDataRange", "  if (!tab) throw new Error('no GA4 tab ' + name);\n  var v = tab.getDataRange"),
+    ("a room counted in check-these", "    if (rptKind(slug, kinds) !== 'question') return;   // B1: question games only, never a room's lock\n",
+     "    if (rptKind(slug, kinds) === 'shot') return;   // B1\n"),
+    ("Daily Activity's curveType back", "      .setNumHeaders(1)\n", "      .setNumHeaders(1)\n      .setOption('curveType', 'function')\n"),
     # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
     ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
      "function rptMap() { return {}; }"),
