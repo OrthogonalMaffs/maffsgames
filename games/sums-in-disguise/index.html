@@ -175,9 +175,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/stage-exit.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Stage 1 and takes the
-     moustache off, so the first screen is the little sum's tiles; 'answer' with i = 0 answers the item on screen right, and
-     with i >= 1 answers the big sum with a decoy, so it is marked wrong and waits on Next.
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Stage 1 and takes the moustache off, so the first screen is the little sum's tiles; 'answer' with i = 0 answers the item on screen right, and with i >= 1 answers the big sum with a decoy, so it is marked wrong and waits on Next.
 {
   "start": "SID.ui.start('stage-1'); SID.ui.unmask();",
   "ready": "!!window.SID && SID.ui.ready()",
@@ -690,7 +688,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     for (var v = 0; v <= S.tiles; v++) {
       var t = document.createElement('button');
       t.type = 'button'; t.className = 'tile'; t.dataset.val = String(v); t.textContent = String(v);
-      // Each tile its own handler (check-site's option probe sees only buttons with their own; contract, from #811).
+      // Each tile its own handler (check-site's option probe sees only buttons with their own; contract, from PR 811).
       t.addEventListener('click', onTile);
       box.appendChild(t);
     }
@@ -734,7 +732,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       b.type = 'button'; b.className = 'opt';
       if (S.flow === 'duck') { b.dataset.val = o[0] + '+' + o[1]; b.innerHTML = tex(sumTex(o)); }
       else { b.dataset.val = String(o); b.textContent = String(o); }
-      // Each option its own handler, where it is built (contract, from #811).
+      // Each option its own handler, where it is built (contract, from PR 811).
       b.addEventListener('click', onOption);
       box.appendChild(b);
     });
