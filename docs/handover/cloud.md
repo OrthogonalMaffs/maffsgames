@@ -69,13 +69,23 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-17 (cloud): ITS-A-SINE-LIST (`docs/handover/contracts/2026-11-17-its-a-sine-list.md`; Jon 17 Nov)
+## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/handover/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
+
+Agent Claude Code (cloud), branch `claude/fervent-mccarthy-3l9b5u` from main bb46787. Tier Medium: merge on green, Project Claude reviews after. Jon teaches it Tue 24 Nov.
+**Close-out carried (first commit):** #818 ITS-A-SINE-LIST, recorded in its entry below; contract moved.
+**Amendments (Jon, 18 Nov, in session):** 1, lane exception: `gcse-stage-4` and `level3-stage-4` labels in firebase-leaderboard.js, and one launch-dates.json line (both under DO NOT TOUCH `schools/assets/`, which the per-level boards and check-ugh-stats need). 2: "no duplicate given" reads the given with its unit (gcse_005 61 cm and gcse_020 61 m).
+Bank recomputed independently before building: 96/96 answers and traps agree, none within 0.005 of a boundary. PNG 1672 x 941 on the art branch; start.webp 1600 x 873.
+Done on the branch: the page (two levels, four stages, 8 a run, boxes (a) then (b), Jon's lines, working cut to 4 d.p., formulas by level and stage, scientific calculator, cones drawn to proportion with the height label clear of the slant edges); `scripts/verify-i-dropped-my-ice-cream.py` (PASS, 6/6 plants caught); roster row #112 in Unlisted (8); games.json and apply-meta; findings file; every MIGRATED list; NOT_ON_HUB; todo ICE-CREAM-LIST.
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
+## 2026-11-17 (cloud): ITS-A-SINE-LIST (`docs/history/contracts/2026-11-17-its-a-sine-list.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/fervent-feynman-25e9sg` restarted from main 6d8cc0e (after #816). Tier Medium: merge on green, Project Claude reviews after. **Lane exception (Jon, 17 Nov 2026, verbatim):** "one-off LANE EXCEPTION (listing is normally home-lane work; Jon, 17 Nov 2026, chose "Cloud, before ice cream")".
 **Approval (verbatim):** Jon, 17 Nov 2026, 14:58: "also the students have tried the it's a sign game, it's ready to get listed now please". Jon, ~15:03, to Project Claude: levels "All three" (GCSE, Level 3, Level 4); placement "GCSE section" (roster GCSE Games, a portal GCSE card, no /essentials/ card); lane "Cloud, before ice cream".
 **Close-out carried (first commit):** #816 CORE-PAPER-EXIT, recorded in its entry below; contract moved.
 Done on the branch: portal GCSE card (after whose-side-are-you-on: the section's listed games run in go-live order; `data-levels="gcse l4"`, the filter has no Level 3 value; keywords from data/games.json; New badge 2026-11-17); sitemap (alphabetical, after integration-duel); spec map G22–G23 (`?level=gcse`) and Level 4 LO2 (`?level=level4`), no Level 3 row for the rules (the map's only Level 3 is Core Maths); hub row after screening-room with the 12 boards `<level>-<mode>`; check-leaderboard-coverage.js: NOT_ON_HUB entry removed, LEVEL_OVERRIDES entry added (the check required it); notes in audit-register.py and check-theme.py; roster row #111 to GCSE Games (31), "Unlisted (contract ...)" dropped from its description, look signed off 2026-11-17, Unlisted (7), the listing note; /updates/ line; todo ITS-A-SINE-LIST closed to todo-done.
-Next: PR, Gate, merge with merge-pr.py (after CANTEEN-PACK #817 if it is merging).
+PR #818. PR's final checks on head 879b58e: Gate 44167827408 and phone-fit-full 44167814376 green. MERGED 17 Nov 20:40:41 UTC as 71698a8 (squash) via merge-pr.py, exit 0, last line "main 71698a8 run 44171822913: GREEN". Main on 71698a8: check-site 44171822913, phone-fit-full 44171822894, pages build 44171822226, all success (recorded in I-DROPPED-MY-ICE-CREAM's first commit, which moved the contract to `docs/history/contracts/`).
+Record: agent Claude Code; wall about 0:47 (contract 19:53, merged 20:40); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-17 (cloud): CORE-PAPER-EXIT (`docs/history/contracts/2026-11-17-core-paper-exit.md`; Jon 17 Nov)
 

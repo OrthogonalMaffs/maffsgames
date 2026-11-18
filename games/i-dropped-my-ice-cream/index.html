@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="From a circumference back to the radius and area, then a cone's volume, slant height and total surface area. For GCSE and Level 3. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/i-dropped-my-ice-cream/">
+<meta property="og:title" content="Circles and Cones Game – GCSE/Level 3 Maths | MaffsGames">
+<meta property="og:description" content="From a circumference back to the radius and area, then a cone's volume, slant height and total surface area. For GCSE and Level 3. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/i-dropped-my-ice-cream/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Circles and Cones Game – GCSE/Level 3 Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster levels include GCSE (the palette rule; L3 too).
+   This game's own tokens. The accent is a deep strawberry (the dropped ice cream), pink-700: 6.0:1 on white and 5.5:1 on
+   --surface-alt, so white text on it and it on the light surfaces both clear 4.5:1. The diagram's lines are the text colour,
+   its unknowns the hint colour, as in It's a SINE!!. */
+:root{--accent:#be185d;--accent-dim:#fce7f3;--on-accent:#ffffff;--line:#1a2744;--faint:#526077;--unk:#a14a05}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.45rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.6}
+.menu-info p+p{margin-top:.6rem}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .35rem}
+.levels{display:flex;gap:.4rem;flex-wrap:wrap}
+.lvl-btn{flex:1 1 0;min-width:92px;min-height:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;font-weight:600;font-size:.9rem;cursor:pointer}
+.lvl-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.calc-row{text-align:center;margin:.2rem 0 .4rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem .7rem;display:flex;flex-direction:column;gap:.4rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.ask{font-size:1rem;line-height:1.4;text-align:center}
+.formulas{display:flex;flex-wrap:wrap;gap:.3rem .9rem;justify-content:center;font-size:.92rem;padding:.25rem .4rem;border-radius:8px;background:var(--surface-alt);border:1px dashed var(--border)}
+.formulas:empty{display:none}
+.prompt{font-size:.9rem;color:var(--muted);text-align:center;line-height:1.35}
+
+/* The diagram: inline SVG drawn from the item's given values (the viewBox is 340 wide; its height follows the shape). */
+.fig svg{display:block;width:100%;height:auto;max-height:34vh;margin:0 auto}
+@media (max-width:600px){.fig svg{max-height:30vh}}
+.c-line{stroke:var(--line);stroke-width:2.2;fill:none;stroke-linejoin:round;stroke-linecap:round}
+.c-back{stroke:var(--line);stroke-width:1.6;fill:none;stroke-dasharray:6 5}
+.c-dash{stroke:var(--faint);stroke-width:1.8;fill:none;stroke-dasharray:6 5}
+.c-thin{stroke:var(--faint);stroke-width:1.4;fill:none}
+.c-rad{stroke:var(--unk);stroke-width:2.2;fill:none}
+.c-dot{fill:var(--line)}
+.c-head{fill:var(--faint)}
+.c-t{font-family:var(--font-num);font-size:13px;fill:var(--text);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round;dominant-baseline:central}
+.c-t.unk{fill:var(--unk);font-weight:700}
+
+.ans-row{display:flex;gap:.35rem;justify-content:center;align-items:center;flex-wrap:wrap}
+.ans-box{display:flex;align-items:center;gap:.25rem}
+.ans-box .lab{font-family:var(--font-num);font-weight:700;white-space:nowrap}
+.ans-box input{width:7em;min-height:44px;padding:.3rem .4rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.05rem;text-align:center}
+.ans-box input:focus{outline:none;border-color:var(--accent)}
+.ans-box .unit{font-family:var(--font-num);color:var(--muted);min-width:1.6em}
+.msg{font-size:.9rem;color:var(--hint);text-align:center}
+.msg:empty{display:none}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.4rem}
+.fb-head{font-weight:700;font-size:1.02rem}
+.fb.right .fb-head{color:var(--correct)}
+.fb.wrong .fb-head{color:var(--wrong)}
+.fb-trap{font-size:1rem;font-weight:700;color:var(--accent);line-height:1.4}
+.fb-line{font-size:.94rem;line-height:1.45}
+.fb-next{display:flex;justify-content:center}
+.worked{margin:0 0 0 1.2rem;font-size:.92rem;line-height:1.5}
+.worked li+li{margin-top:.15rem}
+.feedback:empty{display:none}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.stats{color:var(--muted);line-height:1.8;font-size:.95rem;margin:.4rem 0 .7rem}
+.stats b{color:var(--text)}
+
+/* The phone rule (canon §7.6.1): once a box is marked, the controls that cannot be used go and the feedback takes their place. */
+.qcard.fb-open #ansBlock,.qcard.fb-open .prompt,.qcard.fb-open .msg{display:none}
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .5rem;gap:.3rem}
+  .ask{font-size:.95rem}
+}
+@media (max-height:620px){.hud-label{display:none}.prompt{display:none}.stage-label{display:none}}
+@media (min-width:1024px){
+  .container{max-width:clamp(760px,74vw,1000px)}
+  .ask{font-size:clamp(1rem,2.4vh,1.4rem)}
+  .fig svg{max-height:38vh}
+}
+body.accessible p,body.accessible .fb-line,body.accessible .worked{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Jon's start-screen illustration (assets/start.webp, contract ESSENTIALS-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:600px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 answers the box on screen right; with i >= 1 it answers it wrong, so the box is marked wrong and waits on Next.
+{
+  "start": "ICE.ui.start('stage-1')",
+  "ready": "!!window.ICE && ICE.ui.state() === 'asking'",
+  "answer": [
+    "ICE.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/answer.js"></script>
+<!-- The calculator (canon §4.4): scientific on every stage (contract I-DROPPED-MY-ICE-CREAM: pi, squares and square roots).
+     Mounted the first time a stage is played. -->
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/keypad.js"></script>
+<script src="../../schools/assets/calculator.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>I Dropped My Ice Cream</h1><div class="sub" id="tagline">Am I painting it or am I filling it? Surface area, volume, length. 3 different dimensions, 3 different calculations. You can move from one to the other if you're careful.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="A sad ice cream cone upside down on a school corridor floor, its point to the sky, in a round puddle of melted strawberry ice cream">
+    <div class="panel menu-info">
+      <p>Circles and cones. Start from what you're given and work towards the rest: from the circumference back to the radius, then on to the area; from a cone's diameter and height to its volume, its slant height and the area of its whole surface.</p>
+      <p>Every answer to 1 d.p., worked from full accuracy: keep the unrounded value in your calculator until the end.</p>
+      <div class="mode-h">Level</div>
+      <div class="levels" id="levelList">
+        <button class="lvl-btn" type="button" data-level="gcse" aria-pressed="false">GCSE</button>
+        <button class="lvl-btn" type="button" data-level="level3" aria-pressed="false">Level 3</button>
+      </div>
+      <div class="mode-h">Stages</div>
+      <div class="calc-row"><span class="calc-badge" data-calc="scientific">Scientific calculator required</span></div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1" data-mode="stage-1"><span class="n">1</span><span><span class="t">Circumference to radius</span><span class="d">You know the distance round the edge. How far is it from the middle to the edge?</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2" data-mode="stage-2"><span class="n">2</span><span><span class="t">Circumference to area</span><span class="d">(a) the radius, then (b) the area.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3" data-mode="stage-3"><span class="n">3</span><span><span class="t">Cone volume</span><span class="d">How much does it hold? From the diameter and the height to the volume.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4" data-mode="stage-4"><span class="n">4</span><span><span class="t">Slant height and surface area</span><span class="d">(a) the slant height, then (b) the total surface area of a solid cone.</span></span></button>
+      </div>
+      <p class="note">8 questions a run, from 12 in each stage at each level. A point for each answer right.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/8</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="ask" id="ask"></div>
+      <div class="fig" id="fig"></div>
+      <div class="formulas" id="formulas"></div>
+      <div class="prompt" id="prompt"></div>
+      <div id="ansBlock">
+        <form class="ans-row" id="typeRow" autocomplete="off">
+          <label class="ans-box"><span class="lab" id="boxLab"></span><input id="ans" type="text" inputmode="decimal" aria-label="Your answer, to 1 decimal place" autocomplete="off"><span class="unit" id="unit"></span></label>
+          <button class="btn solid" type="submit" id="checkBtn">Check</button>
+        </form>
+        <div id="calcWrap" hidden><div id="calc"></div></div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 8</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'i-dropped-my-ice-cream', PER = 8, NS = 'http://www.w3.org/2000/svg';
+  var LEVELS = ['gcse', 'level3'];
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
+  // One board for each level and stage, as in It's a SINE!!: '<level>-<mode>', every key named in firebase-leaderboard.js
+  // (gcse-stage-4 and level3-stage-4 added by Jon's lane exception, contract I-DROPPED-MY-ICE-CREAM, Amendment 1).
+  var BOARDS = [];
+  LEVELS.forEach(function (l) { MODES.forEach(function (m) { BOARDS.push(l + '-' + m); }); });
+  var level = MaffsLevel.resolve({ slug: 'i-dropped-my-ice-cream', levels: ['gcse', 'level3'], fallback: 'gcse',
+    boards: ['gcse-stage-1', 'gcse-stage-2', 'gcse-stage-3', 'gcse-stage-4',
+      'level3-stage-1', 'level3-stage-2', 'level3-stage-3', 'level3-stage-4'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* ---------- maths on screen: KaTeX, with a readable fallback if the CDN is unreachable ---------- */
+  function plain(t) {
+    return t.replace(/\\[dt]?frac\{([^{}]*)\}\{([^{}]*)\}/g, '($1)/($2)').replace(/\\sqrt\{([^{}]*)\}/g, '√($1)')
+      .replace(/\^2/g, '²').replace(/\^3/g, '³').replace(/\\pi/g, 'π').replace(/\\times/g, '×').replace(/\\div/g, '÷')
+      .replace(/\\ldots/g, '…').replace(/\\,/g, '').replace(/\\text\{([^{}]*)\}/g, '$1').replace(/[{}]/g, '');
+  }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(plain(t));
+  }
+  // A line with its maths between \( and \), each piece KaTeX.
+  function line(s) { return String(s).split(/\\\(|\\\)/).map(function (p, i) { return i % 2 ? tex(p) : esc(p); }).join(''); }
+
+  /* =====================================================================================================
+     THE BANK: contract I-DROPPED-MY-ICE-CREAM, 18 Nov 2026, verbatim (48 items a level, 12 a stage; ids give the level).
+     scripts/verify-i-dropped-my-ice-cream.py recomputes every answer and trap with exact decimals and checks every line
+     against the saved contract.
+     ===================================================================================================== */
+  var QUESTIONS = {
+    gcse: [
+      {"id":"gcse_001","stage":1,"given":{"C":93},"unit":"cm","prompt":"The circumference of a pizza is 93 cm. Find its radius, to 1 d.p.","answers":{"r":14.8},"traps":{"r":{"diameter":29.6}}},
+      {"id":"gcse_002","stage":1,"given":{"C":216},"unit":"cm","prompt":"The circumference of a bicycle wheel is 216 cm. Find its radius, to 1 d.p.","answers":{"r":34.4},"traps":{"r":{"diameter":68.8}}},
+      {"id":"gcse_003","stage":1,"given":{"C":363},"unit":"cm","prompt":"The circumference of a round table top is 363 cm. Find its radius, to 1 d.p.","answers":{"r":57.8},"traps":{"r":{"diameter":115.5}}},
+      {"id":"gcse_004","stage":1,"given":{"C":108},"unit":"cm","prompt":"The circumference of a clock face is 108 cm. Find its radius, to 1 d.p.","answers":{"r":17.2},"traps":{"r":{"diameter":34.4}}},
+      {"id":"gcse_005","stage":1,"given":{"C":61},"unit":"cm","prompt":"The circumference of a round cake tin is 61 cm. Find its radius, to 1 d.p.","answers":{"r":9.7},"traps":{"r":{"diameter":19.4}}},
+      {"id":"gcse_006","stage":1,"given":{"C":267},"unit":"cm","prompt":"The circumference of a hula hoop is 267 cm. Find its radius, to 1 d.p.","answers":{"r":42.5},"traps":{"r":{"diameter":85.0}}},
+      {"id":"gcse_007","stage":1,"given":{"C":20},"unit":"m","prompt":"The circumference of a garden pond is 20 m. Find its radius, to 1 d.p.","answers":{"r":3.2},"traps":{"r":{"diameter":6.4}}},
+      {"id":"gcse_008","stage":1,"given":{"C":15},"unit":"m","prompt":"The circumference of a trampoline is 15 m. Find its radius, to 1 d.p.","answers":{"r":2.4},"traps":{"r":{"diameter":4.8}}},
+      {"id":"gcse_009","stage":1,"given":{"C":80},"unit":"cm","prompt":"The circumference of a dinner plate is 80 cm. Find its radius, to 1 d.p.","answers":{"r":12.7},"traps":{"r":{"diameter":25.5}}},
+      {"id":"gcse_010","stage":1,"given":{"C":417},"unit":"cm","prompt":"The circumference of a round rug is 417 cm. Find its radius, to 1 d.p.","answers":{"r":66.4},"traps":{"r":{"diameter":132.7}}},
+      {"id":"gcse_011","stage":1,"given":{"C":46},"unit":"m","prompt":"The circumference of a roundabout is 46 m. Find its radius, to 1 d.p.","answers":{"r":7.3},"traps":{"r":{"diameter":14.6}}},
+      {"id":"gcse_012","stage":1,"given":{"C":181},"unit":"cm","prompt":"The circumference of a drum skin is 181 cm. Find its radius, to 1 d.p.","answers":{"r":28.8},"traps":{"r":{"diameter":57.6}}},
+      {"id":"gcse_013","stage":2,"given":{"C":24},"unit":"m","area_unit":"m²","prompt":"The circumference of a round flower bed is 24 m. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":3.8,"A":45.8},"traps":{"r":{"diameter":7.6},"A":{"early_rounding":45.4}}},
+      {"id":"gcse_014","stage":2,"given":{"C":73},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a frisbee is 73 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":11.6,"A":424.1},"traps":{"r":{"diameter":23.2},"A":{"early_rounding":422.7}}},
+      {"id":"gcse_015","stage":2,"given":{"C":228},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a round mirror is 228 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":36.3,"A":4136.8},"traps":{"r":{"diameter":72.6},"A":{"early_rounding":4139.6}}},
+      {"id":"gcse_016","stage":2,"given":{"C":833},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a paddling pool is 833 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":132.6,"A":55217.9},"traps":{"r":{"diameter":265.2},"A":{"early_rounding":55237.9}}},
+      {"id":"gcse_017","stage":2,"given":{"C":84},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a pie is 84 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":13.4,"A":561.5},"traps":{"r":{"diameter":26.7},"A":{"early_rounding":564.1}}},
+      {"id":"gcse_018","stage":2,"given":{"C":72},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a paint tin lid is 72 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":11.5,"A":412.5},"traps":{"r":{"diameter":22.9},"A":{"early_rounding":415.5}}},
+      {"id":"gcse_019","stage":2,"given":{"C":74},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a biscuit tin lid is 74 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":11.8,"A":435.8},"traps":{"r":{"diameter":23.6},"A":{"early_rounding":437.4}}},
+      {"id":"gcse_020","stage":2,"given":{"C":61},"unit":"m","area_unit":"m²","prompt":"The circumference of a helipad is 61 m. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":9.7,"A":296.1},"traps":{"r":{"diameter":19.4},"A":{"early_rounding":295.6}}},
+      {"id":"gcse_021","stage":2,"given":{"C":171},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a cymbal is 171 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":27.2,"A":2326.9},"traps":{"r":{"diameter":54.4},"A":{"early_rounding":2324.3}}},
+      {"id":"gcse_022","stage":2,"given":{"C":43},"unit":"m","area_unit":"m²","prompt":"The circumference of a circus ring is 43 m. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":6.8,"A":147.1},"traps":{"r":{"diameter":13.7},"A":{"early_rounding":145.3}}},
+      {"id":"gcse_023","stage":2,"given":{"C":304},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a round window is 304 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":48.4,"A":7354.2},"traps":{"r":{"diameter":96.8},"A":{"early_rounding":7359.4}}},
+      {"id":"gcse_024","stage":2,"given":{"C":141},"unit":"cm","area_unit":"cm²","prompt":"The circumference of a bin lid is 141 cm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":22.4,"A":1582.1},"traps":{"r":{"diameter":44.9},"A":{"early_rounding":1576.3}}},
+      {"id":"gcse_025","stage":3,"given":{"d":7,"h":14},"unit":"cm","volume_unit":"cm³","prompt":"An ice cream cone is a cone with base diameter 7 cm and height 14 cm. Find its volume, to 1 d.p.","answers":{"V":179.6},"traps":{"V":{"diameter":718.4,"no_third":538.8}}},
+      {"id":"gcse_026","stage":3,"given":{"d":13,"h":24},"unit":"cm","volume_unit":"cm³","prompt":"A party hat is a cone with base diameter 13 cm and height 24 cm. Find its volume, to 1 d.p.","answers":{"V":1061.9},"traps":{"V":{"diameter":4247.4,"no_third":3185.6}}},
+      {"id":"gcse_027","stage":3,"given":{"d":29,"h":54},"unit":"cm","volume_unit":"cm³","prompt":"A traffic cone is a cone with base diameter 29 cm and height 54 cm. Find its volume, to 1 d.p.","answers":{"V":11889.4},"traps":{"V":{"diameter":47557.4,"no_third":35668.1}}},
+      {"id":"gcse_028","stage":3,"given":{"d":26,"h":49},"unit":"cm","volume_unit":"cm³","prompt":"A wizard's hat is a cone with base diameter 26 cm and height 49 cm. Find its volume, to 1 d.p.","answers":{"V":8671.8},"traps":{"V":{"diameter":34687.4,"no_third":26015.5}}},
+      {"id":"gcse_029","stage":3,"given":{"d":13,"h":9},"unit":"cm","volume_unit":"cm³","prompt":"A funnel is a cone with base diameter 13 cm and height 9 cm. Find its volume, to 1 d.p.","answers":{"V":398.2},"traps":{"V":{"diameter":1592.8,"no_third":1194.6}}},
+      {"id":"gcse_030","stage":3,"given":{"d":12,"h":30},"unit":"cm","volume_unit":"cm³","prompt":"A piping bag is a cone with base diameter 12 cm and height 30 cm. Find its volume, to 1 d.p.","answers":{"V":1131.0},"traps":{"V":{"diameter":4523.9,"no_third":3392.9}}},
+      {"id":"gcse_031","stage":3,"given":{"d":28,"h":17},"unit":"cm","volume_unit":"cm³","prompt":"A model volcano is a cone with base diameter 28 cm and height 17 cm. Find its volume, to 1 d.p.","answers":{"V":3489.3},"traps":{"V":{"diameter":13957.0,"no_third":10467.8}}},
+      {"id":"gcse_032","stage":3,"given":{"d":6,"h":3},"unit":"m","volume_unit":"m³","prompt":"A tepee is a cone with base diameter 6 m and height 3 m. Find its volume, to 1 d.p.","answers":{"V":28.3},"traps":{"V":{"diameter":113.1,"no_third":84.8}}},
+      {"id":"gcse_033","stage":3,"given":{"d":8,"h":9},"unit":"cm","volume_unit":"cm³","prompt":"A paper cup is a cone with base diameter 8 cm and height 9 cm. Find its volume, to 1 d.p.","answers":{"V":150.8},"traps":{"V":{"diameter":603.2,"no_third":452.4}}},
+      {"id":"gcse_034","stage":3,"given":{"d":35,"h":23},"unit":"cm","volume_unit":"cm³","prompt":"A lampshade is a cone with base diameter 35 cm and height 23 cm. Find its volume, to 1 d.p.","answers":{"V":7376.2},"traps":{"V":{"diameter":29504.8,"no_third":22128.6}}},
+      {"id":"gcse_035","stage":3,"given":{"d":2,"h":19},"unit":"cm","volume_unit":"cm³","prompt":"A carrot is a cone with base diameter 2 cm and height 19 cm. Find its volume, to 1 d.p.","answers":{"V":19.9},"traps":{"V":{"diameter":79.6,"no_third":59.7}}},
+      {"id":"gcse_036","stage":3,"given":{"d":5,"h":1},"unit":"m","volume_unit":"m³","prompt":"A pile of sand is a cone with base diameter 5 m and height 1 m. Find its volume, to 1 d.p.","answers":{"V":6.5},"traps":{"V":{"diameter":26.2,"no_third":19.6}}},
+      {"id":"gcse_037","stage":4,"given":{"d":12,"h":12},"unit":"cm","area_unit":"cm²","prompt":"A solid wooden cone is a solid cone with base diameter 12 cm and height 12 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":13.4,"A":366.0},"traps":{"l":{"diameter":17.0},"A":{"early_rounding":365.7,"curved_only":252.9}}},
+      {"id":"gcse_038","stage":4,"given":{"d":6,"h":19},"unit":"cm","area_unit":"cm²","prompt":"A cone-shaped candle is a solid cone with base diameter 6 cm and height 19 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":19.2,"A":209.6},"traps":{"l":{"diameter":19.9},"A":{"early_rounding":209.2,"curved_only":181.3}}},
+      {"id":"gcse_039","stage":4,"given":{"d":4,"h":16},"unit":"cm","area_unit":"cm²","prompt":"A unicorn horn is a solid cone with base diameter 4 cm and height 16 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":16.1,"A":113.9},"traps":{"l":{"diameter":16.5},"A":{"early_rounding":113.7,"curved_only":101.3}}},
+      {"id":"gcse_040","stage":4,"given":{"d":11,"h":20},"unit":"cm","area_unit":"cm²","prompt":"A model rocket nose cone is a solid cone with base diameter 11 cm and height 20 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":20.7,"A":453.4},"traps":{"l":{"diameter":22.8},"A":{"early_rounding":452.7,"curved_only":358.4}}},
+      {"id":"gcse_041","stage":4,"given":{"d":4,"h":12},"unit":"cm","area_unit":"cm²","prompt":"A solid chocolate cone is a solid cone with base diameter 4 cm and height 12 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":12.2,"A":89.0},"traps":{"l":{"diameter":12.6},"A":{"early_rounding":89.2,"curved_only":76.4}}},
+      {"id":"gcse_042","stage":4,"given":{"d":7,"h":7},"unit":"cm","area_unit":"cm²","prompt":"A spinning top is a solid cone with base diameter 7 cm and height 7 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":7.8,"A":124.5},"traps":{"l":{"diameter":9.9},"A":{"early_rounding":124.2,"curved_only":86.1}}},
+      {"id":"gcse_043","stage":4,"given":{"d":5,"h":8},"unit":"cm","area_unit":"cm²","prompt":"A pine cone is a solid cone with base diameter 5 cm and height 8 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":8.4,"A":85.5},"traps":{"l":{"diameter":9.4},"A":{"early_rounding":85.6,"curved_only":65.8}}},
+      {"id":"gcse_044","stage":4,"given":{"d":12,"h":15},"unit":"cm","area_unit":"cm²","prompt":"A cone-shaped crayon is a solid cone with base diameter 12 cm and height 15 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":16.2,"A":417.6},"traps":{"l":{"diameter":19.2},"A":{"early_rounding":418.5,"curved_only":304.5}}},
+      {"id":"gcse_045","stage":4,"given":{"d":7,"h":8},"unit":"cm","area_unit":"cm²","prompt":"A cone-shaped bath bomb is a solid cone with base diameter 7 cm and height 8 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":8.7,"A":134.5},"traps":{"l":{"diameter":10.6},"A":{"early_rounding":134.1,"curved_only":96.0}}},
+      {"id":"gcse_046","stage":4,"given":{"d":8,"h":14},"unit":"cm","area_unit":"cm²","prompt":"A wooden Christmas tree ornament is a solid cone with base diameter 8 cm and height 14 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":14.6,"A":233.2},"traps":{"l":{"diameter":16.1},"A":{"early_rounding":233.7,"curved_only":183.0}}},
+      {"id":"gcse_047","stage":4,"given":{"d":10,"h":8},"unit":"cm","area_unit":"cm²","prompt":"A cone-shaped paperweight is a solid cone with base diameter 10 cm and height 8 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":9.4,"A":226.7},"traps":{"l":{"diameter":12.8},"A":{"early_rounding":226.2,"curved_only":148.2}}},
+      {"id":"gcse_048","stage":4,"given":{"d":9,"h":7},"unit":"cm","area_unit":"cm²","prompt":"A cone of cheese is a solid cone with base diameter 9 cm and height 7 cm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":8.3,"A":181.3},"traps":{"l":{"diameter":11.4},"A":{"early_rounding":181.0,"curved_only":117.6}}}
+    ],
+    level3: [
+      {"id":"level3_001","stage":1,"given":{"C":309},"unit":"mm","prompt":"The circumference of a circular steel plate is 309 mm. Find its radius, to 1 d.p.","answers":{"r":49.2},"traps":{"r":{"diameter":98.4}}},
+      {"id":"level3_002","stage":1,"given":{"C":825},"unit":"mm","prompt":"The circumference of a flange is 825 mm. Find its radius, to 1 d.p.","answers":{"r":131.3},"traps":{"r":{"diameter":262.6}}},
+      {"id":"level3_003","stage":1,"given":{"C":888},"unit":"mm","prompt":"The circumference of a gasket is 888 mm. Find its radius, to 1 d.p.","answers":{"r":141.3},"traps":{"r":{"diameter":282.7}}},
+      {"id":"level3_004","stage":1,"given":{"C":199},"unit":"mm","prompt":"The circumference of a pulley wheel is 199 mm. Find its radius, to 1 d.p.","answers":{"r":31.7},"traps":{"r":{"diameter":63.3}}},
+      {"id":"level3_005","stage":1,"given":{"C":292},"unit":"mm","prompt":"The circumference of a grinding disc is 292 mm. Find its radius, to 1 d.p.","answers":{"r":46.5},"traps":{"r":{"diameter":92.9}}},
+      {"id":"level3_006","stage":1,"given":{"C":639},"unit":"mm","prompt":"The circumference of a flywheel is 639 mm. Find its radius, to 1 d.p.","answers":{"r":101.7},"traps":{"r":{"diameter":203.4}}},
+      {"id":"level3_007","stage":1,"given":{"C":625},"unit":"mm","prompt":"The circumference of a circular saw blade is 625 mm. Find its radius, to 1 d.p.","answers":{"r":99.5},"traps":{"r":{"diameter":198.9}}},
+      {"id":"level3_008","stage":1,"given":{"C":940},"unit":"mm","prompt":"The circumference of a brake disc is 940 mm. Find its radius, to 1 d.p.","answers":{"r":149.6},"traps":{"r":{"diameter":299.2}}},
+      {"id":"level3_009","stage":1,"given":{"C":280},"unit":"mm","prompt":"The circumference of a valve seat is 280 mm. Find its radius, to 1 d.p.","answers":{"r":44.6},"traps":{"r":{"diameter":89.1}}},
+      {"id":"level3_010","stage":1,"given":{"C":511},"unit":"mm","prompt":"The circumference of a bearing housing is 511 mm. Find its radius, to 1 d.p.","answers":{"r":81.3},"traps":{"r":{"diameter":162.7}}},
+      {"id":"level3_011","stage":1,"given":{"C":896},"unit":"mm","prompt":"The circumference of a manhole cover is 896 mm. Find its radius, to 1 d.p.","answers":{"r":142.6},"traps":{"r":{"diameter":285.2}}},
+      {"id":"level3_012","stage":1,"given":{"C":191},"unit":"mm","prompt":"The circumference of a shim disc is 191 mm. Find its radius, to 1 d.p.","answers":{"r":30.4},"traps":{"r":{"diameter":60.8}}},
+      {"id":"level3_013","stage":2,"given":{"C":382},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a clutch plate is 382 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":60.8,"A":11612.3},"traps":{"r":{"diameter":121.6},"A":{"early_rounding":11613.3}}},
+      {"id":"level3_014","stage":2,"given":{"C":203},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a cam disc is 203 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":32.3,"A":3279.3},"traps":{"r":{"diameter":64.6},"A":{"early_rounding":3277.6}}},
+      {"id":"level3_015","stage":2,"given":{"C":620},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a sprocket blank is 620 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":98.7,"A":30589.6},"traps":{"r":{"diameter":197.4},"A":{"early_rounding":30604.4}}},
+      {"id":"level3_016","stage":2,"given":{"C":517},"unit":"mm","area_unit":"mm²","prompt":"The circumference of an impeller disc is 517 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":82.3,"A":21270.2},"traps":{"r":{"diameter":164.6},"A":{"early_rounding":21278.9}}},
+      {"id":"level3_017","stage":2,"given":{"C":746},"unit":"mm","area_unit":"mm²","prompt":"The circumference of an end cap is 746 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":118.7,"A":44286.1},"traps":{"r":{"diameter":237.5},"A":{"early_rounding":44264.1}}},
+      {"id":"level3_018","stage":2,"given":{"C":661},"unit":"mm","area_unit":"mm²","prompt":"The circumference of an inspection cover is 661 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":105.2,"A":34769.1},"traps":{"r":{"diameter":210.4},"A":{"early_rounding":34768.1}}},
+      {"id":"level3_019","stage":2,"given":{"C":468},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a rotor blank is 468 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":74.5,"A":17429.4},"traps":{"r":{"diameter":149.0},"A":{"early_rounding":17436.6}}},
+      {"id":"level3_020","stage":2,"given":{"C":375},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a seal is 375 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":59.7,"A":11190.6},"traps":{"r":{"diameter":119.4},"A":{"early_rounding":11196.9}}},
+      {"id":"level3_021","stage":2,"given":{"C":253},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a spacer disc is 253 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":40.3,"A":5093.7},"traps":{"r":{"diameter":80.5},"A":{"early_rounding":5102.2}}},
+      {"id":"level3_022","stage":2,"given":{"C":548},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a sight glass is 548 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":87.2,"A":23897.4},"traps":{"r":{"diameter":174.4},"A":{"early_rounding":23888.2}}},
+      {"id":"level3_023","stage":2,"given":{"C":285},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a boss is 285 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":45.4,"A":6463.7},"traps":{"r":{"diameter":90.7},"A":{"early_rounding":6475.3}}},
+      {"id":"level3_024","stage":2,"given":{"C":832},"unit":"mm","area_unit":"mm²","prompt":"The circumference of a faceplate is 832 mm. Find (a) its radius and (b) its area, each to 1 d.p.","answers":{"r":132.4,"A":55085.4},"traps":{"r":{"diameter":264.8},"A":{"early_rounding":55071.4}}},
+      {"id":"level3_025","stage":3,"given":{"d":62,"h":157},"unit":"mm","volume_unit":"mm³","prompt":"A solid metal cone (spike) is a cone with base diameter 62 mm and height 157 mm. Find its volume, to 1 d.p.","answers":{"V":157998.0},"traps":{"V":{"diameter":631992.1,"no_third":473994.1}}},
+      {"id":"level3_026","stage":3,"given":{"d":13,"h":18},"unit":"mm","volume_unit":"mm³","prompt":"A centre punch tip is a cone with base diameter 13 mm and height 18 mm. Find its volume, to 1 d.p.","answers":{"V":796.4},"traps":{"V":{"diameter":3185.6,"no_third":2389.2}}},
+      {"id":"level3_027","stage":3,"given":{"d":27,"h":11},"unit":"mm","volume_unit":"mm³","prompt":"A countersink bit tip is a cone with base diameter 27 mm and height 11 mm. Find its volume, to 1 d.p.","answers":{"V":2099.4},"traps":{"V":{"diameter":8397.5,"no_third":6298.1}}},
+      {"id":"level3_028","stage":3,"given":{"d":38,"h":76},"unit":"mm","volume_unit":"mm³","prompt":"A plumb bob is a cone with base diameter 38 mm and height 76 mm. Find its volume, to 1 d.p.","answers":{"V":28730.9},"traps":{"V":{"diameter":114923.6,"no_third":86192.7}}},
+      {"id":"level3_029","stage":3,"given":{"d":25,"h":52},"unit":"mm","volume_unit":"mm³","prompt":"A conical nozzle is a cone with base diameter 25 mm and height 52 mm. Find its volume, to 1 d.p.","answers":{"V":8508.5},"traps":{"V":{"diameter":34033.9,"no_third":25525.4}}},
+      {"id":"level3_030","stage":3,"given":{"d":75,"h":101},"unit":"mm","volume_unit":"mm³","prompt":"A conical hopper plug is a cone with base diameter 75 mm and height 101 mm. Find its volume, to 1 d.p.","answers":{"V":148734.8},"traps":{"V":{"diameter":594939.1,"no_third":446204.3}}},
+      {"id":"level3_031","stage":3,"given":{"d":47,"h":27},"unit":"mm","volume_unit":"mm³","prompt":"A valve cone is a cone with base diameter 47 mm and height 27 mm. Find its volume, to 1 d.p.","answers":{"V":15614.5},"traps":{"V":{"diameter":62458.0,"no_third":46843.5}}},
+      {"id":"level3_032","stage":3,"given":{"d":21,"h":9},"unit":"mm","volume_unit":"mm³","prompt":"A conical rivet head is a cone with base diameter 21 mm and height 9 mm. Find its volume, to 1 d.p.","answers":{"V":1039.1},"traps":{"V":{"diameter":4156.3,"no_third":3117.2}}},
+      {"id":"level3_033","stage":3,"given":{"d":116,"h":64},"unit":"mm","volume_unit":"mm³","prompt":"A cone pulley blank is a cone with base diameter 116 mm and height 64 mm. Find its volume, to 1 d.p.","answers":{"V":225457.4},"traps":{"V":{"diameter":901829.8,"no_third":676372.3}}},
+      {"id":"level3_034","stage":3,"given":{"d":10,"h":5},"unit":"mm","volume_unit":"mm³","prompt":"A drill point is a cone with base diameter 10 mm and height 5 mm. Find its volume, to 1 d.p.","answers":{"V":130.9},"traps":{"V":{"diameter":523.6,"no_third":392.7}}},
+      {"id":"level3_035","stage":3,"given":{"d":74,"h":28},"unit":"mm","volume_unit":"mm³","prompt":"A conical spacer is a cone with base diameter 74 mm and height 28 mm. Find its volume, to 1 d.p.","answers":{"V":40141.2},"traps":{"V":{"diameter":160564.7,"no_third":120423.5}}},
+      {"id":"level3_036","stage":3,"given":{"d":16,"h":11},"unit":"mm","volume_unit":"mm³","prompt":"A conical locating pin is a cone with base diameter 16 mm and height 11 mm. Find its volume, to 1 d.p.","answers":{"V":737.2},"traps":{"V":{"diameter":2948.9,"no_third":2211.7}}},
+      {"id":"level3_037","stage":4,"given":{"d":55,"h":45},"unit":"mm","area_unit":"mm²","prompt":"A conical bearing plug is a solid cone with base diameter 55 mm and height 45 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":52.7,"A":6932.0},"traps":{"l":{"diameter":71.1},"A":{"early_rounding":6928.8,"curved_only":4556.2}}},
+      {"id":"level3_038","stage":4,"given":{"d":18,"h":33},"unit":"mm","area_unit":"mm²","prompt":"A spray nozzle insert is a solid cone with base diameter 18 mm and height 33 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":34.2,"A":1221.6},"traps":{"l":{"diameter":37.6},"A":{"early_rounding":1221.5,"curved_only":967.1}}},
+      {"id":"level3_039","stage":4,"given":{"d":16,"h":33},"unit":"mm","area_unit":"mm²","prompt":"A lathe centre is a solid cone with base diameter 16 mm and height 33 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":34.0,"A":1054.5},"traps":{"l":{"diameter":36.7},"A":{"early_rounding":1055.6,"curved_only":853.4}}},
+      {"id":"level3_040","stage":4,"given":{"d":57,"h":54},"unit":"mm","area_unit":"mm²","prompt":"A conical buffer is a solid cone with base diameter 57 mm and height 54 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":61.1,"A":8018.7},"traps":{"l":{"diameter":78.5},"A":{"early_rounding":8022.4,"curved_only":5467.0}}},
+      {"id":"level3_041","stage":4,"given":{"d":129,"h":136},"unit":"mm","area_unit":"mm²","prompt":"A cast cone is a solid cone with base diameter 129 mm and height 136 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":150.5,"A":43570.1},"traps":{"l":{"diameter":187.4},"A":{"early_rounding":43566.0,"curved_only":30500.3}}},
+      {"id":"level3_042","stage":4,"given":{"d":22,"h":18},"unit":"mm","area_unit":"mm²","prompt":"A conical shaft end is a solid cone with base diameter 22 mm and height 18 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":21.1,"A":1109.1},"traps":{"l":{"diameter":28.4},"A":{"early_rounding":1109.3,"curved_only":729.0}}},
+      {"id":"level3_043","stage":4,"given":{"d":89,"h":81},"unit":"mm","area_unit":"mm²","prompt":"A solid conical plug is a solid cone with base diameter 89 mm and height 81 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":92.4,"A":19141.4},"traps":{"l":{"diameter":120.3},"A":{"early_rounding":19138.7,"curved_only":12920.2}}},
+      {"id":"level3_044","stage":4,"given":{"d":42,"h":48},"unit":"mm","area_unit":"mm²","prompt":"A taper plug is a solid cone with base diameter 42 mm and height 48 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":52.4,"A":4842.0},"traps":{"l":{"diameter":63.8},"A":{"early_rounding":4842.5,"curved_only":3456.5}}},
+      {"id":"level3_045","stage":4,"given":{"d":46,"h":18},"unit":"mm","area_unit":"mm²","prompt":"A conical stop is a solid cone with base diameter 46 mm and height 18 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":29.2,"A":3772.2},"traps":{"l":{"diameter":49.4},"A":{"early_rounding":3771.8,"curved_only":2110.3}}},
+      {"id":"level3_046","stage":4,"given":{"d":71,"h":69},"unit":"mm","area_unit":"mm²","prompt":"A conical float is a solid cone with base diameter 71 mm and height 69 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":77.6,"A":12613.3},"traps":{"l":{"diameter":99.0},"A":{"early_rounding":12613.7,"curved_only":8654.1}}},
+      {"id":"level3_047","stage":4,"given":{"d":45,"h":156},"unit":"mm","area_unit":"mm²","prompt":"A conical spike is a solid cone with base diameter 45 mm and height 156 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":157.6,"A":12731.5},"traps":{"l":{"diameter":162.4},"A":{"early_rounding":12730.5,"curved_only":11141.1}}},
+      {"id":"level3_048","stage":4,"given":{"d":64,"h":27},"unit":"mm","area_unit":"mm²","prompt":"A conical die is a solid cone with base diameter 64 mm and height 27 mm. Find (a) its slant height l and (b) its total surface area, each to 1 d.p.","answers":{"l":41.9,"A":7426.1},"traps":{"l":{"diameter":69.5},"A":{"early_rounding":7429.2,"curved_only":4209.1}}}
+    ]
+  };
+
+  /* =====================================================================================================
+     THE STAGES, THE FORMULAS AND JON'S LINES
+     ===================================================================================================== */
+  // Each stage's boxes, in order: (a) then (b) where there are two (Jon's Q6 and Q7).
+  var MODE_INFO = {
+    'stage-1': { n: '1', name: 'Circumference to radius', boxes: ['r'] },
+    'stage-2': { n: '2', name: 'Circumference to area', boxes: ['r', 'A'] },
+    'stage-3': { n: '3', name: 'Cone volume', boxes: ['V'] },
+    'stage-4': { n: '4', name: 'Slant height and surface area', boxes: ['l', 'A'] }
+  };
+  var LEVEL_NAME = { gcse: 'GCSE', level3: 'Level 3' };
+  // The formulas each stage uses. GCSE students recall the circle's two (no panel in Stages 1 and 2); the cone's are shown
+  // under the prompt, as on GCSE papers. Level 3 shows every stage's, as on Jon's paper.
+  var FORMULA_TEX = { C: 'C = 2\\pi r', Acircle: 'A = \\pi r^2', V: 'V = \\tfrac{1}{3}\\pi r^2 h', l: 'l = \\sqrt{r^2 + h^2}', Acone: 'A = \\pi r^2 + \\pi r l' };
+  var FORMULAS = { 'stage-1': ['C'], 'stage-2': ['C', 'Acircle'], 'stage-3': ['V'], 'stage-4': ['l', 'Acone'] };
+  function formulasShown(lv, m) { return lv === 'level3' || m === 'stage-3' || m === 'stage-4'; }
+  // Jon's feedback lines (17 Nov 2026, verbatim), keyed '<box>.<trap>' as the bank names its traps.
+  var HALF_THAT = 'calm down bro, it\'s half that.';
+  var TRAP_LINE = {
+    'r.diameter': HALF_THAT,
+    'V.diameter': HALF_THAT,
+    'A.early_rounding': 'save your rounding energy bruv, too soon, too soon.',
+    'V.no_third': 'just because we don\'t like fractions, that doesn\'t mean we can ignore them dude',
+    'l.diameter': 'well it\'s definitely a number you calculated, it\'s just not what the question asked my friend',
+    'A.curved_only': 'just cos you can\'t see the bottom, doesn\'t mean it aint there my man.'
+  };
+  var BOX_NAME = { r: 'the radius', A: 'the area', V: 'the volume', l: 'the slant height' };
+
+  /* ---------- the numbers: worked from "given", never from a rounded value ---------- */
+  var PI = Math.PI;
+  function dec1(x) { return Number(x).toFixed(1); }
+  // A value cut (never rounded) to 4 d.p., then "…"; a value with no more digits is written as it is.
+  function cut(x) {
+    var s = x.toFixed(10), i = s.indexOf('.'), head = s.slice(0, i + 5), rest = s.slice(i + 5);
+    if (/^0+$/.test(rest)) { var t = head.replace(/0+$/, '').replace(/\.$/, ''); return t; }
+    return head + '\\ldots';
+  }
+  function num(x) { return String(x); }
+  function uTex(u, p) { return '\\text{ ' + u + '}' + (p ? '^' + p : ''); }
+  function boxUnit(q, k) { return k === 'r' || k === 'l' ? q.unit : k === 'V' ? q.volume_unit : q.area_unit; }
+  function boxPow(k) { return k === 'V' ? '3' : k === 'A' ? '2' : ''; }
+  function values(q) {
+    var g = q.given, o = {};
+    if (g.C !== undefined) { o.r = g.C / (2 * PI); o.A = PI * o.r * o.r; }
+    else { o.r = g.d / 2; o.V = PI * o.r * o.r * g.h / 3; o.l = Math.sqrt(o.r * o.r + g.h * g.h); o.A = PI * o.r * o.r + PI * o.r * o.l; }
+    return o;
+  }
+  function answerTex(q, k) { return k + ' = ' + dec1(q.answers[k]) + uTex(q.unit, boxPow(k)); }
+  // The working for one box, a line at a time, each \( ... \) KaTeX.
+  function working(q, k) {
+    var g = q.given, v = values(q), u = q.unit, W = [];
+    if (g.C !== undefined) {
+      W.push('\\(r = \\dfrac{C}{2\\pi} = \\dfrac{' + num(g.C) + '}{2\\pi} = ' + cut(v.r) + '\\)');
+      if (k === 'r') { W.push('\\(r = ' + dec1(q.answers.r) + uTex(u) + '\\) to 1 d.p.'); return W; }
+      W.push('Keep the unrounded \\(r\\) in your calculator.');
+      W.push('\\(A = \\pi r^2 = \\pi \\times ' + cut(v.r) + '^2 = ' + cut(v.A) + '\\)');
+      W.push('\\(A = ' + dec1(q.answers.A) + uTex(u, '2') + '\\) to 1 d.p.');
+      return W;
+    }
+    W.push('\\(r = d \\div 2 = ' + num(g.d) + ' \\div 2 = ' + num(v.r) + uTex(u) + '\\)');
+    if (k === 'V') {
+      W.push('\\(V = \\tfrac{1}{3}\\pi r^2 h = \\tfrac{1}{3} \\times \\pi \\times ' + num(v.r) + '^2 \\times ' + num(g.h) + ' = ' + cut(v.V) + '\\)');
+      W.push('\\(V = ' + dec1(q.answers.V) + uTex(u, '3') + '\\) to 1 d.p.');
+      return W;
+    }
+    W.push('\\(l = \\sqrt{r^2 + h^2} = \\sqrt{' + num(v.r) + '^2 + ' + num(g.h) + '^2} = ' + cut(v.l) + '\\)');
+    if (k === 'l') { W.push('\\(l = ' + dec1(q.answers.l) + uTex(u) + '\\) to 1 d.p.'); return W; }
+    W.push('Keep the unrounded \\(l\\) in your calculator. The base is a circle, so the total is the base plus the curved surface.');
+    W.push('\\(A = \\pi r^2 + \\pi r l = \\pi \\times ' + num(v.r) + '^2 + \\pi \\times ' + num(v.r) + ' \\times ' + cut(v.l) + ' = ' + cut(v.A) + '\\)');
+    W.push('\\(A = ' + dec1(q.answers.A) + uTex(u, '2') + '\\) to 1 d.p.');
+    return W;
+  }
+  // The trap a wrong answer falls into: the box's trap whose value it equals to 1 d.p. (MaffsAnswer.decimal reads it the
+  // same way it reads the answer: the trap to 1 d.p., or a longer value that rounds to it).
+  function trapOf(q, k, raw) {
+    var t = (q.traps || {})[k] || {};
+    for (var name in t) {
+      if (!Object.prototype.hasOwnProperty.call(t, name)) continue;
+      var r = MaffsAnswer.decimal(raw, t[name], 1);
+      if (r === 'correct' || r === 'format') return k + '.' + name;
+    }
+    return null;
+  }
+
+  /* =====================================================================================================
+     THE DIAGRAMS: inline SVG from the item's given values. Only the given values and the unknowns are labelled.
+     ===================================================================================================== */
+  function el(tag, attrs, parent) {
+    var e = document.createElementNS(NS, tag);
+    for (var k in attrs) if (Object.prototype.hasOwnProperty.call(attrs, k)) e.setAttribute(k, attrs[k]);
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  function f1(x) { return x.toFixed(1); }
+  function label(svg, x, y, text, cls, anchor, lab) {
+    var t = el('text', { x: f1(x), y: f1(y), class: 'c-t' + (cls ? ' ' + cls : ''), 'text-anchor': anchor || 'middle', 'data-lab': lab }, svg);
+    t.textContent = text;
+    return t;
+  }
+  function arrowHead(svg, tip, dx, dy) {   // a small filled head at tip, pointing along (dx, dy)
+    var L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L, s = 7, w = 3.5;
+    var p = [tip.x, tip.y, tip.x - ux * s - uy * w, tip.y - uy * s + ux * w, tip.x - ux * s + uy * w, tip.y - uy * s - ux * w];
+    el('path', { d: 'M' + p.map(f1).join(' ').replace(/^(\S+ \S+) (\S+ \S+) (\S+ \S+)$/, '$1 L$2 L$3') + ' Z', class: 'c-head' }, svg);
+  }
+  var VW = 340;
+  function drawCircle(host, q, m) {
+    var R = 78, cx = VW / 2, cy = 112, H = cy + R + 18;
+    var svg = el('svg', { viewBox: '0 0 ' + VW + ' ' + H, role: 'img', 'aria-label': 'A circle with circumference ' + q.given.C + ' ' + q.unit + ' and radius r' });
+    host.appendChild(svg);
+    el('circle', { cx: cx, cy: cy, r: R, class: 'c-line' }, svg);
+    // "C = <value> <unit>", written along the edge outside the circle, over the top.
+    var Rl = R + 8, id = 'cArc' + Math.random().toString(36).slice(2, 8);
+    el('path', { id: id, d: 'M' + f1(cx - Rl) + ' ' + cy + ' A' + Rl + ' ' + Rl + ' 0 0 1 ' + f1(cx + Rl) + ' ' + cy, fill: 'none', stroke: 'none' }, svg);
+    var t = el('text', { class: 'c-t', 'data-lab': 'C' }, svg);
+    var tp = el('textPath', { href: '#' + id, startOffset: '50%', 'text-anchor': 'middle' }, t);
+    tp.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', '#' + id);
+    tp.textContent = 'C = ' + q.given.C + ' ' + q.unit;
+    t.style.dominantBaseline = 'auto';
+    // The radius: centre to edge, the unknown.
+    el('line', { x1: cx, y1: cy, x2: cx + R, y2: cy, class: 'c-rad' }, svg);
+    el('circle', { cx: cx, cy: cy, r: 3.5, class: 'c-dot' }, svg);
+    label(svg, cx + R / 2, cy - 13, 'r = ?', 'unk', 'middle', 'r');
+    if (m === 'stage-2') label(svg, cx, cy + R * 0.48, 'A = ?', 'unk', 'middle', 'A');
+    return { svg: svg };
+  }
+  // The cone, to the true proportion of its height to its diameter; the height's label is placed where it cannot touch a
+  // slant edge: inside, right of the dashed height, where the cone is wide enough, else outside on the left with a leader.
+  function drawCone(host, q, m) {
+    var d = q.given.d, h = q.given.h, u = q.unit;
+    // At most 200 wide and 150 tall, so a tall cone's labels stay readable on a phone (the drawing is capped at 30vh there);
+    // the base's depth is capped by the height too, so a shallow cone's apex stands clear of the back of its base.
+    var sc = Math.min(200 / d, 150 / h), rx = d / 2 * sc, hh = h * sc, ry = Math.max(5, Math.min(rx * 0.25, 26, hh * 0.3));
+    var cx = VW / 2, top = 18, baseY = top + hh, arrowY = baseY + ry + 14, labY = arrowY + 16, H = labY + 14;
+    var svg = el('svg', { viewBox: '0 0 ' + VW + ' ' + f1(H), role: 'img', 'aria-label': 'A cone with base diameter ' + d + ' ' + u + ' and height ' + h + ' ' + u });
+    host.appendChild(svg);
+    var L = { x: cx - rx, y: baseY }, Rt = { x: cx + rx, y: baseY }, Ap = { x: cx, y: top };
+    // The base: front half solid, back half dashed.
+    el('path', { d: 'M' + f1(L.x) + ' ' + f1(baseY) + ' A' + f1(rx) + ' ' + f1(ry) + ' 0 0 1 ' + f1(Rt.x) + ' ' + f1(baseY), class: 'c-back' }, svg);
+    el('path', { d: 'M' + f1(L.x) + ' ' + f1(baseY) + ' A' + f1(rx) + ' ' + f1(ry) + ' 0 0 0 ' + f1(Rt.x) + ' ' + f1(baseY), class: 'c-line' }, svg);
+    // The slant edges.
+    el('line', { x1: f1(Ap.x), y1: f1(Ap.y), x2: f1(L.x), y2: f1(L.y), class: 'c-line c-slant', 'data-edge': 'left' }, svg);
+    el('line', { x1: f1(Ap.x), y1: f1(Ap.y), x2: f1(Rt.x), y2: f1(Rt.y), class: 'c-line c-slant', 'data-edge': 'right' }, svg);
+    // The height: dashed, apex to the base's centre, with its right angle.
+    el('line', { x1: f1(cx), y1: f1(top), x2: f1(cx), y2: f1(baseY), class: 'c-dash c-height' }, svg);
+    var s = Math.min(7, rx * 0.4);
+    el('path', { d: 'M' + f1(cx + s) + ' ' + f1(baseY) + ' L' + f1(cx + s) + ' ' + f1(baseY - s) + ' L' + f1(cx) + ' ' + f1(baseY - s), class: 'c-thin' }, svg);
+    el('circle', { cx: f1(cx), cy: f1(baseY), r: 2.5, class: 'c-dot' }, svg);
+    // The height's label.
+    var ht = label(svg, 0, 0, 'h = ' + h + ' ' + u, '', 'start', 'h');
+    var bb = ht.getBBox(), w = bb.width || 70, th = bb.height || 16;
+    var yIn = baseY - ry - 4 - th / 2, yTop = yIn - th / 2 - 2;
+    var halfAt = function (y) { return rx * (y - top) / hh; };
+    if (cx + 6 + w + 4 <= cx + halfAt(yTop)) {
+      ht.setAttribute('x', f1(cx + 6)); ht.setAttribute('y', f1(yIn)); ht.setAttribute('data-place', 'inside');
+    } else {
+      // Clear of the left edge at the label's lowest point (the edge is furthest out there), so a shallow cone's edge
+      // cannot reach the label's corner.
+      var yOut = top + hh * 0.55, xEdge = cx - halfAt(Math.min(yOut + th / 2 + 2, baseY));
+      ht.setAttribute('text-anchor', 'end'); ht.setAttribute('x', f1(xEdge - 14)); ht.setAttribute('y', f1(yOut)); ht.setAttribute('data-place', 'outside');
+      el('line', { x1: f1(xEdge - 10), y1: f1(yOut), x2: f1(cx), y2: f1(yOut), class: 'c-thin', 'stroke-dasharray': '2 3' }, svg);
+      el('circle', { cx: f1(cx), cy: f1(yOut), r: 2, class: 'c-dot' }, svg);
+    }
+    // The diameter: an arrow under the base, end to end.
+    el('line', { x1: f1(L.x), y1: f1(arrowY), x2: f1(Rt.x), y2: f1(arrowY), class: 'c-thin' }, svg);
+    el('line', { x1: f1(L.x), y1: f1(baseY + 3), x2: f1(L.x), y2: f1(arrowY + 5), class: 'c-thin' }, svg);
+    el('line', { x1: f1(Rt.x), y1: f1(baseY + 3), x2: f1(Rt.x), y2: f1(arrowY + 5), class: 'c-thin' }, svg);
+    if (rx > 9) { arrowHead(svg, { x: L.x, y: arrowY }, -1, 0); arrowHead(svg, { x: Rt.x, y: arrowY }, 1, 0); }
+    label(svg, cx, labY, 'diameter = ' + d + ' ' + u, '', 'middle', 'd');
+    // Stage 4: the slant edge, the unknown, outside the right edge at its middle.
+    if (m === 'stage-4') {
+      var mx = (Ap.x + Rt.x) / 2, my = (Ap.y + Rt.y) / 2, ex = Rt.x - Ap.x, ey = Rt.y - Ap.y, eL = Math.hypot(ex, ey);
+      label(svg, mx + ey / eL * 12, my - ex / eL * 12, 'l = ?', 'unk', 'start', 'l');
+    }
+    return { svg: svg };
+  }
+  function draw(host, q, m) {
+    host.innerHTML = '';
+    return q.given.C !== undefined ? drawCircle(host, q, m) : drawCone(host, q, m);
+  }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, bi = 0, state = 'menu', score = 0, rightCount = 0, itemRight = true, calc = null;
+
+  function stageItems(lv, m) { var n = Number(m.slice(-1)); return QUESTIONS[lv].filter(function (q) { return q.stage === n; }); }
+  // A run: PER items from the stage's 12 at this level, without repeats (a Fisher-Yates shuffle, then the first PER).
+  function run() { return MaffsOptions.shuffle(stageItems(level, mode).slice()).slice(0, PER); }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  // The scientific calculator, every stage: mounted the first time a stage is played.
+  function calculator() {
+    if (!calc && window.MaffsCalc) calc = MaffsCalc.mount($('calc'), { keys: 'scientific', dock: $('qcard'), answer: $('ans') });
+    $('calcWrap').hidden = false;
+  }
+  function setLevel(l) {
+    if (LEVELS.indexOf(l) === -1) return;
+    level = l;
+    var bs = $('levelList').querySelectorAll('.lvl-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].dataset.level === level));
+  }
+  function board() { return level + '-' + mode; }
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; qs = list; qi = 0; score = 0; rightCount = 0;
+    calculator();
+    if (calc) { calc.close(); calc.clear(); }
+    show('game');
+    $('hudStage').textContent = MODE_INFO[mode].n;
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function startMode(m) { if (MODE_INFO[m]) { mode = m; begin(m, run()); } }
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++]; bi = 0; itemRight = true;
+    $('hudQ').textContent = qi + '/' + qs.length;
+    draw($('fig'), Q, mode);
+    var f = formulasShown(level, mode) ? FORMULAS[mode] : [];
+    $('formulas').innerHTML = f.map(function (k) { return '<span data-formula="' + k + '">' + tex(FORMULA_TEX[k]) + '</span>'; }).join('');
+    ask();
+  }
+  function box() { return MODE_INFO[mode].boxes[bi]; }
+  function ask() {
+    var k = box(), two = MODE_INFO[mode].boxes.length > 1, part = two ? '(' + 'ab'.charAt(bi) + ') ' : '';
+    $('hudScore').textContent = score;
+    $('stageLabel').textContent = 'Stage ' + MODE_INFO[mode].n + ' · ' + MODE_INFO[mode].name + ' · ' + LEVEL_NAME[level];
+    $('ask').innerHTML = esc(Q.prompt);
+    $('msg').textContent = ''; delete $('msg').dataset.why;
+    $('prompt').textContent = (two ? 'Part ' + part.trim() + ': ' : '') + 'find ' + BOX_NAME[k] + ', to 1 d.p.';
+    $('boxLab').innerHTML = esc(part) + tex(k + ' =');
+    $('ans').value = '';
+    $('unit').innerHTML = tex(uTex(Q.unit, boxPow(k)).replace(/^\\text\{ /, '\\text{'));
+    $('ans').setAttribute('aria-label', 'Your answer: ' + BOX_NAME[k] + ', to 1 decimal place, in ' + boxUnit(Q, k));
+    MaffsLock.fresh($('ansBlock'));
+    state = 'asking';
+  }
+  // Typed answers by MaffsAnswer.decimal to 1 d.p., against the bank's answer (worked from full accuracy; box (b) never
+  // from the student's own (a)). A right value not to 1 d.p., or an unreadable answer, is never marked (SR-3).
+  function onCheck() {
+    if (state !== 'asking') return;
+    var k = box(), raw = $('ans').value, r = MaffsAnswer.decimal(raw, Q.answers[k], 1);
+    if (r === 'unreadable' || r === 'format') {
+      $('msg').textContent = r === 'format' ? MaffsAnswer.message('format', raw, { dp: 1 }) : MaffsAnswer.message('unreadable', raw);
+      $('msg').dataset.why = r; return;
+    }
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    settle(r === 'correct', raw);
+  }
+  function settle(right, raw) {
+    var k = box(), last = bi === MODE_INFO[mode].boxes.length - 1;
+    state = right ? 'done' : 'wrong';
+    if (right) score++; else itemRight = false;
+    $('hudScore').textContent = score;
+    if (last) {
+      if (itemRight) rightCount++;
+      ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: itemRight });
+    }
+    $('qcard').classList.add('fb-open');
+    var trap = right ? null : trapOf(Q, k, raw);
+    var fb = $('feedback');
+    var head = right ? '✓ Right: ' : '✗ Not quite.';
+    var body = '';
+    if (trap) body += '<div class="fb-trap" data-trap="' + trap + '">' + esc(TRAP_LINE[trap]) + '</div>';
+    if (!right) body += '<div class="fb-line">The answer is ' + tex(answerTex(Q, k)) + '.</div>';
+    body += '<ol class="worked">' + working(Q, k).map(function (l) { return '<li>' + line(l) + '</li>'; }).join('') + '</ol>';
+    var nextText = !last ? 'Next: part (b) →' : (qi >= qs.length ? 'See results →' : 'Next →');
+    fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '" data-box="' + k + '"><div class="fb-head">' + esc(head) + (right ? tex(answerTex(Q, k)) : '') + '</div>' + body +
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button" data-maffs-lock-skip>' + nextText + '</button>' : '') + '</div></div>';
+    if (right) { MaffsLock.fresh(fb); try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {} }
+    else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('ask') });
+  }
+  // On: part (b) of this item, or the next item.
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    if (bi < MODE_INFO[mode].boxes.length - 1) {
+      bi++;
+      $('feedback').innerHTML = '';
+      $('qcard').classList.remove('fb-open');
+      ask();
+      return;
+    }
+    nextQuestion();
+  }
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var b = board(), outOf = qs.length * MODE_INFO[mode].boxes.length;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: rightCount });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
+    var pbKey = 'ice_best_' + b, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = MODE_INFO[mode].name + ' done';
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + outOf + ' · ' + LEVEL_NAME[level];
+    $('resStats').innerHTML = '<b>' + rightCount + '</b> of <b>' + qs.length + '</b> questions with every answer right' + (pb ? '<br>New personal best' : '');
+    var i = MODES.indexOf(mode);
+    $('nextStageBtn').hidden = i >= MODES.length - 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (i + 2);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('levelList').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) setLevel(b.dataset.level); });
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-mode]'); if (b) startMode(b.dataset.mode); });
+  $('typeRow').addEventListener('submit', function (e) { e.preventDefault(); onCheck(); });
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+  setLevel(level);
+
+  // Read-only views of the bank and live state, for scripts/verify-i-dropped-my-ice-cream.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) {
+    for (var l in QUESTIONS) if (Object.prototype.hasOwnProperty.call(QUESTIONS, l)) for (var i = 0; i < QUESTIONS[l].length; i++) if (QUESTIONS[l][i].id === id) return QUESTIONS[l][i];
+    return null;
+  }
+  window.ICE = {
+    SLUG: SLUG, LEVELS: LEVELS, MODES: MODES, BOARDS: BOARDS, TRAP_LINE: copy(TRAP_LINE), FORMULAS: copy(FORMULAS), FORMULA_TEX: copy(FORMULA_TEX),
+    bank: function () { return copy(QUESTIONS); },
+    working: function (id, k) { var q = item(id); return q ? working(q, k) : null; },
+    // Draw one item's diagram into a host element, as the given mode draws it.
+    drawInto: function (host, id, m) { var q = item(id); if (q) draw(host, q, m); return !!q; },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      box: function () { return state === 'menu' || state === 'over' ? null : box(); },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      board: board,
+      calcMounted: function () { return !!calc; },
+      calcShown: function () { return !$('calcWrap').hidden; },
+      setLevel: setLevel,
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in a mode, so a verifier can see any item.
+      preview: function (m, id) {
+        var q = item(id);
+        if (!q || !MODE_INFO[m]) return;
+        setLevel(q.id.split('_')[0]);
+        begin(m, [q]);
+      },
+      // Answer the box on screen: right, or wrong (a value that is no trap's).
+      answer: function (right) {
+        if (state !== 'asking') return;
+        MaffsLock.fresh($('ansBlock'), 0);
+        var a = Q.answers[box()];
+        $('ans').value = right ? dec1(a) : dec1(a + 0.3);
+        $('checkBtn').click();
+      },
+      next: function () { var b = $('nextBtn') || document.querySelector('#feedback .maffs-next, #feedback .fb-next button'); if (b && !b.disabled) b.click(); else if (state === 'done' || state === 'wrong') advance(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'i-dropped-my-ice-cream');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
