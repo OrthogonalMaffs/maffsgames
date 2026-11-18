@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Adding within 100 with a fact you know: every big sum is a little sum in disguise, from 44 + 2 and 40 + 20 to crossing a ten. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/sums-in-disguise/">
+<meta property="og:title" content="Adding with known facts Maths Game | MaffsGames">
+<meta property="og:description" content="Adding within 100 with a fact you know: every big sum is a little sum in disguise, from 44 + 2 and 40 + 20 to crossing a ten. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/sums-in-disguise/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Adding with known facts Maths Game | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster's level is Year 6 (shown as "Starter", SR-11).
+   This game's own tokens. Two looks on one page (contract SUMS-IN-DISGUISE): the grown-up look by default, the kid look
+   (body.look-kids) from the link fragment #kids. Every colour is a token here; the kid look only points the game's own
+   tokens at its brighter set, never a base token (scripts/check-theme.py).
+   Grown accent: violet-700, 7.1:1 on white. Kid accent: fuchsia-700, 6.3:1 on white and 5.9:1 on the kid look's sunny
+   background, so white text on it and it on the light surfaces both clear 4.5:1. */
+:root{
+  --accent:#6d28d9;--accent-dim:#ede9fe;--on-accent:#ffffff;
+  --d-ink:#3b2416;--d-frame:#1e293b;--d-lens:#bae6fd;--d-wig:#f59e0b;--d-wig-2:#d97706;--d-duck:#facc15;--d-beak:#f97316;
+  --d-eye:#111827;--d-hat:#1f2937;--d-band:#6d28d9;--d-tag:#fef3c7;
+  --kid-accent:#a21caf;--kid-accent-dim:#fae8ff;--kid-bg:#fff7d6;--kid-edge:#f0abfc;
+  --kid-wig:#ec4899;--kid-wig-2:#be185d;--kid-band:#16a34a;--kid-lens:#fde68a;--kid-frame:#7e22ce;
+  --pop:#be185d;--pop-edge:#ffffff
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:32em}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.welcome{text-align:center;font-weight:700;font-size:1.05rem;color:var(--accent);margin:.2rem 0 .5rem}
+.welcome:empty{display:none}
+.badges{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:.1rem 0 .6rem}
+.level-tag{display:inline-block;font-size:.78rem;font-weight:700;padding:.15rem .55rem;border-radius:999px;background:var(--accent-dim);color:var(--accent)}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.55}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.8rem 0 .35rem}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.55rem .7rem;display:flex;flex-direction:column;gap:.4rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+
+/* The suspect: the disguise sits on the sum; when it comes off, it moves aside with the tens on its tag. */
+.suspect{position:relative;overflow:hidden;display:flex;flex-direction:column;align-items:center;padding:60px 0 .2rem}
+/* On: centred above the sum. Off (.unmasked): moved to the box's top right, the tens on the tag beside it. The box clips,
+   so nothing it does can make the page scroll sideways. */
+.disguise{position:absolute;top:2px;left:50%;height:56px;transform:translateX(-50%);transform-origin:right top;transition:left .45s ease,transform .45s ease;z-index:1}
+.disguise .art,.disguise svg{height:100%;width:auto;display:block}
+.disguise.tappable{cursor:pointer}
+.suspect.unmasked .disguise{left:100%;transform:translateX(-100%) translate(-6px,2px) rotate(12deg) scale(.62)}
+.tag{display:none;position:absolute;right:10px;top:42px;font-family:var(--font-num);font-weight:700;font-size:1rem;color:var(--text);background:var(--d-tag);border:2px solid var(--d-ink);border-radius:4px 10px 10px 4px;padding:0 .4rem;white-space:nowrap;z-index:2}
+.suspect.unmasked .tag{display:block}
+.sum{font-size:2rem;line-height:1.25;min-height:2.6rem;text-align:center;font-family:var(--font-num);font-weight:700}
+.sum .katex{font-size:1em}
+.clue{font-size:.92rem;color:var(--muted);text-align:center}
+.clue:empty{display:none}
+.say{position:relative;max-width:30em;margin:.1rem auto 0;padding:.35rem .7rem;border-radius:12px;background:var(--accent-dim);color:var(--text);font-weight:600;font-size:.95rem;line-height:1.35;text-align:center}
+.say:empty{display:none}
+.d-ink{fill:var(--d-ink)}
+.d-frame{fill:none;stroke:var(--d-frame);stroke-width:5;stroke-linecap:round}
+.d-lens{fill:var(--d-lens);stroke:var(--d-frame);stroke-width:5}
+.d-wig{fill:var(--d-wig)}.d-wig-2{fill:var(--d-wig-2)}
+.d-duck{fill:var(--d-duck)}.d-beak{fill:var(--d-beak)}.d-eye{fill:var(--d-eye)}
+.d-wing{fill:none;stroke:var(--d-beak);stroke-width:3;stroke-linecap:round}
+.d-hat{fill:var(--d-hat)}.d-band{fill:var(--d-band)}
+
+.prompt{font-size:1rem;line-height:1.35;text-align:center;font-weight:600}
+.prompt:empty{display:none}
+.unmask-row,.peek-row{display:flex;justify-content:center}
+.tiles{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:.3rem}
+.tiles.wide{grid-template-columns:repeat(7,minmax(0,1fr))}
+.tile{min-height:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.1rem;font-weight:700;cursor:pointer;padding:0}
+.tile:hover{border-color:var(--accent)}
+.choices{display:grid;grid-template-columns:1fr;gap:.4rem}
+.opt{min-height:48px;border-radius:12px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.2rem;font-weight:700;cursor:pointer;padding:.3rem .5rem}
+.opt:hover{border-color:var(--accent)}
+.tile.is-right,.opt.is-right{border-color:var(--correct);color:var(--correct)}
+.tile.is-wrong,.opt.is-wrong{border-color:var(--wrong);color:var(--wrong)}
+.tile:disabled,.opt:disabled{cursor:default}
+
+.fb{border-radius:12px;padding:.45rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.35rem}
+.fb.right{border-color:var(--correct)}
+.fb.wrong{border-color:var(--wrong)}
+.fb-line{font-size:.98rem;line-height:1.45;text-align:center}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+
+/* The 67: over the play area after a big answer is marked, never before. It takes no pointer events, so it can never
+   block an answer, the lock or Next; any tap anywhere closes it. */
+.pop67{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;z-index:5}
+.pop67 span{font-family:var(--font-num);font-weight:800;font-size:7rem;line-height:1;color:var(--pop);-webkit-text-stroke:3px var(--pop-edge);paint-order:stroke fill;animation:pop67 .45s cubic-bezier(.2,1.6,.4,1)}
+@keyframes pop67{from{transform:scale(.2) rotate(-12deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.end-line{font-size:1rem;color:var(--text);margin:.2rem auto .4rem;max-width:30em}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.stats{color:var(--muted);line-height:1.8;font-size:.95rem;margin:.4rem 0 .7rem}
+.stats b{color:var(--text)}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .5rem;gap:.3rem}
+  .sum{font-size:1.75rem}
+}
+@media (max-height:620px){.hud-label{display:none}.stage-label{display:none}.suspect{padding-top:50px}.disguise{height:46px}.tag{top:34px}}
+@media (min-width:1024px){.container{max-width:clamp(720px,60vw,900px)}}
+
+/* The kid look: brighter and rounder, bigger disguises; the same layout, items, marking and boards. */
+body.look-kids{background:var(--kid-bg);--accent:var(--kid-accent);--accent-dim:var(--kid-accent-dim);
+  --d-wig:var(--kid-wig);--d-wig-2:var(--kid-wig-2);--d-band:var(--kid-band);--d-lens:var(--kid-lens);--d-frame:var(--kid-frame)}
+body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid var(--kid-edge);border-radius:22px}
+body.look-kids .btn,body.look-kids .stage-btn,body.look-kids .opt,body.look-kids .tile{border-radius:999px}
+body.look-kids .stage-btn{border-radius:20px}
+body.look-kids .header h1{font-size:2.2rem}
+body.look-kids .suspect{padding-top:82px}
+body.look-kids .disguise{height:78px}
+body.look-kids .tag{top:56px;font-size:1.1rem}
+body.look-kids .say{border-radius:18px;font-size:1rem}
+@media (max-width:420px){body.look-kids .header h1{font-size:1.7rem}}
+@media (max-height:620px){body.look-kids .suspect{padding-top:62px}body.look-kids .disguise{height:58px}body.look-kids .tag{top:42px}}
+
+body.accessible p,body.accessible .fb-line{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Stage 1 and takes the
+     moustache off, so the first screen is the little sum's tiles; 'answer' with i = 0 answers the item on screen right, and
+     with i >= 1 answers the big sum with a decoy, so it is marked wrong and waits on Next.
+{
+  "start": "SID.ui.start('stage-1'); SID.ui.unmask();",
+  "ready": "!!window.SID && SID.ui.ready()",
+  "answer": [
+    "SID.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/scroll.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Sums in Disguise</h1><div class="sub" id="titleLine"></div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <p class="welcome" id="welcome"></p>
+    <div class="panel menu-info">
+      <div class="badges"><span class="level-tag">Starter</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <div class="mode-h">Stages</div>
+      <div class="stages" id="stageList"></div>
+      <p class="note" id="menuNote"></p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="suspect" id="suspect">
+        <div class="disguise" id="disguise" aria-hidden="true"><span class="art" id="disguiseArt"></span></div>
+        <div class="tag" id="tag" aria-hidden="true"></div>
+        <div class="sum" id="sum"></div>
+        <div class="clue" id="clue"></div>
+        <div class="say" id="say" aria-live="polite"></div>
+      </div>
+      <div class="prompt" id="prompt"></div>
+      <div class="unmask-row" id="unmaskRow" hidden><button class="btn solid" id="unmaskBtn" type="button"></button></div>
+      <div class="tiles" id="tiles" hidden></div>
+      <div class="choices maffs-options" id="opts" hidden></div>
+      <div class="peek-row" id="peekRow" hidden><button class="btn" id="peekBtn" type="button"></button></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="pop67" id="pop67" hidden aria-hidden="true"><span></span></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <p class="end-line" id="endLine"></p>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================================================
+     THE LINES: every line the disguises and the game say, in one place, for each look.
+     ===================================================================================================== */
+  // Placeholders by Project Claude, 18 Nov 2026, for Jon to rewrite.
+  var LINES = {
+    grown: {
+      title: "Every big sum is a small sum in a cheap disguise. You have seen through worse.",
+      welcome: "Some sums are hiding. Badly.",
+      reveal: { 'stage-1': "Rumbled. It was the little sum all along.", 'stage-2': "I was wearing these ironically.", 'stage-3': "This is my real hair.", 'stage-4': "The duck was a distraction.", 'stage-5': "There was a ten in the hat. There is always a ten in the hat." },
+      right: ["Rumbled.", "Disguise: ruined.", "Seen straight through.", "The sum is embarrassed. Good.", "Correct. The moustache is in tears.", "Exposed."],
+      aha: { tens: "Aha. I tricked you. You gave the tens a number that wasn't theirs.", concat: "Aha. You wrote the disguise down, then the sum. Just the answer, please.", off_by_one: "Aha. Off by one. Count less, know more.", forgot_disguise: "Aha. You took the disguise off and forgot to put it back on.", extra_zero: "Aha. One zero too many. Zeros are not free.", ones: "Aha. Those were tens in a ones costume.", forgot_ten: "Aha. The ten in the little sum escaped. Tens must be counted.", concat_cross: "Aha. You wrote that ten as a digit and not as a ten." },
+      duck_wrong: "That is a different duck. Similar hat.",
+      duck_right: "The duck concedes.",
+      end: "Every disguise removed. The fancy dress shop has filed for bankruptcy."
+    },
+    kids: {
+      title: "Every big sum is just a little sum in a silly disguise. Unmask them all!",
+      welcome: "Welcome, sum detectives!",
+      welcome_class: "Welcome, {name} Class!",
+      reveal: { 'stage-1': "Noooo! My magnificent moustache!", 'stage-2': "Hey! I can't see a thing without those!", 'stage-3': "My hair! Give it back!", 'stage-4': "Quack. That's duck for 'you found me'.", 'stage-5': "Hey! There was a ten hiding in my hat!" },
+      right: ["Unmasked!", "Caught you!", "Disguise destroyed!", "You saw right through it!", "Ha! Gotcha!", "Nobody fools you!"],
+      aha: { tens: "Aha! I tricked you into giving my number to the tens!", concat: "Aha! I tricked you into writing it the long way!", off_by_one: "Aha! Missed me by one! So close!", forgot_disguise: "Aha! You forgot I was in disguise!", extra_zero: "Aha! I sneaked in an extra zero!", ones: "Aha! You thought my tens were ones!", forgot_ten: "Aha! I hid a ten in my hat and you missed it!", concat_cross: "Aha! You wrote my hidden ten the long way!" },
+      duck_wrong: "Quack! That's my cousin. Different sum!",
+      duck_right: "Quack! You found me!",
+      end: "All the sums are unmasked. The disguise shop has closed down!"
+    }
+  };
+  // Shared, both looks (the contract): the pop-up reads "67" alone; the Stage 3 button reads "Peek".
+  var POP_TEXT = '67', PEEK = 'Peek';
+
+  // The game's own labels (stage names, buttons, prompts): the frame around Jon's lines, the same in both looks.
+  var STAGES = {
+    'stage-1': { n: 1, name: 'The Moustache', disguise: 'moustache', flow: 'unmask', tiles: 10, about: 'Ones in disguise. Take the moustache off: 44 + 2 is 4 + 2 underneath.' },
+    'stage-2': { n: 2, name: 'The Glasses', disguise: 'glasses', flow: 'unmask', tiles: 10, about: 'Tens in disguise. Take the glasses off: 40 + 20 is 4 + 2 underneath.' },
+    'stage-3': { n: 3, name: 'The Wig', disguise: 'wig', flow: 'wig', about: 'Ones and tens, wig on. Answer straight away, or peek underneath first.' },
+    'stage-4': { n: 4, name: 'The Duck', disguise: 'duck', flow: 'duck', about: 'Spot the disguise: which big sum is the little one dressed up?' },
+    'stage-5': { n: 5, name: 'The Top Hat', disguise: 'hat', flow: 'unmask', tiles: 20, about: 'Crossing a ten. Take the hat off: 27 + 5 is 7 + 5 underneath, and the 20 waits on the tag.' }
+  };
+  var UNMASK = { moustache: 'Take off the moustache', glasses: 'Take off the glasses', hat: 'Take off the hat' };
+  var MENU_NOTE = '10 questions a run. A point for each big sum right.';
+
+  /* =====================================================================================================
+     THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
+     ===================================================================================================== */
+  var LOOK = 'grown', CLASS_NAME = null;
+  try {
+    var frag = String(window.location.hash || '').replace(/^#/, '');
+    var low = frag.toLowerCase();
+    if (low === 'kids') LOOK = 'kids';
+    else if (low.indexOf('kids/') === 0) {
+      LOOK = 'kids';
+      var nm = decodeURIComponent(frag.slice(5)).trim();
+      if (/^[\p{L}' ’-]{1,20}$/u.test(nm) && /\p{L}/u.test(nm)) CLASS_NAME = nm;
+    }
+  } catch (e) { CLASS_NAME = null; }
+  var L = LINES[LOOK];
+  function greeting() {
+    if (LOOK !== 'kids') return L.welcome;
+    if (!CLASS_NAME) return L.welcome;
+    var g = L.welcome_class.replace('{name}', CLASS_NAME);
+    // A name that already ends with "class" is not given a second "Class".
+    if (/class$/i.test(CLASS_NAME)) g = g.replace(/(class)\s+class\b/i, '$1');
+    return g;
+  }
+  if (LOOK === 'kids') document.body.classList.add('look-kids');
+
+  var SLUG = 'sums-in-disguise', PER = 10;
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'];
+  var level = MaffsLevel.resolve({ slug: 'sums-in-disguise', levels: ['year6'], fallback: 'year6',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false }); } catch (e) { /* fall through */ } }
+    return esc(t);
+  }
+
+  /* =====================================================================================================
+     THE BANK: contract SUMS-IN-DISGUISE, 18 Nov 2026: the generator's 226 items, unchanged and in order.
+     scripts/verify-sums-in-disguise.py checks its SHA-256 and recomputes every item.
+     ===================================================================================================== */
+  var QUESTIONS = [
+    {"id":"s1_001","stage":1,"type":"ones","big":[56,3],"little":[6,3],"little_answer":9,"answer":59,"decoys":{"tens":86,"concat":509,"off_by_one":60}},
+    {"id":"s1_002","stage":1,"type":"ones","big":[34,4],"little":[4,4],"little_answer":8,"answer":38,"decoys":{"tens":74,"concat":308,"off_by_one":37}},
+    {"id":"s1_003","stage":1,"type":"ones","big":[95,2],"little":[5,2],"little_answer":7,"answer":97,"decoys":{"tens":115,"concat":907,"off_by_one":98}},
+    {"id":"s1_004","stage":1,"type":"ones","big":[14,5],"little":[4,5],"little_answer":9,"answer":19,"decoys":{"tens":64,"concat":109,"off_by_one":18}},
+    {"id":"s1_005","stage":1,"type":"ones","big":[65,4],"little":[5,4],"little_answer":9,"answer":69,"decoys":{"tens":105,"concat":609,"off_by_one":70}},
+    {"id":"s1_006","stage":1,"type":"ones","big":[75,3],"little":[5,3],"little_answer":8,"answer":78,"decoys":{"tens":105,"concat":708,"off_by_one":77}},
+    {"id":"s1_007","stage":1,"type":"ones","big":[83,5],"little":[3,5],"little_answer":8,"answer":88,"decoys":{"tens":133,"concat":808,"off_by_one":89}},
+    {"id":"s1_008","stage":1,"type":"ones","big":[42,7],"little":[2,7],"little_answer":9,"answer":49,"decoys":{"tens":112,"concat":409,"off_by_one":48}},
+    {"id":"s1_009","stage":1,"type":"ones","big":[22,1],"little":[2,1],"little_answer":3,"answer":23,"decoys":{"tens":32,"concat":203,"off_by_one":24}},
+    {"id":"s1_010","stage":1,"type":"ones","big":[52,2],"little":[2,2],"little_answer":4,"answer":54,"decoys":{"tens":72,"concat":504,"off_by_one":53}},
+    {"id":"s1_011","stage":1,"type":"ones","big":[93,4],"little":[3,4],"little_answer":7,"answer":97,"decoys":{"tens":133,"concat":907,"off_by_one":98}},
+    {"id":"s1_012","stage":1,"type":"ones","big":[83,2],"little":[3,2],"little_answer":5,"answer":85,"decoys":{"tens":103,"concat":805,"off_by_one":84}},
+    {"id":"s1_013","stage":1,"type":"ones","big":[64,3],"little":[4,3],"little_answer":7,"answer":67,"decoys":{"tens":94,"concat":607,"off_by_one":68}},
+    {"id":"s1_014","stage":1,"type":"ones","big":[37,1],"little":[7,1],"little_answer":8,"answer":38,"decoys":{"tens":47,"concat":308,"off_by_one":37}},
+    {"id":"s1_015","stage":1,"type":"ones","big":[11,4],"little":[1,4],"little_answer":5,"answer":15,"decoys":{"tens":51,"concat":105,"off_by_one":16}},
+    {"id":"s1_016","stage":1,"type":"ones","big":[73,6],"little":[3,6],"little_answer":9,"answer":79,"decoys":{"tens":133,"concat":709,"off_by_one":78}},
+    {"id":"s1_017","stage":1,"type":"ones","big":[42,4],"little":[2,4],"little_answer":6,"answer":46,"decoys":{"tens":82,"concat":406,"off_by_one":47}},
+    {"id":"s1_018","stage":1,"type":"ones","big":[26,2],"little":[6,2],"little_answer":8,"answer":28,"decoys":{"tens":46,"concat":208,"off_by_one":27}},
+    {"id":"s1_019","stage":1,"type":"ones","big":[33,3],"little":[3,3],"little_answer":6,"answer":36,"decoys":{"tens":63,"concat":306,"off_by_one":37}},
+    {"id":"s1_020","stage":1,"type":"ones","big":[86,1],"little":[6,1],"little_answer":7,"answer":87,"decoys":{"tens":96,"concat":807,"off_by_one":86}},
+    {"id":"s1_021","stage":1,"type":"ones","big":[91,1],"little":[1,1],"little_answer":2,"answer":92,"decoys":{"tens":101,"concat":902,"off_by_one":93}},
+    {"id":"s1_022","stage":1,"type":"ones","big":[17,2],"little":[7,2],"little_answer":9,"answer":19,"decoys":{"tens":37,"concat":109,"off_by_one":18}},
+    {"id":"s1_023","stage":1,"type":"ones","big":[21,7],"little":[1,7],"little_answer":8,"answer":28,"decoys":{"tens":91,"concat":208,"off_by_one":29}},
+    {"id":"s1_024","stage":1,"type":"ones","big":[61,6],"little":[1,6],"little_answer":7,"answer":67,"decoys":{"tens":121,"concat":607,"off_by_one":66}},
+    {"id":"s1_025","stage":1,"type":"ones","big":[45,1],"little":[5,1],"little_answer":6,"answer":46,"decoys":{"tens":55,"concat":406,"off_by_one":47}},
+    {"id":"s1_026","stage":1,"type":"ones","big":[78,1],"little":[8,1],"little_answer":9,"answer":79,"decoys":{"tens":88,"concat":709,"off_by_one":78}},
+    {"id":"s1_027","stage":1,"type":"ones","big":[54,2],"little":[4,2],"little_answer":6,"answer":56,"decoys":{"tens":74,"concat":506,"off_by_one":57}},
+    {"id":"s1_028","stage":1,"type":"ones","big":[33,1],"little":[3,1],"little_answer":4,"answer":34,"decoys":{"tens":43,"concat":304,"off_by_one":33}},
+    {"id":"s1_029","stage":1,"type":"ones","big":[72,3],"little":[2,3],"little_answer":5,"answer":75,"decoys":{"tens":102,"concat":705,"off_by_one":76}},
+    {"id":"s1_030","stage":1,"type":"ones","big":[62,5],"little":[2,5],"little_answer":7,"answer":67,"decoys":{"tens":112,"concat":607,"off_by_one":66}},
+    {"id":"s1_031","stage":1,"type":"ones","big":[51,8],"little":[1,8],"little_answer":9,"answer":59,"decoys":{"tens":131,"concat":509,"off_by_one":60}},
+    {"id":"s1_032","stage":1,"type":"ones","big":[21,2],"little":[1,2],"little_answer":3,"answer":23,"decoys":{"tens":41,"concat":203,"off_by_one":22}},
+    {"id":"s1_033","stage":1,"type":"ones","big":[81,3],"little":[1,3],"little_answer":4,"answer":84,"decoys":{"tens":111,"concat":804,"off_by_one":85}},
+    {"id":"s1_034","stage":1,"type":"ones","big":[41,5],"little":[1,5],"little_answer":6,"answer":46,"decoys":{"tens":91,"concat":406,"off_by_one":45}},
+    {"id":"s1_035","stage":1,"type":"ones","big":[94,1],"little":[4,1],"little_answer":5,"answer":95,"decoys":{"tens":104,"concat":905,"off_by_one":96}},
+    {"id":"s1_036","stage":1,"type":"ones","big":[12,6],"little":[2,6],"little_answer":8,"answer":18,"decoys":{"tens":72,"concat":108,"off_by_one":17}},
+    {"id":"s1_037","stage":1,"type":"ones","big":[11,8],"little":[1,8],"little_answer":9,"answer":19,"decoys":{"tens":91,"concat":109,"off_by_one":20}},
+    {"id":"s1_038","stage":1,"type":"ones","big":[21,1],"little":[1,1],"little_answer":2,"answer":22,"decoys":{"tens":31,"concat":202,"off_by_one":21}},
+    {"id":"s1_039","stage":1,"type":"ones","big":[53,6],"little":[3,6],"little_answer":9,"answer":59,"decoys":{"tens":113,"concat":509,"off_by_one":60}},
+    {"id":"s1_040","stage":1,"type":"ones","big":[88,1],"little":[8,1],"little_answer":9,"answer":89,"decoys":{"tens":98,"concat":809,"off_by_one":88}},
+    {"id":"s1_041","stage":1,"type":"ones","big":[43,1],"little":[3,1],"little_answer":4,"answer":44,"decoys":{"tens":53,"concat":404,"off_by_one":45}},
+    {"id":"s1_042","stage":1,"type":"ones","big":[65,3],"little":[5,3],"little_answer":8,"answer":68,"decoys":{"tens":95,"concat":608,"off_by_one":67}},
+    {"id":"s1_043","stage":1,"type":"ones","big":[81,7],"little":[1,7],"little_answer":8,"answer":88,"decoys":{"tens":151,"concat":808,"off_by_one":89}},
+    {"id":"s1_044","stage":1,"type":"ones","big":[37,2],"little":[7,2],"little_answer":9,"answer":39,"decoys":{"tens":57,"concat":309,"off_by_one":38}},
+    {"id":"s1_045","stage":1,"type":"ones","big":[97,1],"little":[7,1],"little_answer":8,"answer":98,"decoys":{"tens":107,"concat":908,"off_by_one":99}},
+    {"id":"s1_046","stage":1,"type":"ones","big":[74,1],"little":[4,1],"little_answer":5,"answer":75,"decoys":{"tens":84,"concat":705,"off_by_one":74}},
+    {"id":"s1_047","stage":1,"type":"ones","big":[91,6],"little":[1,6],"little_answer":7,"answer":97,"decoys":{"tens":151,"concat":907,"off_by_one":98}},
+    {"id":"s1_048","stage":1,"type":"ones","big":[22,7],"little":[2,7],"little_answer":9,"answer":29,"decoys":{"tens":92,"concat":209,"off_by_one":28}},
+    {"id":"s1_049","stage":1,"type":"ones","big":[13,4],"little":[3,4],"little_answer":7,"answer":17,"decoys":{"tens":53,"concat":107,"off_by_one":18}},
+    {"id":"s1_050","stage":1,"type":"ones","big":[53,2],"little":[3,2],"little_answer":5,"answer":55,"decoys":{"tens":73,"concat":505,"off_by_one":54}},
+    {"id":"s2_001","stage":2,"type":"tens","big":[40,50],"little":[4,5],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":45}},
+    {"id":"s2_002","stage":2,"type":"tens","big":[10,20],"little":[1,2],"little_answer":3,"answer":30,"decoys":{"forgot_disguise":3,"extra_zero":300,"ones":12}},
+    {"id":"s2_003","stage":2,"type":"tens","big":[20,30],"little":[2,3],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":23}},
+    {"id":"s2_004","stage":2,"type":"tens","big":[30,40],"little":[3,4],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":34}},
+    {"id":"s2_005","stage":2,"type":"tens","big":[10,30],"little":[1,3],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":13}},
+    {"id":"s2_006","stage":2,"type":"tens","big":[10,80],"little":[1,8],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":18}},
+    {"id":"s2_007","stage":2,"type":"tens","big":[50,30],"little":[5,3],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":53}},
+    {"id":"s2_008","stage":2,"type":"tens","big":[40,40],"little":[4,4],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":44}},
+    {"id":"s2_009","stage":2,"type":"tens","big":[50,20],"little":[5,2],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":52}},
+    {"id":"s2_010","stage":2,"type":"tens","big":[10,40],"little":[1,4],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":14}},
+    {"id":"s2_011","stage":2,"type":"tens","big":[70,10],"little":[7,1],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":71}},
+    {"id":"s2_012","stage":2,"type":"tens","big":[80,10],"little":[8,1],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":81}},
+    {"id":"s2_013","stage":2,"type":"tens","big":[30,30],"little":[3,3],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":33}},
+    {"id":"s2_014","stage":2,"type":"tens","big":[10,70],"little":[1,7],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":17}},
+    {"id":"s2_015","stage":2,"type":"tens","big":[60,30],"little":[6,3],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":63}},
+    {"id":"s2_016","stage":2,"type":"tens","big":[10,60],"little":[1,6],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":16}},
+    {"id":"s2_017","stage":2,"type":"tens","big":[20,40],"little":[2,4],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":24}},
+    {"id":"s2_018","stage":2,"type":"tens","big":[60,10],"little":[6,1],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":61}},
+    {"id":"s2_019","stage":2,"type":"tens","big":[10,10],"little":[1,1],"little_answer":2,"answer":20,"decoys":{"forgot_disguise":2,"extra_zero":200,"ones":11}},
+    {"id":"s2_020","stage":2,"type":"tens","big":[30,10],"little":[3,1],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":31}},
+    {"id":"s2_021","stage":2,"type":"tens","big":[40,30],"little":[4,3],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":43}},
+    {"id":"s2_022","stage":2,"type":"tens","big":[50,10],"little":[5,1],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":51}},
+    {"id":"s2_023","stage":2,"type":"tens","big":[50,40],"little":[5,4],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":54}},
+    {"id":"s2_024","stage":2,"type":"tens","big":[30,60],"little":[3,6],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":36}},
+    {"id":"s2_025","stage":2,"type":"tens","big":[30,20],"little":[3,2],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":32}},
+    {"id":"s2_026","stage":2,"type":"tens","big":[40,10],"little":[4,1],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":41}},
+    {"id":"s2_027","stage":2,"type":"tens","big":[30,50],"little":[3,5],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":35}},
+    {"id":"s2_028","stage":2,"type":"tens","big":[70,20],"little":[7,2],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":72}},
+    {"id":"s2_029","stage":2,"type":"tens","big":[60,20],"little":[6,2],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":62}},
+    {"id":"s2_030","stage":2,"type":"tens","big":[20,60],"little":[2,6],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":26}},
+    {"id":"s2_031","stage":2,"type":"tens","big":[10,50],"little":[1,5],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":15}},
+    {"id":"s2_032","stage":2,"type":"tens","big":[20,10],"little":[2,1],"little_answer":3,"answer":30,"decoys":{"forgot_disguise":3,"extra_zero":300,"ones":21}},
+    {"id":"s2_033","stage":2,"type":"tens","big":[20,70],"little":[2,7],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":27}},
+    {"id":"s2_034","stage":2,"type":"tens","big":[20,20],"little":[2,2],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":22}},
+    {"id":"s2_035","stage":2,"type":"tens","big":[40,20],"little":[4,2],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":42}},
+    {"id":"s2_036","stage":2,"type":"tens","big":[20,50],"little":[2,5],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":25}},
+    {"id":"s3_001","stage":3,"type":"ones","big":[33,6],"little":[3,6],"little_answer":9,"answer":39,"decoys":{"tens":93,"concat":309,"off_by_one":40}},
+    {"id":"s3_002","stage":3,"type":"ones","big":[94,5],"little":[4,5],"little_answer":9,"answer":99,"decoys":{"tens":144,"concat":909,"off_by_one":98}},
+    {"id":"s3_003","stage":3,"type":"ones","big":[83,6],"little":[3,6],"little_answer":9,"answer":89,"decoys":{"tens":143,"concat":809,"off_by_one":90}},
+    {"id":"s3_004","stage":3,"type":"tens","big":[50,30],"little":[5,3],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":53}},
+    {"id":"s3_005","stage":3,"type":"ones","big":[85,2],"little":[5,2],"little_answer":7,"answer":87,"decoys":{"tens":105,"concat":807,"off_by_one":88}},
+    {"id":"s3_006","stage":3,"type":"tens","big":[20,70],"little":[2,7],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":27}},
+    {"id":"s3_007","stage":3,"type":"ones","big":[64,5],"little":[4,5],"little_answer":9,"answer":69,"decoys":{"tens":114,"concat":609,"off_by_one":70}},
+    {"id":"s3_008","stage":3,"type":"tens","big":[10,20],"little":[1,2],"little_answer":3,"answer":30,"decoys":{"forgot_disguise":3,"extra_zero":300,"ones":12}},
+    {"id":"s3_009","stage":3,"type":"tens","big":[30,60],"little":[3,6],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":36}},
+    {"id":"s3_010","stage":3,"type":"tens","big":[40,30],"little":[4,3],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":43}},
+    {"id":"s3_011","stage":3,"type":"ones","big":[36,1],"little":[6,1],"little_answer":7,"answer":37,"decoys":{"tens":46,"concat":307,"off_by_one":38}},
+    {"id":"s3_012","stage":3,"type":"tens","big":[60,10],"little":[6,1],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":61}},
+    {"id":"s3_013","stage":3,"type":"tens","big":[30,30],"little":[3,3],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":33}},
+    {"id":"s3_014","stage":3,"type":"tens","big":[70,20],"little":[7,2],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":72}},
+    {"id":"s3_015","stage":3,"type":"ones","big":[58,1],"little":[8,1],"little_answer":9,"answer":59,"decoys":{"tens":68,"concat":509,"off_by_one":60}},
+    {"id":"s3_016","stage":3,"type":"tens","big":[10,50],"little":[1,5],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":15}},
+    {"id":"s3_017","stage":3,"type":"ones","big":[72,4],"little":[2,4],"little_answer":6,"answer":76,"decoys":{"tens":112,"concat":706,"off_by_one":77}},
+    {"id":"s3_018","stage":3,"type":"tens","big":[20,20],"little":[2,2],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":22}},
+    {"id":"s3_019","stage":3,"type":"ones","big":[75,1],"little":[5,1],"little_answer":6,"answer":76,"decoys":{"tens":85,"concat":706,"off_by_one":77}},
+    {"id":"s3_020","stage":3,"type":"ones","big":[33,4],"little":[3,4],"little_answer":7,"answer":37,"decoys":{"tens":73,"concat":307,"off_by_one":36}},
+    {"id":"s3_021","stage":3,"type":"ones","big":[24,4],"little":[4,4],"little_answer":8,"answer":28,"decoys":{"tens":64,"concat":208,"off_by_one":29}},
+    {"id":"s3_022","stage":3,"type":"tens","big":[60,20],"little":[6,2],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":62}},
+    {"id":"s3_023","stage":3,"type":"ones","big":[28,1],"little":[8,1],"little_answer":9,"answer":29,"decoys":{"tens":38,"concat":209,"off_by_one":30}},
+    {"id":"s3_024","stage":3,"type":"ones","big":[77,1],"little":[7,1],"little_answer":8,"answer":78,"decoys":{"tens":87,"concat":708,"off_by_one":77}},
+    {"id":"s3_025","stage":3,"type":"tens","big":[20,50],"little":[2,5],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":25}},
+    {"id":"s3_026","stage":3,"type":"ones","big":[31,7],"little":[1,7],"little_answer":8,"answer":38,"decoys":{"tens":101,"concat":308,"off_by_one":37}},
+    {"id":"s3_027","stage":3,"type":"tens","big":[20,40],"little":[2,4],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":24}},
+    {"id":"s3_028","stage":3,"type":"ones","big":[25,1],"little":[5,1],"little_answer":6,"answer":26,"decoys":{"tens":35,"concat":206,"off_by_one":25}},
+    {"id":"s3_029","stage":3,"type":"ones","big":[74,3],"little":[4,3],"little_answer":7,"answer":77,"decoys":{"tens":104,"concat":707,"off_by_one":78}},
+    {"id":"s3_030","stage":3,"type":"ones","big":[41,4],"little":[1,4],"little_answer":5,"answer":45,"decoys":{"tens":81,"concat":405,"off_by_one":44}},
+    {"id":"s3_031","stage":3,"type":"tens","big":[40,20],"little":[4,2],"little_answer":6,"answer":60,"decoys":{"forgot_disguise":6,"extra_zero":600,"ones":42}},
+    {"id":"s3_032","stage":3,"type":"tens","big":[10,60],"little":[1,6],"little_answer":7,"answer":70,"decoys":{"forgot_disguise":7,"extra_zero":700,"ones":16}},
+    {"id":"s3_033","stage":3,"type":"tens","big":[20,10],"little":[2,1],"little_answer":3,"answer":30,"decoys":{"forgot_disguise":3,"extra_zero":300,"ones":21}},
+    {"id":"s3_034","stage":3,"type":"tens","big":[10,30],"little":[1,3],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":13}},
+    {"id":"s3_035","stage":3,"type":"tens","big":[40,50],"little":[4,5],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":45}},
+    {"id":"s3_036","stage":3,"type":"tens","big":[10,40],"little":[1,4],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":14}},
+    {"id":"s3_037","stage":3,"type":"ones","big":[54,1],"little":[4,1],"little_answer":5,"answer":55,"decoys":{"tens":64,"concat":505,"off_by_one":56}},
+    {"id":"s3_038","stage":3,"type":"tens","big":[30,50],"little":[3,5],"little_answer":8,"answer":80,"decoys":{"forgot_disguise":8,"extra_zero":800,"ones":35}},
+    {"id":"s3_039","stage":3,"type":"ones","big":[71,4],"little":[1,4],"little_answer":5,"answer":75,"decoys":{"tens":111,"concat":705,"off_by_one":76}},
+    {"id":"s3_040","stage":3,"type":"tens","big":[30,10],"little":[3,1],"little_answer":4,"answer":40,"decoys":{"forgot_disguise":4,"extra_zero":400,"ones":31}},
+    {"id":"s3_041","stage":3,"type":"ones","big":[21,8],"little":[1,8],"little_answer":9,"answer":29,"decoys":{"tens":101,"concat":209,"off_by_one":30}},
+    {"id":"s3_042","stage":3,"type":"ones","big":[61,1],"little":[1,1],"little_answer":2,"answer":62,"decoys":{"tens":71,"concat":602,"off_by_one":61}},
+    {"id":"s3_043","stage":3,"type":"ones","big":[93,3],"little":[3,3],"little_answer":6,"answer":96,"decoys":{"tens":123,"concat":906,"off_by_one":97}},
+    {"id":"s3_044","stage":3,"type":"tens","big":[40,10],"little":[4,1],"little_answer":5,"answer":50,"decoys":{"forgot_disguise":5,"extra_zero":500,"ones":41}},
+    {"id":"s3_045","stage":3,"type":"tens","big":[10,10],"little":[1,1],"little_answer":2,"answer":20,"decoys":{"forgot_disguise":2,"extra_zero":200,"ones":11}},
+    {"id":"s3_046","stage":3,"type":"ones","big":[13,1],"little":[3,1],"little_answer":4,"answer":14,"decoys":{"tens":23,"concat":104,"off_by_one":13}},
+    {"id":"s3_047","stage":3,"type":"ones","big":[76,3],"little":[6,3],"little_answer":9,"answer":79,"decoys":{"tens":106,"concat":709,"off_by_one":80}},
+    {"id":"s3_048","stage":3,"type":"tens","big":[50,40],"little":[5,4],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":54}},
+    {"id":"s3_049","stage":3,"type":"ones","big":[76,1],"little":[6,1],"little_answer":7,"answer":77,"decoys":{"tens":86,"concat":707,"off_by_one":78}},
+    {"id":"s3_050","stage":3,"type":"tens","big":[80,10],"little":[8,1],"little_answer":9,"answer":90,"decoys":{"forgot_disguise":9,"extra_zero":900,"ones":81}},
+    {"id":"s4_001","stage":4,"type":"tens","little":[2,1],"little_answer":3,"answer_sum":[20,10],"answer":30,"decoys":[{"kind":"changed_first","sum":[30,10]},{"kind":"changed_second","sum":[20,20]}]},
+    {"id":"s4_002","stage":4,"type":"tens","little":[2,4],"little_answer":6,"answer_sum":[20,40],"answer":60,"decoys":[{"kind":"changed_first","sum":[10,40]},{"kind":"changed_second","sum":[20,30]}]},
+    {"id":"s4_003","stage":4,"type":"tens","little":[3,4],"little_answer":7,"answer_sum":[30,40],"answer":70,"decoys":[{"kind":"changed_first","sum":[40,40]},{"kind":"changed_second","sum":[30,50]}]},
+    {"id":"s4_004","stage":4,"type":"tens","little":[8,1],"little_answer":9,"answer_sum":[80,10],"answer":90,"decoys":[{"kind":"changed_first","sum":[70,10]},{"kind":"changed_first","sum":[60,10]}]},
+    {"id":"s4_005","stage":4,"type":"ones","little":[3,1],"little_answer":4,"answer_sum":[83,1],"answer":84,"decoys":[{"kind":"changed_first","sum":[84,1]},{"kind":"changed_second","sum":[83,2]}]},
+    {"id":"s4_006","stage":4,"type":"ones","little":[2,2],"little_answer":4,"answer_sum":[12,2],"answer":14,"decoys":[{"kind":"changed_first","sum":[11,2]},{"kind":"changed_second","sum":[12,1]}]},
+    {"id":"s4_007","stage":4,"type":"tens","little":[6,1],"little_answer":7,"answer_sum":[60,10],"answer":70,"decoys":[{"kind":"changed_first","sum":[70,10]},{"kind":"changed_second","sum":[60,20]}]},
+    {"id":"s4_008","stage":4,"type":"tens","little":[1,1],"little_answer":2,"answer_sum":[10,10],"answer":20,"decoys":[{"kind":"changed_first","sum":[20,10]},{"kind":"changed_second","sum":[10,20]}]},
+    {"id":"s4_009","stage":4,"type":"tens","little":[1,4],"little_answer":5,"answer_sum":[10,40],"answer":50,"decoys":[{"kind":"changed_first","sum":[20,40]},{"kind":"changed_second","sum":[10,50]}]},
+    {"id":"s4_010","stage":4,"type":"ones","little":[6,2],"little_answer":8,"answer_sum":[46,2],"answer":48,"decoys":[{"kind":"changed_first","sum":[45,2]},{"kind":"changed_second","sum":[46,1]}]},
+    {"id":"s4_011","stage":4,"type":"tens","little":[3,6],"little_answer":9,"answer_sum":[30,60],"answer":90,"decoys":[{"kind":"changed_first","sum":[20,60]},{"kind":"changed_second","sum":[30,50]}]},
+    {"id":"s4_012","stage":4,"type":"tens","little":[4,4],"little_answer":8,"answer_sum":[40,40],"answer":80,"decoys":[{"kind":"changed_first","sum":[30,40]},{"kind":"changed_second","sum":[40,30]}]},
+    {"id":"s4_013","stage":4,"type":"ones","little":[6,2],"little_answer":8,"answer_sum":[56,2],"answer":58,"decoys":[{"kind":"changed_first","sum":[57,2]},{"kind":"changed_second","sum":[56,3]}]},
+    {"id":"s4_014","stage":4,"type":"ones","little":[1,5],"little_answer":6,"answer_sum":[21,5],"answer":26,"decoys":[{"kind":"changed_first","sum":[22,5]},{"kind":"changed_second","sum":[21,4]}]},
+    {"id":"s4_015","stage":4,"type":"ones","little":[8,1],"little_answer":9,"answer_sum":[68,1],"answer":69,"decoys":[{"kind":"changed_first","sum":[67,1]},{"kind":"changed_first","sum":[66,1]}]},
+    {"id":"s4_016","stage":4,"type":"ones","little":[2,7],"little_answer":9,"answer_sum":[62,7],"answer":69,"decoys":[{"kind":"changed_first","sum":[61,7]},{"kind":"changed_second","sum":[62,6]}]},
+    {"id":"s4_017","stage":4,"type":"ones","little":[4,3],"little_answer":7,"answer_sum":[94,3],"answer":97,"decoys":[{"kind":"changed_first","sum":[95,3]},{"kind":"changed_second","sum":[94,4]}]},
+    {"id":"s4_018","stage":4,"type":"tens","little":[2,5],"little_answer":7,"answer_sum":[20,50],"answer":70,"decoys":[{"kind":"changed_first","sum":[10,50]},{"kind":"changed_second","sum":[20,40]}]},
+    {"id":"s4_019","stage":4,"type":"tens","little":[5,2],"little_answer":7,"answer_sum":[50,20],"answer":70,"decoys":[{"kind":"changed_first","sum":[60,20]},{"kind":"changed_second","sum":[50,30]}]},
+    {"id":"s4_020","stage":4,"type":"ones","little":[1,5],"little_answer":6,"answer_sum":[61,5],"answer":66,"decoys":[{"kind":"changed_first","sum":[62,5]},{"kind":"changed_second","sum":[61,4]}]},
+    {"id":"s4_021","stage":4,"type":"tens","little":[4,1],"little_answer":5,"answer_sum":[40,10],"answer":50,"decoys":[{"kind":"changed_first","sum":[50,10]},{"kind":"changed_second","sum":[40,20]}]},
+    {"id":"s4_022","stage":4,"type":"ones","little":[8,1],"little_answer":9,"answer_sum":[98,1],"answer":99,"decoys":[{"kind":"changed_first","sum":[97,1]},{"kind":"changed_first","sum":[96,1]}]},
+    {"id":"s4_023","stage":4,"type":"tens","little":[1,6],"little_answer":7,"answer_sum":[10,60],"answer":70,"decoys":[{"kind":"changed_first","sum":[20,60]},{"kind":"changed_second","sum":[10,70]}]},
+    {"id":"s4_024","stage":4,"type":"ones","little":[1,3],"little_answer":4,"answer_sum":[11,3],"answer":14,"decoys":[{"kind":"changed_first","sum":[12,3]},{"kind":"changed_second","sum":[11,2]}]},
+    {"id":"s4_025","stage":4,"type":"ones","little":[2,2],"little_answer":4,"answer_sum":[42,2],"answer":44,"decoys":[{"kind":"changed_first","sum":[43,2]},{"kind":"changed_second","sum":[42,3]}]},
+    {"id":"s4_026","stage":4,"type":"ones","little":[3,3],"little_answer":6,"answer_sum":[73,3],"answer":76,"decoys":[{"kind":"changed_first","sum":[72,3]},{"kind":"changed_second","sum":[73,2]}]},
+    {"id":"s4_027","stage":4,"type":"tens","little":[3,2],"little_answer":5,"answer_sum":[30,20],"answer":50,"decoys":[{"kind":"changed_first","sum":[40,20]},{"kind":"changed_second","sum":[30,30]}]},
+    {"id":"s4_028","stage":4,"type":"ones","little":[5,4],"little_answer":9,"answer_sum":[55,4],"answer":59,"decoys":[{"kind":"changed_first","sum":[54,4]},{"kind":"changed_second","sum":[55,3]}]},
+    {"id":"s4_029","stage":4,"type":"ones","little":[3,2],"little_answer":5,"answer_sum":[23,2],"answer":25,"decoys":[{"kind":"changed_first","sum":[24,2]},{"kind":"changed_second","sum":[23,3]}]},
+    {"id":"s4_030","stage":4,"type":"ones","little":[2,6],"little_answer":8,"answer_sum":[42,6],"answer":48,"decoys":[{"kind":"changed_first","sum":[41,6]},{"kind":"changed_second","sum":[42,5]}]},
+    {"id":"s4_031","stage":4,"type":"ones","little":[4,3],"little_answer":7,"answer_sum":[34,3],"answer":37,"decoys":[{"kind":"changed_first","sum":[35,3]},{"kind":"changed_second","sum":[34,4]}]},
+    {"id":"s4_032","stage":4,"type":"ones","little":[3,6],"little_answer":9,"answer_sum":[63,6],"answer":69,"decoys":[{"kind":"changed_first","sum":[62,6]},{"kind":"changed_second","sum":[63,5]}]},
+    {"id":"s4_033","stage":4,"type":"ones","little":[6,3],"little_answer":9,"answer_sum":[16,3],"answer":19,"decoys":[{"kind":"changed_first","sum":[15,3]},{"kind":"changed_second","sum":[16,2]}]},
+    {"id":"s4_034","stage":4,"type":"ones","little":[7,2],"little_answer":9,"answer_sum":[87,2],"answer":89,"decoys":[{"kind":"changed_first","sum":[86,2]},{"kind":"changed_second","sum":[87,1]}]},
+    {"id":"s4_035","stage":4,"type":"ones","little":[4,1],"little_answer":5,"answer_sum":[34,1],"answer":35,"decoys":[{"kind":"changed_first","sum":[35,1]},{"kind":"changed_second","sum":[34,2]}]},
+    {"id":"s4_036","stage":4,"type":"tens","little":[7,1],"little_answer":8,"answer_sum":[70,10],"answer":80,"decoys":[{"kind":"changed_first","sum":[60,10]},{"kind":"changed_second","sum":[70,20]}]},
+    {"id":"s4_037","stage":4,"type":"ones","little":[2,6],"little_answer":8,"answer_sum":[32,6],"answer":38,"decoys":[{"kind":"changed_first","sum":[33,6]},{"kind":"changed_second","sum":[32,7]}]},
+    {"id":"s4_038","stage":4,"type":"ones","little":[2,7],"little_answer":9,"answer_sum":[12,7],"answer":19,"decoys":[{"kind":"changed_first","sum":[11,7]},{"kind":"changed_second","sum":[12,6]}]},
+    {"id":"s4_039","stage":4,"type":"ones","little":[3,4],"little_answer":7,"answer_sum":[43,4],"answer":47,"decoys":[{"kind":"changed_first","sum":[44,4]},{"kind":"changed_second","sum":[43,5]}]},
+    {"id":"s4_040","stage":4,"type":"ones","little":[1,4],"little_answer":5,"answer_sum":[21,4],"answer":25,"decoys":[{"kind":"changed_first","sum":[22,4]},{"kind":"changed_second","sum":[21,3]}]},
+    {"id":"s5_001","stage":5,"type":"cross","big":[58,3],"little":[8,3],"little_answer":11,"answer":61,"decoys":{"forgot_ten":51,"concat":511,"off_by_one":62}},
+    {"id":"s5_002","stage":5,"type":"cross","big":[25,8],"little":[5,8],"little_answer":13,"answer":33,"decoys":{"forgot_ten":23,"concat":213,"off_by_one":32}},
+    {"id":"s5_003","stage":5,"type":"cross","big":[49,1],"little":[9,1],"little_answer":10,"answer":50,"decoys":{"forgot_ten":40,"concat":410,"off_by_one":51}},
+    {"id":"s5_004","stage":5,"type":"cross","big":[17,7],"little":[7,7],"little_answer":14,"answer":24,"decoys":{"forgot_ten":14,"concat":114,"off_by_one":23}},
+    {"id":"s5_005","stage":5,"type":"cross","big":[68,9],"little":[8,9],"little_answer":17,"answer":77,"decoys":{"forgot_ten":67,"concat":617,"off_by_one":78}},
+    {"id":"s5_006","stage":5,"type":"cross","big":[36,4],"little":[6,4],"little_answer":10,"answer":40,"decoys":{"forgot_ten":30,"concat":310,"off_by_one":39}},
+    {"id":"s5_007","stage":5,"type":"cross","big":[83,9],"little":[3,9],"little_answer":12,"answer":92,"decoys":{"forgot_ten":82,"concat":812,"off_by_one":93}},
+    {"id":"s5_008","stage":5,"type":"cross","big":[76,7],"little":[6,7],"little_answer":13,"answer":83,"decoys":{"forgot_ten":73,"concat":713,"off_by_one":82}},
+    {"id":"s5_009","stage":5,"type":"cross","big":[44,7],"little":[4,7],"little_answer":11,"answer":51,"decoys":{"forgot_ten":41,"concat":411,"off_by_one":52}},
+    {"id":"s5_010","stage":5,"type":"cross","big":[59,4],"little":[9,4],"little_answer":13,"answer":63,"decoys":{"forgot_ten":53,"concat":513,"off_by_one":62}},
+    {"id":"s5_011","stage":5,"type":"cross","big":[19,3],"little":[9,3],"little_answer":12,"answer":22,"decoys":{"forgot_ten":12,"concat":112,"off_by_one":23}},
+    {"id":"s5_012","stage":5,"type":"cross","big":[65,5],"little":[5,5],"little_answer":10,"answer":70,"decoys":{"forgot_ten":60,"concat":610,"off_by_one":69}},
+    {"id":"s5_013","stage":5,"type":"cross","big":[34,8],"little":[4,8],"little_answer":12,"answer":42,"decoys":{"forgot_ten":32,"concat":312,"off_by_one":43}},
+    {"id":"s5_014","stage":5,"type":"cross","big":[26,9],"little":[6,9],"little_answer":15,"answer":35,"decoys":{"forgot_ten":25,"concat":215,"off_by_one":34}},
+    {"id":"s5_015","stage":5,"type":"cross","big":[79,5],"little":[9,5],"little_answer":14,"answer":84,"decoys":{"forgot_ten":74,"concat":714,"off_by_one":85}},
+    {"id":"s5_016","stage":5,"type":"cross","big":[88,7],"little":[8,7],"little_answer":15,"answer":95,"decoys":{"forgot_ten":85,"concat":815,"off_by_one":94}},
+    {"id":"s5_017","stage":5,"type":"cross","big":[58,4],"little":[8,4],"little_answer":12,"answer":62,"decoys":{"forgot_ten":52,"concat":512,"off_by_one":63}},
+    {"id":"s5_018","stage":5,"type":"cross","big":[49,8],"little":[9,8],"little_answer":17,"answer":57,"decoys":{"forgot_ten":47,"concat":417,"off_by_one":56}},
+    {"id":"s5_019","stage":5,"type":"cross","big":[24,9],"little":[4,9],"little_answer":13,"answer":33,"decoys":{"forgot_ten":23,"concat":213,"off_by_one":34}},
+    {"id":"s5_020","stage":5,"type":"cross","big":[77,3],"little":[7,3],"little_answer":10,"answer":80,"decoys":{"forgot_ten":70,"concat":710,"off_by_one":79}},
+    {"id":"s5_021","stage":5,"type":"cross","big":[37,6],"little":[7,6],"little_answer":13,"answer":43,"decoys":{"forgot_ten":33,"concat":313,"off_by_one":44}},
+    {"id":"s5_022","stage":5,"type":"cross","big":[88,8],"little":[8,8],"little_answer":16,"answer":96,"decoys":{"forgot_ten":86,"concat":816,"off_by_one":95}},
+    {"id":"s5_023","stage":5,"type":"cross","big":[16,8],"little":[6,8],"little_answer":14,"answer":24,"decoys":{"forgot_ten":14,"concat":114,"off_by_one":25}},
+    {"id":"s5_024","stage":5,"type":"cross","big":[68,6],"little":[8,6],"little_answer":14,"answer":74,"decoys":{"forgot_ten":64,"concat":614,"off_by_one":73}},
+    {"id":"s5_025","stage":5,"type":"cross","big":[67,4],"little":[7,4],"little_answer":11,"answer":71,"decoys":{"forgot_ten":61,"concat":611,"off_by_one":72}},
+    {"id":"s5_026","stage":5,"type":"cross","big":[17,9],"little":[7,9],"little_answer":16,"answer":26,"decoys":{"forgot_ten":16,"concat":116,"off_by_one":25}},
+    {"id":"s5_027","stage":5,"type":"cross","big":[53,7],"little":[3,7],"little_answer":10,"answer":60,"decoys":{"forgot_ten":50,"concat":510,"off_by_one":61}},
+    {"id":"s5_028","stage":5,"type":"cross","big":[87,5],"little":[7,5],"little_answer":12,"answer":92,"decoys":{"forgot_ten":82,"concat":812,"off_by_one":91}},
+    {"id":"s5_029","stage":5,"type":"cross","big":[42,8],"little":[2,8],"little_answer":10,"answer":50,"decoys":{"forgot_ten":40,"concat":410,"off_by_one":51}},
+    {"id":"s5_030","stage":5,"type":"cross","big":[75,6],"little":[5,6],"little_answer":11,"answer":81,"decoys":{"forgot_ten":71,"concat":711,"off_by_one":80}},
+    {"id":"s5_031","stage":5,"type":"cross","big":[33,8],"little":[3,8],"little_answer":11,"answer":41,"decoys":{"forgot_ten":31,"concat":311,"off_by_one":42}},
+    {"id":"s5_032","stage":5,"type":"cross","big":[28,2],"little":[8,2],"little_answer":10,"answer":30,"decoys":{"forgot_ten":20,"concat":210,"off_by_one":29}},
+    {"id":"s5_033","stage":5,"type":"cross","big":[42,9],"little":[2,9],"little_answer":11,"answer":51,"decoys":{"forgot_ten":41,"concat":411,"off_by_one":52}},
+    {"id":"s5_034","stage":5,"type":"cross","big":[77,8],"little":[7,8],"little_answer":15,"answer":85,"decoys":{"forgot_ten":75,"concat":715,"off_by_one":84}},
+    {"id":"s5_035","stage":5,"type":"cross","big":[15,9],"little":[5,9],"little_answer":14,"answer":24,"decoys":{"forgot_ten":14,"concat":114,"off_by_one":25}},
+    {"id":"s5_036","stage":5,"type":"cross","big":[36,6],"little":[6,6],"little_answer":12,"answer":42,"decoys":{"forgot_ten":32,"concat":312,"off_by_one":41}},
+    {"id":"s5_037","stage":5,"type":"cross","big":[89,9],"little":[9,9],"little_answer":18,"answer":98,"decoys":{"forgot_ten":88,"concat":818,"off_by_one":99}},
+    {"id":"s5_038","stage":5,"type":"cross","big":[59,6],"little":[9,6],"little_answer":15,"answer":65,"decoys":{"forgot_ten":55,"concat":515,"off_by_one":64}},
+    {"id":"s5_039","stage":5,"type":"cross","big":[65,7],"little":[5,7],"little_answer":12,"answer":72,"decoys":{"forgot_ten":62,"concat":612,"off_by_one":73}},
+    {"id":"s5_040","stage":5,"type":"cross","big":[29,7],"little":[9,7],"little_answer":16,"answer":36,"decoys":{"forgot_ten":26,"concat":216,"off_by_one":35}},
+    {"id":"s5_041","stage":5,"type":"cross","big":[54,6],"little":[4,6],"little_answer":10,"answer":60,"decoys":{"forgot_ten":50,"concat":510,"off_by_one":61}},
+    {"id":"s5_042","stage":5,"type":"cross","big":[39,2],"little":[9,2],"little_answer":11,"answer":41,"decoys":{"forgot_ten":31,"concat":311,"off_by_one":40}},
+    {"id":"s5_043","stage":5,"type":"cross","big":[68,5],"little":[8,5],"little_answer":13,"answer":73,"decoys":{"forgot_ten":63,"concat":613,"off_by_one":74}},
+    {"id":"s5_044","stage":5,"type":"cross","big":[26,5],"little":[6,5],"little_answer":11,"answer":31,"decoys":{"forgot_ten":21,"concat":211,"off_by_one":30}},
+    {"id":"s5_045","stage":5,"type":"cross","big":[81,9],"little":[1,9],"little_answer":10,"answer":90,"decoys":{"forgot_ten":80,"concat":810,"off_by_one":91}},
+    {"id":"s5_046","stage":5,"type":"cross","big":[48,7],"little":[8,7],"little_answer":15,"answer":55,"decoys":{"forgot_ten":45,"concat":415,"off_by_one":54}},
+    {"id":"s5_047","stage":5,"type":"cross","big":[12,9],"little":[2,9],"little_answer":11,"answer":21,"decoys":{"forgot_ten":11,"concat":111,"off_by_one":22}},
+    {"id":"s5_048","stage":5,"type":"cross","big":[77,6],"little":[7,6],"little_answer":13,"answer":83,"decoys":{"forgot_ten":73,"concat":713,"off_by_one":82}},
+    {"id":"s5_049","stage":5,"type":"cross","big":[76,8],"little":[6,8],"little_answer":14,"answer":84,"decoys":{"forgot_ten":74,"concat":714,"off_by_one":85}},
+    {"id":"s5_050","stage":5,"type":"cross","big":[17,4],"little":[7,4],"little_answer":11,"answer":21,"decoys":{"forgot_ten":11,"concat":111,"off_by_one":20}}
+  ];
+
+  /* ---------- the sums, from the item ---------- */
+  function sumTex(s) { return s[0] + ' + ' + s[1]; }
+  function bigOf(q) { return q.stage === 4 ? q.answer_sum : q.big; }
+  // The tag the disguise takes away with it: the tens (p - a) on a ones or crossing item, the zeros on a tens item.
+  function tagOf(q) { return q.type === 'tens' ? '0 0' : String(bigOf(q)[0] - q.little[0]); }
+  // The learning line, built from the item (never typed into LINES): [plain text, KaTeX html].
+  function learning(q) {
+    var a = q.little[0], b = q.little[1], c = q.little_answer, s = bigOf(q), p = s[0], r = s[1], n = q.answer;
+    if (q.stage === 4) {
+      return [a + ' + ' + b + ' = ' + c + ', so ' + p + ' + ' + r + ' = ' + n + ' is ' + a + ' + ' + b + ' in disguise.',
+        tex(a + ' + ' + b + ' = ' + c) + ', so ' + tex(p + ' + ' + r + ' = ' + n) + ' is ' + tex(a + ' + ' + b) + ' in disguise.'];
+    }
+    if (q.type === 'cross') {
+      return [a + ' + ' + b + ' = ' + c + ', so ' + p + ' + ' + r + ' = ' + (p - a) + ' + ' + c + ' = ' + n + '.',
+        tex(a + ' + ' + b + ' = ' + c) + ', so ' + tex(p + ' + ' + r + ' = ' + (p - a) + ' + ' + c + ' = ' + n) + '.'];
+    }
+    return [a + ' + ' + b + ' = ' + c + ', so ' + p + ' + ' + r + ' = ' + n + '.',
+      tex(a + ' + ' + b + ' = ' + c) + ', so ' + tex(p + ' + ' + r + ' = ' + n) + '.'];
+  }
+  // The 67: a 6 and a 7 anywhere in the big sum's two numbers (Stage 4: answer_sum) and its answer, written as digits.
+  function has67(q) { var d = String(bigOf(q)[0]) + String(bigOf(q)[1]) + String(q.answer); return d.indexOf('6') !== -1 && d.indexOf('7') !== -1; }
+  // The aha line's key for a picked decoy: its name in the item; concat on a crossing item is concat_cross.
+  function ahaKey(q, name) { return name === 'concat' && q.type === 'cross' ? 'concat_cross' : name; }
+
+  /* =====================================================================================================
+     THE DISGUISES: inline SVG, coloured by the tokens above.
+     ===================================================================================================== */
+  var ART = {
+    moustache: '<svg viewBox="0 0 120 44" role="img" aria-label="A moustache"><path class="d-ink" d="M60 16 C53 5 36 4 27 13 C21 20 11 22 4 16 C5 29 19 38 34 34 C46 31 54 26 60 21 C66 26 74 31 86 34 C101 38 115 29 116 16 C109 22 99 20 93 13 C84 4 67 5 60 16 Z"/></svg>',
+    glasses: '<svg viewBox="0 0 120 50" role="img" aria-label="A pair of glasses"><path class="d-frame" d="M17 20 L5 10 M103 20 L115 10"/><circle class="d-lens" cx="35" cy="27" r="17"/><circle class="d-lens" cx="85" cy="27" r="17"/><path class="d-frame" d="M52 25 Q60 17 68 25"/></svg>',
+    wig: '<svg viewBox="0 0 120 60" role="img" aria-label="A curly wig"><circle class="d-wig-2" cx="18" cy="44" r="13"/><circle class="d-wig-2" cx="102" cy="44" r="13"/><circle class="d-wig" cx="28" cy="28" r="16"/><circle class="d-wig" cx="92" cy="28" r="16"/><circle class="d-wig" cx="48" cy="17" r="17"/><circle class="d-wig" cx="72" cy="17" r="17"/><circle class="d-wig-2" cx="60" cy="30" r="14"/><circle class="d-wig" cx="38" cy="40" r="11"/><circle class="d-wig" cx="82" cy="40" r="11"/></svg>',
+    duck: '<svg viewBox="0 0 120 70" role="img" aria-label="A rubber duck"><ellipse class="d-duck" cx="56" cy="48" rx="36" ry="19"/><circle class="d-duck" cx="84" cy="25" r="16"/><path class="d-beak" d="M97 22 L115 27 L97 33 Z"/><circle class="d-eye" cx="89" cy="20" r="2.8"/><path class="d-wing" d="M30 44 Q44 34 58 46"/></svg>',
+    hat: '<svg viewBox="0 0 120 64" role="img" aria-label="A top hat"><rect class="d-hat" x="36" y="4" width="48" height="46" rx="3"/><rect class="d-band" x="36" y="36" width="48" height="9"/><rect class="d-hat" x="16" y="48" width="88" height="10" rx="5"/></svg>'
+  };
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  // state: menu | mask (disguise on, take it off) | little (the little sum's tiles) | big (the big sum's options)
+  //        | done (right, Next) | wrong (MaffsNext) | moving | over
+  var mode = 'stage-1', S = STAGES[mode], Q = null, qs = [], qi = 0, state = 'menu', score = 0, unpeekedRight = 0;
+  var peeked = false, peekTimer = null, popTimer = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function stageItems(m) { var n = STAGES[m].n; return QUESTIONS.filter(function (q) { return q.stage === n; }); }
+  // A run: PER items from the stage, no repeat (a Fisher-Yates shuffle of the stage's items, then the first PER).
+  function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
+  function board() { return mode; }
+
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; S = STAGES[m]; qs = list; qi = 0; score = 0; unpeekedRight = 0;
+    show('game');
+    $('hudStage').textContent = String(S.n);
+    $('disguiseArt').innerHTML = ART[S.disguise];
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function startMode(m) { if (STAGES[m]) begin(m, run(m)); }
+
+  function hidePop() { var p = $('pop67'); p.hidden = true; p.firstChild.textContent = ''; if (popTimer !== null) { MaffsLock.cancel(popTimer); popTimer = null; } }
+  function showPop() {
+    var p = $('pop67');
+    p.firstChild.textContent = POP_TEXT;
+    p.hidden = false;
+    if (popTimer !== null) MaffsLock.cancel(popTimer);
+    popTimer = MaffsLock.timer(function () { popTimer = null; hidePop(); }, 1500);
+  }
+  function disguiseOn(on) { $('suspect').classList.toggle('unmasked', !on); }
+  function showSum(s) { $('sum').innerHTML = tex(sumTex(s)); $('sum').dataset.sum = s[0] + '+' + s[1]; }
+  function setSay(text, key) { $('say').textContent = text || ''; if (key) $('say').dataset.say = key; else delete $('say').dataset.say; }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    hidePop();
+    if (peekTimer !== null) { MaffsLock.cancel(peekTimer); peekTimer = null; }
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++]; peeked = false;
+    $('hudQ').textContent = qi + '/' + qs.length;
+    $('hudScore').textContent = String(score);
+    $('stageLabel').textContent = 'Stage ' + S.n + ' · ' + S.name;
+    $('tag').textContent = tagOf(Q);
+    disguiseOn(true);
+    $('disguise').classList.toggle('tappable', S.flow === 'unmask');
+    setSay('');
+    $('clue').innerHTML = '';
+    ['unmaskRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
+    if (S.flow === 'duck') {
+      showSum(Q.little);
+      $('sum').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer);
+      askBig();
+    } else {
+      showSum(Q.big);
+      if (S.flow === 'unmask') {
+        state = 'mask';
+        $('prompt').textContent = '';
+        $('unmaskBtn').textContent = UNMASK[S.disguise];
+        $('unmaskRow').hidden = false;
+        MaffsLock.fresh($('unmaskRow'));
+      } else {
+        askBig();
+      }
+    }
+  }
+
+  // Step 2: the disguise comes off with the tens on its tag; the little sum shows; the tiles.
+  function unmask() {
+    if (state !== 'mask') return;
+    state = 'little';
+    $('unmaskRow').hidden = true;
+    disguiseOn(false);
+    showSum(Q.little);
+    setSay(L.reveal[mode], 'reveal.' + mode);
+    $('prompt').innerHTML = 'What is ' + tex(sumTex(Q.little)) + '?';
+    var box = $('tiles');
+    box.innerHTML = '';
+    box.classList.toggle('wide', S.tiles > 10);
+    for (var v = 0; v <= S.tiles; v++) {
+      var t = document.createElement('button');
+      t.type = 'button'; t.className = 'tile'; t.dataset.val = String(v); t.textContent = String(v);
+      // Each tile its own handler (check-site's option probe sees only buttons with their own; contract, from #811).
+      t.addEventListener('click', onTile);
+      box.appendChild(t);
+    }
+    box.hidden = false;
+    MaffsLock.fresh(box);
+  }
+  // Step 3: the little sum, marked by the tile's dataset.val; no score either way. A wrong tile shows the right one.
+  function onTile(e) {
+    if (state !== 'little') return;
+    if (!MaffsLock.lock($('tiles'))) return;
+    var b = e.currentTarget, right = b.dataset.val === String(Q.little_answer);
+    b.classList.add(right ? 'is-right' : 'is-wrong');
+    var c = $('tiles').querySelector('[data-val="' + Q.little_answer + '"]');
+    if (c) c.classList.add('is-right');
+    $('tiles').dataset.picked = b.dataset.val;
+    $('clue').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer) + (right ? ' ✓' : '');
+    $('clue').dataset.little = right ? 'right' : 'wrong';
+    // Step 4: the disguise goes back on, and the big sum.
+    $('tiles').hidden = true;
+    disguiseOn(true);
+    showSum(Q.big);
+    setSay('');
+    askBig();
+  }
+
+  function askBig() {
+    state = 'big';
+    var opts, box = $('opts');
+    if (S.flow === 'duck') {
+      $('prompt').innerHTML = 'Which one is ' + tex(sumTex(Q.little)) + ' in disguise?';
+      opts = MaffsOptions.shuffle([Q.answer_sum].concat(Q.decoys.map(function (d) { return d.sum; })));
+    } else {
+      $('prompt').innerHTML = (S.flow === 'unmask' ? 'So what is ' : 'What is ') + tex(sumTex(Q.big)) + '?';
+      var vals = [Q.answer];
+      for (var k in Q.decoys) if (Object.prototype.hasOwnProperty.call(Q.decoys, k)) vals.push(Q.decoys[k]);
+      opts = MaffsOptions.shuffle(vals);
+    }
+    box.innerHTML = '';
+    opts.forEach(function (o) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt';
+      if (S.flow === 'duck') { b.dataset.val = o[0] + '+' + o[1]; b.innerHTML = tex(sumTex(o)); }
+      else { b.dataset.val = String(o); b.textContent = String(o); }
+      // Each option its own handler, where it is built (contract, from #811).
+      b.addEventListener('click', onOption);
+      box.appendChild(b);
+    });
+    box.hidden = false;
+    MaffsLock.fresh(box);
+    if (S.flow === 'wig') {
+      $('peekBtn').textContent = PEEK;
+      $('peekRow').hidden = false;
+      MaffsLock.fresh($('peekRow'));
+    }
+  }
+
+  // Stage 3: Peek lifts the wig to show the little sum, then puts it back. It costs nothing.
+  function peek() {
+    if (state !== 'big' || S.flow !== 'wig') return;
+    peeked = true;
+    disguiseOn(false);
+    showSum(Q.little);
+    setSay(L.reveal[mode], 'reveal.' + mode);
+    if (peekTimer !== null) MaffsLock.cancel(peekTimer);
+    peekTimer = MaffsLock.timer(unpeek, 1500);
+  }
+  function unpeek() {
+    peekTimer = null;
+    if (state !== 'big') return;
+    disguiseOn(true);
+    showSum(Q.big);
+    setSay('');
+  }
+
+  // The big sum (Stage 4: the disguised sum), marked by dataset.val only.
+  function onOption(e) {
+    if (state !== 'big') return;
+    if (!MaffsLock.lock($('opts'))) return;
+    var b = e.currentTarget, val = b.dataset.val;
+    var key = S.flow === 'duck' ? Q.answer_sum[0] + '+' + Q.answer_sum[1] : String(Q.answer);
+    settle(val === key, val, b, key);
+  }
+  function decoyName(val) {
+    if (S.flow === 'duck') {
+      for (var i = 0; i < Q.decoys.length; i++) if (Q.decoys[i].sum[0] + '+' + Q.decoys[i].sum[1] === val) return Q.decoys[i].kind;
+      return null;
+    }
+    for (var k in Q.decoys) if (Object.prototype.hasOwnProperty.call(Q.decoys, k) && String(Q.decoys[k]) === val) return k;
+    return null;
+  }
+  function settle(right, val, btn, key) {
+    if (peekTimer !== null) { MaffsLock.cancel(peekTimer); peekTimer = null; }
+    $('peekRow').hidden = true;
+    state = right ? 'done' : 'wrong';
+    if (right) { score++; if (!peeked) unpeekedRight++; }
+    $('hudScore').textContent = String(score);
+    btn.classList.add(right ? 'is-right' : 'is-wrong');
+    var kb = $('opts').querySelector('[data-val="' + key + '"]');
+    if (kb) kb.classList.add('is-right');
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: right });
+    // The disguise speaks: the verdict in its bubble, then the learning line below.
+    var name = right ? null : decoyName(val), sayKey, sayText;
+    if (S.flow === 'duck') {
+      disguiseOn(false);
+      sayKey = right ? 'duck_right' : 'duck_wrong';
+      sayText = L[sayKey] + ' ' + L.reveal[mode];
+    } else {
+      disguiseOn(true);
+      showSum(Q.big);
+      if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
+      else { sayKey = 'aha.' + ahaKey(Q, name); sayText = L.aha[ahaKey(Q, name)]; }
+    }
+    setSay(sayText, sayKey);
+    var lr = learning(Q), last = qi >= qs.length;
+    var fb = $('feedback');
+    fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '"' + (name ? ' data-pick="' + esc(name) + '"' : '') + '>' +
+      '<div class="fb-line" id="learn" data-learn="' + esc(lr[0]) + '">' + lr[1] + '</div>' +
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button>' : '') + '</div></div>';
+    if (right) {
+      MaffsLock.fresh(fb);
+      $('nextBtn').addEventListener('click', function () { if (state === 'done') advance(); });
+      try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+    } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    // The 67, after marking and never before; it changes nothing.
+    if (has67(Q)) showPop();
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('suspect') });
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    nextQuestion();
+  }
+
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var b = board();
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
+    var pbKey = 'sid_best_' + b, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = score > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: score, previous_best: prev }); lsSet(pbKey, String(score)); }
+    $('resTitle').textContent = S.name + ': done';
+    $('endLine').textContent = L.end;
+    $('resScore').textContent = String(score);
+    $('resOf').textContent = 'out of ' + qs.length;
+    $('resStats').innerHTML = (S.flow === 'wig' ? '<span id="noPeek">Done without peeking: <b>' + unpeekedRight + '</b> of <b>' + qs.length + '</b></span>' : '') +
+      (pb ? (S.flow === 'wig' ? '<br>' : '') + 'New personal best' : '');
+    var i = MODES.indexOf(mode);
+    $('nextStageBtn').hidden = i >= MODES.length - 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (i + 2);
+    show('results');
+  });
+
+  /* ---------- the start screen ---------- */
+  $('titleLine').textContent = L.title;
+  $('welcome').textContent = greeting();
+  $('menuNote').textContent = MENU_NOTE;
+  MODES.forEach(function (m) {
+    var s = STAGES[m], b = document.createElement('button');
+    b.type = 'button'; b.className = 'stage-btn'; b.dataset.mode = m; b.dataset.stage = String(s.n);
+    b.innerHTML = '<span class="n">' + s.n + '</span><span><span class="t"></span><span class="d"></span></span>';
+    b.querySelector('.t').textContent = s.name;
+    b.querySelector('.d').textContent = s.about;
+    b.addEventListener('click', function () { startMode(m); });
+    $('stageList').appendChild(b);
+  });
+
+  /* ---------- wiring ---------- */
+  $('unmaskBtn').addEventListener('click', unmask);
+  $('disguise').addEventListener('click', function () { if (state === 'mask') unmask(); });
+  $('peekBtn').addEventListener('click', peek);
+  $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; hidePop(); show('menu'); });
+  // Any tap closes the 67 sooner; the tap still reaches what it was on (the pop-up takes no pointer events).
+  document.addEventListener('pointerdown', function () { if (!$('pop67').hidden) hidePop(); }, true);
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of the bank and live state, for scripts/verify-sums-in-disguise.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var i = 0; i < QUESTIONS.length; i++) if (QUESTIONS[i].id === id) return QUESTIONS[i]; return null; }
+  function click(container, sel) { MaffsLock.fresh(container, 0); var el = container.querySelector(sel); if (el) el.click(); return !!el; }
+  window.SID = {
+    SLUG: SLUG, MODES: MODES, LOOK: LOOK,
+    bank: function () { return copy(QUESTIONS); },
+    lines: function () { return copy(LINES); },
+    learning: function (id) { var q = item(id); return q ? learning(q)[0] : null; },
+    ui: {
+      state: function () { return state; },
+      ready: function () { return state === 'mask' || state === 'little' || state === 'big'; },
+      mode: function () { return mode; },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      board: board,
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in its stage, so a verifier can see any item.
+      preview: function (id) { var q = item(id); if (q) begin('stage-' + q.stage, [q]); },
+      // Taking the disguise off marks nothing, so it is called directly (a fresh window on the screen cannot swallow it).
+      unmask: function () { unmask(); },
+      tile: function (v) { return state === 'little' && click($('tiles'), '[data-val="' + v + '"]'); },
+      pick: function (v) { return state === 'big' && click($('opts'), '[data-val="' + v + '"]'); },
+      peek: function () { if (state === 'big') { MaffsLock.fresh($('peekRow'), 0); $('peekBtn').click(); } },
+      // Answer the item on screen, from whatever step it is at: right, or the big sum with its first decoy shown.
+      answer: function (right) {
+        if (state === 'mask') this.unmask();
+        if (state === 'little') this.tile(Q.little_answer);
+        if (state !== 'big') return;
+        var key = S.flow === 'duck' ? Q.answer_sum[0] + '+' + Q.answer_sum[1] : String(Q.answer);
+        if (right) { this.pick(key); return; }
+        var bs = $('opts').querySelectorAll('.opt');
+        for (var i = 0; i < bs.length; i++) if (bs[i].dataset.val !== key) { this.pick(bs[i].dataset.val); return; }
+      },
+      next: function () { var b = $('nextBtn') || document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); else if (state === 'done' || state === 'wrong') advance(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'sums-in-disguise');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>

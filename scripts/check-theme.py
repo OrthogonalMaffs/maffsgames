@@ -75,6 +75,7 @@ MIGRATED = [
     "cast-away",  # built to the theme, 10 Nov 2026 (unlisted until Jon approves it)
     "its-a-sine",  # built to the theme, 17 Nov 2026; listed 17 Nov 2026 (Jon approved 17 Nov 2026)
     "i-dropped-my-ice-cream",  # built to the theme, 18 Nov 2026 (unlisted until Jon approves it)
+    "sums-in-disguise",  # built to the theme, 18 Nov 2026, both looks (unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
     "factor-race",  # migrated 25 Oct 2026 (contract THEME-FR-DA)

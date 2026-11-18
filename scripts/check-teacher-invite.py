@@ -91,6 +91,7 @@ RESULTS = {
     "cast-away": "results",
     "its-a-sine": "results",
     "i-dropped-my-ice-cream": "results",
+    "sums-in-disguise": "results",
 }
 
 START_SCREEN = {
