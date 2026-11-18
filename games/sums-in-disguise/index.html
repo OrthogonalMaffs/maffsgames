@@ -180,6 +180,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+/* Jon's start-screen illustration (assets/start.webp, contract SUMS-IN-DISGUISE-ART): the card's width and corners. */
+.start-art{display:block;width:100%;max-width:600px;height:auto;margin:.4rem auto .7rem;border-radius:14px}
+/* Short screens (600 px tall or less): the picture capped at 120 px, cropped from the centre (Jon, 2 Nov 2026). */
+@media (max-height:600px){.start-art{max-height:120px;object-fit:cover;object-position:center}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -208,6 +212,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>Sums in Disguise</h1><div class="sub" id="titleLine"></div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="Five disguises hanging on coat hooks in a cloakroom: a fake moustache, round glasses, a wig, a rubber duck and a top hat, above an empty bench">
     <p class="welcome" id="welcome"></p>
     <div class="panel menu-info">
       <div class="badges"><span class="level-tag">Starter</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
