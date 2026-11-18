@@ -1,29 +1,29 @@
 {
- "as_of": "2026-11-18T14:32:10Z",
+ "as_of": "2026-11-18T23:34:07Z",
  "countries": [
   {
    "country": "United Kingdom",
-   "sessions": 1392
+   "sessions": 1479
+  },
+  {
+   "country": "United States",
+   "sessions": 159
   },
   {
    "country": "Spain",
    "sessions": 157
   },
   {
-   "country": "United States",
-   "sessions": 139
-  },
-  {
    "country": "Singapore",
-   "sessions": 74
+   "sessions": 80
   },
   {
    "country": "Ireland",
-   "sessions": 37
+   "sessions": 46
   },
   {
    "country": "Malaysia",
-   "sessions": 30
+   "sessions": 31
   },
   {
    "country": "Uruguay",
@@ -31,18 +31,18 @@
   },
   {
    "country": "Australia",
-   "sessions": 21
+   "sessions": 22
   },
   {
    "country": "China",
-   "sessions": 19
-  },
-  {
-   "country": "New Zealand",
-   "sessions": 16
+   "sessions": 20
   },
   {
    "country": "Slovakia",
+   "sessions": 17
+  },
+  {
+   "country": "New Zealand",
    "sessions": 16
   },
   {
@@ -59,7 +59,7 @@
   },
   {
    "country": "Other countries",
-   "sessions": 141
+   "sessions": 145
   }
  ],
  "daily": [
