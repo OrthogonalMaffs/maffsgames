@@ -1,10 +1,10 @@
 {
   "room": "canteen-hack",
-  "pack_version": "1",
+  "pack_version": "2",
   "sets": 6,
   "seed": 1,
   "certificate_title": "Nothing left to sign off",
-  "wording_approved": null,
+  "wording_approved": {"by": "Jon", "date": "2026-11-18"},
   "lock_words": {"cookie-price-simultaneous": {"parts": {"a": "Cookie £", "b": "Pizza £"}}},
   "images": [
     {"file": "art/ch-01-menuboard.webp", "role": "clue", "object": "menuboard", "label_box": [128, 361, 1125, 925], "font": "hand", "ink": "light",
