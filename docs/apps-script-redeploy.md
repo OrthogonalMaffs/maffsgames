@@ -95,6 +95,11 @@ Then confirm: **left sidebar → Triggers (alarm-clock icon)**. You should see *
 
 Do **not** use *Deploy → New deployment*. See the warning above.
 
+> **No deployment for a Dashboard-only change.** A change only to the Dashboard, the daily email or the GA4 file
+> (not doPost) needs no deployment: paste, save, run testDashboard. Timers run the latest saved code (Jon,
+> 18 Nov 2026: DAILY-ANSWERS went live this way). Only a change to `doPost` or `doGet` (what the `/exec` URL
+> runs) needs the new version above.
+
 ### 5. Verify
 Copy the Web App URL shown after deploying and check it still ends with the string in the
 warning box above. If it changed, you created a new deployment — go back and edit the original
@@ -163,7 +168,7 @@ The deploy is a **New version of the existing deployment**, never a new deployme
 9. Set **Version** to **New version**.
 10. Click **Deploy**. Do not use *New deployment*: it would change the address and every game would stop logging.
 11. Check the Web app URL it shows still ends with the string in "The one thing that breaks everything" above.
-12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-14-b"`.
+12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-18-a"`.
 13. Back in the editor, choose **testDashboard** in the function drop-down and click **Run**. It rebuilds the Dashboard tab with the new code. If Google asks for a permission, stop and tell Claude which one it named.
 14. Open the **MaffsGames Events** Sheet, play a few questions of any game, and check a new row appears as usual.
 15. Prove the formula fix is live: in the `maffs` WSL terminal run the command below. It posts one test row whose `detail` is `=1+1`, and should print `{"ok":true}`.
