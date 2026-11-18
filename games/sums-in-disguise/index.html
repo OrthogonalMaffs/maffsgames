@@ -112,7 +112,7 @@ button.disguise:disabled{cursor:default;opacity:1}
 .hand .h-fill{fill:var(--hand-fill);stroke:var(--hand-ink);stroke-width:2.2;stroke-linejoin:round}
 @keyframes handPulse{from{transform:translate(0,0) scale(1)}to{transform:translate(-5px,-7px) scale(1.12)}}
 /* Base-10 blocks (SUMS-IN-DISGUISE-ART, Amendment 3): Stages 1, 2 and 5 show the sum as ten-sticks and cubes, the tens
-   taken off into the disguise, the ones added, (Stage 5) ten ones exchanged for a ten, and the tens put back. */
+   taken off into the disguise, the ones added (Stage 5: the ten filled first, BRIDGE), and the tens put back. */
 .blocks{display:flex;align-items:flex-end;justify-content:center;gap:.45rem;min-height:24px;margin:.2rem 0 .1rem;max-width:100%}
 .blocks:empty{display:none}
 .grp{display:flex;align-items:flex-end;gap:3px}
@@ -121,7 +121,12 @@ button.disguise:disabled{cursor:default;opacity:1}
 .stk i{display:block;width:9px;height:7px;border-radius:1px;background:var(--stick)}
 .cubes{display:grid;grid-template-columns:repeat(3,10px);gap:2px;align-content:end}
 .cubes i{display:block;width:10px;height:10px;border-radius:2px;background:var(--cube)}
-button.cubebtn{border:2px dashed var(--accent);border-radius:8px;background:none;padding:4px;cursor:pointer;display:flex;align-items:flex-end;gap:3px;min-height:44px;min-width:44px}
+/* Stage 5's ten outline (BRIDGE): a column of ten slots, the shape of a stick, a filled from the bottom, the rest empty.
+   A real button: tapping it fills the ten. */
+button.tenframe{border:2px dashed var(--accent);border-radius:8px;background:none;padding:3px;cursor:pointer;display:flex;flex-direction:column-reverse;align-items:center;gap:1px;min-width:44px;min-height:44px}
+button.tenframe:disabled{cursor:default;opacity:1}
+.tenframe .slot{display:block;width:10px;height:8px;border-radius:1px;border:1px dashed var(--muted);box-sizing:border-box}
+.tenframe .slot.full{background:var(--cube);border:0}
 .blocks-note{text-align:center;font-size:1.05rem;min-height:0}
 .blocks-note:empty{display:none}
 .held{display:none;position:absolute;right:8px;gap:2px;z-index:2}
@@ -271,7 +276,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="prompt" id="prompt"></div>
       <div class="unmask-row" id="unmaskRow" hidden><button class="btn solid" id="unmaskBtn" type="button"></button></div>
       <div class="tiles" id="tiles" hidden></div>
-      <div class="unmask-row" id="tenRow" hidden><button class="btn solid" id="tenBtn" type="button"></button></div>
+      <div class="unmask-row" id="fillRow" hidden><button class="btn solid" id="fillBtn" type="button"></button></div>
       <div class="unmask-row" id="putRow" hidden><button class="btn solid" id="putBtn" type="button"></button></div>
       <div class="opts-wrap" id="optsWrap"><div class="choices maffs-options" id="opts" hidden></div></div>
       <div class="peek-row" id="peekRow" hidden><button class="btn" id="peekBtn" type="button"></button></div>
@@ -320,7 +325,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       end: "Every disguise removed. The fancy dress shop has filed for bankruptcy.",
       take_off: "Take off the disguise",
       find: "Find {little} in disguise.",
-      ten_in_hat: "Put the ten in the hat",
+      fill_ten: "Fill the ten",
       put_back: "Put the disguise back on"
     },
     kids: {
@@ -329,7 +334,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       welcome_class: "Welcome, {name} Class!",
       take_off: "Take it off!",
       find: "Find {little} in disguise!",
-      ten_in_hat: "Put the ten in my hat!",
+      fill_ten: "Fill the ten!",
       put_back: "Put it back on!",
       reveal: { 'stage-1': "Noooo! My moustache!", 'stage-2': "Hey! My glasses!", 'stage-3': "My hair! Give it back!", 'stage-4': "Quack! You found me!", 'stage-5': "Hey! A ten in my hat!" },
       right: ["Unmasked!", "Caught you!", "Gotcha!", "You saw through it!", "Disguise destroyed!", "Nobody fools you!"],
@@ -348,7 +353,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     'stage-2': { n: 2, name: 'The Glasses', disguise: 'glasses', flow: 'unmask', tiles: 10, about: 'Tens in disguise. Take the glasses off: 40 + 20 is 4 + 2 underneath.' },
     'stage-3': { n: 3, name: 'The Wig', disguise: 'wig', flow: 'wig', about: 'Ones and tens, wig on. Answer straight away, or peek underneath first.' },
     'stage-4': { n: 4, name: 'The Duck', disguise: 'duck', flow: 'duck', about: 'Spot the disguise: which big sum is the little one dressed up?' },
-    'stage-5': { n: 5, name: 'The Top Hat', disguise: 'hat', flow: 'unmask', tiles: 20, exchange: true, about: 'Crossing a ten. Take the hat off: 27 + 5 is 7 + 5 underneath, and the 20 waits on the tag.' }
+    'stage-5': { n: 5, name: 'The Top Hat', disguise: 'hat', flow: 'unmask', tiles: 10, bridge: true, about: 'Crossing a ten: fill the next ten first. 38 + 6 is 38 + 2 + 4.' }
   };
   var MENU_NOTE = '10 questions a run. A point for each big sum right.';
 
@@ -645,7 +650,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var nt = [[String(n).slice(0, -1), true], [String(n).slice(-1), false]];
       // ONE-EQUALS: one "=" a line, a sum on its left and a single number on its right.
       if (typ === 'tens') return [row1, [[String(p).slice(0, -1), true], ['0 + ', false], [String(r).slice(0, -1), true], ['0', false], [' = ', false]].concat(nt)];
-      if (typ === 'cross') return [row1, [[String(p - a), true], [' + ', false], ['10', true], [' + ' + (c - 10), false], [' = ', false]].concat(nt)];
+      // BRIDGE: fill the next ten first, then add the rest: p + bridge = 10(t + 1), then 10(t + 1) + rest = n (one line when
+      // rest = 0, its right-hand side the answer). Every number's tens in the accent.
+      if (typ === 'cross') {
+        var br = 10 - a, rest = c - 10, nx = p + br;
+        var r1 = hlTens(p, typ).concat([[' + ' + br, false], [' = ', false]], hlTens(nx, typ));
+        return rest ? [r1, hlTens(nx, typ).concat([[' + ' + rest, false], [' = ', false]], hlTens(n, typ))] : [r1];
+      }
       return [row1, [[String(p - a), true], [' + ' + c, false], [' = ', false]].concat(nt)];
     }
     row2 = row2.concat(hlTens(n, typ));
@@ -678,7 +689,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var a = q.little[0], b = q.little[1], c = q.little_answer, s = bigOf(q), n = q.answer;
     if (q.stage === 1 || q.stage === 2 || q.stage === 5) {
       if (q.type === 'tens') return a + ' plus ' + b + ' is ' + c + '. ' + s[0] + ' plus ' + s[1] + ' is ' + n + '.';
-      if (q.type === 'cross') return a + ' plus ' + b + ' is ' + c + '. ' + (s[0] - a) + ' plus 10 plus ' + (c - 10) + ' is ' + n + '.';
+      if (q.type === 'cross') { var nx = s[0] + 10 - a; return s[0] + ' plus ' + (10 - a) + ' is ' + nx + '.' + (c > 10 ? ' ' + nx + ' plus ' + (c - 10) + ' is ' + n + '.' : ''); }
       return a + ' plus ' + b + ' is ' + c + '. ' + (s[0] - a) + ' plus ' + c + ' is ' + n + '.';
     }
     return a + ' plus ' + b + ' is ' + c + ', so ' + words(s) + ' is ' + n;
@@ -744,13 +755,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var lastLine = '';
   function setSay(text, key) { $('say').textContent = text || ''; if (key) $('say').dataset.say = key; else delete $('say').dataset.say; }
   // The pointing hand: kid look, question 1 of a run, on the disguise (or the options where there is nothing to take off).
-  function pointAt(el) {
+  // fx, fy: where on el the hand sits, as fractions of its size (default 0.55, 0.45).
+  function pointAt(el, fx, fy) {
     var h = $('hand');
     if (!el) { h.hidden = true; return; }
     h.hidden = false;
     var c = $('qcard').getBoundingClientRect(), r = el.getBoundingClientRect();
-    h.style.left = Math.max(0, Math.min(c.width - 48, r.left - c.left + r.width * 0.55)) + 'px';
-    h.style.top = Math.max(0, r.top - c.top + r.height * 0.45) + 'px';
+    h.style.left = Math.max(0, Math.min(c.width - 48, r.left - c.left + r.width * (fx === undefined ? 0.55 : fx))) + 'px';
+    h.style.top = Math.max(0, r.top - c.top + r.height * (fy === undefined ? 0.45 : fy)) + 'px';
     h.dataset.at = el.id || 'opts';
   }
   function handHere() { return LOOK === 'kids' && qi === 1; }
@@ -776,7 +788,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     setSay('');
     $('clue').innerHTML = '';
     $('blocks').innerHTML = ''; $('blocksNote').innerHTML = ''; drawHeld(0);
-    ['unmaskRow', 'tenRow', 'putRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
+    ['unmaskRow', 'fillRow', 'putRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
     if (S.flow === 'duck') {
       showSum(Q.little);
       $('sum').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer);
@@ -796,27 +808,37 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
 
   /* ---------- Stages 1, 2 and 5: tens on show (Amendment 3) ----------
-     take off (the tens into the disguise) -> the ones on tiles -> (Stage 5) ten ones for a ten -> put it back -> the answer.
-     Every block count comes from the item: (10t + a) + b, or 10a + 10b on a tens item. */
+     take off (the tens into the disguise) -> the ones on tiles -> put it back -> the answer. Stage 5 (BRIDGE) instead:
+     take off -> a + ? = 10 on tiles -> fill the ten (it hops into the hat) -> put it back -> the answer.
+     Every block count comes from the item: (10t + a) + b, or 10a + 10b on a tens item; bridge = 10 - a, rest = a + b - 10. */
   function tensOf(q) { return (q.big[0] - q.little[0]) / 10; }          // t, on a ones or crossing item
+  // The step-2 tile key: the little sum's answer, or in Stage 5 the cubes that fill the ten (10 - a).
+  function littleKey(q) { return S.bridge ? 10 - q.little[0] : q.little_answer; }
+  function frameHtml(full) {
+    var h = '';
+    for (var i = 0; i < 10; i++) h += '<i class="slot' + (i < full ? ' full' : '') + '"></i>';
+    return h;
+  }
   function stickHtml(n) { var h = ''; for (var i = 0; i < n; i++) h += '<span class="stk">' + new Array(11).join('<i></i>') + '</span>'; return h; }
   function cubeHtml(n) { return '<span class="cubes">' + new Array(n + 1).join('<i></i>') + '</span>'; }
-  // groups: [{sticks, cubes}, ...], a "+" between them. cubeButton: the ones as one button (the exchange).
-  function drawBlocks(groups, cubeButton) {
+  // groups: [{sticks, cubes}, ...], a "+" between them; {frame: a} is Stage 5's ten outline with a slots filled.
+  function drawBlocks(groups) {
     var box = $('blocks');
     box.innerHTML = groups.map(function (g) {
       var inner = stickHtml(g.sticks || 0) + (g.cubes ? cubeHtml(g.cubes) : '');
       // No value under a group (NO-LABELS): the child reads the sticks and cubes; a number there would give the answer.
-      return '<span class="grp" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + inner + '</span>';
+      return '<span class="grp" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '"' + (g.frame !== undefined ? ' data-frame="' + g.frame + '"' : '') + '>' + inner + '</span>';
     }).join('<span class="plus">+</span>');
-    if (cubeButton) {
-      var g = box.querySelector('.grp'), b = document.createElement('button');
-      b.type = 'button'; b.className = 'cubebtn'; b.id = 'cubeBtn'; b.setAttribute('aria-label', L.ten_in_hat);
-      while (g.firstChild) b.appendChild(g.firstChild);
-      g.appendChild(b);
-      // Its own handler, where it is built (PR 811).
-      b.addEventListener('click', function () { exchange(false); });
-    }
+    groups.forEach(function (g, i) {
+      if (g.frame === undefined) return;
+      // The ten outline, a real button with its own handler where it is built (PR 811); it fills the ten at step 3 only.
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'tenframe'; b.id = 'tenFrame'; b.setAttribute('aria-label', L.fill_ten);
+      b.innerHTML = frameHtml(g.frame);
+      b.disabled = state !== 'fill';
+      b.addEventListener('click', function () { fillTen(false); });
+      box.querySelectorAll('.grp')[i].appendChild(b);
+    });
   }
   function drawHeld(n) { $('held').innerHTML = stickHtml(n); $('held').dataset.sticks = String(n); }
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
@@ -840,7 +862,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('blocksNote').innerHTML = '';
   }
   function showRow(id, text, aria) {
-    ['unmaskRow', 'tenRow', 'putRow'].forEach(function (r) { $(r).hidden = r !== id; });
+    ['unmaskRow', 'fillRow', 'putRow'].forEach(function (r) { $(r).hidden = r !== id; });
     if (id) {
       $(id).querySelector('button').textContent = text;
       MaffsLock.fresh($(id));
@@ -865,11 +887,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       else {
         $('tag').textContent = String(10 * tensOf(Q));
         drawHeld(tensOf(Q));
-        drawBlocks([{ cubes: Q.little[0] }, { cubes: Q.little[1] }]);
+        // Stage 5 (BRIDGE): the a cubes in the ten outline, bridge slots empty; the b cubes beside it.
+        if (S.bridge) drawBlocks([{ frame: Q.little[0] }, { cubes: Q.little[1] }]);
+        else drawBlocks([{ cubes: Q.little[0] }, { cubes: Q.little[1] }]);
       }
-      askSum(Q.little);
-      // Stages 1 and 2 say their reveal line here; Stage 5's waits for the exchange.
-      if (!S.exchange) setSay(L.reveal[mode], 'reveal.' + mode); else setSay('');
+      if (S.bridge) askBridge(); else askSum(Q.little);
+      // Stages 1 and 2 say their reveal line here; Stage 5's waits for the ten to be filled.
+      if (!S.bridge) setSay(L.reveal[mode], 'reveal.' + mode); else setSay('');
       var box = $('tiles');
       box.innerHTML = '';
       box.classList.toggle('wide', S.tiles > 10);
@@ -882,43 +906,64 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       }
       box.hidden = false;
       MaffsLock.fresh(box);
+      // On the tiles, over the 0 (never the key: the bridge is 1 to 9), so the hand never hides the answer.
+      if (S.bridge && handHere()) pointAt(box, 0.04, 0);
     });
+  }
+  // Stage 5's step 2, as maths: "a + ? = 10" (one "=", a number on its right).
+  function askBridge() {
+    $('prompt').textContent = ''; delete $('prompt').dataset.line;
+    $('sum').innerHTML = tex(Q.little[0] + ' + {?} = 10');
+    $('sum').dataset.sum = Q.little[0] + '+?=10'; $('sum').dataset.ask = '1';
   }
   // Step 3, the ones: marked by the tile's dataset.val; no score either way. A wrong tile shows the right one. Then
   // the blocks show c counted.
   function onTile(e) {
     if (state !== 'little') return;
     if (!MaffsLock.lock($('tiles'))) return;
-    var b = e.currentTarget, right = b.dataset.val === String(Q.little_answer);
+    var key = littleKey(Q), b = e.currentTarget, right = b.dataset.val === String(key);
     b.classList.add(right ? 'is-right' : 'is-wrong');
-    var k = $('tiles').querySelector('[data-val="' + Q.little_answer + '"]');
+    var k = $('tiles').querySelector('[data-val="' + key + '"]');
     if (k) k.classList.add('is-right');
     $('tiles').dataset.picked = b.dataset.val;
-    $('clue').innerHTML = tex(sumTex(Q.little) + ' = ' + Q.little_answer) + (right ? ' ✓' : '');
+    $('clue').innerHTML = tex(S.bridge ? Q.little[0] + ' + ' + key + ' = 10' : sumTex(Q.little) + ' = ' + Q.little_answer) + (right ? ' ✓' : '');
     $('clue').dataset.little = right ? 'right' : 'wrong';
     $('tiles').hidden = true;
+    pointAt(null);
+    if (S.bridge) {
+      // Step 3 waits: the outline (now enabled) or the button fills the ten.
+      state = 'fill';
+      showSum(Q.little);
+      $('tenFrame').disabled = false;
+      showRow('fillRow', L.fill_ten, null);
+      return;
+    }
     var c = Q.little_answer;
     showSum(Q.little);
-    if (Q.type === 'tens') drawBlocks([{ sticks: c }]); else drawBlocks([{ cubes: c }], S.exchange);
+    if (Q.type === 'tens') drawBlocks([{ sticks: c }]); else drawBlocks([{ cubes: c }]);
     $('blocksNote').innerHTML = tex(String(c));
-    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }
-    else showPutBack();
+    showPutBack();
   }
-  // Step 4 (Stage 5), the exchange: ten cubes join into a stick that hops into the hat (tag 10t + 10), c - 10 cubes stay.
-  function exchange(now) {
-    if (state !== 'exchange') return;
-    state = 'exchanging';
+  // Step 3 (Stage 5, BRIDGE), fill the ten: bridge cubes slide from the b group into the empty slots; the full outline, now
+  // a ten, hops into the hat (tag 10t + 10, t + 1 sticks held); rest cubes stay (none when a + b = 10).
+  function fillTen(now) {
+    if (state !== 'fill') return;
+    state = 'filling';
     showRow(null);
     pointAt(null);
-    var c = Q.little_answer, cubes = Array.prototype.slice.call($('blocks').querySelectorAll('.cubes i')).slice(0, 10);
-    flyThen(cubes, $('disguise'), now, function () {
-      $('tag').textContent = String(10 * tensOf(Q) + 10);
-      drawHeld(tensOf(Q) + 1);
-      drawBlocks(c - 10 ? [{ cubes: c - 10 }] : []);
-      $('blocksNote').innerHTML = tex('10 + ' + (c - 10));
-      $('blocksNote').dataset.split = '10 + ' + (c - 10);
-      setSay(L.reveal[mode], 'reveal.' + mode);
-      showPutBack();
+    var a = Q.little[0], br = 10 - a, rest = Q.little_answer - 10, frame = $('tenFrame');
+    frame.disabled = true;
+    var moving = Array.prototype.slice.call($('blocks').querySelectorAll('.cubes i')).slice(0, br);
+    flyThen(moving, frame, now, function () {
+      // The ten is full; the rest stay beside it.
+      drawBlocks([{ frame: 10 }].concat(rest ? [{ cubes: rest }] : []));
+      flyThen([$('tenFrame')], $('disguise'), now, function () {
+        $('tag').textContent = String(10 * tensOf(Q) + 10);
+        drawHeld(tensOf(Q) + 1);
+        drawBlocks(rest ? [{ cubes: rest }] : []);
+        setSay(L.reveal[mode], 'reveal.' + mode);
+        showPutBack();
+      });
     });
   }
   function showPutBack() {
@@ -1124,8 +1169,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (Q.type === 'tens') return Q.big[0] + ' is ' + Q.little[0] + ' tens and ' + Q.big[1] + ' is ' + Q.little[1] + ' tens.';
       return Q.big[0] + ' is ' + tensOf(Q) + ' tens and ' + Q.little[0] + ' ones. The tens go in the ' + NOUN[S.disguise] + '.';
     }
-    if (state === 'little') return words(Q.little) + ' equals what?';
-    if (state === 'exchange') return '10 ones make a ten. Put the ten in the hat.';
+    if (state === 'little') return S.bridge ? Q.little[0] + ' and how many make 10?' : words(Q.little) + ' equals what?';
+    if (state === 'fill') return 'Fill the ten.';
     // Put-back speaks no value (NO-LABELS): the regrouped tens or ones would give the answer before it is chosen.
     if (state === 'putback') return 'Put it back on.';
     if (state === 'big') return S.flow === 'duck' ? L.find.split('{little}').join(words(Q.little)) : words($('sum').dataset.ask === '1' && peekTimer !== null ? Q.little : Q.big) + ' equals what?';
@@ -1157,7 +1202,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // The disguise is a button too: it does what the take-off button does.
   $('disguise').addEventListener('click', function () { if (state === 'mask') unmask(false); else if (state === 'putback') putBack(); });
   $('speakBtn').addEventListener('click', function () { speak(toRead()); });
-  $('tenBtn').addEventListener('click', function () { exchange(false); });
+  $('fillBtn').addEventListener('click', function () { fillTen(false); });
   $('putBtn').addEventListener('click', putBack);
   window.addEventListener('resize', function () { var h = $('hand'); if (!h.hidden) pointAt(document.getElementById(h.dataset.at) || $('opts')); });
   $('peekBtn').addEventListener('click', peek);
@@ -1184,7 +1229,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     working: function (id) { var q = item(id); return q ? stacked(q).slice(0, 2) : null; },
     ui: {
       state: function () { return state; },
-      ready: function () { return state === 'mask' || state === 'little' || state === 'exchange' || state === 'putback' || state === 'big'; },
+      ready: function () { return state === 'mask' || state === 'little' || state === 'fill' || state === 'putback' || state === 'big'; },
       mode: function () { return mode; },
       question: function () { return Q ? copy(Q) : null; },
       score: function () { return score; },
@@ -1195,8 +1240,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       // Taking the disguise off marks nothing, so it is called directly (a fresh window on the screen cannot swallow it).
       // via 'disguise' or 'button' taps that control instead.
       unmask: function (via) { if (via === 'disguise') { MaffsLock.fresh($('suspect'), 0); $('disguise').click(); } else if (via === 'button') { MaffsLock.fresh($('unmaskRow'), 0); $('unmaskBtn').click(); } else unmask(true); },
-      // Stage 5's exchange: via 'cubes' or 'button' taps that control; with no via, at once.
-      exchange: function (via) { if (via === 'cubes') { MaffsLock.fresh($('suspect'), 0); var b = $('cubeBtn'); if (b) b.click(); } else if (via === 'button') { MaffsLock.fresh($('tenRow'), 0); $('tenBtn').click(); } else exchange(true); },
+      // Stage 5's fill the ten: via 'outline' or 'button' taps that control; with no via, at once.
+      fill: function (via) { if (via === 'outline') { MaffsLock.fresh($('suspect'), 0); var b = $('tenFrame'); if (b) b.click(); } else if (via === 'button') { MaffsLock.fresh($('fillRow'), 0); $('fillBtn').click(); } else fillTen(true); },
+      // The step-2 tile key for the item on screen (the little sum's answer, or 10 - a in Stage 5).
+      littleKey: function () { return Q ? littleKey(Q) : null; },
       // Put it back: via 'disguise' or 'button'; with no via, at once.
       putBack: function (via) { if (via === 'disguise') { MaffsLock.fresh($('suspect'), 0); $('disguise').click(); } else if (via === 'button') { MaffsLock.fresh($('putRow'), 0); $('putBtn').click(); } else putBack(); },
       toRead: toRead,
@@ -1206,8 +1253,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       // Answer the item on screen, from whatever step it is at: right, or the big sum with its first decoy shown.
       answer: function (right) {
         if (state === 'mask') this.unmask();
-        if (state === 'little') this.tile(Q.little_answer);
-        if (state === 'exchange') exchange(true);
+        if (state === 'little') this.tile(littleKey(Q));
+        if (state === 'fill') fillTen(true);
         if (state === 'putback') putBack();
         if (state !== 'big') return;
         var key = S.flow === 'duck' ? Q.answer_sum[0] + '+' + Q.answer_sum[1] : String(Q.answer);
