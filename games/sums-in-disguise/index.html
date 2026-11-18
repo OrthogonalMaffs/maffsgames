@@ -116,9 +116,6 @@ button.disguise:disabled{cursor:default;opacity:1}
 .blocks{display:flex;align-items:flex-end;justify-content:center;gap:.45rem;min-height:24px;margin:.2rem 0 .1rem;max-width:100%}
 .blocks:empty{display:none}
 .grp{display:flex;align-items:flex-end;gap:3px}
-.grp.labelled{flex-direction:column;align-items:center;gap:2px}
-.grp .gb{display:flex;align-items:flex-end;gap:3px;min-height:12px}
-.glabel{font-size:1rem}
 .plus{font-family:var(--font-num);font-weight:700;font-size:1.1rem;align-self:center;color:var(--muted)}
 .stk{display:flex;flex-direction:column;gap:1px;padding:1px;border-radius:2px}
 .stk i{display:block;width:9px;height:7px;border-radius:1px;background:var(--stick)}
@@ -809,9 +806,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var box = $('blocks');
     box.innerHTML = groups.map(function (g) {
       var inner = stickHtml(g.sticks || 0) + (g.cubes ? cubeHtml(g.cubes) : '');
-      // A group's value under it, as a plain number (ONE-EQUALS: the regrouping shown by the blocks, never by a chain).
-      var lab = g.label === undefined ? '' : '<span class="glabel" data-label="' + g.label + '">' + tex(String(g.label)) + '</span>';
-      return '<span class="grp' + (lab ? ' labelled' : '') + '" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + (lab ? '<span class="gb">' + inner + '</span>' + lab : inner) + '</span>';
+      // No value under a group (NO-LABELS): the child reads the sticks and cubes; a number there would give the answer.
+      return '<span class="grp" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + inner + '</span>';
     }).join('<span class="plus">+</span>');
     if (cubeButton) {
       var g = box.querySelector('.grp'), b = document.createElement('button');
@@ -929,7 +925,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     state = 'putback';
     showRow('putRow', L.put_back, L.put_back);
   }
-  // Step 5, put it back: the disguise and its sticks go back beside the cubes; the blocks show the regrouping.
+  // Step 5, put it back: the disguise and its sticks go back beside the cubes; the blocks show the regrouping, unlabelled.
   function putBack() {
     if (state !== 'putback') return;
     showRow(null);
@@ -939,11 +935,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     disguiseOn(true);
     setSay('');
     $('blocksNote').innerHTML = '';
-    // The regrouping, shown by the blocks: each group's value under it (the tens, then the ones). A group with no blocks is
-    // not drawn and gets no label (ONE-EQUALS Amendment 1): a tens item has no ones, nor has a crossing item with c = 10.
-    if (Q.type === 'tens') drawBlocks([{ sticks: c, label: 10 * c }]);
-    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }].concat(c - 10 ? [{ cubes: c - 10, label: c - 10 }] : []));
-    else drawBlocks([{ sticks: t, label: 10 * t }, { cubes: c, label: c }]);
+    // The regrouping, shown by the blocks alone (NO-LABELS: no value under any group, nothing that gives the answer). A
+    // group with no blocks is not drawn (ONE-EQUALS Amendment 1): a tens item has no ones, nor has a crossing item with c = 10.
+    if (Q.type === 'tens') drawBlocks([{ sticks: c }]);
+    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1 }].concat(c - 10 ? [{ cubes: c - 10 }] : []));
+    else drawBlocks([{ sticks: t }, { cubes: c }]);
     askBig();
   }
 
@@ -1130,11 +1126,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     if (state === 'little') return words(Q.little) + ' equals what?';
     if (state === 'exchange') return '10 ones make a ten. Put the ten in the hat.';
-    if (state === 'putback') {
-      if (Q.type === 'tens') return Q.little_answer + ' tens. Put it back on.';
-      if (Q.type === 'cross') return 10 * tensOf(Q) + ' and 10. Put it back on.';
-      return 10 * tensOf(Q) + ' and ' + Q.little_answer + '. Put it back on.';
-    }
+    // Put-back speaks no value (NO-LABELS): the regrouped tens or ones would give the answer before it is chosen.
+    if (state === 'putback') return 'Put it back on.';
     if (state === 'big') return S.flow === 'duck' ? L.find.split('{little}').join(words(Q.little)) : words($('sum').dataset.ask === '1' && peekTimer !== null ? Q.little : Q.big) + ' equals what?';
     if (state === 'done' || state === 'wrong') return lastLine + ' ' + spokenWorking(Q);
     return '';

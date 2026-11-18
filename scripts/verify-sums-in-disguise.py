@@ -49,8 +49,13 @@ numbers to check the page's numbers:
             question 1 of a kid run.
   ONE-EQUALS (Jon, 18 Nov 2026, 11:34): every KaTeX string rendered in the play card, at every step of every item in
             both looks, has at most one "=" a line, a sum on its left and a single number or "?" on its right; the put-back
-            question is the plain big sum, the blocks labelled with each group's value (the tens, then the ones; none for a
-            tens item's missing ones); the exchange label "10 + d"; the working one "=" a line.
+            question is the plain big sum; the exchange label "10 + d"; the working one "=" a line.
+  NO-LABELS (Jon, 18 Nov 2026, 12:21): for every Stage 1, 2 and 5 item in both looks, at every step from the start until
+            the big answer is marked, the play screen's text outside the tag, the little-sum line and the answer controls
+            (the 0 to 10 or 20 tiles, the options), and
+            what the speaker would read, hold neither the answer nor the regrouped tens (10t, 10c on a tens item, 10(t + 1)
+            in Stage 5) as a number; after put-back no group of blocks carries a label and nothing is written under the
+            blocks; the put-back read-aloud is "Put it back on." alone.
   Read aloud against a mocked speechSynthesis: no speaker without speechSynthesis, with no voice or with only a voice
             that is not local; a speaker once a local voice arrives (voiceschanged); only that voice passed to speak();
             nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
@@ -235,15 +240,16 @@ def spoken_working(q):
     return '%d plus %d is %d, so %d plus %d is %d' % (a, b, c, p, r, n)
 
 
-def back_labels(q):
-    """ONE-EQUALS: the values under the blocks after put-back, from the item: the tens, then the ones (none for a tens item)."""
+def giveaways(q):
+    """NO-LABELS: the numbers that must not be shown or spoken before the big answer is marked: the answer, and the
+    regrouped tens (10t on a ones item, 10c on a tens item, 10(t + 1) on a Stage 5 crossing item)."""
     a, b = q['little']
     c, t10 = a + b, q['big'][0] - a
-    if q['type'] == 'tens':
-        return [str(10 * c)]
-    if q['type'] == 'cross':
-        return [str(t10 + 10)] + ([str(c - 10)] if c > 10 else [])   # no group, no label, where no blocks are left
-    return [str(t10), str(c)]
+    tens = 10 * c if q['type'] == 'tens' else t10 + 10 if q['type'] == 'cross' else t10
+    return {str(q['answer']), str(tens)}
+
+
+PUT_BACK_READ = 'Put it back on.'
 
 
 EQ_SUM = re.compile(r'^[0-9 ]+(\+[0-9 ]+)+$')
@@ -503,7 +509,19 @@ ITEM_JS = r"""([q]) => {
   const on = () => !$('suspect').classList.contains('unmasked');
   // Every KaTeX string rendered in the play card right now (ONE-EQUALS), with where it was seen.
   out.maths = [];
-  const maths = (where) => { document.querySelectorAll('#qcard annotation').forEach(a => out.maths.push([where, a.textContent])); };
+  // NO-LABELS: the play screen's text, outside the tag, the little-sum line and the answer controls (tiles, options), each KaTeX string read once
+  // from its annotation and every text node apart (so "8" and "0" in two nodes never read as 80); and what the speaker reads.
+  out.shown = [];
+  const shown = () => {
+    const c = $('game').cloneNode(true);
+    c.querySelectorAll('#tag, #clue, #tiles, #opts, [hidden]').forEach(e => e.remove());
+    c.querySelectorAll('.katex').forEach(k => { const a = k.querySelector('annotation'); k.replaceWith(document.createTextNode(' ' + (a ? a.textContent : '') + ' ')); });
+    const w = document.createTreeWalker(c, NodeFilter.SHOW_TEXT), t = [];
+    while (w.nextNode()) t.push(w.currentNode.nodeValue);
+    return t.join(' ');
+  };
+  const maths = (where) => { document.querySelectorAll('#qcard annotation').forEach(a => out.maths.push([where, a.textContent]));
+                             out.shown.push([where, SID.ui.state(), shown(), SID.ui.toRead()]); };
   const blocks = () => ({ groups: [...$('blocks').querySelectorAll('.grp')].map(g => [g.querySelectorAll('.stk').length, g.querySelectorAll('.cubes i').length]),
                           held: $('held').querySelectorAll('.stk').length });
   const opts = () => $('opts').children.length > 0 && !$('opts').hidden;
@@ -554,9 +572,8 @@ ITEM_JS = r"""([q]) => {
       const before = { opts: opts(), state: SID.ui.state(), aria: $('disguise').getAttribute('aria-label') };
       SID.ui.putBack(via);
       out['back_' + via] = { before: before, state: SID.ui.state(), on: on(), blocks: blocks(), ask: ann($('sum')),
-                             labels: [...$('blocks').querySelectorAll('.glabel')].map(x => x.dataset.label),
-                             emptyLabelled: [...$('blocks').querySelectorAll('.grp')].filter(g => g.querySelector('.glabel') && !g.querySelector('.stk, .cubes i')).length,
-                             labelMaths: [...$('blocks').querySelectorAll('.glabel annotation')].map(x => x.textContent),
+                             written: ($('blocks').textContent + ' ' + $('blocksNote').textContent).replace(/[+\s]/g, ''),
+                             labelled: $('blocks').querySelectorAll('.glabel, .katex, [data-label]').length,
                              say: $('say').textContent, opts: opts() };
       maths('after put-back');
     }
@@ -688,10 +705,22 @@ def check_marking(page, html, look, out, info):
                     out.append('%s %s: after put-back (%s) the blocks are %s, expected %s' % (tagl, i, via, bk['blocks'], want_b))
                 if bk['ask'] != '%d + %d = {?}' % tuple(q['big']):
                     out.append('%s %s: after put-back the question is %r, not the plain big sum' % (tagl, i, bk['ask']))
-                if bk['emptyLabelled']:
-                    out.append('%s %s: after put-back a value label is drawn under a group with no blocks' % (tagl, i))
-                if bk['labels'] != back_labels(q) or bk['labelMaths'] != back_labels(q):
-                    out.append('%s %s: after put-back the blocks are labelled %s, expected %s' % (tagl, i, bk['labels'], back_labels(q)))
+                if bk['labelled'] or bk['written']:
+                    out.append('%s %s: after put-back (%s) the blocks carry a label or a value under them (%r)' % (tagl, i, via, bk['written']))
+            # NO-LABELS: from the start until the answer is marked, neither the answer nor the regrouped tens is shown or
+            # spoken; the put-back read-aloud is the line alone.
+            give = giveaways(q)
+            for where, state, text, read in r['shown']:
+                if where.startswith('after marking'):
+                    continue
+                hit = give & set(re.findall(r'\d+', text))
+                if hit:
+                    out.append('%s %s: %s gives the answer away on screen: %s in %r' % (tagl, i, where, sorted(hit), re.sub(r'\s+', ' ', text).strip()))
+                hit = give & set(re.findall(r'\d+', read))
+                if hit:
+                    out.append('%s %s: %s gives the answer away in the read-aloud: %s in %r' % (tagl, i, where, sorted(hit), read))
+                if state == 'putback' and read != PUT_BACK_READ:
+                    out.append('%s %s: at put-back the read-aloud is %r, not %r' % (tagl, i, read, PUT_BACK_READ))
         if st == 3:
             if r['wigOn']['state'] != 'big' or r['wigOn']['sum'] != big or not r['wigOn']['on']:
                 out.append('%s %s: the wig is not on the big sum at the question (%s)' % (tagl, i, r['wigOn']))
@@ -1032,10 +1061,7 @@ def check_speech(pw, base, html, out, info):
                             want.append('10 ones make a ten. Put the ten in the hat.')
                             page.evaluate('SID.ui.exchange()')
                         tap()
-                        c = a + b
-                        want.append('%d tens. Put it back on.' % c if q['type'] == 'tens' else
-                                    '%d and 10. Put it back on.' % (10 * t) if q['type'] == 'cross' else
-                                    '%d and %d. Put it back on.' % (10 * t, c))
+                        want.append(PUT_BACK_READ)
                         page.evaluate('SID.ui.putBack()')
                     page.evaluate('SID.ui.answer(false)')
                     line = page.evaluate("document.getElementById('say').textContent")
@@ -1209,15 +1235,11 @@ PLANTS = [
      edit("    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();",
           "    askBig();\n    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();"),
      'marking grown', r'options exist before put-back|before put-back \('),
-    ('a wrong regrouped number (50 + 7 for 64 + 3)',
-     edit("    else drawBlocks([{ sticks: t, label: 10 * t }, { cubes: c, label: c }]);",
-          "    else drawBlocks([{ sticks: t, label: 10 * t - 10 }, { cubes: c, label: c }]);"),
-     'marking grown', r'after put-back the blocks are labelled'),
     # ONE-EQUALS.
-    ('a "0" label under an empty cubes group',
-     edit("drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }].concat(c - 10 ? [{ cubes: c - 10, label: c - 10 }] : []));",
-          "drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }, { cubes: c - 10, label: c - 10 }]);"),
-     'marking grown', r'a value label is drawn under a group with no blocks'),
+    ('an empty cubes group drawn at put-back',
+     edit("drawBlocks([{ sticks: t + 1 }].concat(c - 10 ? [{ cubes: c - 10 }] : []));",
+          "drawBlocks([{ sticks: t + 1 }, { cubes: c - 10 }]);"),
+     'marking grown', r's5_\d+: after put-back \(button\) the blocks are'),
     ('"81 + 9 = 90 + 0 = ?"',
      edit("      // After put-back: the plain big sum (ONE-EQUALS); the blocks under it show the regrouping.\n      askSum(Q.big);",
           "      askSum(Q.big);\n      $('sum').innerHTML = tex(Q.big[0] + ' + ' + Q.big[1] + ' = ' + (Q.big[0] - Q.little[0] + (Q.type === 'cross' ? 10 : 0)) + ' + ' + (Q.type === 'cross' ? Q.little_answer - 10 : Q.little_answer) + ' = {?}');"),
@@ -1240,6 +1262,15 @@ PLANTS = [
     ('"Find {little}!"',
      edit('find: "Find {little} in disguise!",', 'find: "Find {little}!",'),
      'bank', r"a LINES string puts '\{little\}!' straight after a sum"),
+    # NO-LABELS.
+    ('an "80" label under the sticks of "70 + 10"',
+     edit("    if (Q.type === 'tens') drawBlocks([{ sticks: c }]);\n",
+          "    if (Q.type === 'tens') drawBlocks([{ sticks: c }]);\n    if (Q.big[0] === 70 && Q.big[1] === 10) $('blocks').querySelector('.grp').insertAdjacentHTML('beforeend', '<span class=\"glabel\">' + tex(String(10 * c)) + '</span>');\n"),
+     'marking grown', r's2_011: after put-back \(button\) the blocks carry a label|s2_011: after put-back gives the answer away on screen: \[.80.\]'),
+    ('the spoken "70 and 10. Put it back on." before marking',
+     edit("    if (state === 'putback') return 'Put it back on.';",
+          "    if (state === 'putback') return Q.type === 'cross' ? 10 * tensOf(Q) + ' and 10. Put it back on.' : 'Put it back on.';"),
+     'marking grown', r"s5_\d+: at put-back the read-aloud is '70 and 10\. Put it back on\.'"),
 ]
 
 
