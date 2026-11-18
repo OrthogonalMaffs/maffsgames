@@ -24,7 +24,7 @@ Claude Code (home lane), worktree `~/mg-canteen-approve`, branch `claude/canteen
 - **Pack:** config `"wording_approved": {"by": "Jon", "date": "2026-11-18"}`, `"pack_version": "2"` (a string, as every other pack's). `build_pack.py canteen-hack --final` exit 0: `dist-packs/canteen-hack-pack-v2.pdf`, 36 pages, no DRAFT on any page, the sentence on page 2 (the start read-out), which still fits. Finals unchanged: A 1928, B 2340, C 2960, D 2000, E 1510, F 3508.
 - **Checks:** check-escape-rooms exit 0; test-pack-generator exit 0 (self-test 67/67 on 11 rooms; 56 plants caught, 23 controls pass). No generator or other config changed, so the other ten packs are unchanged.
 - **Docs:** /updates/ line (18 Nov); CANTEEN-PACK-APPROVE closed to todo-done; CORE-BUNDLES-2 stays open.
-- MERGED: pending.
+- MERGED 18 Nov as 6f2d29c (#819) via merge-pr.py, exit 0, last line "main 6f2d29c run 44235030804: GREEN". Main on the merge commit: check-site 44235030804 success, phone-fit-full 44235030742 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-canteen-approve.md` (closed out by DAILY-ANSWERS' first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
