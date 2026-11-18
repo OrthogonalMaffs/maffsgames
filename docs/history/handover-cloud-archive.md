@@ -6,6 +6,36 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-18 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ART (`docs/history/contracts/2026-11-18-sums-in-disguise-art.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` restarted from main 3eb2069. Tier Small.
+**Close-out carried (first commit):** #821 SUMS-IN-DISGUISE, recorded in its entry below; contract moved.
+Done on the branch: Jon's picture, byte for byte from `art/sums-in-disguise` ("start (1).webp", SHA-256 bfdd4ecd…4645, 54,110 bytes, 1600 x 873), as `games/sums-in-disguise/assets/start.webp`, under the title in both looks with Ice Cream's `.start-art` CSS; verifier checks the tag, size and SHA-256 (plant: no alt). **STOP IF hit and ruled (Jon, in session):** at 360 x 640 the picture moves stages 2-3 below the fold (stage 1 stays above); "Accept as is". **Amendment 1 (Jon, 10:38, "find 5 factorial"):** LINES.kids.find is now "Find {little} in disguise!"; the verifier fails any LINES string with "{little}" or "{big}" followed by "!" or "?" (plant: "Find {little}!"); Stage 4's read-aloud now reads the find line. Todo SUMS-IN-DISGUISE-LIST notes the picture.
+**Amendment 3 (Jon, 10:45-10:53, tens on show; it replaces Amendment 2, the Stage 5 split, which was built but never committed):** Stages 1, 2 and 5 show the big sum as base-10 blocks; take off sends the t sticks into the disguise, parked in view beside the sum (tag 10t, or "0" on a tens item); the ones on tiles, then counted; in Stage 5 ten cubes become a stick into the hat (tag 10t + 10, "c = 10 + d", the Stage 5 reveal only now); put back (LINES' put_back) shows the regrouped question ("64 + 3 = 60 + 7 = ?") and only then the options; working and read-aloud to match; the kid hand on each step's button. Verifier checks every Stage 1, 2 and 5 item in both looks (7 new plants). Stage 5's method provisional (todo row).
+PR #822. PR's final checks on head 36018fd: Gate 44291169060 and phone-fit-full 44291711282 green. MERGED 18 Nov 11:20 UTC as fca96ed (squash) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main fca96ed run 44293850170: GREEN". Main on fca96ed: check-site 44293850170, phone-fit-full 44293849978, pages build 44293849198, all success (recorded in SUMS-IN-DISGUISE-ONE-EQUALS's first commit, which moved the contract to `docs/history/contracts/`).
+Record: agent Claude Code; wall about 1:20 (contract about 10:00, merged 11:20); review cycles 0; amendments 3 (and one STOP ruled in session); usage n/a.
+
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE (`docs/history/contracts/2026-11-18-sums-in-disguise.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` from main 5e1c236. Tier Medium: merge on green.
+**Close-out carried (first commit):** #820 I-DROPPED-MY-ICE-CREAM, recorded in its entry below; contract moved.
+Bank: the generator reproduces SHA-256 19e41556…068a8; recomputed independently before building: 0 disagreements.
+Done on the branch: the page (five stages, two looks from the fragment, LINES verbatim, the 67 after marking, boards `stage-1`..`stage-5`); `scripts/verify-sums-in-disguise.py` (PASS, 14/14 plants); roster row #113 in Unlisted (9); games.json and apply-meta; findings file; every list #820 touched; NOT_ON_HUB; launch date; todo SUMS-IN-DISGUISE-LIST and NUMBER-BONDS.
+**Amendment 1 (Jon, 18 Nov, 09:19, "all 4 please"), in the saved contract:** questions as maths ("64 + 3 = ?"), the working stacked in KaTeX with the tens highlighted, one LINES string in feedback, the new kid set (6 words or fewer), take_off/find from LINES, the disguise a button, the kid hand on question 1, Read aloud on on-device voices only (hidden without one; tested against a mocked speechSynthesis). Built into #821.
+PR #821. PR's final checks on head 8bb2d65: Gate 44277968798 and phone-fit-full 44278017720 green (the first head's Gate run was cancelled by the amendment's push). MERGED 18 Nov 09:56 UTC as e9f236e (squash) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main e9f236e run 44280602409: GREEN". Main on e9f236e: check-site 44280602409, phone-fit-full 44280602129, pages build 44280601436, all success (recorded in SUMS-IN-DISGUISE-ART's first commit, which moved the contract to `docs/history/contracts/`).
+Record: agent Claude Code; wall about 1:47 (contract about 08:50, merged 09:56, with Amendment 1 received 09:19); review cycles 0; amendments 1; usage n/a.
+
+## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/history/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
+
+Agent Claude Code (cloud), branch `claude/fervent-mccarthy-3l9b5u` from main bb46787. Tier Medium: merge on green, Project Claude reviews after. Jon teaches it Tue 24 Nov.
+**Close-out carried (first commit):** #818 ITS-A-SINE-LIST, recorded in its entry below; contract moved.
+**Amendments (Jon, 18 Nov, in session):** 1, lane exception: `gcse-stage-4` and `level3-stage-4` labels in firebase-leaderboard.js, and one launch-dates.json line (both under DO NOT TOUCH `schools/assets/`, which the per-level boards and check-ugh-stats need). 2: "no duplicate given" reads the given with its unit (gcse_005 61 cm and gcse_020 61 m).
+Bank recomputed independently before building: 96/96 answers and traps agree, none within 0.005 of a boundary. PNG 1672 x 941 on the art branch; start.webp 1600 x 873.
+Done on the branch: the page (two levels, four stages, 8 a run, boxes (a) then (b), Jon's lines, working cut to 4 d.p., formulas by level and stage, scientific calculator, cones drawn to proportion with the height label clear of the slant edges); `scripts/verify-i-dropped-my-ice-cream.py` (PASS, 6/6 plants caught); roster row #112 in Unlisted (8); games.json and apply-meta; findings file; every MIGRATED list; NOT_ON_HUB; todo ICE-CREAM-LIST.
+PR #820. PR's final checks on head 7edee19: Gate 44268072982 and phone-fit-full 44268068543 green. MERGED 18 Nov 08:50:07 UTC as 5e1c236 (squash), merged by Vector52F (merge-pr.py, the only route; its last line was not carried into the next session). Main on 5e1c236: check-site 44270404391, phone-fit-full 44270405049, pages build 44270404235, all success (read back from the API in SUMS-IN-DISGUISE's session and recorded in its first commit, which moved the contract to `docs/history/contracts/`).
+
+## Moved 2026-11-18 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-17 (cloud): ITS-A-SINE-LIST (`docs/history/contracts/2026-11-17-its-a-sine-list.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/fervent-feynman-25e9sg` restarted from main 6d8cc0e (after #816). Tier Medium: merge on green, Project Claude reviews after. **Lane exception (Jon, 17 Nov 2026, verbatim):** "one-off LANE EXCEPTION (listing is normally home-lane work; Jon, 17 Nov 2026, chose "Cloud, before ice cream")".
