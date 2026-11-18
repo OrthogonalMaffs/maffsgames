@@ -74,6 +74,7 @@ import plant_common as pc  # noqa: E402
 SLUG = 'decimal-detective'
 COUNTS = {'LINEUP': 15, 'ROUNDUP': 15, 'PLACEIT': 15}
 NOTE = "{0} and {1} are equal: a zero on the end doesn't change the value."
+ORDER = 'The right order: '   # a wrong Line-Up's note: the bank's sorted row as written (canon 7.6)
 
 # Round Up questions whose ask names the form, so two options equal in value are told apart by it
 # (SR-4). (value, instruction) -> reason.
@@ -104,6 +105,9 @@ PATCHES = {
                           "  /* planted: the start left as shuffled */\n"),
     'right-waits': ("if (isCorrect && !note) MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);\n  else MaffsNext.wrong(",
                     "if (isCorrect && !note) { /* planted: waits */ }\n  else MaffsNext.wrong("),
+    'order-removed': ("             : 'The right order: ' + data.sorted.join(', ') + (equal ? ' ' + equal : '');",
+                      "             : equal;"),
+    'order-reversed': ("data.sorted.join(', ')", "data.sorted.slice().reverse().join(', ')"),
     'wrong-moves-on': ("else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion, label: 'Next Case \\u2192' });",
                        "else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);"),
 }
@@ -250,6 +254,7 @@ JS_CARD_XY = '''(i) => { const b = document.querySelectorAll('#lineupZone .suspe
 JS_LOAD2 = '''([type, data]) => { questions = [{type, data}, {type, data}]; currentQ = 0; loadQuestion(); }'''
 JS_NEXT_STATE = '''() => { const n = document.querySelectorAll('#gameScreen .maffs-next');
   return {q: currentQ, next: n.length, label: n.length ? n[0].textContent : null}; }'''
+JS_NOTE = '''() => { const n = document.querySelector('#feedback .feedback-note'); return n ? n.textContent : null; }'''
 JS_FEEDBACK = '''() => { const f = document.getElementById('feedback');
   return f.style.display === 'none' ? null : f.textContent.trim(); }'''
 # The marker's place and every number the student can see in the Place It area (the tick labels and,
@@ -539,6 +544,22 @@ def touch_drag(rep, page, q, tag):
         rep.fail(tag, 'Line-Up touch drag', 'a card was moved and Check is still disabled')
 
 
+def equal_notes(q):
+    return [NOTE.format(*sorted((x, y), key=len)) for k, x in enumerate(q['suspects'])
+            for y in q['suspects'][k + 1:] if x != y and D(x) == D(y)]
+
+
+def lineup_note(rep, where, q, order, right, note):
+    """Canon 7.6: a wrong Line-Up's note is the bank's sorted row as written, smallest first, then any
+    equal-value note; a right one has the equal-value note alone, or no note (so it moves on). The row
+    itself is recomputed with Decimal in check_bank."""
+    eq = ' '.join(equal_notes(q))
+    want = eq if right else ORDER + ', '.join(q['sorted']) + (' ' + eq if eq else '')
+    if (note or '') != want:
+        rep.fail(where, 'feedback note', 'order %s (%s): the note reads %r, expected %r'
+                 % (order, 'right' if right else 'wrong', note, want))
+
+
 def advance_pass(rep, page, bank):
     """Canon 7.6 for each type: a right answer moves on by itself (unless it carries a note to read); a
     wrong one waits on Next Case."""
@@ -560,6 +581,7 @@ def advance_pass(rep, page, bank):
             kt = grid_index(q)
             page.evaluate('(k) => setMarkerPosition(k / 20)', kt if right else (kt - 1 if kt > 0 else kt + 1))
         page.click('#checkBtn')
+        answer.note = page.evaluate(JS_NOTE)
         return verdict(page.evaluate(JS_FEEDBACK)), page.evaluate(JS_NEXT_STATE)
 
     def waits(where, what, st):
@@ -581,6 +603,8 @@ def advance_pass(rep, page, bank):
         got, st = answer(kind, q, True)
         if got != 'right':
             rep.fail(name, 'right answer', 'marked %r' % got)
+        if kind == 'lineup':
+            lineup_note(rep, name, q, 'sorted', True, answer.note)
         if st['next']:
             rep.fail(name, 'right answer', 'a Next control is mounted: a right answer must not wait (canon 7.6)')
         if st['q'] != 0:
@@ -592,11 +616,18 @@ def advance_pass(rep, page, bank):
         got, st = answer(kind, q, False)
         if got != 'wrong':
             rep.fail(name, 'wrong answer', 'marked %r' % got)
+        if kind == 'lineup':
+            lineup_note(rep, name, q, 'reversed', False, answer.note)
         waits(name, 'wrong answer', st)
     got, st = answer('lineup', paired, True)          # right, with the equal-value note: it waits to be read
     if got != 'right':
         rep.fail('Line-Up with an equal pair', 'right answer', 'marked %r' % got)
     waits('Line-Up with an equal pair', 'right answer with its note', st)
+    got, st = answer('lineup', paired, False)         # wrong, with an equal pair: the order, then the note
+    if got != 'wrong':
+        rep.fail('Line-Up with an equal pair', 'wrong answer', 'marked %r' % got)
+    lineup_note(rep, 'Line-Up with an equal pair', paired, 'reversed', False, answer.note)
+    waits('Line-Up with an equal pair', 'wrong answer', st)
 
 
 def close(browser, page):
@@ -649,6 +680,7 @@ def run_page(rep, chromium=None, verbose=False, patch=None):
                     actions += 1
                     if verdict(text) != want:
                         rep.fail(where, 'marking', 'order %s shows %r, expected %s' % (order, text, want))
+                    lineup_note(rep, where, q, order, want == 'right', page.evaluate(JS_NOTE))
                     for n in notes:
                         if n not in (text or ''):
                             rep.fail(where, 'feedback', 'order %s: the note %r is not shown' % (order, n))
@@ -733,7 +765,9 @@ def selftest(bank, chromium):
                         ('check-on-load', 'Check enabled when a question loads (page)'),   # todo 1.51
                         ('start-as-shuffled', 'Line-Up start left as shuffled (page)'),    # todo 1.51
                         ('right-waits', 'a right answer waits (page)'),                    # canon 7.6
-                        ('wrong-moves-on', 'a wrong answer moves on by itself (page)')):
+                        ('wrong-moves-on', 'a wrong answer moves on by itself (page)'),
+                        ('order-removed', 'a wrong Line-Up without the order (page)'),     # DD-LINEUP-ORDER
+                        ('order-reversed', 'a wrong Line-Up order smallest-last (page)')):
         rep = Report()
         try:
             run_page(rep, chromium, patch=patch)

@@ -856,7 +856,11 @@ function checkLineup(data) {
   const allCorrect = marks.every(Boolean);
   cards.forEach((card, i) => card.classList.add(marks[i] ? 'correct' : 'incorrect'));
 
-  recordAnswer('lineup', allCorrect, equalValueNote(data.suspects));
+  // Canon 7.6: a wrong answer shows the right one. The order is the bank's own, as written.
+  const equal = equalValueNote(data.suspects);
+  const note = allCorrect ? equal
+             : 'The right order: ' + data.sorted.join(', ') + (equal ? ' ' + equal : '');
+  recordAnswer('lineup', allCorrect, note);
 }
 
 // Cards that are different strings but the same number (0.77 and 0.770) may go in either order; say

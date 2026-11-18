@@ -69,6 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-18 (cloud): DD-LINEUP-ORDER (`docs/handover/contracts/2026-11-18-dd-lineup-order.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/admiring-archimedes-vak9ig` from main 1263129. Tier Small.
+**Close-out carried (first commit):** #826 SUMS-IN-DISGUISE-BRIDGE, recorded in its entry below; contract moved.
+Done on the branch: Decimal Detective's checkLineup gives a wrong Line-Up the note "The right order: " and the bank's sorted row as written (then the equal-value note, if any); a right answer's note is unchanged. recordAnswer, the marks, Round Up and Place It untouched. Bank checked first: every sorted row ascending (check_bank recomputes it with Decimal). Verifier: every Line-Up item's right and wrong orders, plus advance_pass's plain item right and wrong and the equal-pair item wrong, read the note exactly; plants order-removed and order-reversed. todo DD-LINEUP-FEEDBACK part (1) done, part (2) open to NEXT-IN-VIEW. An /updates/ line added (AGENTS.md: a change a student sees), not in EXACT CHANGE.
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
 ## 2026-11-18 (cloud): SUMS-IN-DISGUISE-BRIDGE (`docs/history/contracts/2026-11-18-sums-in-disguise-bridge.md`; Jon 18 Nov, evening; class plays it Thu 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/quirky-hamilton-n94lmq` restarted from main 620594f. Tier Small.
