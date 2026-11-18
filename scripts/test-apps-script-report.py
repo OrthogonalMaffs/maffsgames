@@ -56,6 +56,9 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     every section, Daily Activity last; the chart's series named from its header row, with straight lines.
     Plants: the 10% threshold made <=, the class gap made 60 minutes, % correct coloured green or red, lnkd.in falling
     into Other, a missing GA4 tab throwing, a room counted in check-these, curveType back.
+  - DASHBOARD-FIXES (18 Nov 2026): all four charts (Top Games, Accuracy, the level pie, Daily Activity) are built by
+    one helper, each with setNumHeaders(1), so a header row is never drawn as data; newChart() appears once. Plant:
+    the pie built without it.
 
     python scripts/test-apps-script-report.py [--sample]
 """
@@ -174,6 +177,7 @@ HARNESS = r"""
       UrlFetchApp, DriveApp, SpreadsheetApp, MailApp, Utilities, Charts, FakeDate, ContentService, {});
     return { api, env };
   }
+  const allCharts = [];   // every chart built by the main run and section i's (DASHBOARD-FIXES)
   const dashText = sh => {
     const keys = Object.keys(sh.cells).map(k => k.split(',').map(Number));
     const maxR = Math.max(0, ...keys.map(k => k[0]));
@@ -233,6 +237,8 @@ HARNESS = r"""
       dt.indexOf('Accuracy by Game — Last 7 Days (question games, min 30') >= 0 && dt.indexOf('alpha-q | gcse | h00000001 | 12 | 3') >= 0 &&
       dt.indexOf('Room | Started | Escaped | Escape % | Timed out | Attempts per lock') >= 0 && dt.indexOf('escape-alpha | 4 | 1 | 25% | 2 | 4') >= 0 && dt.indexOf('Left out of accuracy') >= 0 && dt.indexOf('1 game sends question_id so far') >= 0, dt);
     out.push(['__sample_email', true, mail.body]); out.push(['__sample_dash', true, dt]);
+    out.push(['__charts', true, JSON.stringify(env.charts)]);
+    allCharts.push(...env.charts);   // Top Games, Accuracy and the pie; section i adds Daily Activity
 
     // ---- doPost: the column-order rule (ROOM-TIMES). The 18 columns before 7 Nov 2026 keep their order and
     // detail is appended last; each posted field lands under its own header; a Sheet whose row 1 has only the old
@@ -433,6 +439,20 @@ HARNESS = r"""
          JSON.stringify(opt));
       ok('i. the chart: series named from the header row (setNumHeaders 1) and straight lines (no curveType)',
          JSON.stringify(call('setNumHeaders')) === '[1]' && !('curveType' in opt), JSON.stringify([call('setNumHeaders'), opt]));
+      out.push(['__charts_i', true, JSON.stringify(env.charts)]);
+      allCharts.push(...env.charts);
+      // DASHBOARD-FIXES: every chart takes its names from its header row; without setNumHeaders(1) Sheets may draw
+      // the header as data (a "Game" bar). All four are built by one helper, so none can be built another way.
+      const titleOf = c => (c.find(([k, a]) => k === 'setOption' && a[0] === 'title') || [null, [0, '?']])[1][1];
+      const heads = c => c.filter(([k]) => k === 'setNumHeaders').map(([, a]) => JSON.stringify(a)).join();
+      const built = [...new Set(allCharts.map(titleOf))].sort();
+      ok('i. all four Dashboard charts are built, each with setNumHeaders(1)',
+         JSON.stringify(built) === JSON.stringify(['Accuracy by Game (sorted lowest first)',
+           'Daily Games Started and Questions Answered — Last 30 Days', 'Level Split — Last 7 Days', 'Top Games — Last 7 Days']) &&
+         allCharts.every(c => heads(c) === '[1]'),
+         JSON.stringify(allCharts.map(c => [titleOf(c), heads(c)])));
+      ok('i. one chart builder: newChart() appears once in the endpoint', (src.match(/newChart\(/g) || []).length === 1,
+         (src.match(/newChart\(/g) || []).length + ' newChart( calls');
       const cells = env.sheets['Dashboard'] ? env.sheets['Dashboard'].cells : {};
       ok('i. no cell in the table is undefined, NaN or text where a count belongs',
          t5.slice(1).every(l => /^\d{4}-\d\d-\d\d \| \d+ \| \d+$/.test(l)) && Object.keys(cells).every(k => cells[k] !== undefined), t5.join(' / '));
@@ -675,7 +695,9 @@ PLANTS = [
     ("a missing GA4 tab throwing", "  if (!tab) return null;\n  var v = tab.getDataRange", "  if (!tab) throw new Error('no GA4 tab ' + name);\n  var v = tab.getDataRange"),
     ("a room counted in check-these", "    if (rptKind(slug, kinds) !== 'question') return;   // B1: question games only, never a room's lock\n",
      "    if (rptKind(slug, kinds) === 'shot') return;   // B1\n"),
-    ("Daily Activity's curveType back", "      .setNumHeaders(1)\n", "      .setNumHeaders(1)\n      .setOption('curveType', 'function')\n"),
+    ("Daily Activity's curveType back", "colors: ['#0ea5e9', '#0d9488'],", "colors: ['#0ea5e9', '#0d9488'], curveType: 'function',"),
+    ("the pie chart built without setNumHeaders(1)", "  b = b.setNumHeaders(1);\n",
+     "  if (spec.type !== Charts.ChartType.PIE) b = b.setNumHeaders(1);\n"),
     # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
     ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
      "function rptMap() { return {}; }"),

@@ -76,7 +76,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-18-a';
+const SCRIPT_VERSION = '2026-11-18-b';
 
 function doGet(e) {
   return jsonResponse({
@@ -959,17 +959,9 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
 
   // Chart 1: Top Games bar chart
   if (topSlugs.length > 0) {
-    var chartRange = dash.getRange(t1Start+1, 1, topSlugs.length+1, 2);
-    var chart1 = dash.newChart()
-      .setChartType(Charts.ChartType.BAR)
-      .addRange(chartRange)
-      .setPosition(t1Start, 6, 0, 0)
-      .setOption('title', 'Top Games — Last 7 Days')
-      .setOption('legend', {position: 'none'})
-      .setOption('width', 500).setOption('height', 300)
-      .setOption('colors', ['#0ea5e9'])
-      .build();
-    dash.insertChart(chart1);
+    dashChart(dash, {type: Charts.ChartType.BAR, ranges: [dash.getRange(t1Start+1, 1, topSlugs.length+1, 2)],
+      row: t1Start, col: 6, options: {title: 'Top Games — Last 7 Days', legend: {position: 'none'}, width: 500, height: 300,
+      colors: ['#0ea5e9']}});
     r = rowBelowChart(r, t1Start, 300);
   }
 
@@ -993,18 +985,10 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   if (rep.games.length > 0) {
     // Built from the table data (cols 1 and 4); col 4 holds fractions, so the axis runs 0 to 1
 
-    var chart3 = dash.newChart()
-      .setChartType(Charts.ChartType.BAR)
-      .addRange(dash.getRange(t3Start+1, 1, rep.games.length+1, 1))
-      .addRange(dash.getRange(t3Start+1, 4, rep.games.length+1, 1))
-      .setPosition(t3Start, 6, 0, 0)
-      .setOption('title', 'Accuracy by Game (sorted lowest first)')
-      .setOption('legend', {position: 'none'})
-      .setOption('width', 500).setOption('height', 300)
-      .setOption('colors', ['#f97316'])
-      .setOption('hAxis', {minValue: 0, maxValue: 1, format: 'percent'})
-      .build();
-    dash.insertChart(chart3);
+    dashChart(dash, {type: Charts.ChartType.BAR,
+      ranges: [dash.getRange(t3Start+1, 1, rep.games.length+1, 1), dash.getRange(t3Start+1, 4, rep.games.length+1, 1)],
+      row: t3Start, col: 6, options: {title: 'Accuracy by Game (sorted lowest first)', legend: {position: 'none'},
+      width: 500, height: 300, colors: ['#f97316'], hAxis: {minValue: 0, maxValue: 1, format: 'percent'}}});
     r = rowBelowChart(r, t3Start, 300);
   }
 
@@ -1043,16 +1027,9 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
 
   // Chart 2: Level pie chart
   if (levels.length > 0) {
-    var pieRange = dash.getRange(t2Start+1, 1, levels.length+1, 2);
-    var chart2 = dash.newChart()
-      .setChartType(Charts.ChartType.PIE)
-      .addRange(pieRange)
-      .setPosition(t2Start, 6, 0, 0)
-      .setOption('title', 'Level Split — Last 7 Days')
-      .setOption('width', 400).setOption('height', 280)
-      .setOption('colors', ['#22c55e','#3b82f6','#f97316','#8b5cf6','#ef4444','#0ea5e9'])
-      .build();
-    dash.insertChart(chart2);
+    dashChart(dash, {type: Charts.ChartType.PIE, ranges: [dash.getRange(t2Start+1, 1, levels.length+1, 2)],
+      row: t2Start, col: 6, options: {title: 'Level Split — Last 7 Days', width: 400, height: 280,
+      colors: ['#22c55e','#3b82f6','#f97316','#8b5cf6','#ef4444','#0ea5e9']}});
     r = rowBelowChart(r, t2Start, 280);
   }
 
@@ -1086,23 +1063,14 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   });
 
   // Chart 5: Daily activity line chart, games started on the left axis, questions answered on the right. The
-  // series are named from the header row (setNumHeaders), and the lines are straight: a smoothed curve
+  // series are named from the header row (dashChart), and the lines are straight: a smoothed curve
   // overshot the real points and dipped below zero near a trough (DASHBOARD-GLANCE).
   if (days.length > 1) {
-    var lineRange = dash.getRange(t5Start+1, 1, days.length+1, 3);
-    var chart5 = dash.newChart()
-      .setChartType(Charts.ChartType.LINE)
-      .addRange(lineRange)
-      .setNumHeaders(1)
-      .setPosition(t5Start, 6, 0, 0)
-      .setOption('title', 'Daily Games Started and Questions Answered — Last 30 Days')
-      .setOption('legend', {position: 'bottom'})
-      .setOption('width', 500).setOption('height', 280)
-      .setOption('colors', ['#0ea5e9', '#0d9488'])
-      .setOption('series', {0: {targetAxisIndex: 0}, 1: {targetAxisIndex: 1}})
-      .setOption('vAxes', {0: {title: 'Games started'}, 1: {title: 'Questions answered'}})
-      .build();
-    dash.insertChart(chart5);
+    dashChart(dash, {type: Charts.ChartType.LINE, ranges: [dash.getRange(t5Start+1, 1, days.length+1, 3)],
+      row: t5Start, col: 6, options: {title: 'Daily Games Started and Questions Answered — Last 30 Days',
+      legend: {position: 'bottom'}, width: 500, height: 280, colors: ['#0ea5e9', '#0d9488'],
+      series: {0: {targetAxisIndex: 0}, 1: {targetAxisIndex: 1}},
+      vAxes: {0: {title: 'Games started'}, 1: {title: 'Questions answered'}}}});
     r = rowBelowChart(r, t5Start, 280);
   }
 
@@ -1112,6 +1080,19 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   dash.setColumnWidth(3, 80);
   dash.setColumnWidth(4, 100);
   dash.setTabColor('#0ea5e9');
+}
+
+// Every Dashboard chart is built here (DASHBOARD-FIXES, 18 Nov 2026), so every one takes its series and category
+// names from its first row: each range starts at its table's header row, and without setNumHeaders(1) Sheets may
+// draw that row as data (a "Game" bar). spec: type (Charts.ChartType), ranges (Ranges, header row first), row and
+// col (the chart's top-left cell), options (setOption's names and values).
+function dashChart(dash, spec) {
+  var b = dash.newChart().setChartType(spec.type);
+  spec.ranges.forEach(function(rg) { b = b.addRange(rg); });
+  b = b.setNumHeaders(1);
+  b = b.setPosition(spec.row, spec.col, 0, 0);
+  Object.keys(spec.options).forEach(function(k) { b = b.setOption(k, spec.options[k]); });
+  dash.insertChart(b.build());
 }
 
 // Percentages are written as fractions (0.17) and shown as 17% by the cell
