@@ -69,6 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ART (`docs/handover/contracts/2026-11-18-sums-in-disguise-art.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` restarted from main 3eb2069. Tier Small.
+**Close-out carried (first commit):** #821 SUMS-IN-DISGUISE, recorded in its entry below; contract moved.
+Done on the branch: Jon's picture, byte for byte from `art/sums-in-disguise` ("start (1).webp", SHA-256 bfdd4ecd…4645, 54,110 bytes, 1600 x 873), as `games/sums-in-disguise/assets/start.webp`, under the title in both looks with Ice Cream's `.start-art` CSS; verifier checks the tag, size and SHA-256 (plant: no alt). **STOP IF hit and ruled (Jon, in session):** at 360 x 640 the picture moves stages 2-3 below the fold (stage 1 stays above); "Accept as is". **Amendment 1 (Jon, 10:38, "find 5 factorial"):** LINES.kids.find is now "Find {little} in disguise!"; the verifier fails any LINES string with "{little}" or "{big}" followed by "!" or "?" (plant: "Find {little}!"); Stage 4's read-aloud now reads the find line. Todo SUMS-IN-DISGUISE-LIST notes the picture.
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
 ## 2026-11-18 (cloud): SUMS-IN-DISGUISE (`docs/history/contracts/2026-11-18-sums-in-disguise.md`; Jon 18 Nov)
 
 Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` from main 5e1c236. Tier Medium: merge on green.

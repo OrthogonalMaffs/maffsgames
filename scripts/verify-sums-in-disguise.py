@@ -73,6 +73,11 @@ SLUG = 'sums-in-disguise'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 CONTRACT = 'sums-in-disguise.md'
 SHA = '19e415561cb6baecdaf01d2bde6f23f367a6aff2802d33b8d152dce6561068a8'
+# The start picture (contract SUMS-IN-DISGUISE-ART, 18 Nov 2026): Jon's, from branch art/sums-in-disguise, byte for byte.
+PICTURE = os.path.join(ROOT, 'games', SLUG, 'assets', 'start.webp')
+PICTURE_SHA = 'bfdd4ecd1d99f714387c8030e6dfc500ba1d0e18cbe1ebadc26a59fef4484645'
+PICTURE_ALT = ('Five disguises hanging on coat hooks in a cloakroom: a fake moustache, round glasses, a wig, a rubber duck '
+               'and a top hat, above an empty bench')
 MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5']
 COUNTS = {1: 50, 2: 36, 3: 50, 4: 40, 5: 50}
 TYPES = {3: {'ones': 25, 'tens': 25}, 4: {'ones': 25, 'tens': 15}}
@@ -106,6 +111,12 @@ def contract_lines():
         out['kids'] = new['kids']
         add = re.search(r'^ADD to the grown: block: (.*)$', amend, re.M).group(1)
         out['grown'].update(dict(re.findall(r'([a-z_]+): ' + q, add)))
+    # SUMS-IN-DISGUISE-ART's Amendment 1 (Jon, 18 Nov 2026, 10:38): LINES.kids.find, its "!" no longer after the sum.
+    for d in ('docs/handover/contracts', 'docs/history/contracts'):
+        for f in glob.glob(os.path.join(ROOT, d, '*sums-in-disguise-art.md')):
+            for look, key, old, new in re.findall(r'LINES\.(kids|grown)\.([a-z_]+) ' + q + r' \u2192 ' + q, open(f, encoding='utf-8').read()):
+                if out[look].get(key) == old:
+                    out[look][key] = new
     return out
 
 
@@ -312,9 +323,50 @@ def check_bank(html, out, info):
     info['bank'] = len(items)
 
 
+def webp_size(path):
+    b = open(path, 'rb').read(64)
+    if b[:4] != b'RIFF' or b[8:12] != b'WEBP':
+        return None
+    kind = b[12:16]
+    if kind == b'VP8 ':
+        return int.from_bytes(b[26:28], 'little') & 0x3fff, int.from_bytes(b[28:30], 'little') & 0x3fff
+    if kind == b'VP8L':
+        v = int.from_bytes(b[21:25], 'little')
+        return (v & 0x3fff) + 1, ((v >> 14) & 0x3fff) + 1
+    if kind == b'VP8X':
+        return int.from_bytes(b[24:27], 'little') + 1, int.from_bytes(b[27:30], 'little') + 1
+    return None
+
+
+def check_picture(html, out):
+    """The start picture: straight after the start screen's header, its src, size and alt in the tag; the file that size
+    and that SHA-256 (contract SUMS-IN-DISGUISE-ART)."""
+    img = re.search(r'<div id="menu" class="screen active">\s*<div class="header">.*?</div>\s*(<img class="start-art"[^>]*>)', html, re.S)
+    if not img:
+        out.append('start picture: no img.start-art straight after the start screen\'s header')
+    else:
+        tag = img.group(1)
+        for attr in ('src="assets/start.webp"', 'width="1600"', 'height="873"', 'alt="%s"' % PICTURE_ALT):
+            if attr not in tag:
+                out.append('start picture: the tag has no %s' % attr)
+    if not os.path.exists(PICTURE):
+        out.append('start picture: assets/start.webp is missing')
+        return
+    size = webp_size(PICTURE)
+    if size != (1600, 873):
+        out.append('start picture: assets/start.webp is %s, not 1600 x 873' % (size,))
+    got = hashlib.sha256(open(PICTURE, 'rb').read()).hexdigest()
+    if got != PICTURE_SHA:
+        out.append('start picture: assets/start.webp has SHA-256 %s, not %s' % (got, PICTURE_SHA))
+
+
 def check_source(html, out):
     """The fragment, the look and the class name stay in the page."""
     js = '\n'.join(re.findall(r'<script>(.*?)</script>', html, re.S))
+    # No line puts "!" or "?" straight after a sum: "Find {little}!" read as a factorial (Jon, 18 Nov 2026, 10:38).
+    lines_src = re.search(r'var LINES = \{(.*?)\n  \};', js, re.S)
+    for m in re.finditer(r'\{(little|big)\}[!?]', lines_src.group(1) if lines_src else ''):
+        out.append('a LINES string puts %r straight after a sum' % m.group(0))
     if re.search(r'innerHTML\s*=[^;\n]*(greeting\(|CLASS_NAME|\bfrag\b|\bnm\b)', js):
         out.append('the greeting (the class name) is written with innerHTML')
     if js.count('location.hash') != 1:
@@ -748,7 +800,7 @@ def check_speech(pw, base, html, out, info):
                     page.evaluate('(id) => SID.ui.preview(id)', q['id'])
                     if spoken():
                         out.append('read aloud (%s) %s: spoke without a tap' % (look, q['id']))
-                    want = ['Find %d plus %d' % (a, b)] if st == 4 else ['%d plus %d equals what?' % (p, r)]
+                    want = [L[look]['find'].replace('{little}', '%d plus %d' % (a, b))] if st == 4 else ['%d plus %d equals what?' % (p, r)]
                     tap()
                     if st in (1, 2, 5):
                         page.evaluate('SID.ui.unmask()')
@@ -801,6 +853,7 @@ def check(html, out, units, shard=None):
             try:
                 check_bank(html, out, info)
                 check_source(html, out)
+                check_picture(html, out)
             except Exception as e:  # noqa: BLE001
                 out.append('the bank checks threw: %s' % str(e).splitlines()[0][:200])
     browser = [u for u in units if u != 'bank']
@@ -906,6 +959,13 @@ PLANTS = [
      edit("var row1 = [[a + ' + ' + b, false], [' = ', false], [String(c), false]];",
           "var row1 = [[a + ' + ' + b, false], [' = ', false], [String(9), false]];"),
      'marking grown', r'the working (is|shown is)'),
+    # SUMS-IN-DISGUISE-ART and its Amendment 1.
+    ('the start picture with no alt',
+     edit('width="1600" height="873" alt="%s">' % PICTURE_ALT, 'width="1600" height="873">'),
+     'bank', r'start picture: the tag has no alt='),
+    ('"Find {little}!"',
+     edit('find: "Find {little} in disguise!",', 'find: "Find {little}!",'),
+     'bank', r"a LINES string puts '\{little\}!' straight after a sum"),
 ]
 
 

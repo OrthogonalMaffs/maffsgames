@@ -295,7 +295,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       welcome: "Welcome, sum detectives!",
       welcome_class: "Welcome, {name} Class!",
       take_off: "Take it off!",
-      find: "Find {little}!",
+      find: "Find {little} in disguise!",
       reveal: { 'stage-1': "Noooo! My moustache!", 'stage-2': "Hey! My glasses!", 'stage-3': "My hair! Give it back!", 'stage-4': "Quack! You found me!", 'stage-5': "Hey! A ten in my hat!" },
       right: ["Unmasked!", "Caught you!", "Gotcha!", "You saw through it!", "Disguise destroyed!", "Nobody fools you!"],
       aha: { tens: "Aha! I tricked your tens!", concat: "Aha! Too many digits!", off_by_one: "Aha! Missed by one!", forgot_disguise: "Aha! You forgot my disguise!", extra_zero: "Aha! One zero too many!", ones: "Aha! Those were tens!", forgot_ten: "Aha! You missed my ten!", concat_cross: "Aha! Too many digits!" },
@@ -958,7 +958,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (!Q) return '';
     if (state === 'mask') return words(Q.big) + ' equals what?';
     if (state === 'little') return words(Q.little) + ' equals what?';
-    if (state === 'big') return S.flow === 'duck' ? 'Find ' + words(Q.little) : words($('sum').dataset.ask === '1' && peekTimer !== null ? Q.little : Q.big) + ' equals what?';
+    if (state === 'big') return S.flow === 'duck' ? L.find.split('{little}').join(words(Q.little)) : words($('sum').dataset.ask === '1' && peekTimer !== null ? Q.little : Q.big) + ' equals what?';
     if (state === 'done' || state === 'wrong') return lastLine + ' ' + spokenWorking(Q);
     return '';
   }

@@ -40,3 +40,24 @@ STOP IF:
 - The file on art/sums-in-disguise is missing or its SHA-256 differs (report both).
 - The picture pushes the stage buttons below the fold at 360 px in either look, and the Ice Cream CSS doesn't fix it.
 - merge-pr.py refuses for a reason other than a transient 5xx it already retries.
+
+DECIDED IN SESSION (Jon, 18 Nov 2026, on STOP IF "the picture pushes the stage buttons below the fold at 360 px"): "Accept as is (Recommended)". Ice Cream's CSS is used unchanged. At 360 x 640 stage 1 stays fully above the fold in both looks (bottom 571 of 600 grown, 557 kids); before the picture stages 1 to 3 showed. Ice Cream and It's a SINE show none of their stage buttons above the fold at that size.
+
+AMENDMENT 1 (the follow-up to SUMS-IN-DISGUISE, recorded here as the contract asks; verbatim):
+FOLLOW-UP to SUMS-IN-DISGUISE (Jon, 18 Nov 2026, 10:38, playing Stage 4 in the kid look: "asking the kids to find 5 factorial is a bit advanced isn't it?").
+
+ROOT CAUSE: LINES.kids.find is "Find {little}!", so the screen reads "Find 2 + 5!", which is 2 + 5 factorial. Project Claude's placeholder. It is the only place in the repo where a "!" follows maths (games/sums-in-disguise/index.html:293).
+
+CLASS CHECK: Local: one string in one game's LINES; no other game has a "!" straight after an expression. The check below stops this game's LINES ever doing it again.
+
+EXACT CHANGE:
+- If SUMS-IN-DISGUISE-ART has not merged, add this to its PR (record it there as Amendment 1). If it has merged, open a new PR, SUMS-IN-DISGUISE-FIND, with the close-out of SUMS-IN-DISGUISE-ART as its first commit.
+- games/sums-in-disguise/index.html: LINES.kids.find "Find {little}!" → "Find {little} in disguise!". Change nothing else in LINES.
+- scripts/verify-sums-in-disguise.py: no LINES string, in either look, has "{little}" or "{big}" followed by "!" or "?"; the read-aloud text for Stage 4 matches the new line. One new plant that must fail: "Find {little}!".
+- In the saved contract and the handover, note the change.
+
+DO NOT TOUCH: everything else in LINES, the bank, the marking, the read-aloud logic, schools/assets/, other games. No listing. No draft PR.
+
+SUCCESS CONDITION: Stage 4 in the kid look reads "Find 2 + 5 in disguise!"; the verifier passes with the new plant failing; the Gate and phone-fit pass; merged by merge-pr.py with its last line and main's run IDs reported.
+
+STOP IF: the new line breaks phone-fit at 360 px, or merge-pr.py refuses for a reason other than a transient 5xx.
