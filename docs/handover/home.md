@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-18 (home): CANTEEN-APPROVE (The Canteen Hack's opening names the Healthy Week price; pack approved, v2)
+
+Claude Code (home lane), worktree `~/mg-canteen-approve`, branch `claude/canteen-approve`; contract `docs/handover/contracts/2026-11-18-canteen-approve.md`. The first commit carries CANTEEN-PACK's close-out (#817, 236e9ae).
+
+- **Room:** `escape-rooms/canteen-hack/room.js` hook gains Jon's sentence "Last term it cost a fraction of that." straight after the £8.40 one (Jon 18 Nov 03:43). Nothing else in the room changed. The pack reads the hook, so its start read-out has it too.
+- **Pack:** config `"wording_approved": {"by": "Jon", "date": "2026-11-18"}`, `"pack_version": "2"` (a string, as every other pack's). `build_pack.py canteen-hack --final` exit 0: `dist-packs/canteen-hack-pack-v2.pdf`, 36 pages, no DRAFT on any page, the sentence on page 2 (the start read-out), which still fits. Finals unchanged: A 1928, B 2340, C 2960, D 2000, E 1510, F 3508.
+- **Checks:** check-escape-rooms exit 0; test-pack-generator exit 0 (self-test 67/67 on 11 rooms; 56 plants caught, 23 controls pass). No generator or other config changed, so the other ten packs are unchanged.
+- **Docs:** /updates/ line (18 Nov); CANTEEN-PACK-APPROVE closed to todo-done; CORE-BUNDLES-2 stays open.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-17 (home): CANTEEN-PACK (The Canteen Hack print pack, DRAFT; the generator prints a "pair" lock)
 
 Claude Code (home lane), worktree `~/mg-canteen-pack`, branch `claude/canteen-pack`; contract `docs/handover/contracts/2026-11-17-canteen-pack.md`. The first commit carries FINAL-PADLOCK-FAIR's close-out (#807, 65c7ebd).
@@ -25,7 +37,7 @@ Claude Code (home lane), worktree `~/mg-canteen-pack`, branch `claude/canteen-pa
 - **Pack:** 6 sets, seed 1, DRAFT, 36 pages, class 2-digit x 3-digit (default shape; easier classes reach 5), certificate "Nothing left to sign off", no readout_voice (the hook is the narrator's), herrings print no words; all six clues have printed/caption overrides. lockcheck: 3 recomputes, all 30 variants agree.
 - **Checks:** the other ten packs byte-identical (31 files: HTML, logs, PDFs less dates; Roll for Initiative fails locally before and after). check-escape-rooms exit 0 (600 of 1000 VALID). test-pack-generator exit 0: self-test 67/67 on 11 rooms (its wrong-answer plant now bumps a pair's first value, Canteen sorting first), 56 plants caught, 23 controls pass.
 - **Todo:** CANTEEN-PACK-APPROVE, CORE-BUNDLES-2; COMIC-CAPER-REUPLOAD and CHRISTMAS-LIBRARY-KILN-REUPLOAD closed as superseded by PACKS-V2-UPLOAD (todo-done).
-- MERGED: pending.
+- MERGED 17 Nov as 236e9ae (#817) via merge-pr.py, exit 0, last line "main 236e9ae run 44165899116: GREEN". Main on the merge commit: check-site 44165899116 success, phone-fit-full 44165898866 success (both push runs). Contract moved to  (closed out by CANTEEN-APPROVE's first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
@@ -80,16 +92,4 @@ Claude Code (home lane), worktree `~/mg-pe-shed-pack`, branch `claude/pe-shed-pa
 - MERGED 16 Nov as 6f9498b (#801) via merge-pr.py, last line "main 6f9498b run 43942870305: GREEN", exit 0. Main on the merge commit: check-site 43942870305 success, phone-fit-full 43942870330 success (both push runs). Contract moved to .
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-16 (home): FOOTER-PHONE-FOUR (four footer links on phones)
-
-Codex (home lane), worktree `~/mg-footer-phone-four`, branch `codex/footer-phone-four`; contract `docs/handover/contracts/2026-11-16-footer-phone-four.md`. First commit 78e43086 closed UNLIST-GRAPH-SKETCHER (#791, 7be6482; check-site 43762342514 and phone-fit-full 43762342465 green; three follow-ups).
-
-- Shared footer: six wide-only links and their preceding separators gain `sf-wide` in CANONICAL; `apply-footer.py` wrote 152 pages. One media query hides them below 810px. In local Chromium with the real fonts, the ten-link row is 784px plus 24px padding and first fits at 808px; 810px is the rounded breakpoint. The four phone links are About, Contact, Privacy and Feedback on the existing 40px bar.
-- The browser assertion in `measure-phone-fit.py` passed on the homepage, prime-or-composite and the fractions parent guide at 320, 375, 390, 810 and 1280px. Both plants failed it: missing classes on a homepage copy and the media query removed from a stylesheet copy. `check-footer.py` passed all 152 pages; a diff check found only footer classes in those pages and the dated /updates/ line. `measure-phone-fit.py --selftest`, `check-context-size.py` and `git diff --check` passed; `ci-groups.py --worst-case` said no gate file changed. Next: PR Gate, merge and main-run report.
-- Backlog housekeeping: #794, #793, #795 and #796 rows closed or updated as the contract names. The B4 Angle Ace ledger row was not in item 7 and stays for a later contract; its text is stale on main.
-
-- MERGED 16 Nov as cdc38aec (#797), carried by PE-SHED-PACK's first commit. Main on the merge commit: check-site 43927268181 success, phone-fit-full 43927268127 success (both push runs). Contract moved to `docs/history/contracts/`.
-
-Record: agent Codex; wall pending; review cycles 0; amendments 0; usage n/a.
 
