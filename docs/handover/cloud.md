@@ -69,14 +69,23 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/handover/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE (`docs/handover/contracts/2026-11-18-sums-in-disguise.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` from main 5e1c236. Tier Medium: merge on green.
+**Close-out carried (first commit):** #820 I-DROPPED-MY-ICE-CREAM, recorded in its entry below; contract moved.
+Bank: the generator reproduces SHA-256 19e41556…068a8; recomputed independently before building: 0 disagreements.
+Done on the branch: the page (five stages, two looks from the fragment, LINES verbatim, the 67 after marking, boards `stage-1`..`stage-5`); `scripts/verify-sums-in-disguise.py` (PASS, 14/14 plants); roster row #113 in Unlisted (9); games.json and apply-meta; findings file; every list #820 touched; NOT_ON_HUB; launch date; todo SUMS-IN-DISGUISE-LIST and NUMBER-BONDS.
+**Amendment 1 (Jon, 18 Nov, 09:19, "all 4 please"), in the saved contract:** questions as maths ("64 + 3 = ?"), the working stacked in KaTeX with the tens highlighted, one LINES string in feedback, the new kid set (6 words or fewer), take_off/find from LINES, the disguise a button, the kid hand on question 1, Read aloud on on-device voices only (hidden without one; tested against a mocked speechSynthesis). Built into #821.
+PR #821 open. Next: Gate and phone-fit-full on the amended head, merge with merge-pr.py.
+
+## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/history/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
 
 Agent Claude Code (cloud), branch `claude/fervent-mccarthy-3l9b5u` from main bb46787. Tier Medium: merge on green, Project Claude reviews after. Jon teaches it Tue 24 Nov.
 **Close-out carried (first commit):** #818 ITS-A-SINE-LIST, recorded in its entry below; contract moved.
 **Amendments (Jon, 18 Nov, in session):** 1, lane exception: `gcse-stage-4` and `level3-stage-4` labels in firebase-leaderboard.js, and one launch-dates.json line (both under DO NOT TOUCH `schools/assets/`, which the per-level boards and check-ugh-stats need). 2: "no duplicate given" reads the given with its unit (gcse_005 61 cm and gcse_020 61 m).
 Bank recomputed independently before building: 96/96 answers and traps agree, none within 0.005 of a boundary. PNG 1672 x 941 on the art branch; start.webp 1600 x 873.
 Done on the branch: the page (two levels, four stages, 8 a run, boxes (a) then (b), Jon's lines, working cut to 4 d.p., formulas by level and stage, scientific calculator, cones drawn to proportion with the height label clear of the slant edges); `scripts/verify-i-dropped-my-ice-cream.py` (PASS, 6/6 plants caught); roster row #112 in Unlisted (8); games.json and apply-meta; findings file; every MIGRATED list; NOT_ON_HUB; todo ICE-CREAM-LIST.
-Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+PR #820. PR's final checks on head 7edee19: Gate 44268072982 and phone-fit-full 44268068543 green. MERGED 18 Nov 08:50:07 UTC as 5e1c236 (squash), merged by Vector52F (merge-pr.py, the only route; its last line was not carried into the next session). Main on 5e1c236: check-site 44270404391, phone-fit-full 44270405049, pages build 44270404235, all success (read back from the API in SUMS-IN-DISGUISE's session and recorded in its first commit, which moved the contract to `docs/history/contracts/`).
 
 ## 2026-11-17 (cloud): ITS-A-SINE-LIST (`docs/history/contracts/2026-11-17-its-a-sine-list.md`; Jon 17 Nov)
 

@@ -1926,6 +1926,21 @@
     "gcse",
     "level 3"
    ]
+  },
+  {
+   "slug": "sums-in-disguise",
+   "search_phrase": "Adding with known facts",
+   "description": "Adding within 100 with a fact you know: every big sum is a little sum in disguise, from 44 + 2 and 40 + 20 to crossing a ten.",
+   "keywords": [
+    "addition",
+    "adding within 100",
+    "number bonds",
+    "mental addition",
+    "known facts",
+    "adding tens",
+    "crossing a ten",
+    "essentials"
+   ]
   }
  ],
  "rooms": [
