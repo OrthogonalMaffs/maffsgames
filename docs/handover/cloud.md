@@ -69,6 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ONE-EQUALS (`docs/handover/contracts/2026-11-18-sums-in-disguise-one-equals.md`; Jon 18 Nov, 11:34)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` restarted from main 33db4a1. Tier Small.
+**Close-out carried (first commit):** #822 SUMS-IN-DISGUISE-ART, recorded in its entry below; contract moved.
+Done on the branch: the rule, every rendered KaTeX string a line with at most one "=", a sum on its left and a single number or "?" on its right. The put-back question is the plain big sum; the blocks carry each group's value (tens, then ones; a tens item has no ones label). The exchange label is "10 + d". The working is one "=" a line ("40 + 20 = 60" replaces "6 tens = 60"; "7 + 5 = 12" and "20 + 10 + 2 = 32"). Read-aloud follows. The blocks clear once the answer is marked (the working repeats them), so Next stays above the fold at 360 px with the speaker showing (603 and 612 px before). The verifier collects every KaTeX string at every step of every item in both looks; 26/26 plants (3 new).
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
 ## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ART (`docs/history/contracts/2026-11-18-sums-in-disguise-art.md`; Jon 18 Nov)
 
 Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` restarted from main 3eb2069. Tier Small.

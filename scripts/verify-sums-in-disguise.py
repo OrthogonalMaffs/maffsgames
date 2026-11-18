@@ -47,6 +47,10 @@ numbers to check the page's numbers:
             blocks and question ("64 + 3 = 60 + 7 = ?", "40 + 20 = 6 tens = ?", "27 + 5 = 30 + 2 = ?"); no options before
             it; the working's rows and highlighted tens; the read-aloud for each step; the hand on each step's button on
             question 1 of a kid run.
+  ONE-EQUALS (Jon, 18 Nov 2026, 11:34): every KaTeX string rendered in the play card, at every step of every item in
+            both looks, has at most one "=" a line, a sum on its left and a single number or "?" on its right; the put-back
+            question is the plain big sum, the blocks labelled with each group's value (the tens, then the ones; none for a
+            tens item's missing ones); the exchange label "10 + d"; the working one "=" a line.
   Read aloud against a mocked speechSynthesis: no speaker without speechSynthesis, with no voice or with only a voice
             that is not local; a speaker once a local voice arrives (voiceschanged); only that voice passed to speak();
             nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
@@ -199,9 +203,9 @@ def working(q):
     if q['stage'] in (1, 2, 5):
         t10, nt = p - a, str(n)[:-1]
         if typ == 'tens':
-            return ['%d + %d = %d' % (a, b, c), '%d tens = %d' % (c, n)], [str(c), nt]
+            return ['%d + %d = %d' % (a, b, c), '%d + %d = %d' % (p, r, n)], [str(p)[:-1], str(r)[:-1], nt]
         if typ == 'cross':
-            return ['%d + %d = %d = 10 + %d' % (a, b, c, c - 10), '%d + 10 + %d = %d' % (t10, c - 10, n)], ['10', str(t10), '10', nt]
+            return ['%d + %d = %d' % (a, b, c), '%d + 10 + %d = %d' % (t10, c - 10, n)], [str(t10), '10', nt]
         return ['%d + %d = %d' % (a, b, c), '%d + %d = %d' % (t10, c, n)], [str(t10), nt]
     rows = ['%d + %d = %d' % (a, b, c), '%d + %d = %d' % (p, r, n)]
     hl = hl_tens(p, typ) + (hl_tens(r, typ) if typ == 'tens' else []) + hl_tens(n, typ)
@@ -224,22 +228,42 @@ def spoken_working(q):
     c, (p, r), n = a + b, big_of(q), sum(big_of(q))
     if q['stage'] in (1, 2, 5):
         if q['type'] == 'tens':
-            return '%d plus %d is %d. %d tens is %d.' % (a, b, c, c, n)
+            return '%d plus %d is %d. %d plus %d is %d.' % (a, b, c, p, r, n)
         if q['type'] == 'cross':
-            return '%d plus %d is %d, which is 10 and %d. %d plus 10 plus %d is %d.' % (a, b, c, c - 10, p - a, c - 10, n)
+            return '%d plus %d is %d. %d plus 10 plus %d is %d.' % (a, b, c, p - a, c - 10, n)
         return '%d plus %d is %d. %d plus %d is %d.' % (a, b, c, p - a, c, n)
     return '%d plus %d is %d, so %d plus %d is %d' % (a, b, c, p, r, n)
 
 
-def regroup(q):
-    """The question after put-back, from the item: (KaTeX source, plain)."""
+def back_labels(q):
+    """ONE-EQUALS: the values under the blocks after put-back, from the item: the tens, then the ones (none for a tens item)."""
     a, b = q['little']
-    c, (p, r) = a + b, q['big']
+    c, t10 = a + b, q['big'][0] - a
     if q['type'] == 'tens':
-        return '%d + %d = %d\\text{ tens} = {?}' % (p, r, c), '%d + %d = %d tens = ?' % (p, r, c)
+        return [str(10 * c)]
     if q['type'] == 'cross':
-        return '%d + %d = %d + %d = {?}' % (p, r, p - a + 10, c - 10), '%d + %d = %d + %d = ?' % (p, r, p - a + 10, c - 10)
-    return '%d + %d = %d + %d = {?}' % (p, r, p - a, c), '%d + %d = %d + %d = ?' % (p, r, p - a, c)
+        return [str(t10 + 10), str(c - 10)]
+    return [str(t10), str(c)]
+
+
+EQ_SUM = re.compile(r'^[0-9 ]+(\+[0-9 ]+)+$')
+
+
+def one_equals(t):
+    """The rule for a rendered KaTeX string: each line has at most one "=", a sum on its left and a single number or "?"
+    on its right. Returns the offending line, or None."""
+    plain = HL.sub(lambda m: m.group(1), t or '')
+    plain = re.sub(r'\\text\{([^{}]*)\}', lambda m: m.group(1), plain)
+    plain = plain.replace('\\begin{aligned}', '').replace('\\end{aligned}', '').replace('&', '').replace('{?}', '?')
+    for line in plain.split('\\\\'):
+        line = re.sub(r'\s+', ' ', line).strip()
+        if line.count('=') > 1:
+            return line
+        if '=' in line:
+            left, right = (x.strip() for x in line.split('='))
+            if not EQ_SUM.match(left) or not re.fullmatch(r'\d+|\?', right):
+                return line
+    return None
 
 
 def blocks_at(q, step):
@@ -256,7 +280,7 @@ def blocks_at(q, step):
     if step == 'exchanged':
         return ([(0, c - 10)] if c > 10 else []), t + 1
     if step == 'back':
-        return ([(c, 0)] if tens else [(t + 1, c - 10)] if q['type'] == 'cross' else [(t, c)]), 0
+        return ([(c, 0)] if tens else [(t + 1, 0), (0, c - 10)] if q['type'] == 'cross' else [(t, 0), (0, c)]), 0
 
 
 def strings(d):
@@ -477,6 +501,9 @@ ITEM_JS = r"""([q]) => {
   const ann = (el) => { const a = el.querySelector('annotation'); return a ? a.textContent : null; };
   const words = (el) => { const c = el.cloneNode(true); c.querySelectorAll('.katex').forEach(k => k.remove()); return c.textContent; };
   const on = () => !$('suspect').classList.contains('unmasked');
+  // Every KaTeX string rendered in the play card right now (ONE-EQUALS), with where it was seen.
+  out.maths = [];
+  const maths = (where) => { document.querySelectorAll('#qcard annotation').forEach(a => out.maths.push([where, a.textContent])); };
   const blocks = () => ({ groups: [...$('blocks').querySelectorAll('.grp')].map(g => [g.querySelectorAll('.stk').length, g.querySelectorAll('.cubes i').length]),
                           held: $('held').querySelectorAll('.stk').length });
   const opts = () => $('opts').children.length > 0 && !$('opts').hidden;
@@ -484,8 +511,10 @@ ITEM_JS = r"""([q]) => {
     const cs = getComputedStyle($('disguise'));
     return { shown: d.width > 0 && d.height > 0 && cs.visibility !== 'hidden' && cs.opacity !== '0' && cs.display !== 'none',
              beside: d.left >= k.right - 2 && d.top < k.bottom && d.bottom > k.top }; };
+  if (flow === 'wig') { SID.ui.preview(q.id); maths('the wig on'); SID.ui.peek(); maths('the peek'); }
   if (flow === 'unmask') {
     SID.ui.preview(q.id);
+    maths('the start');
     out.mask = { state: SID.ui.state(), sum: sumOf(), on: on(), pop: !$('pop67').hidden, button: $('unmaskBtn').textContent,
                  aria: $('disguise').getAttribute('aria-label'), disabled: $('disguise').disabled, blocks: blocks(), opts: opts() };
     SID.ui.unmask('disguise');
@@ -494,6 +523,7 @@ ITEM_JS = r"""([q]) => {
     SID.ui.unmask('button');
     out.little = { state: SID.ui.state(), sum: sumOf(), on: on(), tag: $('tag').textContent, ask: ann($('sum')), prompt: $('prompt').textContent,
                    tagShown: getComputedStyle($('tag')).display !== 'none', say: $('say').textContent, blocks: blocks(), park: beside(), opts: opts() };
+    maths('after take-off');
     out.tileVals = [...$('tiles').querySelectorAll('.tile')].map(b => b.dataset.val);
     for (const v of out.tileVals) {
       window.__ev = [];
@@ -508,12 +538,14 @@ ITEM_JS = r"""([q]) => {
     out.counted = { state: SID.ui.state(), blocks: blocks(), note: ann($('blocksNote')), say: $('say').textContent, opts: opts(),
                     ten: $('tenBtn').textContent, tenShown: !$('tenRow').hidden, put: $('putBtn').textContent, putShown: !$('putRow').hidden,
                     cubeBtn: !!$('cubeBtn'), cubeAria: $('cubeBtn') ? $('cubeBtn').getAttribute('aria-label') : null };
+    maths('the ones counted');
     if (q.stage === 5) {
       for (const via of ['button', 'cubes']) {
         SID.ui.preview(q.id); SID.ui.unmask(); SID.ui.tile(q.little_answer);
         SID.ui.exchange(via);
         out['ex_' + via] = { state: SID.ui.state(), tag: $('tag').textContent, blocks: blocks(), note: ann($('blocksNote')), say: $('say').textContent,
                              opts: opts(), park: beside(), putShown: !$('putRow').hidden, aria: $('disguise').getAttribute('aria-label') };
+        maths('the exchange');
       }
     }
     for (const via of ['button', 'disguise']) {
@@ -521,8 +553,11 @@ ITEM_JS = r"""([q]) => {
       if (q.stage === 5) SID.ui.exchange();
       const before = { opts: opts(), state: SID.ui.state(), aria: $('disguise').getAttribute('aria-label') };
       SID.ui.putBack(via);
-      out['back_' + via] = { before: before, state: SID.ui.state(), on: on(), blocks: blocks(), ask: ann($('sum')), regroup: $('sum').dataset.regroup || null,
+      out['back_' + via] = { before: before, state: SID.ui.state(), on: on(), blocks: blocks(), ask: ann($('sum')),
+                             labels: [...$('blocks').querySelectorAll('.glabel')].map(x => x.dataset.label),
+                             labelMaths: [...$('blocks').querySelectorAll('.glabel annotation')].map(x => x.textContent),
                              say: $('say').textContent, opts: opts() };
+      maths('after put-back');
     }
   }
   if (flow === 'wig') {
@@ -533,6 +568,7 @@ ITEM_JS = r"""([q]) => {
   }
   const toBig = () => { SID.ui.preview(q.id); if (flow === 'unmask') { SID.ui.unmask(); SID.ui.tile(q.little_answer); if (q.stage === 5) SID.ui.exchange(); SID.ui.putBack(); } };
   toBig();
+  maths('the big sum');
   out.big = { state: SID.ui.state(), sum: sumOf(), on: on(), ask: ann($('sum')), prompt: words($('prompt')), promptMath: ann($('prompt')),
               line: $('prompt').dataset.line || null };
   out.optVals = [...$('opts').querySelectorAll('.opt')].map(b => b.dataset.val);
@@ -551,6 +587,7 @@ ITEM_JS = r"""([q]) => {
       pop: $('pop67').hidden ? null : $('pop67').textContent.trim(), score: SID.ui.score(),
       next: !!document.querySelector('#feedback .maffs-next, #nextBtn'),
       qa: qa.map(e => [e[1].correct, e[1].question_id]) };
+    maths('after marking ' + v);
   }
   return out;
 }"""
@@ -631,15 +668,14 @@ def check_marking(page, html, look, out, info):
                         out.append('%s %s: after the exchange (%s) the blocks are %s, expected %s' % (tagl, i, via, ex['blocks'], want_b))
                     if ex['tag'] != str(10 * t + 10):
                         out.append('%s %s: after the exchange (%s) the tag reads %s, not %d' % (tagl, i, via, ex['tag'], 10 * t + 10))
-                    if ex['note'] != '%d = 10 + %d' % (c, c - 10):
-                        out.append('%s %s: the exchange reads %r, not "%d = 10 + %d"' % (tagl, i, ex['note'], c, c - 10))
+                    if ex['note'] != '10 + %d' % (c - 10):
+                        out.append('%s %s: the exchange reads %r, not "10 + %d"' % (tagl, i, ex['note'], c - 10))
                     if ex['say'] != L['reveal'][mode]:
                         out.append('%s %s: at the exchange the line is %r, not the Stage 5 reveal' % (tagl, i, ex['say']))
                     if ex['state'] != 'putback' or ex['opts'] or not ex['putShown'] or not ex['park']['shown']:
                         out.append('%s %s: after the exchange (%s) it does not wait for put-back with the hat in view (%s)' % (tagl, i, via, ex))
             elif not ct['putShown'] or ct['put'] != L['put_back'] or ct['tenShown'] or ct['cubeBtn'] or ct['state'] != 'putback':
                 out.append('%s %s: after the ones, put-back is not offered alone (%s)' % (tagl, i, ct))
-            rg = regroup(q)
             want_b = blocks_at(q, 'back')
             for via in ('button', 'disguise'):
                 bk = r['back_' + via]
@@ -649,8 +685,10 @@ def check_marking(page, html, look, out, info):
                     out.append('%s %s: putting it back (%s) does not put the disguise on and ask (%s)' % (tagl, i, via, bk))
                 if [tuple(g) for g in bk['blocks']['groups']] != want_b[0] or bk['blocks']['held'] != want_b[1]:
                     out.append('%s %s: after put-back (%s) the blocks are %s, expected %s' % (tagl, i, via, bk['blocks'], want_b))
-                if bk['ask'] != rg[0] or bk['regroup'] != rg[1]:
-                    out.append('%s %s: the regrouped question is %r, expected %r' % (tagl, i, bk['ask'], rg[0]))
+                if bk['ask'] != '%d + %d = {?}' % tuple(q['big']):
+                    out.append('%s %s: after put-back the question is %r, not the plain big sum' % (tagl, i, bk['ask']))
+                if bk['labels'] != back_labels(q) or bk['labelMaths'] != back_labels(q):
+                    out.append('%s %s: after put-back the blocks are labelled %s, expected %s' % (tagl, i, bk['labels'], back_labels(q)))
         if st == 3:
             if r['wigOn']['state'] != 'big' or r['wigOn']['sum'] != big or not r['wigOn']['on']:
                 out.append('%s %s: the wig is not on the big sum at the question (%s)' % (tagl, i, r['wigOn']))
@@ -669,11 +707,14 @@ def check_marking(page, html, look, out, info):
         else:
             key = str(q['answer'])
             want_opts = {key} | {str(v) for v in q['decoys'].values()}
-            if bg['ask'] != (regroup(q)[0] if st in (1, 2, 5) else '%d + %d = {?}' % tuple(big_of(q))) or bg['prompt'].strip():
+            if bg['ask'] != '%d + %d = {?}' % tuple(big_of(q)) or bg['prompt'].strip():
                 out.append('%s %s: the big sum is asked as %r with the words %r' % (tagl, i, bg['ask'], bg['prompt']))
             names = {str(v): k for k, v in q['decoys'].items()}
         if set(r['optVals']) != want_opts or len(r['optVals']) != len(want_opts):
             out.append('%s %s: options %s, expected %s' % (tagl, i, r['optVals'], sorted(want_opts)))
+        bad = [(w, t) for w, t in r['maths'] if one_equals(t)]
+        if bad:
+            out.append('%s %s: %d rendered maths string(s) break one "=" a line, e.g. %r at %s' % (tagl, i, len(bad), one_equals(bad[0][1]), bad[0][0]))
         rows, hl = working(q)
         for v, o in r['opts'].items():
             right = v == key
@@ -1166,9 +1207,21 @@ PLANTS = [
           "    askBig();\n    if (S.exchange) { state = 'exchange'; showRow('tenRow', L.ten_in_hat, null); }\n    else showPutBack();"),
      'marking grown', r'options exist before put-back|before put-back \('),
     ('a wrong regrouped number (50 + 7 for 64 + 3)',
-     edit("    return [p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = ?'];",
-          "    return [p + ' + ' + r + ' = ' + (t10 - 10) + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + (t10 - 10) + ' + ' + c + ' = ?'];"),
-     'marking grown', r'the regrouped question is'),
+     edit("    else drawBlocks([{ sticks: t, label: 10 * t }, { cubes: c, label: c }]);",
+          "    else drawBlocks([{ sticks: t, label: 10 * t - 10 }, { cubes: c, label: c }]);"),
+     'marking grown', r'after put-back the blocks are labelled'),
+    # ONE-EQUALS.
+    ('"81 + 9 = 90 + 0 = ?"',
+     edit("      // After put-back: the plain big sum (ONE-EQUALS); the blocks under it show the regrouping.\n      askSum(Q.big);",
+          "      askSum(Q.big);\n      $('sum').innerHTML = tex(Q.big[0] + ' + ' + Q.big[1] + ' = ' + (Q.big[0] - Q.little[0] + (Q.type === 'cross' ? 10 : 0)) + ' + ' + (Q.type === 'cross' ? Q.little_answer - 10 : Q.little_answer) + ' = {?}');"),
+     'marking grown', r'break one "=" a line'),
+    ('"7 + 5 = 12 = 10 + 2"',
+     edit("      if (typ === 'cross') return [row1, [[String(p - a), true],",
+          "      if (typ === 'cross') return [row1.concat([[' = ', false], ['10', true], [' + ' + (c - 10), false]]), [[String(p - a), true],"),
+     'marking grown', r's5_\d+: \d+ rendered maths string\(s\) break one "=" a line'),
+    ('"18 = 10 + 8"',
+     edit("      $('blocksNote').innerHTML = tex('10 + ' + (c - 10));", "      $('blocksNote').innerHTML = tex(c + ' = 10 + ' + (c - 10));"),
+     'marking grown', r's5_\d+: \d+ rendered maths string\(s\) break one "=" a line'),
     ('the Stage 5 reveal at take-off',
      edit("      if (!S.exchange) setSay(L.reveal[mode], 'reveal.' + mode); else setSay('');",
           "      setSay(L.reveal[mode], 'reveal.' + mode);"),
