@@ -251,3 +251,6 @@ STOP IF:
 AMENDMENT 1 (Jon, 18 Nov 2026, in session, answering two questions from Code Claude: the contract asked for per-level boards "as in its-a-sine" and "no shared asset changed", but two keys and one launch date have no home outside schools/assets/):
 - Boards, answer "Add 2 labels (Recommended)": lane exception, add 'gcse-stage-4':'GCSE · Stage 4' and 'level3-stage-4':'Level 3 · Stage 4' to LEVEL_NAMES in schools/assets/firebase-leaderboard.js. Additive only, its-a-sine's Amendment 1 pattern. Per-level boards as the contract asks.
 - Launch date, answer "Yes, add the line (Recommended)": one additive line in schools/assets/launch-dates.json ("i-dropped-my-ice-cream": "2026-11-18"), recorded as a lane exception in the PR. No check exemption needed.
+
+AMENDMENT 2 (Jon, 18 Nov 2026, in session, answering Code Claude: EXACT CHANGE 4's "no duplicate given within a level" against the bank's gcse_005 (stage 1, a round cake tin, C = 61 cm) and gcse_020 (stage 2, a helipad, C = 61 m), both given {"C":61}, every answer correct, the bank DO NOT TOUCH):
+- Answer "Given plus its unit (Recommended)": 61 cm and 61 m are different measurements, so this pair passes; the check still fails any true repeat (same number, same unit). Flagged in the PR for Project Claude.

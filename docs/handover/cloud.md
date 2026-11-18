@@ -69,6 +69,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-18 (cloud): I-DROPPED-MY-ICE-CREAM (`docs/handover/contracts/2026-11-18-i-dropped-my-ice-cream.md`; Jon 17-18 Nov)
+
+Agent Claude Code (cloud), branch `claude/fervent-mccarthy-3l9b5u` from main bb46787. Tier Medium: merge on green, Project Claude reviews after. Jon teaches it Tue 24 Nov.
+**Close-out carried (first commit):** #818 ITS-A-SINE-LIST, recorded in its entry below; contract moved.
+**Amendments (Jon, 18 Nov, in session):** 1, lane exception: `gcse-stage-4` and `level3-stage-4` labels in firebase-leaderboard.js, and one launch-dates.json line (both under DO NOT TOUCH `schools/assets/`, which the per-level boards and check-ugh-stats need). 2: "no duplicate given" reads the given with its unit (gcse_005 61 cm and gcse_020 61 m).
+Bank recomputed independently before building: 96/96 answers and traps agree, none within 0.005 of a boundary. PNG 1672 x 941 on the art branch; start.webp 1600 x 873.
+Done on the branch: the page (two levels, four stages, 8 a run, boxes (a) then (b), Jon's lines, working cut to 4 d.p., formulas by level and stage, scientific calculator, cones drawn to proportion with the height label clear of the slant edges); `scripts/verify-i-dropped-my-ice-cream.py` (PASS, 6/6 plants caught); roster row #112 in Unlisted (8); games.json and apply-meta; findings file; every MIGRATED list; NOT_ON_HUB; todo ICE-CREAM-LIST.
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
 ## 2026-11-17 (cloud): ITS-A-SINE-LIST (`docs/history/contracts/2026-11-17-its-a-sine-list.md`; Jon 17 Nov)
 
 Agent Claude Code (cloud), branch `claude/fervent-feynman-25e9sg` restarted from main 6d8cc0e (after #816). Tier Medium: merge on green, Project Claude reviews after. **Lane exception (Jon, 17 Nov 2026, verbatim):** "one-off LANE EXCEPTION (listing is normally home-lane work; Jon, 17 Nov 2026, chose "Cloud, before ice cream")".

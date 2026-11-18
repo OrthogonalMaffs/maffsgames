@@ -502,7 +502,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // slant edge: inside, right of the dashed height, where the cone is wide enough, else outside on the left with a leader.
   function drawCone(host, q, m) {
     var d = q.given.d, h = q.given.h, u = q.unit;
-    var sc = Math.min(200 / d, 190 / h), rx = d / 2 * sc, hh = h * sc, ry = Math.max(6, Math.min(rx * 0.25, 26));
+    // At most 200 wide and 150 tall, so a tall cone's labels stay readable on a phone (the drawing is capped at 30vh there);
+    // the base's depth is capped by the height too, so a shallow cone's apex stands clear of the back of its base.
+    var sc = Math.min(200 / d, 150 / h), rx = d / 2 * sc, hh = h * sc, ry = Math.max(5, Math.min(rx * 0.25, 26, hh * 0.3));
     var cx = VW / 2, top = 18, baseY = top + hh, arrowY = baseY + ry + 14, labY = arrowY + 16, H = labY + 14;
     var svg = el('svg', { viewBox: '0 0 ' + VW + ' ' + f1(H), role: 'img', 'aria-label': 'A cone with base diameter ' + d + ' ' + u + ' and height ' + h + ' ' + u });
     host.appendChild(svg);
@@ -526,7 +528,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (cx + 6 + w + 4 <= cx + halfAt(yTop)) {
       ht.setAttribute('x', f1(cx + 6)); ht.setAttribute('y', f1(yIn)); ht.setAttribute('data-place', 'inside');
     } else {
-      var yOut = top + hh * 0.55, xEdge = cx - halfAt(yOut);
+      // Clear of the left edge at the label's lowest point (the edge is furthest out there), so a shallow cone's edge
+      // cannot reach the label's corner.
+      var yOut = top + hh * 0.55, xEdge = cx - halfAt(Math.min(yOut + th / 2 + 2, baseY));
       ht.setAttribute('text-anchor', 'end'); ht.setAttribute('x', f1(xEdge - 14)); ht.setAttribute('y', f1(yOut)); ht.setAttribute('data-place', 'outside');
       el('line', { x1: f1(xEdge - 10), y1: f1(yOut), x2: f1(cx), y2: f1(yOut), class: 'c-thin', 'stroke-dasharray': '2 3' }, svg);
       el('circle', { cx: f1(cx), cy: f1(yOut), r: 2, class: 'c-dot' }, svg);
