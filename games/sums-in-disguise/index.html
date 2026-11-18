@@ -116,6 +116,9 @@ button.disguise:disabled{cursor:default;opacity:1}
 .blocks{display:flex;align-items:flex-end;justify-content:center;gap:.45rem;min-height:24px;margin:.2rem 0 .1rem;max-width:100%}
 .blocks:empty{display:none}
 .grp{display:flex;align-items:flex-end;gap:3px}
+.grp.labelled{flex-direction:column;align-items:center;gap:2px}
+.grp .gb{display:flex;align-items:flex-end;gap:3px;min-height:12px}
+.glabel{font-size:1rem}
 .plus{font-family:var(--font-num);font-weight:700;font-size:1.1rem;align-self:center;color:var(--muted)}
 .stk{display:flex;flex-direction:column;gap:1px;padding:1px;border-radius:2px}
 .stk i{display:block;width:9px;height:7px;border-radius:1px;background:var(--stick)}
@@ -643,11 +646,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (q.stage === 1 || q.stage === 2 || q.stage === 5) {
       // Amendment 3: the tens put back, as the blocks show them; the tens highlighted in the sticks' colour.
       var nt = [[String(n).slice(0, -1), true], [String(n).slice(-1), false]];
-      if (typ === 'tens') return [row1, [[String(c), true], [' tens', false, '\\text{ tens}'], [' = ', false]].concat(nt)];
-      if (typ === 'cross') {
-        row1 = row1.concat([[' = ', false], ['10', true], [' + ' + (c - 10), false]]);
-        return [row1, [[String(p - a), true], [' + ', false], ['10', true], [' + ' + (c - 10), false], [' = ', false]].concat(nt)];
-      }
+      // ONE-EQUALS: one "=" a line, a sum on its left and a single number on its right.
+      if (typ === 'tens') return [row1, [[String(p).slice(0, -1), true], ['0 + ', false], [String(r).slice(0, -1), true], ['0', false], [' = ', false]].concat(nt)];
+      if (typ === 'cross') return [row1, [[String(p - a), true], [' + ', false], ['10', true], [' + ' + (c - 10), false], [' = ', false]].concat(nt)];
       return [row1, [[String(p - a), true], [' + ' + c, false], [' = ', false]].concat(nt)];
     }
     row2 = row2.concat(hlTens(n, typ));
@@ -679,8 +680,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function spokenWorking(q) {
     var a = q.little[0], b = q.little[1], c = q.little_answer, s = bigOf(q), n = q.answer;
     if (q.stage === 1 || q.stage === 2 || q.stage === 5) {
-      if (q.type === 'tens') return a + ' plus ' + b + ' is ' + c + '. ' + c + ' tens is ' + n + '.';
-      if (q.type === 'cross') return a + ' plus ' + b + ' is ' + c + ', which is 10 and ' + (c - 10) + '. ' + (s[0] - a) + ' plus 10 plus ' + (c - 10) + ' is ' + n + '.';
+      if (q.type === 'tens') return a + ' plus ' + b + ' is ' + c + '. ' + s[0] + ' plus ' + s[1] + ' is ' + n + '.';
+      if (q.type === 'cross') return a + ' plus ' + b + ' is ' + c + '. ' + (s[0] - a) + ' plus 10 plus ' + (c - 10) + ' is ' + n + '.';
       return a + ' plus ' + b + ' is ' + c + '. ' + (s[0] - a) + ' plus ' + c + ' is ' + n + '.';
     }
     return a + ' plus ' + b + ' is ' + c + ', so ' + words(s) + ' is ' + n;
@@ -778,7 +779,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     setSay('');
     $('clue').innerHTML = '';
     $('blocks').innerHTML = ''; $('blocksNote').innerHTML = ''; drawHeld(0);
-    delete $('sum').dataset.regroup;
     ['unmaskRow', 'tenRow', 'putRow', 'tiles', 'opts', 'peekRow'].forEach(function (id) { $(id).hidden = true; });
     if (S.flow === 'duck') {
       showSum(Q.little);
@@ -809,7 +809,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var box = $('blocks');
     box.innerHTML = groups.map(function (g) {
       var inner = stickHtml(g.sticks || 0) + (g.cubes ? cubeHtml(g.cubes) : '');
-      return '<span class="grp" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + inner + '</span>';
+      // A group's value under it, as a plain number (ONE-EQUALS: the regrouping shown by the blocks, never by a chain).
+      var lab = g.label === undefined ? '' : '<span class="glabel" data-label="' + g.label + '">' + tex(String(g.label)) + '</span>';
+      return '<span class="grp' + (lab ? ' labelled' : '') + '" data-sticks="' + (g.sticks || 0) + '" data-cubes="' + (g.cubes || 0) + '">' + (lab ? '<span class="gb">' + inner + '</span>' + lab : inner) + '</span>';
     }).join('<span class="plus">+</span>');
     if (cubeButton) {
       var g = box.querySelector('.grp'), b = document.createElement('button');
@@ -917,8 +919,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('tag').textContent = String(10 * tensOf(Q) + 10);
       drawHeld(tensOf(Q) + 1);
       drawBlocks(c - 10 ? [{ cubes: c - 10 }] : []);
-      $('blocksNote').innerHTML = tex(c + ' = 10 + ' + (c - 10));
-      $('blocksNote').dataset.split = c + ' = 10 + ' + (c - 10);
+      $('blocksNote').innerHTML = tex('10 + ' + (c - 10));
+      $('blocksNote').dataset.split = '10 + ' + (c - 10);
       setSay(L.reveal[mode], 'reveal.' + mode);
       showPutBack();
     });
@@ -927,7 +929,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     state = 'putback';
     showRow('putRow', L.put_back, L.put_back);
   }
-  // Step 5, put it back: the disguise and its sticks go back beside the cubes; the question shows the regrouping.
+  // Step 5, put it back: the disguise and its sticks go back beside the cubes; the blocks show the regrouping.
   function putBack() {
     if (state !== 'putback') return;
     showRow(null);
@@ -937,17 +939,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     disguiseOn(true);
     setSay('');
     $('blocksNote').innerHTML = '';
-    if (Q.type === 'tens') drawBlocks([{ sticks: c }]);
-    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, cubes: c - 10 }]);
-    else drawBlocks([{ sticks: t, cubes: c }]);
+    // The regrouping, shown by the blocks: each group's value under it (the tens, then the ones). A group with no blocks is
+    // not drawn and gets no label (ONE-EQUALS Amendment 1): a tens item has no ones, nor has a crossing item with c = 10.
+    if (Q.type === 'tens') drawBlocks([{ sticks: c, label: 10 * c }]);
+    else if (Q.type === 'cross') drawBlocks([{ sticks: t + 1, label: 10 * (t + 1) }].concat(c - 10 ? [{ cubes: c - 10, label: c - 10 }] : []));
+    else drawBlocks([{ sticks: t, label: 10 * t }, { cubes: c, label: c }]);
     askBig();
-  }
-  // The question after put-back, as maths: the regrouping the blocks show.
-  function regroup(q) {
-    var p = q.big[0], r = q.big[1], c = q.little_answer, t10 = p - q.little[0];
-    if (q.type === 'tens') return [p + ' + ' + r + ' = ' + c + '\\text{ tens} = {?}', p + ' + ' + r + ' = ' + c + ' tens = ?'];
-    if (q.type === 'cross') return [p + ' + ' + r + ' = ' + (t10 + 10) + ' + ' + (c - 10) + ' = {?}', p + ' + ' + r + ' = ' + (t10 + 10) + ' + ' + (c - 10) + ' = ?'];
-    return [p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = {?}', p + ' + ' + r + ' = ' + t10 + ' + ' + c + ' = ?'];
   }
 
   function askBig() {
@@ -959,11 +956,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('prompt').dataset.line = 'find';
       opts = MaffsOptions.shuffle([Q.answer_sum].concat(Q.decoys.map(function (d) { return d.sum; })));
     } else if (S.flow === 'unmask') {
-      // After put-back (Amendment 3): the regrouping the blocks show, as maths.
-      var rg = regroup(Q);
-      $('prompt').textContent = ''; delete $('prompt').dataset.line;
-      $('sum').innerHTML = tex(rg[0]);
-      $('sum').dataset.sum = Q.big[0] + '+' + Q.big[1]; $('sum').dataset.ask = '1'; $('sum').dataset.regroup = rg[1];
+      // After put-back: the plain big sum (ONE-EQUALS); the blocks under it show the regrouping.
+      askSum(Q.big);
       var vals = [Q.answer];
       for (var k2 in Q.decoys) if (Object.prototype.hasOwnProperty.call(Q.decoys, k2)) vals.push(Q.decoys[k2]);
       opts = MaffsOptions.shuffle(vals);
@@ -1034,6 +1028,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     hush();
     // The little sum is the working's first row now, so its line under the sum goes (room for Next on a phone).
     $('clue').innerHTML = '';
+    // The working below repeats the regrouping the blocks showed, so the blocks go too (room for Next on a phone).
+    $('blocks').innerHTML = ''; $('blocksNote').innerHTML = '';
     state = right ? 'done' : 'wrong';
     if (right) { score++; if (!peeked) unpeekedRight++; }
     $('hudScore').textContent = String(score);
