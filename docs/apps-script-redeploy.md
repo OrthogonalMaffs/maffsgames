@@ -168,7 +168,7 @@ The deploy is a **New version of the existing deployment**, never a new deployme
 9. Set **Version** to **New version**.
 10. Click **Deploy**. Do not use *New deployment*: it would change the address and every game would stop logging.
 11. Check the Web app URL it shows still ends with the string in "The one thing that breaks everything" above.
-12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-18-a"`.
+12. Open the `/exec` URL in a private window. It must show `"version":"2026-11-18-b"`.
 13. Back in the editor, choose **testDashboard** in the function drop-down and click **Run**. It rebuilds the Dashboard tab with the new code. If Google asks for a permission, stop and tell Claude which one it named.
 14. Open the **MaffsGames Events** Sheet, play a few questions of any game, and check a new row appears as usual.
 15. Prove the formula fix is live: in the `maffs` WSL terminal run the command below. It posts one test row whose `detail` is `=1+1`, and should print `{"ok":true}`.

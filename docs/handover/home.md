@@ -16,6 +16,20 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-18 (home): DASHBOARD-FIXES (every Dashboard chart names its series from its header row; SR-33; two close-outs)
+
+Claude Code (home lane), worktree `~/mg-dashboard-fixes`, branch `claude/dashboard-fixes`; contract `docs/handover/contracts/2026-11-18-dashboard-fixes.md`. Tier Medium. The first commit carries two close-outs:
+- **#827 DASHBOARD-GLANCE:** recorded in its entry below; contract moved.
+- **#828 DD-LINEUP-ORDER (cloud's task; recorded here because the cloud lane owns `docs/handover/cloud.md`):** MERGED 18 Nov as 5a56852 (#828), merge-pr.py last line "main 5a56852 run 44376293965: GREEN". Main on the merge commit: check-site 44376293965 success, phone-fit-full 44376293770 success, pages build 44376293960 success (confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dd-lineup-order.md`. Cloud's own DD-LINEUP-ORDER entry still ends "Next: PR, Gate and phone-fit-full, merge"; its next first commit can mark it merged.
+- **Charts (`docs/apps-script-endpoint.js`, SCRIPT_VERSION 2026-11-18-b):** one helper, `dashChart(dash, spec)`, builds all four Dashboard charts (Top Games, Accuracy, the level pie, Daily Activity) and always calls `setNumHeaders(1)`, the pattern of `docs/apps-script-ga4-summary.js`'s chart loop; `newChart(` appears once. Each range still starts at its header row. Look unchanged: in the stubs every chart's type, ranges, position and options match main's call for call; only setNumHeaders(1) is added (it was missing on three).
+- **Percent cells: PARKED (STOP IF), cause not shown.** Ruled out, in a traced run of the stubs (every write and format recorded per cell): each of the two cells is written once per run, as a number (a count; cellValue passes numbers through), and no setNumberFormat touches it; no cell is written twice; no string such as "12%" is written. The only mechanism that fits: a number format left over from an earlier build that `dash.clear()` (:883) did not remove. The pre-#827 layout's Top Games "Completion %" (formatPercentColumn, column D, first data row) sits exactly on A's "Different games played" cell whatever the data, because both layouts start at the same row; C2's cell depends on the day's data. But Google documents Sheet.clear() as "Clears the sheet of content and formatting information", so this is unproven, and no guessed fix ships. The test function `checkPercentCells` is in the PR body: it logs the two cells' formats and whether a scratch sheet keeps "0%" through clear(). Pointer row DASHBOARD-PERCENT-CELLS in `docs/todo.md` (todo.md is 28 bytes under its 150 KiB cap).
+- **Tests:** `scripts/test-apps-script-report.py` section i: all four charts are built, each with setNumHeaders(1); newChart( appears once. New plant: the pie built without setNumHeaders(1), caught. The curveType plant now targets the spec. 21 plants caught.
+- **Canon:** SR-33 (foundational skills are priority-audience work, Jon 18 Nov 2026) after SR-32; §0.2 point 2 names it. `docs/apps-script-redeploy.md` step 12: 2026-11-18-b. No /updates/ line (internal).
+- **Jon's steps after merge (never Deploy):** 1. paste `docs/apps-script-endpoint.js` into Code.gs, keeping your REPORT_EMAIL line; 2. Save; 3. run `testDashboard`. Then the percent check in the PR body, once.
+- MERGED: pending.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-18 (home): DASHBOARD-GLANCE (the Dashboard answers Jon's weekly questions; GA4 sources tab; Daily Activity chart fixed)
 
 Claude Code (home lane), worktree `~/mg-dashboard-glance`, branch `claude/dashboard-glance`; contract `docs/handover/contracts/2026-11-18-dashboard-glance.md`. The first commit carries DAILY-ANSWERS' close-out (#825, aba826a). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
@@ -26,7 +40,7 @@ Claude Code (home lane), worktree `~/mg-dashboard-glance`, branch `claude/dashbo
 - **Tests:** test-apps-script-report.py section j (A to H on hand-written rows and GA4 tab rows, through sendDailyReport) plus a chart check; 20 plants caught, 7 of them new. Stubs gained only what the sections call: load() takes GA4 tabs and launch dates, setBackground/setFontColor record their colour, and formatDate honours its zone (it ignored it, so a midnight in BST became the day before) and gains 'HH:mm' and 'u'. Section i's curveType clause removed (contract J). test-ga4-country.py: the mock serves the sources table, a check that it asks for exactly the approved dimensions and nothing finer than country, plant 'city' caught. test-ga4-summary.py unchanged and passes.
 - **Docs:** canon §1.2.1 (third tab) and §1.4 (an at-a-glance paragraph); docs/ga4-country-setup.md (the sources tab, re-run ga4CountryBackfill once); docs/apps-script-redeploy.md (no deployment for a Dashboard-only change; step 12's version 2026-11-18-a).
 - **Jon's steps after merge (never Deploy):** 1. paste `docs/apps-script-endpoint.js` into Code.gs, keeping your REPORT_EMAIL line; 2. paste `docs/apps-script-ga4-country.js` into ga4-country.gs; 3. Save; 4. run `ga4CountryBackfill` once (fills GA4 sources daily from 1 Sep 2026); 5. run `testDashboard`.
-- MERGED: pending.
+- MERGED 18 Nov as bc3d192 (#827) via merge-pr.py, exit 0, last line "main bc3d192 run 44370288253: GREEN". Main on the merge commit: check-site 44370288253 success, phone-fit-full 44370288214 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dashboard-glance.md` (closed out by DASHBOARD-FIXES' first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
