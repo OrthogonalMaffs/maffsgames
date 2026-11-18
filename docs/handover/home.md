@@ -16,6 +16,12 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-18 (home): DASHBOARD-FIXES (every Dashboard chart names its series from its header row; SR-33; two close-outs)
+
+Claude Code (home lane), worktree `~/mg-dashboard-fixes`, branch `claude/dashboard-fixes`; contract `docs/handover/contracts/2026-11-18-dashboard-fixes.md`. Tier Medium. The first commit carries two close-outs:
+- **#827 DASHBOARD-GLANCE:** recorded in its entry below; contract moved.
+- **#828 DD-LINEUP-ORDER (cloud's task; recorded here because the cloud lane owns `docs/handover/cloud.md`):** MERGED 18 Nov as 5a56852 (#828), merge-pr.py last line "main 5a56852 run 44376293965: GREEN". Main on the merge commit: check-site 44376293965 success, phone-fit-full 44376293770 success, pages build 44376293960 success (confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dd-lineup-order.md`. Cloud's own DD-LINEUP-ORDER entry still ends "Next: PR, Gate and phone-fit-full, merge"; its next first commit can mark it merged.
+
 ## 2026-11-18 (home): DASHBOARD-GLANCE (the Dashboard answers Jon's weekly questions; GA4 sources tab; Daily Activity chart fixed)
 
 Claude Code (home lane), worktree `~/mg-dashboard-glance`, branch `claude/dashboard-glance`; contract `docs/handover/contracts/2026-11-18-dashboard-glance.md`. The first commit carries DAILY-ANSWERS' close-out (#825, aba826a). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
@@ -26,7 +32,7 @@ Claude Code (home lane), worktree `~/mg-dashboard-glance`, branch `claude/dashbo
 - **Tests:** test-apps-script-report.py section j (A to H on hand-written rows and GA4 tab rows, through sendDailyReport) plus a chart check; 20 plants caught, 7 of them new. Stubs gained only what the sections call: load() takes GA4 tabs and launch dates, setBackground/setFontColor record their colour, and formatDate honours its zone (it ignored it, so a midnight in BST became the day before) and gains 'HH:mm' and 'u'. Section i's curveType clause removed (contract J). test-ga4-country.py: the mock serves the sources table, a check that it asks for exactly the approved dimensions and nothing finer than country, plant 'city' caught. test-ga4-summary.py unchanged and passes.
 - **Docs:** canon §1.2.1 (third tab) and §1.4 (an at-a-glance paragraph); docs/ga4-country-setup.md (the sources tab, re-run ga4CountryBackfill once); docs/apps-script-redeploy.md (no deployment for a Dashboard-only change; step 12's version 2026-11-18-a).
 - **Jon's steps after merge (never Deploy):** 1. paste `docs/apps-script-endpoint.js` into Code.gs, keeping your REPORT_EMAIL line; 2. paste `docs/apps-script-ga4-country.js` into ga4-country.gs; 3. Save; 4. run `ga4CountryBackfill` once (fills GA4 sources daily from 1 Sep 2026); 5. run `testDashboard`.
-- MERGED: pending.
+- MERGED 18 Nov as bc3d192 (#827) via merge-pr.py, exit 0, last line "main bc3d192 run 44370288253: GREEN". Main on the merge commit: check-site 44370288253 success, phone-fit-full 44370288214 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dashboard-glance.md` (closed out by DASHBOARD-FIXES' first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
