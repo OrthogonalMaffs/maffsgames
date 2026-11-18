@@ -112,6 +112,7 @@ PATCHES = {
                        "else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);"),
 }
 PLACEIT_PATCHES = ('start', 'tolerance', 'readout')   # their self-test run is the desktop Place It pass
+NOTE_PATCHES = ('order-removed', 'order-reversed')     # theirs is the moving-on pass alone (the CI budget)
 
 
 class Report:
@@ -639,7 +640,7 @@ def close(browser, page):
 def run_page(rep, chromium=None, verbose=False, patch=None):
     """Read the bank, then mark every item through the page. Returns (bank, actions).
     A self-test run does only what its plant needs: the desktop Place It pass (PLACEIT_PATCHES), or
-    Line-Up's start and the moving on (the others)."""
+    Line-Up's start and the moving on (the others; the moving on alone for NOTE_PATCHES)."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -652,7 +653,8 @@ def run_page(rep, chromium=None, verbose=False, patch=None):
                 actions += desktop_placeit(rep, page, bank['PLACEIT'])
                 close(browser, page)
                 return bank, actions
-            actions += lineup_start(rep, page, bank['LINEUP'])
+            if patch not in NOTE_PATCHES:
+                actions += lineup_start(rep, page, bank['LINEUP'])
             advance_pass(rep, page, bank)
             if patch:
                 close(browser, page)
