@@ -73,6 +73,9 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Agent Claude Code (cloud), branch `claude/admiring-archimedes-vak9ig` restarted from main 1aebc5b. Tier Small.
 **Close-outs carried (first commit):** #828 DD-LINEUP-ORDER, recorded in its entry below. **#830 PRINTABLES-CORE (home lane's PR, recorded here because the cloud lane edits only its own handover):** merge commit 006d3d8; main's runs on it, read from the API this session: check-site 44477099151 success, phone-fit-full 44477099247 success, pages build 44477099011 success. Its contract moved to `docs/history/contracts/2026-11-19-printables-core.md`.
+Done on the branch: rebuildDashboard resets the whole sheet's number format to General straight after `dash.clear()` (Sheet.clear() keeps number formats: Jon's proof, 19 Nov 09:48); SCRIPT_VERSION and redeploy.md step 12 2026-11-19-a. Stub: `numFmt` kept through clear(); checks: a stale "0%" on a count cell is reset, and every number under a percent format is 0 to 1. Plant: the reset removed, caught by both. 95 checks, 22 plants (main: 93, 21). **Reported, not fixed (STOP IF):** :871-872 and :734-735 format a cell "0%" even when it holds "n/a"; harmless (Sheets shows text as text), so the invariant leaves text out (decided for Jon). todo row moved to todo-done.
+**Jon, after merge, one at a time; never Deploy:** 1. Paste docs/apps-script-endpoint.js into Code.gs, keeping your REPORT_EMAIL line. 2. Save. 3. Run testDashboard. 4. Look at "Different games played" and the When-used rows (Mon–Fri, Sat–Sun): whole numbers, not percentages. 5. Delete the temporary `check` script file if it is still there.
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
 
 ## 2026-11-18 (cloud): DD-LINEUP-ORDER (`docs/history/contracts/2026-11-18-dd-lineup-order.md`; Jon 18 Nov)
 
