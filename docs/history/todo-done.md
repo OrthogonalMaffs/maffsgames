@@ -3339,3 +3339,13 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 | CANTEEN-PACK-APPROVE | **Proofread The Canteen Hack print pack and approve its wording** (contract CANTEEN-PACK, 17 Nov 2026). Build it with `python -X utf8 tools/pack-generator/build_pack.py canteen-hack` (writes `dist-packs/canteen-hack-pack-v1.pdf`, 36 pages, DRAFT on pages 1 and 2) and read it against #817's proofread list (certificate title, clue words, the price tags' two boxes and a + b lines, the cropped kale). Approve: set `"wording_approved"` in its config. | Jon |
 
 **Closed 18 Nov 2026 (CANTEEN-APPROVE).** Row CANTEEN-PACK-APPROVE, moved word for word above. Jon proofread the v1 PDF built from main bb46787 and asked (18 Nov 03:42) "why is the cookie at £8.40 in the intro if it's a different price for each group?"; he approved the sentence "Last term it cost a fraction of that." after the £8.40 one, in the live room and so in the pack, and the rest of the wording (03:43: "yes that chance would be good, other than that I'm happy"). The config now has `"wording_approved": {"by": "Jon", "date": "2026-11-18"}` and `"pack_version": "2"`; the `--final` build writes `dist-packs/canteen-hack-pack-v2.pdf`, 36 pages, no DRAFT on any page. CORE-BUNDLES-2 stays open.
+
+## Closed by PRINTABLES-CORE (19 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| CORE-BUNDLES-2 | **List the Core bundles on Tes** (Jon, 17 Nov 2026, 19:24: "wait for canteen and list the bundles at the same time"): Core bundle 2 (Hamster Heist, P.E. Store, Heatwave, Canteen) and an all-seven Core bundle, once The Canteen Hack is live (CANTEEN-PACK-APPROVE, then built with `--final`). | Jon |
+
+- **PRINTABLES-CORE** (PRINTABLES-PAGE, 15 Nov 2026; Jon 09:52 "Now, add Core later"): add the three ★★ Core rooms (Car Trap, Roll for Initiative, Prom Budget) and the Core bundle to /printables/ once Tes publishes them, prices as Tes shows them, each card built as the page's others (chip from /escape-rooms/, topics from the room's own page description). Owner: home lane, when Jon sends the Tes links.
+
+**Closed 19 Nov 2026 (PRINTABLES-CORE).** Rows CORE-BUNDLES-2 and PRINTABLES-CORE, moved word for word above. Jon listed Core bundle 2 (£6.50) and the complete Core collection (£10) on Tes and sent the links, with the seven Core rooms' and the first Core bundle's, on 18 Nov 2026 (23:27 and 23:48); Project Claude checked each Tes page's title and price at 23:50. /printables/ now lists all seven ★★ Core rooms and the three Core bundles after the Warm-up bundle, each built as the page's other cards (chip, topics from each room's own description, price, Tes link, and a play link for each room).

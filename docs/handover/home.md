@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-19 (home): PRINTABLES-CORE (the seven Core rooms and three Core bundles on /printables/)
+
+Claude Code (home lane), worktree `~/mg-printables-core`, branch `claude/printables-core`; contract `docs/handover/contracts/2026-11-19-printables-core.md`. Tier Medium. The first commit carries DASHBOARD-FIXES' close-out (#829, e4ac609).
+
+- **/printables/ (`printables/index.html`):** ten `<article class="pack">` cards after the Warm-up bundle, inside the escape-room packs' div, built as the page's other cards with the ★★ Core chip copied from The Christmas Tree Fiasco's. Seven rooms in /escape-rooms/'s order (Hamster Heist, P.E. Store, Heatwave, Prom Budget, Canteen, Car Trap, Roll for Initiative), each £3 with topics, a Tes link (`tes-<slug>`) and a play link (`play-<slug>`); then Core bundle (£5), Core bundle 2 (£6.50) and the complete Core collection (£10), Tes link only. Every h3 matches the hub's card and every topics line matches the room's meta description word for word; each /escape-rooms/<slug>/ exists. Existing cards unchanged.
+- **/updates/:** one 19 Nov 2026 line.
+- **todo:** PRINTABLES-CORE and CORE-BUNDLES-2 moved word for word to `docs/history/todo-done.md` with a done note; todo.md 153572 to 152846 bytes.
+- MERGED: pending. The next home contract's first commit records the merge and moves this contract to history.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-18 (home): DASHBOARD-FIXES (every Dashboard chart names its series from its header row; SR-33; two close-outs)
 
 Claude Code (home lane), worktree `~/mg-dashboard-fixes`, branch `claude/dashboard-fixes`; contract `docs/handover/contracts/2026-11-18-dashboard-fixes.md`. Tier Medium. The first commit carries two close-outs:
