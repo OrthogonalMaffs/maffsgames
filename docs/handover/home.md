@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-19 (home): DD-VERIFIER-SHARD (Decimal Detective's verifier on ci-shards, so #837 fits the per-line limit)
+
+Claude Code (home lane), worktree `~/mg-dd-verifier-shard`, branch `claude/dd-verifier-shard`; contract `docs/handover/contracts/2026-11-19-dd-verifier-shard.md`. Tier Small. Route 1 for #837 NEXT-IN-VIEW, whose Gate (check-site 44573475355) stopped on this verifier: 177s median + 15s setup = 192s, 71% of 270s against the 70% (189s) line limit, selected because next-control.js selects 136 verifiers.
+
+- **`scripts/verify-decimal-detective.py`:** `# ci-shards: <same label> | | 2`; 14 units: desktop, phone 320x568, phone 375x667, phone 390x844, bank (keys plus the four bank plants), and one per page plant (9). Each check and plant runs in exactly one unit; a slice without the desktop pass reads the bank from the page first. `--list-units` works.
+- **Checked locally:** full run PASS, identical to main's (45 items, 1307 answers, the same 13 self-test lines caught), 198s against 199s; --shard 1/2 PASS (7 units, 111s), 2/2 PASS (7 units, 84s), together all 14, none twice. ci-groups --selftest and --check PASS (each part 120s default, 50%, until main times its units); ci-deps --selftest PASS.
+- **Report only (ci-lines over 60% of their line budget, ci-timings.json from main run 44566476211, setup 15s):** check-answer-lock.py "Answer lock, static rules and self-test" 268s + 15s of 450s (63%); verify-screening-room.py 150s + 15s of 270s (61%).
+- MERGED 19 Nov as f2e6d2a (#839) via merge-pr.py, exit 0, last line "main f2e6d2a run 44580613966: GREEN". Main on the merge commit: check-site 44580613966 success, phone-fit-full 44580613885 success (both push runs), pages build 44580613026 success (all confirmed from the API). Cleaned up by end-task. Its contract moves to history in the next home contract's first commit. Main then merged into #837 (its entry below).
+
 ## 2026-11-19 (home): NEXT-IN-VIEW (MaffsNext.wrong() brings Next into view on a phone, in every game)
 
 Claude Code (home lane), worktree `~/mg-next-in-view`, branch `claude/next-in-view`; contract `docs/handover/contracts/2026-11-19-next-in-view.md`. Tier Medium. The first commit carries PRINTABLES-CORE's close-out (#830, 006d3d8).
@@ -26,7 +35,10 @@ Claude Code (home lane), worktree `~/mg-next-in-view`, branch `claude/next-in-vi
 - **Decided for you:** screening-room (2 normal rows, 3 Aa) is unchanged: its own `MaffsScroll.reveal(result, { up: true })` right after wrong() holds its explanation's top, which is taller than the screen, so Next stays below (844 / 528 at 320x568, as before). Same task, so no visible jump. Not changed (game files out of scope); a per-game `keep:` or a shorter result is its fix.
 - **todo:** NNL-PHONE-NEXT and DD-LINEUP-FEEDBACK closed with figures in `docs/history/todo-done.md` (NNL Order Them 630 to 518, Calculate 585 to 518, DD Line-Up 799 to 518, Round Up 548 to 517, at 320x568, fold 528; Aa too). SIX-PS-SHORT-WRONG: all 14 unchanged (the 6 P's own reveal decides); 5 more found unlisted, on main too (row updated). todo.md 150456 to 149425 bytes.
 - **Canon 7.6** sentence under the MaffsNext usage; one /updates/ line.
-- MERGED: pending. The next home contract's first commit records the merge and moves this contract to history.
+- **Gate failure 1 (check-site 44572179542, head 735a008):** ci-deps.py --selftest, "always-run verifiers at most ALWAYS_BUDGET (12)": 133. The loader's `tag.src = src` (a computed value) read to ci-deps as an unknown load on every page loading next-control.js. Fixed in 5c09c245 with `setAttribute('src', ...)`; ci-deps still records schools/assets/scroll.js as next-control.js's dependency (the literal 'scroll.js' resolved beside it). ci-deps.py untouched.
+- **Gate failure 2 (check-site 44573475355, head 5c09c24): STOPPED.** Plan job: verify-decimal-detective.py's line 177s + 15s setup = 192s, 71% of 270s against the 70% line limit, selected because next-control.js selects 136 verifiers; already over on main's timings (run 44566476211), not slowed by this PR. The fix was outside this contract's files, so it stopped and reported.
+- **Route 1 (Project Claude, DD-VERIFIER-SHARD):** #839 put the verifier on ci-shards and merged as f2e6d2a (entry above); main merged into this branch (one conflict, here in home.md), Gate re-run.
+- MERGED: pending. The next home contract's first commit records the merge and moves this contract and DD-VERIFIER-SHARD's to history.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
