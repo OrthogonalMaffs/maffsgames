@@ -98,6 +98,10 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .highlight.h1{text-decoration-color:var(--teal);background:var(--teal-dim)}
 .highlight.h2{text-decoration-color:var(--amber);background:rgba(245,158,11,0.15)}
 .highlight.h3{text-decoration-color:var(--purple);background:rgba(139,92,246,0.15)}
+/* After a wrong answer (canon 7.6): the clue words outlined in the text, the answer and the clue above Next */
+.question-card .highlight.clue{outline:2px solid var(--green);outline-offset:2px}
+.wpd-fb{text-align:center;font-size:15px;line-height:1.5;margin-top:14px}.wpd-fb:empty{display:none}
+.wpd-fb .fb-lbl{color:var(--muted);font-weight:600}.wpd-fb .fb-topic{color:var(--green);font-weight:700}
 
 .stage-pill{display:inline-block;font-size:12px;font-weight:600;color:var(--teal);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2);padding:4px 12px;border-radius:8px;margin-bottom:16px}
 
@@ -167,6 +171,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game: the generic driver, unaided.
 {}
 -->
@@ -226,6 +231,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   <div id="stagePill" class="stage-pill"></div>
   <div class="question-card" id="questionCard"></div>
   <div class="options-grid" id="optionsGrid"></div>
+  <div id="wpdAfter"><div class="wpd-fb" id="wpdFb" aria-live="polite"></div></div>
 </div>
 
 <!-- RESULTS SCREEN -->
@@ -675,6 +681,8 @@ function updateHUD() {
 }
 
 function showPhrase() {
+  MaffsNext.clear($('wpdAfter'));
+  $('wpdFb').textContent = '';
   if (phraseIndex >= totalPhrases) {
     endGame();
     return;
@@ -803,15 +811,36 @@ function handleAnswer(btn, chosen, hl) {
 
   updateHUD();
 
-  MaffsLock.timer(() => {
-    questionCard.classList.add('fade-out');
-    optionsGrid.classList.add('fade-out');
+  const fading = [questionCard, optionsGrid, $('wpdAfter')];
+  const advance = () => {
+    fading.forEach(el => el.classList.add('fade-out'));
     MaffsLock.timer(() => {
-      questionCard.classList.remove('fade-out');
-      optionsGrid.classList.remove('fade-out');
+      fading.forEach(el => el.classList.remove('fade-out'));
       showPhrase();
     }, 200);
-  }, 800);
+  };
+  if (isCorrect) { MaffsLock.timer(advance, 800); return; }
+
+  // A wrong answer waits for the student (canon 7.6): the topic that fits, and the phrase's own clue words outlined
+  // in the text and quoted above Next. The fade runs when Next is pressed.
+  questionCard.querySelectorAll('.highlight').forEach(s => { if (s.textContent === hl.phrase) s.classList.add('clue'); });
+  const fb = $('wpdFb');
+  fb.textContent = '';
+  const line = (label, text, cls) => {
+    const p = document.createElement('div');
+    const l = document.createElement('span');
+    l.className = 'fb-lbl';
+    l.textContent = label + ' ';
+    const v = document.createElement('span');
+    if (cls) v.className = cls;
+    v.textContent = text;
+    p.appendChild(l);
+    p.appendChild(v);
+    fb.appendChild(p);
+  };
+  line('The answer:', accepted.join(' or '), 'fb-topic');
+  line('The clue:', '\u201c' + hl.phrase + '\u201d');
+  MaffsNext.wrong({ mount: $('wpdAfter'), onAdvance: advance, keep: fb });
 }
 
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
