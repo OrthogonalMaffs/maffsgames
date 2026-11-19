@@ -56,6 +56,9 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     every section, Daily Activity last; the chart's series named from its header row, with straight lines.
     Plants: the 10% threshold made <=, the class gap made 60 minutes, % correct coloured green or red, lnkd.in falling
     into Other, a missing GA4 tab throwing, a room counted in check-these, curveType back.
+  - DASHBOARD-PERCENT-CELLS (19 Nov 2026): the stub keeps number formats through clear(), as real Sheets does; a
+    stale "0%" planted on a count cell is gone after a rebuild, and every number in a percent-formatted cell is 0 to 1
+    (text, which Sheets shows unchanged, is left out). Plant: the rebuild's format reset removed.
   - DASHBOARD-FIXES (18 Nov 2026): all four charts (Top Games, Accuracy, the level pie, Daily Activity) are built by
     one helper, each with setNumHeaders(1), so a header row is never drawn as data; newChart() appears once. Plant:
     the pie built without it.
@@ -132,8 +135,11 @@ HARNESS = r"""
     } };
     const chain = new Proxy({}, { get: (t, k) => k === 'build' ? () => ({}) : (...a) => { env.charts[env.charts.length - 1].push([k, a]); return chain; } });
     function sheetFake(name, data) {
-      const sh = { name, cells: {}, fmt: {},
-        clear() { sh.cells = {}; sh.fmt = {}; }, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
+      // numFmt is each cell's number format. Real Sheets keeps it through clear() (Jon's checkPercentCells, 19 Nov
+      // 2026), so clear() here leaves it too; fmt (backgrounds, font colours) is wiped as before.
+      const sh = { name, cells: {}, fmt: {}, numFmt: {},
+        clear() { sh.cells = {}; sh.fmt = {}; },
+        getMaxRows: () => 1000, getMaxColumns: () => 26, getCharts: () => [], removeChart() {}, insertChart() {}, setColumnWidth() {},
         setTabColor() {}, setFrozenRows() {}, newChart: () => { env.charts.push([]); return chain; },
         getDataRange: () => ({ getValues: () => data }),
         getLastRow: () => data.length,
@@ -142,7 +148,10 @@ HARNESS = r"""
           const rg = { dims: [r, c, nr || 1, nc || 1], setValue(v) { sh.cells[r + ',' + c] = v; return rg; },
             setValues(vs) { vs.forEach((line, i) => line.forEach((v, j) => sh.cells[(r + i) + ',' + (c + j)] = v)); return rg; },
             getValues: () => [data[r - 1].slice(c - 1, c - 1 + (nc || 1))] };
-          ['setFontSize', 'setFontWeight', 'setFontStyle', 'setNumberFormat'].forEach(m => rg[m] = () => rg);
+          ['setFontSize', 'setFontWeight', 'setFontStyle'].forEach(m => rg[m] = () => rg);
+          rg.setNumberFormat = f => {
+            for (let i = 0; i < (nr || 1); i++) for (let j = 0; j < (nc || 1); j++) sh.numFmt[(r + i) + ',' + (c + j)] = f;
+            return rg; };
           ['setBackground', 'setFontColor'].forEach(m => rg[m] = v => {
             for (let i = 0; i < (nr || 1); i++) for (let j = 0; j < (nc || 1); j++) {
               const k = (r + i) + ',' + (c + j); sh.fmt[k] = Object.assign(sh.fmt[k] || {}, { [m]: v }); }
@@ -509,6 +518,26 @@ HARNESS = r"""
       ok('j. A: up is green; % correct is grey though it fell',
          fmtOf(d.sh, d.ls, chA, 1).setFontColor === '#15803d' && fmtOf(d.sh, d.ls, chA, 5).setFontColor === '#15803d' &&
          fmtOf(d.sh, d.ls, chA, 3).setFontColor === '#6b7280', JSON.stringify([1, 2, 3, 4, 5].map(c => fmtOf(d.sh, d.ls, chA, c))));
+      // ---- DASHBOARD-PERCENT-CELLS (Jon, 19 Nov 2026): a "0%" left on a cell from an earlier build survives
+      // Sheet.clear(); the rebuild must reset it. A count cell is found from this build's output, given a stale "0%",
+      // and the same data rebuilt on the same sheet; then every percent-formatted cell must hold a fraction or nothing.
+      {
+        const sh = d.sh, key = Object.keys(sh.cells).map(k => k.split(',').map(Number)).sort((a, b) => a[0] - b[0] || a[1] - b[1])
+          .map(k => k.join(',')).find(k => Number.isInteger(sh.cells[k]) && sh.cells[k] >= 2);
+        if (key) sh.numFmt[key] = '0%';
+        const was = key ? sh.cells[key] : undefined;
+        api.sendDailyReport();
+        const sh2 = env.sheets['Dashboard'];
+        ok('percent cells: a stale "0%" on a count cell is reset by the rebuild',
+           key && sh2 === sh && sh2.cells[key] === was && sh2.numFmt[key] !== '0%',
+           key ? key + ' = ' + sh2.cells[key] + ', format ' + JSON.stringify(sh2.numFmt[key]) : 'no count cell >= 2 found');
+        const bad = Object.keys(sh2.numFmt).filter(k => String(sh2.numFmt[k]).indexOf('%') >= 0).filter(k => {
+          // Text is left out: Sheets shows text unchanged under any number format. Two sections format "n/a" (:735,
+          // :872); reported to Jon in DASHBOARD-PERCENT-CELLS, not changed here.
+          const v = sh2.cells[k]; return !(v === undefined || v === '' || typeof v === 'string' || (typeof v === 'number' && v >= 0 && v <= 1)); });
+        ok('percent cells: every number under a percent format is from 0 to 1 (text and empty cells left out)',
+           Object.keys(sh2.cells).length > 0 && bad.length === 0, bad.slice(0, 8).map(k => k + ' = ' + JSON.stringify(sh2.cells[k]) + ' (' + sh2.numFmt[k] + ')').join('; '));
+      }
       // ---- no GA4 tabs at all: one line in A, D and E, and the rest of the Dashboard is still built
       d = runDash(ra, {});
       ok('j. a missing GA4 tab gives the line in A, D and E, never an error',
@@ -698,6 +727,8 @@ PLANTS = [
     ("Daily Activity's curveType back", "colors: ['#0ea5e9', '#0d9488'],", "colors: ['#0ea5e9', '#0d9488'], curveType: 'function',"),
     ("the pie chart built without setNumHeaders(1)", "  b = b.setNumHeaders(1);\n",
      "  if (spec.type !== Charts.ChartType.PIE) b = b.setNumHeaders(1);\n"),
+    ("the Dashboard rebuilt without resetting number formats",
+     "    dash.getRange(1, 1, dash.getMaxRows(), dash.getMaxColumns()).setNumberFormat('General');\n", ""),
     # Kept last. The tally maps given a prototype again: a "__proto__" slug is then lost from every tally (section g).
     ("the report's tally maps have a prototype", "function rptMap() { return Object.create(null); }",
      "function rptMap() { return {}; }"),

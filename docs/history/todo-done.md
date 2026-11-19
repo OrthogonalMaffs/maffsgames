@@ -3349,3 +3349,11 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 - **PRINTABLES-CORE** (PRINTABLES-PAGE, 15 Nov 2026; Jon 09:52 "Now, add Core later"): add the three ★★ Core rooms (Car Trap, Roll for Initiative, Prom Budget) and the Core bundle to /printables/ once Tes publishes them, prices as Tes shows them, each card built as the page's others (chip from /escape-rooms/, topics from the room's own page description). Owner: home lane, when Jon sends the Tes links.
 
 **Closed 19 Nov 2026 (PRINTABLES-CORE).** Rows CORE-BUNDLES-2 and PRINTABLES-CORE, moved word for word above. Jon listed Core bundle 2 (£6.50) and the complete Core collection (£10) on Tes and sent the links, with the seven Core rooms' and the first Core bundle's, on 18 Nov 2026 (23:27 and 23:48); Project Claude checked each Tes page's title and price at 23:50. /printables/ now lists all seven ★★ Core rooms and the three Core bundles after the Warm-up bundle, each built as the page's other cards (chip, topics from each room's own description, price, Tes link, and a play link for each room).
+
+## Closed by DASHBOARD-PERCENT-CELLS (19 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| DASHBOARD-PERCENT-CELLS | Two Dashboard counts show as %; cause unproven: home.md DASHBOARD-FIXES. | home; Jon |
+
+**Closed 19 Nov 2026 (DASHBOARD-PERCENT-CELLS).** Row DASHBOARD-PERCENT-CELLS, moved word for word above. Cause proven by Jon in real Sheets, 19 Nov 2026, 09:48 (checkPercentCells): Sheet.clear() keeps number formats, so a "0%" left from an earlier build showed the next count written to that cell as a percentage. Fixed by this PR: rebuildDashboard resets the whole sheet's number format to General straight after clear() (SCRIPT_VERSION 2026-11-19-a); the test stub now keeps number formats through clear(), as real Sheets does. Owed: Jon's eye check after pasting the script and running testDashboard.

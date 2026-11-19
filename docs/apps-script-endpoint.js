@@ -76,7 +76,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-18-b';
+const SCRIPT_VERSION = '2026-11-19-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -881,6 +881,8 @@ function rebuildDashboard(weekRows, monthRows, col, kinds, prevWeekRows) {
   var dash = ss.getSheetByName(DASH_NAME);
   if (dash) {
     dash.clear();
+    // Sheet.clear() leaves number formats in place (proven in real Sheets, 19 Nov 2026), so a stale "0%" would show the next count written to that cell as a percentage.
+    dash.getRange(1, 1, dash.getMaxRows(), dash.getMaxColumns()).setNumberFormat('General');
     // Remove existing charts
     dash.getCharts().forEach(function(c) { dash.removeChart(c); });
   } else {
