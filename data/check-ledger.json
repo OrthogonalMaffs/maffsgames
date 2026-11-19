@@ -2007,7 +2007,7 @@
  "factor-race": {
   "generator": false,
   "layers": {
-   "A": "violations",
+   "A": "verified",
    "B": "none",
    "C": "none",
    "D": "none",
@@ -2035,19 +2035,8 @@
     "status": "pass"
    },
    "B4": {
-    "entries": [
-     {
-      "detail": "level 'year6' has 20 question(s), below the 40 minimum",
-      "id": "factor-race::year6",
-      "line": null
-     },
-     {
-      "detail": "level 'ks3' has 20 question(s), below the 40 minimum",
-      "id": "factor-race::ks3",
-      "line": null
-     }
-    ],
-    "status": "fail"
+    "entries": [],
+    "status": "pass"
    },
    "B5": {
     "entries": [],

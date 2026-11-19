@@ -69,7 +69,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-19 (cloud): FRACTION-SNAP-START (`docs/handover/contracts/2026-11-19-fraction-snap-start.md`; Jon 19 Nov)
+## 2026-11-19 (cloud): FACTOR-RACE-Y6-40 (`docs/handover/contracts/2026-11-19-factor-race-y6-40.md`; Jon 19 Nov)
+
+Agent Claude Code (cloud), branch `claude/youthful-knuth-uprtv0` restarted from main 150bd66. Tier Small. YEAR6_BANK's last line was the one quoted (:240).
+**Close-outs carried (first commit, 59b6b03):** #835 FRACTION-SNAP-START, recorded in its entry below.
+Done on the branch: the 20 pairs appended verbatim (40 in all); every comment's factor counts recomputed before adding, and 13 are won by the smaller number, as the contract says. `verify-factor-race.py` PASS, only its docstring's "20 pairs" now "40 pairs". `check-banks.py --ci` then failed on 2 STALE entries, `factor-race::year6` and `::ks3`; cleared with `--write-ledger --only factor-race`, then `--ci` OK. Row LEDGER-B4-FACTOR-RACE moved to `docs/history/todo-done.md` (nothing left); /updates/ line.
+**Decided for you:** (1) the ledger data edit, as in FORMULA-FORGE-40. (2) KS3's entry clears only because extract-banks reads YEAR6_BANK for both levels (`scoped_to_level: false`), the same misreading that gave the 9 Nov count; KS3 is generated, so the entry was never real. The extractor is not changed (not in this contract).
+Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+
+## 2026-11-19 (cloud): FRACTION-SNAP-START (`docs/history/contracts/2026-11-19-fraction-snap-start.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/youthful-knuth-uprtv0` restarted from main 1f88f36. Tier Small. Lines 156-159 and the verifier's :368-370 and :415-416 matched the contract.
 **Close-outs carried (first commit, 25bd040):** #834 FORMULA-FORGE-40, recorded in its entry below.
@@ -77,7 +85,8 @@ Done on the branch: the how-to's lines 157-159 are the contract's three, each wi
 **Phone fit (local, main against the branch, same fonts; the footer pre-check skipped in a scratch copy, as it fails locally by 1 px):** the judged rows are identical (normal PASS; Aa WARN at 320, 618/528). Start screen, Start button bottom / fold: normal 418/400/400 on main, 499/463/463 here, all three fit on both; Aa 754/677/599 on main, 823/719/668 here, 320 and 375 below the fold on both, 390 fits on both. No size flips; the screen is 63-81 px taller.
 **Report only, plain-text fractions on other games' start screens** (Chromium text at load, plus a static pass over how-to/help/start containers): `possibly-maybe:181` "2/4 counts the same as 1/2"; `shape-shifter:205` "a scale factor of 2, 3 or 1/2". (Score counters such as 0/10 and "2026/27" excluded; `how-many-parts:264`'s 3/4 is a KaTeX fallback and renders.)
 **Decided for you:** (1) The \dfrac lines make the start screen taller (above); no fit is lost, so no CSS was added to win it back; Jon may want `\tfrac` or tighter spacing. (2) At 320 px "0.5" wraps onto its own line. (3) The fallback text keeps the contract's wording with a/b-style fractions, so the page still reads if KaTeX never loads. (4) A third plant (the how-to never rendered) proves the Chromium check. (5) An /updates/ line, which the contract did not list but AGENTS.md requires for a change students see.
-Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+PR #835. **Merged (closed out by FACTOR-RACE-Y6-40):** merge commit 8bfe33e (14:54:49 UTC 19 Nov), route merge-pr.py `--watch --wait 3600`, exit 0, last line "main 8bfe33e run 44548908435: GREEN"; main's runs on it, read from the API: check-site 44548908435 success, phone-fit-full 44548908467 success, pages build 44548907797 success, all attempt 1. Jon (19 Nov): leave the taller start screen as it is. Contract moved to `docs/history/contracts/`.
+Record: agent Claude Code; wall about 0:22 (first commit 14:32, merged 14:55 UTC); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-19 (cloud): FORMULA-FORGE-40 (`docs/history/contracts/2026-11-19-formula-forge-40.md`; Jon 19 Nov)
 

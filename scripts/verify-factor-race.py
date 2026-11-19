@@ -3,7 +3,7 @@
 """Factor Race: two numbers, tap the one with more factors.
 
 Two sources of pairs, both read from the page as served:
-  Year 6 (?level=year6): YEAR6_BANK, 20 pairs, 10 dealt per session.
+  Year 6 (?level=year6): YEAR6_BANK, 40 pairs, 10 dealt per session.
   KS3 (the default): VALID_PAIRS, built at load from every ordered pair in [2, 60] whose factor counts differ, and
     generatePair() picks one uniformly.
 The game keeps no key: the right card is the one with more factors, which this script recomputes by counting the
