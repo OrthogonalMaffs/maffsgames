@@ -37,11 +37,22 @@ the real clock), at its first roster level:
   2. double-click Next (MaffsNext, or the game's own continue control): one advance, and its second click
      marks nothing on the next question;
   3. at 390px on a touch screen, answer wrong and double-tap Next: nothing marked by the second tap. First, the
-     pause (contract WRONG-PAUSE-NEXT, 19 Nov 2026; canon 7.6): within PAUSE_S (2 s, real clock) of the wrong mark a
-     Next control is on screen (MaffsNext's, or the game's own where OWN_NEXT names it with its reason), and the
-     question does not change for PAUSE_S while Next is not pressed (the auto-advance timers #838 found were
-     800-1000 ms; MaffsNext's 20 s fallback is 5 s at TIME_SCALE). A game this cannot judge is on
-     WRONG_PAUSE_UNCHECKED: reported, never failed, and the list may only shrink;
+     pause (contract WRONG-PAUSE-NEXT, 19 Nov 2026, and Jon's ruling on its stop; canon 7.6): within PAUSE_S (3 s,
+     real clock) of the wrong mark a control the student presses to go on is on screen, and the question does not
+     change by itself in that time (the auto-advance timers #838 found were 800-1000 ms; MaffsNext's 20 s fallback is
+     5 s at TIME_SCALE). The control: MaffsNext's; the shared retry pattern's .dismiss-btn (_addDismiss: "Try Again",
+     added after 2000 ms; the question stays until it is pressed); or the game's own, where OWN_NEXT names it;
+
+The pause check's four lists (WRONG-PAUSE-NEXT; each entry carries its reason):
+  OWN_NEXT                 the game waits on a continue control of its own, not MaffsNext's: judged as passing when
+                           that control is on screen and the question holds.
+  WRONG_PAUSE_UNCHECKED    the run cannot drive the game to a wrong answer it can judge (a staged flow, or a game
+                           that logs right answers only): played, reported, never failed. Only shrinks
+                           (WRONG_PAUSE_UNCHECKED_AT_START).
+  WRONG_PAUSE_EXEMPT       a wrong answer rightly does not wait on Next (the run ends; the turn passes): reported,
+                           never failed. Changes need Jon.
+  WRONG_PAUSE_KNOWN_FAIL   the game fails the pause and is waiting for its own fix: reported, never failed. Only
+                           shrinks (WRONG_PAUSE_KNOWN_FAIL_AT_START); a listed game that passes is noted for taking off.
   4. tap through to the end quickly (each answer followed at once by its continue control, then the end
      screen tapped for a while, the way formula-plug-in's reveal screen ran showResults twice): exactly one
      game_completed and at most one submitScore.
@@ -413,6 +424,15 @@ INIT = r"""
       return CONTINUE_RE.test(t) || t.indexOf('next question') !== -1; });
     return hit ? { el: hit, ready: true, kind: (hit.textContent || '').trim().slice(0, 30) } : null;
   };
+  // WRONG-PAUSE-NEXT: the control a wrong answer waits on, found without moving the page: MaffsNext's, the shared
+  // retry pattern's .dismiss-btn (_addDismiss), or another continue control (the game's own). Its kind, or null.
+  window.__lockPauseControl = function () {
+    const mn = document.querySelector('.maffs-next');
+    if (mn && visible(mn)) return 'maffs-next';
+    if ([...document.querySelectorAll('.dismiss-btn')].some(visible)) return 'dismiss-btn';
+    const c = window.__lockFindContinue();
+    return c ? c.kind : null;
+  };
   window.__lockContinue = function () {
     const c = window.__lockFindContinue();
     window.__lockContEl = c ? c.el : null;
@@ -673,18 +693,18 @@ class Driver:
         seen = None
         while True:
             # The question changed: the game rendered something new through MaffsLock (every migrated game draws its
-            # next question with fresh() or screen()) and no continue control is on screen (a feedback screen opened
+            # next question with fresh() or screen()) and no pause control is on screen (a feedback screen opened
             # through screen() with its Next is still the pause). Not self.up: some games leave the answered group enabled.
-            if await self.ev('(f) => __lockFreshCalls > f && !__lockFindContinue()', s['lastFresh']):
+            if await self.ev('(f) => __lockFreshCalls > f && !__lockPauseControl()', s['lastFresh']):
                 return ['wrong answer: the next question came up within %gs with Next not pressed (canon 7.6: a wrong '
                         'answer waits on Next; WRONG-PAUSE-NEXT)' % PAUSE_S]
-            seen = await self.ev('() => { const c = __lockFindContinue(); return c ? c.kind : null; }') or seen
+            seen = await self.ev('() => __lockPauseControl()') or seen
             if loop.time() >= t_end:
                 break
             await self.page.wait_for_timeout(25)
         if not seen:
             return ['wrong answer: no Next control within %gs (canon 7.6: MaffsNext.wrong; WRONG-PAUSE-NEXT)' % PAUSE_S]
-        if seen != 'maffs-next' and self.slug not in OWN_NEXT:
+        if seen not in ('maffs-next', 'dismiss-btn') and self.slug not in OWN_NEXT:
             return ['wrong answer: its own continue control ("%s"), not MaffsNext: use MaffsNext.wrong, or name it in '
                     'OWN_NEXT with its reason (WRONG-PAUSE-NEXT)' % seen]
         return []
@@ -736,7 +756,7 @@ async def play(browser, base, slug, level, page_html):
         if s:
             pause = await d.wrong_pause(s) if s['lastCorrect'] is False else [
                 'wrong answer: none reached to judge its pause (the game marks right answers only; WRONG-PAUSE-NEXT)']
-            if slug in WRONG_PAUSE_UNCHECKED:
+            if pause_list(slug):
                 PAUSE_REPORTED[slug] = pause[0] if pause else 'passes'
             else:
                 out += pause
@@ -963,10 +983,27 @@ SCREEN_NOT_YET = set('''
 SCREEN_REPORTED = {}   # slug -> the not-fresh fault, for a game on SCREEN_NOT_YET
 # WRONG-PAUSE-NEXT (contract of 19 Nov 2026; canon 7.6): after a wrong answer the game waits on Next. PAUSE_S is the
 # window, real clock: Next on screen by its end, and the question unchanged through it with Next not pressed.
-PAUSE_S = 2.0
+PAUSE_S = 3.0
 PAUSE_ONLY = False     # the self-test's pause plants play the touch phase alone
 # Games whose Next after a wrong answer is their own control, not MaffsNext's: slug -> the one-line reason.
 OWN_NEXT = {
+    'estimation-golf': 'its own "Next Hole" button (#nextBtn) under each hole\'s result',
+    'spot-the-error': 'its own "Next" (a .dismiss-btn) under the explanation of the error',
+    'truth-buster': 'its own Next button (#nextBtn), shown 3 s after the verdict and its reason',
+    'spot-the-muppet': 'its own "Next Question" button (#nextBtn), shown with the explanation',
+    'terrible-advice': 'its own "Next Question" button (#nextBtn), shown with the reveal',
+    'expected-damage': 'every answer waits on its own Next (#nextBtn): the outcome is worth reading (Jon, 1 Oct 2026)',
+    'think-of-a-number': 'its own Next button (#nextBtn) under the feedback',
+    'four-quadrant-explorer': 'its own Next button (#nextBtn), shown by showNextBtn() after the feedback',
+    'like-terms-collector': 'its own Next button (#nextBtn) under the feedback',
+    'probability-pioneer': 'its own Next button per question type (#scaleNextBtn, #mcqNextBtn, #tfNextBtn)',
+    'core-maths-paper1': 'its own "Next Question" button (#nextBtn) under the marked answer',
+    'core-maths-paper2a': 'its own "Next Question" button (#nextBtn) under the marked answer',
+    'core-maths-paper2b': 'its own "Next Question" button (#nextBtn) under the marked answer',
+    'core-maths-paper2c': 'its own "Next Question" button (#nextBtn) under the marked answer',
+    'stat-attack': 'its own "Next Scenario" button on the scenario\'s feedback',
+    'fermi-lab': 'its own "Next Question" button (#nextBtn) under the estimate\'s feedback',
+    'truth-will-set-you-free': 'its own "Continue to Expression" button after the verdict on each statement',
 }
 # Games the pause check cannot judge: reported, never failed. It may only shrink: it must stay a subset of the list as
 # it began (WRONG_PAUSE_UNCHECKED_AT_START, frozen), so a new game is judged from the start. Each with its reason.
@@ -981,7 +1018,28 @@ WRONG_PAUSE_UNCHECKED = {
     'prime-factorisation': 'the run reaches no wrong answer: it logs right answers only (mark_any)',
     'prisoners-dilemma': 'the run reaches no wrong answer: it logs right answers only (mark_any)',
 }
-PAUSE_REPORTED = {}    # slug -> its pause fault (or 'passes'), for a game on WRONG_PAUSE_UNCHECKED
+# Games where a wrong answer rightly does not wait on Next: reported, never failed. Changes need Jon (ruling of 19 Nov 2026).
+WRONG_PAUSE_EXEMPT = {
+    'higher-power': 'a wrong guess ends the run; the results screen follows (games/higher-power/index.html:604-607)',
+    'trig-wars': 'turn-based artillery: a miss shows its tip for 2.8 s and passes the turn (games/trig-wars/index.html:982)',
+}
+# Games that fail the pause and wait for their own fix: reported, never failed; only shrinks (Jon, 19 Nov 2026).
+WRONG_PAUSE_KNOWN_FAIL_AT_START = frozenset('''
+52dle
+'''.split())
+WRONG_PAUSE_KNOWN_FAIL = {
+    '52dle': 'moves on by itself after a wrong guess; removed by 52DLE-REBUILD (cloud queue)',
+}
+PAUSE_REPORTED = {}    # slug -> its pause fault (or 'passes'), for a game on one of the three reported lists
+
+
+def pause_list(slug):
+    """(list name, reason) for a game whose pause is reported, not failed; None when it is judged."""
+    for name, d in (('WRONG_PAUSE_UNCHECKED', WRONG_PAUSE_UNCHECKED), ('WRONG_PAUSE_EXEMPT', WRONG_PAUSE_EXEMPT),
+                    ('WRONG_PAUSE_KNOWN_FAIL', WRONG_PAUSE_KNOWN_FAIL)):
+        if slug in d:
+            return name, d[slug]
+    return None
 
 
 def counts(slug, remaining):
@@ -1274,8 +1332,19 @@ def main():
         fails.append('%s: on WRONG_PAUSE_UNCHECKED but not on WRONG_PAUSE_UNCHECKED_AT_START (the list only shrinks)' % s)
     for s in sorted(WRONG_PAUSE_UNCHECKED_AT_START - slugs):
         fails.append('%s: on WRONG_PAUSE_UNCHECKED_AT_START but not a roster game that records question_answered' % s)
-    for s in sorted(set(OWN_NEXT) - slugs):
-        fails.append('%s: on OWN_NEXT but not a roster game that records question_answered' % s)
+    for s in sorted(set(WRONG_PAUSE_KNOWN_FAIL) - WRONG_PAUSE_KNOWN_FAIL_AT_START):
+        fails.append('%s: on WRONG_PAUSE_KNOWN_FAIL but not on WRONG_PAUSE_KNOWN_FAIL_AT_START (the list only shrinks)' % s)
+    pause_lists = (('OWN_NEXT', OWN_NEXT), ('WRONG_PAUSE_UNCHECKED', WRONG_PAUSE_UNCHECKED),
+                   ('WRONG_PAUSE_EXEMPT', WRONG_PAUSE_EXEMPT), ('WRONG_PAUSE_KNOWN_FAIL', WRONG_PAUSE_KNOWN_FAIL))
+    for name, d in pause_lists:
+        for s in sorted(set(d) - slugs):
+            fails.append('%s: on %s but not a roster game that records question_answered' % (s, name))
+        for s in sorted(k for k, v in d.items() if not (isinstance(v, str) and v.strip())):
+            fails.append('%s: on %s with no reason' % (s, name))
+    for i, (a, da) in enumerate(pause_lists):
+        for b, db in pause_lists[i + 1:]:
+            for s in sorted(set(da) & set(db)):
+                fails.append('%s: on both %s and %s (one list each)' % (s, a, b))
     page = {s: open(os.path.join(ROOT, 'games', s, 'index.html'), encoding='utf-8').read() for s, _ in games}
     # Adopted: on NOT_YET, but the page loads the lock (the cloud lane migrates its own games). Judged in full.
     adopted = {s for s in NOT_YET & slugs if INCLUDE.search(page[s])}
@@ -1326,8 +1395,10 @@ def main():
     if SWALLOWED:
         print('  note: a tap landed in a fresh window and was made again once it closed: %s' % ', '.join(sorted(SWALLOWED)))
     for slug in sorted(PAUSE_REPORTED):
-        print('  REPORTED (WRONG_PAUSE_UNCHECKED, %s) %s: %s' % (WRONG_PAUSE_UNCHECKED[slug], slug,
-                                                              PAUSE_REPORTED[slug][:120]))
+        name, why = pause_list(slug)
+        print('  REPORTED (%s, %s) %s: %s' % (name, why, slug, PAUSE_REPORTED[slug][:120]))
+        if name == 'WRONG_PAUSE_KNOWN_FAIL' and PAUSE_REPORTED[slug] == 'passes':
+            print('  note: %s now passes the pause: take it off WRONG_PAUSE_KNOWN_FAIL' % slug)
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))

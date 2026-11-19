@@ -81,8 +81,8 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
 .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
-/* The answer after a wrong one (canon 7.6): shown above Next, which waits for the student */
-.fb{text-align:center;font-size:.95rem;color:var(--text);margin:.2rem 0 0}.fb:empty{display:none}.fb .fb-lbl{color:var(--muted);font-weight:600;margin-right:.35rem}.fb .katex{font-size:1.1em!important}
+/* The answer after a wrong one (canon 7.6): beside Next (above it when the row is too narrow), which waits for the student */
+#after{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;column-gap:.75rem}#after .maffs-next-wrap{width:auto}#after .maffs-next{margin:4px 0}.options:has(+ #after .fb:not(:empty)){margin-bottom:.5rem}.fb{text-align:center;font-size:.95rem;color:var(--text);margin:0}.fb:empty{display:none}.fb .fb-lbl{color:var(--muted);font-weight:600;margin-right:.35rem}.fb .katex{font-size:1.1em!important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
