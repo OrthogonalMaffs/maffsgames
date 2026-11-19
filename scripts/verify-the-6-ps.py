@@ -1567,9 +1567,8 @@ PLANTS = [
     ('the page script run twice with no guard against it',
      [("  if (window.SixPs) {   // the page script ran twice in one window", "  if (false) {   // the page script ran twice in one window")],
      ['second'], r'page script run twice'),
-    ('the feedback not scrolled into view (the helper never called)',
-     [("    MaffsScroll.reveal(fb, { up: true });", "")],
-     ['tall'], r'Next is not on the screen'),
+    # Retired 19 Nov 2026 (Jon's ruling on NEXT-IN-VIEW): 'the feedback not scrolled into view (the helper never
+    # called)'. MaffsNext.wrong() now brings Next into view itself, and scripts/test-next-control.py's plants guard that.
     ('a calculator-optional question labelled "Calculator"',
      [("$('qCalc').textContent = q.calc === 'optional' ? 'Calculator optional' : q.calc ? 'Calculator' : 'Non-calculator';",
        "$('qCalc').textContent = q.calc ? 'Calculator' : 'Non-calculator';")],

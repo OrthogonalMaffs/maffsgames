@@ -29,6 +29,12 @@
  *   - A 44px target: the control is at least 44px tall and wide.
  *   - Advancing clears every MaffsLock.timer() (schools/assets/answer-lock.js), so no timer
  *     set for the question just left can fire on the next one.
+ *   - In view (NEXT-IN-VIEW, 19 Nov 2026): wrong() brings the control into view itself, through
+ *     MaffsScroll.reveal (schools/assets/scroll.js), which settles again as fonts arrive and the
+ *     working grows, and stops at the student's own wheel, touch or key. A page that does not
+ *     load scroll.js gets it once, from beside this file. Canon §7.6.1: the reason and Next both
+ *     on screen on a phone. A control inside something fixed (an overlay) is left alone, since
+ *     scrolling the page cannot move it.
  *
  * USAGE
  * -----
@@ -41,6 +47,8 @@
  *   fallbackMs  safety net, default 20000. Deliberately long: it is not the mechanism.
  *               It runs on its own clock and ignores the floor.
  *   label       button text, default 'Next →'
+ *   keep        the reason/feedback element (or a function returning it) whose top must stay
+ *               on screen while Next is brought into view; default the control itself
  *
  * MaffsNext.FLOOR_MS is read each time a control is made, never captured at load. Its
  * value for students is 3000. Content verifiers set it to 0 through the shared harness
@@ -53,6 +61,58 @@
   var FALLBACK_MS = 20000;
   var FLOOR_MS = 3000;
   var api;   // window.MaffsNext, assigned below
+
+  // This file's own address, read while it runs, so scroll.js is found beside it at any page depth.
+  var SELF_SRC = (function () {
+    var s = document.currentScript;
+    if (s && s.src) return s.src;
+    var all = document.getElementsByTagName('script');
+    for (var i = all.length - 1; i >= 0; i--) {
+      if (/(^|\/)next-control\.js([?#]|$)/.test(all[i].src || '')) return all[i].src;
+    }
+    return '';
+  })();
+  var scrollWaiting = null;   // callbacks waiting for scroll.js, once its tag is added; 'failed' if it could not load
+
+  /* Run fn once MaffsScroll exists: now if the page loaded scroll.js, otherwise after one tag fetches it. */
+  function withScroll(fn) {
+    if (window.MaffsScroll && typeof window.MaffsScroll.reveal === 'function') { fn(); return; }
+    if (scrollWaiting === 'failed') return;
+    if (scrollWaiting) { scrollWaiting.push(fn); return; }
+    var src;
+    try { src = new URL('scroll.js', SELF_SRC || document.baseURI).href; } catch (e) { return; }
+    scrollWaiting = [fn];
+    var tag = document.createElement('script');
+    // The address is this file's own folder plus the literal 'scroll.js', the file scripts/ci-deps.py already
+    // records for this one (it resolves that literal beside next-control.js), so it is set as an attribute:
+    // a `.src =` given a computed value reads to ci-deps as an unknown load and runs every verifier.
+    tag.setAttribute('src', src);
+    tag.setAttribute('data-maffs-next', 'scroll');
+    tag.onload = function () {
+      var q = scrollWaiting;
+      scrollWaiting = null;
+      if (!(window.MaffsScroll && typeof window.MaffsScroll.reveal === 'function')) { scrollWaiting = 'failed'; return; }
+      for (var i = 0; i < q.length; i++) { try { q[i](); } catch (e) { /* one page's fault stays its own */ } }
+    };
+    tag.onerror = function () { scrollWaiting = 'failed'; };
+    (document.head || document.documentElement).appendChild(tag);
+  }
+
+  // Inside something fixed (an overlay), scrolling the page cannot move the control: leave it.
+  function inFixed(el) {
+    for (var n = el; n && n.nodeType === 1; n = n.parentElement) {
+      if (getComputedStyle(n).position === 'fixed') return true;
+    }
+    return false;
+  }
+
+  /* Bring the control into view, with keep's top held on screen. Nothing once the control has gone. */
+  function reveal(wrap, keep, state) {
+    withScroll(function () {
+      if (state.cancelled || state.done || !wrap.isConnected || inFixed(wrap)) return;
+      window.MaffsScroll.reveal(wrap, { keep: keep || wrap });
+    });
+  }
 
   // The floor in force for a new control: the public constant, read at use.
   function floorMs() {
@@ -150,6 +210,9 @@
     // Safety net only. If the student walks away the run still completes.
     state.fallback = setTimeout(function () { state.fallback = null; go(true); },
       typeof opts.fallbackMs === 'number' ? opts.fallbackMs : FALLBACK_MS);
+
+    // The reason and Next on screen (canon §7.6.1), settling as the page does.
+    reveal(wrap, opts.keep, state);
 
     return { advance: function () { go(false); }, button: btn };
   }

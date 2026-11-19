@@ -784,7 +784,9 @@ FIT_JS = r"""(aa) => {
       showQ(); scrollTo(0, 0);
       [...document.querySelectorAll('#options .opt-btn')].find(b => b.dataset.val === pick).click();
       const nx = document.querySelector('#nextMount button');
-      const bottom = nx ? Math.round(nx.getBoundingClientRect().bottom) : 1e6;
+      // Page coordinates (rect + scrollY), as measure-phone-fit.py does: MaffsNext's reveal scrolls Next into reach,
+      // which is not fitting (canon 7.6.1; Jon's ruling on NEXT-IN-VIEW, 19 Nov 2026).
+      const bottom = nx ? Math.round(nx.getBoundingClientRect().bottom + scrollY) : 1e6;
       if (bottom > fold || document.documentElement.scrollWidth > W)
         out.push([lv, i, pick, bottom - Math.round(fold), document.documentElement.scrollWidth > W]);
     }
