@@ -26,7 +26,7 @@ Claude Code (home lane), worktree `~/mg-dashboard-fixes`, branch `claude/dashboa
 - **Tests:** `scripts/test-apps-script-report.py` section i: all four charts are built, each with setNumHeaders(1); newChart( appears once. New plant: the pie built without setNumHeaders(1), caught. The curveType plant now targets the spec. 21 plants caught.
 - **Canon:** SR-33 (foundational skills are priority-audience work, Jon 18 Nov 2026) after SR-32; §0.2 point 2 names it. `docs/apps-script-redeploy.md` step 12: 2026-11-18-b. No /updates/ line (internal).
 - **Jon's steps after merge (never Deploy):** 1. paste `docs/apps-script-endpoint.js` into Code.gs, keeping your REPORT_EMAIL line; 2. Save; 3. run `testDashboard`. Then the percent check in the PR body, once.
-- MERGED: pending.
+- MERGED 18 Nov as e4ac609 (#829) via merge-pr.py, exit 0, last line "main e4ac609 run 44397107631: GREEN". Main on the merge commit: check-site 44397107631 success, phone-fit-full 44397107629 success (both push runs), pages build 44397106626 success (all confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dashboard-fixes.md` (closed out by PRINTABLES-CORE's first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
