@@ -1142,6 +1142,8 @@ if (window.MaffsNext) MaffsNext.clear(someElement);
 
 `schools/assets/next-control.js`, loaded alongside the other shared assets.
 
+MaffsNext.wrong() brings Next into view itself (MaffsScroll.reveal); pass keep: the reason element so its top stays on screen.
+
 **What the helper guarantees** (1 Oct 2026; `scripts/test-next-control.py`, in CI):
 
 - **A 3-second floor.** For `MaffsNext.FLOOR_MS` (3000ms) after `wrong()` mounts, Next is visibly
@@ -1257,6 +1259,8 @@ secondary panels, so the reason to read and the `Next →` control both sit abov
 student who has to scroll to find Next either never reads the reason (they hunt for the button) or
 never finds the button. Measure against the viewport minus the site footer, which is fixed and
 40px tall.
+
+Fit is measured in page coordinates (rect + scrollY), as measure-phone-fit.py does: MaffsNext's reveal makes Next reachable but does not count as fitting.
 
 - **Hide what cannot be used.** An answer keypad is locked while the feedback shows, so it is
   hidden, and the feedback takes its space. On a **wrong** answer only: a right answer shows one
