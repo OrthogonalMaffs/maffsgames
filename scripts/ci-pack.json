@@ -13,7 +13,7 @@
   "Better Value claims (every item's declared measure computed from its inputs; the key's claim true, every distractor's false; every text figure in its claim; KNOWN)": "28",
   "Better Value tax-and-NI rule of thumb (checked with uk_rates)": "49",
   "Binomial Blaster (every key and option evaluated with SymPy, every item marked in Chromium)": "71",
-  "Boolean Blitz (every key's truth table recomputed from its expression; an option right exactly when it has the key's truth table and no more literals; answer once; Chromium)": "86",
+  "Boolean Blitz (every key's truth table recomputed from its expression; an option right exactly when it has the key's truth table and no more literals; answer once; Chromium)": "68",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 1 of 4": "24",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 2 of 4": "74",
   "Burst mode (canon 7.5.6: burst.js loaded once in each adopted game and nowhere else; a 5-answer burst in Chromium shows the return bar after the 5th answer only, with the right score in its link; no score or history written; nothing changes without ?burst; &stage= presses button[data-stage]; fault-injection self-test: the stage, four-answer bar, without-?burst, score-submission and miscounted-score planted faults, each caught), part 3 of 4": "10",
@@ -54,7 +54,7 @@
   "Escape-room art (engine.js: a room with no art field requests no picture, in a fixture room; every live room's scene, win and fail pictures load as before; the old always-request engine planted and caught)": "61",
   "Escape-room credits (every credited room's start screen and teacher page show its room.js credit and the one invitation exactly once, linked to /feedback/; uncredited rooms show none; at 320, 390 and 1280 px no note leaves its container or truncates a title, on the room pages, the hub and the front page)": "27",
   "Escape-room dial scale (every live room's dials: ticks on their values, labelled majors with min and max, no overlap, drag sets the labelled value, no tick in the dead quarter; every lock's instrument on screen at 390x844; four planted faults caught)": "69",
-  "Escape-room difficulty stars (every live room's start screen and teacher page show its hub card's rating, with the text equivalent; \"Suits a top set\" on 3-star teacher pages only; no sideways scroll at 320 px on the rooms, teacher pages, hub and front page)": "17",
+  "Escape-room difficulty stars (every live room's start screen and teacher page show its hub card's rating, with the text equivalent; \"Suits a top set\" on 3-star teacher pages only; no sideways scroll at 320 px on the rooms, teacher pages, hub and front page)": "65",
   "Escape-room keypad, up to N digits (engine.js maxDigits on a fixture lock: 5,4,Set opens, 5,4,0,0,Set is the named misconception, no empty slots; a fixed keypad unchanged; the old fixed-length rule planted and caught)": "3",
   "Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught)": "11",
   "Escape-room search order and herrings (every live room shows the note and treats a searched herring like a clue; Chromium checks shuffled positions over 60 plays, refresh persistence, replay and an old save without order)": "26",
@@ -196,7 +196,7 @@
   "Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught), part 2 of 2": "6",
   "Tax Theft (every key recomputed from HMRC 2025/26 + money-answer format check)": "16",
   "Terrible Advice (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "13",
-  "Test the Claim (independent recomputation of every key)": "16",
+  "Test the Claim (independent recomputation of every key)": "56",
   "Text writes (every text-mode write in scripts/ passes newline='', so Windows cannot turn LF into CRLF)": "7",
   "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught), part 1 of 2": "3",
   "The 6 P's (the topic data file is the generator's output; no mark figure, AQA, Edexcel or \"in development\" in the page, no launch into a game; the four past-paper sites before Start; 10,000 sessions each way: six distinct covered topics in band order, frequencies in proportion to marks; every format marked by value through the page's own judge(), schema faults left out, five picked unseen first; a full session at 1280 px with localStorage working, on fixture banks covering all nine formats: every format answered right and wrong, never-marked answers not marked, slips, working, five a topic and a topic card, results, nudge, practice links, tick-list and events; resumed mid-topic after a reload; the same session at 320 px on a touch screen, typed on the phone keypad, with localStorage blocked: no sideways scroll on any screen, resumed mid-topic from window.name; every real bank's verdict and Next on a 375 x 667 phone; a topic with no bank offers Skip only; fault-injection self-test: the planted faults, each caught), part 2 of 2": "7",
@@ -345,7 +345,7 @@
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 2,
    "tier": "content"
@@ -369,7 +369,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
@@ -421,8 +421,8 @@
   {
    "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)",
    "median": 178,
-   "percent": 71,
-   "setup": 16
+   "percent": 74,
+   "setup": 22
   }
  ]
 }
