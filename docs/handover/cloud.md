@@ -69,14 +69,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-19 (cloud): TODO-135-CLOSE (`docs/handover/contracts/2026-11-19-todo-135-close.md`; Jon 19 Nov)
+## 2026-11-19 (cloud): TODO-135-CLOSE (`docs/history/contracts/2026-11-19-todo-135-close.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/zealous-dijkstra-12fjsn` from main 91d9f0f. Tier Small, docs only. Every line reference in the contract matched main.
 **Close-outs carried (first commit):** #831 DASHBOARD-PERCENT-CELLS, recorded in its entry below; cloud.md's STOP IF pointer now names `docs/history/contracts/`.
 Done on the branch: row 1.35 moved word for word to todo-done ("Closed by fix PRs") with its done note; LEDGER-B4-FRACTION-EQUIVALENCE rewritten to the generator's real state, owner Project Claude (spec), then cloud lane. todo.md 152,731 to 151,168 bytes.
 **Scan (§1, headline live or open, body FIXED or DONE for every part): none.** Of §1's 9 rows, those that say FIXED or DONE (1.14, 1.26, 1.34, 1.36, 1.48) each still name an open part; 1.14 and 1.48 are the reverse case (headline FIXED, a part still open). Changed none.
 **Decided for you:** the LEDGER row keeps a bold label without the old counts, and its survey pointer and 9 Nov provenance after the new text.
-Next: PR, Gate, merge with merge-pr.py.
+**Merged (closed out by FRACTION-SNAP-REBUILD):** #832, merge commit 20b30ed, route merge-pr.py, last line "main 20b30ed run 44523951280: GREEN"; main's runs on it, read from the API: check-site 44523951280 success, phone-fit-full 44523951287 success, pages build 44523949894 success. Contract moved to `docs/history/contracts/`.
 
 ## 2026-11-19 (cloud): DASHBOARD-PERCENT-CELLS (`docs/history/contracts/2026-11-19-dashboard-percent-cells.md`; Jon 19 Nov, Amendment 1)
 
