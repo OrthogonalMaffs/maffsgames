@@ -20,6 +20,16 @@ Every item, both levels:
   checker-allowlist.json (SR-4; B11-CLEAR, 12 Oct 2026);
   four distinct option strings; and, in Chromium (390x844), every item shown through showQ() and every option
   clicked through handle(): the key marked right, the others wrong.
+The worked solution shown on a wrong answer (contract SURD-WORKING, 19 Nov 2026), read from the page's own
+workingFor(), templates and data alike, every item at both levels:
+  every line read in SymPy: each top-level \\text{...} is words, the maths between is checked; in each maths run,
+  every "="-separated part is equal (a part with a decimal within 10^-6, the 6th place; a line opening with "="
+  continues the line before); in a recurring-decimal item x is the key, elsewhere a, b and x are positive symbols;
+  the last part of the last line equals the key;
+  a square-factor template's first line names the biggest square factor of n (recomputed here), and its last part
+  is the key as written; the templates cover exactly the items the contract lists, and every data key names an item;
+  in Chromium, a wrong answer shows that item's lines, rendered, in the "How to get there" box before Next, and a
+  right answer shows no box.
 A self-test plants each audit fault back into a copy of the page; each must FAIL naming its item.
 
     python scripts/verify-surd-simplifier.py [--no-selftest] [--against FILE] [--katex-dir DIR]
@@ -43,6 +53,7 @@ SLUG = 'surd-simplifier'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 COUNTS = {'gcse': 50, 'alevel': 50}
 SYMS = {'a': sp.Symbol('a', positive=True), 'x': sp.Symbol('x', positive=True)}
+WSYMS = dict(SYMS, b=sp.Symbol('b', positive=True))
 TRANSFORMS = standard_transformations + (implicit_multiplication_application,)
 AUDIT = {('gcse', 33): 'surd-simplifier-t1-001', ('alevel', 35): 'surd-simplifier-t1-002'}
 
@@ -237,6 +248,111 @@ def check_bank(fails, bank):
                                      'question (SR-4)' % (w, opts[x], opts[y]))
 
 
+# Which template each item's working comes from when it has no data entry (contract SURD-WORKING, 3(a)), 1-based.
+TEMPLATE_ITEMS = {
+    'surd': {'gcse': set(range(1, 17)), 'alevel': {1, 2, 3}},
+    'recurring': {'gcse': set(range(36, 51)), 'alevel': set(range(31, 41)) - {39}},
+}
+SURD_STEM = re.compile(r'(\d+)?\\sqrt\{(\d+)\}')
+SQ_LINE = re.compile(r'\\text\{Biggest square factor of \} (\d+) \\text\{ is \} (\d+)')
+
+
+def math_runs(line):
+    """The maths of one working line: the runs between its top-level \\text{...} groups."""
+    runs, cur, i = [], '', 0
+    while i < len(line):
+        if line.startswith('\\text{', i):
+            _, i = group(line, i + 5)
+            runs.append(cur)
+            cur = ''
+            continue
+        cur += line[i]
+        i += 1
+    runs.append(cur)
+    return [r for r in (x.replace('\\ldots', '').replace('\\;', ' ').replace('\\,', ' ').strip() for x in runs) if r]
+
+
+def wvalue(tex, x):
+    """A part of a working line, exactly: decimals as fractions; x is the key in a recurring item."""
+    tex = re.sub(r'(\d+)\.(\d+)', lambda m: '\\dfrac{%d}{%d}' % (int(m.group(1) + m.group(2)), 10 ** len(m.group(2))), tex)
+    loc = dict(WSYMS, sqrt=sp.sqrt)
+    if x is not None:
+        loc['x'] = x
+    try:
+        return parse_expr(to_py(tex), local_dict=loc, transformations=TRANSFORMS)
+    except Exception as e:
+        raise ValueError('cannot read %r: %s' % (tex, e))
+
+
+def biggest_square(n):
+    return max(k * k for k in range(1, int(n ** 0.5) + 1) if n % (k * k) == 0)
+
+
+def check_working(fails, bank, work, data_keys):
+    """Contract SURD-WORKING item 5: every line's parts equal, the last part the key; templates as listed."""
+    for k in data_keys:
+        m = re.fullmatch(r'(gcse|alevel)-(\d+)', k)
+        if not m or not 1 <= int(m.group(2)) <= len(bank.get(m.group(1), [])):
+            fails.append('working: the data key %r names no item' % k)
+    for lv in COUNTS:
+        for i, q in enumerate(bank.get(lv, [])):
+            w = item_name(lv, i, q)
+            lines = (work.get(lv) or [])[i] if i < len(work.get(lv) or []) else []
+            if not lines:
+                fails.append('%s: no working' % w)
+                continue
+            n1 = i + 1
+            data = '%s-%d' % (lv, n1) in data_keys
+            if not data:
+                kind = [t for t, by in TEMPLATE_ITEMS.items() if n1 in by[lv]]
+                if not kind:
+                    fails.append('%s: working from a template, but the contract lists no template for it' % w)
+            elif any(n1 in by[lv] for by in TEMPLATE_ITEMS.values()) and (lv, n1) != ('alevel', 39):
+                fails.append('%s: a data entry overrides its template; the contract lists only alevel-39' % w)
+            r = recurring(q['q'].strip())
+            x = r if r is not None else None
+            prev, last = None, None
+            try:
+                for li, line in enumerate(lines):
+                    for ri, run in enumerate(math_runs(line)):
+                        parts = [t.strip() for t in run.split('=')]
+                        if ri == 0 and parts[0] == '' and prev is not None:
+                            parts[0] = prev
+                        elif parts[0] == '':
+                            raise ValueError('line %d opens with "=" and nothing before it' % (li + 1))
+                        vals = [wvalue(t, x) for t in parts]
+                        for a in range(1, len(parts)):
+                            dec = bool(re.search(r'\d\.\d', parts[a - 1] + parts[a]))
+                            d = sp.simplify(vals[a - 1] - vals[a])
+                            ok = (d.is_number and abs(d) <= sp.Rational(1, 10 ** 6)) if dec else d == 0
+                            if not ok:
+                                fails.append('%s: working line %d: %s = %s is false (%s)'
+                                             % (w, li + 1, parts[a - 1], parts[a], lines[li]))
+                        prev = parts[-1]
+                        last = vals[-1]
+                if last is None or sp.simplify(last - value(q['correct'])) != 0:
+                    fails.append('%s: the working ends on %s, the key is %s' % (w, prev, q['correct']))
+            except ValueError as e:
+                fails.append('%s: working: %s (extend wvalue())' % (w, e))
+                continue
+            m = SURD_STEM.fullmatch(q['q'].strip())
+            if not data and m and n1 in TEMPLATE_ITEMS['surd'][lv]:
+                n = int(m.group(2))
+                s1 = SQ_LINE.fullmatch(lines[0])
+                if not s1 or int(s1.group(1)) != n:
+                    fails.append('%s: the square-factor template does not open by naming the factor of %d' % (w, n))
+                elif int(s1.group(2)) != biggest_square(n):
+                    fails.append('%s: the working names %s as the biggest square factor of %d; it is %d'
+                                 % (w, s1.group(2), n, biggest_square(n)))
+                if prev != q['correct']:
+                    fails.append('%s: the square-factor template ends on %s, not the key as written %s'
+                                 % (w, prev, q['correct']))
+
+
+WORK_JS = r"""() => ({keys: Object.keys(WORKING),
+  work: Object.fromEntries(['gcse', 'alevel'].map(lv => [lv, QUESTIONS[lv].map((q, i) => workingFor(lv, i))]))})"""
+
+
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0; window.setInterval = () => 0;
   const out = [];
@@ -252,11 +368,27 @@ SWEEP_JS = r"""() => {
       btn.click();
       const right = btn.classList.contains('correct');
       if (right !== (pick === q.correct)) out.push([lv, i, pick, right ? 'marked right' : 'marked wrong']);
+      // SURD-WORKING: a wrong answer shows the item's working before Next; a right one shows none.
+      const box = document.getElementById('working');
+      const boxShown = box && !box.hidden && getComputedStyle(box).display !== 'none';   // the sweep never shows #game, so no offsetHeight
+      const want = workingFor(lv, i).length;
+      const got = boxShown ? box.querySelectorAll('.wl').length : 0;
+      const next = document.querySelector('#nextMount .maffs-next');
+      if (pick !== q.correct) {
+        if (!boxShown || got !== want || !want)
+          out.push([lv, i, pick, 'answered wrong: the working box shows ' + got + ' of ' + want + ' lines']);
+        else if (box.querySelector('.katex-error') || [...box.querySelectorAll('.wl')].some(l => !l.textContent.trim()))
+          out.push([lv, i, pick, 'answered wrong: a working line does not render']);
+        else if (!box.querySelector('h3') || box.querySelector('h3').textContent !== 'How to get there')
+          out.push([lv, i, pick, 'answered wrong: the working box is not titled "How to get there"']);
+        if (!next) out.push([lv, i, pick, 'answered wrong: no Next']);
+      } else if (boxShown) out.push([lv, i, pick, 'answered right: the working box is shown']);
     }
   });
   return out;
 }"""
 KATEX_DIR = None
+WORK_SEEN = [None, None]   # the last page's (working by level, WORKING's keys), set by play()
 
 
 def text_fails(html):
@@ -291,6 +423,8 @@ def play(fails, html):
             page.goto(base + '/games/%s/?cb=verify' % SLUG, wait_until='load', timeout=20000)
             page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             bank = page.evaluate('() => QUESTIONS')
+            got = page.evaluate(WORK_JS)
+            WORK_SEEN[:] = [got['work'], set(got['keys'])]
             for lv, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s in Chromium: option %s %s' % (item_name(lv, i, bank[lv][i]), pick, what))
             browser.close()
@@ -318,6 +452,13 @@ PLANTS = [
      "correct:'\\\\dfrac{6}{9}',d:['\\\\dfrac{6}{10}','\\\\dfrac{2}{9}','\\\\dfrac{2}{3}']}"),
     ('start screen', 's1-001: "nested surds" listed, none in the bank',
      "expand surd brackets\n", "expand surd brackets, nested surds\n"),
+    # SURD-WORKING (19 Nov 2026): a false line, a wrong biggest square factor, and no box on a wrong answer.
+    ('gcse[0]', 'working: sqrt(4) x sqrt(5) in gcse item 1',
+     "'}\\\\times\\\\sqrt{'+b+'}',", "'}\\\\times\\\\sqrt{'+(n===12&&!k?5:b)+'}',", 'is false'),
+    ('gcse[4]', 'working: a square factor, not the biggest',
+     "if(n%(j*j)===0)a=j;", "if(n%(j*j)===0&&a===1)a=j;", 'biggest square factor'),
+    ('gcse[0]', 'working: no box on a wrong answer',
+     "else{showWorking(q);MaffsNext.wrong(", "else{MaffsNext.wrong(", 'working box shows 0'),
 ]
 
 
@@ -357,12 +498,14 @@ def main():
     bank = play(fails, html)
     if bank is not None:
         check_bank(fails, bank)
+        check_working(fails, bank, *WORK_SEEN)
     fails += start_screen_fails(html, bank)
     print('%s: %d items, every key recomputed from its stem, every option read and clicked in Chromium'
           % (SLUG, sum(len(bank.get(k, [])) for k in COUNTS) if bank else 0))
     ok = True
     if not args.no_selftest and not args.against:
-        for tag, what, new, old in PLANTS:
+        for tag, what, new, old, *need in PLANTS:
+            need = need[0] if need else ''
             if html.count(new) != 1:
                 print('  self-test %-46s *** CANNOT PLANT (%d) ***' % (what, html.count(new)))
                 ok = False
@@ -371,8 +514,9 @@ def main():
             planted = play(rep, html.replace(new, old))
             if planted is not None:
                 check_bank(rep, planted)
+                check_working(rep, planted, *WORK_SEEN)
             rep += start_screen_fails(html.replace(new, old), planted)
-            hit = [f for f in rep if f.startswith(tag)]
+            hit = [f for f in rep if f.startswith(tag) and need in f]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
     for f in fails:

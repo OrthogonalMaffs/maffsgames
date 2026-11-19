@@ -633,6 +633,7 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
 | LEDGER-B6 | **B6 ledger debt: 18 draft-marker hits in 6 games, none a wrong answer** (`expected-damage` 2, `maths-court` 2, `probability-paradox` 5, `terrible-advice` 4, `test-the-claim` 1, `wrong-on-the-internet` 4). One fix across games: let the rule accept deliberate character voice and ordinary uses of "wait", then retire the entries. Survey: `docs/audits/ledger-debt-2026-11.md` §B6. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | LEDGER-B3-ANGLE-ACE | **B3 ledger debt, `angle-ace`: 7 duplicate questions.** Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | LEDGER-B3-MOMENTS-MASTER | **B3 ledger debt, `moments-master`: 1 duplicate question.** Possibly a false match: see §4 item 11. Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+| EXTRACT-BANKS-MISREAD | **`scripts/extract-banks.py` counts a level's fixed list for a generated level** (factor-race KS3 and fraction-equivalence KS3/GCSE were reported as 20) and missed negative-number-line's Place It list (45 items, reported 30); `data/check-ledger.json` B4 entries built on those counts are not real. Found 19 Nov 2026 (bank audit; FACTOR-RACE-Y6-40). | home lane |
 
 
 ## 5. Parked, deliberately
