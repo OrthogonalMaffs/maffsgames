@@ -17,7 +17,8 @@ findings:
   where: games/fraction-equivalence/index.html(YEAR6 bank)
   summary: The Year 6 bank has only 20 items
   evidence: 'docs/audits/audit-tranche1-2026-10-06.md: section 3 (Fraction Snap)'
-  status: open
+  status: fixed
+  pr: 833
 - id: fraction-equivalence-f1-001
   severity: MEDIUM
   jc: false
@@ -36,7 +37,8 @@ findings:
   summary: 'Bank items 12 and 18 are the same question written the other way round (1/4 against 1/3, and 1/3 against 1/4),
     so the Year 6 bank has 19 different pairs, not 20. Replacing one is new content (Jon''s call, SR-19)'
   evidence: 'scripts/verify-fraction-equivalence.py (VERIFIERS-20): it records this pair as an expected repeat and fails on any other'
-  status: open
+  status: fixed
+  pr: 833
 - id: fraction-equivalence-s1-001
   severity: LOW
   jc: false
