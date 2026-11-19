@@ -69,13 +69,20 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-19 (cloud): FACTOR-RACE-Y6-40 (`docs/handover/contracts/2026-11-19-factor-race-y6-40.md`; Jon 19 Nov)
+## 2026-11-19 (cloud): SURD-WORKING (`docs/handover/contracts/2026-11-19-surd-working.md`; Jon 19 Nov)
+
+Agent Claude Code (cloud), branch `claude/peaceful-cerf-xb5ewl` from main 7df7951 (f7fd9ad plus two [skip ci] records). Tier Medium. Lines :182, :196 and :243 matched the contract's quoted text.
+**Close-outs carried (first commit):** #836 FACTOR-RACE-Y6-40, recorded in its entry below.
+Next: the two items, the working (templates and data), the box, the verifier, todo row, /updates/; PR, Gate, merge.
+
+## 2026-11-19 (cloud): FACTOR-RACE-Y6-40 (`docs/history/contracts/2026-11-19-factor-race-y6-40.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/youthful-knuth-uprtv0` restarted from main 150bd66. Tier Small. YEAR6_BANK's last line was the one quoted (:240).
 **Close-outs carried (first commit, 59b6b03):** #835 FRACTION-SNAP-START, recorded in its entry below.
 Done on the branch: the 20 pairs appended verbatim (40 in all); every comment's factor counts recomputed before adding, and 13 are won by the smaller number, as the contract says. `verify-factor-race.py` PASS, only its docstring's "20 pairs" now "40 pairs". `check-banks.py --ci` then failed on 2 STALE entries, `factor-race::year6` and `::ks3`; cleared with `--write-ledger --only factor-race`, then `--ci` OK. Row LEDGER-B4-FACTOR-RACE moved to `docs/history/todo-done.md` (nothing left); /updates/ line.
 **Decided for you:** (1) the ledger data edit, as in FORMULA-FORGE-40. (2) KS3's entry clears only because extract-banks reads YEAR6_BANK for both levels (`scoped_to_level: false`), the same misreading that gave the 9 Nov count; KS3 is generated, so the entry was never real. The extractor is not changed (not in this contract).
-Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+PR #836. **Merged (closed out by SURD-WORKING):** merge commit f7fd9ad (16:28:21 UTC 19 Nov), route merge-pr.py (the only route; its squash message has the same contract-and-footer shape as #835's); its last line was in the earlier session and is not quoted here. Main's runs on f7fd9ad, read from the API: check-site 44566476211 success, phone-fit-full 44566476389 success, pages build 44566475206 success, all attempt 1. Contract moved to `docs/history/contracts/`.
+Record: agent Claude Code; wall about 0:17 (first commit 16:11, merged 16:28 UTC); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-19 (cloud): FRACTION-SNAP-START (`docs/history/contracts/2026-11-19-fraction-snap-start.md`; Jon 19 Nov)
 
