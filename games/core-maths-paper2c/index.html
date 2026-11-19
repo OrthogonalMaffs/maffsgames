@@ -484,7 +484,8 @@ var currentQ = 0, score = 0, answers = [];
 // the sections in place and in their sizes, and each question's options in a new order (MaffsOptions), so a second
 // go is a real second go. PAPER[n] is the source index of the question at position n of this session. An option's
 // dataset.val is its index in q.options; marking compares that value with the key, never the button's position.
-var PAPER = [];
+// Until startGame() deals, the paper is in source order, so the page's state is valid before any play.
+var PAPER = QUESTIONS.map(function(_, i) { return i; });
 function dealPaper(starts, counts) {
   PAPER = [];
   starts.forEach(function(start, si) {

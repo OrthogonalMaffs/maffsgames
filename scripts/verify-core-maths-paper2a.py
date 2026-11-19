@@ -337,7 +337,7 @@ RENDER_JS = """(i) => {
   showScreen('gameScreen');
   document.getElementById('sectionBanner').style.display = 'none';
   document.getElementById('questionArea').style.display = 'block';
-  if (!PAPER.length) startGame();   // the session's deal (CORE-PAPERS-SHUFFLE); source question i at its dealt position
+  startGame();   // a dealt session (CORE-PAPERS-SHUFFLE); source question i shown at its dealt position
   document.getElementById('sectionBanner').style.display = 'none';
   document.getElementById('questionArea').style.display = 'block';
   currentQ = PAPER.indexOf(i); answered = false;
