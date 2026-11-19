@@ -1381,13 +1381,13 @@
       "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{27}{33} equals the marked answer \\dfrac{9}{11} but is not in its simplest form, which the ask names."
     },
     {
-      "id": "surd-simplifier::829ef097eb30#1::B11::[\"\\\\dfrac{142857}{999999}\", \"\\\\dfrac{1}{7}\"]",
+      "id": "surd-simplifier::ca319f14af91#1::B11::[\"\\\\dfrac{63}{99}\", \"\\\\dfrac{7}{11}\"]",
       "where": "surd-simplifier QUESTIONS.gcse[47]",
       "pair": [
-        "\\dfrac{142857}{999999}",
-        "\\dfrac{1}{7}"
+        "\\dfrac{63}{99}",
+        "\\dfrac{7}{11}"
       ],
-      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{142857}{999999} equals the marked answer \\dfrac{1}{7} but is not in its simplest form, which the ask names."
+      "reason": "The ask is \"Convert to a fraction in its simplest form\". \\dfrac{63}{99} equals the marked answer \\dfrac{7}{11} but is not in its simplest form, which the ask names."
     },
     {
       "id": "surd-simplifier::b3fcae9ca95e#1::B11::[\"1\", \"\\\\dfrac{9}{9}\"]",
@@ -1534,7 +1534,7 @@
       "reason": "The ask is \"Write in its simplest form\". \\dfrac{9}{9} equals the marked answer 1 but is not in its simplest form, which the ask names."
     },
     {
-      "id": "surd-simplifier::829ef097eb30#2::B11::[\"\\\\dfrac{142857}{999999}\", \"\\\\dfrac{1}{7}\"]",
+      "id": "surd-simplifier::829ef097eb30#1::B11::[\"\\\\dfrac{142857}{999999}\", \"\\\\dfrac{1}{7}\"]",
       "where": "surd-simplifier QUESTIONS.alevel[38]",
       "pair": [
         "\\dfrac{142857}{999999}",

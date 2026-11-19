@@ -64,6 +64,11 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .screen{display:none}.screen.active{display:block}
 .katex{font-size:1.1em!important}.q-card .katex{font-size:1.4em!important}
 .back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}.back-link:hover{color:var(--text)}
+.working{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:0.8rem 1rem;margin:0 0 1rem;text-align:left}
+.working[hidden]{display:none}
+.working h3{font-size:0.8rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem}
+.working .wl{margin:0.3rem 0;line-height:1.7;overflow-wrap:break-word}
+.working .wl .katex{font-size:1.05em!important}
 .mode-info{text-align:center;color:var(--muted);font-size:0.8rem;margin:0.5rem 0;line-height:1.5}
 /* === Accessibility === */
 body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
@@ -129,6 +134,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
     <div class="options" id="options"></div>
     <div id="nextMount"></div>
+    <div class="working" id="working" hidden aria-live="polite"><h3>How to get there</h3><div id="workingLines"></div></div>
   </div>
   <div id="results" class="screen">
     <div class="results">
@@ -179,7 +185,7 @@ gcse:[
   {q:'\\dfrac{\\sqrt{2}}{\\sqrt{6}}',ask:'Simplify, rationalising the denominator',correct:'\\dfrac{\\sqrt{3}}{3}',d:['\\dfrac{\\sqrt{2}}{6}','\\dfrac{1}{\\sqrt{3}}','\\dfrac{\\sqrt{12}}{6}']},
   {q:'\\dfrac{\\sqrt{3}}{\\sqrt{12}}',ask:'Simplify',correct:'\\dfrac{1}{2}',d:['\\dfrac{\\sqrt{3}}{12}','\\dfrac{1}{4}','\\dfrac{\\sqrt{36}}{12}']},
   {q:'\\dfrac{8}{\\sqrt{32}}',ask:'Rationalise and simplify',correct:'\\sqrt{2}',d:['2\\sqrt{2}','4','\\sqrt{2} \\cdot \\sqrt{2}']},
-  {q:'\\dfrac{8}{\\sqrt{32}}',ask:'Simplify fully',correct:'\\sqrt{2}',d:['2','2\\sqrt{2}','4']},
+  {q:'\\dfrac{12}{\\sqrt{6}}',ask:'Rationalise and simplify',correct:'2\\sqrt{6}',d:['12\\sqrt{6}','\\sqrt{2}','2']},
   // Recurring decimals (Q36-50)
   {q:'0.\\dot{3}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{1}{3}',d:['\\dfrac{3}{10}','\\dfrac{1}{9}','\\dfrac{3}{9}']},
   {q:'0.\\dot{6}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{2}{3}',d:['\\dfrac{6}{10}','\\dfrac{2}{9}','\\dfrac{6}{9}']},
@@ -193,7 +199,7 @@ gcse:[
   {q:'0.\\dot{8}\\dot{1}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{9}{11}',d:['\\dfrac{81}{100}','\\dfrac{81}{99}','\\dfrac{27}{33}']},
   {q:'0.1\\dot{6}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{1}{6}',d:['\\dfrac{16}{100}','\\dfrac{16}{99}','\\dfrac{1}{9}']},
   {q:'0.08\\dot{3}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{1}{12}',d:['\\dfrac{83}{1000}','\\dfrac{1}{8}','\\dfrac{83}{999}']},
-  {q:'0.\\dot{1}4285\\dot{7}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{1}{7}',d:['\\dfrac{142857}{999999}','\\dfrac{1}{9}','\\dfrac{14}{99}']},
+  {q:'0.\\dot{6}\\dot{3}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{7}{11}',d:['\\dfrac{63}{100}','\\dfrac{63}{99}','\\dfrac{2}{3}']},
   {q:'0.\\dot{9}',ask:'Write in its simplest form',correct:'1',d:['\\dfrac{9}{10}','\\dfrac{9}{9}','\\dfrac{99}{100}']},
   {q:'0.\\dot{3}\\dot{6}',ask:'Convert to a fraction in its simplest form',correct:'\\dfrac{4}{11}',d:['\\dfrac{36}{100}','\\dfrac{36}{99}','\\dfrac{12}{33}']},
 ],
@@ -256,6 +262,111 @@ alevel:[
 ]
 };
 
+// Worked solutions, shown on a wrong answer (contract SURD-WORKING, 19 Nov 2026; canon 7.6: show the working).
+// WORKING, keyed 'level-itemNumber' (1-based), is Project Claude's data, verbatim; an entry overrides a template.
+// Every other item's working is computed below. scripts/verify-surd-simplifier.py checks every line in SymPy.
+const WORKING={
+'gcse-17':['\\sqrt{27} = 3\\sqrt{3}','\\text{so }\\sqrt{27} + \\sqrt{3} = 3\\sqrt{3} + \\sqrt{3} = 4\\sqrt{3}'],
+'gcse-18':['\\sqrt{50} = 5\\sqrt{2}\\text{ and }\\sqrt{8} = 2\\sqrt{2}','\\sqrt{50} - \\sqrt{8} = 5\\sqrt{2} - 2\\sqrt{2} = 3\\sqrt{2}'],
+'gcse-19':['\\sqrt{20} = 2\\sqrt{5}\\text{ and }\\sqrt{45} = 3\\sqrt{5}','\\sqrt{20} + \\sqrt{45} = 2\\sqrt{5} + 3\\sqrt{5} = 5\\sqrt{5}'],
+'gcse-20':['\\text{Multiply the numbers, then the surds}','2\\sqrt{3} \\times 3\\sqrt{3} = 6 \\times \\sqrt{3}\\times\\sqrt{3} = 6 \\times 3 = 18'],
+'gcse-21':['\\text{Multiply top and bottom by }\\sqrt{2}','\\dfrac{1}{\\sqrt{2}} = \\dfrac{1\\times\\sqrt{2}}{\\sqrt{2}\\times\\sqrt{2}} = \\dfrac{\\sqrt{2}}{2}'],
+'gcse-22':['\\text{Multiply top and bottom by }\\sqrt{3}','\\dfrac{1}{\\sqrt{3}} = \\dfrac{\\sqrt{3}}{\\sqrt{3}\\times\\sqrt{3}} = \\dfrac{\\sqrt{3}}{3}'],
+'gcse-23':['\\text{Multiply top and bottom by }\\sqrt{5}','\\dfrac{1}{\\sqrt{5}} = \\dfrac{\\sqrt{5}}{\\sqrt{5}\\times\\sqrt{5}} = \\dfrac{\\sqrt{5}}{5}'],
+'gcse-24':['\\text{Multiply top and bottom by }\\sqrt{3}','\\dfrac{2}{\\sqrt{3}} = \\dfrac{2\\sqrt{3}}{\\sqrt{3}\\times\\sqrt{3}} = \\dfrac{2\\sqrt{3}}{3}'],
+'gcse-25':['\\text{Multiply top and bottom by }\\sqrt{2}','\\dfrac{3}{\\sqrt{2}} = \\dfrac{3\\sqrt{2}}{\\sqrt{2}\\times\\sqrt{2}} = \\dfrac{3\\sqrt{2}}{2}'],
+'gcse-26':['\\text{Multiply top and bottom by }\\sqrt{8}','\\dfrac{4}{\\sqrt{8}} = \\dfrac{4\\sqrt{8}}{8} = \\dfrac{\\sqrt{8}}{2} = \\dfrac{2\\sqrt{2}}{2} = \\sqrt{2}'],
+'gcse-27':['\\text{Multiply top and bottom by }\\sqrt{12}','\\dfrac{6}{\\sqrt{12}} = \\dfrac{6\\sqrt{12}}{12} = \\dfrac{\\sqrt{12}}{2} = \\dfrac{2\\sqrt{3}}{2} = \\sqrt{3}'],
+'gcse-28':['\\text{Multiply top and bottom by }\\sqrt{50}','\\dfrac{10}{\\sqrt{50}} = \\dfrac{10\\sqrt{50}}{50} = \\dfrac{\\sqrt{50}}{5} = \\dfrac{5\\sqrt{2}}{5} = \\sqrt{2}'],
+'gcse-29':['\\text{Multiply top and bottom by }\\sqrt{5}','\\dfrac{5}{\\sqrt{5}} = \\dfrac{5\\sqrt{5}}{5} = \\sqrt{5}'],
+'gcse-30':['\\text{Multiply top and bottom by }\\sqrt{3}','\\dfrac{1}{2\\sqrt{3}} = \\dfrac{\\sqrt{3}}{2\\sqrt{3}\\times\\sqrt{3}} = \\dfrac{\\sqrt{3}}{2\\times 3} = \\dfrac{\\sqrt{3}}{6}'],
+'gcse-31':['\\text{Multiply top and bottom by }\\sqrt{7}','\\dfrac{3}{\\sqrt{7}} = \\dfrac{3\\sqrt{7}}{\\sqrt{7}\\times\\sqrt{7}} = \\dfrac{3\\sqrt{7}}{7}'],
+'gcse-32':['\\dfrac{\\sqrt{2}}{\\sqrt{6}} = \\sqrt{\\dfrac{2}{6}} = \\sqrt{\\dfrac{1}{3}} = \\dfrac{1}{\\sqrt{3}}','\\text{Multiply top and bottom by }\\sqrt{3}\\text{: }\\dfrac{1}{\\sqrt{3}} = \\dfrac{\\sqrt{3}}{3}'],
+'gcse-33':['\\dfrac{\\sqrt{3}}{\\sqrt{12}} = \\sqrt{\\dfrac{3}{12}} = \\sqrt{\\dfrac{1}{4}} = \\dfrac{1}{2}'],
+'gcse-34':['\\sqrt{32} = 4\\sqrt{2}\\text{, so }\\dfrac{8}{\\sqrt{32}} = \\dfrac{8}{4\\sqrt{2}} = \\dfrac{2}{\\sqrt{2}}','\\text{Multiply top and bottom by }\\sqrt{2}\\text{: }\\dfrac{2}{\\sqrt{2}} = \\dfrac{2\\sqrt{2}}{2} = \\sqrt{2}'],
+'gcse-35':['\\text{Multiply top and bottom by }\\sqrt{6}','\\dfrac{12}{\\sqrt{6}} = \\dfrac{12\\sqrt{6}}{\\sqrt{6}\\times\\sqrt{6}} = \\dfrac{12\\sqrt{6}}{6} = 2\\sqrt{6}'],
+'alevel-4':['3\\sqrt{50} = 3\\times 5\\sqrt{2} = 15\\sqrt{2}','2\\sqrt{18} = 2\\times 3\\sqrt{2} = 6\\sqrt{2}','3\\sqrt{50} - 2\\sqrt{18} = 15\\sqrt{2} - 6\\sqrt{2} = 9\\sqrt{2}'],
+'alevel-5':['\\sqrt{75} = 5\\sqrt{3}','2\\sqrt{27} = 2\\times 3\\sqrt{3} = 6\\sqrt{3}','\\sqrt{75} + 2\\sqrt{27} = 5\\sqrt{3} + 6\\sqrt{3} = 11\\sqrt{3}'],
+'alevel-6':['(2\\sqrt{3})^2 = 2^2 \\times (\\sqrt{3})^2 = 4 \\times 3 = 12'],
+'alevel-7':['\\sqrt{2} \\times \\sqrt{8} = \\sqrt{16} = 4'],
+'alevel-8':['\\sqrt{6} \\times \\sqrt{24} = \\sqrt{144} = 12'],
+'alevel-9':['\\dfrac{\\sqrt{48}}{\\sqrt{3}} = \\sqrt{\\dfrac{48}{3}} = \\sqrt{16} = 4'],
+'alevel-10':['\\sqrt{5}(\\sqrt{5}+\\sqrt{20}) = \\sqrt{5}\\times\\sqrt{5} + \\sqrt{5}\\times\\sqrt{20} = 5 + \\sqrt{100} = 5 + 10 = 15'],
+'alevel-11':['\\text{Multiply top and bottom by the conjugate }\\sqrt{3}+1','\\dfrac{1}{\\sqrt{3}-1} = \\dfrac{\\sqrt{3}+1}{(\\sqrt{3}-1)(\\sqrt{3}+1)} = \\dfrac{\\sqrt{3}+1}{3-1} = \\dfrac{\\sqrt{3}+1}{2}'],
+'alevel-12':['\\text{Multiply top and bottom by the conjugate }\\sqrt{5}-2','\\dfrac{1}{\\sqrt{5}+2} = \\dfrac{\\sqrt{5}-2}{(\\sqrt{5}+2)(\\sqrt{5}-2)} = \\dfrac{\\sqrt{5}-2}{5-4} = \\sqrt{5}-2'],
+'alevel-13':['\\text{Multiply top and bottom by the conjugate }\\sqrt{2}-1','\\dfrac{1}{\\sqrt{2}+1} = \\dfrac{\\sqrt{2}-1}{(\\sqrt{2}+1)(\\sqrt{2}-1)} = \\dfrac{\\sqrt{2}-1}{2-1} = \\sqrt{2}-1'],
+'alevel-14':['\\text{Multiply top and bottom by the conjugate }\\sqrt{7}+2','\\dfrac{1}{\\sqrt{7}-2} = \\dfrac{\\sqrt{7}+2}{(\\sqrt{7}-2)(\\sqrt{7}+2)} = \\dfrac{\\sqrt{7}+2}{7-4} = \\dfrac{\\sqrt{7}+2}{3}'],
+'alevel-15':['\\text{Multiply top and bottom by the conjugate }\\sqrt{3}-1','\\dfrac{2}{\\sqrt{3}+1} = \\dfrac{2(\\sqrt{3}-1)}{(\\sqrt{3}+1)(\\sqrt{3}-1)} = \\dfrac{2(\\sqrt{3}-1)}{3-1} = \\sqrt{3}-1'],
+'alevel-16':['\\text{Multiply top and bottom by the conjugate }\\sqrt{5}+1','\\dfrac{3}{\\sqrt{5}-1} = \\dfrac{3(\\sqrt{5}+1)}{(\\sqrt{5}-1)(\\sqrt{5}+1)} = \\dfrac{3(\\sqrt{5}+1)}{5-1} = \\dfrac{3(\\sqrt{5}+1)}{4}'],
+'alevel-17':['\\text{Multiply top and bottom by the conjugate }2-\\sqrt{3}','\\dfrac{4}{2+\\sqrt{3}} = \\dfrac{4(2-\\sqrt{3})}{(2+\\sqrt{3})(2-\\sqrt{3})} = \\dfrac{4(2-\\sqrt{3})}{4-3} = 8-4\\sqrt{3}'],
+'alevel-18':['\\text{Multiply top and bottom by the conjugate }\\sqrt{2}+1','\\dfrac{\\sqrt{2}}{\\sqrt{2}-1} = \\dfrac{\\sqrt{2}(\\sqrt{2}+1)}{(\\sqrt{2}-1)(\\sqrt{2}+1)} = \\dfrac{2+\\sqrt{2}}{2-1} = 2+\\sqrt{2}'],
+'alevel-19':['\\text{Multiply top and bottom by the conjugate }\\sqrt{6}-1','\\dfrac{5}{\\sqrt{6}+1} = \\dfrac{5(\\sqrt{6}-1)}{(\\sqrt{6}+1)(\\sqrt{6}-1)} = \\dfrac{5(\\sqrt{6}-1)}{6-1} = \\sqrt{6}-1'],
+'alevel-20':['\\text{Multiply top and bottom by the conjugate }2\\sqrt{3}-3','\\dfrac{1}{2\\sqrt{3}+3} = \\dfrac{2\\sqrt{3}-3}{(2\\sqrt{3}+3)(2\\sqrt{3}-3)} = \\dfrac{2\\sqrt{3}-3}{12-9} = \\dfrac{2\\sqrt{3}-3}{3}'],
+'alevel-21':['\\text{Difference of two squares}\\;(a+b)(a-b) = a^2 - b^2','(\\sqrt{3}+1)(\\sqrt{3}-1) = 3 - 1 = 2'],
+'alevel-22':['\\text{Difference of two squares}\\;(a+b)(a-b) = a^2 - b^2','(\\sqrt{5}+2)(\\sqrt{5}-2) = 5 - 4 = 1'],
+'alevel-23':['\\text{Difference of two squares}\\;(a+b)(a-b) = a^2 - b^2','(\\sqrt{7}+3)(\\sqrt{7}-3) = 7 - 9 = -2'],
+'alevel-24':['(2+\\sqrt{3})^2 = (2+\\sqrt{3})(2+\\sqrt{3})','= 4 + 2\\sqrt{3} + 2\\sqrt{3} + 3 = 7+4\\sqrt{3}'],
+'alevel-25':['(3-\\sqrt{2})^2 = (3-\\sqrt{2})(3-\\sqrt{2})','= 9 - 3\\sqrt{2} - 3\\sqrt{2} + 2 = 11-6\\sqrt{2}'],
+'alevel-26':['(1+\\sqrt{5})(2+\\sqrt{5}) = 2 + \\sqrt{5} + 2\\sqrt{5} + 5 = 7+3\\sqrt{5}'],
+'alevel-27':['\\text{Difference of two squares}\\;(a+b)(a-b) = a^2 - b^2','(\\sqrt{2}+\\sqrt{3})(\\sqrt{2}-\\sqrt{3}) = 2 - 3 = -1'],
+'alevel-28':['(\\sqrt{6}+1)^2 = (\\sqrt{6}+1)(\\sqrt{6}+1)','= 6 + \\sqrt{6} + \\sqrt{6} + 1 = 7+2\\sqrt{6}'],
+'alevel-29':['(2\\sqrt{3}+1)(\\sqrt{3}-2) = 2\\sqrt{3}\\times\\sqrt{3} - 4\\sqrt{3} + \\sqrt{3} - 2','= 6 - 3\\sqrt{3} - 2 = 4-3\\sqrt{3}'],
+'alevel-30':['(\\sqrt{5}+\\sqrt{2})^2 = 5 + \\sqrt{10} + \\sqrt{10} + 2 = 7+2\\sqrt{10}'],
+'alevel-41':['\\text{Multiply top and bottom by }\\sqrt{3}+1','\\dfrac{\\sqrt{3}+1}{\\sqrt{3}-1} = \\dfrac{(\\sqrt{3}+1)^2}{(\\sqrt{3}-1)(\\sqrt{3}+1)} = \\dfrac{4+2\\sqrt{3}}{2} = 2+\\sqrt{3}'],
+'alevel-42':['\\text{Multiply top and bottom by }\\sqrt{5}+\\sqrt{2}','\\dfrac{\\sqrt{5}+\\sqrt{2}}{\\sqrt{5}-\\sqrt{2}} = \\dfrac{(\\sqrt{5}+\\sqrt{2})^2}{(\\sqrt{5}-\\sqrt{2})(\\sqrt{5}+\\sqrt{2})} = \\dfrac{7+2\\sqrt{10}}{5-2} = \\dfrac{7+2\\sqrt{10}}{3}'],
+'alevel-43':['\\text{Multiply top and bottom by }\\sqrt{3}-\\sqrt{2}','\\dfrac{1}{\\sqrt{2}+\\sqrt{3}} = \\dfrac{\\sqrt{3}-\\sqrt{2}}{(\\sqrt{3}+\\sqrt{2})(\\sqrt{3}-\\sqrt{2})} = \\dfrac{\\sqrt{3}-\\sqrt{2}}{3-2} = \\sqrt{3}-\\sqrt{2}'],
+'alevel-44':['\\dfrac{6}{\\sqrt{3}} = \\dfrac{6\\sqrt{3}}{3} = 2\\sqrt{3}\\text{ and }\\sqrt{27} = 3\\sqrt{3}','\\dfrac{6}{\\sqrt{3}}+\\sqrt{27} = 2\\sqrt{3} + 3\\sqrt{3} = 5\\sqrt{3}'],
+'alevel-45':['\\sqrt{50} = 5\\sqrt{2}\\text{ and }\\sqrt{8} = 2\\sqrt{2}','\\dfrac{\\sqrt{50}+\\sqrt{8}}{\\sqrt{2}} = \\dfrac{5\\sqrt{2}+2\\sqrt{2}}{\\sqrt{2}} = \\dfrac{7\\sqrt{2}}{\\sqrt{2}} = 7'],
+'alevel-46':['\\text{Difference of two squares}\\;(a+b)(a-b) = a^2 - b^2','(3+\\sqrt{5})(3-\\sqrt{5}) = 9 - 5 = 4'],
+'alevel-47':['\\sqrt{8} = 2\\sqrt{2}\\text{, so }\\sqrt{2}(3\\sqrt{2}-\\sqrt{8}) = \\sqrt{2}(3\\sqrt{2}-2\\sqrt{2}) = \\sqrt{2}\\times\\sqrt{2} = 2'],
+'alevel-48':['\\text{Squaring undoes the square root: }(\\sqrt{a})^2 = a'],
+'alevel-49':['x^4 = (x^2)^2\\text{, so }\\sqrt{x^4} = x^2'],
+'alevel-50':['\\dfrac{8}{\\sqrt{2}} \\times \\dfrac{1}{\\sqrt{2}} = \\dfrac{8}{\\sqrt{2}\\times\\sqrt{2}} = \\dfrac{8}{2} = 4'],
+'alevel-39':['x = 0.142857\\ldots','1000000x = 142857.142857\\ldots','\\text{Subtract: } 999999x = 142857','999999 = 7 \\times 142857','x = \\dfrac{142857}{999999} = \\dfrac{1}{7}'],
+};
+// k\sqrt{n} or \sqrt{n}, "Simplify": a^2 is the biggest square factor of n, b = n/a^2.
+function surdTemplate(q){
+  const m=/^(\d+)?\\sqrt\{(\d+)\}$/.exec(q.q);if(!m||q.ask!=='Simplify')return null;
+  const k=m[1]?+m[1]:0,n=+m[2];let a=1;for(let j=2;j*j<=n;j++)if(n%(j*j)===0)a=j;
+  const b=n/(a*a),K=k?String(k):'';
+  return ['\\text{Biggest square factor of } '+n+' \\text{ is } '+(a*a),
+    K+'\\sqrt{'+n+'} = '+K+'\\sqrt{'+(a*a)+'}\\times\\sqrt{'+b+'}',
+    k?'= '+k+'\\times '+a+'\\sqrt{'+b+'} = '+(k*a)+'\\sqrt{'+b+'}':'= '+a+'\\sqrt{'+b+'}'];
+}
+// 0.<pre><recurring>, read from the dots: multiply by 10^(p+r) (and 10^p when p > 0), subtract, cancel.
+function recurTemplate(q){
+  const m=/^0\.((?:\d|\\dot\{\d\})+)$/.exec(q.q);if(!m||q.q.indexOf('\\dot')<0)return null;
+  const t=[...m[1].matchAll(/\\dot\{(\d)\}|(\d)/g)].map(x=>({d:x[1]||x[2],dot:!!x[1]}));
+  const f=t.findIndex(x=>x.dot),pre=t.slice(0,f).map(x=>x.d).join(''),rep=t.slice(f).map(x=>x.d).join('');
+  if(pre===''&&rep==='9')return ['x = 0.999999\\ldots','10x = 9.999999\\ldots','\\text{Subtract: } 9x = 9','x = 1'];
+  const p=pre.length,r=rep.length,ten=e=>'1'+'0'.repeat(e);
+  const dig=n=>{let d=pre;while(d.length<n)d+=rep;return d.slice(0,n)};
+  const times=e=>{const d=dig(e+6);return (d.slice(0,e).replace(/^0+/,'')||'0')+'.'+d.slice(e)+'\\ldots'};   // 10^e x, to 6 d.p., truncated
+  const N=parseInt(pre+rep,10)-parseInt(pre||'0',10),D=Math.pow(10,p)*(Math.pow(10,r)-1);
+  let g=N,h=D;while(h){[g,h]=[h,g%h]}
+  const L=['x = '+times(0),ten(p+r)+'x = '+times(p+r)];if(p>0)L.push(ten(p)+'x = '+times(p));
+  L.push('\\text{Subtract: } '+D+'x = '+N);
+  L.push('x = \\dfrac{'+N+'}{'+D+'}'+(g>1?' = \\dfrac{'+N/g+'}{'+D/g+'}':''));
+  return L;
+}
+function workingFor(lv,i){const q=QUESTIONS[lv][i];return WORKING[lv+'-'+(i+1)]||surdTemplate(q)||recurTemplate(q)||[]}
+// One line: each top-level \text{...} as words, so a long sentence wraps on a phone; the maths between as KaTeX.
+function workLine(tex){
+  const el=document.createElement('div');el.className='wl';let i=0,math='';
+  // A short run with no "=" (the conjugate after "Multiply top and bottom by") stays on one line; a chain of "=" may wrap.
+  const flush=()=>{if(math.trim()){const s=document.createElement('span');if(math.indexOf('=')<0)s.style.whiteSpace='nowrap';rk(s,math);el.appendChild(s)}math=''};
+  while(i<tex.length){
+    if(tex.startsWith('\\text{',i)){let d=0,j=i+5;for(;j<tex.length;j++){d+=(tex[j]==='{')-(tex[j]==='}');if(d===0)break}
+      flush();const s=document.createElement('span');s.textContent=tex.slice(i+6,j);el.appendChild(s);i=j+1;continue}
+    math+=tex[i++];
+  }
+  flush();return el;
+}
+function showWorking(q){
+  const lines=workingFor(level,QUESTIONS[level].indexOf(q)),box=document.getElementById('working'),w=document.getElementById('workingLines');
+  w.innerHTML='';lines.forEach(t=>w.appendChild(workLine(t)));box.hidden=!lines.length;
+}
+
 let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
 const BASE=100,T_K=0.15;
 
@@ -280,6 +391,7 @@ function startGame(){
 }
 function showQ(){
   if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));
+  document.getElementById('working').hidden=true;document.getElementById('workingLines').innerHTML='';
   const q=questions[qIdx];
   document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
   const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);
@@ -299,8 +411,8 @@ function handle(btn,q){
   else{btn.classList.add('wrong');streak=0;pip('fail')}
   mfg('question_answered',{game_slug:'surd-simplifier',level:level,correct:ok,question_index:qIdx+1});
   document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
-  // A right answer moves on; a wrong one waits on Next, the right option shown (canon 7.6)
-  if(ok){MaffsLock.timer(adv,1000)}else{MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
+  // A right answer moves on; a wrong one waits on Next, the right option shown with its working (canon 7.6)
+  if(ok){MaffsLock.timer(adv,1000)}else{showWorking(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
 }
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}

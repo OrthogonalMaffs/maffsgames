@@ -71,7 +71,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 ## 2026-11-19 (cloud): SURD-WORKING (`docs/handover/contracts/2026-11-19-surd-working.md`; Jon 19 Nov)
 
-Agent Claude Code (cloud), branch `claude/peaceful-cerf-xb5ewl` from main 7df7951 (f7fd9ad plus two [skip ci] records). Tier Medium. Lines :182, :196 and :243 matched the contract's quoted text.
+Agent Claude Code (cloud), branch `claude/peaceful-cerf-xb5ewl` from main 7df7951 (f7fd9ad plus two CI record commits). Tier Medium. Lines :182, :196 and :243 matched the contract's quoted text.
 **Close-outs carried (first commit):** #836 FACTOR-RACE-Y6-40, recorded in its entry below.
 Next: the two items, the working (templates and data), the box, the verifier, todo row, /updates/; PR, Gate, merge.
 
