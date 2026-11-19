@@ -94,18 +94,3 @@ Claude Code (home lane), worktree `~/mg-canteen-pack`, branch `claude/canteen-pa
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
-## 2026-11-17 (home): FINAL-PADLOCK-FAIR (fair final padlocks, the optional final padlock, versioned PDF names; all ten packs rebuilt)
-
-Claude Code (home lane, cloud session), branch `claude/inspiring-einstein-jylil1`; contract `docs/handover/contracts/2026-11-17-final-padlock-fair.md` with Amendment 1 (the final padlock optional for the teacher) and Amendment 2 (Jon: page 1's cap 150 to 180). The first commit carries HEATWAVE-PACK's close-out (#804, 61b2f9a). MERGE-PR-ROBUST (#806) had merged (3797bf8) before this branched.
-
-- **Rules (final.py, lockcheck.py, build_pack.py; every pack):** friendly() refuses a product above PRODUCT_MAX = 10,000; lockcheck refuses it independently. One difficulty class a pack: with a multiplication, one digit signature and every product in [lo, 3 lo]; in plus-and-minus, the largest term's digits. choose() tries classes in a seeded order, each class's windows smallest first, and raises naming the best class found; each set's target is drawn by the existing seeded choice from its in-class, in-window candidates. lockcheck.pack_problems() re-reads the printed expressions (called from verify_finals, so the build and the self-test check every room).
-- **Optional final padlock (Amendment 1):** run sheet step 5's second line, the score sheet's "Finished (final padlock, or Lock 3 if skipped)", the locks page's "The final padlock (if your teacher says so)". The lock number comes from the room's lock count. RUN_IT_WORDS 180 (Amendment 2); page 1 is now 178 words in nine packs, 175 in Kiln: little headroom.
-- **Names:** `dist-packs/<slug>-pack-v<N>.pdf`; the PDF title and footer carry the same version (pack_version(), a whole number from 1; the configs keep it as a string). Every room's pack_version up by one (Amendment 1 changed every pack): car-trap 2, christmas-tree-fiasco 3, comic-caper 2, hamster-heist 2, heatwave-mutiny 2, kiln-disaster 3, library-jam 2, pe-shed-rebellion 2, prom-budget 2, roll-for-initiative 2.
-- **Heatwave:** `"final_shape": "plus-and-minus"` (with a multiplication the best class reached 3 sets). Found: the generator's shared wording speaks of multiplying (teacher key "two answers whose product is close"; student hint card "Which two of your answers multiply to about that?"), wrong for this shape. Not changed (outside the contract); added to HEATWAVE-PACK-APPROVE.
-- **Builds (this machine, all ten, Roll for Initiative included):** nine `--final`, Heatwave DRAFT; every PDF's title, every footer and every name checked with pypdf. Targets in the PR.
-- **Tests:** a plant that tested the old factor rule found a ceiling case first; its search now asks for the factor rule. test-pack-generator.py: self-test 67/67; its own 40 plants caught, 17 controls pass (new: 10,001; mixed signatures; ratio over 3; plus-and-minus digits; unversioned name; controls 10,000, two packs as built, the versioned name). check-escape-rooms.py exit 0.
-- **Todo:** PACKS-V2-UPLOAD added; HEATWAVE-PACK-APPROVE updated (v2 name, the shape, the wording question).
-- MERGED 17 Nov as 65c7ebd (#807). Main on the merge commit: check-site 44044387029 success, phone-fit-full 44044386836 success (both push runs). Contract already in `docs/history/contracts/` (closed out by CANTEEN-PACK's first commit).
-
-Record: agent Claude Code; review cycles 0; amendments 2; usage n/a.
-
