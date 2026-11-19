@@ -2,6 +2,47 @@
 
 ## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-18 (home): DAILY-ANSWERS (the Dashboard's Daily Activity shows games started and questions answered)
+
+Claude Code (home lane), worktree `~/mg-daily-answers`, branch `claude/daily-answers`; contract `docs/handover/contracts/2026-11-18-daily-answers.md`. The first commit carries CANTEEN-APPROVE's close-out (#819, 6f2d29c). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
+
+- **Table 5 (`docs/apps-script-endpoint.js`, rebuildDashboard):** one pass over monthRows tallies, by day (`Utilities.formatDate(..., TIMEZONE, 'yyyy-MM-dd')` as before), game_started rows and question_answered rows whose `rptKind(String(slug), kinds)` is 'question' (marked or not; rooms and shot games left out). Both are rptMap tallies. Days are the sorted union of both; a missing count is 0. Header `Date | Games Started | Questions Answered` (bold, #f0f0f0, 3 columns); every row through cellValue. Section title unchanged.
+- **Chart 5:** LINE over 3 columns, same position and 500 × 280, curveType kept; colours #0ea5e9 (starts) and #0d9488 (answers); series 0 on axis 0, series 1 on axis 1; vAxes 'Games started' / 'Questions answered'; legend bottom; title 'Daily Games Started and Questions Answered — Last 30 Days'. Column 3 width stays 80 (its header overflows into the empty column 4 cell).
+- **rptKind vs rptBuild:** the same call on the same String(game_slug), so no slug is classed differently. rptBuild drops unmarked rows for accuracy; this count keeps them, by Jon's decision.
+- **Test (`scripts/test-apps-script-report.py`, section i):** five days of hand-written rows (a day with answers and no starts, a day of room answers only that must have no row, room and shot answers, one row with correct null); expected table and chart options written by hand. The chart stub now records its calls per newChart and a range keeps its size, so the chart can be read; nothing else in the stubs changed. Three new plants caught: room answers counted, shot answers counted, a day with no starts dropped. Every earlier check passes unchanged; test-apps-script-counts.py PASS (38).
+- **Gate flake (for the cloud lane):** the first Gate, check-site 44342334459 on 4e3413d1, went red only because "PR budget (measured times)" was cancelled at its 5-minute timeout: its timing-files step took 3 minutes while GitHub returned 502s (that job usually takes about 2 minutes); the other 89 jobs passed. The token cannot rerun jobs (403), so an empty commit started a fresh run. Project Claude approved the diff, 18 Nov.
+- **For Jon, before the Dashboard changes:** paste the updated `docs/apps-script-endpoint.js` into Apps Script per `docs/apps-script-redeploy.md`, with your own address in REPORT_EMAIL (the repo keeps the placeholder), as a new version of the existing deployment. Done: Jon pasted the file into Code.gs and ran testDashboard, 18 Nov 2026, 17:35; the table showed three columns; no redeploy was needed.
+- MERGED 18 Nov as aba826a (#825) via merge-pr.py, exit 0, last line "main aba826a run 44351676786: GREEN". Main on the merge commit: check-site 44351676786 success, phone-fit-full 44351676633 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-daily-answers.md` (closed out by DASHBOARD-GLANCE's first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-18 (home): CANTEEN-APPROVE (The Canteen Hack's opening names the Healthy Week price; pack approved, v2)
+
+Claude Code (home lane), worktree `~/mg-canteen-approve`, branch `claude/canteen-approve`; contract `docs/handover/contracts/2026-11-18-canteen-approve.md`. The first commit carries CANTEEN-PACK's close-out (#817, 236e9ae).
+
+- **Room:** `escape-rooms/canteen-hack/room.js` hook gains Jon's sentence "Last term it cost a fraction of that." straight after the £8.40 one (Jon 18 Nov 03:43). Nothing else in the room changed. The pack reads the hook, so its start read-out has it too.
+- **Pack:** config `"wording_approved": {"by": "Jon", "date": "2026-11-18"}`, `"pack_version": "2"` (a string, as every other pack's). `build_pack.py canteen-hack --final` exit 0: `dist-packs/canteen-hack-pack-v2.pdf`, 36 pages, no DRAFT on any page, the sentence on page 2 (the start read-out), which still fits. Finals unchanged: A 1928, B 2340, C 2960, D 2000, E 1510, F 3508.
+- **Checks:** check-escape-rooms exit 0; test-pack-generator exit 0 (self-test 67/67 on 11 rooms; 56 plants caught, 23 controls pass). No generator or other config changed, so the other ten packs are unchanged.
+- **Docs:** /updates/ line (18 Nov); CANTEEN-PACK-APPROVE closed to todo-done; CORE-BUNDLES-2 stays open.
+- MERGED 18 Nov as 6f2d29c (#819) via merge-pr.py, exit 0, last line "main 6f2d29c run 44235030804: GREEN". Main on the merge commit: check-site 44235030804 success, phone-fit-full 44235030742 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-canteen-approve.md` (closed out by DAILY-ANSWERS' first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-17 (home): CANTEEN-PACK (The Canteen Hack print pack, DRAFT; the generator prints a "pair" lock)
+
+Claude Code (home lane), worktree `~/mg-canteen-pack`, branch `claude/canteen-pack`; contract `docs/handover/contracts/2026-11-17-canteen-pack.md`. The first commit carries FINAL-PADLOCK-FAIR's close-out (#807, 65c7ebd).
+
+- **Pair locks (build_pack.py, general; Jon 17 Nov 19:25, "I agree that you add the 2 numbers for cookie."):** an instrument of kind "pair" is an ORDERED pair: answer_atoms() (distinctness), miss_is_answer() and lockcheck compare (a, b); answers_of() gives a + b; two labelled boxes on the cover (`label_boxes` + `part_label_boxes`; labels from lock_words "parts"); key and solutions give both labels; the locks page and key say a + b. New checks pair_final_problems() and pair_key_problems(). Single-value and multi-accepted locks untouched.
+- **Clipped cards (general):** AUDIT_JS stops a build when an evidence card's words run past its foot (the card hid it; the page did not overflow). Found on Canteen's kale (32 px); no other pack had one. The kale picture is cropped 100 px top and bottom.
+- **Pack:** 6 sets, seed 1, DRAFT, 36 pages, class 2-digit x 3-digit (default shape; easier classes reach 5), certificate "Nothing left to sign off", no readout_voice (the hook is the narrator's), herrings print no words; all six clues have printed/caption overrides. lockcheck: 3 recomputes, all 30 variants agree.
+- **Checks:** the other ten packs byte-identical (31 files: HTML, logs, PDFs less dates; Roll for Initiative fails locally before and after). check-escape-rooms exit 0 (600 of 1000 VALID). test-pack-generator exit 0: self-test 67/67 on 11 rooms (its wrong-answer plant now bumps a pair's first value, Canteen sorting first), 56 plants caught, 23 controls pass.
+- **Todo:** CANTEEN-PACK-APPROVE, CORE-BUNDLES-2; COMIC-CAPER-REUPLOAD and CHRISTMAS-LIBRARY-KILN-REUPLOAD closed as superseded by PACKS-V2-UPLOAD (todo-done).
+- MERGED 17 Nov as 236e9ae (#817) via merge-pr.py, exit 0, last line "main 236e9ae run 44165899116: GREEN". Main on the merge commit: check-site 44165899116 success, phone-fit-full 44165898866 success (both push runs). Contract moved to  (closed out by CANTEEN-APPROVE's first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-17 (home): FINAL-PADLOCK-FAIR (fair final padlocks, the optional final padlock, versioned PDF names; all ten packs rebuilt)
 
 Claude Code (home lane, cloud session), branch `claude/inspiring-einstein-jylil1`; contract `docs/handover/contracts/2026-11-17-final-padlock-fair.md` with Amendment 1 (the final padlock optional for the teacher) and Amendment 2 (Jon: page 1's cap 150 to 180). The first commit carries HEATWAVE-PACK's close-out (#804, 61b2f9a). MERGE-PR-ROBUST (#806) had merged (3797bf8) before this branched.
