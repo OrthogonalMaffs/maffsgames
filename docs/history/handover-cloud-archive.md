@@ -4,6 +4,26 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-NO-LABELS (`docs/history/contracts/2026-11-18-sums-in-disguise-no-labels.md`; Jon 18 Nov, 12:21)
+
+Agent Claude Code (cloud), branch `claude/quirky-hamilton-n94lmq` from main 5e53fd4. Tier Small.
+**Close-out carried (first commit):** #823 SUMS-IN-DISGUISE-ONE-EQUALS, recorded in its entry below; contract moved.
+Done on the branch: put-back draws the blocks with no label on any group (counts unchanged; drawBlocks no longer takes a label, its `.labelled`, `.gb` and `.glabel` CSS removed, nothing else used them); the put-back read-aloud is "Put it back on." alone. The verifier, for every Stage 1, 2 and 5 item in both looks at every step before marking, fails the answer or the regrouped tens (10t, 10c, 10(t + 1)) as a number in the play screen's text outside the tag, the little-sum line, the tiles and the options, or in what the speaker reads; fails any label or value under the blocks after put-back; and requires the put-back read to be the line alone. Plants: an "80" under the sticks of 70 + 10, and "70 and 10. Put it back on." (both caught); ONE-EQUALS' two label plants replaced by one for an empty cubes group. 28/28 plants. **Reading for Jon:** the tiles (0 to 10, 0 to 20) are excluded as an answer control, like the options. The counting note under the cubes (c, as the little-sum line shows it) and Stage 5's exchange note "10 + d" are steps before put-back, cleared at put-back, so they stay (DO NOT TOUCH, the steps); "10 + d" does show the answer's ones digit before the options appear: say if it should go too.
+PR #824. PR's final checks on head 5f8037f: Gate 44305303189 and phone-fit-full 44305320869 green. MERGED 18 Nov 12:48:40 UTC as ddc11e6 (squash) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main ddc11e6 run 44307480462: GREEN". Main on ddc11e6: check-site 44307480462, phone-fit-full 44307480521, pages build 44307479714, all success (read back from the API in SUMS-IN-DISGUISE-BRIDGE's first commit, which moved the contract to `docs/history/contracts/`).
+Record: agent Claude Code; wall about 0:27 (contract about 12:21, merged 12:48); review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ONE-EQUALS (`docs/history/contracts/2026-11-18-sums-in-disguise-one-equals.md`; Jon 18 Nov, 11:34)
+
+Agent Claude Code (cloud), branch `claude/beautiful-goldberg-dh2a9w` restarted from main 33db4a1. Tier Small.
+**Close-out carried (first commit):** #822 SUMS-IN-DISGUISE-ART, recorded in its entry below; contract moved.
+Done on the branch: the rule, every rendered KaTeX string a line with at most one "=", a sum on its left and a single number or "?" on its right. The put-back question is the plain big sum; the blocks carry each group's value (tens, then ones; a tens item has no ones label). The exchange label is "10 + d". The working is one "=" a line ("40 + 20 = 60" replaces "6 tens = 60"; "7 + 5 = 12" and "20 + 10 + 2 = 32"). Read-aloud follows. The blocks clear once the answer is marked (the working repeats them), so Next stays above the fold at 360 px with the speaker showing (603 and 612 px before). The verifier collects every KaTeX string at every step of every item in both looks.
+**Amendment 1 (Jon, 18 Nov):** a group with no blocks is not drawn and gets no label (81 + 9 shows only "90"); the verifier fails a label under a group with zero blocks (plant: a "0" under an empty cubes group). 27/27 plants.
+**Jon, 18 Nov, about 11:55:** no further PRs in this session (context at 70%); every new job goes to a fresh cloud session.
+PR #823. PR's final checks on head 51aa557: Gate 44298415647 and phone-fit-full 44298444369 green. MERGED 18 Nov 12:10:52 UTC as 5e53fd4 (squash), merged by Vector52F (merge-pr.py, the only route; its last line was not carried into the next session). Main on 5e53fd4: check-site 44301469818, phone-fit-full 44301469719, pages build 44301468786, all success (read back from the API in SUMS-IN-DISGUISE-NO-LABELS's session and recorded in its first commit, which moved the contract to `docs/history/contracts/`).
+Record: agent Claude Code; wall about 0:36 (contract 11:34, merged 12:10); review cycles 0; amendments 1; usage n/a.
+
 ## Moved 2026-11-18 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-18 (cloud): SUMS-IN-DISGUISE-ART (`docs/history/contracts/2026-11-18-sums-in-disguise-art.md`; Jon 18 Nov)
