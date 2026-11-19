@@ -1260,6 +1260,8 @@ student who has to scroll to find Next either never reads the reason (they hunt 
 never finds the button. Measure against the viewport minus the site footer, which is fixed and
 40px tall.
 
+Fit is measured in page coordinates (rect + scrollY), as measure-phone-fit.py does: MaffsNext's reveal makes Next reachable but does not count as fitting.
+
 - **Hide what cannot be used.** An answer keypad is locked while the feedback shows, so it is
   hidden, and the feedback takes its space. On a **wrong** answer only: a right answer shows one
   line for a moment, and hiding the keypad then makes it vanish and return under the student's
