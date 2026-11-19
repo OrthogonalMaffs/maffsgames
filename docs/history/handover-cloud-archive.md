@@ -6,6 +6,31 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-19 (cloud): DASHBOARD-PERCENT-CELLS (`docs/history/contracts/2026-11-19-dashboard-percent-cells.md`; Jon 19 Nov, Amendment 1)
+
+Agent Claude Code (cloud), branch `claude/admiring-archimedes-vak9ig` restarted from main 1aebc5b. Tier Small.
+**Close-outs carried (first commit):** #828 DD-LINEUP-ORDER, recorded in its entry below. **#830 PRINTABLES-CORE (home lane's PR, recorded here because the cloud lane edits only its own handover):** merge commit 006d3d8; main's runs on it, read from the API this session: check-site 44477099151 success, phone-fit-full 44477099247 success, pages build 44477099011 success. Its contract moved to `docs/history/contracts/2026-11-19-printables-core.md`.
+Done on the branch: rebuildDashboard resets the whole sheet's number format to General straight after `dash.clear()` (Sheet.clear() keeps number formats: Jon's proof, 19 Nov 09:48); SCRIPT_VERSION and redeploy.md step 12 2026-11-19-a. Stub: `numFmt` kept through clear(); checks: a stale "0%" on a count cell is reset, and every number under a percent format is 0 to 1. Plant: the reset removed, caught by both. 95 checks, 22 plants (main: 93, 21). **Reported, not fixed (STOP IF):** :871-872 and :734-735 format a cell "0%" even when it holds "n/a"; harmless (Sheets shows text as text), so the invariant leaves text out (decided for Jon). todo row moved to todo-done.
+**Jon, after merge, one at a time; never Deploy:** 1. Paste docs/apps-script-endpoint.js into Code.gs, keeping your REPORT_EMAIL line. 2. Save. 3. Run testDashboard. 4. Look at "Different games played" and the When-used rows (Mon–Fri, Sat–Sun): whole numbers, not percentages. 5. Delete the temporary `check` script file if it is still there.
+**Merged (closed out by TODO-135-CLOSE):** #831, merge commit 97e8d53 (10:22:44 UTC 19 Nov), route merge-pr.py, last line "main 97e8d53 run 44505103230: GREEN"; main's runs on it, read from the API: check-site 44505103230 success, phone-fit-full 44505103209 success and 44506435183 success, pages build 44505102768 success. Contract moved to `docs/history/contracts/`.
+
+## 2026-11-18 (cloud): DD-LINEUP-ORDER (`docs/history/contracts/2026-11-18-dd-lineup-order.md`; Jon 18 Nov)
+
+Agent Claude Code (cloud), branch `claude/admiring-archimedes-vak9ig` from main 1263129. Tier Small.
+**Close-out carried (first commit):** #826 SUMS-IN-DISGUISE-BRIDGE, recorded in its entry below; contract moved.
+Done on the branch: Decimal Detective's checkLineup gives a wrong Line-Up the note "The right order: " and the bank's sorted row as written (then the equal-value note, if any); a right answer's note is unchanged. recordAnswer, the marks, Round Up and Place It untouched. Bank checked first: every sorted row ascending (check_bank recomputes it with Decimal). Verifier: every Line-Up item's right and wrong orders, plus advance_pass's plain item right and wrong and the equal-pair item wrong, read the note exactly; plants order-removed and order-reversed (their self-test runs skip the Line-Up start pass: the first Gate failed only the PR budget, Content verifiers 50 at 182s against a 189s limit). todo DD-LINEUP-FEEDBACK part (1) done, part (2) open to NEXT-IN-VIEW. An /updates/ line added (AGENTS.md: a change a student sees), not in EXACT CHANGE.
+PR #828. MERGED 18 Nov 19:02:56 UTC as 5a56852 (squash) via merge-pr.py `--watch --wait 3600`, exit 0, last line "main 5a56852 run 44376293965: GREEN". Main on 5a56852: check-site 44376293965, phone-fit-full 44376293770, pages build 44376293960, all success (as home.md's DASHBOARD-FIXES entry records them; contract already in `docs/history/contracts/`).
+Record: agent Claude Code; wall about 0:45 (first commit 18:23, merged 19:03); review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-18 (cloud): SUMS-IN-DISGUISE-BRIDGE (`docs/history/contracts/2026-11-18-sums-in-disguise-bridge.md`; Jon 18 Nov, evening; class plays it Thu 19 Nov)
+
+Agent Claude Code (cloud), branch `claude/quirky-hamilton-n94lmq` restarted from main 620594f. Tier Small.
+**Close-out carried (first commit):** #824 SUMS-IN-DISGUISE-NO-LABELS, recorded in its entry below; contract moved.
+Done on the branch: Stage 5 bridges to the next ten (bridge = 10 - a, rest = a + b - 10, all from the item; bank untouched): take-off as before, the a cubes in a ten outline (a column of ten slots, a real button named by fill_ten), b cubes beside it; "a + ? = 10" on tiles 0 to 10 keyed to bridge; fill the ten by button or outline (bridge cubes slide in, the ten hops into the hat, tag 10t + 10, rest cubes stay); put-back and options unchanged. Working "38 + 2 = 40 / 40 + 4 = 44" (one line when rest = 0); read-aloud to match; ten_in_hat replaced by fill_ten in both looks; Stage 5's about text. The kid hand on the tiles sits over the 0 (never the key) so it never hides the answer (`pointAt` gained optional anchor fractions, defaults unchanged). Verifier: the outline, the key, the fill by both routes, the tag only after fill, the working and speech, the worst items (a = 1, b = 9) above the fold at 360 px; the exchange checks and plants replaced by five new ones. 30/30 plants. todo SUMS-IN-DISGUISE-LIST updated.
+PR #826. PR's final checks on head df8265d: Gate 44357993074 and phone-fit-full 44357909814 green. MERGED 18 Nov 17:35:46 UTC as cb35e08 (squash) via merge-pr.py, last line "main cb35e08 run 44360424747: GREEN". Main on cb35e08: check-site 44360424747, phone-fit-full 44360424536, pages build 44360423248, all success (read back from the API in DD-LINEUP-ORDER's first commit, which moved the contract to `docs/history/contracts/`).
+
+## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-18 (cloud): SUMS-IN-DISGUISE-NO-LABELS (`docs/history/contracts/2026-11-18-sums-in-disguise-no-labels.md`; Jon 18 Nov, 12:21)
 
 Agent Claude Code (cloud), branch `claude/quirky-hamilton-n94lmq` from main 5e53fd4. Tier Small.
