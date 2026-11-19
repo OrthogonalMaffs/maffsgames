@@ -39,7 +39,8 @@
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
   "Dash before a number (no em dash or spaced en dash directly before a number, a variable or a minus sign in student-facing text; planted faults)": "30",
-  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)": "50",
+  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 1 of 2": "62",
+  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 2 of 2": "50",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "7",
@@ -284,6 +285,12 @@
    "parts": 2,
    "tier": "content"
   },
+  "verify-decimal-detective.py": {
+   "how": "chosen from 14 timed unit(s)",
+   "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)",
+   "parts": 2,
+   "tier": "content"
+  },
   "verify-equation-builder.py": {
    "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
@@ -417,12 +424,5 @@
    "tier": "content"
   }
  },
- "split-candidates": [
-  {
-   "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)",
-   "median": 177,
-   "percent": 71,
-   "setup": 15
-  }
- ]
+ "split-candidates": []
 }
