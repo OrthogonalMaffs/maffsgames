@@ -65,8 +65,10 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import core_paper_deal as deal  # noqa: E402
 
 SLUG = 'core-maths-paper1'
+GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 MIN_CONTRAST = 3.0
 
 
@@ -747,8 +749,8 @@ MARK = r"""() => {
   const res = [];
   document.getElementById('questionArea').style.display = 'block';
   for (let i = 0; i < QUESTIONS.length; i++) {
-    currentQ = i; showQuestion();
-    const btn = document.querySelectorAll('#optionsContainer .option-btn')[QUESTIONS[i].correct];
+    currentQ = PAPER.indexOf(i); showQuestion();   // the dealt position of source question i (CORE-PAPERS-SHUFFLE)
+    const btn = [...document.querySelectorAll('#optionsContainer .option-btn')].find(b => b.dataset.val === String(QUESTIONS[i].correct));
     btn.click();
     res.push([i, btn.classList.contains('correct')]);
   }
@@ -774,7 +776,7 @@ def load_bank():
             # SR-32: the width each chart is drawn at on a 320 px phone (the 4 px gridline spacing is read from it)
             page.set_viewport_size({'width': 320, 'height': 568})
             w320 = page.evaluate("""() => { const out = {}; document.getElementById('questionArea').style.display = 'block';
-              QUESTIONS.forEach((q, i) => { if (!q.svg) return; currentQ = i; showQuestion();
+              QUESTIONS.forEach((q, i) => { if (!q.svg) return; currentQ = PAPER.indexOf(i); showQuestion();
                 const el = document.querySelector('.svg-container svg'); if (el) out[q.svg] = el.getBoundingClientRect().width; });
               return out; }""")
             mk = page.evaluate(MARK)
@@ -910,6 +912,8 @@ def main():
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails
+    # CORE-PAPERS-SHUFFLE (19 Nov 2026): the deal, 20 sessions, with its own planted faults
+    ok = deal.run(open(GAME, encoding='utf-8').read(), SLUG, 'p1', selftest=not args.no_selftest) and ok
     if not args.no_selftest:
         s_ok, lines = selftest(bank, ctx)
         print('\nFault-injection self-test (patched copies; the file is never touched):')

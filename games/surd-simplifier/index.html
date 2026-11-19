@@ -64,11 +64,25 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .screen{display:none}.screen.active{display:block}
 .katex{font-size:1.1em!important}.q-card .katex{font-size:1.4em!important}
 .back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:0.85rem}.back-link:hover{color:var(--text)}
-.working{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:10px;padding:0.8rem 1rem;margin:0 0 1rem;text-align:left}
-.working[hidden]{display:none}
-.working h3{font-size:0.8rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4rem}
-.working .wl{margin:0.3rem 0;line-height:1.7;overflow-wrap:break-word}
-.working .wl .katex{font-size:1.05em!important}
+/* "How to get there" after a wrong answer: a reference card above Next (canon 7.6.2; contract WORKING-CARD, 19 Nov 2026).
+   Two copies (schools/assets/fold.css): .maffs-ref-fits open, .maffs-ref-phone collapsed; nothing shows until a wrong
+   answer (.shown). The open copy shows only where every item's Next stays above the fold with it open, measured over
+   all 100 items in normal and Aa mode (the media query below); everywhere else the collapsed one, one tap away. */
+.work-row .maffs-ref{--ref-bg:var(--surface);--ref-edge:var(--accent);text-align:left}
+.work-row:not(.shown) > .maffs-ref{display:none}
+.work-row.shown > .maffs-ref-fits{display:none}
+.work-row.shown > .maffs-ref-phone{display:block}
+/* Open where it fits. Measured 19 Nov 2026 (all 100 items answered wrong, each in its worst pairing of options to a
+   row, normal and Aa, real fonts; the fold is the viewport less the 40px fixed footer, as measure-phone-fit reads it):
+   with the card open, Next needs a viewport 950px tall at 320 wide (Aa), 912px at 375-412 (Aa), and 830px from 760
+   wide, where the column stops growing (Aa; normal 816). Each band takes its narrowest width's need plus 30px, so the
+   1280x720 and 1366x768 laptops and every phone up to 979px tall get the collapsed card. */
+@media (min-width: 320px) and (max-width: 759px) and (min-height: 980px), (min-width: 760px) and (min-height: 860px) {
+  .work-row.shown > .maffs-ref-fits{display:block}
+  .work-row.shown > .maffs-ref-phone{display:none}
+}
+.work-row .wl{margin:0.3rem 0;line-height:1.7;overflow-wrap:break-word}
+.work-row .wl .katex{font-size:1.05em!important}
 .mode-info{text-align:center;color:var(--muted);font-size:0.8rem;margin:0.5rem 0;line-height:1.5}
 /* === Accessibility === */
 body.accessible { font-family: 'OpenDyslexic', sans-serif !important; letter-spacing: 0.12em; word-spacing: 0.16em; }
@@ -100,6 +114,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
 <div class="container">
@@ -133,8 +148,18 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
     <div class="progress" id="progress"></div>
     <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
     <div class="options" id="options"></div>
-    <div id="nextMount"></div>
-    <div class="working" id="working" hidden aria-live="polite"><h3>How to get there</h3><div id="workingLines"></div></div>
+    <!-- The working, between the options and Next (canon 7.6.1, 7.6.2): open where it fits, collapsed elsewhere. -->
+    <div class="maffs-ref-row work-row" id="workRow">
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Working</span><span class="maffs-ref-title">How to get there</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Working</span><span class="maffs-ref-title">How to get there</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <div id="nextMount"></div>
+    </div>
   </div>
   <div id="results" class="screen">
     <div class="results">
@@ -363,8 +388,16 @@ function workLine(tex){
   flush();return el;
 }
 function showWorking(q){
-  const lines=workingFor(level,QUESTIONS[level].indexOf(q)),box=document.getElementById('working'),w=document.getElementById('workingLines');
-  w.innerHTML='';lines.forEach(t=>w.appendChild(workLine(t)));box.hidden=!lines.length;
+  const lines=workingFor(level,QUESTIONS[level].indexOf(q)),row=document.getElementById('workRow');
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML='';lines.forEach(t=>w.appendChild(workLine(t)))});
+  row.classList.toggle('shown',lines.length>0);
+}
+// The copy the media query shows: Next keeps its top on screen as it comes into view.
+function shownCard(){return [...document.querySelectorAll('#workRow > .maffs-ref')].find(d=>getComputedStyle(d).display!=='none')||null}
+function clearWorking(){
+  const row=document.getElementById('workRow');row.classList.remove('shown');
+  row.querySelector('.maffs-ref-phone').open=false;row.querySelector('.maffs-ref-fits').open=true;
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML=''});
 }
 
 let level='gcse',questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
@@ -391,7 +424,7 @@ function startGame(){
 }
 function showQ(){
   if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));
-  document.getElementById('working').hidden=true;document.getElementById('workingLines').innerHTML='';
+  clearWorking();
   const q=questions[qIdx];
   document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
   const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);
@@ -412,7 +445,7 @@ function handle(btn,q){
   mfg('question_answered',{game_slug:'surd-simplifier',level:level,correct:ok,question_index:qIdx+1});
   document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
   // A right answer moves on; a wrong one waits on Next, the right option shown with its working (canon 7.6)
-  if(ok){MaffsLock.timer(adv,1000)}else{showWorking(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
+  if(ok){MaffsLock.timer(adv,1000)}else{showWorking(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv,keep:shownCard})}
 }
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
