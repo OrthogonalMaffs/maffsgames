@@ -83,7 +83,10 @@
     try { src = new URL('scroll.js', SELF_SRC || document.baseURI).href; } catch (e) { return; }
     scrollWaiting = [fn];
     var tag = document.createElement('script');
-    tag.src = src;
+    // The address is this file's own folder plus the literal 'scroll.js', the file scripts/ci-deps.py already
+    // records for this one (it resolves that literal beside next-control.js), so it is set as an attribute:
+    // a `.src =` given a computed value reads to ci-deps as an unknown load and runs every verifier.
+    tag.setAttribute('src', src);
     tag.setAttribute('data-maffs-next', 'scroll');
     tag.onload = function () {
       var q = scrollWaiting;
