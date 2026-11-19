@@ -154,9 +154,9 @@ driver did, so the tap-through still meets right and wrong answers. -->
     <div class="start-desc">Are these two fractions equivalent? Yes or no, fast as you can!</div>
     <div class="how-to">
       <p>Equivalent = same value, different form</p>
-      <p>½ and 4/8 are equivalent (both = 0.5)</p>
-      <p>½ and 4/9 are not equivalent</p>
-      <p>Cross multiply to check: for a/b and c/d, they're equivalent if a×d = b×c</p>
+      <p data-mt="\(\dfrac{1}{2}\) and \(\dfrac{4}{8}\) are equivalent: both are 0.5">1/2 and 4/8 are equivalent: both are 0.5</p>
+      <p data-mt="\(\dfrac{1}{2}\) and \(\dfrac{2}{3}\) are not: adding the same number to the top and bottom changes the value">1/2 and 2/3 are not: adding the same number to the top and bottom changes the value</p>
+      <p data-mt="Cross multiply to check: \(\dfrac{a}{b}\) and \(\dfrac{c}{d}\) are equivalent when \(ad = bc\)">Cross multiply to check: a/b and c/d are equivalent when ad = bc</p>
     </div>
     <button class="btn btn-primary" onclick="startGame()">Start game</button>
     <div class="maffs-start-note" data-maffs-start-note></div>
@@ -443,6 +443,13 @@ function renderLB() {
   if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'fraction-equivalence', gameLevel, 5);
 }
 document.getElementById('best').textContent=getBest();
+// The how-to's fractions: each line's TeX is in data-mt, its plain text the fallback if KaTeX never loads.
+// KaTeX is a deferred script, so it has run by DOMContentLoaded.
+function renderHowTo(){
+  if (typeof katex==='undefined') return;
+  document.querySelectorAll('.how-to [data-mt]').forEach(function(p){p.innerHTML=MaffsText.html(p.getAttribute('data-mt'));});
+}
+if (document.readyState==='loading') document.addEventListener('DOMContentLoaded',renderHowTo); else renderHowTo();
 (function(){var KEY='mfg_accessible',btn=document.getElementById('a11yToggle');if(!btn)return;function apply(on){document.body.classList.toggle('accessible',on);btn.classList.toggle('active',on);btn.setAttribute('aria-pressed',String(on));}apply(localStorage.getItem(KEY)==='true');btn.addEventListener('click',function(){var on=!document.body.classList.contains('accessible');localStorage.setItem(KEY,String(on));apply(on);});})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
