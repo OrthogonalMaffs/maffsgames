@@ -3360,3 +3360,11 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 | DASHBOARD-PERCENT-CELLS | Two Dashboard counts show as %; cause unproven: home.md DASHBOARD-FIXES. | home; Jon |
 
 **Closed 19 Nov 2026 (DASHBOARD-PERCENT-CELLS).** Row DASHBOARD-PERCENT-CELLS, moved word for word above. Cause proven by Jon in real Sheets, 19 Nov 2026, 09:48 (checkPercentCells): Sheet.clear() keeps number formats, so a "0%" left from an earlier build showed the next count written to that cell as a percentage. Fixed by this PR: rebuildDashboard resets the whole sheet's number format to General straight after clear() (SCRIPT_VERSION 2026-11-19-a); the test stub now keeps number formats through clear(), as real Sheets does. Owed: Jon's eye check after pasting the script and running testDashboard.
+
+## Closed by FACTOR-RACE-Y6-40 (19 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| LEDGER-B4-FACTOR-RACE | **B4 ledger debt, `factor-race`: 2 levels below the 40-question minimum** (year6 20, ks3 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+**Closed 19 Nov 2026 (FACTOR-RACE-Y6-40).** Row LEDGER-B4-FACTOR-RACE, moved word for word above. Year 6 is now 40 pairs (20 appended, 13 of them won by the smaller number). KS3 is generated (VALID_PAIRS), not 20: the 9 Nov count misread it, because extract-banks reads YEAR6_BANK for both levels. Both B4 ledger entries cleared (`check-banks.py --write-ledger --only factor-race`). Held by `scripts/verify-factor-race.py`.
