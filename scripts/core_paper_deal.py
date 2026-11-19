@@ -13,15 +13,20 @@ real sessions (startGame()), checked:
     source order, and must match the page's SECTIONS/SECTION_STARTS where it has them); each section's order
     differs between sessions;
   - each question's options are a permutation of its source options (values 0..n-1, each drawn with its own
-    text, lettered A, B, C, D by position), in more than one order across the sessions; the key lands in each of
-    A-D somewhere on the paper;
-  - every option clicked: marked right exactly when its value is the key or in the item's accept list;
+    text), in more than one order across the sessions; the key lands in each of positions 1-4 somewhere on the
+    paper;
+  - no letter on any button (contract CORE-PAPERS-NO-LETTERS, Jon, 19 Nov 2026: a shuffled position means nothing,
+    and a letter there can be read as one inside an option, "Option A", "School C"): before marking, every
+    .option-letter badge is empty and aria-hidden, so a button's accessible name is its option text alone;
+  - every option clicked: marked right exactly when its value is the key or in the item's accept list; after
+    marking, the pressed button's badge shows the tick if it is accepted, else the cross, every accepted
+    option's badge the tick, and every other badge stays empty;
   - question_answered carries question_index (the position, 1-based) and question_id, the source id
     "<prefix>-qNN" of the question shown, the same in every session;
   - "Q n of 36" counts positions, and the results screen's section scores count the dealt sections.
 
-plants(html) returns the faults the self-test plants: options not shuffled; a question dealt into another
-section; marking by position; question_id from the position. Each must FAIL.
+PLANTS lists the faults the self-test plants: options not shuffled; a question dealt into another section;
+marking by position; question_id from the position; the position letters put back. Each must FAIL.
 """
 import re
 
@@ -51,7 +56,8 @@ PLAY_JS = r"""([sessions, mathtext]) => {
       const btns = [...document.querySelectorAll('#optionsContainer .option-btn')];
       const rec = {src: src, counter: document.getElementById('qCounter').textContent,
                    vals: btns.map(b => b.dataset.val),
-                   letters: btns.map(b => b.querySelector('.option-letter').textContent),
+                   badges: btns.map(b => { const e = b.querySelector('.option-letter');
+                                           return [e.textContent, e.getAttribute('aria-hidden')]; }),
                    textOk: btns.every(b => b.querySelector('.option-text').innerHTML === norm(R(q.options[+b.dataset.val]))),
                    marks: [], sent: null};
       for (let v = 0; v < q.options.length; v++) {
@@ -63,6 +69,12 @@ PLAY_JS = r"""([sessions, mathtext]) => {
         b.click();
         const right = b.classList.contains('correct') && answers[0] === true;
         if (right !== ok.includes(v)) rec.marks.push([v, right ? 'marked right' : 'marked wrong']);
+        for (const x of document.querySelectorAll('#optionsContainer .option-btn')) {
+          const xv = +x.dataset.val, got = x.querySelector('.option-letter').textContent;
+          const want = ok.includes(xv) ? '\u2713' : (x === b ? '\u2717' : '');
+          if (got !== want) rec.marks.push([v, 'pressed: option value ' + xv + "'s badge reads " + JSON.stringify(got)
+                                               + ', expected ' + JSON.stringify(want)]);
+        }
         if (v === q.correct) rec.sent = sent.slice();
       }
       ses.qs.push(rec);
@@ -133,8 +145,11 @@ def check(fails, bank, res, prefix):
                 continue
             if not r['textOk']:
                 fails.append('%s: an option is drawn with another option\'s text' % w)
-            if r['letters'] != list('ABCD'[:m]):
-                fails.append('%s: letters %s' % (w, r['letters']))
+            shown = [t for t, _ in r['badges'] if t != '']
+            if shown:
+                fails.append('%s: a button shows %s before marking' % (w, shown))
+            if any(h != 'true' for _, h in r['badges']):
+                fails.append('%s: a badge is not aria-hidden (%s)' % (w, [h for _, h in r['badges']]))
             opt_orders[r['src']].add(tuple(r['vals']))
             key_pos.add(r['vals'].index(str(q['correct'])))
             for v, what in r['marks']:
@@ -155,7 +170,7 @@ def check(fails, bank, res, prefix):
             fails.append('%s: options not shuffled: Q%s drawn in one order in all %d sessions'
                          % (TAG, ','.join(map(str, same[:8])) + ('...' if len(same) > 8 else ''), len(res['sessions'])))
         if key_pos != {0, 1, 2, 3}:
-            fails.append('%s: the key never landed at %s' % (TAG, ', '.join('ABCD'[i] for i in range(4) if i not in key_pos)))
+            fails.append('%s: the key never landed at position %s' % (TAG, ', '.join(str(i + 1) for i in range(4) if i not in key_pos)))
     s0, _, c0 = secs[0]
     want = ['%d / %d' % (c0, c0)] + ['0 / %d' % c for _, _, c in secs[1:]]
     if res['results']['scores'] != want or res['results']['final'] != '%d / %d' % (c0, total):
@@ -213,6 +228,9 @@ PLANTS = [
     ('question_id from the position',
      r'question_id: ?questionId\(PAPER\[currentQ\]\)',
      'question_id: questionId(currentQ)'),
+    ('the position letters put back',
+     r'<span class="option-letter" aria-hidden="true"></span>',
+     '<span class="option-letter" aria-hidden="true">\'+\'ABCD\'[pos]+\'</span>'),
 ]
 
 

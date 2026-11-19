@@ -757,14 +757,13 @@ function showQuestion() {
   document.getElementById('qStem').innerHTML = stemHTML;
 
   // Options
-  var letters = ['A', 'B', 'C', 'D'];
   var container = document.getElementById('optionsContainer');
   container.innerHTML = '';
   dealOptions(q).forEach(function(v, pos) {
     var btn = document.createElement('button');
     btn.className = 'option-btn';
     btn.dataset.val = String(v);
-    btn.innerHTML = '<span class="option-letter">' + letters[pos] + '</span><span class="option-text">' + q.options[v] + '</span>';
+    btn.innerHTML = '<span class="option-letter" aria-hidden="true"></span><span class="option-text">' + q.options[v] + '</span>';
     btn.addEventListener('click', function() { selectAnswer(parseInt(this.dataset.val, 10)); });
     container.appendChild(btn);
   });

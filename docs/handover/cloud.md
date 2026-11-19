@@ -72,8 +72,11 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 ## 2026-11-19 (cloud): CORE-PAPERS-NO-LETTERS (`docs/handover/contracts/2026-11-19-core-papers-no-letters.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/nifty-faraday-13526r` from main eb89b6f. Tier Small.
-**Close-outs carried (first commit):** #841 WORKING-CARD, recorded in its entry below.
-In progress.
+**Close-outs carried (first commit, b235476):** #841 WORKING-CARD, recorded in its entry below (check-site 44616595773, phone-fit-full 44616595499, pages 44616593785, all success).
+**STOP IF sweep:** nothing reads the letters. The only reader of `.option-letter` text is `scripts/core_paper_deal.py`; no keyboard handler, analytics field, lock hint (each says "the first option shown") or "press A" text in the four pages, scripts, `schools/assets/` or firebase/.
+Done on the branch: each paper's builder (paper1 :760-767, 2a :585-592, 2b :539-546, 2c :558-565) drops `letters` and writes `<span class="option-letter" aria-hidden="true"></span>`; marking's ✓/✗ untouched. `core_paper_deal.py`: the A-D check replaced by every badge empty and aria-hidden before marking, and, after each option is pressed, the pressed badge ✗ (or ✓ if accepted), every accepted option ✓, every other badge empty; the key-position message now names positions 1-4; new plant "the position letters put back".
+**Checked locally:** verify-core-maths-paper1, -2a, -2b, -2c, -paper1-tax all exit 0; the deal PASS on each paper, 20 sessions; all five plants caught on each (the new one: "a button shows ['A', 'B', 'C', 'D'] before marking"). measure-phone-fit `--only` each paper in normal, `--aa` and `--laptop` (fallback fonts: this container's footer pre-check fails on real fonts, main too), main eb89b6f against the branch: all 12 reports byte-identical.
+**Decided for you:** (1) aria-hidden stays on the badge after marking too (the contract's attribute; ✓/✗ was the badge's text before and the button's state is in its class), so a screen reader reads the option text alone throughout; (2) the deal check's position wording ("position 1-4", not "A-D").
 
 ## 2026-11-19 (cloud): WORKING-CARD (`docs/history/contracts/2026-11-19-working-card.md`; Jon 19 Nov)
 
