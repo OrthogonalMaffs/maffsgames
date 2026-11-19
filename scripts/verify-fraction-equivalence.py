@@ -346,6 +346,27 @@ def check_best(fails, page, level):
         fails.append('best: at %s it must be kept under %s only and the old fs_best never read (%r)' % (level, want, got))
 
 
+HOWTO_RULE = r'Cross multiply to check: \(\dfrac{a}{b}\) and \(\dfrac{c}{d}\) are equivalent when \(ad = bc\)'
+# Each how-to line as the student sees it: its KaTeX count, and its text with the KaTeX taken out.
+HOWTO_JS = """() => [...document.querySelectorAll('.how-to p')].map(p => {
+  const c = p.cloneNode(true); c.querySelectorAll('.katex').forEach(k => k.remove());
+  return {tex: p.getAttribute('data-mt') || '', katex: p.querySelectorAll('.katex').length, plain: c.textContent};
+})"""
+
+
+def check_howto(fails, page):
+    """FRACTION-SNAP-START: every fraction on the start screen's how-to renders as KaTeX, none as plain n/d text."""
+    lines = page.evaluate(HOWTO_JS)
+    if len(lines) != 4:
+        fails.append('how-to: expected 4 lines, found %d' % len(lines))
+    for ln in lines:
+        if re.search(r'\d\s*/\s*\d|[a-z]\s*/\s*[a-z]\b|[\u00bc-\u00be\u2150-\u215e]', ln['plain']):
+            fails.append('how-to: a fraction shown as plain text, not KaTeX: %r' % ln['plain'])
+        if ln['tex'].count('\\dfrac') and ln['katex'] < ln['tex'].count('\\('):
+            fails.append('how-to: %d of its %d maths parts rendered as KaTeX: %r' % (
+                ln['katex'], ln['tex'].count('\\('), ln['tex']))
+
+
 def open_page(pw, base, html, level):
     browser = pw.chromium.launch()
     ctx = browser.new_context(viewport={'width': 390, 'height': 844})
@@ -366,14 +387,20 @@ def open_page(pw, base, html, level):
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     # R2 (SWEEP-1 fraction-equivalence-s1-001): the cross-multiplication rule says which fractions a, b, c and d belong to
-    if "Cross multiply to check: for a/b and c/d, they're equivalent if a×d = b×c" not in html:
-        fails.append("how-to: the cross-multiplication rule must name its fractions: 'for a/b and c/d, they're equivalent if a×d = b×c'")
+    # (FRACTION-SNAP-START, 19 Nov 2026: now in KaTeX, as \dfrac{a}{b} and \dfrac{c}{d})
+    if HOWTO_RULE not in html:
+        fails.append("how-to: the cross-multiplication rule must name its fractions and state ad = bc: %r" % HOWTO_RULE)
+    # FRACTION-SNAP-START: the old +1-on-the-bottom example (1/2 and 4/9) is gone from the how-to
+    howto = re.search(r'<div class="how-to">(.*?)</div>', html, re.S)
+    if not howto or '4/9' in howto.group(1) or '4}{9}' in howto.group(1):
+        fails.append("how-to: it must not contain the old +1 example 4/9 (or 4}{9}), and must be present")
     proc, base = bc.start_stub_server()
     stats = {}
     try:
         with sync_playwright() as pw:
             browser, page, errors = open_page(pw, base, html, 'year6')
             check_best(fails, page, 'year6')
+            check_howto(fails, page)
             bank = page.evaluate('() => JSON.parse(JSON.stringify(YEAR6_BANK))')
             stats['bank'] = check_bank(fails, bank)
             inbank = {(p['n1'], p['d1'], p['n2'], p['d2']) for p in bank}
@@ -413,7 +440,14 @@ PLANTS = [
     ('a wrong figure in the working (n1 x d1)', 'working',
      [('const cross=cur.n1*cur.d2;', 'const cross=cur.n1*cur.d1;', False)]),
     ('the cross-multiplication rule with undefined letters', 'how-to',
-     [("for a/b and c/d, they're equivalent if a×d = b×c", "if a×d = b×c, they're equivalent", False)]),
+     [(r'Cross multiply to check: \(\dfrac{a}{b}\) and \(\dfrac{c}{d}\) are equivalent when',
+       r'Cross multiply to check: they are equivalent when', False)]),
+    ('the old "1/2 and 4/9 are not equivalent" line restored', 'how-to',
+     [(r'<p data-mt="\(\dfrac{1}{2}\) and \(\dfrac{2}{3}\) are not: adding the same number to the top and bottom '
+       r'changes the value">1/2 and 2/3 are not: adding the same number to the top and bottom changes the value</p>',
+       '<p>\u00bd and 4/9 are not equivalent</p>', False)]),
+    ('the how-to left as its plain-text fallback (never rendered)', 'how-to',
+     [("if (typeof katex==='undefined') return;", 'return;', False)]),
     ('a GCSE draw in simplest form (a = 1 allowed)', 'simplest form',
      [('const a = randInt(2,6), n1 = p*a', 'const a = randInt(1,6), n1 = p*a', False)]),
     ('the old n1*m / (d1*m + 1..3) wrong pairs restored', 'draw',
