@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium) |
+# ci-shards: Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium) | | 2
 """Decimal Detective: every key recomputed, and every answer marked through the real page.
 
 The bank (45 items, one level: 15 Line-Up, 15 Round Up, 15 Place It) was keyed by hand and never
@@ -57,6 +57,8 @@ some seed starts on the key), a right answer that waits, and a wrong answer that
 itself. It runs unless --no-selftest. The file is never touched.
 
     python scripts/verify-decimal-detective.py [--verbose] [--no-selftest] [--chromium PATH]
+    python scripts/verify-decimal-detective.py --shard 1/2      # part 1 of 2 of its work units (CI, # ci-shards)
+    python scripts/verify-decimal-detective.py --list-units     # the units: desktop, each phone, bank, each page plant
 """
 import argparse
 import copy
@@ -631,89 +633,148 @@ def advance_pass(rep, page, bank):
     waits('Line-Up with an equal pair', 'wrong answer', st)
 
 
+DESKTOP = (1000, 900)
+JS_BANK = ('JSON.parse(JSON.stringify({LINEUP: LINEUP_QUESTIONS, '
+           'ROUNDUP: ROUNDUP_QUESTIONS, PLACEIT: PLACEIT_QUESTIONS}))')
+
+# The page plants of the self-test, each a page served in place of the file: (patch, what it plants).
+PAGE_PLANTS = (('start', 'Place It marker at 50%, Check enabled (page)'),        # the audit's F1
+               ('tolerance', 'Place It one-step tolerance (page)'),               # F2, F3
+               ('readout', 'Place It live value readout (page)'),                 # F4
+               ('check-on-load', 'Check enabled when a question loads (page)'),   # todo 1.51
+               ('start-as-shuffled', 'Line-Up start left as shuffled (page)'),    # todo 1.51
+               ('right-waits', 'a right answer waits (page)'),                    # canon 7.6
+               ('wrong-moves-on', 'a wrong answer moves on by itself (page)'),
+               ('order-removed', 'a wrong Line-Up without the order (page)'),     # DD-LINEUP-ORDER
+               ('order-reversed', 'a wrong Line-Up order smallest-last (page)'))
+
+
 def close(browser, page):
     """Close, with no right answer's advance timer left to run: the session is never finished."""
     page.evaluate('MaffsLock.clearTimers()')
     browser.close()
 
 
-def run_page(rep, chromium=None, verbose=False, patch=None):
-    """Read the bank, then mark every item through the page. Returns (bank, actions).
-    A self-test run does only what its plant needs: the desktop Place It pass (PLACEIT_PATCHES), or
-    Line-Up's start and the moving on (the others; the moving on alone for NOTE_PATCHES)."""
+def read_bank(pw, base, chromium):
+    """The bank, read from the page, for a slice that does not run the desktop pass (which reads it itself)."""
+    browser, page, _ = open_page(pw, base, chromium, DESKTOP, False, None)
+    bank = page.evaluate(JS_BANK)
+    close(browser, page)
+    return bank
+
+
+def plant_run(rep, chromium, patch):
+    """One page plant: only what the plant needs, the desktop Place It pass (PLACEIT_PATCHES), or Line-Up's
+    start and the moving on (the others; the moving on alone for NOTE_PATCHES). Returns the bank."""
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
-            browser, page, errors = open_page(pw, base, chromium, (1000, 900), False, patch)
-            bank = page.evaluate('JSON.parse(JSON.stringify({LINEUP: LINEUP_QUESTIONS, '
-                                 'ROUNDUP: ROUNDUP_QUESTIONS, PLACEIT: PLACEIT_QUESTIONS}))')
-            actions = 0
+            browser, page, errors = open_page(pw, base, chromium, DESKTOP, False, patch)
+            bank = page.evaluate(JS_BANK)
             if patch in PLACEIT_PATCHES:
-                actions += desktop_placeit(rep, page, bank['PLACEIT'])
+                desktop_placeit(rep, page, bank['PLACEIT'])
                 close(browser, page)
-                return bank, actions
+                return bank
             if patch not in NOTE_PATCHES:
-                actions += lineup_start(rep, page, bank['LINEUP'])
+                lineup_start(rep, page, bank['LINEUP'])
             advance_pass(rep, page, bank)
-            if patch:
-                close(browser, page)
-                for e in errors:
-                    rep.fail('page', 'error', e)
-                return bank, actions
-
-            for i, q in enumerate(bank['LINEUP'], 1):
-                where = 'Line-Up %d' % i
-                right = sorted(q['suspects'], key=D)
-                orders = [(right, 'right')]
-                for a in range(4):
-                    if D(right[a]) == D(right[a + 1]):
-                        swapped = right[:a] + [right[a + 1], right[a]] + right[a + 2:]
-                        orders.append((swapped, 'right'))
-                a = next(a for a in range(4) if D(right[a]) != D(right[a + 1]))
-                orders.append((right[:a] + [right[a + 1], right[a]] + right[a + 2:], 'wrong'))
-                notes = [NOTE.format(*sorted((x, y), key=len)) for k, x in enumerate(q['suspects'])
-                         for y in q['suspects'][k + 1:] if x != y and D(x) == D(y)]
-                for order, want in orders:
-                    page.evaluate(JS_LOAD, ['lineup', q])
-                    page.evaluate(JS_ORDER, order)
-                    page.click('#checkBtn')
-                    text = page.evaluate(JS_FEEDBACK)
-                    actions += 1
-                    if verdict(text) != want:
-                        rep.fail(where, 'marking', 'order %s shows %r, expected %s' % (order, text, want))
-                    lineup_note(rep, where, q, order, want == 'right', page.evaluate(JS_NOTE))
-                    for n in notes:
-                        if n not in (text or ''):
-                            rep.fail(where, 'feedback', 'order %s: the note %r is not shown' % (order, n))
-
-            for i, q in enumerate(bank['ROUNDUP'], 1):
-                where = 'Round Up %d (%s)' % (i, q['value'])
-                for opt in q['options']:
-                    page.evaluate(JS_LOAD, ['roundup', q])
-                    page.click('.option-btn[data-option="%s"]' % opt)
-                    page.click('#checkBtn')
-                    text = page.evaluate(JS_FEEDBACK)
-                    actions += 1
-                    want = 'right' if opt == q['answer'] else 'wrong'
-                    if verdict(text) != want:
-                        rep.fail(where, 'marking', 'option %s shows %r, expected %s' % (opt, text, want))
-
-            placeable = [q for q in bank['PLACEIT'] if grid_index(q) is not None]
-            actions += desktop_placeit(rep, page, placeable)
-            keys_placeit(rep, page, placeable[0])
-            if page.evaluate('window._mfgCompleted === true'):
-                rep.fail('page', 'session', 'the session reached its end screen; it must not (nothing may submit)')
             close(browser, page)
-            for size in PHONES:
-                browser, page, errs = open_page(pw, base, chromium, size, True, None)
-                touch_drag(rep, page, bank['LINEUP'][0], '%dx%d' % size)
-                phone_placeit(rep, page, placeable, size, verbose)
-                close(browser, page)
-                errors += errs
             for e in errors:
                 rep.fail('page', 'error', e)
-            if verbose:
+            return bank
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
+def desktop_pass(rep, pw, base, chromium):
+    """Read the bank, then mark every item through the desktop page. Returns (bank, actions)."""
+    browser, page, errors = open_page(pw, base, chromium, DESKTOP, False, None)
+    bank = page.evaluate(JS_BANK)
+    actions = lineup_start(rep, page, bank['LINEUP'])
+    advance_pass(rep, page, bank)
+
+    for i, q in enumerate(bank['LINEUP'], 1):
+        where = 'Line-Up %d' % i
+        right = sorted(q['suspects'], key=D)
+        orders = [(right, 'right')]
+        for a in range(4):
+            if D(right[a]) == D(right[a + 1]):
+                swapped = right[:a] + [right[a + 1], right[a]] + right[a + 2:]
+                orders.append((swapped, 'right'))
+        a = next(a for a in range(4) if D(right[a]) != D(right[a + 1]))
+        orders.append((right[:a] + [right[a + 1], right[a]] + right[a + 2:], 'wrong'))
+        notes = [NOTE.format(*sorted((x, y), key=len)) for k, x in enumerate(q['suspects'])
+                 for y in q['suspects'][k + 1:] if x != y and D(x) == D(y)]
+        for order, want in orders:
+            page.evaluate(JS_LOAD, ['lineup', q])
+            page.evaluate(JS_ORDER, order)
+            page.click('#checkBtn')
+            text = page.evaluate(JS_FEEDBACK)
+            actions += 1
+            if verdict(text) != want:
+                rep.fail(where, 'marking', 'order %s shows %r, expected %s' % (order, text, want))
+            lineup_note(rep, where, q, order, want == 'right', page.evaluate(JS_NOTE))
+            for n in notes:
+                if n not in (text or ''):
+                    rep.fail(where, 'feedback', 'order %s: the note %r is not shown' % (order, n))
+
+    for i, q in enumerate(bank['ROUNDUP'], 1):
+        where = 'Round Up %d (%s)' % (i, q['value'])
+        for opt in q['options']:
+            page.evaluate(JS_LOAD, ['roundup', q])
+            page.click('.option-btn[data-option="%s"]' % opt)
+            page.click('#checkBtn')
+            text = page.evaluate(JS_FEEDBACK)
+            actions += 1
+            want = 'right' if opt == q['answer'] else 'wrong'
+            if verdict(text) != want:
+                rep.fail(where, 'marking', 'option %s shows %r, expected %s' % (opt, text, want))
+
+    placeable = [q for q in bank['PLACEIT'] if grid_index(q) is not None]
+    actions += desktop_placeit(rep, page, placeable)
+    keys_placeit(rep, page, placeable[0])
+    if page.evaluate('window._mfgCompleted === true'):
+        rep.fail('page', 'session', 'the session reached its end screen; it must not (nothing may submit)')
+    close(browser, page)
+    for e in errors:
+        rep.fail('page', 'error', e)
+    return bank, actions
+
+
+def phone_pass(rep, pw, base, chromium, size, bank, verbose):
+    """Line-Up's touch drag and Place It on one phone."""
+    placeable = [q for q in bank['PLACEIT'] if grid_index(q) is not None]
+    browser, page, errors = open_page(pw, base, chromium, size, True, None)
+    touch_drag(rep, page, bank['LINEUP'][0], '%dx%d' % size)
+    phone_placeit(rep, page, placeable, size, verbose)
+    close(browser, page)
+    for e in errors:
+        rep.fail('page', 'error', e)
+
+
+def phone_unit(size):
+    return 'phone %dx%d' % size
+
+
+def page_units(rep, chromium, verbose, mine, shard):
+    """The desktop pass and the phones, those in this run's slice, in one stub server. Returns (bank or None, actions)."""
+    from playwright.sync_api import sync_playwright
+    bank, actions = None, 0
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            if 'desktop' in mine:
+                with shard.unit('desktop'):
+                    bank, actions = desktop_pass(rep, pw, base, chromium)
+            for size in PHONES:
+                if phone_unit(size) in mine:
+                    with shard.unit(phone_unit(size)):
+                        if bank is None:
+                            bank = read_bank(pw, base, chromium)
+                        phone_pass(rep, pw, base, chromium, size, bank, verbose)
+            if verbose and 'desktop' in mine:
                 print('  %d answers marked in Chromium' % actions)
             return bank, actions
     finally:
@@ -721,23 +782,21 @@ def run_page(rep, chromium=None, verbose=False, patch=None):
         proc.wait()
 
 
-def selftest(bank, chromium):
+def bank_plants(bank):
+    """The self-test's planted bank faults (copies; the file is never touched). Returns (ok, lines)."""
     lines, ok = [], True
     base = Report()
     check_bank(base, bank)
 
-    def record(name, rep):
-        nonlocal ok
-        new = [f for f in rep.fails if f not in base.fails]
-        ok = ok and bool(new)
-        lines.append('  self-test %-44s %s' % (name, ('caught: ' + new[0][:100]) if new else '*** MISSED ***'))
-
     def expect(name, fn):
+        nonlocal ok
         b = copy.deepcopy(bank)
         fn(b)
         rep = Report()
         check_bank(rep, b)
-        record(name, rep)
+        new = [f for f in rep.fails if f not in base.fails]
+        ok = ok and bool(new)
+        lines.append('  self-test %-44s %s' % (name, ('caught: ' + new[0][:100]) if new else '*** MISSED ***'))
 
     def find(items, field, text):
         return next(q for q in items if q[field] == text)
@@ -760,25 +819,20 @@ def selftest(bank, chromium):
     def off_grid(b):                                                            # a target that cannot be placed
         b['PLACEIT'][0]['value'] = 0.33
     expect('Place It target off the half-tick grid (0.33)', off_grid)
-
-    for patch, name in (('start', 'Place It marker at 50%, Check enabled (page)'),        # the audit's F1
-                        ('tolerance', 'Place It one-step tolerance (page)'),               # F2, F3
-                        ('readout', 'Place It live value readout (page)'),                 # F4
-                        ('check-on-load', 'Check enabled when a question loads (page)'),   # todo 1.51
-                        ('start-as-shuffled', 'Line-Up start left as shuffled (page)'),    # todo 1.51
-                        ('right-waits', 'a right answer waits (page)'),                    # canon 7.6
-                        ('wrong-moves-on', 'a wrong answer moves on by itself (page)'),
-                        ('order-removed', 'a wrong Line-Up without the order (page)'),     # DD-LINEUP-ORDER
-                        ('order-reversed', 'a wrong Line-Up order smallest-last (page)')):
-        rep = Report()
-        try:
-            run_page(rep, chromium, patch=patch)
-        except pc.StalePlant as e:                                              # a plant that did not apply fails the run
-            ok = False
-            lines.append('  self-test %-44s %s' % (name, e))
-            continue
-        record(name, rep)
     return ok, lines
+
+
+def page_plant(patch, name, chromium):
+    """One page plant, run and judged against the unplanted bank's own faults. Returns (ok, line)."""
+    rep = Report()
+    try:
+        bank = plant_run(rep, chromium, patch)
+    except pc.StalePlant as e:                                                  # a plant that did not apply fails the run
+        return False, '  self-test %-44s %s' % (name, e)
+    base = Report()
+    check_bank(base, bank)
+    new = [f for f in rep.fails if f not in base.fails]
+    return bool(new), '  self-test %-44s %s' % (name, ('caught: ' + new[0][:100]) if new else '*** MISSED ***')
 
 
 def main():
@@ -790,23 +844,54 @@ def main():
     ap.add_argument('--verbose', action='store_true')
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--chromium', help='Chromium executable (a cloud sandbox: /opt/pw-browsers/chromium)')
+    bc.shard_args(ap)
     args = ap.parse_args()
+    shard = bc.Shard(__file__, args)
+
+    # Work units (SHARD, canon 7.8.1): the desktop pass, each phone, the bank's keys with the bank plants, and each
+    # page plant. A full run (no --shard) runs them all, in this order, as the verifier always has.
+    units = ['desktop'] + [phone_unit(s) for s in PHONES] + ['bank']
+    if not args.no_selftest:
+        units += ['plant: ' + patch for patch, _ in PAGE_PLANTS]
+    mine = shard.pick(units)
 
     rep = Report()
-    bank, actions = run_page(rep, args.chromium, args.verbose)
-    check_bank(rep, bank, args.verbose)
+    bank, actions = None, 0
+    if any(u == 'desktop' or u.startswith('phone ') for u in mine):
+        bank, actions = page_units(rep, args.chromium, args.verbose, mine, shard)
+    lines, s_ok = [], True
+    if 'bank' in mine:
+        with shard.unit('bank'):
+            if bank is None:
+                from playwright.sync_api import sync_playwright
+                proc, base = bc.start_stub_server()
+                try:
+                    with sync_playwright() as pw:
+                        bank = read_bank(pw, base, args.chromium)
+                finally:
+                    proc.terminate()
+                    proc.wait()
+            check_bank(rep, bank, args.verbose)
+            if not args.no_selftest:
+                s_ok, lines = bank_plants(bank)
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails
-    if not args.no_selftest:
-        s_ok, lines = selftest(bank, args.chromium)
+    for patch, name in PAGE_PLANTS:
+        if 'plant: ' + patch in mine:
+            with shard.unit('plant: ' + patch):
+                p_ok, line = page_plant(patch, name, args.chromium)
+            s_ok = s_ok and p_ok
+            lines.append(line)
+    if lines:
         print('\nFault-injection self-test (patched copies; the file is never touched):')
         for ln in lines:
             print(ln)
         ok = ok and s_ok
-    print('\n%s: %d FAIL(s); %d items (Line-Up and Round Up keys recomputed with Decimal), '
-          '%d Line-Up starts and answers read or marked in Chromium'
-          % ('PASS' if ok else 'FAILED', len(rep.fails), sum(len(v) for v in bank.values()), actions))
+    print('\n%s: %d FAIL(s); %s; %d units of %d (%s), %d answers read or marked in Chromium'
+          % ('PASS' if ok else 'FAILED', len(rep.fails),
+             '%d items (Line-Up and Round Up keys recomputed with Decimal)' % sum(len(v) for v in bank.values())
+             if bank else 'the bank not read in this part', len(mine), len(units), args.shard or 'full run', actions))
     return 0 if ok else 1
 
 
