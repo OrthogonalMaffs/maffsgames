@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-19 (home): DD-VERIFIER-SHARD (Decimal Detective's verifier on ci-shards, so #837 fits the per-line limit)
+
+Claude Code (home lane), worktree `~/mg-dd-verifier-shard`, branch `claude/dd-verifier-shard`; contract `docs/handover/contracts/2026-11-19-dd-verifier-shard.md`. Tier Small. Route 1 for #837 NEXT-IN-VIEW, whose Gate (check-site 44573475355) stopped on this verifier: 177s median + 15s setup = 192s, 71% of 270s against the 70% (189s) line limit, selected because next-control.js selects 136 verifiers.
+
+- **`scripts/verify-decimal-detective.py`:** `# ci-shards: <same label> | | 2`; 14 units: desktop, phone 320x568, phone 375x667, phone 390x844, bank (keys plus the four bank plants), and one per page plant (9). Each check and plant runs in exactly one unit; a slice without the desktop pass reads the bank from the page first. `--list-units` works.
+- **Checked locally:** full run PASS, identical to main's (45 items, 1307 answers, the same 13 self-test lines caught), 198s against 199s; --shard 1/2 PASS (7 units, 111s), 2/2 PASS (7 units, 84s), together all 14, none twice. ci-groups --selftest and --check PASS (each part 120s default, 50%, until main times its units); ci-deps --selftest PASS.
+- **Report only (ci-lines over 60% of their line budget, ci-timings.json from main run 44566476211, setup 15s):** check-answer-lock.py "Answer lock, static rules and self-test" 268s + 15s of 450s (63%); verify-screening-room.py 150s + 15s of 270s (61%).
+- MERGED: pending. Then main is merged into #837 and #837 merged (its entry below).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-19 (home): PRINTABLES-CORE (the seven Core rooms and three Core bundles on /printables/)
 
 Claude Code (home lane), worktree `~/mg-printables-core`, branch `claude/printables-core`; contract `docs/handover/contracts/2026-11-19-printables-core.md`. Tier Medium. The first commit carries DASHBOARD-FIXES' close-out (#829, e4ac609).
