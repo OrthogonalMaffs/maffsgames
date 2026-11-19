@@ -3360,3 +3360,15 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 | DASHBOARD-PERCENT-CELLS | Two Dashboard counts show as %; cause unproven: home.md DASHBOARD-FIXES. | home; Jon |
 
 **Closed 19 Nov 2026 (DASHBOARD-PERCENT-CELLS).** Row DASHBOARD-PERCENT-CELLS, moved word for word above. Cause proven by Jon in real Sheets, 19 Nov 2026, 09:48 (checkPercentCells): Sheet.clear() keeps number formats, so a "0%" left from an earlier build showed the next count written to that cell as a percentage. Fixed by this PR: rebuildDashboard resets the whole sheet's number format to General straight after clear() (SCRIPT_VERSION 2026-11-19-a); the test stub now keeps number formats through clear(), as real Sheets does. Owed: Jon's eye check after pasting the script and running testDashboard.
+
+## Closed by NEXT-IN-VIEW (19 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| DD-LINEUP-FEEDBACK | **Decimal Detective's Line-Up after a wrong answer** (found by ESSENTIALS-AUDIT-LEFTOVERS PR 2, #776, 15 Nov 2026; both as before it). (1) **Done (DD-LINEUP-ORDER, 18 Nov 2026):** a wrong Line-Up now shows "The right order: …" from the item under "Not quite. Check the evidence." (canon §7.6). (2) Open, to the shared Next fix (NEXT-IN-VIEW, not yet contracted): Next Case ends below the fold: 799 at 320×568 (fold 528), 770 at 375×667 (fold 627); Round Up's 548 at 320×568. | cloud lane |
+| NNL-PHONE-NEXT | **Negative Number Line: after a wrong answer in Order Them and Calculate, Next is below the fold on small phones** (found by ESSENTIALS-AUDIT-LEFTOVERS PR 1, #775, 15 Nov 2026; so with the old button too). At 320×568 Next ends at 630 (Order Them) and 585 (Calculate), fold 528; Place It fits (480), the only screen `verify-negative-number-line.py` holds to the fold. In Aa also at 375×667 (651 and 642, fold 627). Needs layout work outside the feedback block (canon §7.6.1). | cloud lane |
+
+**Closed 19 Nov 2026 (NEXT-IN-VIEW).** Rows DD-LINEUP-FEEDBACK (its part 2; part 1 was done by DD-LINEUP-ORDER) and NNL-PHONE-NEXT, moved word for word above. MaffsNext.wrong() now brings Next into view itself (MaffsScroll.reveal, scroll.js loaded where a page lacks it). Measured in Chromium on a touch profile, the wrong answer given through the game's own functions, Next's bottom and the feedback's top read in the window 2.5 s later, before (main 150bd66) and after (this branch); fold = window height less the fixed 40px footer:
+- Negative Number Line, Order Them: 320x568 Next 630 to 518 (fold 528), feedback top 407; Aa 320x568 738 to 517; Aa 375x667 651 to 616 (fold 627). Calculate: 320x568 585 to 518; Aa 320x568 669 to 517; Aa 375x667 642 to 616. Feedback top on screen in every case; one move each; the sizes that already fitted do not move.
+- Decimal Detective, Line-Up: 320x568 799 to 518 (fold 528), feedback top 328; 375x667 748 to 617 (fold 627); Aa 320x568 and 375x667 in view too. Round Up: 320x568 548 to 517. One move each.
+The page is scrolled, not re-laid out: measured from the top of the page (measure-phone-fit.py's way) these screens are unchanged.

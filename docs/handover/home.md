@@ -16,6 +16,20 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-19 (home): NEXT-IN-VIEW (MaffsNext.wrong() brings Next into view on a phone, in every game)
+
+Claude Code (home lane), worktree `~/mg-next-in-view`, branch `claude/next-in-view`; contract `docs/handover/contracts/2026-11-19-next-in-view.md`. Tier Medium. The first commit carries PRINTABLES-CORE's close-out (#830, 006d3d8).
+
+- **`schools/assets/next-control.js`:** wrong() calls `MaffsScroll.reveal(wrap, { keep: opts.keep || wrap })` once its timers are set; new option `keep` (the reason element, or a function returning it). A page without scroll.js gets it once, by a tag whose src is resolved from next-control.js's own (`data-maffs-next="scroll"`); the reveal is skipped if the control was cleared or advanced meanwhile, and for a control inside a position:fixed ancestor (scrolling the page cannot move it). Floor, fallback, advance-once and 44px unchanged; scroll.js unchanged.
+- **Tests:** `scripts/test-next-control.py` gains six in-view cases at 320x568 on pages served two levels down (Next brought up with the reason's top on screen; no scroll.js: loaded once, same result; already in view: no scroll; keep holds when both cannot fit; a touchstart stops the pending passes; clear() before scroll.js arrives: no scroll). Two plants caught: the reveal call removed, scroll.js not loaded. 23 checks pass. check-scroll-reveal.py unchanged, passes.
+- **Re-measure (81 MaffsNext games, 320x568, 375x667, 390x844, main 150bd66 against this branch):** measure-phone-fit.py measures Next from the top of the page after `scrollTo(0, 0)`, so a scroll cannot change it: 0 of 243 rows changed in either mode, known-failures 21 games (normal) and 26 (Aa) before and after, Next below the fold by that measure 55 and 83 rows before and after. **phone-fit-state.json: nothing to take off, nothing added.** The same runs, read in the window after the page settles: Next in view on 95 of 150 wrong screens before, 148 after (normal); 68 before, 147 after (Aa); no screen moved twice or reversed.
+- **Decided for you:** screening-room (2 normal rows, 3 Aa) is unchanged: its own `MaffsScroll.reveal(result, { up: true })` right after wrong() holds its explanation's top, which is taller than the screen, so Next stays below (844 / 528 at 320x568, as before). Same task, so no visible jump. Not changed (game files out of scope); a per-game `keep:` or a shorter result is its fix.
+- **todo:** NNL-PHONE-NEXT and DD-LINEUP-FEEDBACK closed with figures in `docs/history/todo-done.md` (NNL Order Them 630 to 518, Calculate 585 to 518, DD Line-Up 799 to 518, Round Up 548 to 517, at 320x568, fold 528; Aa too). SIX-PS-SHORT-WRONG: all 14 unchanged (the 6 P's own reveal decides); 5 more found unlisted, on main too (row updated). todo.md 150456 to 149425 bytes.
+- **Canon 7.6** sentence under the MaffsNext usage; one /updates/ line.
+- MERGED: pending. The next home contract's first commit records the merge and moves this contract to history.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-19 (home): PRINTABLES-CORE (the seven Core rooms and three Core bundles on /printables/)
 
 Claude Code (home lane), worktree `~/mg-printables-core`, branch `claude/printables-core`; contract `docs/handover/contracts/2026-11-19-printables-core.md`. Tier Medium. The first commit carries DASHBOARD-FIXES' close-out (#829, e4ac609).
