@@ -46,8 +46,10 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
 import stats_common as st  # noqa: E402
+import core_paper_deal as deal  # noqa: E402
 
 SLUG = 'core-maths-paper2a'
+GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 
 
 def _load_check_banks():
@@ -335,7 +337,10 @@ RENDER_JS = """(i) => {
   showScreen('gameScreen');
   document.getElementById('sectionBanner').style.display = 'none';
   document.getElementById('questionArea').style.display = 'block';
-  currentQ = i; answered = false;
+  if (!PAPER.length) startGame();   // the session's deal (CORE-PAPERS-SHUFFLE); source question i at its dealt position
+  document.getElementById('sectionBanner').style.display = 'none';
+  document.getElementById('questionArea').style.display = 'block';
+  currentQ = PAPER.indexOf(i); answered = false;
   showQuestion();
   const btns = [...document.querySelectorAll('#optionsContainer .option-btn')];
   const note = document.getElementById('workingNote');
@@ -343,12 +348,12 @@ RENDER_JS = """(i) => {
     marked: btns.filter(b => /\\b(correct|reveal|incorrect)\\b/.test(b.className)).length,
     working: note.classList.contains('visible') && getComputedStyle(note).display !== 'none'
              && note.textContent.trim().length > 0,
-    texts: btns.map(b => b.querySelector('.option-text').textContent),
+    texts: btns.slice().sort((a, b) => a.dataset.val - b.dataset.val).map(b => b.querySelector('.option-text').textContent),
     svg: document.querySelector('#qStem svg') ? document.querySelector('#qStem svg').outerHTML : null,
   };
   selectAnswer(QUESTIONS[i].correct);
   const post = {
-    keyMarked: btns[QUESTIONS[i].correct].classList.contains('correct'),
+    keyMarked: btns.find(b => b.dataset.val === String(QUESTIONS[i].correct)).classList.contains('correct'),
     working: note.classList.contains('visible') && note.textContent.trim().length > 0,
   };
   return {pre: pre, post: post};
@@ -500,7 +505,7 @@ def selftest(bank, rendered):
     leak_bank, leak_rendered = load_and_render("""(() => {
       const orig = showQuestion;
       showQuestion = function () { orig(); const n = document.getElementById('workingNote');
-        n.textContent = QUESTIONS[currentQ].working; n.classList.add('visible'); };
+        n.textContent = currentQuestion().working; n.classList.add('visible'); };
     })()""")
     expect('pre-answer leak (working shown)', lambda rep: check_rendered(rep, leak_bank, leak_rendered))
     bar_bank, bar_rendered = load_and_render("""(() => {
@@ -532,6 +537,8 @@ def main():
     for f in rep.fails:
         print('FAIL ' + f)
     ok = not rep.fails
+    # CORE-PAPERS-SHUFFLE (19 Nov 2026): the deal, 20 sessions, with its own planted faults
+    ok = deal.run(open(GAME, encoding='utf-8').read(), SLUG, 'p2a', selftest=not args.no_selftest) and ok
     if not args.no_selftest:
         s_ok, lines = selftest(bank, rendered)
         print('\nFault-injection self-test (patched copies; the file is never touched):')

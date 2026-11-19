@@ -27,19 +27,20 @@
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/stage-exit.js" data-game="#gameScreen" data-leave="exitPaper" data-confirm="second-tap" data-label="← Exit paper"></script>
 <!-- The on-screen calculator with its scientific keys (canon §4.4 "scientific": rates of change and exponential
      models need powers and logs; Jon's tagging ruling, 10 Oct 2026); keypad.js first, as MaffsCalc composes it. -->
 <script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option; i >= 1 the first not accepted (the key, or Q35's accepted pair). Start is "Begin Practice".
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. i = 0 picks the first option shown; i >= 1 the first not accepted (the key, or Q35's accepted pair). Start is "Begin Practice".
 {
   "start_sel": ".start-btn",
   "answer": [
     "const bs = [...document.querySelectorAll('#optionsContainer .option-btn')];",
     "if (i === 0) { bs[0].click(); return; }",
-    "const ok = QUESTIONS[currentQ].accept || [QUESTIONS[currentQ].correct];",
+    "const q = currentQuestion(), ok = q.accept || [q.correct];",
     "(bs.find(b => ok.indexOf(+b.dataset.val) === -1) || bs[0]).click();"
   ]
 }
@@ -479,6 +480,28 @@ var QUESTIONS = [
 // ── GAME STATE ──
 var currentQ = 0, score = 0, answers = [];
 
+// The session's paper (CORE-PAPERS-SHUFFLE, 19 Nov 2026): every play deals each section's questions in a new order,
+// the sections in place and in their sizes, and each question's options in a new order (MaffsOptions), so a second
+// go is a real second go. PAPER[n] is the source index of the question at position n of this session. An option's
+// dataset.val is its index in q.options; marking compares that value with the key, never the button's position.
+var PAPER = [];
+function dealPaper(starts, counts) {
+  PAPER = [];
+  starts.forEach(function(start, si) {
+    var ids = [];
+    for (var i = 0; i < counts[si]; i++) ids.push(start + i);
+    PAPER = PAPER.concat(MaffsOptions.shuffle(ids));
+  });
+}
+function currentQuestion() { return QUESTIONS[PAPER[currentQ]]; }
+// question_id: the question's stable source id, its place in QUESTIONS as written ("p2c-q07" is the 7th).
+function questionId(src) { return 'p2c-q' + (src < 9 ? '0' : '') + (src + 1); }
+function dealOptions(q) {
+  var others = [];
+  for (var i = 0; i < q.options.length; i++) if (i !== q.correct) others.push(i);
+  return MaffsOptions.build(q.correct, others, { max: q.options.length });
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
   document.getElementById(id).classList.add('active');
@@ -493,7 +516,7 @@ function exitPaper() {
 }
 
 function startGame() {
-  currentQ = 0; score = 0; answers = []; MaffsLock.newSession();
+  currentQ = 0; score = 0; answers = []; dealPaper(SECTION_STARTS, SECTIONS.map(function(sec){ return sec.count; })); MaffsLock.newSession();
   mfg('game_started',{game_slug:'core-maths-paper2c',level:resolvedLevel});
   showScreen('gameScreen');
   showSectionBanner(0);
@@ -511,7 +534,7 @@ function showSectionBanner(qIndex) {
 }
 
 function showQuestion() {
-  var q = QUESTIONS[currentQ];
+  var q = currentQuestion();
   document.getElementById('progressFill').style.width = (currentQ/36*100)+'%';
   document.getElementById('qCounter').textContent = 'Q'+(currentQ+1)+' of 36';
   document.getElementById('qTag').textContent = '\u00a7'+q.section+' \u00b7 '+q.ao;
@@ -534,12 +557,12 @@ function showQuestion() {
   var letters = ['A','B','C','D'];
   var container = document.getElementById('optionsContainer');
   container.innerHTML = '';
-  q.options.forEach(function(opt,i){
+  dealOptions(q).forEach(function(v,pos){
     var btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.dataset.val = String(i);
-    btn.innerHTML = '<span class="option-letter">'+letters[i]+'</span><span class="option-text">'+MaffsText.html(opt)+'</span>';
-    btn.addEventListener('click',function(){selectAnswer(i);});
+    btn.dataset.val = String(v);
+    btn.innerHTML = '<span class="option-letter">'+letters[pos]+'</span><span class="option-text">'+MaffsText.html(q.options[v])+'</span>';
+    btn.addEventListener('click',function(){selectAnswer(parseInt(this.dataset.val,10));});
     container.appendChild(btn);
   });
   MaffsLock.fresh(container);   // a new question: a double-click on Next cannot pick an option
@@ -549,7 +572,7 @@ function showQuestion() {
 
 function selectAnswer(idx) {
   if (!MaffsLock.lock(document.getElementById('optionsContainer'))) return;   // one answer per question (canon 7.6.0)
-  var q = QUESTIONS[currentQ];
+  var q = currentQuestion();
   var ok = q.accept || [q.correct];   // an item may accept more than one option (Jon, 9 Oct 2026: Q35)
   var isCorrect = ok.indexOf(idx) !== -1;
   answers.push(isCorrect);
@@ -564,7 +587,7 @@ function selectAnswer(idx) {
   var note = document.getElementById('workingNote');
   note.innerHTML = MaffsText.html(q.working);
   note.classList.add('visible');
-  mfg('question_answered',{game_slug:'core-maths-paper2c',level:resolvedLevel,question_index:currentQ+1,correct:isCorrect,section:q.section});
+  mfg('question_answered',{game_slug:'core-maths-paper2c',level:resolvedLevel,question_index:currentQ+1,question_id:questionId(PAPER[currentQ]),correct:isCorrect,section:q.section});
   MaffsLock.timer(function(){document.getElementById('nextBtn').classList.add('visible');},1500);
 }
 
