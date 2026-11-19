@@ -636,6 +636,7 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
 | LEDGER-B3-ANGLE-ACE | **B3 ledger debt, `angle-ace`: 7 duplicate questions.** Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | LEDGER-B3-MOMENTS-MASTER | **B3 ledger debt, `moments-master`: 1 duplicate question.** Possibly a false match: see §4 item 11. Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 | EXTRACT-BANKS-MISREAD | **`scripts/extract-banks.py` counts a level's fixed list for a generated level** (factor-race KS3 and fraction-equivalence KS3/GCSE were reported as 20) and missed negative-number-line's Place It list (45 items, reported 30); `data/check-ledger.json` B4 entries built on those counts are not real. Found 19 Nov 2026 (bank audit; FACTOR-RACE-Y6-40). | home lane |
+| PHONE-FIT-PR | **A PR that changes a game page is never phone-fit measured before merge:** phone-fit-full runs on main only, and only when a shared path changed (`.github/workflows/phone-fit-full.yml`:42-79), so #840 turned main red unseen (#843's stop, 19 Nov 2026). Measure the PR's changed games in the Gate. | home lane |
 
 
 ## 5. Parked, deliberately

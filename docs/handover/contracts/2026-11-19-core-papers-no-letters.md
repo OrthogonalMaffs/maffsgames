@@ -20,3 +20,11 @@ SUCCESS CONDITION: no button in the four papers shows a letter before marking; �
 
 STOP IF: anything reads the letters (a keyboard shortcut, analytics, the answer-lock hint, any text that says "press A"): report it and change nothing; the empty badge changes any phone-fit measurement; merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you").
 END OF CONTRACT
+
+AMENDMENT 1 (Jon, 19 Nov 2026), ruling on #843's stop, verbatim:
+Ruling on #843's stop (Jon):
+1. Remove the seven stale known-failures entries from scripts/phone-fit-state.json (lists may shrink).
+2. Do not list Paper 1's Aa 320x568, and do not nudge 2 px for one deal. Since #840 any question can be shown first, so measure every question, not the seeded one: add to scripts/core_paper_deal.py a phone-fit pass over every question of all four papers on the asking screen, against the fold less the footer, in page coordinates: normal mode at 320x568, 375x667, 390x844 and Aa at 375x667, 390x844 — the last option ends above the fold; Aa at 320x568 — the options start above the fold (canon 7.6.1's gate and its Aa exception).
+3. Fix what fails in the pages, the same way in all four (spacing above the options, not the stems or options' text), until every question passes. If more than 10 questions across the four papers fail after reasonable spacing changes, or a fix would change any question's text, stop and report the figures.
+4. One todo row PHONE-FIT-PR (§4, home lane): a PR that changes a game page is never phone-fit measured before merge (phone-fit-full runs on main only, and only when a shared path changed: .github/workflows/phone-fit-full.yml:42-79), so #840 turned main red unseen. Measure the PR's changed games in the Gate. Keep todo.md under its cap.
+5. Then the manual phone-fit-full run on the branch green, Gate green, merge with merge-pr.py. Record this stop and ruling in cloud.md.

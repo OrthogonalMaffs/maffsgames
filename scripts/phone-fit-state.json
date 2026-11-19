@@ -45,13 +45,10 @@
         "320x568"
       ],
       "core-maths-paper2a": [
-        "320x568",
-        "375x667",
-        "390x844"
+        "320x568"
       ],
       "core-maths-paper2b": [
-        "320x568",
-        "375x667"
+        "320x568"
       ],
       "core-maths-paper2c": [
         "320x568"
@@ -198,7 +195,6 @@
         "390x844"
       ],
       "core-maths-paper2c": [
-        "320x568",
         "375x667"
       ],
       "correlation-or-coincidence": [
@@ -342,13 +338,6 @@
         "1366x768 option",
         "1280x720 next",
         "1280x720 option"
-      ],
-      "core-maths-paper2a": [
-        "1366x768 option",
-        "1280x720 option"
-      ],
-      "core-maths-paper2b": [
-        "1280x720 next"
       ],
       "curling-friction": [
         "1366x768 next",
