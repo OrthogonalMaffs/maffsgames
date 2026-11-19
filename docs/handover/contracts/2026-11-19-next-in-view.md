@@ -1,0 +1,24 @@
+NEXT-IN-VIEW, one part.
+LANE: home (Claude Code in the terminal). Send now. It touches only schools/assets/ and scripts, so it can run beside the cloud lane's game PRs. TIER: Medium. MODEL: Claude Code, Opus 5.5, high effort (shared code used by 81 games).
+
+TASK: After a wrong answer, every game that uses MaffsNext brings the Next control (and the reason directly above it) into view on a phone, from one place: MaffsNext.wrong().
+
+ROOT CAUSE: Checked on main 150bd66. MaffsNext.wrong() (schools/assets/next-control.js:100-117) appends the control to its mount and does nothing to bring it into view. Canon 7.6.1 requires the reason and Next both above the fold. MaffsScroll.reveal() (schools/assets/scroll.js) already does exactly that, and settles after fonts and resizes, but only 17 games call it, and 46 of the 81 pages that use MaffsNext.wrong don't load scroll.js at all. Open todo rows caused by this: NNL-PHONE-NEXT (Negative Number Line, Next at 630/585 against a fold of 528 at 320x568), DD-LINEUP-FEEDBACK part 2, and the Next-below-fold entries in scripts/phone-fit-state.json known-failures (normal 39, aa 39, laptop 27 entries in all; only some are Next).
+
+CLASS CHECK: A bug class in shared infrastructure: the missing step is in a function called from 81 games. Fix it once in MaffsNext.wrong(), not per game.
+
+EXACT CHANGE:
+1. First commit: close out #830 PRINTABLES-CORE in docs/handover/home.md (its entry says "MERGED: pending"): read main's runs on 006d3d8 from the API, record them, and move docs/handover/contracts/2026-11-19-printables-core.md to docs/history/contracts/ if it is still there. Save this contract verbatim as docs/handover/contracts/2026-11-19-next-in-view.md.
+2. schools/assets/next-control.js, wrong(): after mount.appendChild(wrap), call MaffsScroll.reveal(wrap, { keep: opts.keep || wrap }). opts.keep is a new optional option, the reason/feedback element whose top must stay on screen; document it in the header's Options list. If window.MaffsScroll is missing, next-control.js loads schools/assets/scroll.js once (a script tag whose src is resolved from next-control.js's own src, so it works at any page depth) and calls reveal when it arrives. clear() still cancels everything; a student's own scroll still cancels pending passes (scroll.js already does this).
+3. scripts/test-next-control.py: new cases in Chromium at 320x568: a page whose Next is below the fold ends with Next's bottom inside the fold and its keep element's top on screen; a page without scroll.js loads it once and does the same; a page where Next is already in view doesn't scroll; a touch during the passes stops them. Plants that must FAIL: the reveal call removed; scroll.js not loaded when missing.
+4. scripts/check-scroll-reveal.py: unchanged, and it must still pass (games keep no scrollIntoView of their own).
+5. Re-measure: run measure-phone-fit.py in normal and Aa mode over every game that uses MaffsNext.wrong. Take every entry the change fixes out of scripts/phone-fit-state.json (its note: "Take a game (or an entry) off in the PR that fixes it"). Add nothing. Report the before and after counts per mode.
+6. todo: close NNL-PHONE-NEXT and DD-LINEUP-FEEDBACK part 2 if the measurements show them fixed (move them to docs/history/todo-done.md with the figures), otherwise update them with the new figures. Same for SIX-PS-SHORT-WRONG's 14 questions if any now fit. todo.md must not grow.
+7. canon 7.6: one sentence under the MaffsNext usage: "MaffsNext.wrong() brings Next into view itself (MaffsScroll.reveal); pass keep: the reason element so its top stays on screen." One /updates/ line: "On a phone, a wrong answer now brings the Next button into view, in every game." home.md entry.
+8. PR, Gate and phone-fit-full green, then merge with python -X utf8 scripts/merge-pr.py <n> --watch --wait 3600; report its last line. No draft PR.
+
+DO NOT TOUCH: any game file (passing keep: from games is a later, per-game step); MaffsNext's floor, fallback, advance-once and 44px rules; scroll.js's behaviour; docs/handover/cloud.md; the cloud lane's open PR and its files.
+
+SUCCESS CONDITION: wrong() reveals Next on every MaffsNext page, loading scroll.js where it's missing; the new tests pass and both plants fail; check-scroll-reveal passes; phone-fit-state.json shrinks by every entry fixed, with counts reported; todo rows updated or closed with figures; canon and /updates/ lines in; merged by merge-pr.py with a GREEN last line; home.md records it all.
+
+STOP IF: a game's own reveal or scroll code fights the new call (the page jumps twice, or ends with Next out of view): list the games, change none; any phone-fit entry gets worse; any existing MaffsNext test fails; merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you").

@@ -23,7 +23,7 @@ Claude Code (home lane), worktree `~/mg-printables-core`, branch `claude/printab
 - **/printables/ (`printables/index.html`):** ten `<article class="pack">` cards after the Warm-up bundle, inside the escape-room packs' div, built as the page's other cards with the ★★ Core chip copied from The Christmas Tree Fiasco's. Seven rooms in /escape-rooms/'s order (Hamster Heist, P.E. Store, Heatwave, Prom Budget, Canteen, Car Trap, Roll for Initiative), each £3 with topics, a Tes link (`tes-<slug>`) and a play link (`play-<slug>`); then Core bundle (£5), Core bundle 2 (£6.50) and the complete Core collection (£10), Tes link only. Every h3 matches the hub's card and every topics line matches the room's meta description word for word; each /escape-rooms/<slug>/ exists. Existing cards unchanged.
 - **/updates/:** one 19 Nov 2026 line.
 - **todo:** PRINTABLES-CORE and CORE-BUNDLES-2 moved word for word to `docs/history/todo-done.md` with a done note; todo.md 153572 to 152846 bytes.
-- MERGED: pending. The next home contract's first commit records the merge and moves this contract to history.
+- MERGED 19 Nov as 006d3d8 (#830) via merge-pr.py, exit 0, last line "main 006d3d8 run 44477099151: GREEN". Main on the merge commit: check-site 44477099151 success, phone-fit-full 44477099247 success (both push runs), pages build 44477099011 success (all confirmed from the API). Contract already in `docs/history/contracts/2026-11-19-printables-core.md` (moved by #831); closed out by NEXT-IN-VIEW's first commit.
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
