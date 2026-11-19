@@ -16,6 +16,9 @@
 <title>Equivalent Fractions Game – KS3/GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row. This game's own tokens: one blue accent (6.70:1 on the
    white surface) and its tint; Yes and No take the base --correct and --wrong. Everything else is a base token. */
@@ -35,9 +38,7 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .question-box{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.6rem 1.2rem;text-align:center}
 .q-label{font-size:.95rem;color:var(--muted);font-weight:600;margin-bottom:1rem}
 .fractions-row{display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:1.4rem;flex-wrap:wrap}
-.fraction{display:flex;flex-direction:column;align-items:center;gap:4px}
-.frac-num,.frac-den{font-family:var(--font-num);font-weight:700;font-size:clamp(32px,9vw,52px);color:var(--text);line-height:1}
-.frac-line{width:64px;height:4px;background:var(--text);border-radius:2px;margin:4px 0}
+.fraction{color:var(--text);line-height:1;font-size:clamp(26.4px,7.44vw,43px)}   /* KaTeX's 1.21em puts each number at 32-52px, the CSS fractions' size */
 .equals-q{font-family:var(--font-num);font-weight:700;font-size:clamp(22px,6vw,32px);color:var(--muted)}
 
 .btn-row{display:flex;gap:16px;justify-content:center}
@@ -86,7 +87,7 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 .lb-score{font-family:var(--font-num);font-size:.9rem;color:var(--text)}
 body.accessible{letter-spacing:.12em;word-spacing:.16em}
 body.accessible p,body.accessible .question-text,body.accessible .card-text{line-height:2;max-width:65ch}
-body.accessible .score-val,body.accessible .frac-num,body.accessible .frac-den,body.accessible .go-score{letter-spacing:0}
+body.accessible .score-val,body.accessible .fraction,body.accessible .go-score{letter-spacing:0}
 .a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:44px;height:44px;font-size:12px;font-weight:700;cursor:pointer}
 .a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
 .correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
@@ -166,17 +167,9 @@ driver did, so the tap-through still meets right and wrong answers. -->
     <div class="question-box">
       <div class="q-label">Are these fractions equivalent?</div>
       <div class="fractions-row">
-        <div class="fraction">
-          <div class="frac-num" id="n1">1</div>
-          <div class="frac-line"></div>
-          <div class="frac-den" id="d1">2</div>
-        </div>
+        <div class="fraction" id="frac1"></div>
         <div class="equals-q">=?</div>
-        <div class="fraction">
-          <div class="frac-num" id="n2">3</div>
-          <div class="frac-line"></div>
-          <div class="frac-den" id="d2">6</div>
-        </div>
+        <div class="fraction" id="frac2"></div>
       </div>
       <div class="btn-row" id="ynRow">
         <button class="yn-btn yes" id="btnYes" onclick="guess(true)">Yes ✓</button>
@@ -208,43 +201,73 @@ driver did, so the tap-through still meets right and wrong answers. -->
 const TIME = 30000;
 const QUESTIONS = 15;
 
-// Year 6 pre-defined question bank (denominators 2,3,4,5,6,8,10 only)
+// Year 6 question bank (FRACTION-SNAP-REBUILD, 19 Nov 2026): 46 pairs, denominators 2, 3, 4, 5, 6, 8, 10 and 12 only.
+// kind: yes (equivalent); add (the same number added to top and bottom); one (only the top or only the bottom
+// multiplied); near (the cross-products differ by 1). Each wrong kind is a misconception a NO is built from.
 const YEAR6_BANK = [
-  // 10 equivalent pairs (YES)
-  { n1:1, d1:2, n2:2, d2:4, equiv:true },
-  { n1:1, d1:3, n2:2, d2:6, equiv:true },
-  { n1:2, d1:3, n2:4, d2:6, equiv:true },
-  { n1:3, d1:4, n2:6, d2:8, equiv:true },
-  { n1:1, d1:5, n2:2, d2:10, equiv:true },
-  { n1:2, d1:5, n2:4, d2:10, equiv:true },
-  { n1:1, d1:4, n2:2, d2:8, equiv:true },
-  { n1:3, d1:5, n2:6, d2:10, equiv:true },
-  { n1:1, d1:2, n2:3, d2:6, equiv:true },
-  { n1:1, d1:2, n2:5, d2:10, equiv:true },
-  // 10 non-equivalent pairs (NO)
-  { n1:1, d1:2, n2:1, d2:3, equiv:false },
-  { n1:2, d1:3, n2:3, d2:4, equiv:false },
-  { n1:1, d1:4, n2:1, d2:3, equiv:false },
-  { n1:3, d1:5, n2:2, d2:3, equiv:false },
-  { n1:1, d1:6, n2:1, d2:8, equiv:false },
-  { n1:2, d1:5, n2:1, d2:3, equiv:false },
-  { n1:3, d1:4, n2:4, d2:5, equiv:false },
-  { n1:1, d1:3, n2:1, d2:4, equiv:false },
-  { n1:2, d1:6, n2:3, d2:8, equiv:false },
-  { n1:5, d1:10, n2:3, d2:8, equiv:false },
+  // 22 equivalent pairs (YES)
+  { n1:1, d1:2, n2:2, d2:4, equiv:true, kind:'yes' },
+  { n1:1, d1:2, n2:3, d2:6, equiv:true, kind:'yes' },
+  { n1:1, d1:2, n2:5, d2:10, equiv:true, kind:'yes' },
+  { n1:2, d1:4, n2:4, d2:8, equiv:true, kind:'yes' },
+  { n1:3, d1:6, n2:6, d2:12, equiv:true, kind:'yes' },
+  { n1:1, d1:3, n2:2, d2:6, equiv:true, kind:'yes' },
+  { n1:1, d1:3, n2:4, d2:12, equiv:true, kind:'yes' },
+  { n1:2, d1:6, n2:4, d2:12, equiv:true, kind:'yes' },
+  { n1:2, d1:3, n2:4, d2:6, equiv:true, kind:'yes' },
+  { n1:2, d1:3, n2:8, d2:12, equiv:true, kind:'yes' },
+  { n1:4, d1:6, n2:8, d2:12, equiv:true, kind:'yes' },
+  { n1:1, d1:4, n2:2, d2:8, equiv:true, kind:'yes' },
+  { n1:1, d1:4, n2:3, d2:12, equiv:true, kind:'yes' },
+  { n1:3, d1:4, n2:6, d2:8, equiv:true, kind:'yes' },
+  { n1:3, d1:4, n2:9, d2:12, equiv:true, kind:'yes' },
+  { n1:6, d1:8, n2:9, d2:12, equiv:true, kind:'yes' },
+  { n1:1, d1:5, n2:2, d2:10, equiv:true, kind:'yes' },
+  { n1:2, d1:5, n2:4, d2:10, equiv:true, kind:'yes' },
+  { n1:3, d1:5, n2:6, d2:10, equiv:true, kind:'yes' },
+  { n1:4, d1:5, n2:8, d2:10, equiv:true, kind:'yes' },
+  { n1:1, d1:6, n2:2, d2:12, equiv:true, kind:'yes' },
+  { n1:5, d1:6, n2:10, d2:12, equiv:true, kind:'yes' },
+  // 8 pairs with the same number added to top and bottom (NO)
+  { n1:1, d1:2, n2:2, d2:3, equiv:false, kind:'add' },
+  { n1:1, d1:3, n2:2, d2:4, equiv:false, kind:'add' },
+  { n1:2, d1:3, n2:3, d2:4, equiv:false, kind:'add' },
+  { n1:1, d1:4, n2:2, d2:5, equiv:false, kind:'add' },
+  { n1:3, d1:4, n2:4, d2:5, equiv:false, kind:'add' },
+  { n1:1, d1:2, n2:3, d2:4, equiv:false, kind:'add' },
+  { n1:1, d1:3, n2:3, d2:5, equiv:false, kind:'add' },
+  { n1:1, d1:4, n2:3, d2:6, equiv:false, kind:'add' },
+  // 8 pairs with only the top or only the bottom multiplied (NO)
+  { n1:1, d1:2, n2:1, d2:4, equiv:false, kind:'one' },
+  { n1:1, d1:3, n2:1, d2:6, equiv:false, kind:'one' },
+  { n1:3, d1:4, n2:3, d2:8, equiv:false, kind:'one' },
+  { n1:2, d1:5, n2:2, d2:10, equiv:false, kind:'one' },
+  { n1:1, d1:4, n2:2, d2:4, equiv:false, kind:'one' },
+  { n1:1, d1:5, n2:3, d2:5, equiv:false, kind:'one' },
+  { n1:1, d1:6, n2:1, d2:12, equiv:false, kind:'one' },
+  { n1:2, d1:3, n2:2, d2:6, equiv:false, kind:'one' },
+  // 8 pairs whose cross-products differ by 1 (NO)
+  { n1:1, d1:2, n2:2, d2:5, equiv:false, kind:'near' },
+  { n1:1, d1:3, n2:3, d2:8, equiv:false, kind:'near' },
+  { n1:2, d1:3, n2:5, d2:8, equiv:false, kind:'near' },
+  { n1:3, d1:5, n2:5, d2:8, equiv:false, kind:'near' },
+  { n1:1, d1:2, n2:3, d2:5, equiv:false, kind:'near' },
+  { n1:2, d1:5, n2:3, d2:8, equiv:false, kind:'near' },
+  { n1:1, d1:4, n2:1, d2:5, equiv:false, kind:'near' },
+  { n1:2, d1:5, n2:5, d2:12, equiv:false, kind:'near' },
 ];
 
-// Detect level from URL param
-const urlLevel = MaffsLevel.resolve({slug:'fraction-equivalence',levels:['year6','ks3','gcse'],fallback:'ks3',boards:['all']});
-const gameLevel = urlLevel === 'year6' ? 'year6' : 'all';
+// The level from the URL: year6, ks3 or gcse, each its own leaderboard (FRACTION-SNAP-REBUILD)
+const gameLevel = MaffsLevel.resolve({slug:'fraction-equivalence',levels:['year6','ks3','gcse'],fallback:'ks3'});
 
 let score=0, streak=0, qNum=0, timerInt=null, timerStart=null;
 const ynRow=document.getElementById('ynRow');   // MaffsLock's container (canon 7.6.0)
-let cur={n1:1,d1:2,n2:2,d2:4,equiv:true};
+let cur={n1:1,d1:2,n2:2,d2:4,equiv:true,kind:'yes'};
 
 function gcd(a,b){return b===0?a:gcd(b,a%b);}
 function randInt(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
 function shuffle(arr){return [...arr].sort(()=>Math.random()-0.5);}
+function pick(arr){return arr[Math.floor(Math.random()*arr.length)];}
 
 let year6Questions = [];
 let year6Index = 0;
@@ -257,25 +280,59 @@ function generateQ() {
     }
     return year6Questions[year6Index++];
   }
-  // Default: random generation
-  const equiv = Math.random() > 0.4; // 60% equivalent
-  let n1=randInt(1,9), d1=randInt(2,12);
-  if(n1>=d1) d1=n1+randInt(1,6);
-  const g=gcd(n1,d1);
-  n1/=g; d1/=g; // simplify
+  // KS3 and GCSE: half the pairs equivalent; the rest split equally between the three wrong kinds.
+  const kind = Math.random() < 0.5 ? 'yes' : pick(['add','one','near']);
+  const q = gameLevel === 'gcse' ? genGCSE(kind) : genKS3(kind);
+  q.kind = kind;
+  q.equiv = q.n1*q.d2 === q.n2*q.d1;
+  return q;
+}
 
-  let n2,d2;
-  if(equiv) {
-    const mult=randInt(2,6);
-    n2=n1*mult; d2=d1*mult;
-  } else {
-    // Make definitely not equivalent
-    do {
-      const mult=randInt(2,6);
-      n2=n1*mult; d2=d1*mult+randInt(1,3);
-    } while(n1*d2===n2*d1); // ensure not equivalent
+// A proper fraction in simplest form, bottom 2 to 12: the base of every generated pair.
+function baseFraction() {
+  let p, q;
+  do { q = randInt(2,12); p = randInt(1,q-1); } while (gcd(p,q) !== 1);
+  return [p,q];
+}
+
+// Every proper c/d with d from 2 to maxD whose cross-products with p/q differ by 1 (so c/d is in simplest form and not p/q).
+function neighbours(p, q, maxD) {
+  const out = [];
+  for (let d = 2; d <= maxD; d++) for (let c = 1; c < d; c++) if (Math.abs(p*d - q*c) === 1) out.push([c,d]);
+  return out;
+}
+
+// KS3: the first fraction in simplest form.
+function genKS3(kind) {
+  const [p,q] = baseFraction();
+  let n2, d2;
+  if (kind === 'yes') { const m = randInt(2,6); n2 = p*m; d2 = q*m; }
+  else if (kind === 'add') { const k = randInt(1,5); n2 = p+k; d2 = q+k; }
+  else if (kind === 'one') { const m = randInt(2,6); if (p*m < q && Math.random() < 0.5) { n2 = p*m; d2 = q; } else { n2 = p; d2 = q*m; } }
+  else { [n2,d2] = pick(neighbours(p, q, Math.max(12, 2*q))); }   // never empty: d and d + q both give a neighbour
+  return {n1:p, d1:q, n2, d2};
+}
+
+// GCSE: neither fraction in simplest form, every number 60 or less (redrawn otherwise).
+function genGCSE(kind) {
+  for (;;) {
+    const [p,q] = baseFraction();
+    const a = randInt(2,6), n1 = p*a, d1 = q*a;
+    let n2, d2;
+    if (kind === 'yes') { let b; do { b = randInt(2,9); } while (b === a); n2 = p*b; d2 = q*b; }
+    else if (kind === 'add') {
+      const ks = [];   // k = a always qualifies, so this is never empty
+      for (let k = 1; k <= 9; k++) if (gcd(n1+k, d1+k) > 1) ks.push(k);
+      const k = pick(ks); n2 = n1+k; d2 = d1+k;
+    }
+    else if (kind === 'one') { const m = randInt(2,4); if (n1*m < d1 && Math.random() < 0.5) { n2 = n1*m; d2 = d1; } else { n2 = n1; d2 = d1*m; } }
+    else {
+      const nb = neighbours(p, q, 12);
+      if (!nb.length) continue;
+      const [c,d] = pick(nb), e = randInt(2,6); n2 = c*e; d2 = d*e;
+    }
+    if (Math.max(n1,d1,n2,d2) <= 60) return {n1, d1, n2, d2};
   }
-  return {n1,d1,n2,d2,equiv};
 }
 
 function startGame(){
@@ -296,15 +353,13 @@ function nextQ(){
   qNum++;
   MaffsLock.fresh(ynRow);   // a new pair: a double-click on Start or Play again cannot answer it
   cur=generateQ();
-  document.getElementById('n1').textContent=cur.n1;
-  document.getElementById('d1').textContent=cur.d1;
-  document.getElementById('n2').textContent=cur.n2;
-  document.getElementById('d2').textContent=cur.d2;
+  document.getElementById('frac1').innerHTML=fracHTML(cur.n1,cur.d1);
+  document.getElementById('frac2').innerHTML=fracHTML(cur.n2,cur.d2);
   document.getElementById('btnYes').className='yn-btn yes';
   document.getElementById('btnNo').className='yn-btn no';
   document.getElementById('feedback').textContent='';
   document.getElementById('feedback').className='feedback';
-  document.getElementById('hint').textContent='';
+  document.getElementById('hint').innerHTML='';
   clearInterval(timerInt);
   timerStart=Date.now();
   timerInt=setInterval(tickTimer,50);
@@ -357,7 +412,12 @@ function guess(val){
 function showHint(){
   const cross=cur.n1*cur.d2;
   const cross2=cur.n2*cur.d1;
-  document.getElementById('hint').textContent=`${cur.n1}×${cur.d2}=${cross} vs ${cur.n2}×${cur.d1}=${cross2} → ${cross===cross2?'equal':'not equal'}`;
+  document.getElementById('hint').innerHTML=MaffsText.html(`\\(${cur.n1}\\times${cur.d2}=${cross}\\) vs \\(${cur.n2}\\times${cur.d1}=${cross2}\\) → ${cross===cross2?'equal':'not equal'}`);
+}
+
+// A fraction drawn by KaTeX (canon 7.1.1); a plain n/d if KaTeX has not loaded.
+function fracHTML(n,d){
+  return (typeof katex!=='undefined')?katex.renderToString(`\\dfrac{${n}}{${d}}`,{throwOnError:false}):`${n}/${d}`;
 }
 
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
@@ -376,8 +436,9 @@ const endGame=MaffsLock.finishOnce(function(){
   saveBest(score);renderLB();
 });
 
-function getBest(){return parseInt(localStorage.getItem('fs_best')||'0');}
-function saveBest(s){if(s>getBest())localStorage.setItem('fs_best',s);document.getElementById('best').textContent=getBest();}
+// One best per level (FRACTION-SNAP-REBUILD): Year 6, KS3 and GCSE are different games.
+function getBest(){return parseInt(localStorage.getItem('fs_best_'+gameLevel)||'0');}
+function saveBest(s){if(s>getBest())localStorage.setItem('fs_best_'+gameLevel,s);document.getElementById('best').textContent=getBest();}
 function renderLB() {
   if (window.MaffsScoreHistory) MaffsScoreHistory.renderTop(document.getElementById('lbList'), 'fraction-equivalence', gameLevel, 5);
 }
