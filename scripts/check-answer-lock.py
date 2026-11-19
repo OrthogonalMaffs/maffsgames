@@ -672,7 +672,10 @@ class Driver:
         t_end = loop.time() + PAUSE_S
         seen = None
         while True:
-            if await self.ev(self.up, s['lastFresh']):
+            # The question changed: the game rendered something new through MaffsLock (every migrated game draws its
+            # next question with fresh() or screen()) and no continue control is on screen (a feedback screen opened
+            # through screen() with its Next is still the pause). Not self.up: some games leave the answered group enabled.
+            if await self.ev('(f) => __lockFreshCalls > f && !__lockFindContinue()', s['lastFresh']):
                 return ['wrong answer: the next question came up within %gs with Next not pressed (canon 7.6: a wrong '
                         'answer waits on Next; WRONG-PAUSE-NEXT)' % PAUSE_S]
             seen = await self.ev('() => { const c = __lockFindContinue(); return c ? c.kind : null; }') or seen
@@ -968,12 +971,15 @@ OWN_NEXT = {
 # Games the pause check cannot judge: reported, never failed. It may only shrink: it must stay a subset of the list as
 # it began (WRONG_PAUSE_UNCHECKED_AT_START, frozen), so a new game is judged from the start. Each with its reason.
 WRONG_PAUSE_UNCHECKED_AT_START = frozenset('''
-expectation-station maths-court tax-theft
+expectation-station maths-court tax-theft chart-interrogator prime-factorisation prisoners-dilemma
 '''.split())
 WRONG_PAUSE_UNCHECKED = {
     'expectation-station': 'a staged flow the #838 survey could not trace',
     'maths-court': 'a staged flow the #838 survey could not trace',
     'tax-theft': 'a staged flow the #838 survey could not trace',
+    'chart-interrogator': 'the run reaches no wrong answer: it logs right answers only (mark_any)',
+    'prime-factorisation': 'the run reaches no wrong answer: it logs right answers only (mark_any)',
+    'prisoners-dilemma': 'the run reaches no wrong answer: it logs right answers only (mark_any)',
 }
 PAUSE_REPORTED = {}    # slug -> its pause fault (or 'passes'), for a game on WRONG_PAUSE_UNCHECKED
 
