@@ -26,6 +26,7 @@ from fractions import Fraction as F
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
+import core_paper_deal as deal  # noqa: E402
 
 SLUG = 'core-maths-paper2b'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
@@ -89,7 +90,7 @@ SWEEP_JS = r"""() => {
   window.setTimeout = () => 0;
   const out = [];
   QUESTIONS.forEach((q, n) => q.options.forEach((_, i) => {
-    currentQ = n; answers = []; score = 0;
+    currentQ = PAPER.indexOf(n); answers = []; score = 0;   // source question n at its dealt position (CORE-PAPERS-SHUFFLE)
     showQuestion();
     const btn = [...document.querySelectorAll('#optionsContainer .option-btn')].find(b => b.dataset.val === String(i));
     if (!btn) { out.push([n, i, 'not on screen']); return; }
@@ -175,6 +176,8 @@ def main():
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+    # CORE-PAPERS-SHUFFLE (19 Nov 2026): the deal, 20 sessions, with its own planted faults
+    ok = deal.run(html, SLUG, 'p2b', mathtext=False, selftest=not args.no_selftest and not args.against) and ok
     for f in fails:
         print('FAIL  ' + f)
     if not ok:
