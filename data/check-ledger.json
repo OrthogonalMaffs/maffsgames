@@ -2304,16 +2304,6 @@
    "B4": {
     "entries": [
      {
-      "detail": "level 'gcse' has 29 question(s), below the 40 minimum",
-      "id": "formula-forge::gcse",
-      "line": null
-     },
-     {
-      "detail": "level 'alevel' has 29 question(s), below the 40 minimum",
-      "id": "formula-forge::alevel",
-      "line": null
-     },
-     {
       "detail": "level 'level4' has 16 question(s), below the 40 minimum",
       "id": "formula-forge::level4",
       "line": null
