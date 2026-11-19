@@ -69,13 +69,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-19 (cloud): FORMULA-FORGE-40 (`docs/handover/contracts/2026-11-19-formula-forge-40.md`; Jon 19 Nov)
+## 2026-11-19 (cloud): FORMULA-FORGE-40 (`docs/history/contracts/2026-11-19-formula-forge-40.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/youthful-knuth-uprtv0` from main 346ac4d. Tier Small. Every stage array was where the contract said (s1 closing `],` at :238, s2 :274, s3 :306, s4 :332 on main).
 **Close-outs carried (first commit, f9eaf4a):** #833 FRACTION-SNAP-REBUILD, recorded in its entry below, with the check-site attempt-1 flake.
 Done on the branch: the 11 items appended verbatim to the end of Q.gcse's four stages (s1 10, s2 10, s3 10, s4 10; Q.level4 4/5/4/3 unchanged; A-Level copies Q.gcse, so 40 too). `verify-formula-forge.py` PASS unchanged (56 items, 203 worked lines). `check-banks.py --ci` (CI's form) failed after extraction on 2 STALE entries, `formula-forge::gcse` and `::alevel` (the fix itself); cleared with `check-banks.py --write-ledger --only formula-forge` (`data/check-ledger.json`, those two entries only; level4 kept), then `--ci` OK. todo row LEDGER-B4-FORMULA-FORGE now names level4 only (150,465 to 150,456 bytes); /updates/ line.
 **Decided for you:** (1) the ledger edit above: the contract named only the two scripts as unchanged, and `--ci` cannot pass with the entries left, so the data file was regenerated as FRACTION-SNAP-REBUILD did. (2) The todo row's "Recorded 9 Nov 2026 (DOCS-BUNDLE)" was dropped so todo.md does not grow.
-Next: PR, Gate and phone-fit-full, merge with merge-pr.py.
+PR #834. **Merged (closed out by FRACTION-SNAP-START):** merge commit d10f9d7 (14:13:57 UTC 19 Nov), route merge-pr.py `--watch --wait 3600`, exit 0, last line "main d10f9d7 run 44541510720: GREEN"; main's runs on it, read from the API: check-site 44541510720 success, phone-fit-full 44541510713 success, pages build 44541509556 success, all attempt 1. Contract moved to `docs/history/contracts/`.
+Record: agent Claude Code; wall about 0:19 (first commit 13:55, merged 14:14 UTC); review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-19 (cloud): FRACTION-SNAP-REBUILD (`docs/history/contracts/2026-11-19-fraction-snap-rebuild.md`; Jon 19 Nov)
 
