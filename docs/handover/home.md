@@ -16,6 +16,12 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-19 (home): WRONG-PAUSE-NEXT (four games pause on Next after a wrong answer; check-answer-lock fails a game that stops pausing)
+
+Claude Code (home lane), worktree `~/mg-wrong-pause-next`, branch `claude/wrong-pause-next`; contract `docs/handover/contracts/2026-11-19-wrong-pause-next.md`. Tier Medium. The first commit carries the close-outs of #837 NEXT-IN-VIEW and #839 DD-VERIFIER-SHARD (their entries below; both contracts moved to `docs/history/contracts/`).
+
+- In progress: the four games and the check are written; next, the full in-play run, phone-fit, PR.
+
 ## 2026-11-19 (home): DD-VERIFIER-SHARD (Decimal Detective's verifier on ci-shards, so #837 fits the per-line limit)
 
 Claude Code (home lane), worktree `~/mg-dd-verifier-shard`, branch `claude/dd-verifier-shard`; contract `docs/handover/contracts/2026-11-19-dd-verifier-shard.md`. Tier Small. Route 1 for #837 NEXT-IN-VIEW, whose Gate (check-site 44573475355) stopped on this verifier: 177s median + 15s setup = 192s, 71% of 270s against the 70% (189s) line limit, selected because next-control.js selects 136 verifiers.
@@ -23,7 +29,7 @@ Claude Code (home lane), worktree `~/mg-dd-verifier-shard`, branch `claude/dd-ve
 - **`scripts/verify-decimal-detective.py`:** `# ci-shards: <same label> | | 2`; 14 units: desktop, phone 320x568, phone 375x667, phone 390x844, bank (keys plus the four bank plants), and one per page plant (9). Each check and plant runs in exactly one unit; a slice without the desktop pass reads the bank from the page first. `--list-units` works.
 - **Checked locally:** full run PASS, identical to main's (45 items, 1307 answers, the same 13 self-test lines caught), 198s against 199s; --shard 1/2 PASS (7 units, 111s), 2/2 PASS (7 units, 84s), together all 14, none twice. ci-groups --selftest and --check PASS (each part 120s default, 50%, until main times its units); ci-deps --selftest PASS.
 - **Report only (ci-lines over 60% of their line budget, ci-timings.json from main run 44566476211, setup 15s):** check-answer-lock.py "Answer lock, static rules and self-test" 268s + 15s of 450s (63%); verify-screening-room.py 150s + 15s of 270s (61%).
-- MERGED 19 Nov as f2e6d2a (#839) via merge-pr.py, exit 0, last line "main f2e6d2a run 44580613966: GREEN". Main on the merge commit: check-site 44580613966 success, phone-fit-full 44580613885 success (both push runs), pages build 44580613026 success (all confirmed from the API). Cleaned up by end-task. Its contract moves to history in the next home contract's first commit. Main then merged into #837 (its entry below).
+- MERGED 19 Nov as f2e6d2a (#839) via merge-pr.py, exit 0, last line "main f2e6d2a run 44580613966: GREEN". Main on the merge commit: check-site 44580613966 success, phone-fit-full 44580613885 success (both push runs), pages build 44580613026 success (all confirmed from the API). Cleaned up by end-task. Main then merged into #837 (its entry below). Contract moved to `docs/history/contracts/2026-11-19-dd-verifier-shard.md` (closed out by WRONG-PAUSE-NEXT's first commit).
 
 ## 2026-11-19 (home): NEXT-IN-VIEW (MaffsNext.wrong() brings Next into view on a phone, in every game)
 
@@ -40,7 +46,7 @@ Claude Code (home lane), worktree `~/mg-next-in-view`, branch `claude/next-in-vi
 - **Route 1 (Project Claude, DD-VERIFIER-SHARD):** #839 put the verifier on ci-shards and merged as f2e6d2a (entry above); main merged into this branch (one conflict, here in home.md), Gate re-run.
 - **Gate failure 3 (check-site 44583202526, head d1fe5b9): STOPPED.** Two plants no longer caught, because wrong() now scrolls Next into view: The 6 P's "the feedback not scrolled into view (the helper never called)" and Sequence Solver's "WORKED: the phone rule undone" (its FIT_JS measured Next in the window). Every other selected verifier passed; the Plan job passed.
 - **Jon's ruling (option c), 19 Nov 2026:** the 6 P's plant retired (test-next-control.py's plants guard the reveal); Sequence Solver's FIT_JS measures Next in page coordinates (rect + scrollY against innerHeight - 40, as measure-phone-fit.py:207), so its plant is caught again; canon 7.6.1 sentence: fit is measured in page coordinates, the reveal makes Next reachable but does not count as fitting; the three todo rows stay open (above); phone-fit-state.json unchanged. Main merged in again (conflict in updates/index.html only).
-- MERGED: pending. The next home contract's first commit records the merge and moves this contract and DD-VERIFIER-SHARD's to history.
+- MERGED 19 Nov as 9da4073 (#837) via merge-pr.py, exit 0, last line "main 9da4073 run 44591763818: GREEN". Main on the merge commit: check-site 44591763818 success, phone-fit-full 44591763629 success (both push runs), pages build 44591762538 success (all confirmed from the API). Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-19-next-in-view.md` (closed out by WRONG-PAUSE-NEXT's first commit).
 
 Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
