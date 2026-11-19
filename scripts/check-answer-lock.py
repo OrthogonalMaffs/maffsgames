@@ -36,7 +36,12 @@ the real clock), at its first roster level:
      the question_answered count and its correct count, game_completed and submitScore are unchanged;
   2. double-click Next (MaffsNext, or the game's own continue control): one advance, and its second click
      marks nothing on the next question;
-  3. at 390px on a touch screen, answer wrong and double-tap Next: nothing marked by the second tap;
+  3. at 390px on a touch screen, answer wrong and double-tap Next: nothing marked by the second tap. First, the
+     pause (contract WRONG-PAUSE-NEXT, 19 Nov 2026; canon 7.6): within PAUSE_S (2 s, real clock) of the wrong mark a
+     Next control is on screen (MaffsNext's, or the game's own where OWN_NEXT names it with its reason), and the
+     question does not change for PAUSE_S while Next is not pressed (the auto-advance timers #838 found were
+     800-1000 ms; MaffsNext's 20 s fallback is 5 s at TIME_SCALE). A game this cannot judge is on
+     WRONG_PAUSE_UNCHECKED: reported, never failed, and the list may only shrink;
   4. tap through to the end quickly (each answer followed at once by its continue control, then the end
      screen tapped for a while, the way formula-plug-in's reveal screen ran showResults twice): exactly one
      game_completed and at most one submitScore.
@@ -395,10 +400,10 @@ INIT = r"""
     return (window.__mfgGroup || []).map(e => window.__lockRect(e));
   };
   const CONTINUE_RE = /^(got it|next|continue|carry on|onward|ok|okay|keep going|see (your )?(results|scorecard)|show results|finish)\b/;
-  window.__lockContinue = function () {
+  // The continue control on screen, found without moving the page: { el, ready, kind }, or null.
+  window.__lockFindContinue = function () {
     const mn = document.querySelector('.maffs-next');
-    window.__lockContEl = mn;
-    if (mn && visible(mn)) return { rect: window.__lockRect(mn), ready: !mn.disabled, kind: 'maffs-next' };
+    if (mn && visible(mn)) return { el: mn, ready: !mn.disabled, kind: 'maffs-next' };
     const grp = window.__mfgGroup || [];
     const els = [...document.querySelectorAll('button, [role="button"], a')].filter(e =>
       // A group of interstitial controls ("Keep going" / "Finish here") is not an answer group.
@@ -406,8 +411,12 @@ INIT = r"""
         /^(continue|keep going)\b/.test((e.textContent || '').trim().toLowerCase())));
     const hit = els.find(e => { const t = (e.textContent || '').trim().toLowerCase();
       return CONTINUE_RE.test(t) || t.indexOf('next question') !== -1; });
-    window.__lockContEl = hit;
-    return hit ? { rect: window.__lockRect(hit), ready: true, kind: (hit.textContent || '').trim().slice(0, 30) } : null;
+    return hit ? { el: hit, ready: true, kind: (hit.textContent || '').trim().slice(0, 30) } : null;
+  };
+  window.__lockContinue = function () {
+    const c = window.__lockFindContinue();
+    window.__lockContEl = c ? c.el : null;
+    return c ? { rect: window.__lockRect(c.el), ready: c.ready, kind: c.kind } : null;
   };
   // A keypad: its submit key is one of the group (formula-plug-in's numpad Enter). Its index, or -1.
   const SUBMIT_RE = /^(check|submit|answer|enter|go|calculate|confirm|done|finish)\b/;
@@ -655,6 +664,28 @@ class Driver:
             await self.page.wait_for_timeout(25)
         return None
 
+    async def wrong_pause(self, s):
+        """WRONG-PAUSE-NEXT (canon 7.6): [fault] for the wrong mark s, watched for PAUSE_S with nothing pressed: the
+        next question must not come up, and a Next control must be on screen by the end (MaffsNext's, or the game's
+        own if OWN_NEXT names it)."""
+        loop = asyncio.get_event_loop()
+        t_end = loop.time() + PAUSE_S
+        seen = None
+        while True:
+            if await self.ev(self.up, s['lastFresh']):
+                return ['wrong answer: the next question came up within %gs with Next not pressed (canon 7.6: a wrong '
+                        'answer waits on Next; WRONG-PAUSE-NEXT)' % PAUSE_S]
+            seen = await self.ev('() => { const c = __lockFindContinue(); return c ? c.kind : null; }') or seen
+            if loop.time() >= t_end:
+                break
+            await self.page.wait_for_timeout(25)
+        if not seen:
+            return ['wrong answer: no Next control within %gs (canon 7.6: MaffsNext.wrong; WRONG-PAUSE-NEXT)' % PAUSE_S]
+        if seen != 'maffs-next' and self.slug not in OWN_NEXT:
+            return ['wrong answer: its own continue control ("%s"), not MaffsNext: use MaffsNext.wrong, or name it in '
+                    'OWN_NEXT with its reason (WRONG-PAUSE-NEXT)' % seen]
+        return []
+
     async def answer_wrong(self, touch=False):
         for k in range(8):
             s = await self.answer(k + 1, touch)
@@ -692,6 +723,43 @@ async def play(browser, base, slug, level, page_html):
         await page.goto(url, wait_until='load', timeout=LOAD_MS)
         await page.wait_for_timeout(300)
         return ctx, page, errs
+
+    async def touch():
+        """3: at 390px by touch, a wrong answer's pause (WRONG-PAUSE-NEXT), then a double tap on Next. [fault]"""
+        out = []
+        ctx, page, errs = await new_page(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
+        d = Driver(page, slug, hint)
+        s = await d.start() and await d.answer_wrong(touch=True)
+        if s:
+            pause = await d.wrong_pause(s) if s['lastCorrect'] is False else [
+                'wrong answer: none reached to judge its pause (the game marks right answers only; WRONG-PAUSE-NEXT)']
+            if slug in WRONG_PAUSE_UNCHECKED:
+                PAUSE_REPORTED[slug] = pause[0] if pause else 'passes'
+            else:
+                out += pause
+            c = None
+            for _ in range(80):
+                c = await d.ev('() => __lockContinue()')
+                if c and c['ready']:
+                    break
+                await page.wait_for_timeout(50)
+            if c and c['ready']:
+                before = await d.snap()
+                await page.touchscreen.tap(c['rect']['x'], c['rect']['y'])
+                await page.wait_for_timeout(60)
+                await page.touchscreen.tap(c['rect']['x'], c['rect']['y'])
+                await page.wait_for_timeout(500)
+                after = await d.snap()
+                if after['answered'] != before['answered']:
+                    out.append('double-tap on %s at 390px: the second tap marked %s' % (c['kind'], diff(before, after)))
+        else:
+            out.append('390px: could not reach a wrong answer by touch')
+        LOGS.setdefault(slug, {})['touch'] = await event_log(d)
+        await ctx.close()
+        return out
+
+    if PAUSE_ONLY:                      # the self-test's pause plants: the touch phase alone
+        return await touch()
 
     # 1 and 2: desktop
     ctx, page, errs = await new_page(viewport={'width': 1280, 'height': 900})
@@ -822,29 +890,8 @@ async def play(browser, base, slug, level, page_html):
     LOGS[slug] = {'desktop': await event_log(d)}
     await ctx.close()
 
-    # 3: double-tap at 390px
-    ctx, page, errs = await new_page(viewport={'width': 390, 'height': 844}, has_touch=True, is_mobile=True)
-    d = Driver(page, slug, hint)
-    if await d.start() and await d.answer_wrong(touch=True):
-        c = None
-        for _ in range(80):
-            c = await d.ev('() => __lockContinue()')
-            if c and c['ready']:
-                break
-            await page.wait_for_timeout(50)
-        if c and c['ready']:
-            before = await d.snap()
-            await page.touchscreen.tap(c['rect']['x'], c['rect']['y'])
-            await page.wait_for_timeout(60)
-            await page.touchscreen.tap(c['rect']['x'], c['rect']['y'])
-            await page.wait_for_timeout(500)
-            after = await d.snap()
-            if after['answered'] != before['answered']:
-                faults.append('double-tap on %s at 390px: the second tap marked %s' % (c['kind'], diff(before, after)))
-    else:
-        faults.append('390px: could not reach a wrong answer by touch')
-    LOGS.setdefault(slug, {})['touch'] = await event_log(d)
-    await ctx.close()
+    # 3: at 390px by touch: the wrong answer's pause, then a double tap on Next
+    faults += await touch()
     if slug in SCREEN_NOT_YET:
         screen = [f for f in faults if 'is not fresh (not MaffsLock.screen)' in f]
         if screen:
@@ -911,6 +958,24 @@ SWALLOWED = set()      # games where a driver tap landed in a fresh window and w
 SCREEN_NOT_YET = set('''
 '''.split())
 SCREEN_REPORTED = {}   # slug -> the not-fresh fault, for a game on SCREEN_NOT_YET
+# WRONG-PAUSE-NEXT (contract of 19 Nov 2026; canon 7.6): after a wrong answer the game waits on Next. PAUSE_S is the
+# window, real clock: Next on screen by its end, and the question unchanged through it with Next not pressed.
+PAUSE_S = 2.0
+PAUSE_ONLY = False     # the self-test's pause plants play the touch phase alone
+# Games whose Next after a wrong answer is their own control, not MaffsNext's: slug -> the one-line reason.
+OWN_NEXT = {
+}
+# Games the pause check cannot judge: reported, never failed. It may only shrink: it must stay a subset of the list as
+# it began (WRONG_PAUSE_UNCHECKED_AT_START, frozen), so a new game is judged from the start. Each with its reason.
+WRONG_PAUSE_UNCHECKED_AT_START = frozenset('''
+expectation-station maths-court tax-theft
+'''.split())
+WRONG_PAUSE_UNCHECKED = {
+    'expectation-station': 'a staged flow the #838 survey could not trace',
+    'maths-court': 'a staged flow the #838 survey could not trace',
+    'tax-theft': 'a staged flow the #838 survey could not trace',
+}
+PAUSE_REPORTED = {}    # slug -> its pause fault (or 'passes'), for a game on WRONG_PAUSE_UNCHECKED
 
 
 def counts(slug, remaining):
@@ -1090,6 +1155,7 @@ def selftest_plays(games, waiting, dead_under, old_route):
             errs.append('planted %s (bare show(), no MaffsLock.screen) passed the Play again check: %s' % (pslug, pres or 'clean'))
         else:
             print('  self-test: planted %s (a bare show(): no MaffsLock.screen): CAUGHT (%s)' % (pslug, hit[0][:110]))
+    errs += pause_plants(games)
     if waiting:
         errs.append('the plants above left %d request(s) for the network (dead in the self-test), e.g. %s'
                     % (len(waiting), waiting[0]))
@@ -1115,6 +1181,50 @@ def selftest_plays(games, waiting, dead_under, old_route):
         print('  self-test: the network dead (every request left for it held, never answered): %s plays clean and nothing '
               'waits on it; the old route (KaTeX left to the CDN) planted: CAUGHT (%s; waiting on the network: %s)'
               % (kgame[0], old[0].split('\n')[0][:70], ', '.join(held)))
+    return errs
+
+
+# WRONG-PAUSE-NEXT's plants: the pause game as it is passes; each change below must FAIL the pause check.
+PAUSE_GAME = 'binomial-blaster'
+NEXT_INCLUDE = '<script src="../../schools/assets/next-control.js"></script>\n'
+PAUSE_PLANTS = (
+    ("its wrong path back to MaffsLock.timer(adv,1000)",
+     'if(ok)MaffsLock.timer(adv,1000);else showAnswer(q)', 'MaffsLock.timer(adv,1000)'),
+    ("a Next that advances by itself in under 2 s (MaffsNext's fallback at 400 ms)",
+     NEXT_INCLUDE, NEXT_INCLUDE + '<script>(function(){var w=MaffsNext.wrong;MaffsNext.wrong=function(o){'
+                                  'o.fallbackMs=400;return w(o)}})();</script>\n'),
+)
+
+
+def pause_plants(games):
+    """[error]: the pause game plays clean, and each plant is caught by the pause check (the touch phase alone)."""
+    import tempfile
+    global PAUSE_ONLY
+    errs = []
+    game = next(g for g in games if g[0] == PAUSE_GAME)
+    html = open(os.path.join(ROOT, 'games', PAUSE_GAME, 'index.html'), encoding='utf-8').read()
+    PAUSE_ONLY = True
+    try:
+        clean = asyncio.run(play_all([game], None)).get(PAUSE_GAME, ['not played'])
+        if clean:
+            errs.append('pause plants: %s as it is does not pass: %s' % (PAUSE_GAME, clean[0][:120]))
+        for why, old, new in PAUSE_PLANTS:
+            if html.count(old) != 1:
+                errs.append('pause plant (%s): %s no longer holds %r once' % (why, PAUSE_GAME, old))
+                continue
+            with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
+                f.write(html.replace(old, new, 1))
+            try:
+                res = asyncio.run(play_all([game], f.name)).get(PAUSE_GAME, [])
+            finally:
+                os.unlink(f.name)
+            hit = [x for x in res if x.startswith('wrong answer:')]
+            if not hit:
+                errs.append('pause plant (%s) passed the pause check: %s' % (why, res or 'clean'))
+            else:
+                print('  self-test: planted %s, %s: CAUGHT (%s)' % (PAUSE_GAME, why, hit[0][:100]))
+    finally:
+        PAUSE_ONLY = False
     return errs
 
 
@@ -1154,6 +1264,12 @@ def main():
         fails.append('%s: on NOT_YET but not in NOT_YET_AT_START (a new game is migrated from the start)' % s)
     for s in sorted(NOT_YET - slugs):
         fails.append('%s: on NOT_YET but not a roster game that records question_answered' % s)
+    for s in sorted(set(WRONG_PAUSE_UNCHECKED) - WRONG_PAUSE_UNCHECKED_AT_START):
+        fails.append('%s: on WRONG_PAUSE_UNCHECKED but not on WRONG_PAUSE_UNCHECKED_AT_START (the list only shrinks)' % s)
+    for s in sorted(WRONG_PAUSE_UNCHECKED_AT_START - slugs):
+        fails.append('%s: on WRONG_PAUSE_UNCHECKED_AT_START but not a roster game that records question_answered' % s)
+    for s in sorted(set(OWN_NEXT) - slugs):
+        fails.append('%s: on OWN_NEXT but not a roster game that records question_answered' % s)
     page = {s: open(os.path.join(ROOT, 'games', s, 'index.html'), encoding='utf-8').read() for s, _ in games}
     # Adopted: on NOT_YET, but the page loads the lock (the cloud lane migrates its own games). Judged in full.
     adopted = {s for s in NOT_YET & slugs if INCLUDE.search(page[s])}
@@ -1203,6 +1319,9 @@ def main():
         print('  REPORTED (SCREEN_NOT_YET, PLAY-AGAIN-SCREEN batch 2) %s: %s' % (slug, SCREEN_REPORTED[slug][:120]))
     if SWALLOWED:
         print('  note: a tap landed in a fresh window and was made again once it closed: %s' % ', '.join(sorted(SWALLOWED)))
+    for slug in sorted(PAUSE_REPORTED):
+        print('  REPORTED (WRONG_PAUSE_UNCHECKED, %s) %s: %s' % (WRONG_PAUSE_UNCHECKED[slug], slug,
+                                                              PAUSE_REPORTED[slug][:120]))
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))

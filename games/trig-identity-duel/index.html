@@ -21,6 +21,7 @@
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game.
 {}
 -->
@@ -80,6 +81,8 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
 .correct::after { content: ' \2713'; font-size: 0.85em; opacity: 0.8; }
 .incorrect::after { content: ' \2717'; font-size: 0.85em; opacity: 0.8; }
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
+/* The answer after a wrong one (canon 7.6): shown above Next, which waits for the student */
+.fb{text-align:center;font-size:.95rem;color:var(--text);margin:.2rem 0 0}.fb:empty{display:none}.fb .fb-lbl{color:var(--muted);font-weight:600;margin-right:.35rem}.fb .katex{font-size:1.1em!important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -125,6 +128,7 @@ body.accessible .question-text, body.accessible .problem-text { font-size: 1.1em
       <div class="prompt" id="prompt"></div>
     </div>
     <div class="options" id="options"></div>
+    <div id="after"><div class="fb" id="fb" aria-live="polite"></div></div>
   </div>
   <div id="results" class="screen">
     <div class="results">
@@ -266,6 +270,7 @@ function startGame(){
   show('game');showQ()
 }
 function showQ(){
+  MaffsNext.clear(document.getElementById('after'));document.getElementById('fb').innerHTML='';
   const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;
   document.getElementById('context').textContent=q.ctx||'';
   const qEl=document.getElementById('question');qEl.innerHTML='';
@@ -287,8 +292,10 @@ function handle(btn,q){
   if(ok){btn.classList.add('correct');score+=BASE;streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}
   else{btn.classList.add('wrong');streak=0;pip('fail')}
   mfg('question_answered',{game_slug:'trig-identity-duel',level:level,correct:ok,question_index:qIdx+1});
-  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;MaffsLock.timer(adv,1000)
+  document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;if(ok)MaffsLock.timer(adv,1000);else showAnswer(q)
 }
+// A wrong answer waits for the student (canon 7.6): the answer, drawn as its option is, above Next.
+function showAnswer(q){const fb=document.getElementById('fb');fb.innerHTML='<span class="fb-lbl">The answer:</span>';const k=document.createElement('span');const v=q.correct;if(v.includes('\\')||v.includes('^')||v.includes('{')||v.includes('\u221a')){rk(k,v)}else{k.textContent=v}fb.appendChild(k);MaffsNext.wrong({mount:document.getElementById('after'),onAdvance:adv,keep:fb})}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 const end=MaffsLock.finishOnce(function(){const el=Math.round((Date.now()-sessionStart)/1000);const pct=Math.round(correctCount/totalQ*100);let t='Keep Practising!';if(pct>=90)t='Outstanding!';else if(pct>=70)t='Well Done!';else if(pct>=50)t='Good Effort!';document.getElementById('resultTitle').textContent=t;document.getElementById('finalScore').textContent=score;document.getElementById('statsLine').textContent=`${correctCount}/${totalQ} correct (${pct}%) \u00b7 Best streak: ${bestStreak} \u00b7 Time: ${el>=60?Math.floor(el/60)+'m ':''}${el%60}s`;window._ggAbandoned=false;mfg('game_completed',{game_slug:'trig-identity-duel',level:level,score:score,questions_answered:totalQ,accuracy:pct});
