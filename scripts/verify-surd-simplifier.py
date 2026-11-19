@@ -33,9 +33,9 @@ workingFor(), templates and data alike, every item at both levels:
 The card's place (contract WORKING-CARD, 19 Nov 2026; canon 7.6.1, 7.6.2): two copies, open and collapsed, swapped by
 the page's media query. On every wrong answer the shown card comes before Next in document order, both copies hold
 the same lines, and opening the collapsed copy shows every line. At each size in LAYOUT_SIZES, normal and Aa mode,
-every item answered wrong, its options in each of their three row pairings: Next's bottom in page coordinates
-(rect.bottom + scrollY) is within the fold; where the
-open card shows that has no exception; where the collapsed one shows, only KNOWN_PAST_FOLD may end below it.
+every item answered wrong, its options in each of their three row pairings: with the open card, Next's bottom in
+page coordinates (rect.bottom + scrollY) is within the fold (the viewport less the fixed footer); with the collapsed
+card, Next ends exactly where it ends with no card (the card costs no height, Jon's ruling of 19 Nov 2026).
 A self-test plants each audit fault back into a copy of the page; each must FAIL naming its item.
 
     python scripts/verify-surd-simplifier.py [--no-selftest] [--against FILE] [--katex-dir DIR]
@@ -389,8 +389,9 @@ SWEEP_JS = r"""() => {
           out.push([lv, i, pick, 'answered wrong: the working box shows ' + got + ' of ' + want + ' lines']);
         else if (box.querySelector('.katex-error') || [...box.querySelectorAll('.wl')].some(l => !l.textContent.trim()))
           out.push([lv, i, pick, 'answered wrong: a working line does not render']);
-        else if (cards.some(c => c.querySelector(':scope > summary').textContent.indexOf('How to get there') !== 0))
-          out.push([lv, i, pick, 'answered wrong: the working card is not titled "How to get there"']);
+        else if (cards.some(c => c.querySelector(':scope > summary .maffs-ref-title').textContent !== 'How to get there'
+                              || c.querySelector(':scope > summary .maffs-ref-show').textContent !== 'Working'))
+          out.push([lv, i, pick, 'answered wrong: the working card is not titled "How to get there" (open) and "Working" (collapsed)']);
         else if (cards.some(c => c.querySelectorAll('.wl').length !== want))
           out.push([lv, i, pick, 'answered wrong: the two copies of the card hold different lines']);
         if (!next) out.push([lv, i, pick, 'answered wrong: no Next']);
@@ -410,21 +411,10 @@ WORK_SEEN = [None, None]   # the last page's (working by level, WORKING's keys),
 # The fold is the viewport less the fixed site footer, as scripts/measure-phone-fit.py reads it.
 LAYOUT_SIZES = [(320, 568), (375, 667), (390, 844), (412, 915), (320, 980), (759, 979), (760, 859), (760, 860),
                 (1280, 720), (1366, 768), (1440, 900), (1920, 1080)]
-# Where Next ends below the fold with the COLLAPSED card, measured 19 Nov 2026: {(mode, 'WxH'): items, or ALL}.
-#   normal 320x568 (528 px fold): the same 53 items end below it on main ed8590b, before the card (worst 576 px).
-#   Aa 320x568: canon 7.6.1's recorded exception (OpenDyslexic at 320 may scroll; the options start above the fold).
-#   Aa 375x667 (627 px fold): 25 items, worst alevel[16] at 680 px (main: none, worst 623): in Aa the collapsed pill
-#   (239 px) and Next (135 px) do not fit on one 343 px line, so the row wraps (+57 px). The contract's STOP IF:
-#   reported to Jon, the merge held; listed here until he rules.
-ALL = 'all'
-def _items(**lv):
-    return {(k, i) for k, v in lv.items() for i in v}
-KNOWN_PAST_FOLD = {
-    ('normal', '320x568'): _items(gcse=list(range(20, 33)) + list(range(35, 50)),
-                                  alevel=list(range(10, 20)) + list(range(30, 43)) + [44, 49]),
-    ('aa', '320x568'): ALL,
-    ('aa', '375x667'): _items(gcse=range(20, 33), alevel=list(range(10, 20)) + [41, 42]),
-}
+# The collapsed card costs no height (Jon's ruling, 19 Nov 2026, replacing a list of exceptions): with it shown, Next
+# ends exactly where it ends with no card at all, so a collapsed card can never put Next further down than main did.
+# Its label is "Working" in every mode: "How to get there" and then "Show working" wrapped below Next in Aa on a phone.
+NO_HEIGHT_TOL = 0.5
 
 # Each item's options are shuffled into a 2x2 grid, and a row is as tall as its taller option, so Next's place depends
 # on which options share a row: every item is measured in all three pairings and the worst kept.
@@ -438,10 +428,17 @@ LAYOUT_JS = r"""async () => {
       await document.fonts.ready;
       const n = document.querySelector('#nextMount .maffs-next');
       const box = document.getElementById('options'), bs = [...box.children];
-      let bottom = null;
+      const row = document.getElementById('workRow');
+      let bottom = null, bare = null, cost = 0;
       if (n) for (const o of [[0, 1, 2, 3], [0, 2, 1, 3], [0, 3, 1, 2]]) {
         o.forEach(k => box.appendChild(bs[k]));
-        bottom = Math.max(bottom === null ? -1 : bottom, n.getBoundingClientRect().bottom + scrollY);
+        const withCard = n.getBoundingClientRect().bottom + scrollY;
+        row.classList.remove('shown');                       // the same page with no card at all
+        const without = n.getBoundingClientRect().bottom + scrollY;
+        row.classList.add('shown');
+        bottom = Math.max(bottom === null ? -1 : bottom, withCard);
+        bare = Math.max(bare === null ? -1 : bare, without);
+        cost = Math.max(cost, withCard - without);
       }
       const c = shownCard();
       let lines = null;
@@ -453,7 +450,7 @@ LAYOUT_JS = r"""async () => {
       }
       const f = document.querySelector('.site-footer');
       const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? Math.round(f.getBoundingClientRect().height) : 0);
-      res.push([lv, i, bottom, fold, c ? (c.open ? 'open' : 'collapsed') : 'none', lines]);
+      res.push([lv, i, bottom, fold, cost, c ? (c.open ? 'open' : 'collapsed') : 'none', lines]);
     }
   }
   return res;
@@ -487,8 +484,7 @@ def layout(fails, html, sizes=None):
                     page.goto(base + '/games/%s/?cb=layout' % SLUG, wait_until='load', timeout=20000)
                     page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
                     size = '%dx%d' % (w, h)
-                    known = KNOWN_PAST_FOLD.get((mode, size), set())
-                    for lv, i, bottom, fold, card, lines in page.evaluate(LAYOUT_JS):
+                    for lv, i, bottom, fold, cost, card, lines in page.evaluate(LAYOUT_JS):
                         tag = 'layout %s %s %s[%d]' % (mode, size, lv, i)
                         if bottom is None:
                             fails.append('%s: no Next after a wrong answer' % tag)
@@ -497,11 +493,10 @@ def layout(fails, html, sizes=None):
                             fails.append('%s: no working card after a wrong answer' % tag)
                         if lines and lines[0] != lines[1]:
                             fails.append('%s: the collapsed card, opened, shows %d of %d lines' % (tag, lines[0], lines[1]))
-                        if bottom > fold + 0.5:
-                            if card == 'open':
-                                fails.append('%s: with the card open, Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
-                            elif known != ALL and (lv, i) not in known:
-                                fails.append('%s: Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                        if card == 'open' and bottom > fold + 0.5:
+                            fails.append('%s: with the card open, Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                        if card == 'collapsed' and cost > NO_HEIGHT_TOL:
+                            fails.append('%s: the collapsed card costs %.0fpx: Next ends lower than with no card' % (tag, cost))
                     ctx.close()
             browser.close()
     finally:
@@ -583,8 +578,13 @@ CARD_BELOW_NEXT = ('card: the working card moved below Next', re.compile(
     r'(\n(\s*)<div class="maffs-ref-row work-row" id="workRow">.*?)\n\s*<div id="nextMount"></div>', re.S),
     r'\n\2<div id="nextMount"></div>\1', 'comes after Next')
 # WORKING-CARD: a threshold loosened, so the open card shows at 1280x720 where it pushes Next past the fold.
-LAYOUT_PLANT = ('card: the open band loosened to 700px tall', '(min-width: 760px) and (min-height: 860px)',
-                '(min-width: 760px) and (min-height: 700px)', [(1280, 720)], 'with the card open')
+LAYOUT_PLANTS = [
+    ('card: the open band loosened to 700px tall', '(min-width: 760px) and (min-height: 860px)',
+     '(min-width: 760px) and (min-height: 700px)', [(1280, 720)], 'with the card open', 1),
+    # The label that wrapped in Aa at 320 wide: the collapsed card on its own line, below Next.
+    ('card: the collapsed label "Show working" (wraps in Aa)', '<span class="maffs-ref-show">Working</span>',
+     '<span class="maffs-ref-show">Show working</span>', [(320, 568)], 'collapsed card costs', 2),
+]
 
 
 def start_screen_fails(html, bank):
@@ -656,11 +656,11 @@ def main():
             hit = [f for f in rep if f.startswith('gcse[0]') and need in f]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
-        what, new, old, sizes, need = LAYOUT_PLANT
-        if html.count(new) != 1:
-            print('  self-test %-46s *** CANNOT PLANT (%d) ***' % (what, html.count(new)))
-            ok = False
-        else:
+        for what, new, old, sizes, need, count in LAYOUT_PLANTS:
+            if html.count(new) != count:
+                print('  self-test %-46s *** CANNOT PLANT (%d) ***' % (what, html.count(new)))
+                ok = False
+                continue
             rep = []
             layout(rep, html.replace(new, old), sizes)
             hit = [f for f in rep if f.startswith('layout') and need in f]
