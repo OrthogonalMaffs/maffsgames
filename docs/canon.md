@@ -1347,7 +1347,7 @@ A red full run on main is fixed before new game work.
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)
 
 A rule, method or reference a student may want while answering (Distinctly Average's "Finding the median")
-is a **reference card**: the shared `.maffs-ref` in `schools/assets/theme.css`, one native `<details>`, so it
+is a **reference card**: the shared `.maffs-ref` in `schools/assets/fold.css`, one native `<details>`, so it
 needs no script, opens from the keyboard and is read once by a screen reader. A help panel that sits open
 above a question pushes the options down the screen, which is the likeliest shared cause of the games on the
 known-failures list (§7.6.1).
@@ -1361,8 +1361,10 @@ known-failures list (§7.6.1).
   width band, because the card's height depends on the width. The thresholds come from measuring every
   item; no script decides. `.maffs-ref-row` holds the copies and the Next mount: collapsed, the card sits
   beside Next on one line and costs no height; opened by the student, it takes the full width above Next.
+  A worked solution after a wrong answer is a reference card too: above Next, open where it fits, collapsed
+  wherever it would push Next below the fold, the 1280 x 720 laptop included (Jon, 19 Nov 2026).
 - **A game tints it** with two non-base tokens, `--ref-bg` and `--ref-edge`, and styles only its content;
-  everything else is in `theme.css`. Every rule is scoped to `.maffs-ref`, so a page without one is unchanged.
+  everything else is in `fold.css`. Every rule is scoped to `.maffs-ref`, so a page without one is unchanged.
 - **Not a fading scaffold.** "Scaffolds fade" (§12) withdraws an open aid once the student can work without
   it. A reference card is never open on the asking screen, so it has nothing to fade: Distinctly Average's
   open-until-two-right streak was removed when its card moved onto this pattern.

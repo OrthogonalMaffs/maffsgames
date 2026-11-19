@@ -28,8 +28,14 @@ workingFor(), templates and data alike, every item at both levels:
   the last part of the last line equals the key;
   a square-factor template's first line names the biggest square factor of n (recomputed here), and its last part
   is the key as written; the templates cover exactly the items the contract lists, and every data key names an item;
-  in Chromium, a wrong answer shows that item's lines, rendered, in the "How to get there" box before Next, and a
-  right answer shows no box.
+  in Chromium, a wrong answer shows that item's lines, rendered, in the "How to get there" card, and a right answer
+  shows no card.
+The card's place (contract WORKING-CARD, 19 Nov 2026; canon 7.6.1, 7.6.2): two copies, open and collapsed, swapped by
+the page's media query. On every wrong answer the shown card comes before Next in document order, both copies hold
+the same lines, and opening the collapsed copy shows every line. At each size in LAYOUT_SIZES, normal and Aa mode,
+every item answered wrong, its options in each of their three row pairings: Next's bottom in page coordinates
+(rect.bottom + scrollY) is within the fold; where the
+open card shows that has no exception; where the collapsed one shows, only KNOWN_PAST_FOLD may end below it.
 A self-test plants each audit fault back into a copy of the page; each must FAIL naming its item.
 
     python scripts/verify-surd-simplifier.py [--no-selftest] [--against FILE] [--katex-dir DIR]
@@ -368,20 +374,28 @@ SWEEP_JS = r"""() => {
       btn.click();
       const right = btn.classList.contains('correct');
       if (right !== (pick === q.correct)) out.push([lv, i, pick, right ? 'marked right' : 'marked wrong']);
-      // SURD-WORKING: a wrong answer shows the item's working before Next; a right one shows none.
-      const box = document.getElementById('working');
-      const boxShown = box && !box.hidden && getComputedStyle(box).display !== 'none';   // the sweep never shows #game, so no offsetHeight
+      // SURD-WORKING: a wrong answer shows the item's working; a right one shows none. WORKING-CARD: the card shown
+      // (one of two copies, by the media query) comes before Next, and both copies hold the same lines.
+      const cards = [...document.querySelectorAll('.maffs-ref')];
+      const shownCards = cards.filter(c => getComputedStyle(c).display !== 'none');   // the sweep never shows #game, so no offsetHeight
+      const box = shownCards[0];
+      const boxShown = shownCards.length > 0;
       const want = workingFor(lv, i).length;
       const got = boxShown ? box.querySelectorAll('.wl').length : 0;
       const next = document.querySelector('#nextMount .maffs-next');
       if (pick !== q.correct) {
+        if (shownCards.length > 1) out.push([lv, i, pick, 'answered wrong: ' + shownCards.length + ' working cards show at once']);
         if (!boxShown || got !== want || !want)
           out.push([lv, i, pick, 'answered wrong: the working box shows ' + got + ' of ' + want + ' lines']);
         else if (box.querySelector('.katex-error') || [...box.querySelectorAll('.wl')].some(l => !l.textContent.trim()))
           out.push([lv, i, pick, 'answered wrong: a working line does not render']);
-        else if (!box.querySelector('h3') || box.querySelector('h3').textContent !== 'How to get there')
-          out.push([lv, i, pick, 'answered wrong: the working box is not titled "How to get there"']);
+        else if (cards.some(c => c.querySelector(':scope > summary').textContent.indexOf('How to get there') !== 0))
+          out.push([lv, i, pick, 'answered wrong: the working card is not titled "How to get there"']);
+        else if (cards.some(c => c.querySelectorAll('.wl').length !== want))
+          out.push([lv, i, pick, 'answered wrong: the two copies of the card hold different lines']);
         if (!next) out.push([lv, i, pick, 'answered wrong: no Next']);
+        else if (boxShown && !(box.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING))
+          out.push([lv, i, pick, 'answered wrong: the working card comes after Next (canon 7.6.1: feedback above Next)']);
       } else if (boxShown) out.push([lv, i, pick, 'answered right: the working box is shown']);
     }
   });
@@ -389,6 +403,110 @@ SWEEP_JS = r"""() => {
 }"""
 KATEX_DIR = None
 WORK_SEEN = [None, None]   # the last page's (working by level, WORKING's keys), set by play()
+
+
+# WORKING-CARD (19 Nov 2026): the sizes measured, (width, height). Canon phones, a tall phone, the band edges of the
+# page's media query (320x980 and 760x860 open; 759x979 and 760x859 collapsed), the two laptops (ruling R2) and desktops.
+# The fold is the viewport less the fixed site footer, as scripts/measure-phone-fit.py reads it.
+LAYOUT_SIZES = [(320, 568), (375, 667), (390, 844), (412, 915), (320, 980), (759, 979), (760, 859), (760, 860),
+                (1280, 720), (1366, 768), (1440, 900), (1920, 1080)]
+# Where Next ends below the fold with the COLLAPSED card, measured 19 Nov 2026: {(mode, 'WxH'): items, or ALL}.
+#   normal 320x568 (528 px fold): the same 53 items end below it on main ed8590b, before the card (worst 576 px).
+#   Aa 320x568: canon 7.6.1's recorded exception (OpenDyslexic at 320 may scroll; the options start above the fold).
+#   Aa 375x667 (627 px fold): 25 items, worst alevel[16] at 680 px (main: none, worst 623): in Aa the collapsed pill
+#   (239 px) and Next (135 px) do not fit on one 343 px line, so the row wraps (+57 px). The contract's STOP IF:
+#   reported to Jon, the merge held; listed here until he rules.
+ALL = 'all'
+def _items(**lv):
+    return {(k, i) for k, v in lv.items() for i in v}
+KNOWN_PAST_FOLD = {
+    ('normal', '320x568'): _items(gcse=list(range(20, 33)) + list(range(35, 50)),
+                                  alevel=list(range(10, 20)) + list(range(30, 43)) + [44, 49]),
+    ('aa', '320x568'): ALL,
+    ('aa', '375x667'): _items(gcse=range(20, 33), alevel=list(range(10, 20)) + [41, 42]),
+}
+
+# Each item's options are shuffled into a 2x2 grid, and a row is as tall as its taller option, so Next's place depends
+# on which options share a row: every item is measured in all three pairings and the worst kept.
+LAYOUT_JS = r"""async () => {
+  const res = [];
+  for (const lv of ['gcse', 'alevel']) {
+    level = lv; startGame();
+    for (let i = 0; i < QUESTIONS[lv].length; i++) {
+      const q = QUESTIONS[lv][i]; questions[qIdx] = q; showQ();
+      [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val !== q.correct).click();
+      await document.fonts.ready;
+      const n = document.querySelector('#nextMount .maffs-next');
+      const box = document.getElementById('options'), bs = [...box.children];
+      let bottom = null;
+      if (n) for (const o of [[0, 1, 2, 3], [0, 2, 1, 3], [0, 3, 1, 2]]) {
+        o.forEach(k => box.appendChild(bs[k]));
+        bottom = Math.max(bottom === null ? -1 : bottom, n.getBoundingClientRect().bottom + scrollY);
+      }
+      const c = shownCard();
+      let lines = null;
+      if (c && !c.open) {   // opening the collapsed card shows every line
+        c.open = true;
+        const ls = [...c.querySelectorAll('.wl')];
+        lines = [ls.filter(l => l.getBoundingClientRect().height > 0).length, workingFor(lv, i).length];
+        c.open = false;
+      }
+      const f = document.querySelector('.site-footer');
+      const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? Math.round(f.getBoundingClientRect().height) : 0);
+      res.push([lv, i, bottom, fold, c ? (c.open ? 'open' : 'collapsed') : 'none', lines]);
+    }
+  }
+  return res;
+}"""
+
+
+def layout(fails, html, sizes=None):
+    """WORKING-CARD: Next within the fold with the card the media query shows, every item, normal and Aa."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for mode in ('normal', 'aa'):
+                for w, h in sizes or LAYOUT_SIZES:
+                    ctx = browser.new_context(viewport={'width': w, 'height': h})
+                    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+                    if mode == 'aa':
+                        ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
+                    bc.offline(ctx, base)
+                    if KATEX_DIR:
+                        ctx.route(lambda url: '/katex@0.16.9/dist/' in url, lambda route: route.fulfill(
+                            path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+                    else:
+                        ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+                    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                        status=200, content_type='text/html; charset=utf-8', body=html))
+                    page = ctx.new_page()
+                    page.goto(base + '/games/%s/?cb=layout' % SLUG, wait_until='load', timeout=20000)
+                    page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+                    size = '%dx%d' % (w, h)
+                    known = KNOWN_PAST_FOLD.get((mode, size), set())
+                    for lv, i, bottom, fold, card, lines in page.evaluate(LAYOUT_JS):
+                        tag = 'layout %s %s %s[%d]' % (mode, size, lv, i)
+                        if bottom is None:
+                            fails.append('%s: no Next after a wrong answer' % tag)
+                            continue
+                        if card == 'none':
+                            fails.append('%s: no working card after a wrong answer' % tag)
+                        if lines and lines[0] != lines[1]:
+                            fails.append('%s: the collapsed card, opened, shows %d of %d lines' % (tag, lines[0], lines[1]))
+                        if bottom > fold + 0.5:
+                            if card == 'open':
+                                fails.append('%s: with the card open, Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                            elif known != ALL and (lv, i) not in known:
+                                fails.append('%s: Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
 
 
 def text_fails(html):
@@ -460,6 +578,13 @@ PLANTS = [
     ('gcse[0]', 'working: no box on a wrong answer',
      "else{showWorking(q);MaffsNext.wrong(", "else{MaffsNext.wrong(", 'working box shows 0'),
 ]
+# WORKING-CARD (19 Nov 2026): the card moved below Next (#nextMount taken out of the row and put before it).
+CARD_BELOW_NEXT = ('card: the working card moved below Next', re.compile(
+    r'(\n(\s*)<div class="maffs-ref-row work-row" id="workRow">.*?)\n\s*<div id="nextMount"></div>', re.S),
+    r'\n\2<div id="nextMount"></div>\1', 'comes after Next')
+# WORKING-CARD: a threshold loosened, so the open card shows at 1280x720 where it pushes Next past the fold.
+LAYOUT_PLANT = ('card: the open band loosened to 700px tall', '(min-width: 760px) and (min-height: 860px)',
+                '(min-width: 760px) and (min-height: 700px)', [(1280, 720)], 'with the card open')
 
 
 def start_screen_fails(html, bank):
@@ -500,6 +625,7 @@ def main():
         check_bank(fails, bank)
         check_working(fails, bank, *WORK_SEEN)
     fails += start_screen_fails(html, bank)
+    layout(fails, html)
     print('%s: %d items, every key recomputed from its stem, every option read and clicked in Chromium'
           % (SLUG, sum(len(bank.get(k, [])) for k in COUNTS) if bank else 0))
     ok = True
@@ -517,6 +643,27 @@ def main():
                 check_working(rep, planted, *WORK_SEEN)
             rep += start_screen_fails(html.replace(new, old), planted)
             hit = [f for f in rep if f.startswith(tag) and need in f]
+            ok = ok and bool(hit)
+            print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+        what, rx, rep_with, need = CARD_BELOW_NEXT
+        planted_html, n = rx.subn(rep_with, html)
+        if n != 1:
+            print('  self-test %-46s *** CANNOT PLANT (%d) ***' % (what, n))
+            ok = False
+        else:
+            rep = []
+            play(rep, planted_html)
+            hit = [f for f in rep if f.startswith('gcse[0]') and need in f]
+            ok = ok and bool(hit)
+            print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+        what, new, old, sizes, need = LAYOUT_PLANT
+        if html.count(new) != 1:
+            print('  self-test %-46s *** CANNOT PLANT (%d) ***' % (what, html.count(new)))
+            ok = False
+        else:
+            rep = []
+            layout(rep, html.replace(new, old), sizes)
+            hit = [f for f in rep if f.startswith('layout') and need in f]
             ok = ok and bool(hit)
             print('  self-test %-46s %s' % (what, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
     for f in fails:
