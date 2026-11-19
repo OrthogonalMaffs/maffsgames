@@ -286,7 +286,7 @@
    "tier": "content"
   },
   "verify-decimal-detective.py": {
-   "how": "chosen from 14 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)",
    "parts": 2,
    "tier": "content"
@@ -370,7 +370,7 @@
    "tier": "content"
   },
   "verify-shape-shifter.py": {
-   "how": "kept from the pack (9 needed)",
+   "how": "kept from the pack (8 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation (90° each way and 180°, about (0,0) and other points) and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 9,
    "tier": "content"
