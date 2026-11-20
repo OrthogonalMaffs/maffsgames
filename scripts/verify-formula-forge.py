@@ -18,6 +18,8 @@ carry its own TeX reader until the home lane gives bank_common an exact one). Th
   - KaTeX (pinned local copy) parses every formula, option and worked line;
   - sessions: startGame() at each level, dealt three times: 6 a stage (or the whole stage when it has fewer), stages in order,
     no item twice;
+  - the prompt (FORGE-SUBJECT-PROMPT): the first question at each level has exactly one .subject-chip in #target, its KaTeX
+    annotation the item's subject; the start screen shows "Powers and Multi: have paper handy.";
   - in Chromium (390x844) every option of every item is pressed through the game's own buttons: the key is marked correct and
     scores; any other is marked wrong, the key is shown, the worked solution shows the item's lines, and Next is mounted.
 Hint 2's prose keeping its spaces (r-001, t4-004, fixed by FORGE-HINT-SPACES) is held by check-banks.py's B7, not here.
@@ -316,6 +318,15 @@ MARK_JS = r"""([lv, st, i]) => {
     MaffsLock.clearTimers();
   }
   return out; }"""
+# FORGE-SUBJECT-PROMPT: the subject in "Make ... the subject" is one .subject-chip holding the subject in KaTeX, read back from
+# KaTeX's own TeX annotation, on the first question of a session at each level.
+CHIP_JS = r"""() => { const out = [];
+  for (const lv of ['gcse', 'alevel', 'level4']) { level = lv; startGame();
+    const chips = [...document.querySelectorAll('#target .subject-chip')], a = chips[0] && chips[0].querySelector('.katex annotation');
+    out.push({lv: lv, n: chips.length, tex: a ? a.textContent : null, subject: currentQ.subject});
+    MaffsLock.clearTimers(); }
+  return out; }"""
+PAPER_LINE = 'Powers and Multi: have paper handy.'
 
 
 def mark_checks(fails, page, bank):
@@ -371,6 +382,14 @@ def play(fails, html):
             # s1-003 (R2): the start screen says an expression divided by is assumed non-zero (y != 1, u != f, R_T != R_2)
             if 'assume that expression is not zero' not in page.inner_text('#menu'):
                 fails.append('start: the start screen must say that an expression divided by is assumed not to be zero (formula-forge-s1-003)')
+            shown = page.evaluate('(t) => [...document.querySelectorAll("#menu .menu-info")].some(e => e.textContent.trim() === t '
+                                  '&& e.getClientRects().length > 0)', PAPER_LINE)
+            if not shown:
+                fails.append('start: the start screen must show the line %r (FORGE-SUBJECT-PROMPT)' % PAPER_LINE)
+            for r in page.evaluate(CHIP_JS):
+                if r['n'] != 1 or r['tex'] != r['subject']:
+                    fails.append('prompt: %s, first question: expected one .subject-chip holding %r in KaTeX, found %d holding %r'
+                                 % (r['lv'], r['subject'], r['n'], r['tex']))
             mark_checks(fails, page, bank)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -401,6 +420,10 @@ PLANTS = [
     ('a wrong Hint 2 equation inside \\( \\) (2A = 2bh)', 'working:', [("hint2:'\\\\(2A = bh\\\\). Now divide by \\\\(b\\\\).'",
                                                                     "hint2:'\\\\(2A = 2bh\\\\). Now divide by \\\\(b\\\\).'")]),
     ('marking by the first character only', 'marking:', [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val[0]===q.correct[0];")]),
+    ('the subject-chip class removed from the subject', 'prompt:',
+     [("sSpan.className='subject-chip';", "")]),
+    ('the start line "Powers and Multi: have paper handy." removed', 'start:',
+     [('    <div class="menu-info">Powers and Multi: have paper handy.</div>\n', '')]),
     ('five a stage dealt, not six', 'session:', [("const s1=shuffle([...bank.s1]).slice(0,6);", "const s1=shuffle([...bank.s1]).slice(0,5);")]),
 ]
 
