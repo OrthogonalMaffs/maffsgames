@@ -2,7 +2,8 @@
 # ci-line: 52-dle (every clue ladder recomputed and narrowing to one number, the page's ladders the generator's output, daily, run, scoring, broken clues and exact marking played in Chromium) |
 """52-dle: every clue is true, every ladder narrows to one number, and the page plays the game the contract describes.
 
-The game (contract 52DLE-REBUILD, 19-20 Nov 2026): a hidden number, KS3 (key ks3, "Foundation") 1-100 or GCSE 1-1000.
+The game (contract 52DLE-REBUILD, 19-20 Nov 2026): a hidden number, KS3 (key ks3, labelled "KS3" since 52DLE-TIDY,
+20 Nov 2026) 1-100 or GCSE 1-1000.
 Clues are shown one at a time from a ladder of 3-5, written into the page as codes by scripts/gen-52dle.py. A daily
 of one number per level per day (picked from the UK date and the level) and a run of five different numbers.
 
@@ -27,13 +28,16 @@ Checks, each recomputed here and never by the page's own code:
              each in the words given here.
   marking    exact match by MaffsAnswer.exact on the raw text: "23.9" never wins 23, "23" and "23.0" do; the box is a
              text box and "1,000" is never marked.
-  facts      "Did you know?" for exactly the contract's 17 numbers, each fact recomputed (FACTS), and shown after
+  labels     the word "Foundation" appears nowhere in the page: the 1-100 level is "KS3" (52DLE-TIDY).
+  facts      "Did you know?" for exactly the contract's 16 numbers (17, less 521, which no ladder reaches: 52DLE-TIDY),
+             each one in at least one level's pool, each fact recomputed (FACTS), and shown after
              the number is found or missed.
   play       a whole run and a whole daily played in Chromium: the events (one question_answered per number with
              question_id 52dle-<level>-<n>, attempts and correct; level and mode on every event), one submitScore
              for the run on its level's board and none for the daily; the daily's result is shown again on return.
 Plants (each must FAIL by its named check): a false clue; a ladder leaving two numbers; two digit clues; a
-fixed-size warmth band; a run with a repeated number.
+fixed-size warmth band; a run with a repeated number; "Foundation" restored as the KS3 label; a fact for a number in
+no pool (521).
 
     python scripts/verify-52dle.py [--no-selftest] [--against FILE]
 """
@@ -231,7 +235,7 @@ def shared_birthday(n):
     return 1 - q
 
 
-# The contract's 17 numbers; each fact's words pinned with what they claim of the number.
+# The contract's numbers, less 521 (52DLE-TIDY: in no pool, so it could never show); each fact's words pinned with what they claim of the number.
 FACTS = {
     7: [('The 4th prime', lambda a: a == sp.prime(4)), ('days in a week', lambda a: a == 7)],
     13: [('I am the 6th prime', lambda a: a == sp.prime(6)), ('7th Fibonacci', lambda a: a == fib(7))],
@@ -255,8 +259,6 @@ FACTS = {
     144: [('12 squared', lambda a: a == 12 ** 2), ('12th Fibonacci', lambda a: a == fib(12))],
     271: [('first three digits of e', lambda a: a == int(str(sp.N(sp.E, 10)).replace('.', '')[:3]))],
     314: [('first three significant digits of π', lambda a: a == int(str(sp.N(sp.pi, 10)).replace('.', '')[:3]))],
-    521: [('2⁵²¹ − 1 is a Mersenne prime', lambda a: a in (2, 3, 5, 7, 13, 17, 19, 31, 61, 89, 107, 127, 521)),
-          ('I am the exponent', lambda a: a == 521)],
 }
 
 
@@ -297,6 +299,8 @@ def check_static(fails, html):
     have = GEN.current(html)
     if have != want:
         fails.append('generator: the page\'s ladder block is not gen-52dle.py\'s output (run python scripts/gen-52dle.py)')
+    if 'Foundation' in html:
+        fails.append('labels: the page says "Foundation"; the 1-100 level is "KS3" (52DLE-TIDY)')
     lad = page_ladders(html)
     if lad is None:
         fails.append('ladders: the page has no ladder block')
@@ -436,7 +440,11 @@ def browser_checks(fails, html, lad):
                     fails.append('daily: %s is %s in the UK, the page says %s' % (iso, want, got_d))
 
             # facts
-            check_facts(fails, page.evaluate('() => D52.FACTS'))
+            facts = page.evaluate('() => D52.FACTS')
+            check_facts(fails, facts)
+            for k in sorted(facts, key=int):
+                if lad and not any(int(k) in lad[lv] for lv in lad):
+                    fails.append('facts: %s is in no pool, so its "Did you know?" can never show' % k)
 
             # marking and feedback, in the page: 23 at KS3 (its first ladder), every clue shown
             def preview(level, n, k=0):
@@ -655,6 +663,10 @@ def plants(html):
             if other not in l and n not in names(other, n):
                 out.append(('ladders: ks3 %d' % n, 'two digit clues', plant_ladder(html, 'ks3', n, l[:-1] + [other, l[-1]]), 'two digit clues'))
                 break
+    out.append(('labels:', '"Foundation" restored', html.replace('aria-pressed="false">KS3<span', 'aria-pressed="false">Foundation<span')
+                .replace("{ ks3: 'KS3', gcse: 'GCSE' }", "{ ks3: 'Foundation', gcse: 'GCSE' }"), 'Foundation'))
+    out.append(('facts: 521', 'a fact for a number in no pool', html.replace(
+        '    314: "π', '    521: "2⁵²¹ − 1 is a Mersenne prime. I am the exponent.",\n    314: "π'), 'in no pool'))
     out.append(('closeness: gcse', 'a fixed-size warmth band', html.replace('WARMTH[i][0] * top', 'WARMTH[i][0] * 100'), 'closeness'))
     out.append(('run: ', 'a run with a repeated number', html.replace('out.push({ n: p[i], ladder', 'out.push({ n: p[0], ladder')
                 .replace('var ls = laddersOf(lv, p[i]);', 'var ls = laddersOf(lv, p[0]);'), 'five different'))

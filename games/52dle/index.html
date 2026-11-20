@@ -155,7 +155,7 @@ body.accessible p,body.accessible .fb-line,body.accessible .dyk,body.accessible 
     <div class="panel menu-info">
       <div class="mode-h">Level</div>
       <div class="levels" id="levelList">
-        <button class="lvl-btn" type="button" data-level="ks3" aria-pressed="false">Foundation<span class="r">1 to 100</span></button>
+        <button class="lvl-btn" type="button" data-level="ks3" aria-pressed="false">KS3<span class="r">1 to 100</span></button>
         <button class="lvl-btn" type="button" data-level="gcse" aria-pressed="false">GCSE<span class="r">1 to 1000</span></button>
       </div>
       <div class="mode-h">Play</div>
@@ -226,7 +226,7 @@ body.accessible p,body.accessible .fb-line,body.accessible .dyk,body.accessible 
   var SLUG = '52dle', RUN = 5, MAX_GUESSES = 6;
   var LEVELS = ['ks3', 'gcse'];
   var TOP = { ks3: 100, gcse: 1000 };
-  var LEVEL_NAME = { ks3: 'Foundation', gcse: 'GCSE' };
+  var LEVEL_NAME = { ks3: 'KS3', gcse: 'GCSE' };
   var level = MaffsLevel.resolve({ slug: '52dle', levels: ['ks3', 'gcse'], fallback: 'ks3' });
   var $ = function (id) { return document.getElementById(id); };
   function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
@@ -1290,7 +1290,6 @@ var LADDERS = {
     144: "I am 12 squared. I am also the 12th Fibonacci number — the only Fibonacci perfect square beyond 1.",
     271: "The first three digits of e are 2.71… I am those digits without the decimal. e ≈ 2.71828…",
     314: "π ≈ 3.14159… I am the first three significant digits of π, without the decimal point.",
-    521: "2⁵²¹ − 1 is a Mersenne prime. I am the exponent. One of the earliest discovered by computer in 1952."
   };
 
   /* ---------- the clues: each code's words, and whether a number fits it ---------- */
