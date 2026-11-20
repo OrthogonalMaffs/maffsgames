@@ -27,9 +27,19 @@ The bank is read from the page source (esprima), never from a copy. For every qu
     equates to the angle at C lies on the OTHER side of AB from C; the angle BAT beside a radius OA
     (90 degrees minus angle OAB) lies on B's side of OA. The marked arc must run from ray AB to ray AT,
     T being where the figure labels the tangent.
+  - the working shown on a wrong answer (contract CIRCLE-WORKING, 19 Nov 2026), the page's WORKING
+    object, keyed 1-55 by the item's place in QUESTIONS.gcse: every item has an entry and every entry
+    an item; in each line, outside its \\text{} words, every "=" chain is true in SymPy (degrees
+    stripped; where the answer is an unknown it is replaced by the item's key: x, y, OP, AB or d, per
+    UNKNOWNS); a lone capital letter in a chain names the angle being found (item 34's C and D).
+    In Chromium, every item answered wrong with every wrong option shows its lines in the card titled
+    "Why", before Next, both copies alike; a right answer shows none. At each size in LAYOUT_SIZES,
+    normal and Aa, every item answered wrong in each of its three option pairings: with the open card,
+    Next's bottom in page coordinates is within the fold (the viewport less the fixed footer); with the
+    collapsed card, Next ends exactly where it ends with no card (Surd Simplifier's no-height rule).
 A fault-injection self-test (Q48's old numbers, Q19's old `inside` flag, a distractor equal to
-its key, a changed key, and the old tangent figures planted back into the page) must FAIL each
-time; it runs unless --no-selftest.
+its key, a changed key, and the old tangent figures planted back into the page; a false working line, no card on a wrong answer,
+the card below Next) must FAIL each time; it runs unless --no-selftest.
 
     python scripts/verify-circle-theorem-spotter.py [--file PATH] [--verbose] [--no-selftest]
 """
@@ -94,6 +104,17 @@ def load_bank(path, src=None):
                     out.append((f'{bc.literal_key(level.key)} Q{i + 1}', el.loc.start.line, to_py(el)))
             return out
     raise SystemExit(f'FAIL    {path}: no top-level QUESTIONS')
+
+
+def load_working(src):
+    """The page's WORKING object: {item number: [line, ...]}."""
+    tree, _src = bc.parse_game_source(src)
+    if tree is None:
+        raise SystemExit('FAIL    the page script does not parse')
+    for name, init, _kind in bc.top_level_declarations(tree):
+        if name == 'WORKING':
+            return {int(bc.literal_key(p.key)): to_py(p.value) for p in init.properties}
+    return None
 
 
 # --- values ----------------------------------------------------------------------------------
@@ -599,6 +620,257 @@ def selftest(bank):
     return bad
 
 
+# --- the working (contract CIRCLE-WORKING, 19 Nov 2026) --------------------------------------------
+
+# Items whose answer is an unknown: the name in the working, replaced by the item's key (the contract's list).
+UNKNOWNS = {25: 'x', 28: 'x', 31: 'x', 32: 'x', 48: 'x', 49: 'x', 50: 'y', 42: 'OP', 54: 'AB', 55: 'd'}
+
+
+def math_runs(line):
+    """The maths of a working line: the runs outside its top-level \\text{...} groups."""
+    runs, cur, i = [], '', 0
+    while i < len(line):
+        if line.startswith('\\text{', i):
+            d, j = 0, i + 5
+            for j in range(i + 5, len(line)):
+                d += (line[j] == '{') - (line[j] == '}')
+                if d == 0:
+                    break
+            else:
+                raise ValueError('unbalanced \\text{ in %r' % line)
+            runs.append(cur)
+            cur, i = '', j + 1
+            continue
+        cur += line[i]
+        i += 1
+    runs.append(cur)
+    return [r for r in runs if r.strip()]
+
+
+def tex_value(part, subs):
+    """One side of an "=" as SymPy, degrees stripped, the item's unknown replaced by its key; a lone capital
+    letter (the angle being named) is returned as None."""
+    t = part.replace('^\\circ', '').replace('\\times', '*').replace('\\div', '/').replace('\\,', ' ')
+    t = re.sub(r'\\sqrt\{([^{}]*)\}', r'sqrt(\1)', t).replace('^', '**').strip()
+    if re.fullmatch(r'[A-Z]', t):
+        return None
+    for name, val in subs.items():
+        t = re.sub(r'(?<![A-Za-z])%s(?![A-Za-z])' % name, '(%s)' % val, t)
+    if '\\' in t:
+        raise ValueError('unread TeX %r' % part)
+    e = parse_expr(t, transformations=TRANSFORMS)
+    if e.free_symbols:
+        raise ValueError('%r leaves %s unknown' % (part, sorted(map(str, e.free_symbols))))
+    return e
+
+
+def working_fails(working, bank):
+    """Every item has its working, and every "=" chain in it is true."""
+    if working is None:
+        return ['working: the page has no top-level WORKING']
+    fails = []
+    n = len(bank)
+    missing = [i for i in range(1, n + 1) if not working.get(i)]
+    extra = sorted(k for k in working if not 1 <= k <= n)
+    if missing:
+        fails.append('working: no entry for item(s) %s' % missing)
+    if extra:
+        fails.append('working: entries %s name no item' % extra)
+    for i, lines in sorted(working.items()):
+        if not 1 <= i <= n:
+            continue
+        q = bank[i - 1][2]
+        subs = {UNKNOWNS[i]: option_value(q['correct'])} if i in UNKNOWNS else {}
+        for k, line in enumerate(lines, 1):
+            try:
+                for run in math_runs(line):
+                    parts = run.split('=')
+                    if len(parts) < 2:
+                        continue
+                    vals = [v for v in (tex_value(p, subs) for p in parts) if v is not None]
+                    if any(sp.simplify(v - vals[0]) != 0 for v in vals[1:]):
+                        fails.append('working: item %d line %d: %r is false (%s)'
+                                     % (i, k, run.strip(), ' = '.join(map(str, vals))))
+            except Exception as e:  # a line this script cannot read is a failure, never a skip
+                fails.append('working: item %d line %d: cannot read %r (%s)' % (i, k, line, e))
+    return fails
+
+
+SWEEP_JS = r"""() => {
+  window.setTimeout = () => 0; window.setInterval = () => 0;
+  const out = []; startGame();
+  QUESTIONS.gcse.forEach((q, i) => {
+    for (const pick of [q.correct, ...q.d]) {
+      questions[qIdx] = q; showQ();
+      const btn = [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val === pick);
+      if (!btn) { out.push([i + 1, pick, 'not on screen']); continue; }
+      btn.click();
+      const cards = [...document.querySelectorAll('.maffs-ref')];
+      const shown = cards.filter(c => getComputedStyle(c).display !== 'none');
+      const want = (WORKING[i + 1] || []).length;
+      const next = document.querySelector('#nextMount .maffs-next');
+      if (pick !== q.correct) {
+        const box = shown[0];
+        const got = box ? box.querySelectorAll('.wl').length : 0;
+        if (shown.length > 1) out.push([i + 1, pick, 'answered wrong: ' + shown.length + ' cards show at once']);
+        if (!box || !want || got !== want) out.push([i + 1, pick, 'answered wrong: the card shows ' + got + ' of ' + want + ' lines']);
+        else if (box.querySelector('.katex-error') || [...box.querySelectorAll('.wl')].some(l => !l.textContent.trim()))
+          out.push([i + 1, pick, 'answered wrong: a working line does not render']);
+        else if (cards.some(c => c.querySelector(':scope > summary .maffs-ref-title').textContent !== 'Why'
+                              || c.querySelector(':scope > summary .maffs-ref-show').textContent !== 'Why'))
+          out.push([i + 1, pick, 'answered wrong: the card is not titled "Why"']);
+        else if (cards.some(c => c.querySelectorAll('.wl').length !== want))
+          out.push([i + 1, pick, 'answered wrong: the two copies of the card hold different lines']);
+        if (!document.getElementById('feedback').textContent.startsWith('The answer: '))
+          out.push([i + 1, pick, 'answered wrong: "The answer" is not shown']);
+        if (!next) out.push([i + 1, pick, 'answered wrong: no Next']);
+        else if (box && !(box.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING))
+          out.push([i + 1, pick, 'answered wrong: the card comes after Next (canon 7.6.1: feedback above Next)']);
+      } else if (shown.length) out.push([i + 1, pick, 'answered right: the card is shown']);
+    }
+  });
+  return out;
+}"""
+
+# The sizes measured, (width, height): canon phones, a tall phone, the band edges of the page's media query (open at
+# 320x1430, 430x1300, 760x1170; collapsed at 429x1429, 759x1299, 760x1169), the two laptops (ruling R2) and desktops.
+LAYOUT_SIZES = [(320, 568), (375, 667), (390, 844), (412, 915), (320, 1430), (429, 1429), (430, 1300), (759, 1299),
+                (760, 1169), (760, 1170), (1280, 720), (1366, 768), (1440, 900), (1920, 1080), (1920, 1200)]
+NO_HEIGHT_TOL = 0.5
+
+# Options sit two to a row and a row is as tall as its taller option, so every item is measured in all three pairings.
+LAYOUT_JS = r"""async () => {
+  const res = []; startGame();
+  for (let i = 0; i < QUESTIONS.gcse.length; i++) {
+    const q = QUESTIONS.gcse[i]; questions[qIdx] = q; showQ();
+    [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val !== q.correct).click();
+    await document.fonts.ready;
+    const n = document.querySelector('#nextMount .maffs-next');
+    const box = document.getElementById('options'), bs = [...box.children];
+    const row = document.getElementById('workRow');
+    let bottom = null, cost = 0;
+    if (n && row) for (const o of [[0, 1, 2, 3], [0, 2, 1, 3], [0, 3, 1, 2]]) {
+      o.forEach(k => box.appendChild(bs[k]));
+      const withCard = n.getBoundingClientRect().bottom + scrollY;
+      row.classList.remove('shown');
+      const without = n.getBoundingClientRect().bottom + scrollY;
+      row.classList.add('shown');
+      bottom = Math.max(bottom === null ? -1 : bottom, withCard);
+      cost = Math.max(cost, withCard - without);
+    }
+    const c = typeof shownCard === 'function' ? shownCard() : null;
+    let lines = null;
+    if (c && !c.open) {
+      c.open = true;
+      lines = [[...c.querySelectorAll('.wl')].filter(l => l.getBoundingClientRect().height > 0).length, (WORKING[i + 1] || []).length];
+      c.open = false;
+    }
+    const f = document.querySelector('.site-footer');
+    const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? Math.round(f.getBoundingClientRect().height) : 0);
+    res.push([i + 1, bottom, fold, cost, c ? (c.open ? 'open' : 'collapsed') : 'none', lines]);
+  }
+  return res;
+}"""
+
+
+def _context(browser, base, html, w=390, h=844, aa=False):
+    ctx = browser.new_context(viewport={'width': w, 'height': h})
+    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+    if aa:
+        ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
+    bc.offline(ctx, base)
+    ctx.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)
+    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+    ctx.route(lambda u: bool(page_url.search(u)), lambda r: r.fulfill(
+        status=200, content_type='text/html; charset=utf-8', body=html))
+    pg = ctx.new_page()
+    pg.goto(base + '/games/%s/?cb=working' % SLUG, wait_until='load', timeout=30000)
+    pg.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+    return ctx, pg
+
+
+def card_fails(html, sizes=None, sweep=True):
+    """In Chromium: the card on a wrong answer (every wrong option), and Next's place at every size, normal and Aa."""
+    from playwright.sync_api import sync_playwright
+    fails = []
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            if sweep:
+                ctx, pg = _context(browser, base, html)
+                errors = []
+                pg.on('pageerror', lambda e: errors.append(str(e)))
+                for i, pick, what in pg.evaluate(SWEEP_JS):
+                    fails.append('card: item %d, option %r %s' % (i, pick, what))
+                if errors:
+                    fails.append('card: page errors: %s' % '; '.join(errors[:3]))
+                ctx.close()
+            for mode in ('normal', 'aa'):
+                for w, h in sizes or LAYOUT_SIZES:
+                    ctx, pg = _context(browser, base, html, w, h, mode == 'aa')
+                    for i, bottom, fold, cost, card, lines in pg.evaluate(LAYOUT_JS):
+                        tag = 'layout %s %dx%d item %d' % (mode, w, h, i)
+                        if bottom is None or card == 'none':
+                            fails.append('%s: no card or no Next after a wrong answer' % tag)
+                            continue
+                        if lines and lines[0] != lines[1]:
+                            fails.append('%s: the collapsed card, opened, shows %d of %d lines' % (tag, lines[0], lines[1]))
+                        if card == 'open' and bottom > fold + 0.5:
+                            fails.append('%s: with the card open, Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                        if card == 'collapsed' and cost > NO_HEIGHT_TOL:
+                            fails.append('%s: the collapsed card costs %.0fpx: Next ends lower than with no card' % (tag, cost))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+    return fails
+
+
+# (name, today's text, the planted text, the failure it must give): each must FAIL.
+WORK_PLANTS = [
+    ("a false line (item 12's 180 - 72 = 118)", "'180^\\\\circ - 72^\\\\circ = 108^\\\\circ'",
+     "'180^\\\\circ - 72^\\\\circ = 118^\\\\circ'", 'item 12 line 2'),
+]
+CARD_PLANTS = [
+    ('no card on a wrong answer', "showWorking(q);MaffsNext.wrong(", "MaffsNext.wrong(", 'the card shows 0'),
+]
+# The card moved below Next (#nextMount taken out of the row and put before it).
+CARD_BELOW_NEXT = ('the card moved below Next', re.compile(
+    r'(\n(\s*)<div class="maffs-ref-row work-row" id="workRow">.*?)\n\s*<div id="nextMount"></div>', re.S),
+    r'\n\2<div id="nextMount"></div>\1', 'comes after Next')
+
+
+def working_selftest(html):
+    bad = []
+    for name, old, new, want in WORK_PLANTS:
+        if html.count(old) != 1:
+            print(f'self-test CANNOT PLANT {name}')
+            bad.append(name)
+            continue
+        planted = html.replace(old, new)
+        fails = working_fails(load_working(planted), load_bank_text(planted))
+        hit = [f for f in fails if want in f]
+        print(f'self-test {"caught " if hit else "MISSED "} {name}' + (f': {hit[0][:110]}' if hit else ''))
+        if not hit:
+            bad.append(name)
+    name, pat, rep, want = CARD_BELOW_NEXT
+    planted = [(n, html.replace(o, w) if html.count(o) == 1 else None, t) for n, o, w, t in CARD_PLANTS]
+    moved, k = pat.subn(rep, html, count=1)
+    planted.append((name, moved if k == 1 else None, want))
+    for name, page, want in planted:
+        if page is None:
+            print(f'self-test CANNOT PLANT {name}')
+            bad.append(name)
+            continue
+        hit = [f for f in card_fails(page, sizes=[(390, 844)]) if want in f]
+        print(f'self-test {"caught " if hit else "MISSED "} {name}' + (f': {hit[0][:110]}' if hit else ''))
+        if not hit:
+            bad.append(name)
+    return bad
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--file', default=PAGE, help='the page to check (default: the live game file)')
@@ -612,11 +884,14 @@ def main():
     fails += tangent_side_fails(figs)
     fails += check_text(open(args.file, encoding='utf-8').read(), bank)
     fails += check_copies(read_copies(open(args.file, encoding='utf-8').read()))
+    html = open(args.file, encoding='utf-8').read()
+    fails += working_fails(load_working(html), bank)
+    fails += card_fails(html)
     if len(figs) < 9:
         fails.append('figure: only %d tangent figures with a marked tangent angle read (expected 9)' % len(figs))
     for f in fails:
         print(f'FAIL    {f}')
-    missed = [] if args.no_selftest else selftest(bank)
+    missed = [] if args.no_selftest else selftest(bank) + working_selftest(html)
     for m in missed:
         print(f'FAIL    self-test did not catch: {m}')
     if fails or missed:
@@ -624,7 +899,8 @@ def main():
               f'{len(bank)} questions, {solved} calculations solved')
         return 1
     print(f'\nPASS: {len(bank)} questions, {solved} calculation questions solved independently, '
-          f'options and arc wording checked; {len(figs)} tangent figures measured in Chromium')
+          f'options and arc wording checked; {len(figs)} tangent figures measured in Chromium; '
+          f'the working for all {len(bank)} checked, its card at {len(LAYOUT_SIZES)} sizes x normal/Aa')
     return 0
 
 
