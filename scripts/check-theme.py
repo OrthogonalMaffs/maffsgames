@@ -84,10 +84,11 @@ MIGRATED = [
     "prime-factorisation",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "percentage-flip",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "fraction-equivalence",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
+    "52dle",  # rebuilt to the theme, 20 Nov 2026 (contract 52DLE-REBUILD)
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf",
-    "prime-or-composite", "equatle", "52dle",
+    "prime-or-composite", "equatle",
     "constructions-lab", "word-problem-decoder", "equation-builder", "spot-the-error",
     "gradient-hunter", "truth-buster", "spot-the-muppet", "terrible-advice",
     "wrong-on-the-internet", "maths-court", "expected-damage", "negative-number-line",

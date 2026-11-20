@@ -1,1043 +1,1716 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<!-- Google tag (gtag.js) -->
-<script src="../../schools/assets/analytics.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<meta name="description" content="A daily number deduction puzzle: use the maths clues to find the hidden number. For KS3 and GCSE. Free, no sign-up.">
+<meta name="description" content="A number deduction puzzle: clue by clue, find the hidden number. A daily number and a five-number run, for KS3 and GCSE. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/52dle/">
 <meta property="og:title" content="Daily Number Puzzle Game – KS3/GCSE Maths | MaffsGames">
-<meta property="og:description" content="A daily number deduction puzzle: use the maths clues to find the hidden number. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:description" content="A number deduction puzzle: clue by clue, find the hidden number. A daily number and a five-number run, for KS3 and GCSE. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/52dle/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
 <title>Daily Number Puzzle Game – KS3/GCSE Maths | MaffsGames</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
-:root {
-  --bg:        #070b14;
-  --surface:   #0e1424;
-  --surface2:  #131b2e;
-  --border:    #1a2440;
-  --accent:    #a78bfa;
-  --accent-warm: #c4b5fd;
-  --accent-dim: rgba(167,139,250,.15);
-  --teal:       #2dd4bf;
-  --teal-dim:   #134e4a;
-  --text:       #e4e8f0;
-  --body:       #a8b8d0;
-  --muted:      #687890;
-  --border-line: #1a2e4a;
-  --border-dim: #111f33;
-  --success:    #22c55e;
-  --danger:     #ef4444;
-  --warn:       #f59e0b;
-  --higher:     #60a5fa;
-  --lower:      #f87171;
-}
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster levels are KS3 and GCSE (the palette rule).
+   This game's own tokens. The accent is violet-700, 7.1:1 on white, so white text on it and it on the light surfaces
+   both clear 4.5:1. The five closeness colours run hot (close) to cold (far off), each at least 4.5:1 on white and on
+   --surface-alt; the word always says it too, so colour is never the only sign. */
+:root{--accent:#6d28d9;--accent-dim:#ede9fe;--on-accent:#ffffff;
+  --w1:#b91c1c;--w2:#c2410c;--w3:#a16207;--w4:#0e7490;--w5:#1d4ed8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:640px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:2.2rem;font-weight:700;line-height:1.1;color:var(--accent);font-family:var(--font-num)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.55}
+.menu-info p+p,.menu-info ul+p{margin-top:.55rem}
+.menu-info ul{margin:.4rem 0 0 1.2rem}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .35rem}
+.levels{display:flex;gap:.4rem;flex-wrap:wrap}
+.lvl-btn{flex:1 1 0;min-width:120px;min-height:44px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;font-weight:600;font-size:.9rem;cursor:pointer}
+.lvl-btn .r{display:block;font-weight:400;font-size:.78rem;color:var(--muted)}
+.lvl-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent)}
+.modes{display:flex;flex-direction:column;gap:.5rem}
+.mode-btn{display:block;width:100%;text-align:left;min-height:56px;padding:.5rem .85rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.mode-btn:hover{border-color:var(--accent)}
+.mode-btn .t{display:block;font-weight:700;font-size:1rem}
+.mode-btn .d{display:block;font-size:.82rem;color:var(--muted);line-height:1.35}
+.mode-btn.primary{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.mode-btn.primary .d{color:var(--on-accent)}
+.btn{min-height:44px;padding:.5rem 1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.4rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.95rem;font-weight:700}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem .75rem;display:flex;flex-direction:column;gap:.45rem}
+.card-h{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.clues{list-style:none;display:flex;flex-direction:column;gap:.25rem}
+.clues li{display:flex;gap:.5rem;align-items:baseline;font-size:1rem;line-height:1.35}
+.clues li .k{flex:none;font-family:var(--font-num);font-weight:700;color:var(--accent);min-width:1.2em}
+.clues li.unseen{color:var(--muted);font-style:italic}
+.ans-row{display:flex;gap:.4rem;align-items:center;flex-wrap:wrap}
+.ans-row input{flex:1 1 7em;min-width:0;min-height:44px;padding:.3rem .5rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.1rem;text-align:center}
+.ans-row input:focus{outline:none;border-color:var(--accent)}
+.clue-row{display:flex;gap:.5rem;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.worth{font-size:.85rem;color:var(--muted)}
+.worth b{font-family:var(--font-num);color:var(--text)}
+.msg{font-size:.92rem;color:var(--hint);text-align:center}
+.msg:empty{display:none}
+.guesses{list-style:none;display:flex;flex-direction:column;gap:.3rem;margin-top:.45rem}
+.guess{border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:.35rem .6rem;font-size:.92rem;line-height:1.4}
+.g-top{display:flex;gap:.6rem;align-items:baseline;flex-wrap:wrap}
+.g-num{font-family:var(--font-num);font-weight:700;font-size:1.05rem;min-width:3.2em}
+.g-dir{font-weight:700}
+.g-warm{font-weight:600}
+.g-warm[data-band="1"]{color:var(--w1)}.g-warm[data-band="2"]{color:var(--w2)}.g-warm[data-band="3"]{color:var(--w3)}
+.g-warm[data-band="4"]{color:var(--w4)}.g-warm[data-band="5"]{color:var(--w5)}
+.g-broken{list-style:none;margin-top:.15rem;color:var(--wrong);font-size:.9rem}
+.g-broken li::before{content:"✗ "}
 
-body {
-  background: var(--bg);
-  color: var(--body);
-  font-family: 'Outfit', sans-serif;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow-x: hidden;
-}
+.fb{border-radius:12px;padding:.55rem .75rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.4rem}
+.fb-head{font-weight:700;font-size:1.05rem}
+.fb.right .fb-head{color:var(--correct)}
+.fb.wrong .fb-head{color:var(--wrong)}
+.fb-num{font-family:var(--font-num);font-size:1.6rem;font-weight:700;color:var(--accent)}
+.fb-line{font-size:.94rem;line-height:1.45}
+.fb-line b{font-family:var(--font-num)}
+.dyk{border-left:4px solid var(--accent);padding:.2rem .6rem;font-size:.94rem;line-height:1.45}
+.dyk .h{display:block;font-weight:700;color:var(--accent);font-size:.8rem;text-transform:uppercase;letter-spacing:.05em}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
 
-/* Grid background */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(167,139,250,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(167,139,250,0.03) 1px, transparent 1px);
-  background-size: 40px 40px;
-  pointer-events: none;
-  z-index: 0;
-}
+.results{text-align:center;padding:.4rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.per{list-style:none;margin:.6rem auto;max-width:26em;text-align:left}
+.per li{display:flex;justify-content:space-between;gap:.6rem;padding:.3rem .2rem;border-bottom:1px solid var(--border);font-size:.92rem}
+.per li .n{font-family:var(--font-num);font-weight:700}
+.per li .s{font-family:var(--font-num)}
+.stats{color:var(--muted);line-height:1.7;font-size:.95rem;margin:.3rem 0 .6rem}
+.share-grid{font-size:1.4rem;letter-spacing:.05em;margin:.3rem 0;min-height:1.6rem}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-top:.6rem}
+.daily-list{max-width:26em;margin:.6rem auto;text-align:left}
+.daily-list h3{font-size:.8rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.3rem}
+.daily-list ol{margin-left:1.4rem;font-size:.92rem;line-height:1.6}
+.name-row{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin-top:.4rem}
+.name-row input{min-height:44px;padding:.3rem .5rem;border-radius:8px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;width:12em}
 
-/* Nav */
-nav {
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  height: 52px;
-  background: rgba(7,11,20,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-dim);
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .header h1{font-size:1.8rem}
+  .card{padding:.5rem .55rem;gap:.35rem}
+  .clues li{font-size:.95rem}
 }
-.nav-logo {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.2rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  color: var(--accent);
-  text-decoration: none;
-}
-.nav-back {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.nav-back:hover { color: var(--accent); }
-
-/* Page layout */
-.page {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 640px;
-  padding: 2rem 1rem 4rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.5rem;
-}
-
-/* Header */
-.game-header { text-align: center; }
-.game-kicker {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--teal);
-  margin-bottom: 0.4rem;
-}
-.game-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 3.5rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: var(--accent-warm);
-  line-height: 1;
-}
-.game-sub {
-  font-size: 0.75rem;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-top: 0.4rem;
-}
-
-/* Status bar */
-.status-bar {
-  display: flex;
-  gap: 1rem;
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 0.75rem 1rem;
-  justify-content: space-around;
-}
-.si { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; }
-.si-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--accent);
-}
-.si-lbl {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.48rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* Guess history */
-.guess-history {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.guess-row {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.6rem 1rem;
-  background: var(--surface2);
-  border: 1px solid var(--border-dim);
-  border-radius: 3px;
-  animation: slideIn 0.2s ease;
-}
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(-6px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-.guess-num {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: var(--body);
-  min-width: 60px;
-}
-.guess-feedback {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  flex: 1;
-}
-.guess-arrow {
-  font-size: 1rem;
-  min-width: 20px;
-}
-.fb-higher { color: var(--higher); }
-.fb-lower  { color: var(--lower); }
-.fb-exact  { color: var(--success); }
-.fb-warm   { color: var(--warn); }
-
-/* Empty rows */
-.guess-slot {
-  height: 46px;
-  background: var(--surface2);
-  border: 1px dashed var(--border-dim);
-  border-radius: 3px;
-  opacity: 0.4;
-}
-
-/* Input area */
-.input-area {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-}
-.input-row {
-  display: flex;
-  gap: 0.5rem;
-}
-.guess-input {
-  flex: 1;
-  min-width: 0;   /* a text box's default width (20 characters) is wider than a number box's: let it shrink on a 320px phone (ANSWER-BOX-TEXT) */
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 0.7rem 1rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1rem;
-  color: var(--body);
-  outline: none;
-  transition: border-color 0.2s;
-}
-.guess-input:focus { border-color: var(--accent-dim); }
-.guess-input::placeholder { color: var(--muted); font-size: 0.7rem; }
-
-.btn {
-  padding: 0.7rem 1.2rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-radius: 3px;
-  border: none;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.btn-gold {
-  background: var(--accent);
-  color: var(--bg);
-  font-weight: 500;
-}
-.btn-gold:hover { background: var(--accent-warm); }
-.btn-gold:disabled { background: var(--muted); cursor: not-allowed; opacity: 0.5; }
-.btn-ghost {
-  background: transparent;
-  border: 1px solid var(--border);
-  color: var(--muted);
-}
-.btn-ghost:hover { border-color: var(--accent-dim); color: var(--accent); }
-.btn-ghost:disabled { opacity: 0.3; cursor: not-allowed; }
-.btn-teal {
-  background: transparent;
-  border: 1px solid var(--teal-dim);
-  color: var(--teal);
-}
-.btn-teal:hover { background: var(--teal-dim); }
-
-/* Hint area */
-.hint-area {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.hint-box {
-  background: var(--surface2);
-  border: 1px solid var(--teal-dim);
-  border-radius: 3px;
-  padding: 0.6rem 1rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--teal);
-  line-height: 1.5;
-  animation: slideIn 0.2s ease;
-}
-.hint-label {
-  font-size: 0.48rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-  margin-bottom: 0.2rem;
-}
-.hint-controls {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.hint-cost {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  color: var(--muted);
-}
-
-/* Category badge */
-.cat-badge {
-  display: inline-block;
-  padding: 0.15rem 0.5rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.48rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border-radius: 2px;
-  background: rgba(167,139,250,0.1);
-  color: var(--accent-dim);
-  border: 1px solid var(--accent-dim);
-}
-
-/* Clue box */
-.clue-box {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--accent-dim);
-  border-radius: 3px;
-  padding: 0.9rem 1rem;
-}
-.clue-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.5rem;
-}
-.clue-label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.48rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.clue-text {
-  font-size: 0.78rem;
-  line-height: 1.7;
-  color: var(--body);
-  font-style: italic;
-}
-
-/* Message */
-.msg {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  text-align: center;
-  min-height: 1.2rem;
-  color: var(--danger);
-}
-.msg.ok { color: var(--success); }
-
-/* Modal */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(7,11,20,0.85);
-  backdrop-filter: blur(8px);
-  z-index: 200;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  animation: fadeIn 0.2s ease;
-}
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-.modal-overlay.hidden { display: none; }
-
-.modal {
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  width: 100%;
-  max-width: 380px;
-  overflow: hidden;
-  animation: popIn 0.25s ease;
-}
-@keyframes popIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to   { transform: scale(1);    opacity: 1; }
-}
-.modal-header {
-  padding: 1.4rem 1.4rem 0;
-  text-align: center;
-}
-.modal-result {
-  font-family: 'Outfit', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
-  margin-bottom: 0.3rem;
-}
-.modal-result.win  { color: var(--success); }
-.modal-result.lose { color: var(--danger); }
-.modal-answer {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.65rem;
-  color: var(--muted);
-}
-.modal-answer span { color: var(--accent); font-size: 0.9rem; }
-
-.modal-score {
-  margin: 1rem 1.4rem;
-  background: var(--border);
-  border: 1px solid var(--border-dim);
-  border-radius: 3px;
-  padding: 0.8rem;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-.ms-item { display: flex; flex-direction: column; gap: 0.1rem; }
-.ms-val {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.9rem;
-  color: var(--accent);
-}
-.ms-lbl {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.45rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-/* Name entry */
-.modal-name {
-  padding: 0 1.4rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.modal-name label {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.52rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.name-input {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 0.6rem 0.8rem;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.8rem;
-  color: var(--body);
-  outline: none;
-  width: 100%;
-}
-.name-input:focus { border-color: var(--accent-dim); }
-
-.modal-acts {
-  display: flex;
-  gap: 0.5rem;
-  padding: 1rem 1.4rem 1.4rem;
-}
-.modal-acts .btn { flex: 1; }
-
-/* Leaderboard */
-.lb-section {
-  width: 100%;
-  background: var(--surface2);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-.lb-header {
-  padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--border-dim);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.lb-title {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-.lb-body { padding: 0.5rem 0; }
-.lb-empty {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-  color: var(--muted);
-  text-align: center;
-  padding: 1.2rem;
-  font-style: italic;
-}
-.lb-row {
-  display: grid;
-  grid-template-columns: 1.5rem 1fr auto auto auto;
-  gap: 0.5rem;
-  align-items: center;
-  padding: 0.4rem 1rem;
-  border-bottom: 1px solid var(--border-dim);
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.6rem;
-}
-.lb-row:last-child { border-bottom: none; }
-.lb-row.hl { background: rgba(167,139,250,0.06); }
-.lb-rank { color: var(--muted); }
-.lb-name { color: var(--body); }
-.lb-score { color: var(--accent); text-align: right; }
-.lb-g, .lb-h { color: var(--muted); text-align: right; font-size: 0.52rem; }
-
-/* Next puzzle */
-.next-box {
-  text-align: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 0.55rem;
-  color: var(--muted);
-  padding: 0.75rem 0 0.25rem;
-}
-.next-box span { color: var(--teal); }
-
-/* Shake */
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20%      { transform: translateX(-6px); }
-  40%      { transform: translateX(6px); }
-  60%      { transform: translateX(-4px); }
-  80%      { transform: translateX(4px); }
-}
-.shake { animation: shake 0.35s ease; }
-
-/* Share grid */
-.share-grid {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 1.1rem;
-  letter-spacing: 0.05em;
-  padding: 0.5rem 1.4rem;
-  color: var(--body);
-  text-align: center;
-  min-height: 1.5rem;
-}
-
-@media (max-width: 480px) {
-  .page { padding: 1.5rem 0.75rem 3rem; }
-  .game-title { font-size: 2.8rem; }
-  .status-bar { padding: 0.6rem 0.5rem; gap: 0.5rem; }
-  .si-val { font-size: 0.9rem; }
-}
-
-/* === Accessibility === */
-body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
-body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
-.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
-.correct::after,[data-feedback="correct"]::after{content:' \2713';font-size:0.85em;opacity:0.8}
-.incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' \2717';font-size:0.85em;opacity:0.8}
+@media (min-width:1024px){.container{max-width:clamp(640px,60vw,820px)}}
+body.accessible p,body.accessible .fb-line,body.accessible .dyk,body.accessible .clues li{line-height:1.6}
+@media (max-width:420px){body.accessible .hud-label{display:none}body.accessible .clues li{font-size:.88rem}}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 <script src="../../schools/assets/level.js"></script>
-<script>MaffsLevel.resolve({slug:'52dle',levels:['ks3','gcse'],fallback:'ks3',boards:['all']});</script>
 <script src="../../schools/assets/firebase-leaderboard.js"></script>
 <script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/answer.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. One puzzle a day, up to six guesses, each guess one mark. i = 0 types the answer; i >= 1 types the answer + 1 (wrong); then Guess.
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. One mark (question_answered) per number, when it is found or missed. 'answer' with i = 0 guesses the number right; with i >= 1 it guesses wrong six times, so the number is missed and the page waits on Next (MaffsNext.wrong).
 {
-  "ready": "!state.done && !MaffsLock.isLocked(document.getElementById('input-area'))",
+  "start": "D52.ui.start('run')",
+  "ready": "!!window.D52 && D52.ui.state() === 'asking'",
   "answer": [
-    "document.getElementById('guess-input').value = String(i === 0 ? puzzle.a : puzzle.a + 1);",
-    "document.getElementById('submit-btn').click();"
+    "D52.ui.answer(i === 0);"
   ]
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
-
-<nav>
-  <a class="nav-logo" href="/">Maffs Games</a>
-  <div style="display:flex;align-items:center;gap:0.75rem">
-    <button class="a11y-toggle" id="a11y-btn" title="Toggle accessible font">Aa</button>
-    <a class="nav-back" href="../../">← Back</a>
-  </div>
-</nav>
-
-<div class="page">
-
-  <div class="game-header">
-    <p class="game-kicker">Daily · Mathematical Deduction</p>
-    <h1 class="game-title">52<strong style="color:var(--teal)">-dle</strong></h1>
-    <p class="game-sub">Identify the hidden number. Six guesses. New puzzle every 24 hours.</p>
-    <p class="game-sub">After each guess you see ↑ Higher or ↓ Lower and a closeness word: Incredibly close (within 2), Very warm (within 10), Getting warmer (within 50), In the right area (within 200) or Far off. The colour of the closeness word shows how near you are, not whether to go higher or lower.</p>
-  </div>
-
-  <div class="status-bar">
-    <div class="si"><span class="si-val" id="sv-g">6</span><span class="si-lbl">Guesses Left</span></div>
-    <div class="si"><span class="si-val" id="sv-t">0:00</span><span class="si-lbl">Time</span></div>
-    <div class="si"><span class="si-val" id="sv-h">0</span><span class="si-lbl">Hints Used</span></div>
-    <div class="si"><span class="si-val" id="sv-s">—</span><span class="si-lbl">Est. Score</span></div>
-  </div>
-
-  <div class="clue-box" id="clue-box">
-    <div class="clue-header">
-      <span class="clue-label">Today's Clue</span>
-      <span class="cat-badge" id="cat-badge">—</span>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>52-dle</h1><div class="sub">Clue by clue, find the hidden number.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel menu-info">
+      <div class="mode-h">Level</div>
+      <div class="levels" id="levelList">
+        <button class="lvl-btn" type="button" data-level="ks3" aria-pressed="false">Foundation<span class="r">1 to 100</span></button>
+        <button class="lvl-btn" type="button" data-level="gcse" aria-pressed="false">GCSE<span class="r">1 to 1000</span></button>
+      </div>
+      <div class="mode-h">Play</div>
+      <div class="modes" id="modeList">
+        <button class="mode-btn primary" type="button" data-mode="run"><span class="t">Start: five numbers</span><span class="d">A run of five, out of 500, on the leaderboard for your level.</span></button>
+        <button class="mode-btn" type="button" data-mode="daily"><span class="t">Today’s number</span><span class="d" id="dailyNote">One number a day, the same for everyone. Share how you did.</span></button>
+      </div>
+      <div class="mode-h">How it works</div>
+      <p>A number is hidden. You get one clue about it to start: guess whenever you like, or ask for the next clue. Every clue is true of the number, and after the last clue only one number fits. Six guesses a number.</p>
+      <p>A wrong guess tells you <b>Higher</b> or <b>Lower</b>, how close you are, and which of your clues it breaks. The closeness words, nearest first: Incredibly close, Very warm, Getting warmer, In the right area, Far off. They scale with the range: within 1 of 100 is as close as within 10 of 1000. The colour of the closeness word shows how near you are, not whether to go higher or lower.</p>
+      <p>“Between 41 and 50” includes 41 and 50. Each number is worth 100, less 20 for each clue after the first and 10 for each wrong guess (at least 10 if you find it).</p>
     </div>
-    <div class="clue-text" id="clue-text">Loading puzzle…</div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
   </div>
 
-  <div class="guess-history" id="guess-history"></div>
-
-  <div class="input-area" id="input-area">
-    <div class="input-row">
-      <input class="guess-input" id="guess-input" type="text" inputmode="decimal" placeholder="Enter your guess…" autocomplete="off">
-      <button class="btn btn-gold" id="submit-btn" onclick="submitGuess()">Guess</button>
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label" id="hudNLabel">Number</div><div class="hud-val" id="hudN">1/5</div></div>
+      <div class="hud-item"><div class="hud-label">Guesses left</div><div class="hud-val" id="hudG">6</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     </div>
-    <div class="msg" id="msg-bar"></div>
-    <div class="hint-controls">
-      <button class="btn btn-teal" id="hint-btn" onclick="useHint()">Use Hint</button>
-      <span class="hint-cost">−150 pts per hint · 3 max</span>
+    <div class="card" id="card">
+      <div class="card-h" id="cardH">Clues</div>
+      <ol class="clues" id="clues"></ol>
+      <div id="ansBlock">
+        <form class="ans-row" id="guessRow" autocomplete="off">
+          <input id="guess" type="text" inputmode="numeric" aria-label="Your guess, a whole number" placeholder="Your guess" autocomplete="off">
+          <button class="btn solid" type="submit" id="guessBtn">Guess</button>
+        </form>
+        <div class="clue-row" style="margin-top:.4rem">
+          <button class="btn" type="button" id="clueBtn">Next clue (−20)</button>
+          <span class="worth">Worth <b id="worth">100</b></span>
+        </div>
+      </div>
+      <div class="msg" id="msg" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
     </div>
-    <div class="hint-area" id="hint-area"></div>
+    <ol class="guesses" id="guesses" aria-label="Your guesses, newest first" aria-live="polite"></ol>
   </div>
 
-  <div class="lb-section">
-    <div class="lb-header">
-      <span class="lb-title">Today's Leaderboard</span>
-      <button class="btn btn-ghost" style="padding:0.3rem 0.7rem;font-size:0.5rem;" onclick="renderLB('')">Refresh</button>
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Run done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 500</div>
+      <div class="share-grid" id="shareGrid" hidden></div>
+      <ul class="per" id="resPer"></ul>
+      <div class="stats" id="resStats"></div>
+      <div class="daily-list" id="dailyList" hidden>
+        <h3>Today’s list on this device</h3>
+        <ol id="dailyOl"></ol>
+        <div class="name-row" id="nameRow"><input id="nameIn" type="text" maxlength="20" placeholder="Your name" aria-label="Your name for today’s list"><button class="btn" type="button" id="saveBtn">Add to the list</button></div>
+      </div>
+      <div class="res-btns">
+        <button class="btn solid" id="againBtn" type="button">Play again</button>
+        <button class="btn" id="shareBtn" type="button" hidden>Share</button>
+        <button class="btn" id="menuBtn" type="button">Menu</button>
+      </div>
+      <p id="teacherInvite"></p>
     </div>
-    <div class="lb-body" id="lb-out"><div class="lb-empty">No scores yet — be the first.</div></div>
-    <div class="next-box">Next puzzle in <span id="next-timer">—</span></div>
-  </div>
-
-</div>
-
-<!-- Result Modal -->
-<div class="modal-overlay hidden" id="modal" data-mfg-aside="leaderboard">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="modal-result" id="modal-result">—</div>
-      <div class="modal-answer" id="modal-answer"></div>
-    </div>
-    <div class="share-grid" id="share-grid"></div>
-    <div class="modal-score" id="modal-score"></div>
-    <div class="modal-name" id="modal-name-section">
-      <label for="name-input">Your name for the leaderboard</label>
-      <input class="name-input" id="name-input" type="text" maxlength="20" placeholder="Anonymous">
-    </div>
-    <div class="modal-acts">
-      <button class="btn btn-ghost" onclick="shareResult()">Share</button>
-      <button class="btn btn-gold" id="modal-submit-btn" onclick="submitToLB()">Submit Score</button>
-      <button class="btn btn-ghost" onclick="closeModal()">Close</button>
-    </div>
-    <div style="padding:0 24px 20px"><p id="teacherInvite"></p></div>
   </div>
 </div>
 
 <script>
-// ─── ACCESSIBILITY TOGGLE ──────────────────────────────────────────
-(function(){
-  var btn=document.getElementById('a11y-btn');
-  if(localStorage.getItem('mfg_accessible')==='true'){document.body.classList.add('accessible');btn.classList.add('active');}
-  btn.addEventListener('click',function(){
-    document.body.classList.toggle('accessible');
-    var on=document.body.classList.contains('accessible');
-    localStorage.setItem('mfg_accessible',on);
-    btn.classList.toggle('active',on);
-  });
-})();
+(function () {
+  'use strict';
+  var SLUG = '52dle', RUN = 5, MAX_GUESSES = 6;
+  var LEVELS = ['ks3', 'gcse'];
+  var TOP = { ks3: 100, gcse: 1000 };
+  var LEVEL_NAME = { ks3: 'Foundation', gcse: 'GCSE' };
+  var level = MaffsLevel.resolve({ slug: '52dle', levels: ['ks3', 'gcse'], fallback: 'ks3' });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
 
-// ─── PUZZLES ─────────────────────────────────────────────────────────
-const PUZZLES = [
-  {a:52,  cat:"Cards & Combinatorics", clue:"I am the number of cards in a standard deck. 52! ≈ 8 × 10⁶⁷ — more than the number of atoms in the Earth (about 10⁵⁰).",hints:["I am less than 100","I am even","I am 4 × 13"]},
-  {a:89,  cat:"Fibonacci",      clue:"I am the 11th Fibonacci number. My reverse, 98, is NOT prime. I am the largest two-digit Fibonacci.",hints:["I am a Fibonacci number","I am between 80 and 100","I am odd"]},
-  {a:31,  cat:"Prime",          clue:"I am the 11th prime. Reverse me and you get 13, also prime. We are emirp twins.",hints:["I am prime","I am less than 40","My digits sum to 4"]},
-  {a:271, cat:"Euler's Number", clue:"The first three digits of e are 2.71… I am those digits without the decimal. e ≈ 2.71828…",hints:["I am between 200 and 300","I contain the digit 7","I am the first three digits of e"]},
-  {a:314, cat:"Pi",             clue:"π ≈ 3.14159… I am the first three significant digits of π, without the decimal point.",hints:["I am between 300 and 320","π ≈ 3.14…","I am 100 × (π to 2 d.p.)"]},
-  {a:144, cat:"Fibonacci",      clue:"I am 12 squared. I am also the 12th Fibonacci number — the only Fibonacci perfect square beyond 1.",hints:["I am a perfect square","I am a Fibonacci number","12 × 12"]},
-  {a:97,  cat:"Prime",          clue:"I am the largest two-digit prime. My reverse, 79, is also prime — we are emirp twins.",hints:["I am the largest two-digit prime","I am between 90 and 100","My digits sum to 16"]},
-  {a:53,  cat:"Prime",          clue:"I am the 16th prime. The nearest prime greater than 52 — one more than the cards in a deck.",hints:["I am prime","I am one more than 52","I am between 50 and 55"]},
-  {a:42,  cat:"Mathematical Culture", clue:"The answer to life, the universe, and everything. Also 6 × 7. Ten less than 52.",hints:["6 × 7","The Hitchhiker's Guide number","I am between 40 and 45"]},
-  {a:1618,cat:"Golden Ratio",   clue:"φ ≈ 1.618… The golden ratio, first four digits. Often said to appear throughout nature.",hints:["I am the golden ratio digits","I am between 1600 and 1650","φ ≈ 1.618"]},
-  {a:2704, cat:"Perfect Square", clue:"I am 52 squared. The square of the number of cards in a standard deck.",hints:["I am 52²","I am between 2700 and 2710","52 × 52"]},
-  {a:13,  cat:"Prime",          clue:"I am the 6th prime, and the 7th Fibonacci number. Considered unlucky by many, loved by mathematicians.",hints:["I am prime and Fibonacci","I am less than 20","I am 12 + 1"]},
-  {a:37,  cat:"Prime",          clue:"I am a permutable prime — rearrange my digits and you still get primes: 37, 73. We are emirp cousins.",hints:["I am prime","37 reversed is also prime","I am between 30 and 40"]},
-  {a:100, cat:"Perfect Square", clue:"10 squared. The basis of our decimal system. One hundred.",hints:["I am a perfect square","I am 10²","I am between 90 and 110"]},
-  {a:7,   cat:"Prime",          clue:"The 4th prime. The number of days in a week. Often named as people's favourite number in online polls.",hints:["I am a single digit prime","I am the 4th prime","I am less than 10"]},
-  {a:28,  cat:"Perfect Number", clue:"I am the second perfect number. My proper divisors (1,2,4,7,14) sum to me. 6 is the first — I am the second.",hints:["I am a perfect number","My proper divisors sum to me","I am between 20 and 35"]},
-  {a:1597, cat:"Fibonacci",     clue:"I am the 17th Fibonacci number. I am also prime, making me a Fibonacci prime.",hints:["I am Fibonacci and prime","I am between 1500 and 1600","F(17)"]},
-  {a:64,  cat:"Perfect Square", clue:"I am 8 squared. I am also 4 cubed. I am the only number (besides 1) that is both a perfect square and a perfect cube below 100.",hints:["I am 8²","I am 4³","I am between 60 and 70"]},
-  {a:23,  cat:"Prime",          clue:"I am the 9th prime. I am also the smallest number of people needed for a better than even chance that two of them share a birthday.",hints:["I am prime","I am the 9th prime","I am between 20 and 30"]},
-  {a:521, cat:"Mersenne Prime exponent", clue:"2⁵²¹ − 1 is a Mersenne prime. I am the exponent. One of the earliest discovered by computer in 1952.",hints:["I am a Mersenne prime exponent","I am between 500 and 530","2⁵²¹ − 1 is prime"]},
-];
-
-// ─── STATE ────────────────────────────────────────────────────────────
-function dayStr() {
-  const d = new Date();
-  return `${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
-}
-function dayIdx() {
-  const epoch = new Date('2026-01-01');
-  return Math.floor((new Date() - epoch) / 86400000) % PUZZLES.length;
-}
-
-const SKEY = () => '52dle_s_' + dayStr();
-const LKEY = () => '52dle_lb_' + dayStr();
-
-const MAX_GUESSES = 6;
-const MAX_HINTS   = 3;
-let puzzle, state, timerInterval;
-
-function defaultState() {
-  return { guesses:[], hintsUsed:0, done:false, won:false, startTime: Date.now(), elapsed:0 };
-}
-
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(SKEY())) || defaultState(); }
-  catch { return defaultState(); }
-}
-function saveState() {
-  localStorage.setItem(SKEY(), JSON.stringify(state));
-}
-
-// ─── SCORING ─────────────────────────────────────────────────────────
-const BASE=1000, G_COST=100, H_COST=150, T_K=0.015;
-function calcScore(guesses, hints, secs, won) {
-  if (!won) return 0;
-  const pen = Math.max(0, (guesses - 1) * G_COST + hints * H_COST);
-  const mult = 1 / (1 + T_K * Math.log(1 + secs));
-  return Math.max(1, Math.round((BASE - pen) * mult));
-}
-function liveScore(guesses, hints, secs) {
-  const pen = Math.max(0, guesses * G_COST + hints * H_COST);
-  return Math.max(0, Math.round((BASE - pen) * (1 / (1 + T_K * Math.log(1 + secs)))));
-}
-
-// ─── FEEDBACK ────────────────────────────────────────────────────────
-function getFeedback(guess, answer) {
-  const diff = guess - answer;
-  const absDiff = Math.abs(diff);
-  let cls, arrow, text;
-  if (diff === 0) {
-    return { cls:'fb-exact', arrow:'\u2713', text:'Exact match.' };
+/* 52DLE-LADDERS: written by scripts/gen-52dle.py; do not edit by hand */
+var LADDERS = {
+  ks3: {
+    1: "m7 m5 p m3 O|m9 m7 m5 O S|m7 m5 m3 O S",
+    2: "m9 E P|m7 E P|m4 E P",
+    3: "s m7 m5 O D1|s m7 m5 O B1-10|m7 m5 O P B1-10",
+    4: "E S D1|E B1-10 S",
+    5: "m7 m3 O P B1-10|s m7 m3 O B1-10|s m7 m3 O D1",
+    6: "E M3 D1|E M3 B1-10",
+    7: "s m5 m3 O D1|m5 m3 O P B1-10|m5 m3 O P D1",
+    8: "s M4 B1-10|s M4 D1",
+    9: "M3 S D1|M3 B1-10 S|M3 B1-20 S",
+    10: "m4 M5 U1|D2 m3 U1|D2 m4 U1",
+    11: "D2 O U2|s B1-20 L1|D2 P U2",
+    12: "M4 M6 B11-20|m10 E U3|M3 B1-20 L2",
+    13: "m7 B11-20 L3|O B1-20 U4|m9 B11-20 L3",
+    14: "m6 M7 B11-20|E B1-20 U5|s M7 B11-20",
+    15: "m6 B11-20 L5|O M5 U6|m4 B11-20 U6",
+    16: "m6 L6 S|m3 B11-20 U7|D2 B1-20 M8",
+    17: "B1-20 B11-20 U8|m7 B11-20 U8|P B1-20 U8",
+    18: "s M9 B11-20|M3 B1-20 L8|D2 M9 B11-20",
+    19: "m10 B11-20 U10|P B1-20 L9|m7 B11-20 L9",
+    20: "D2 p U2|m6 M10 U2|m8 p U2",
+    21: "O M7 U3|m9 M7 U3|D2 m6 U3",
+    22: "m4 B21-40 L2|m9 B21-30 U4|m4 B21-30 U4",
+    23: "P B21-40 U5|m6 B21-30 L3|B21-40 B21-30 U5",
+    24: "m10 M4 U6|p B21-30 L4|B21-40 M6 M8",
+    25: "m10 B21-30 S|O B21-40 U7|m7 B21-30 U7",
+    26: "B21-40 B21-30 L6|s B21-40 L6|m3 B21-30 U8",
+    27: "p M9 L7|s B21-30 U9|m7 B21-30 L7",
+    28: "m5 B21-30 U10|M4 B21-40 M7|B21-40 B21-30 U10",
+    29: "m7 B21-30 U11|m3 B21-40 L9|m9 B21-30 L9",
+    30: "p M10 U3|B21-40 M5 M6|s M5 U3",
+    31: "P B21-40 U4|m3 B21-40 L1|O B21-40 U4",
+    32: "m3 M4 U5|p B31-40 L2|m6 M4 U5",
+    33: "B21-40 B31-40 L3|s B31-40 U6|p B31-40 L3",
+    34: "s B31-40 U7|m3 B21-40 L4|m6 B31-40 U7",
+    35: "m6 B31-40 U8|m8 M7 L5|p M7 B31-40",
+    36: "B21-40 L6 S|m5 M6 B31-40|m8 M4 U9",
+    37: "P B21-40 U10|m7 B31-40 L7|m5 B31-40 U10",
+    38: "m3 B31-40 L8|p B21-40 U11|m6 B31-40 L8",
+    39: "M3 B31-40 U12|p B21-40 L9|M3 B31-40 L9",
+    40: "M4 M10 U4|m3 M10 U4|m7 M8 U4",
+    41: "m7 B41-50 L1|P B41-60 U5|m8 B41-50 L1",
+    42: "m8 B41-50 L2|m4 M6 M7|m10 M7 U6",
+    43: "P B41-50 L3|m4 B41-60 U7|m5 B41-50 U7",
+    44: "M4 B41-50 L4|E B41-60 U8|m6 M4 B41-50",
+    45: "m10 M9 B41-50|m6 B41-60 U9|m4 B41-50 U9",
+    46: "D2 B41-50 L6|m5 B41-60 U10|m4 B41-60 L6",
+    47: "m5 B41-50 L7|m8 B41-60 U11|m3 B41-50 U11",
+    48: "M6 B41-50 L8|m7 B41-60 M8|E M8 U12",
+    49: "m4 M7 S|O B41-60 U13|m6 B41-50 L9",
+    50: "m6 B41-60 L0|M5 M10 U5|p B41-60 U5",
+    51: "O B41-60 U6|M3 B41-60 L1|p B41-60 L1",
+    52: "m8 B51-60 L2|E B41-60 U7|E B51-60 U7",
+    53: "m5 B51-60 L3|P B41-60 U8|m7 B51-60 U8",
+    54: "m5 M9 B51-60|m4 M3 L4|E B41-60 U9",
+    55: "m10 B51-60 U10|m3 B41-60 L5|D2 B51-60 L5",
+    56: "m5 B51-60 U11|m3 M7 M8|M4 B41-60 L6",
+    57: "m6 B41-60 U12|m4 B51-60 L7|m6 B51-60 U12",
+    58: "s B41-60 U13|E B51-60 L8|D2 B51-60 U13",
+    59: "D2 B41-60 U14|s B51-60 L9|P B41-60 U14",
+    60: "D2 M10 U6|M4 M6 L0|m7 M10 U6",
+    61: "m9 B61-70 L1|m10 B61-80 U7|m7 B61-70 L1",
+    62: "m6 B61-80 L2|D2 B61-70 U8|m6 B61-70 U8",
+    63: "M3 M9 L3|s M7 U9|s M9 B61-70",
+    64: "M4 M8 U10|B61-80 L4 S|m5 M8 U10",
+    65: "B61-80 B61-70 U11|D2 M5 U11|O M5 B61-70",
+    66: "m10 B61-70 L6|m4 M6 U12|p B61-70 U12",
+    67: "m6 P U13|D2 B61-70 L7|m9 B61-70 U13",
+    68: "m8 M4 U14|m5 B61-70 L8|m7 M4 U14",
+    69: "B61-80 B61-70 U15|M3 B61-80 L9|m4 B61-70 L9",
+    70: "B61-80 M7 U7|M5 M7 L0|D2 M10 U7",
+    71: "P B61-80 U8|O B61-80 U8",
+    72: "s B71-80 U9|B61-80 M6 M9|M3 M8 L2",
+    73: "P B61-80 U10|m3 B71-80 L3|O B71-80 U10",
+    74: "m7 B71-80 U11|m4 B61-80 L4|m6 B71-80 L4",
+    75: "m4 M5 B71-80|m6 B61-80 U12|m6 M5 U12",
+    76: "m8 B71-80 U13|m3 B61-80 L6|D2 M4 U13",
+    77: "m10 M7 B71-80|m4 B61-80 U14|p m3 L7",
+    78: "m8 M6 B71-80|m4 E U15|M3 B61-80 L8",
+    79: "m7 B71-80 L9|P B61-80 U16|m5 B71-80 U16",
+    80: "M5 M10 U8|m9 M10 U8|M4 M10 U8",
+    81: "m8 M9 L1|M3 L1 S|M3 M9 L1",
+    82: "m9 B81-90 L2|E B81-100 U10|D2 B81-90 U10",
+    83: "m6 B81-90 L3|P B81-100 U11|P B81-100 L3",
+    84: "M4 M7 U12|D2 B81-90 L4|m5 B81-90 U12",
+    85: "B81-100 B81-90 U13|m10 B81-90 L5|m4 B81-90 U13",
+    86: "m9 B81-90 L6|m4 E U14|s B81-90 U14",
+    87: "m10 B81-90 L7|m4 B81-100 U15|O B81-90 L7",
+    88: "E M8 B81-90|m5 p U16|m7 B81-100 L8",
+    89: "m10 P U17|m9 B81-90 L9|s O U17",
+    90: "B81-100 M9 L0|s M10 U9|M5 M9 M10",
+    91: "O B81-100 M7|m3 M7 L1|s B81-100 L1",
+    92: "M4 B81-100 U11|D2 B91-100 L2|m8 B91-100 L2",
+    93: "D2 B91-100 L3|m7 B81-100 U12|B81-100 B91-100 U12",
+    94: "m9 B91-100 U13|m7 B81-100 L4|E B81-100 U13",
+    95: "m6 B91-100 L5|p M5 U14|D2 M5 B91-100",
+    96: "B81-100 M6 L6|D2 M4 U15|m10 M8 B91-100",
+    97: "m7 B91-100 U16|P B81-100 L7|m4 B91-100 U16",
+    98: "m5 E U17|m4 M7 L8|m5 p U17",
+    99: "m5 p U18|s B91-100 L9|M3 B81-100 L9",
+    100: "E L0 D3|m9 M4 U1|m7 M10 S"
+  },
+  gcse: {
+    1: "O T C|m6 T C|m4 T C",
+    2: "m12 E P|m4 E P|m5 E P",
+    3: "m10 F2 T|m8 P T|O P T",
+    4: "m12 E F3|m9 E F3|m11 E F3",
+    5: "t m7 O P D1|s t m7 O D1|t m7 O F2 D1",
+    6: "c F4 D1|E M3 F4|m8 F4 D1",
+    7: "m5 m3 O P D1|s m5 m3 O D1|s t m5 O D1",
+    8: "E C D1|m7 F4 M4|M4 C D1",
+    9: "t M3 F3|m8 M3 F3|m7 M3 F3",
+    10: "F4 B1-200 U1|B1-100 L0 T|F4 B1-50 U1",
+    11: "P D2 U2|m5 D2 U2|O D2 U2",
+    12: "M6 F6 U3|M4 M6 F6|F6 B1-100 U3",
+    14: "F4 D2 U5|M7 L4 B1-50|M7 B1-100 U5",
+    15: "D2 T U6|M3 F4 M5|M5 B1-50 U6",
+    16: "L6 B1-50 F5|m5 U7 S|B1-200 U7 F5",
+    17: "F2 B1-50 U8|P B1-50 U8",
+    18: "E F6 U9|M9 L8 B1-50|m12 M6 F6",
+    20: "B1-200 F6 U2|m11 D2 U2|F6 B1-100 U2",
+    21: "M7 B1-50 U3|D2 T U3|F4 M7 U3",
+    22: "D2 M11 U4|F4 L2 B1-50|B1-100 L2 M11",
+    24: "m7 F8 M12|M8 L4 B1-50|F8 M8 U6",
+    25: "M5 D2 S|m4 L5 F3|m9 M5 F3",
+    26: "m4 E B1-50 U8",
+    27: "D2 U9 C|M3 L7 B1-50|m11 F4 M9",
+    28: "U10 B1-50 T|M4 M7 F6|M4 M7 B1-50",
+    30: "F8 M6 L0|M5 B1-50 U3|F8 M6 M10",
+    32: "s M8 F6|M4 B1-100 U5|m5 M8 F6",
+    33: "F4 L3 B1-50|B1-100 M11 U6|M3 M11 B1-50",
+    34: "F4 B1-50 U7|F4 D2 U7|F4 B1-100 U7",
+    35: "M7 B1-50 U8|M7 B1-100 U8|M7 B1-100 L5",
+    36: "c M6 F9|M12 B1-50 T|M9 B1-100 L6",
+    38: "F4 U11 B1-50|p U11 B1-50|E U11 B1-50",
+    39: "m4 U12 B1-50|m8 U12 B1-50|O U12 B1-50",
+    40: "M4 F8 U4|M8 L0 B1-50|M10 B1-50 U4",
+    42: "M7 L2 D2|M7 L2 B1-50|M7 D2 U6",
+    43: "F2 D2 B1-50 U7|m7 F2 B1-50 U7|P D2 B1-50 U7",
+    44: "F6 B1-100 U8|L4 M11 B1-50|F6 L4 D2",
+    45: "M9 B1-100 L5|M5 F6 U9|M9 L5 D2",
+    46: "F4 U10 B1-50",
+    48: "c U12 F10|L8 D2 M12|p M12 F10",
+    49: "B1-100 U13 S|m3 M7 F3|m10 U13 B1-50",
+    50: "m4 F6 U5|m4 F6 M10|m4 F6 L0",
+    51: "m7 F4 L1 D2|t F4 L1 D2|t F4 B1-100 L1",
+    52: "F6 B1-100 U7|F6 B51-100 U7|F6 D2 U7",
+    54: "E F8 M9|F8 D2 U9|F8 M9 B51-100",
+    55: "B1-100 M11 U10|L5 B51-100 T|M5 M11 B51-100",
+    56: "F8 B1-100 U11|M7 L6 B51-100|M7 B1-100 U11",
+    58: "F4 L8 B51-100",
+    59: "F2 B1-100 U14|F2 D2 U14|P D2 U14",
+    60: "M10 B51-100 U6|M5 D2 M12|L0 M12 B51-100",
+    61: "P B51-100 U7|F2 B51-100 U7|O B51-100 U7",
+    62: "F4 B51-100 U8",
+    63: "M7 M9 B1-100|F6 L3 D2|F6 B1-100 L3",
+    64: "U10 B51-100 S|m3 B1-200 F7|B1-100 L4 C",
+    65: "M5 D2 U11|M5 B1-100 U11|M5 U11 B51-100",
+    66: "B1-200 U12 T|M6 D2 M11|M11 U12 B51-100",
+    67: "F2 D2 U13|P B1-100 U13|P U13 B51-100",
+    68: "M4 B1-100 U14|M4 D2 U14|M4 U14 B51-100",
+    69: "F4 L9 B51-100",
+    70: "F8 M7 L0|M5 B51-100 U7|M7 D2 U7",
+    72: "M3 L2 B51-100|M8 M9 B1-100|L2 F12 B51-100",
+    73: "P U10 B51-100|F2 U10 B51-100",
+    74: "m5 F4 U11 B51-100|E F4 U11 B51-100|m4 E U11 B51-100",
+    75: "F6 D2 U12|M3 L5 B51-100|F6 B1-100 U12",
+    76: "F6 U13 B51-100|F6 B1-100 L6|F6 L6 D2",
+    77: "M7 M11 B51-100|M7 U14 B51-100|B1-200 M7 U14",
+    78: "M6 L8 B51-100|F8 D2 U15|U15 B51-100 T",
+    80: "M4 M5 F10|M8 M10 B51-100|E B51-100 F10",
+    81: "M3 B51-100 F5|M9 B1-100 L1|M9 B1-100 F5",
+    82: "t F4 U10 B51-100|s E U10 B51-100|m4 E U10 B51-100",
+    83: "P U11 B51-100|F2 U11 B51-100",
+    84: "M7 D2 M12|F12 U12 B51-100|L4 M12 B51-100",
+    85: "M5 D2 U13|M5 B1-100 U13|M5 U13 B51-100",
+    86: "F4 L6 B51-100",
+    88: "E D2 U16|B1-100 L8 M11|M4 D2 U16",
+    89: "P D2 U17|O B1-100 U17|m7 B1-100 U17",
+    90: "M5 M9 B51-100|m12 F12 D2|B1-100 M10 U9",
+    91: "L1 B51-100 T|M7 L1 B51-100|M7 U10 B51-100",
+    92: "F6 D2 U11|F6 B1-100 U11|F6 U11 B51-100",
+    93: "F4 L3 B51-100",
+    95: "M5 D2 U14|M5 U14 B51-100|M5 B1-100 U14",
+    96: "B1-100 M12 U15|L6 F12 D2|M4 U15 B51-100",
+    98: "F6 U17 B51-100|p D2 U17|p B1-100 U17",
+    99: "m7 B1-100 U18|M9 M11 B51-100|B1-200 F6 L9",
+    100: "B1-200 M10 S|m12 F9 U1|m8 L0 F9",
+    101: "D3 O U2|D3 m10 U2|m11 O U2",
+    102: "F8 L2 B101-150|F8 B101-200 U3|D3 F8 U3",
+    103: "P B101-200 U4|P B101-150 U4|F2 B101-150 U4",
+    104: "F8 B101-150 U5|F8 M8 U5|M4 F8 U5",
+    105: "L5 B101-150 T|M5 F8 U6|M7 B101-200 U6",
+    107: "F2 B101-150 U8|P B101-200 U8|F2 B101-200 U8",
+    108: "M9 L8 B101-150|L8 M12 B101-150|L8 F12 B101-150",
+    110: "F8 M11 B101-150|m4 M5 U2|M11 B101-150 U2",
+    111: "O B101-200 U3|O B101-150 U3|m6 B101-200 U3",
+    112: "m10 F10 U4|M7 M8 B101-150|B101-200 F10 U4",
+    114: "m5 F8 B101-150 U6|E F8 B101-150 U6|t F8 B101-200 U6",
+    115: "M5 B101-150 U7",
+    116: "M4 B101-150 U8|F6 B101-200 L6|F6 B101-200 U8",
+    117: "F6 U9 B101-150|M9 B101-200 L7|M9 L7 B101-150",
+    118: "F4 L8 B101-150",
+    119: "M7 U11 B101-150|M7 L9 B101-150",
+    120: "E B101-150 F16|p M8 U3|B101-200 M12 T",
+    121: "m6 B101-150 F3|L1 M11 S|B101-200 U4 F3",
+    122: "F4 B101-200 U5|F4 B101-150 U5",
+    123: "M3 L3 B101-150",
+    124: "F6 B101-200 U7|F6 B101-150 U7|M4 B101-150 U7",
+    125: "B101-200 B101-150 C|B101-200 U8 C|m7 B101-200 C",
+    126: "L6 F12 B101-150|M7 B101-200 U9|M7 U9 B101-150",
+    128: "M8 B101-200 U11|F8 U11 B101-150|M8 L8 B101-150",
+    129: "F4 U12 B101-150|M3 L9 B101-150",
+    130: "F8 B101-150 U4|B101-200 M10 U4|M5 B101-150 U4",
+    132: "B101-200 L2 F12|M6 M11 B101-150|L2 M12 B101-150",
+    133: "M7 L3 B101-150|M7 B101-200 U7|M7 B101-150 U7",
+    134: "F4 L4 B101-150",
+    135: "F8 B101-200 U9|M9 L5 B101-150|F8 U9 B101-150",
+    136: "F8 M8 T|M4 U10 B101-150|M8 U10 B101-150",
+    137: "P U11 B101-150|F2 U11 B101-150",
+    138: "F8 U12 B101-150|E U12 B101-150|M6 U12 B101-150",
+    139: "m4 U13 B101-150|F2 U13 B101-150|P U13 B101-150",
+    140: "M7 B101-200 U5|m3 F12 B101-150|M7 B101-150 U5",
+    143: "B101-200 M11 U8|L3 M11 B101-150|M11 B101-150 U8",
+    144: "M8 B101-150 F15|B101-200 L4 M12|B101-200 M12 F15",
+    145: "M5 U10 B101-150",
+    146: "m4 E U11 B101-150|E F4 U11 B101-150|E F4 B101-200 U11",
+    147: "M7 F6 U12|M7 L7 B101-150|F6 B101-200 U12",
+    148: "M4 U13 B101-150|p U13 B101-150|F6 U13 B101-150",
+    149: "t U14 B101-150|F2 U14 B101-150|P U14 B101-150",
+    150: "m12 F12 U6|m4 F12 U6|B101-200 M10 U6",
+    151: "P B101-200 U7|F2 B101-200 U7",
+    152: "M4 B151-200 U8|M4 F8 U8|M8 B151-200 U8",
+    153: "M9 B101-200 L3|M9 L3 T|F6 B101-200 L3",
+    154: "M7 M11 B151-200|M7 B101-200 M11|M7 B101-200 L4",
+    155: "M5 U11 B151-200|F4 U11 B151-200|M5 B101-200 U11",
+    156: "F12 M12 B151-200|B101-200 L6 M12|L6 F12 B151-200",
+    159: "F4 L9 B151-200",
+    160: "M8 F12 U7|E B151-200 U7|M4 B151-200 U7",
+    161: "M7 B101-200 L1|F4 B151-200 U8|M7 L1 B151-200",
+    162: "m4 B1-200 F10|M9 L2 B151-200|m12 M6 F10",
+    164: "F6 U11 B151-200|F6 B101-200 U11|M4 U11 B151-200",
+    165: "B101-200 M11 U12|L5 M11 B151-200|M5 M11 B151-200",
+    166: "F4 U13 B151-200|F4 B101-200 U13|F4 L6 B151-200",
+    167: "P U14 B151-200|F2 U14 B151-200",
+    168: "M7 B101-200 U15|M8 B151-200 F16|B1-200 U15 F16",
+    169: "m7 B151-200 F3|B101-200 L9 S|O B151-200 S",
+    170: "M5 B151-200 U8|B101-200 M10 U8|M10 B151-200 U8",
+    171: "B1-200 F6 L1|F6 L1 T|F6 B101-200 L1",
+    172: "F6 L2 B151-200|M4 U10 B151-200|F6 U10 B151-200",
+    174: "M3 L4 B151-200|M6 L4 B151-200",
+    175: "M7 U13 B151-200|F6 B101-200 L5|M7 L5 B151-200",
+    176: "B1-200 U14 F10|M8 B101-200 M11|m6 B151-200 F10",
+    177: "M3 L7 B151-200",
+    178: "m7 E U16 B151-200|s m11 B101-200 U16|m4 E B101-200 U16",
+    180: "c B1-200 F18|M5 M6 B151-200|M9 B101-200 L0",
+    182: "F8 U11 B151-200|M7 L2 B151-200|M7 U11 B151-200",
+    183: "F4 U12 B151-200|F4 L3 B151-200",
+    184: "B1-200 M8 U13|M4 U13 B151-200|M8 U13 B151-200",
+    185: "M5 B101-200 U14|M5 U14 B151-200",
+    186: "F8 L6 B151-200",
+    187: "B101-200 M11 U16|F4 M11 B151-200|M11 U16 B151-200",
+    188: "E U17 B151-200|E B101-200 U17|M4 B1-200 U17",
+    189: "B1-200 F8 U18|M9 B101-200 L9|M7 B101-200 U18",
+    190: "F8 L0 T|M10 U10 B151-200|m3 B151-200 T",
+    192: "M3 L2 F14|M8 B101-200 U12|B1-200 B151-200 F14",
+    194: "F4 L4 B151-200",
+    195: "B1-200 M5 U15|M5 U15 B151-200|M5 B101-200 U15",
+    196: "D3 B101-200 F9|M4 B151-200 S|B1-200 M7 U16",
+    198: "F12 M11 B151-200|m7 B101-200 U18|m4 F12 B151-200",
+    199: "m5 B1-200 U19|P B151-200 U19|m9 B101-200 U19",
+    200: "m11 F12 U2|t F12 U2|s F12 U2",
+    201: "m10 B201-250 U3|m5 B201-300 U3|F4 B201-300 U3",
+    202: "F4 L2 B201-250|F4 B201-300 U4|F4 B201-250 U4",
+    203: "B201-400 M7 U5|M7 B201-250 U5|M7 L3 B201-250",
+    204: "L4 M12 B201-250|B201-400 F12 U6|F12 B201-250 U6",
+    205: "F4 M5 B201-300 U7|F4 M5 B201-250 U7|O F4 B201-250 U7",
+    206: "m5 F4 B201-250 U8|E F4 B201-300 U8|m5 F4 B201-300 U8",
+    207: "F6 L7 B201-250|M9 L7 B201-250|F6 B201-300 L7",
+    208: "M8 U10 F10|m3 U10 F10|D3 B201-250 F10",
+    209: "M11 U11 B201-250|F4 M11 B201-250|L9 M11 B201-250",
+    210: "M7 L0 B201-250|m4 F16 U3|D3 M7 U3",
+    211: "P B201-250 U4|B201-400 F2 U4|P B201-300 U4",
+    212: "M4 B201-250 U5|D3 F6 U5|B201-400 F6 U5",
+    213: "F4 B201-300 U6|F4 B201-250 U6",
+    214: "F4 L4 B201-250",
+    215: "M5 B201-250 U8",
+    216: "M8 U9 F16|m10 B201-250 C|M9 B201-300 L6",
+    217: "M7 U10 B201-250|M7 L7 B201-250",
+    218: "F4 L8 B201-250",
+    220: "B201-300 M10 M11|m9 F12 U4|M10 F12 B201-250",
+    221: "m7 F4 B201-300 U5|p m3 L1 B201-250|m7 O B201-250 U5",
+    222: "M6 L2 B201-250|M3 L2 B201-250",
+    224: "M8 B201-300 F12|M4 M7 U8|M8 B201-300 U8",
+    225: "M3 M5 F9|m4 B201-250 S|M9 B201-300 L5",
+    226: "E F4 U10 B201-250|m4 E U10 B201-250",
+    227: "F2 L7 B201-250|P L7 B201-250|P U11 B201-250",
+    228: "L8 M12 B201-250|B201-300 F12 U12|F12 U12 B201-250",
+    229: "F2 U13 B201-250|P U13 B201-250",
+    230: "F8 B201-300 U5|F8 B201-250 U5|M5 B201-300 U5",
+    231: "M7 B201-300 L1|B201-400 T U6|O F8 B201-250",
+    232: "M4 F8 U7|M8 L2 B201-250|M8 B201-300 U7",
+    233: "P B201-250 U8|F2 B201-250 U8",
+    234: "m4 F12 B201-250|M9 B201-300 L4|B201-300 F12 U9",
+    235: "M5 U10 B201-250",
+    236: "F6 B201-300 L6|M4 U11 B201-250|F6 L6 B201-250",
+    237: "M3 F4 L7 B201-250|m9 M3 L7 B201-250",
+    238: "M7 B201-300 U13|F8 U13 B201-250|M7 B201-300 L8",
+    239: "F2 U14 B201-250|m8 U14 B201-250|m4 U14 B201-250",
+    240: "M10 B201-250 U6|m7 B201-300 F20|E U6 F20",
+    242: "F6 M11 B201-250|F6 L2 M11|F6 B201-250 U8",
+    243: "M9 L3 B201-250|M9 B201-300 L3|F6 L3 B201-250",
+    244: "F6 B201-300 U10|F6 U10 B201-250|F6 L4 B201-250",
+    245: "M7 F6 B201-300|M5 U11 B201-250|M7 U11 B201-250",
+    246: "F8 L6 B201-250|F8 U12 B201-250",
+    247: "F4 U13 B201-250",
+    248: "p U14 B201-250|F8 U14 B201-250|M4 U14 B201-250",
+    249: "F4 U15 B201-250|m5 U15 B201-250|m8 U15 B201-250",
+    250: "B201-300 M10 U7",
+    251: "m4 B251-300 U8|F2 B251-300 U8|O B251-300 U8",
+    252: "B201-300 L2 M12|B201-400 M7 F18|M4 U9 B251-300",
+    253: "M11 B251-300 T|B201-300 M11 U10|M11 U10 B251-300",
+    254: "F4 U11 B251-300",
+    255: "M5 B201-300 U12|M5 U12 B251-300",
+    256: "M4 B201-400 F9|E B251-300 S|M8 B201-300 U13",
+    258: "F8 L8 B251-300",
+    259: "M7 B201-300 L9|M7 L9 B251-300|M7 B201-300 U16",
+    260: "m6 F12 B251-300|B201-300 M10 U8|M10 F12 B251-300",
+    261: "F6 B201-300 L1|O U9 B251-300|F6 L1 B251-300",
+    262: "F4 L2 B251-300",
+    264: "B201-300 U12 F16|L4 M12 B251-300|m5 B251-300 F16",
+    265: "M5 B201-300 U13|M5 U13 B251-300",
+    266: "M7 L6 B251-300|M7 B201-300 L6|F8 U14 B251-300",
+    267: "F4 U15 B251-300",
+    268: "F6 L8 B251-300|M4 B201-300 U16|F6 B201-300 U16",
+    269: "P L9 B251-300|F2 B201-300 U17|P U17 B251-300",
+    270: "M9 B251-300 F16|B201-300 M10 U9|M9 M10 B251-300",
+    271: "F2 B201-300 U10|F2 U10 B251-300|P B201-300 U10",
+    272: "s B251-300 F10|M8 B201-300 U11|E B251-300 F10",
+    273: "M7 U12 B251-300|F8 B201-300 L3|M3 L3 B251-300",
+    274: "E F4 B201-300 U13|m4 E U13 B251-300|E F4 U13 B251-300",
+    275: "M5 F6 B251-300|B201-300 L5 M11|M5 U14 B251-300",
+    276: "M12 U15 B251-300|B201-400 L6 T|U15 B251-300 T",
+    277: "F2 U16 B251-300|F2 B201-300 U16|P U16 B251-300",
+    278: "m8 E B201-300 U17|m8 E U17 B251-300|m7 F4 B201-300 U17",
+    279: "M9 B201-300 L9|F6 U18 B251-300|F6 L9 B251-300",
+    280: "M7 M10 B251-300|B201-300 U10 F16|M4 U10 B251-300",
+    282: "F8 L2 B251-300",
+    283: "F2 U13 B251-300|P U13 B251-300",
+    284: "M4 U14 B251-300|F6 L4 B251-300",
+    285: "M5 U15 B251-300|M5 B201-300 U15",
+    286: "F8 U16 B251-300|B201-300 L6 M11|M11 U16 B251-300",
+    287: "M7 L7 B251-300|B201-400 M7 U17|M7 B201-300 U17",
+    288: "M8 M9 F18|E B201-300 U18|L8 M12 B251-300",
+    289: "m8 B251-300 S|m11 U19 F3|B201-400 L9 S",
+    290: "F8 B201-300 U11|M10 U11 B251-300|M5 U11 B251-300",
+    291: "F4 L1 B251-300|F4 U12 B251-300",
+    292: "B201-400 F6 U13|F6 U13 B251-300|F6 L2 B251-300",
+    294: "M7 F12 B251-300|L4 F12 B251-300|M7 U15 B251-300",
+    295: "M5 U16 B251-300|M5 B201-300 U16",
+    296: "F8 U17 B251-300|B201-400 F8 U17|M4 B201-300 U17",
+    297: "M9 M11 B251-300|B201-400 F8 U18|M9 L7 B251-300",
+    298: "s B251-300 U19|F4 B201-400 U19|E B201-300 U19",
+    299: "m6 B251-300 U20|O B201-300 U20|m12 B251-300 U20",
+    300: "B201-400 L0 F18|E T F18|c T F18",
+    301: "B201-400 M7 U4|m4 M7 U4|F4 M7 U4",
+    302: "F4 L2 B301-350|F4 B301-400 U5|F4 B301-350 U5",
+    303: "m9 M3 L3 B301-350|M3 F4 L3 B301-350",
+    304: "s B301-350 F10|M8 B301-400 U7|E U7 F10",
+    305: "F4 M5 B301-400 U8|F4 M5 B301-350 U8|m7 M5 B301-350 U8",
+    306: "B301-400 L6 F12|L6 F12 B301-350|M9 L6 B301-350",
+    307: "P B301-400 U10|P U10 B301-350|F2 B301-400 U10",
+    308: "L8 M11 B301-350|F12 M11 U11|M4 M11 B301-350",
+    310: "F8 M10 B301-350|F8 L0 B301-350|F8 B301-350 U4",
+    311: "O B301-400 U5|F2 B301-350 U5|F2 B301-400 U5",
+    312: "M8 F16 U6|L2 M12 B301-350|M8 B301-350 U6",
+    313: "F2 L3 B301-350|P L3 B301-350",
+    314: "E F4 B301-350 U8|E F4 B301-400 U8",
+    315: "O F12 B301-350|M7 B301-400 U9|M5 M9 B301-350",
+    316: "M4 U10 B301-350|F6 L6 B301-350",
+    317: "F2 U11 B301-350|P U11 B301-350",
+    318: "F8 M6 B301-350",
+    319: "B301-400 L9 M11|L9 M11 B301-350|B301-400 M11 U13",
+    320: "M5 B301-350 F14|M8 M10 U5|M8 U5 F14",
+    321: "M3 L1 B301-350",
+    322: "M7 B301-400 U7|F8 L2 B301-350|F8 B301-350 U7",
+    323: "c m3 F4 B301-400 L3|m11 m5 O B301-350 U8|m7 m3 F4 L3 B301-350",
+    324: "m8 S F15|M6 L4 B301-350|M12 B301-350 F15",
+    325: "F6 B301-350 T|B201-400 B301-350 T|M5 B301-400 T",
+    326: "m5 F4 U11 B301-350|m4 E U11 B301-350|E F4 U11 B301-350",
+    327: "p L7 B301-350|F4 L7 B301-350|M3 L7 B301-350",
+    328: "F8 U13 B301-350|M4 U13 B301-350|F8 B301-400 U13",
+    329: "M7 U14 B301-350|M7 L9 B301-350|F4 U14 B301-350",
+    330: "M3 M11 B301-350|M5 B301-400 U6|B301-400 M11 F16",
+    332: "M4 B301-400 U8|F6 L2 B301-350|F6 B301-350 U8",
+    333: "M3 F6 B301-350|M9 B301-400 L3|M9 F6 B301-350",
+    334: "m7 F4 U10 B301-350|c F4 B301-400 U10|E F4 U10 B301-350",
+    335: "M5 U11 B301-350",
+    336: "s B301-350 F20|M7 B301-400 U12|M7 U12 B301-350",
+    337: "F2 U13 B301-350|P U13 B301-350",
+    338: "F6 L8 B301-350|E U14 B301-350|F6 U14 B301-350",
+    339: "m6 U15 B301-350|m12 U15 B301-350|O U15 B301-350",
+    340: "B301-400 M10 U7|m8 F12 U7|M10 B301-350 U7",
+    341: "L1 M11 B301-350|B301-400 L1 M11|M11 B301-350 U8",
+    342: "M9 B301-400 L2|L2 F12 B301-350|M9 L2 B301-350",
+    343: "m8 B301-400 C|M7 U10 B301-350|m12 B301-400 C",
+    344: "M8 U11 B301-350|F8 B301-400 U11|F8 U11 B301-350",
+    345: "M5 U12 B301-350|O F8 B301-350|F8 L5 B301-350",
+    346: "m11 F4 U13 B301-350|E F4 U13 B301-350|m8 E U13 B301-350",
+    347: "P U14 B301-350|F2 U14 B301-350",
+    348: "M6 U15 B301-350|B301-400 L8 M12|M4 U15 B301-350",
+    349: "m3 U16 B301-350|c U16 B301-350|m10 U16 B301-350",
+    350: "M7 B301-400 U8|B301-400 F12 U8|M7 B301-400 L0",
+    351: "M9 B301-400 L1|B201-400 F8 U9|B201-400 U9 T",
+    352: "F12 U10 B351-400|B301-400 L2 M11|M8 F12 U10",
+    353: "F2 U11 B351-400|P U11 B351-400",
+    354: "F8 U12 B351-400",
+    355: "M5 B301-400 U13|M5 U13 B351-400",
+    356: "F6 L6 B351-400|F6 U14 B351-400",
+    357: "M7 U15 B351-400|F8 B301-400 L7|M7 B301-400 L7",
+    359: "P U17 B351-400|F2 B301-400 U17|F2 U17 B351-400",
+    360: "M8 B301-400 F24|M10 U9 B351-400|B201-400 M12 F24",
+    361: "m3 B351-400 F3|D3 U10 S|B201-400 B351-400 F3",
+    362: "m4 E U11 B351-400|m7 F4 U11 B351-400|m5 E U11 B351-400",
+    363: "F6 M11 U12|F6 U12 B351-400|F6 L3 B351-400",
+    364: "F12 U13 B351-400|M7 B301-400 L4|M4 U13 B351-400",
+    365: "M5 U14 B351-400|M5 B301-400 U14|F4 U14 B351-400",
+    366: "m12 M6 L6 B351-400|E F8 B301-400 U15|E F8 U15 B351-400",
+    367: "F2 U16 B351-400|P U16 B351-400",
+    368: "M8 L8 B351-400|B201-400 U17 F10|M4 B351-400 F10",
+    369: "F6 B301-400 L9|F6 L9 B351-400|M9 B301-400 L9",
+    370: "B301-400 M10 U10|F8 L0 B351-400|B201-400 F8 U10",
+    371: "F4 M7 B351-400|M7 L1 B351-400|M7 U11 B351-400",
+    372: "F12 U12 B351-400|M4 U12 B351-400|L2 M12 B351-400",
+    373: "F2 U13 B351-400|P U13 B351-400",
+    374: "F8 U14 B351-400|B301-400 L4 M11|L4 M11 B351-400",
+    375: "M5 B301-400 U15|M3 L5 B351-400|M5 U15 B351-400",
+    376: "F8 M8 B351-400|M4 B301-400 U16|M8 L6 B351-400",
+    377: "F4 L7 B351-400",
+    378: "M7 B301-400 U18|B351-400 F16 T|M7 U18 T",
+    380: "M10 U11 B351-400|M5 U11 B351-400|M5 F12 B351-400",
+    381: "F4 U12 B351-400",
+    382: "E F4 U13 B351-400|m4 E U13 B351-400|m7 E U13 B351-400",
+    383: "P U14 B351-400|F2 U14 B351-400",
+    384: "U15 B351-400 F16|B201-400 M8 U15|L4 M12 B351-400",
+    385: "M5 B301-400 U16|M7 M11 B351-400|M11 U16 B351-400",
+    386: "F4 L6 B351-400",
+    387: "M9 L7 B351-400|M9 B301-400 L7|F6 L7 B351-400",
+    388: "F6 B301-400 U19|p B301-400 U19|F6 B351-400 U19",
+    389: "O B351-400 U20|P B351-400 U20|F2 B351-400 U20",
+    390: "M10 B351-400 F16|B301-400 M10 U12|M5 B351-400 F16",
+    391: "s m7 m3 L1 B351-400|p m5 O U13 B351-400|m7 m3 F4 L1 B351-400",
+    392: "M7 U14 B351-400|B301-400 F12 U14|M8 B301-400 U14",
+    393: "F4 L3 B351-400|F4 U15 B351-400",
+    394: "F4 L4 B351-400",
+    395: "B201-400 M5 U17|M5 B301-400 U17|M5 U17 B351-400",
+    396: "M6 L6 F18|M9 M11 B351-400|B301-400 M12 U18",
+    398: "F4 B351-400 U20|p B351-400 U20|F4 B301-400 U20",
+    399: "c B301-400 U21|F8 L9 B351-400|m9 B351-400 U21",
+    400: "m6 M10 F15|M8 L0 S|M4 U4 F15",
+    401: "O B401-450 U5|F2 B401-450 U5|m10 B401-600 U5",
+    402: "F8 B401-500 U6|B401-600 F8 U6|F8 B401-450 U6",
+    403: "F4 B401-500 U7|F4 B401-450 U7",
+    404: "B401-600 F6 U8|F6 B401-500 U8|F6 B401-500 L4",
+    405: "p L5 F10|m12 L5 F10|O B401-500 F10",
+    406: "U10 B401-450 T|M7 L6 B401-450|M7 U10 B401-450",
+    407: "L7 M11 B401-450|F4 B401-500 U11|B401-500 L7 M11",
+    408: "B401-600 L8 F16|M8 U12 B401-450|U12 B401-450 F16",
+    409: "P U13 B401-450|F2 U13 B401-450",
+    410: "M10 B401-450 U5|F8 B401-500 U5|E B401-450 U5",
+    411: "O B401-450 U6|F4 B401-500 U6|m6 B401-450 U6",
+    412: "M4 B401-450 U7|F6 L2 B401-450|B401-600 F6 U7",
+    413: "M7 B401-500 U8|B401-600 M7 U8|M7 B401-450 U8",
+    414: "F12 U9 B401-450|M9 B401-500 L4|B401-500 F12 U9",
+    415: "M5 U10 B401-450|F4 U10 B401-450",
+    416: "M8 F12 B401-450|m3 F12 B401-450|M8 B401-500 U11",
+    417: "F4 U12 B401-450",
+    418: "B401-500 M11 U13|B401-500 L8 M11|L8 M11 B401-450",
+    419: "P U14 B401-450|F2 U14 B401-450",
+    420: "B401-500 U6 F24|M6 M7 B401-450|M7 B401-500 U6",
+    421: "F2 B401-450 U7|B401-600 P U7|P B401-450 U7",
+    422: "F4 L2 B401-450",
+    423: "F6 B401-500 L3|M3 L3 B401-450|F6 L3 B401-450",
+    424: "B401-600 M8 U10|M4 F8 B401-450|M8 L4 B401-450",
+    425: "M5 F6 B401-450|F6 U11 B401-450|F6 L5 B401-450",
+    426: "M3 L6 B401-450|M6 L6 B401-450",
+    427: "M7 L7 B401-450|M7 U13 B401-450",
+    428: "B401-600 F6 U14|F6 B401-500 U14|F6 U14 B401-450",
+    429: "M3 M11 B401-450|B401-500 L9 M11|B401-500 M11 U15",
+    430: "M10 B401-450 U7|B401-500 M10 U7|B401-600 F8 U7",
+    431: "F2 B401-450 U8|F2 B401-500 U8|P B401-500 U8",
+    432: "B401-500 U9 F20|M8 M9 B401-450|M12 U9 B401-450",
+    433: "F2 B401-500 U10|F2 U10 B401-450|P B401-500 U10",
+    434: "M7 L4 B401-450|F8 U11 B401-450|M7 B401-500 L4",
+    435: "O B401-450 T|B401-500 U12 T|M5 B401-450 T",
+    436: "F6 B401-500 U13|M4 U13 B401-450|F6 L6 B401-450",
+    437: "p O U14 B401-450|O F4 U14 B401-450",
+    438: "M6 U15 B401-450|E U15 B401-450",
+    439: "O U16 B401-450|m8 U16 B401-450|m4 U16 B401-450",
+    440: "M10 B401-450 U8|m6 B401-500 F16|M11 B401-450 U8",
+    441: "M3 B401-500 F9|t B401-450 S|M7 M9 L1",
+    442: "m3 F8 L2 B401-450|m6 F8 L2 B401-450",
+    443: "P U11 B401-450|F2 U11 B401-450",
+    444: "L4 M12 B401-450|B401-500 F12 U12|F12 U12 B401-450",
+    445: "M5 U13 B401-450",
+    446: "F4 L6 B401-450",
+    447: "F4 B401-500 U15|F4 U15 B401-450",
+    448: "m9 U16 F14|M7 M8 B401-450|m9 B401-500 F14",
+    449: "c U17 B401-450|m9 U17 B401-450|F2 U17 B401-450",
+    450: "m4 M5 F18|B401-500 M10 U9|m12 B401-600 F18",
+    451: "B401-500 M11 U10|B401-500 L1 M11",
+    452: "E F6 B451-500|M4 F6 B451-500|F6 U11 B451-500",
+    453: "m7 M3 L3 B451-500|M3 F4 B401-500 L3|M3 F4 L3 B451-500",
+    454: "F4 B401-500 L4|F4 L4 B451-500",
+    455: "O F8 U14|M7 B401-500 L5|M5 B401-500 U14",
+    456: "M8 U15 B451-500|B401-500 L6 M12|L6 M12 B451-500",
+    457: "F2 U16 B451-500|P U16 B451-500",
+    458: "E F4 B401-500 U17|E F4 U17 B451-500|m5 F4 B401-500 U17",
+    459: "B401-600 F8 U18|M9 L9 B451-500|F8 B401-500 U18",
+    460: "M5 U10 B451-500|m11 U10 B451-500|F12 U10 B451-500",
+    461: "P U11 B451-500|O U11 B451-500|F2 U11 B451-500",
+    462: "m8 B451-500 F16|M7 B401-500 U12|L2 M11 B451-500",
+    463: "P U13 B451-500|F2 U13 B451-500|P L3 B451-500",
+    464: "M8 B401-500 U14|B401-600 L4 F10|M8 U14 B451-500",
+    465: "O B451-500 T|M5 B401-500 U15|L5 B451-500 T",
+    466: "F4 L6 B451-500",
+    467: "F2 U17 B451-500|P U17 B451-500",
+    468: "M4 B451-500 F18|M9 B401-500 L8|M9 L8 B451-500",
+    469: "M7 B401-500 U19|M7 B451-500 U19|M7 L9 B451-500",
+    470: "M5 U11 B451-500|M10 U11 B451-500|B401-500 M10 U11",
+    471: "M3 L1 B451-500",
+    472: "M4 U13 B451-500|F8 U13 B451-500|M8 B401-500 U13",
+    473: "M11 U14 B451-500|B401-500 M11 U14|B401-500 L3 M11",
+    474: "M6 L4 B451-500|M3 L4 B451-500",
+    475: "F6 U16 B451-500|F6 B401-500 U16|F6 L5 B451-500",
+    476: "M7 U17 B451-500|B401-500 F12 U17|M7 F12 U17",
+    477: "M9 B401-500 L7|F6 U18 B451-500|F6 L7 B451-500",
+    478: "E F4 B401-500 U19|t E B401-500 U19|m7 F4 B451-500 U19",
+    479: "F2 B451-500 U20|P B451-500 U20|P B401-500 U20",
+    480: "c B451-500 F24|B401-500 M10 U12|M12 B451-500 F24",
+    481: "O F4 U13 B451-500|p O U13 B451-500",
+    482: "F4 L2 B451-500",
+    483: "M7 B401-500 U15|F8 L3 B451-500|F8 B401-500 L3",
+    484: "U16 B451-500 F9|m9 B401-500 S|m3 B451-500 F9",
+    485: "M5 U17 B451-500|M5 B401-500 U17|F4 M5 B451-500",
+    486: "M9 L6 B451-500|M9 B401-500 L6",
+    487: "P B451-500 U19|F2 B451-500 U19|P B401-500 U19",
+    488: "M8 B451-500 U20|B401-600 M8 U20|M4 B451-500 U20",
+    489: "m6 B451-500 U21|F4 B451-500 U21|m6 B401-500 U21",
+    490: "F12 U13 B451-500|M7 M10 B451-500|M7 U13 B451-500",
+    491: "P U14 B451-500|F2 U14 B451-500",
+    492: "F12 U15 B451-500|F12 M12 B451-500|L2 M12 B451-500",
+    493: "O F4 B401-500 U16|O F4 U16 B451-500",
+    494: "F8 U17 B451-500|F8 B401-500 U17",
+    495: "O F12 B451-500|M5 B401-500 U18|B401-600 L5 M11",
+    496: "c T F10|M4 B401-500 U19|c U19 F10",
+    497: "F4 L7 B451-500|B401-600 M7 U20|M7 B451-500 U20",
+    498: "E B451-500 U21|B401-600 F8 U21|F8 B451-500 U21",
+    499: "m9 B451-500 U22|B401-600 B451-500 U22|m12 B451-500 U22",
+    500: "B401-600 F12 U5|M4 B401-600 U5|m7 F12 U5",
+    501: "m10 B501-550 U6|O B501-550 U6|F4 B501-550 U6",
+    502: "m8 E B501-550 U7|m7 m4 B501-600 U7|m10 m7 B501-550 U7",
+    504: "M7 B501-550 F24|M8 B501-600 U9|M7 M9 B501-550",
+    505: "O M5 U10 B501-550|m10 M5 U10 B501-550|F4 M5 U10 B501-550",
+    506: "B501-600 M11 U11|M11 U11 B501-550|B501-600 L6 M11",
+    507: "B401-600 F6 U12|F6 U12 B501-550|F6 B501-600 U12",
+    508: "F6 U13 B501-550|F6 B501-600 U13",
+    509: "P L9 B501-550|P U14 B501-550|F2 U14 B501-550",
+    510: "M10 B501-550 U6|B501-550 F16 U6|M6 B501-550 U6",
+    511: "M7 L1 B501-550|O B501-600 U7|M7 B501-550 U7",
+    512: "U8 F10 C|M8 L2 B501-550|M8 B501-600 C",
+    513: "F8 U9 B501-550|M9 B501-600 L3|M9 L3 B501-550",
+    514: "F4 L4 B501-550",
+    515: "M5 U11 B501-550",
+    516: "B501-600 L6 F12|M4 U12 B501-550|F12 M12 B501-550",
+    517: "L7 M11 B501-550|B501-600 L7 M11|B501-600 M11 U13",
+    518: "F8 M7 B501-550|F8 L8 B501-550|M7 U14 B501-550",
+    519: "F4 L9 B501-550",
+    520: "D3 F16 U7|M5 M8 B501-550|s F16 U7",
+    522: "M3 L2 B501-550|B501-600 F12 U9|M9 B501-600 L2",
+    524: "F6 L4 B501-550|F6 U11 B501-550|F6 B501-600 U11",
+    525: "O F12 U12|M5 M7 B501-550|L5 F12 B501-550",
+    526: "F4 L6 B501-550",
+    527: "m5 F4 U14 B501-550",
+    528: "L8 B501-550 T|B501-600 M11 M12|B401-600 U15 F20",
+    529: "U16 B501-550 F3|m6 B501-600 S|U16 B501-550 S",
+    530: "F8 M10 B501-550|M5 B501-600 U8|B501-600 M10 U8",
+    531: "F6 B501-600 U9|M9 L1 B501-550|M9 B501-600 L1",
+    532: "M7 B501-600 U10|M7 F12 U10|M7 L2 B501-550",
+    533: "m5 O U11 B501-550|p m3 L3 B501-550|m3 F4 L3 B501-550",
+    534: "F8 L4 B501-550|F8 U12 B501-550|F8 M6 B501-550",
+    535: "M5 U13 B501-550",
+    536: "F8 M8 B501-550|M8 L6 B501-550|M8 B501-600 U14",
+    537: "M3 F4 L7 B501-550",
+    538: "F4 B501-600 L8|E U16 B501-550|F4 L8 B501-550",
+    539: "B401-600 F6 M11|O U17 B501-550|M7 B501-600 L9",
+    540: "m8 B501-550 F24|M9 B501-600 L0|M10 B501-550 F24",
+    542: "E F4 U11 B501-550|E F4 B501-600 U11|E F4 B401-600 U11",
+    543: "F4 U12 B501-550|F4 B501-600 U12",
+    544: "L4 F12 B501-550|M8 B501-600 U13|M8 F12 B501-550",
+    545: "M5 U14 B501-550",
+    546: "m5 B501-550 F16|M7 B501-600 U15|M7 B501-550 F16",
+    547: "F2 L7 B501-550|P B501-600 U16|F2 U16 B501-550",
+    548: "E U17 B501-550|M4 U17 B501-550|m11 U17 B501-550",
+    549: "m12 U18 B501-550|M9 B501-600 L9|m6 U18 B501-550",
+    550: "B501-600 M11 U10|B501-600 M10 U10|M10 M11 U10",
+    551: "m7 p m3 B501-600 L1|m7 m3 F4 B501-600 L1",
+    552: "M4 U12 B551-600|B501-600 L2 F16|M8 U12 B551-600",
+    553: "M7 B501-600 L3|M7 U13 B551-600|M7 B501-600 U13",
+    554: "F4 L4 B551-600",
+    555: "M5 B501-600 U15|M5 U15 B551-600",
+    556: "F6 U16 B551-600|F6 B501-600 U16",
+    558: "M9 B501-600 L8|B501-600 L8 F12|M9 L8 B551-600",
+    559: "O F4 B501-600 U19|O F4 B551-600 U19",
+    560: "M10 U11 B551-600|m3 M7 F20|E U11 F20",
+    561: "U12 B551-600 T|F8 B501-600 L1|B401-600 L1 T",
+    562: "F4 L2 B551-600",
+    563: "P U14 B551-600|F2 U14 B551-600",
+    564: "B501-600 F12 U15|L4 M12 B551-600|F12 U15 B551-600",
+    565: "F4 M5 B551-600|M5 U16 B551-600|F4 L5 B551-600",
+    566: "F4 U17 B551-600|F4 B501-600 U17",
+    567: "M7 L7 B551-600|m11 U18 F10|m5 L7 F10",
+    568: "M8 B501-600 U19|M4 B551-600 U19|M4 B501-600 U19",
+    570: "B501-600 M10 U12|M5 B551-600 F16|L0 B551-600 F16",
+    571: "F2 L1 B551-600|P B501-600 U13|F2 B501-600 U13",
+    572: "B501-600 M11 U14|L2 F12 B551-600|L2 M11 B551-600",
+    573: "M3 L3 B551-600",
+    574: "F8 B501-600 U16|M7 L4 B551-600|M7 U16 B551-600",
+    575: "F6 L5 B551-600|M5 B501-600 U17|M5 U17 B551-600",
+    576: "M4 B401-600 F21|M8 L6 B551-600|B501-600 U18 S",
+    577: "F2 B551-600 U19|P B551-600 U19|P B501-600 U19",
+    578: "m4 F6 U20|F6 L8 B551-600",
+    579: "M3 L9 B551-600",
+    580: "M10 U13 B551-600|B501-600 M10 U13|M5 U13 B551-600",
+    581: "M7 U14 B551-600|M7 L1 B551-600",
+    582: "F8 L2 B551-600|F8 M6 B551-600|F8 B501-600 L2",
+    583: "L3 M11 B551-600|M11 U16 B551-600|B501-600 L3 M11",
+    584: "M8 B501-600 U17|M8 L4 B551-600|M8 U17 B551-600",
+    585: "M9 B501-600 L5|O F12 B551-600|M5 M9 B551-600",
+    586: "E F4 B551-600 U19|m8 E B501-600 U19|m8 E B551-600 U19",
+    588: "m10 B501-600 F18|M4 B401-600 U21|M7 M12 B551-600",
+    589: "O B551-600 U22|F4 B551-600 U22|F4 B401-600 U22",
+    590: "M10 U14 B551-600|F8 U14 B551-600|M5 U14 B551-600",
+    591: "M3 F4 L1 B551-600|t M3 L1 B551-600|m11 M3 L1 B551-600",
+    592: "U16 B551-600 F10|m6 U16 F10|B401-600 U16 F10",
+    594: "M11 B551-600 F16|M11 U18 B551-600|M6 M11 B551-600",
+    595: "L5 B551-600 T|M5 M7 U19|B501-600 L5 T",
+    596: "M4 B551-600 U20|M4 B501-600 U20",
+    597: "F4 L7 B551-600",
+    598: "F8 B501-600 U22|E B401-600 U22|E B551-600 U22",
+    599: "m12 B401-600 U23|m7 B401-600 U23|B401-600 P U23",
+    600: "m7 U6 F24|M8 U6 F24",
+    601: "F2 B601-650 U7|m10 B601-700 U7|B601-800 F2 U7",
+    602: "M7 B601-650 U8|B601-800 M7 U8|F8 B601-650 U8",
+    603: "F6 B601-700 L3|M9 L3 B601-650|F6 L3 B601-650",
+    604: "F6 B601-700 L4|F6 U10 B601-650|F6 L4 B601-650",
+    605: "F6 B601-700 M11|B601-800 F6 M11|B601-700 L5 M11",
+    606: "M3 F8 B601-700 L6|F8 M6 L6 B601-650|m12 M6 L6 B601-650",
+    608: "L8 F12 B601-650|M8 F12 B601-650|M8 U14 B601-650",
+    609: "M7 U15 B601-650|F8 B601-700 L9|F8 L9 B601-650",
+    610: "E B601-650 U7|F8 L0 B601-650|p B601-650 U7",
+    611: "F4 B601-700 U8|F4 B601-800 U8|O B601-650 U8",
+    612: "m5 B601-650 F18|M9 B601-700 L2|m7 B601-650 F18",
+    614: "E F4 B601-800 U11|m7 F4 B601-700 U11|E F4 U11 B601-650",
+    615: "M5 U12 B601-650",
+    616: "M7 M8 M11|m5 U13 F16|M7 B601-700 U13",
+    617: "P U14 B601-650|F2 U14 B601-650",
+    618: "m4 M6 L8 B601-650|m11 F8 L8 B601-650|F8 M6 L8 B601-650",
+    619: "F2 U16 B601-650|P L9 B601-650|F2 L9 B601-650",
+    620: "B601-700 M10 U8|M10 B601-650 U8|M5 B601-700 U8",
+    621: "F8 B601-700 U9|M3 L1 B601-650|F8 M9 B601-700",
+    622: "F4 U10 B601-650|F4 L2 B601-650|F4 B601-700 U10",
+    623: "M7 B601-700 U11|M7 L3 B601-650|B601-800 M7 U11",
+    624: "B601-800 M8 U12|m9 L4 F20|M8 L4 F20",
+    625: "m3 U13 F5|M5 B601-650 S|m6 B601-800 F5",
+    626: "F4 L6 B601-650|F4 B601-700 L6",
+    627: "M3 L7 B601-650|B601-700 M11 U15|L7 M11 B601-650",
+    628: "M4 U16 B601-650|F6 L8 B601-650",
+    629: "F4 U17 B601-650",
+    630: "B601-700 T F24|M6 M10 B601-650|M7 M9 L0",
+    632: "M4 U11 B601-650|M8 U11 B601-650|M8 L2 B601-650",
+    633: "M3 F4 B601-650|F4 B601-700 U12|F4 U12 B601-650",
+    634: "F4 B601-700 U13|F4 U13 B601-650",
+    635: "F4 M5 B601-650|M5 U14 B601-650|F4 L5 B601-650",
+    636: "L6 M12 B601-650|B601-700 F12 U15|M3 F12 B601-650",
+    637: "F6 L7 B601-650|M7 B601-700 U16|M7 F6 U16",
+    638: "B601-700 M11 U17|M11 U17 B601-650|F8 U17 B601-650",
+    639: "F6 B601-700 L9|m4 U18 B601-650|M9 B601-700 L9",
+    640: "m7 B601-650 F16|B601-700 M10 U10|M8 L0 B601-650",
+    641: "P U11 B601-650|P B601-700 U11|F2 B601-700 U11",
+    642: "m4 M3 B601-700 L2|m12 M6 L2 B601-650|m4 M3 L2 B601-650",
+    644: "M7 L4 B601-650|B601-700 L4 F12|M7 B601-700 U14",
+    645: "M5 U15 B601-650",
+    646: "F8 U16 B601-650",
+    647: "F2 U17 B601-650|P U17 B601-650",
+    648: "E U18 B601-650|M9 L8 F20|m10 U18 F20",
+    649: "B601-700 L9 M11|D3 B601-650 U19|L9 M11 B601-650",
+    650: "B601-700 F12 U11|m4 F12 U11|B601-700 M10 U11",
+    651: "M7 B601-700 L1|M7 B601-700 U12",
+    652: "M4 U13 B651-700|F6 B601-700 U13|F6 U13 B651-700",
+    653: "P U14 B651-700|F2 U14 B651-700",
+    654: "B601-800 F8 M6 L4|m12 M6 L4 B651-700|M3 F8 L4 B651-700",
+    655: "M5 U16 B651-700|F4 U16 B651-700|F4 B601-700 U16",
+    656: "M8 U17 B651-700|B601-700 L6 F10|B601-700 U17 F10",
+    657: "F6 L7 B651-700|F6 U18 B651-700|M9 L7 B651-700",
+    658: "F8 B651-700 U19|M7 B601-700 L8|M7 B651-700 U19",
+    659: "F2 L9 B651-700|P L9 B651-700",
+    660: "M10 M11 U12|m7 B601-700 F24|L0 M12 B651-700",
+    661: "O U13 B651-700|P U13 B651-700|F2 U13 B651-700",
+    662: "F4 L2 B651-700",
+    663: "F8 L3 B651-700|F8 B601-700 L3",
+    664: "M4 F8 B651-700|M8 B601-700 U16|M8 L4 B651-700",
+    665: "F8 U17 B651-700|M7 B601-700 L5|M7 U17 B651-700",
+    666: "M9 F12 T|s B651-700 T|m5 B601-700 T",
+    667: "m5 O B651-700 U19",
+    668: "F6 B601-700 U20|B601-800 F6 U20|F6 L8 B651-700",
+    670: "M5 U13 B651-700|F8 M10 B651-700|F8 U13 B651-700",
+    671: "B601-700 L1 M11|B601-700 M11 U14|L1 M11 B651-700",
+    672: "m11 L2 F24|M4 U15 B651-700|M7 B601-700 M12",
+    674: "F4 U17 B651-700",
+    675: "M5 B601-700 U18|M3 L5 B651-700|M9 L5 B651-700",
+    676: "B601-800 L6 F9|m3 B651-700 S|M4 B601-700 U19",
+    677: "F2 L7 B651-700|P L7 B651-700",
+    678: "M6 L8 B651-700|F8 B601-700 U21|M3 L8 B651-700",
+    679: "F4 M7 B651-700|M7 B651-700 U22|F4 M7 U22",
+    680: "M8 U14 B651-700|m11 U14 F16|U14 B651-700 F16",
+    681: "F4 U15 B651-700|F4 B601-700 U15",
+    682: "B601-700 M11 U16|F8 L2 B651-700|F8 M11 B651-700",
+    683: "F2 U17 B651-700|P U17 B651-700",
+    684: "M9 M12 B651-700|B601-700 U18 F18|m10 B651-700 F18",
+    685: "M5 B651-700 U19|M5 B601-700 U19",
+    686: "M7 B651-700 U20|F8 B651-700 U20|M7 B601-700 U20",
+    687: "M3 F4 L7 B651-700|M3 F4 B601-700 L7|m9 M3 L7 B651-700",
+    688: "B601-800 F10 U22|M8 L8 B651-700|E B601-700 U22",
+    689: "O B651-700 U23|O B601-700 U23",
+    690: "m8 B651-700 F16|B601-700 M10 U15|U15 B651-700 F16",
+    692: "F6 U17 B651-700|F6 B601-700 U17",
+    693: "m8 L3 F12|M7 U18 B651-700|M9 B601-700 M11",
+    694: "E F4 B601-700 U19|E F4 B651-700 U19",
+    695: "F4 B651-700 U20|M5 B651-700 U20|M5 B601-700 U20",
+    696: "M8 B601-700 U21|L6 B651-700 F16|B601-800 F16 U21",
+    697: "m8 m7 B651-700 U22|m7 F4 B651-700 U22|m7 O B651-700 U22",
+    698: "E B601-700 U23|F4 L8 B651-700|E B651-700 U23",
+    699: "F4 B601-700 U24|m8 B651-700 U24|s B601-700 U24",
+    700: "m6 U7 F18|D3 U7 F18|M4 B601-800 U7",
+    701: "B601-800 P U8|B601-800 F2 U8",
+    702: "B601-800 U9 F16|M9 L2 B701-750|M9 L2 F16",
+    703: "L3 B701-750 T|m3 B601-800 T|B701-800 U10 T",
+    704: "B601-800 L4 F14|M8 U11 B701-750|s L4 F14",
+    705: "m6 M5 U12 B701-750|O M5 U12 B701-750|t F8 U12 B701-750",
+    706: "F4 B701-800 U13|F4 U13 B701-750",
+    707: "M7 U14 B701-750|M7 L7 B701-750",
+    708: "L8 M12 B701-750",
+    710: "F8 B701-800 U8|E B701-750 U8|F8 B701-750 U8",
+    711: "M9 L1 B701-750|O B701-800 U9|F6 L1 B701-750",
+    712: "M8 U10 B701-750|M4 U10 B701-750|M8 B701-800 U10",
+    713: "t m3 F4 L3 B701-750|t p m3 L3 B701-750",
+    714: "M7 L4 B701-750|M7 L4 F16|M7 B701-800 U12",
+    715: "M11 U13 B701-750|L5 M11 B701-750|B701-800 L5 M11",
+    716: "F6 L6 B701-750|M4 U14 B701-750",
+    717: "F4 U15 B701-750",
+    718: "F4 L8 B701-750",
+    719: "P U17 B701-750|F2 U17 B701-750",
+    720: "M3 M9 F30|M4 U9 B701-750|p L0 F30",
+    721: "M7 L1 B701-750|M7 B701-800 U10|B601-800 M7 U10",
+    722: "F6 U11 B701-750|F6 L2 B701-750|F6 B701-800 U11",
+    723: "F4 B701-800 U12|M3 L3 B701-750|F4 U12 B701-750",
+    724: "F6 B701-800 U13|M4 U13 B701-750|F6 U13 B701-750",
+    725: "M5 F6 B701-750|M5 U14 B701-750|F6 L5 B701-750",
+    726: "B701-800 M11 U15|M6 L6 B701-750|M3 L6 B701-750",
+    727: "P L7 B701-750|F2 L7 B701-750",
+    728: "M4 M7 B701-750|m10 U17 F16|M7 L8 B701-750",
+    729: "m7 U18 F7|B601-800 B701-750 S|M9 B701-800 L9",
+    730: "B701-800 M10 U10|M5 U10 B701-750|M5 B701-800 U10",
+    731: "m7 F4 L1 B701-750",
+    732: "M12 U12 B701-750|B601-800 L2 F12|F12 U12 B701-750",
+    733: "F2 U13 B701-750|P U13 B701-750",
+    734: "F4 L4 B701-750",
+    735: "L5 F12 B701-750|M7 B701-800 U15|M5 U15 B701-750",
+    736: "M4 U16 B701-750|M8 B701-800 F12|p F12 U16",
+    737: "B701-800 L7 M11|L7 M11 B701-750|M11 U17 B701-750",
+    738: "M9 L8 B701-750|M9 F12 B701-750|M9 B701-800 L8",
+    739: "F2 B701-750 U19|m4 B701-750 U19|m11 B701-750 U19",
+    740: "L0 F12 B701-750|B701-800 M10 U11|B701-800 F12 U11",
+    741: "B601-800 L1 T|B701-800 L1 T|B601-800 F8 T",
+    742: "M7 L2 B701-750|M7 B701-800 U13|M7 U13 B701-750",
+    743: "P U14 B701-750|F2 U14 B701-750",
+    744: "M8 U15 B701-750|B701-800 M12 F16|L4 M12 B701-750",
+    745: "M5 U16 B701-750|F4 L5 B701-750|F4 M5 B701-750",
+    746: "m4 E U17 B701-750|E F4 B701-800 U17|m11 F4 U17 B701-750",
+    747: "F6 B701-800 L7|F6 B701-800 U18|F6 L7 B701-750",
+    748: "B701-800 L8 M11|p B701-750 U19|B701-800 F12 U19",
+    749: "m4 B701-750 U20|M7 B701-800 L9|c B701-750 U20",
+    750: "B701-800 M10 U12",
+    751: "m5 U13 B751-800|m8 U13 B751-800|P U13 B751-800",
+    752: "m12 B701-800 F10|M8 U14 B751-800|E B751-800 F10",
+    753: "m9 M3 L3 B751-800|M3 F4 L3 B751-800",
+    754: "F8 B701-800 L4|F8 L4 B751-800",
+    755: "M5 B701-800 U17|M5 U17 B751-800",
+    756: "M7 M9 B701-800|B601-800 L6 F24|M7 B701-800 F24",
+    757: "F2 B751-800 U19|P B751-800 U19",
+    759: "B701-800 L9 M11|M11 B751-800 U21|F8 M11 B751-800",
+    760: "M10 U13 F16|M10 U13 B751-800|M5 M8 U13",
+    761: "O U14 B751-800|P U14 B751-800|F2 U14 B751-800",
+    762: "F8 U15 B751-800|F8 B701-800 U15",
+    763: "M7 B701-800 U16|M7 B701-800 L3|M7 L3 B751-800",
+    764: "M4 U17 B751-800|F6 B701-800 U17|F6 U17 B751-800",
+    765: "M9 L5 B751-800|M5 B701-800 U18|M5 F12 B751-800",
+    766: "F4 L6 B751-800",
+    767: "F4 L7 B751-800",
+    768: "B701-800 M12 F18|M8 L8 B751-800|m10 B751-800 F18",
+    769: "P L9 B751-800|F2 L9 B751-800",
+    770: "M5 M11 B751-800|M7 B701-800 L0|m8 U14 F16",
+    771: "M3 L1 B751-800",
+    772: "F6 L2 B751-800|M4 U16 B751-800|F6 B701-800 U16",
+    773: "F2 U17 B751-800|P L3 B751-800|P U17 B751-800",
+    774: "E F12 B751-800|M9 B701-800 L4|B701-800 L4 F12",
+    775: "B601-800 F6 U19|M5 B701-800 U19|F6 B751-800 U19",
+    776: "M4 B751-800 U20|F8 M8 B751-800|F8 B751-800 U20",
+    777: "B601-800 M7 U21|F8 B701-800 L7|M7 B751-800 U21",
+    778: "F4 B751-800 U22|F4 B701-800 U22",
+    779: "F4 B701-800 U23|F4 B751-800 U23",
+    780: "M5 B701-800 F24|M10 U15 T|L0 M12 B751-800",
+    781: "B701-800 M11 U16|M11 U16 B751-800|F4 M11 B751-800",
+    782: "F8 U17 B751-800|F8 B701-800 U17",
+    783: "F8 B701-800 L3|F8 M9 B751-800|F8 L3 B751-800",
+    784: "M4 B751-800 S|E B701-800 F15|B601-800 M8 U19",
+    785: "M5 B701-800 U20|M5 B751-800 U20",
+    786: "F8 M6 B701-800 U21|m12 M3 L6 B751-800|m8 M6 B701-800 U21",
+    788: "B601-800 F6 U23|m7 F6 U23|F6 B751-800 U23",
+    789: "m6 B751-800 U24|F4 B701-800 U24|m7 B701-800 U24",
+    790: "B701-800 M10 U16|F8 L0 B751-800|M5 U16 B751-800",
+    791: "M7 U17 B751-800|M7 L1 B751-800",
+    792: "M8 B751-800 F24|B701-800 L2 M11|M11 U18 B751-800",
+    793: "O F4 B701-800 U19|O F4 B751-800 U19",
+    794: "F4 L4 B751-800",
+    795: "M5 B701-800 U21|F8 L5 B751-800|B601-800 M5 U21",
+    796: "M4 B701-800 U22|F6 L6 B751-800|s F6 U22",
+    797: "B601-800 F2 U23|P B751-800 U23|F2 B701-800 U23",
+    798: "m4 F16 U24|M7 L8 B751-800|m12 F16 U24",
+    799: "p B601-800 U25|D3 B701-800 U25|m7 B751-800 U25",
+    800: "E U8 F18|m12 M8 F18|M8 U8 F18",
+    801: "m5 U9 B801-850|F6 B801-900 L1|F6 B801-900 U9",
+    802: "F4 B801-900 U10|F4 U10 B801-850",
+    803: "F4 U11 B801-850|B801-900 L3 M11|F4 B801-900 U11",
+    804: "L4 M12 B801-850|B801-900 F12 U12|F12 U12 B801-850",
+    805: "M7 B801-900 U13|F8 L5 B801-850|M7 U13 B801-850",
+    806: "m7 F8 L6 B801-850|m4 F8 U14 B801-850|m4 B801-1000 F8 U14",
+    807: "M3 F4 B801-900 L7|M3 F4 L7 B801-850|M3 F4 B801-1000 L7",
+    808: "F8 L8 B801-850|F8 B801-900 L8|M8 U16 B801-850",
+    810: "m11 m8 F20|M6 U9 B801-850|s m4 F20",
+    811: "F2 B801-900 U10|B801-1000 F2 U10|F2 U10 B801-850",
+    812: "M4 B801-900 U11|L2 F12 B801-850|M7 U11 B801-850",
+    814: "M11 U13 B801-850|B801-900 L4 M11|F8 M11 B801-850",
+    815: "M5 U14 B801-850",
+    816: "m11 U15 F20|M8 L6 B801-850|m9 B801-850 F20",
+    817: "m3 F4 L7 B801-850|m5 O U16 B801-850|m3 F4 B801-900 L7",
+    818: "F4 U17 B801-850|F4 B801-900 U17",
+    819: "B801-900 L9 F12|M7 M9 B801-850|m6 L9 F12",
+    820: "B801-900 F12 T|M5 U10 B801-850|m6 F12 T",
+    821: "F2 U11 B801-850|F2 B801-900 U11|P U11 B801-850",
+    822: "M3 L2 B801-850|F8 B801-900 U12|F8 L2 B801-850",
+    823: "P U13 B801-850|B801-1000 F2 U13|P B801-900 U13",
+    824: "M4 U14 B801-850|M8 L4 B801-850|B801-1000 M8 U14",
+    825: "M5 U15 B801-850|B801-900 L5 M11|M5 M11 U15",
+    826: "M7 U16 B801-850|M7 L6 B801-850|M7 B801-900 U16",
+    827: "F2 L7 B801-850|P L7 B801-850",
+    828: "p B801-850 F18|M9 B801-900 L8|m7 B801-900 F18",
+    829: "F2 B801-850 U19|P B801-850 U19",
+    830: "M5 B801-900 U11|F8 M10 B801-850|F8 U11 B801-850",
+    831: "F4 L1 B801-850",
+    832: "M4 U13 B801-850|B801-900 L2 F14|m7 B801-850 F14",
+    833: "M7 L3 B801-850|F6 B801-900 U14|M7 F6 U14",
+    834: "F8 U15 B801-850",
+    835: "M5 U16 B801-850",
+    836: "B801-1000 F12 U17|M4 M11 B801-850|M4 M11 U17",
+    837: "B801-1000 F8 U18|M9 L7 B801-850|F8 M9 B801-850",
+    838: "E B801-850 U19|F4 B801-850 U19",
+    839: "P B801-850 U20|m8 B801-850 U20|F2 B801-850 U20",
+    840: "M8 L0 B801-850|B801-1000 M10 F32|M5 B801-900 U12",
+    841: "B801-900 U13 F3|c B801-850 S|B801-1000 U13 S",
+    842: "E F4 U14 B801-850|m5 F4 U14 B801-850|E F4 B801-900 U14",
+    844: "F6 L4 B801-850|F6 U16 B801-850|M4 F6 B801-850",
+    845: "F6 L5 B801-850|F6 B801-900 L5|M5 F6 B801-850",
+    846: "M9 B801-900 L6|M9 L6 B801-850",
+    847: "M11 B801-850 U19|M7 B801-900 L7|F6 M11 B801-850",
+    848: "t B801-850 F10|M8 B801-900 U20|M8 B801-850 F10",
+    849: "m7 B801-850 U21|m11 B801-850 U21|m5 B801-850 U21",
+    850: "B801-900 M10 U13|B801-900 F12 U13",
+    851: "m5 O F4 B801-900 U14|m7 m5 O B801-900 U14",
+    852: "B801-900 L2 M12|M4 U15 B851-900|L2 F12 B851-900",
+    853: "P B801-900 U16|F2 U16 B851-900|F2 B801-900 U16",
+    854: "M7 B801-900 L4|M7 L4 B851-900|M7 U17 B851-900",
+    855: "L5 F12 B851-900|M5 B801-900 U18|M9 F12 B851-900",
+    856: "M8 B801-900 U19|F8 L6 B851-900|M8 B851-900 U19",
+    857: "F2 B851-900 U20|P B851-900 U20",
+    858: "B801-900 M11 U21|M11 F16 U21|B801-1000 M11 F16",
+    859: "P L9 B851-900|F2 L9 B851-900",
+    860: "E U14 B851-900|L0 F12 B851-900|M4 U14 B851-900",
+    861: "M7 B801-900 T|m6 U15 B851-900|B801-1000 F8 L1",
+    862: "F4 L2 B851-900",
+    864: "L4 B851-900 F24|M8 B801-900 U18|M4 B801-900 F24",
+    865: "M5 B851-900 U19|M5 B801-900 U19|F4 B851-900 U19",
+    866: "E F4 B851-900 U20|m4 E B851-900 U20|E F4 B801-900 U20",
+    867: "O F6 U21|m9 F6 U21|m7 F6 U21",
+    868: "m8 F12 U22|M7 L8 B851-900|t F12 U22",
+    869: "m4 M11 U23|m8 M11 U23|F4 M11 B851-900",
+    870: "M5 U15 B851-900|B801-900 M10 F16|L0 B851-900 F16",
+    871: "O F4 U16 B851-900|p O U16 B851-900",
+    872: "M8 B801-900 U17|F8 L2 B851-900|M8 U17 B851-900",
+    873: "M9 L3 B851-900|F6 B801-900 U18|F6 U18 B851-900",
+    874: "m4 F8 B801-900 U19|m4 E B851-900 U19|m4 F8 B851-900 U19",
+    875: "O F8 U20|M7 L5 B851-900|M7 B851-900 U20",
+    876: "M6 L6 B851-900|M4 B801-900 U21|M3 L6 B851-900",
+    878: "m7 E B851-900 U23|m8 E B851-900 U23|E F4 B851-900 U23",
+    879: "M3 F4 B851-900|M3 L9 B851-900|F4 B801-900 U24",
+    880: "p U16 F20|B801-900 L0 M11|M5 M8 B851-900",
+    881: "P L1 B851-900|F2 L1 B851-900",
+    882: "M7 B801-900 F18|M9 L2 B851-900|E B851-900 F18",
+    883: "F2 B851-900 U19|P B851-900 U19",
+    884: "L4 F12 B851-900|F12 B851-900 U20|M4 B851-900 U20",
+    885: "M5 B851-900 U21|M5 B801-900 U21",
+    886: "m4 E B851-900 U22|m7 E B851-900 U22|m4 E B801-900 U22",
+    887: "F2 B851-900 U23|P B851-900 U23|P B801-900 U23",
+    888: "M3 M8 U24|B801-900 M12 F16|p M8 U24",
+    889: "F4 M7 B801-900|O B851-900 U25|M7 B801-900 U25",
+    890: "M10 U17 B851-900|F8 M10 U17|m4 M10 U17",
+    891: "M3 L1 F10|M11 U18 B851-900|M9 L1 M11",
+    892: "F6 B851-900 U19|m3 F6 B851-900|E F6 B851-900",
+    893: "F4 L3 B851-900",
+    894: "F8 M6 B851-900",
+    895: "M5 B801-900 U22|M5 B851-900 U22",
+    896: "E F16 U23|M7 L6 B851-900|p F16 U23",
+    897: "F8 B801-900 U24|F8 B851-900 U24|F8 L7 B851-900",
+    898: "m7 B801-900 U25|E F4 U25|m7 B851-900 U25",
+    899: "m10 B801-900 U26|m10 B851-900 U26|m6 B801-900 U26",
+    900: "B801-1000 M6 S|M9 M12 F27|m7 B801-1000 F27",
+    901: "p O B801-1000 U10|O F4 B801-1000 U10",
+    902: "B901-1000 M11 U11|B901-1000 L2 M11|B801-1000 L2 M11",
+    903: "M7 B901-1000 U12|L3 B901-950 T|M7 U12 T",
+    904: "F8 U13 B901-950|F8 L4 B901-950|M4 F8 B901-950",
+    905: "F4 M5 B901-950|F4 L5 B901-950",
+    906: "m12 M3 L6 B901-950|m9 M3 L6 B901-950|M3 F8 L6 B901-950",
+    907: "F2 B901-1000 U16|F2 U16 B901-950|P B901-1000 U16",
+    908: "F6 U17 B901-950|B801-1000 F6 L8|F6 B901-1000 U17",
+    909: "F6 L9 B901-950|F6 B901-1000 L9|M9 L9 B901-950",
+    910: "m8 U10 F16|M7 M10 B901-950|B901-1000 U10 F16",
+    911: "O U11 B901-950|F2 U11 B901-950|O B901-1000 U11",
+    912: "B801-1000 U12 F20|L2 M12 B901-950|m11 B901-950 F20",
+    913: "B901-1000 L3 M11|M11 U13 B901-950|L3 M11 B901-950",
+    914: "E F4 B901-1000 U14|E F4 U14 B901-950",
+    915: "M5 U15 B901-950",
+    916: "F6 L6 B901-950|M4 U16 B901-950",
+    917: "M7 L7 B901-950|F4 L7 B901-950|F4 M7 B901-950",
+    918: "L8 B901-950 F16|B901-1000 L8 F16|M9 L8 B901-950",
+    920: "m7 U11 F16|M5 M8 B901-950|m6 U11 F16",
+    921: "F4 U12 B901-950|M3 L1 B901-950|F4 B901-1000 U12",
+    922: "F4 L2 B901-950",
+    923: "m5 O F4 B901-1000 U14|m5 O F4 U14 B901-950|p m5 O B901-1000 U14",
+    924: "L4 M11 B901-950|B801-1000 M7 F24|m9 L4 F24",
+    925: "F6 B901-1000 L5|M5 U16 B901-950|F6 L5 B901-950",
+    926: "F4 B901-1000 L6|F4 L6 B901-950",
+    927: "F6 L7 B901-950|M3 L7 B901-950|M9 B901-1000 L7",
+    928: "M8 B901-950 U19|B901-1000 F12 U19|M8 B901-1000 U19",
+    930: "M6 L0 B901-950|B901-1000 U12 F16|M5 U12 B901-950",
+    931: "M7 F6 B901-950|m3 F6 L1|M7 U13 B901-950",
+    932: "F6 B901-1000 U14|F6 U14 B901-950|M4 B901-1000 U14",
+    933: "F4 U15 B901-950",
+    934: "E F4 B901-1000 U16|E F4 U16 B901-950|m4 E U16 B901-950",
+    935: "M5 M11 B901-950|L5 M11 B901-950|B901-1000 M11 U17",
+    936: "M9 B901-950 F24|M8 B901-1000 U18|B801-1000 L6 F24",
+    938: "M7 B901-1000 U20|F8 L8 B901-950|p B901-950 U20",
+    939: "m6 B901-950 U21|O B901-950 U21|m4 B901-950 U21",
+    940: "M5 B901-1000 U13|B901-1000 M10 U13|F12 U13 B901-950",
+    941: "B801-1000 F2 U14|P B901-1000 U14|B801-1000 P U14",
+    942: "m12 M3 L2 B901-950|m8 M3 L2 B901-950|F8 M6 L2 B901-950",
+    943: "O F4 U16 B901-950|O F4 B901-1000 U16",
+    944: "m9 B901-950 F10|M8 B901-1000 U17|B901-1000 U17 F10",
+    945: "O B901-950 F16|M5 M7 U18|M9 B901-1000 L5",
+    946: "B801-1000 L6 T|F8 B901-950 U19|B901-1000 L6 M11",
+    948: "M12 B901-950 U21|F12 M12 B901-950|B901-1000 L8 M12",
+    949: "p B901-950 U22|t B901-950 U22|m10 B901-950 U22",
+    950: "B901-1000 M10 U14|m4 F12 U14|B901-1000 F12 U14",
+    951: "m10 U15 B951-1000|m6 U15 B951-1000|m8 U15 B951-1000",
+    952: "M8 U16 F16|M7 B901-1000 L2|B901-1000 U16 F16",
+    954: "B901-1000 F12 U18|M9 L4 B951-1000|M9 F12 B951-1000",
+    955: "M5 B951-1000 U19|M5 B901-1000 U19",
+    956: "F6 L6 B951-1000|F6 B951-1000 U20|B801-1000 F6 U20",
+    957: "F8 M11 B951-1000|F8 B951-1000 U21|F8 B901-1000 U21",
+    958: "E F4 B901-1000 U22|E F4 B951-1000 U22|m5 F4 B951-1000 U22",
+    959: "M7 B901-1000 L9|m4 M7 U23|M7 B901-1000 U23",
+    960: "m9 M4 F28|M5 U15 B951-1000|B901-1000 L0 M12",
+    961: "p B901-1000 F3|m11 B951-1000 S|m8 B901-1000 S",
+    962: "F8 U17 B951-1000|F8 L2 B951-1000",
+    963: "F6 L3 B951-1000|F6 B901-1000 L3|M9 L3 B951-1000",
+    964: "F6 B901-1000 L4|M4 B951-1000 U19|F6 L4 B951-1000",
+    965: "M5 B901-1000 U20|M5 B951-1000 U20",
+    966: "M7 B901-1000 U21|m4 B951-1000 F16|M7 B951-1000 U21",
+    967: "P B901-1000 U22|F2 B951-1000 U22|P B951-1000 U22",
+    968: "m6 F12 U23|M8 M11 B951-1000|t F12 U23",
+    969: "m9 M3 L9 B951-1000|m7 O B901-1000 U24|m9 F8 B901-1000 L9",
+    970: "F8 B901-1000 L0|M10 U16 B951-1000|F8 B901-1000 M10",
+    972: "m7 B901-1000 F18|L2 M12 B951-1000|m10 B951-1000 F18",
+    973: "M7 B951-1000 U19|M7 L3 B951-1000|M7 B901-1000 U19",
+    974: "F4 L4 B951-1000",
+    975: "L5 F12 B951-1000|M5 B901-1000 U21|O F12 B951-1000",
+    976: "M8 B951-1000 F10|M4 B901-1000 U22|E B951-1000 F10",
+    977: "F2 B901-1000 U23|P B901-1000 U23|F2 B951-1000 U23",
+    978: "F8 L8 B951-1000|F8 M6 U24|F8 M6 B951-1000",
+    979: "m10 M11 U25|m8 M11 U25|m9 M11 U25",
+    980: "M5 U17 F18|M7 M10 B951-1000|m8 U17 F18",
+    981: "M9 L1 B951-1000|F6 L1 B951-1000|M9 B901-1000 L1",
+    982: "F4 L2 B951-1000",
+    983: "P B951-1000 U20|F2 B951-1000 U20",
+    984: "B801-1000 M8 U21|B901-1000 L4 F16|M8 L4 B951-1000",
+    985: "M5 B901-1000 U22|M5 B951-1000 U22",
+    986: "F8 B901-1000 U23|B801-1000 F8 U23|m8 F8 U23",
+    987: "M7 B951-1000 U24|B801-1000 M7 U24|m6 M7 U24",
+    988: "t M4 U25|m7 M4 U25|E B901-1000 U25",
+    989: "O B951-1000 U26|O B901-1000 U26",
+    990: "m12 M10 U18|m4 M11 F24|M9 L0 B951-1000",
+    991: "F2 B951-1000 U19|P B951-1000 U19",
+    992: "M8 B951-1000 U20|B901-1000 L2 F12|M8 F12 U20",
+    993: "F4 B951-1000 U21",
+    994: "F8 B951-1000 U22|M7 B951-1000 U22|F8 L4 B951-1000",
+    995: "c M5 U23|m3 M5 U23|F4 M5 U23",
+    996: "m8 M4 U24|L6 F12 B951-1000|M4 F12 U24",
+    997: "B801-1000 F2 U25|m11 P U25|O F2 U25",
+    998: "m9 E U26|m12 E U26|p E U26",
+    999: "m11 m4 U27|F8 M9 B901-1000|D3 m4 U27",
+    1000: "m3 C D4|m12 F16 U1|m7 U1 D4"
   }
-  if (absDiff <= 2)   { cls='fb-exact'; text='Incredibly close!'; }
-  else if (absDiff <= 10)  { cls='fb-warm';  text='Very warm.'; }
-  else if (absDiff <= 50)  { cls='fb-warn';  text='Getting warmer.'; }
-  else if (absDiff <= 200) { cls='fb-higher'; text='In the right area.'; }
-  else                     { cls='fb-lower'; text='Far off.'; }
-  arrow = diff < 0 ? '\u2191 Higher' : '\u2193 Lower';
-  return { cls, arrow, text };
-}
+};
+/* 52DLE-LADDERS-END */
 
-// ─── RENDER ──────────────────────────────────────────────────────────
-function renderGuesses() {
-  const el = document.getElementById('guess-history');
-  el.innerHTML = '';
-  state.guesses.forEach(g => {
-    const fb = getFeedback(g, puzzle.a);
-    const row = document.createElement('div');
-    row.className = 'guess-row';
-    row.innerHTML = `
-      <span class="guess-num">${g}</span>
-      <span class="guess-feedback ${fb.cls}">${fb.text}</span>
-      <span class="guess-arrow ${fb.cls}">${fb.arrow}</span>
-    `;
-    el.appendChild(row);
-  });
-  // Empty slots
-  const remaining = MAX_GUESSES - state.guesses.length;
-  if (!state.done) {
-    for (let i = 0; i < remaining; i++) {
-      const slot = document.createElement('div');
-      slot.className = 'guess-slot';
-      el.appendChild(slot);
+  // "Did you know?": shown after these numbers are found or missed, in the words of the old daily puzzle for each
+  // (contract 52DLE-REBUILD, item 8; each fact recomputed by scripts/verify-52dle.py).
+  var FACTS = {
+    7: "The 4th prime. The number of days in a week. Often named as people's favourite number in online polls.",
+    13: "I am the 6th prime, and the 7th Fibonacci number. Considered unlucky by many, loved by mathematicians.",
+    23: "I am the 9th prime. I am also the smallest number of people needed for a better than even chance that two of them share a birthday.",
+    28: "I am the second perfect number. My proper divisors (1,2,4,7,14) sum to me. 6 is the first — I am the second.",
+    31: "I am the 11th prime. Reverse me and you get 13, also prime. We are emirp twins.",
+    37: "I am a permutable prime — rearrange my digits and you still get primes: 37, 73. We are emirp cousins.",
+    42: "The answer to life, the universe, and everything. Also 6 × 7. Ten less than 52.",
+    52: "I am the number of cards in a standard deck. 52! ≈ 8 × 10⁶⁷ — more than the number of atoms in the Earth (about 10⁵⁰).",
+    53: "I am the 16th prime. The nearest prime greater than 52 — one more than the cards in a deck.",
+    64: "I am 8 squared. I am also 4 cubed. I am the only number (besides 1) that is both a perfect square and a perfect cube below 100.",
+    89: "I am the 11th Fibonacci number. My reverse, 98, is NOT prime. I am the largest two-digit Fibonacci.",
+    97: "I am the largest two-digit prime. My reverse, 79, is also prime — we are emirp twins.",
+    100: "10 squared. The basis of our decimal system. One hundred.",
+    144: "I am 12 squared. I am also the 12th Fibonacci number — the only Fibonacci perfect square beyond 1.",
+    271: "The first three digits of e are 2.71… I am those digits without the decimal. e ≈ 2.71828…",
+    314: "π ≈ 3.14159… I am the first three significant digits of π, without the decimal point.",
+    521: "2⁵²¹ − 1 is a Mersenne prime. I am the exponent. One of the earliest discovered by computer in 1952."
+  };
+
+  /* ---------- the clues: each code's words, and whether a number fits it ---------- */
+  function digitSum(n) { var s = 0; String(n).split('').forEach(function (d) { s += Number(d); }); return s; }
+  function isPrime(n) { if (n < 2) return false; for (var d = 2; d * d <= n; d++) if (n % d === 0) return false; return true; }
+  function isSquare(n) { var r = Math.round(Math.sqrt(n)); return r * r === n; }
+  function isCube(n) { var r = Math.round(Math.cbrt(n)); return r * r * r === n; }
+  function isTri(n) { var k = Math.round((Math.sqrt(8 * n + 1) - 1) / 2); return k * (k + 1) / 2 === n; }
+  function nFactors(n) { var c = 0; for (var d = 1; d <= n; d++) if (n % d === 0) c++; return c; }
+  // A code: its letter and its numbers (B41-50 -> 'B', [41, 50]).
+  function parse(code) {
+    var m = /^([A-Za-z])(\d*)(?:-(\d+))?$/.exec(code);
+    return { t: m[1], a: m[2] === '' ? null : Number(m[2]), b: m[3] === undefined ? null : Number(m[3]) };
+  }
+  function words(code) {
+    var c = parse(code), a = c.a;
+    switch (c.t) {
+      case 'D': return 'I have ' + a + (a === 1 ? ' digit' : ' digits');
+      case 'O': return 'I am odd';
+      case 'E': return 'I am even';
+      case 'P': return 'I am a prime number';
+      case 'p': return 'I am not a prime number';
+      case 'S': return 'I am a square number';
+      case 's': return 'I am not a square number';
+      case 'M': return 'I am in the ' + a + ' times table';
+      case 'm': return 'I am not in the ' + a + ' times table';
+      case 'U': return 'My digits add up to ' + a;
+      case 'L': return 'My last digit is ' + a;
+      case 'B': return 'I am between ' + a + ' and ' + c.b;
+      case 'C': return 'I am a cube number';
+      case 'c': return 'I am not a cube number';
+      case 'T': return 'I am a triangular number';
+      case 't': return 'I am not a triangular number';
+      case 'F': return 'I have exactly ' + a + ' factors';
     }
+    return code;
   }
-}
-
-function renderHints() {
-  const el = document.getElementById('hint-area');
-  el.innerHTML = '';
-  for (let i = 0; i < state.hintsUsed; i++) {
-    const box = document.createElement('div');
-    box.className = 'hint-box';
-    box.innerHTML = `<div class="hint-label">Hint ${i+1}</div>${puzzle.hints[i]}`;
-    el.appendChild(box);
+  function fits(code, n) {
+    var c = parse(code), a = c.a;
+    switch (c.t) {
+      case 'D': return String(n).length === a;
+      case 'O': return n % 2 === 1;
+      case 'E': return n % 2 === 0;
+      case 'P': return isPrime(n);
+      case 'p': return !isPrime(n);
+      case 'S': return isSquare(n);
+      case 's': return !isSquare(n);
+      case 'M': return n % a === 0;
+      case 'm': return n % a !== 0;
+      case 'U': return digitSum(n) === a;
+      case 'L': return n % 10 === a;
+      case 'B': return n >= a && n <= c.b;
+      case 'C': return isCube(n);
+      case 'c': return !isCube(n);
+      case 'T': return isTri(n);
+      case 't': return !isTri(n);
+      case 'F': return nFactors(n) === a;
+    }
+    return false;
   }
-}
-
-function renderStatus() {
-  document.getElementById('sv-g').textContent = MAX_GUESSES - state.guesses.length;
-  document.getElementById('sv-h').textContent = state.hintsUsed;
-  const secs = Math.floor((Date.now() - state.startTime) / 1000) + state.elapsed;
-  document.getElementById('sv-s').textContent = liveScore(state.guesses.length, state.hintsUsed, secs);
-  const btn = document.getElementById('hint-btn');
-  btn.disabled = state.hintsUsed >= MAX_HINTS || state.done;
-}
-
-function renderTimer() {
-  const secs = Math.floor((Date.now() - state.startTime) / 1000) + (state.elapsed || 0);
-  const m = Math.floor(secs / 60);
-  const s = secs % 60;
-  document.getElementById('sv-t').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-  renderStatus();
-}
-
-function renderLB(highlightName) {
-  const arr = loadLB();
-  const el = document.getElementById('lb-out');
-  if (!arr.length) {
-    el.innerHTML = '<div class="lb-empty">No scores yet — be the first.</div>';
-    return;
+  // Why a guess g breaks a clue it does not fit: "40 is not odd".
+  function broken(code, g) {
+    var c = parse(code), a = c.a;
+    switch (c.t) {
+      case 'D': return g + ' does not have ' + a + (a === 1 ? ' digit' : ' digits');
+      case 'O': return g + ' is not odd';
+      case 'E': return g + ' is not even';
+      case 'P': return g + ' is not a prime number';
+      case 'p': return g + ' is a prime number';
+      case 'S': return g + ' is not a square number';
+      case 's': return g + ' is a square number';
+      case 'M': return g + ' is not in the ' + a + ' times table';
+      case 'm': return g + ' is in the ' + a + ' times table';
+      case 'U': return g + '’s digits add up to ' + digitSum(g) + ', not ' + a;
+      case 'L': return g + '’s last digit is ' + (g % 10) + ', not ' + a;
+      case 'B': return g + ' is not between ' + a + ' and ' + c.b;
+      case 'C': return g + ' is not a cube number';
+      case 'c': return g + ' is a cube number';
+      case 'T': return g + ' is not a triangular number';
+      case 't': return g + ' is a triangular number';
+      case 'F': return g + ' has ' + nFactors(g) + ' factors, not ' + a;
+    }
+    return '';
   }
-  el.innerHTML = arr.slice(0,10).map((e,i) => `
-    <div class="lb-row ${e.name === highlightName ? 'hl' : ''}">
-      <span class="lb-rank">${i+1}</span>
-      <span class="lb-name">${escHtml(e.name)}</span>
-      <span class="lb-score">${e.sc.toLocaleString('en-GB')}</span>
-      <span class="lb-g">${e.guesses}g</span>
-      <span class="lb-h">${e.hints}h</span>
-    </div>
-  `).join('');
-}
+  // Closeness, as a share of the level's range (contract item 5): a band is a fraction of 100 or of 1000, never a
+  // fixed size, so "Very warm" means within 5 of 100 and within 50 of 1000.
+  var WARMTH = [[0.01, 'Incredibly close'], [0.05, 'Very warm'], [0.15, 'Getting warmer'], [0.4, 'In the right area']];
+  function warmth(lv, diff) {
+    var d = Math.abs(diff), top = TOP[lv];
+    for (var i = 0; i < WARMTH.length; i++) if (d <= WARMTH[i][0] * top) return { band: i + 1, word: WARMTH[i][1] };
+    return { band: 5, word: 'Far off' };
+  }
+  // A number's score (contract item 7): 100, less 20 a clue after the first and 10 a wrong guess; at least 10 if found.
+  function worth(clues, wrong, solved) {
+    if (solved === false) return 0;
+    return Math.max(10, 100 - 20 * (clues - 1) - 10 * wrong);
+  }
 
-function escHtml(s) {
-  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+  /* ---------- the pools, the daily and the run ---------- */
+  function pool(lv) { return Object.keys(LADDERS[lv]).map(Number).sort(function (a, b) { return a - b; }); }
+  function laddersOf(lv, n) { return LADDERS[lv][n].split('|').map(function (l) { return l.split(' '); }); }
+  // The date in the UK, YYYY-MM-DD: the daily turns over at midnight in Europe/London for everyone.
+  function ukDate(d) {
+    try {
+      var o = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(d).forEach(function (p) { o[p.type] = p.value; });
+      if (o.year && o.month && o.day) return o.year + '-' + o.month + '-' + o.day;
+    } catch (e) { /* no time-zone support: the device's own date */ }
+    var mm = d.getMonth() + 1, dd = d.getDate();
+    return d.getFullYear() + '-' + (mm < 10 ? '0' : '') + mm + '-' + (dd < 10 ? '0' : '') + dd;
+  }
+  // FNV-1a, 32-bit: the same text gives the same number on every device. Not a random generator.
+  function fnv(s) {
+    var h = 0x811c9dc5;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  }
+  // The day's number and ladder for a level: picked from the date and the level alone.
+  function dailyPick(date, lv) {
+    var p = pool(lv), n = p[fnv(date + '|' + lv) % p.length], ls = laddersOf(lv, n);
+    return { n: n, ladder: ls[fnv(date + '|' + lv + '|ladder') % ls.length] };
+  }
+  // A run: RUN different numbers from the level's pool (a partial Fisher-Yates shuffle), each with one of its ladders.
+  function runPick(lv) {
+    var p = pool(lv), out = [];
+    for (var i = 0; i < RUN; i++) {
+      var j = i + Math.floor(Math.random() * (p.length - i)), t = p[i]; p[i] = p[j]; p[j] = t;
+      var ls = laddersOf(lv, p[i]);
+      out.push({ n: p[i], ladder: ls[Math.floor(Math.random() * ls.length)] });
+    }
+    return out;
+  }
 
-// ─── NEXT PUZZLE TIMER ────────────────────────────────────────────────
-function renderNextTimer() {
-  const now = new Date();
-  const tomorrow = new Date(now);
-  tomorrow.setHours(24,0,0,0);
-  const diff = Math.max(0, Math.floor((tomorrow - now) / 1000));
-  const h = Math.floor(diff/3600);
-  const m = Math.floor((diff%3600)/60);
-  const s = diff%60;
-  document.getElementById('next-timer').textContent =
-    `${h}h ${m.toString().padStart(2,'0')}m ${s.toString().padStart(2,'0')}s`;
-}
-
-// ─── LEADERBOARD STORAGE ─────────────────────────────────────────────
-function loadLB() {
-  try { return JSON.parse(localStorage.getItem(LKEY())) || []; }
-  catch { return []; }
-}
-function addEntry(name, sc, guesses, hints) {
-  const arr = loadLB();
-  arr.push({ name: name||'Anonymous', sc, guesses, hints, ts: Date.now() });
-  arr.sort((a,b) => b.sc - a.sc);
-  localStorage.setItem(LKEY(), JSON.stringify(arr));
-  return arr;
-}
-
-// ─── SHARE ───────────────────────────────────────────────────────────
-function buildShareGrid() {
-  const squares = state.guesses.map(g => {
-    const d = Math.abs(g - puzzle.a);
-    if (d === 0) return '\uD83D\uDFE9';
-    if (d <= 10) return '\uD83D\uDFE8';
-    return '\uD83D\uDFE5';
-  });
-  if (!state.won) squares.push('\uD83D\uDC80');
-  return squares.join('');
-}
-
-function shareResult() {
-  const grid = buildShareGrid();
-  const secs = Math.floor(((state.endTime||Date.now()) - state.startTime) / 1000) + (state.elapsed||0);
-  const txt = `52-dle ${new Date().toLocaleDateString('en-GB')}\n${state.won ? '\u2713 ' + state.guesses.length + '/6' : '\u2717 X/6'} \u00B7 ${state.hintsUsed} hints\n${grid}\nmaffsgames.co.uk/games/52dle`;
-  if (navigator.clipboard) {
-    navigator.clipboard.writeText(txt).then(() => {
-      const btn = document.querySelector('.modal-acts .btn-ghost');
-      btn.textContent = 'Copied!';
-      MaffsLock.timer(() => btn.textContent = 'Share', 2000);
+  /* ---------- play ---------- */
+  var mode = 'run', items = [], qi = 0, Q = null, shown = 1, guesses = [], state = 'menu', total = 0, results = [], date = null;
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    MaffsLock.screen($(id));
+  }
+  function setLevel(l) {
+    if (LEVELS.indexOf(l) === -1) return;
+    level = l;
+    var bs = $('levelList').querySelectorAll('.lvl-btn');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].dataset.level === level));
+    dailyNote();
+  }
+  function dailyKey(d, lv) { return '52dle_daily_' + lv + '_' + d; }
+  function dailyState(d, lv) { try { return JSON.parse(lsGet(dailyKey(d, lv)) || 'null'); } catch (e) { return null; } }
+  function saveDaily() {
+    if (mode !== 'daily') return;
+    lsSet(dailyKey(date, level), JSON.stringify({ n: Q.n, ladder: Q.ladder, shown: shown, guesses: guesses,
+      done: state !== 'asking', solved: results.length ? results[0].solved : null, score: total }));
+  }
+  function dailyNote() {
+    var st = dailyState(ukDate(new Date()), level);
+    $('dailyNote').textContent = st && st.done ? 'Done today: ' + st.score + ' out of 100. See your result and share it.'
+      : 'One number a day, the same for everyone. Share how you did.';
+  }
+  function begin(m) {
+    MaffsLock.newSession();
+    mode = m; qi = 0; total = 0; results = [];
+    if (m === 'daily') {
+      date = ukDate(new Date());
+      var st = dailyState(date, level), pick = dailyPick(date, level);
+      if (st && st.n === pick.n && st.done) { showDailyResult(st); return; }
+      items = [pick];
+      ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+      show('game');
+      nextNumber(st && st.n === pick.n ? st : null);
+      return;
+    }
+    play(runPick(level));
+  }
+  function play(list) {
+    items = list;
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    show('game');
+    nextNumber(null);
+  }
+  function nextNumber(resume) {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    if (qi >= items.length) { finish(); return; }
+    Q = items[qi++];
+    shown = resume ? resume.shown : 1;
+    guesses = resume ? resume.guesses.slice() : [];
+    state = 'asking';
+    $('hudNLabel').textContent = mode === 'daily' ? 'Today' : 'Number';
+    $('hudN').textContent = mode === 'daily' ? LEVEL_NAME[level] : qi + '/' + items.length;
+    $('ansBlock').hidden = false;
+    $('msg').textContent = '';
+    $('guess').value = '';
+    render();
+    MaffsLock.fresh($('ansBlock'));
+    try { $('guess').focus({ preventScroll: true }); } catch (e) {}
+    saveDaily();
+  }
+  function wrongCount() { return guesses.filter(function (g) { return g !== Q.n; }).length; }
+  function render() {
+    $('clues').innerHTML = Q.ladder.map(function (code, i) {
+      if (i < shown) return '<li data-code="' + esc(code) + '"><span class="k">' + (i + 1) + '</span><span>' + esc(words(code)) + '</span></li>';
+      return state === 'asking' ? '' : '<li class="unseen" data-code="' + esc(code) + '"><span class="k">' + (i + 1) + '</span><span>' + esc(words(code)) + ' (not shown)</span></li>';
+    }).join('');
+    $('cardH').textContent = 'Clues: ' + Math.min(shown, Q.ladder.length) + ' of ' + Q.ladder.length;
+    $('clueBtn').disabled = shown >= Q.ladder.length || state !== 'asking';
+    $('clueBtn').textContent = shown >= Q.ladder.length ? 'No more clues' : 'Next clue (−20)';
+    $('worth').textContent = worth(shown, wrongCount(), true);
+    $('hudG').textContent = MAX_GUESSES - guesses.length;
+    $('hudScore').textContent = total;
+    $('guesses').innerHTML = guesses.slice().reverse().map(function (g) { return guessRow(g, true); }).join('');
+  }
+  // One guess's feedback: Higher or Lower, its closeness, and each revealed clue it breaks.
+  function guessRow(g, li) {
+    if (g === Q.n) return '';
+    var w = warmth(level, g - Q.n), brk = Q.ladder.slice(0, shown).filter(function (c) { return !fits(c, g); });
+    var html = '<div class="g-top"><span class="g-num">' + g + '</span><span class="g-dir" data-dir="' + (g < Q.n ? 'higher' : 'lower') + '">' +
+      (g < Q.n ? '↑ Higher' : '↓ Lower') + '</span><span class="g-warm" data-band="' + w.band + '">' + w.word + '</span></div>' +
+      (brk.length ? '<ul class="g-broken">' + brk.map(function (c) { return '<li data-code="' + esc(c) + '">' + esc(broken(c, g)) + '</li>'; }).join('') + '</ul>' : '');
+    return li ? '<li class="guess" data-guess="' + g + '">' + html + '</li>' : html;
+  }
+  function nextClue() {
+    if (state !== 'asking' || shown >= Q.ladder.length) return;
+    shown++;
+    $('msg').textContent = '';
+    render();
+    saveDaily();
+  }
+  // A guess: a whole number from 1 to the level's top, marked by MaffsAnswer.exact on the raw text (canon 7.1.3: 23.9
+  // is never 23). Anything else is not a guess and costs nothing.
+  function onGuess() {
+    if (state !== 'asking') return;
+    var raw = $('guess').value, v = MaffsAnswer.parse(raw), top = TOP[level];
+    if (v === null || v !== Math.floor(v) || v < 1 || v > top) {
+      $('msg').textContent = 'Guess a whole number from 1 to ' + top + '.';
+      $('msg').dataset.why = v === null ? 'unreadable' : 'range';
+      return;
+    }
+    if (!MaffsLock.lock($('ansBlock'))) return;
+    $('msg').textContent = ''; delete $('msg').dataset.why;
+    var right = MaffsAnswer.exact(raw, Q.n) === 'correct';
+    guesses.push(right ? Q.n : v);
+    $('guess').value = '';
+    if (right || guesses.length >= MAX_GUESSES) { settle(right); return; }
+    render();
+    saveDaily();
+    MaffsLock.fresh($('ansBlock'));
+    try { $('guess').focus({ preventScroll: true }); } catch (e) {}
+  }
+  // The number is found or missed: one question_answered, then the number, its clues and any fact, waiting on Next.
+  function settle(solved) {
+    state = solved ? 'done' : 'missed';
+    var wrong = wrongCount(), sc = worth(shown, wrong, solved);
+    total += sc;
+    results.push({ n: Q.n, solved: solved, score: sc, clues: shown, guesses: guesses.length });
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi,
+      question_id: '52dle-' + level + '-' + Q.n, correct: solved, attempts: guesses.length });
+    $('ansBlock').hidden = true;
+    $('msg').textContent = '';
+    render();
+    var fb = $('feedback'), fact = FACTS[Q.n];
+    var last = qi >= items.length;
+    var body = '<div class="fb ' + (solved ? 'right' : 'wrong') + '" data-why="' + (solved ? 'solved' : 'missed') + '">' +
+      '<div class="fb-head">' + (solved ? '✓ Found it: ' : '✗ Six guesses used. The number was ') + '<span class="fb-num">' + Q.n + '</span></div>' +
+      '<div class="fb-line">' + (solved ? 'In <b>' + guesses.length + '</b> ' + (guesses.length === 1 ? 'guess' : 'guesses') + ' with <b>' + shown + '</b> ' +
+        (shown === 1 ? 'clue' : 'clues') + ': <b>' + sc + '</b> points.' : 'Every clue above fits ' + Q.n + ', and no other number from 1 to ' + TOP[level] + ' fits them all.') + '</div>' +
+      (fact ? '<div class="dyk" data-fact="' + Q.n + '"><span class="h">Did you know?</span>' + esc(fact) + '</div>' : '') +
+      '<div class="fb-next">' + (solved ? '<button class="btn solid" id="nextBtn" type="button" data-maffs-lock-skip>' + (last ? 'See results →' : 'Next number →') + '</button>' : '') + '</div></div>';
+    fb.innerHTML = body;
+    $('hudScore').textContent = total;
+    saveDaily();
+    if (solved) { MaffsLock.fresh(fb); try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {} }
+    else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, fallbackMs: 2147483647, label: last ? 'See results →' : 'Next →', keep: fb.firstChild });
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next button') || fb; }, { keep: fb.firstChild });
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'missed') return;
+    state = 'moving';
+    nextNumber(null);
+  }
+  function shareText(r) {
+    var sq = r.guesses.map(function (g) {
+      if (g === r.n) return '🟩';
+      return warmth(r.level, g - r.n).band <= 2 ? '🟨' : '🟥';
     });
+    if (!r.solved) sq.push('💀');
+    return '52-dle ' + r.date + ' · ' + LEVEL_NAME[r.level] + '\n' + (r.solved ? '✓ ' + r.guesses.length + '/6' : '✗ X/6') +
+      ' · ' + r.shown + (r.shown === 1 ? ' clue' : ' clues') + ' · ' + r.score + '/100\n' + sq.join('') + '\nmaffsgames.co.uk/games/52dle';
   }
-}
-
-// ─── ACTIONS ─────────────────────────────────────────────────────────
-function setMsg(text, ok) {
-  const el = document.getElementById('msg-bar');
-  el.textContent = text;
-  el.className = 'msg' + (ok ? ' ok' : '');
-}
-
-function submitGuess() {
-  if (state.done) return;
-  const input = document.getElementById('guess-input');
-  // The raw text is marked, never a number cut from it (canon 7.1.3): 23.9 is not 23 (52dle-t2-001).
-  const raw = input.value.trim();
-  const val = MaffsAnswer.parse(raw);
-  if (val === null || val < 0) {
-    setMsg('Enter a valid positive number.');
-    input.classList.add('shake');
-    MaffsLock.timer(() => input.classList.remove('shake'), 400);
-    return;
+  // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var found = results.filter(function (r) { return r.solved; }).length;
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: total, questions_answered: results.length, questions_correct: found });
+    if (mode === 'daily') {
+      var st = dailyState(date, level) || {};
+      showDailyResult(st);
+      return;
+    }
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, level, total, results.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, level, total);
+    var pbKey = '52dle_best_' + level, prev = parseInt(lsGet(pbKey) || '0', 10) || 0, pb = total > prev;
+    if (pb) { ev('personal_best_set', { game_slug: SLUG, level: level, mode: mode, score: total, previous_best: prev }); lsSet(pbKey, String(total)); }
+    $('resTitle').textContent = 'Five numbers done';
+    $('resScore').textContent = total;
+    $('resOf').textContent = 'out of ' + (100 * RUN) + ' · ' + LEVEL_NAME[level];
+    $('resPer').innerHTML = results.map(function (r) {
+      return '<li data-n="' + r.n + '"><span class="n">' + r.n + '</span><span>' + (r.solved ? r.guesses + (r.guesses === 1 ? ' guess, ' : ' guesses, ') + r.clues + (r.clues === 1 ? ' clue' : ' clues') : 'missed') +
+        '</span><span class="s">' + r.score + '</span></li>';
+    }).join('');
+    $('resStats').innerHTML = '<b>' + found + '</b> of <b>' + results.length + '</b> found' + (pb ? '<br>New personal best' : '');
+    $('shareGrid').hidden = true; $('shareBtn').hidden = true; $('dailyList').hidden = true;
+    $('againBtn').hidden = false;
+    show('results');
+  });
+  function showDailyResult(st) {
+    state = 'over';
+    var r = { n: st.n, level: level, date: date, guesses: st.guesses || [], solved: !!st.solved, shown: st.shown || 1, score: st.score || 0 };
+    $('resTitle').textContent = 'Today’s number: ' + r.n;
+    $('resScore').textContent = r.score;
+    $('resOf').textContent = 'out of 100 · ' + LEVEL_NAME[level] + ' · ' + date;
+    $('resPer').innerHTML = '';
+    $('resStats').innerHTML = r.solved ? 'Found in <b>' + r.guesses.length + '</b> ' + (r.guesses.length === 1 ? 'guess' : 'guesses') + ' with <b>' + r.shown + '</b> ' + (r.shown === 1 ? 'clue' : 'clues') + '. A new number tomorrow.'
+      : 'Missed today. A new number tomorrow.';
+    $('shareGrid').hidden = false;
+    $('shareGrid').textContent = shareText(r).split('\n')[2];
+    $('shareGrid').dataset.text = shareText(r);
+    $('shareBtn').hidden = false; $('shareBtn').textContent = 'Share';
+    $('dailyList').hidden = false;
+    renderDailyList();
+    $('againBtn').hidden = true;
+    show('results');
   }
-  // One mark per guess (canon 7.6.0): an unreadable entry above is never marked, so it takes no lock.
-  const area = document.getElementById('input-area');
-  if (!MaffsLock.lock(area)) return;
-  setMsg('');
-  state.guesses.push(val);
-  const won = MaffsAnswer.exact(raw, puzzle.a) === 'correct';
-  mfg('question_answered',{game_slug:'52dle',level:'all',correct:won,question_index:state.guesses.length});
-  if (won || state.guesses.length >= MAX_GUESSES) {
-    endGame(won);
+  // Today's list: names and scores kept on this device only, never sent anywhere.
+  function listKey() { return '52dle_list_' + level + '_' + date; }
+  function renderDailyList() {
+    var arr = [];
+    try { arr = JSON.parse(lsGet(listKey()) || '[]'); } catch (e) {}
+    $('dailyOl').innerHTML = arr.length ? arr.map(function (e) { return '<li>' + esc(e.name) + ': ' + e.score + '</li>'; }).join('') : '<li>Nobody yet.</li>';
   }
-  renderGuesses();
-  renderStatus();
-  saveState();
-  input.value = '';
-  if (!state.done) MaffsLock.fresh(area);   // the next guess: a second Enter on this one lands on nothing
-  input.focus();
-}
-
-function useHint() {
-  if (state.hintsUsed >= MAX_HINTS || state.done) return;
-  state.hintsUsed++;
-  renderHints();
-  renderStatus();
-  saveState();
-}
-
-// Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
-function endGame(won) { finishGame(won); }
-const finishGame = MaffsLock.finishOnce(function (won) {
-  state.done = true;
-  state.won = won;
-  state.endTime = Date.now();
-  clearInterval(timerInterval);
-  saveState();
-  document.getElementById('input-area').style.opacity = '0.4';
-  document.getElementById('input-area').style.pointerEvents = 'none';
-  document.getElementById('submit-btn').disabled = true;
-
-  const secs = Math.floor((state.endTime - state.startTime) / 1000) + (state.elapsed||0);
-  const sc = calcScore(state.guesses.length, state.hintsUsed, secs, won);
-  state.finalScore = sc;
-  saveState();
-
-  window._ggAbandoned=false;
-  mfg('game_completed',{game_slug:'52dle',level:'all',score:sc,questions_answered:state.guesses.length,accuracy:won?100:0});
-  if(window.MaffsLeaderboard){MaffsLeaderboard.submitScore('52dle','all',sc,state.guesses.length).catch(function(){});if(window.MaffsScoreHistory){MaffsScoreHistory.record('52dle','all',sc);}}
-
-  MaffsLock.timer(() => showModal(won, sc, secs), 500);
-});
-
-function showModal(won, sc, secs) {
-  const m = document.getElementById('modal');
-  m.classList.remove('hidden');
-  document.getElementById('modal-result').textContent = won ? 'Correct!' : 'Hard Luck.';
-  document.getElementById('modal-result').className = 'modal-result ' + (won ? 'win' : 'lose');
-  document.getElementById('modal-answer').innerHTML = `The answer was <span>${puzzle.a}</span>: ${puzzle.cat}`;
-  document.getElementById('share-grid').textContent = buildShareGrid();
-
-  const guesses = state.guesses.length;
-  const hints   = state.hintsUsed;
-  const mins    = Math.floor(secs/60);
-  const remSecs = secs%60;
-  document.getElementById('modal-score').innerHTML = `
-    <div class="ms-item"><span class="ms-val">${sc.toLocaleString('en-GB')}</span><span class="ms-lbl">Final Score</span></div>
-    <div class="ms-item"><span class="ms-val">${guesses}/${MAX_GUESSES}</span><span class="ms-lbl">Guesses</span></div>
-    <div class="ms-item"><span class="ms-val">${hints}</span><span class="ms-lbl">Hints Used</span></div>
-    <div class="ms-item"><span class="ms-val">${mins}:${remSecs.toString().padStart(2,'0')}</span><span class="ms-lbl">Time</span></div>
-  `;
-
-  if (!won) {
-    document.getElementById('modal-name-section').style.display = 'none';
-    document.getElementById('modal-submit-btn').style.display = 'none';
+  function saveName() {
+    var name = $('nameIn').value.trim().slice(0, 20) || 'Anonymous', st = dailyState(date, level) || {}, arr = [];
+    try { arr = JSON.parse(lsGet(listKey()) || '[]'); } catch (e) {}
+    arr.push({ name: name, score: st.score || 0 });
+    arr.sort(function (a, b) { return b.score - a.score; });
+    lsSet(listKey(), JSON.stringify(arr));
+    $('nameIn').value = '';
+    renderDailyList();
   }
-}
-
-function closeModal() {
-  document.getElementById('modal').classList.add('hidden');
-}
-
-function submitToLB() {
-  const name = document.getElementById('name-input').value.trim().slice(0,20) || 'Anonymous';
-  const secs = Math.floor((state.endTime - state.startTime) / 1000) + (state.elapsed||0);
-  addEntry(name, state.finalScore, state.guesses.length, state.hintsUsed);
-  document.getElementById('modal').classList.add('hidden');
-  renderLB(name);
-  setMsg('Score submitted!', true);
-}
-
-// ─── KEYBOARD ────────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !state.done) submitGuess();
-});
-
-// ─── INIT ────────────────────────────────────────────────────────────
-function init() {
-  puzzle = PUZZLES[dayIdx()];
-  state  = loadState();
-
-  document.getElementById('clue-text').textContent = puzzle.clue;
-  document.getElementById('cat-badge').textContent  = puzzle.cat;
-
-  renderGuesses();
-  renderHints();
-  renderStatus();
-  renderLB('');
-
-  if (state.done) {
-    document.getElementById('input-area').style.opacity = '0.4';
-    document.getElementById('input-area').style.pointerEvents = 'none';
-    const secs = Math.floor(((state.endTime||Date.now()) - state.startTime) / 1000) + (state.elapsed||0);
-    document.getElementById('sv-t').textContent = (() => {
-      const m = Math.floor(secs/60);
-      const s = secs%60;
-      return `${m}:${s.toString().padStart(2,'0')}`;
-    })();
-    document.getElementById('sv-s').textContent = state.finalScore || 0;
-  } else {
-    MaffsLock.fresh(document.getElementById('input-area'));
-    timerInterval = setInterval(renderTimer, 1000);
-    window._ggAbandoned=true;
-    mfg('game_started',{game_slug:'52dle',level:'all'});
-    if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'52dle',level:'all',questions_answered:state.guesses.length})});}
+  function share() {
+    var txt = $('shareGrid').dataset.text || '';
+    if (navigator.clipboard) navigator.clipboard.writeText(txt).then(function () {
+      $('shareBtn').textContent = 'Copied';
+      MaffsLock.timer(function () { $('shareBtn').textContent = 'Share'; }, 2000);
+    }).catch(function () {});
   }
 
-  setInterval(renderNextTimer, 1000);
-  renderNextTimer();
-}
+  /* ---------- wiring ---------- */
+  $('levelList').addEventListener('click', function (e) { var b = e.target.closest('[data-level]'); if (b) setLevel(b.dataset.level); });
+  $('modeList').addEventListener('click', function (e) { var b = e.target.closest('[data-mode]'); if (b) begin(b.dataset.mode); });
+  $('guessRow').addEventListener('submit', function (e) { e.preventDefault(); onGuess(); });
+  $('clueBtn').addEventListener('click', nextClue);
+  $('feedback').addEventListener('click', function (e) { if (e.target.closest('#nextBtn') && state === 'done') advance(); });
+  $('againBtn').addEventListener('click', function () { begin(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; dailyNote(); show('menu'); });
+  $('shareBtn').addEventListener('click', share);
+  $('saveBtn').addEventListener('click', saveName);
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+  setLevel(level);
 
-init();
+  // Read-only views and drivers, for scripts/verify-52dle.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  window.D52 = {
+    SLUG: SLUG, LEVELS: LEVELS, TOP: copy(TOP), RUN: RUN, MAX_GUESSES: MAX_GUESSES, FACTS: copy(FACTS),
+    ladders: function () { return copy(LADDERS); },
+    words: words, fits: fits, broken: broken, warmth: warmth, worth: worth,
+    dailyPick: dailyPick, runPick: runPick, ukDate: function (iso) { return ukDate(new Date(iso)); },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      number: function () { return Q ? Q.n : null; },
+      ladder: function () { return Q ? Q.ladder.slice() : null; },
+      items: function () { return copy(items); },
+      shown: function () { return shown; },
+      total: function () { return total; },
+      results: function () { return copy(results); },
+      setLevel: setLevel,
+      start: function (m) { begin(m); },
+      // One number with one of its ladders, as a run of one, so a verifier can play any number.
+      preview: function (lv, n, k) {
+        setLevel(lv);
+        MaffsLock.newSession();
+        mode = 'run'; qi = 0; total = 0; results = [];
+        play([{ n: n, ladder: laddersOf(lv, n)[k || 0] }]);
+      },
+      // Guess right, or (wrong) six whole numbers that are not the number, each through the Guess button.
+      answer: function (right) {
+        if (state !== 'asking') return;
+        var n = Q.n, top = TOP[level], k = 0;
+        while (state === 'asking' && k < MAX_GUESSES) {
+          var g = right ? n : (n + k + 1 <= top ? n + k + 1 : n - k - 1);
+          MaffsLock.fresh($('ansBlock'), 0);
+          $('guess').value = String(g);
+          $('guessBtn').click();
+          k++;
+          if (right) break;
+        }
+      },
+      guess: function (raw) { MaffsLock.fresh($('ansBlock'), 0); $('guess').value = raw; $('guessBtn').click(); },
+      clue: function () { $('clueBtn').click(); },
+      next: function () { var b = $('nextBtn') || document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); else if (state === 'done' || state === 'missed') advance(); }
+    }
+  };
+})();
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), '52dle');</script>
