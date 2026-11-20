@@ -1941,6 +1941,21 @@
     "crossing a ten",
     "essentials"
    ]
+  },
+  {
+   "slug": "maffscards",
+   "search_phrase": "MaffsCards Number Card",
+   "description": "Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi.",
+   "keywords": [
+    "number properties",
+    "factors",
+    "prime factors",
+    "roman numerals",
+    "square numbers",
+    "pi",
+    "card game",
+    "ks3"
+   ]
   }
  ],
  "rooms": [

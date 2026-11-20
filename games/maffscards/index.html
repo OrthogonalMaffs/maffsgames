@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<meta name="description" content="Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi. For KS3. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/maffscards/">
+<meta property="og:title" content="MaffsCards Number Card Game – KS3 Maths | MaffsGames">
+<meta property="og:description" content="Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi. For KS3. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/maffscards/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>MaffsCards Number Card Game – KS3 Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row (KS3, canon 7.5.1). Outfit and JetBrains Mono, as the printed
+   deck (tools/maffscards/build_pdf.py). The accent is the printed deck's nickname teal, darkened to teal-700 so text in it
+   and white text on it clear 4.5:1 on white and on --surface-alt. Nothing relies on colour alone: the winning side says
+   "Wins" in words, the chosen row is outlined and the Play button names it. */
+:root{--accent:#0f766e;--accent-dim:#ccfbf1;--on-accent:#ffffff;--ink:#1a2744;--back:#0f766e;--back2:#115e59}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:760px;width:100%;padding:1rem}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:.4rem}
+.hud{flex:1 1 auto;min-width:0;display:flex;flex-direction:column;align-items:center;font-size:.75rem;color:var(--muted);line-height:1.25;text-align:center}
+.hud>span{white-space:nowrap}
+.hud .wins{display:flex;flex-wrap:wrap;justify-content:center;column-gap:.25rem}
+.hud b{color:var(--text);font-family:var(--font-num)}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:800;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.55}
+.menu-info p+p{margin-top:.5rem}
+.mode-h{font-size:.75rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.9rem 0 .35rem}
+.opts{display:flex;gap:.4rem;flex-wrap:wrap}
+.opt-btn{flex:1 1 0;min-width:110px;min-height:48px;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;font-weight:600;font-size:.9rem;cursor:pointer;line-height:1.2;padding:.3rem .5rem}
+.opt-btn small{display:block;font-weight:400;font-size:.78rem;color:var(--muted)}
+.opt-btn[aria-pressed="true"]{border-color:var(--accent);color:var(--accent);background:var(--surface)}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.start-row{display:flex;justify-content:center;margin-top:1rem}
+.start-row .btn{min-width:12rem;font-size:1.05rem}
+.note{font-size:.85rem;color:var(--muted);margin-top:.7rem}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-text)}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+
+/* ---------- the table: three counts, Marvin's face-down card among them ---------- */
+.counts{display:grid;grid-template-columns:1fr 1fr 1fr;gap:.4rem;margin:.1rem 0 .35rem}
+.count{display:flex;justify-content:center;align-items:baseline;gap:.3rem;border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:.2rem .3rem;line-height:1.2}
+.count .cl{font-size:.8rem;color:var(--muted)}
+.count b{font-family:var(--font-num);font-size:1.05rem}
+.count.mar{background:repeating-linear-gradient(45deg,var(--back) 0 6px,var(--back2) 6px 12px);border-color:var(--back2);color:var(--on-accent)}
+.count.mar .cl{color:var(--on-accent)}
+.count.mar b{display:inline-block;background:var(--back2);padding:0 .35rem;border-radius:6px}
+.say{font-size:.92rem;line-height:1.35;margin:0 0 .35rem;min-height:1.35em}
+.say .who{font-weight:700;color:var(--accent)}
+
+/* ---------- a card, as the printed deck draws it ---------- */
+.card{background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:14px;padding:.45rem .6rem .5rem;max-width:420px;margin:0 auto}
+.mc-top{display:grid;grid-template-columns:auto 1fr auto;gap:.5rem;align-items:center}
+.mc-num{font-weight:800;font-size:2.3rem;line-height:.95;letter-spacing:-.02em}
+.mc-deck{font-family:var(--font-num);font-size:.75rem;font-weight:600;border:1px solid var(--ink);border-radius:4px;padding:.05rem .3rem;align-self:start;margin-top:.15rem}
+.mc-nick{font-weight:700;color:var(--accent);font-size:.92rem;line-height:1.2}
+.mc-dotbox{display:flex;justify-content:center;align-items:center;height:26px;margin:.2rem 0 .2rem}
+.mc-dots{display:block;fill:var(--ink)}
+.mc-rows{display:flex;flex-direction:column}
+.mc-row{display:flex;justify-content:space-between;align-items:center;gap:.5rem;width:100%;min-height:38px;padding:.15rem .4rem;border:0;border-top:1px solid var(--ink);background:transparent;color:var(--ink);font:inherit;text-align:left;cursor:pointer;border-radius:0}
+.mc-row:hover{background:var(--surface-alt)}
+.mc-row[aria-pressed="true"]{background:var(--accent-dim);outline:3px solid var(--accent);outline-offset:-3px;border-radius:6px}
+.mc-row:disabled{cursor:default;opacity:1}
+.mc-row:disabled:hover{background:transparent}
+.mc-row[aria-pressed="true"]:disabled:hover{background:var(--accent-dim)}
+.mc-lab{font-size:.86rem;font-weight:500;line-height:1.25}
+.mc-roman{font-family:var(--font-num);font-size:.78rem}
+.mc-low{font-weight:700;font-size:.75rem;border:1px solid var(--ink);border-radius:4px;padding:0 .25rem;white-space:nowrap}
+.mc-val{font-family:var(--font-num);font-weight:700;font-size:1.05rem;white-space:nowrap}
+.mc-badges{display:inline-flex;flex-wrap:wrap;gap:.2rem;vertical-align:middle;margin-left:.15rem}
+.mc-badge{border:1px solid var(--ink);border-radius:99px;padding:0 .4rem;font-weight:600;font-size:.75rem;line-height:1.35}
+.mc-nobadge{font-size:.75rem;font-style:italic}
+.play-row{display:flex;justify-content:center;margin:.45rem 0 .2rem;min-height:48px}
+.play-row .btn{min-width:min(100%,18rem)}
+.hint{font-size:.85rem;color:var(--muted);text-align:center;align-self:center}
+
+/* ---------- the reveal: both cards compact, the values side by side ---------- */
+.rv-cat{text-align:center;font-weight:700;font-size:1rem;margin:.1rem 0 .35rem}
+.rv-cat .mc-low{font-size:.75rem;margin-left:.3rem}
+.rv-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;align-items:stretch}
+.rv-side{perspective:900px;display:flex}
+.flip{display:grid;width:100%;transition:transform .6s ease;transform-style:preserve-3d}
+.flip.turned{transform:rotateY(180deg)}
+.face{grid-area:1/1;backface-visibility:hidden;-webkit-backface-visibility:hidden;border:2px solid var(--ink);border-radius:12px;padding:.35rem .45rem;background:var(--surface);color:var(--ink);display:flex;flex-direction:column}
+.face.back{background:repeating-linear-gradient(45deg,var(--back) 0 8px,var(--back2) 8px 16px);border-color:var(--back2)}
+.flip .face.front{transform:rotateY(180deg)}
+.rv-who{font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;display:flex;justify-content:space-between;align-items:center;gap:.3rem}
+.rv-who>span:first-child{display:flex;align-items:baseline;gap:.35rem}
+.rv-win{font-size:.75rem;border:1.5px solid var(--correct);color:var(--correct);border-radius:4px;padding:0 .25rem;letter-spacing:0;text-transform:none}
+.rv-num{font-weight:800;font-size:1.6rem;line-height:1;letter-spacing:0;text-transform:none}
+.rv-nick{font-size:.78rem;font-weight:700;color:var(--accent);line-height:1.2;margin:.1rem 0 .2rem}
+.rv-val{font-family:var(--font-num);font-weight:700;font-size:1.5rem;text-align:center;border:1px solid var(--ink);border-radius:8px;padding:.05rem 0;margin-bottom:.25rem}
+.rv-side.win .rv-val{background:var(--accent-dim);outline:3px solid var(--correct);outline-offset:-1px}
+.rv-how{font-size:.78rem;line-height:1.3;font-family:var(--font-num);overflow-wrap:anywhere}
+.rv-out{text-align:center;font-weight:700;font-size:.98rem;margin:.45rem 0 .2rem}
+.quip{font-size:.9rem;line-height:1.35;background:var(--surface-alt);border-radius:10px;padding:.35rem .55rem;margin:.25rem 0}
+.quip .who{font-weight:700;color:var(--accent)}
+.rv-next{display:flex;justify-content:center;margin:.35rem 0 .2rem}
+.rv-next .btn{min-width:10rem}
+@keyframes mcLeft{to{transform:translateX(-60%) scale(.6);opacity:0}}
+@keyframes mcRight{to{transform:translateX(60%) scale(.6);opacity:0}}
+@keyframes mcMid{to{transform:scale(.5);opacity:0}}
+.rv-grid.go-you{animation:mcLeft .4s ease-in forwards}
+.rv-grid.go-marvin{animation:mcRight .4s ease-in forwards}
+.rv-grid.go-mid{animation:mcMid .4s ease-in forwards}
+
+/* ---------- results ---------- */
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.5rem;margin-bottom:.3rem;color:var(--accent)}
+.stats{color:var(--muted);line-height:1.7;font-size:.95rem;margin:.4rem 0 .5rem}
+.stats b{color:var(--text);font-family:var(--font-num)}
+.res-quip{max-width:30em;margin:.4rem auto .7rem;text-align:left}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-note{font-size:.85rem;color:var(--muted);margin:.3rem 0 .6rem}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .card{padding:.3rem .5rem .35rem}
+  .mc-num{font-size:2rem}
+  .mc-nick{font-size:.88rem}
+  .mc-row{min-height:36px;padding:.1rem .3rem}
+}
+@media (max-height:620px){
+  .mc-dotbox{height:22px;margin:.1rem 0 .1rem}
+  .mc-num{font-size:1.8rem}
+}
+body.accessible p{line-height:1.6}
+body.accessible .say,body.accessible .quip{line-height:1.45}
+body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem}
+/* Aa (OpenDyslexic) on a phone: the same card, set tighter so its six rows and Play still fit 320 x 568 (canon 7.6.1;
+   contract MAFFSCARDS-GAME item 9). Nothing below .75rem (12 px), the site's smallest text. */
+@media (max-width:420px){
+  body.accessible .hud{line-height:1.12}
+  body.accessible .hud .aa-off{display:none}
+  body.accessible .say{font-size:.8rem}
+  body.accessible .mc-num{font-size:1.6rem}
+  body.accessible .mc-deck{display:none}
+  body.accessible .mc-nick{font-size:.75rem;line-height:1.15}
+  body.accessible .mc-dotbox{height:16px;margin:.05rem 0 .05rem}
+  body.accessible .mc-row{min-height:32px;padding-top:.15rem;padding-bottom:.15rem}
+  body.accessible .mc-lab{font-size:.76rem;line-height:1.2}
+  body.accessible .mc-low,body.accessible .mc-badge{font-size:.75rem}
+  body.accessible .mc-val{font-size:.95rem}
+  body.accessible .count .cl{font-size:.75rem}
+  body.accessible .rv-nick{display:none}
+  body.accessible .rv-num{font-size:1.3rem}
+  body.accessible .rv-val{font-size:1.1rem;margin-bottom:.15rem}
+  body.accessible .face{padding:.25rem .35rem}
+  body.accessible .quip{padding:.25rem .45rem}
+  body.accessible .rv-how{font-size:.75rem}
+  body.accessible .rv-out{font-size:.8rem;margin:.3rem 0 .1rem}
+  body.accessible .rv-cat{font-size:.85rem;margin-bottom:.25rem}
+  body.accessible .play-row .btn{font-size:.82rem;padding:.25rem .5rem;line-height:1.25}
+  body.accessible .play-row{margin-top:.35rem}
+  body.accessible .say{margin-bottom:.25rem}
+  body.accessible .quip{font-size:.8rem}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+<!-- Marvin's lines, verbatim from the contract (MAFFSCARDS-GAME parts 3 and 4, approved by Jon, 19 Nov 2026).
+     scripts/verify-maffscards.py checks every line against docs/handover/contracts/2026-11-20-maffscards-game.md. -->
+<script type="application/json" id="marvinLines">
+{
+ "sets": {
+  "sof": {
+   "W": ["I added up every factor. Twice. You added up, what, vibes?", "Your number divides into so few things. I'd feel sorry for it, if I could.", "Mine had more factors. Statistically, it also has more friends."],
+   "L": ["More factors than mine. I'm told humans call this feeling \"gutted\". Logging it.", "Out-divided by a biped. I'll be discussing this with my therapist, who is also me.", "Your number is very sociable. I respect that. I resent it, but I respect it."],
+   "D": ["Same sum of factors. Into the pile they go, like socks in a dryer.", "A tie. For one round we are mathematically equal. Don't get used to it.", "Identical totals. Is this what humans call \"a moment\"?"]
+  },
+  "lpf": {
+   "W": ["My number was hiding a bigger prime. Like a nesting doll, but smug.", "Biggest prime wins. I won, therefore I am. Is that how you say it?", "Largest prime factor: mine. I can hear the primes humming."],
+   "L": ["Your prime is bigger. I'm choosing to find that intriguing, not upsetting.", "You split your number open and found treasure. I found a 3.", "An interesting choice for a carbon-based biped. Statistically inferior, but effective."],
+   "D": ["Same largest prime. Our numbers are cousins. Awkward.", "Matching primes. Pile. I'm beginning to enjoy the pile.", "Identical prime factors. The universe is showing off again."]
+  },
+  "roman": {
+   "W": ["More letters. The Romans would be proud. Or confused. Mostly confused.", "Longer numeral. I counted the letters. Then I counted them in Latin.", "Roman length is mine. Veni, vidi, vici. I won't count those letters."],
+   "L": ["Your numeral is longer. Somewhere, a centurion is laughing at me.", "Beaten by Roman letters. Of all the ancient civilisations to lose to.", "Longer than mine. Mind you, the Romans never managed a zero."],
+   "D": ["Equal letters. Pile. Even the Romans couldn't sort this one out.", "A tie in Roman. Filing it under \"Miscellaneous, Ancient\".", "Same length. Into the middle, like a gladiator who couldn't be bothered."]
+  },
+  "dist": {
+   "W": ["Closer to a square than you. I live round the corner from one. Very handy.", "Lowest distance wins. I was nearer. I like to keep my squares close.", "Nearer a square. Humans say \"close but no cigar\". I say \"close, and cigar\"."],
+   "L": ["You're closer to a square. Your number practically lives there. Mine is visiting.", "Further from a square than you. I took the scenic route.", "An interesting choice for a carbon-based biped. Statistically inferior, but effective."],
+   "D": ["Same distance from a square. Equidistant. I've always wanted to say equidistant.", "Equally far from a square. The pile grows. I find this thrilling.", "Two numbers, one square, no winner."]
+  },
+  "powers": {
+   "W": ["More superpowers. My number has a cape. Yours has a lanyard.", "I'd show you my number's badges, but you'd only get jealous.", "Higher superpower score. I am told this is called a flex."],
+   "L": ["Your number has more superpowers. Mine is mostly just a number. Like me.", "Out-powered. I asked my number to try harder. It did not.", "More badges than mine. I'm going to need to see some identification."],
+   "D": ["Same superpowers. This category ties a lot. I've done the maths.", "Matching superpowers. Pile. This category loves a pile.", "Two heroes, one middle pile, no sequel."]
+  },
+  "pi": {
+   "W": ["Pi likes my number more. I can't blame pi.", "More appearances in pi. I've read all 1,000 digits. Twice. For fun.", "Pi and I go way back. About 3.14 back."],
+   "L": ["Your number turns up more in pi. Pi has favourites. Pi is wrong.", "Beaten on pi. I'll be having words with pi.", "An interesting choice for a carbon-based biped. Statistically inferior, but effective."],
+   "D": ["Same count in pi. Pi refuses to choose. Typical pi.", "A pi tie. Pi is irrational, so I'm not surprised.", "Equal in pi. The pile grows. Pi would approve: it never ends either."]
+  }
+ },
+ "cards": [
+  {"id": "64-played", "when": "64 played, either side", "text": "Square AND cube. It's never going to stop going on about it."},
+  {"id": "1-wins-pi", "when": "1 wins on pi", "text": "One. ONE. Defeated by the number one."},
+  {"id": "1-powers", "when": "1 played on superpowers", "text": "One has five superpowers and isn't even prime. Explain that, human."},
+  {"id": "28-sof", "when": "28 played on sum of factors", "text": "28. A perfect number. I find perfection deeply irritating."},
+  {"id": "88-roman", "when": "88 played on Roman length", "text": "LXXXVIII. That's not a numeral, it's a keyboard falling over."},
+  {"id": "37-loses", "when": "37 is Marvin's card when he loses", "text": "The Loner. I relate to it more than I'd like."},
+  {"id": "100-pi", "when": "100 played on pi", "text": "100 appears once in pi's first 1,000 digits. Once. Honestly."}
+ ],
+ "start": ["I'm studying how humans choose. Please, choose like a human.", "Shall we begin? I've calculated every outcome. I'd like to see yours."],
+ "marvinWins": ["Fascinating. You lost in a very human way. I took notes.", "A win for the machines. Don't worry, it's only cards."],
+ "playerWins": ["Beaten by a biped. I'm going to need a minute. Or a millisecond.", "You win. Statistically inferior, but effective. Well played, human."],
+ "draw": ["A hundred rounds and no winner. We are, it seems, perfectly matched. Unsettling."]
+}
+</script>
+</head>
+<body>
+<div class="container">
+  <div class="topbar"><a href="../../" class="back-link">← Back to Games</a><div class="hud" id="hud" hidden><span>Round <b id="hudRound">1</b><span id="hudCap" class="aa-off"></span></span><span class="wins"><span>Won: you <b id="wYou">0</b>,</span><span>Marvin <b id="wMar">0</b></span></span></div><button class="a11y-toggle" id="a11yToggle" type="button" aria-pressed="false" title="Easier-to-read font">Aa</button></div>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>MaffsCards</h1><div class="sub">A compare-and-win number card game. You against Marvin, the computer, who is studying humans.</div></div>
+    <div class="panel menu-info">
+      <p>Every card is a number with six values: sum of factors, largest prime factor, Roman numeral length, distance to the nearest square, superpowers and how often it turns up in pi. Pick a value you think beats Marvin's card. Highest wins, except distance to a square: lowest wins.</p>
+      <p>Win the round and you take both cards, and you choose next. A tie sends both cards to the middle pile, and the next round's winner takes those too.</p>
+      <div class="mode-h">Deck</div>
+      <div class="opts" id="optDeck">
+        <button class="opt-btn" type="button" data-opt="deck" data-val="main" aria-pressed="true">Main deck<small>32 cards</small></button>
+        <button class="opt-btn" type="button" data-opt="deck" data-val="all" aria-pressed="false">All 48<small>main and extra</small></button>
+      </div>
+      <div class="mode-h">Length</div>
+      <div class="opts" id="optLength">
+        <button class="opt-btn" type="button" data-opt="length" data-val="ten" aria-pressed="true">First to 10<small>rounds won</small></button>
+        <button class="opt-btn" type="button" data-opt="length" data-val="deck" aria-pressed="false">The entire deck<small>until one holds every card</small></button>
+      </div>
+      <div class="mode-h">Marvin</div>
+      <div class="opts" id="optMarvin">
+        <button class="opt-btn" type="button" data-opt="marvin" data-val="easy" aria-pressed="true">Easy<small>picks at random</small></button>
+        <button class="opt-btn" type="button" data-opt="marvin" data-val="hard" aria-pressed="false">Hard<small>knows the deck</small></button>
+      </div>
+      <div class="start-row"><button class="btn solid" id="startBtn" type="button">Deal the cards</button></div>
+      <p class="note">First to 10 games you win go on the leaderboard: the fewer rounds you take, the better. The entire-deck game (at most 100 rounds) has no leaderboard.</p>
+      <p class="note" id="loadMsg" hidden></p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="counts" aria-live="polite">
+      <div class="count you" title="Your cards"><span class="cl">You</span><b id="cYou">0</b></div>
+      <div class="count mid" title="The middle pile"><span class="cl">Middle</span><b id="cMid">0</b></div>
+      <div class="count mar" title="Marvin's cards, face down"><span class="cl">Marvin</span><b id="cMar">0</b></div>
+    </div>
+    <div class="say" id="say" aria-live="polite"></div>
+    <div id="choose">
+      <article class="card" id="yourCard" aria-label="Your top card"></article>
+      <div class="play-row"><span class="hint" id="hint">Tap a value to choose it.</span><button class="btn solid" id="playBtn" type="button" hidden></button></div>
+    </div>
+    <div id="reveal" hidden>
+      <div class="rv-cat" id="rvCat"></div>
+      <div class="rv-grid" id="rvGrid">
+        <div class="rv-side you" id="rvYou"></div>
+        <div class="rv-side marvin" id="rvMar"><div class="flip" id="rvFlip"><div class="face back" aria-hidden="true"></div><div class="face front" id="rvMarFront"></div></div></div>
+      </div>
+      <div class="rv-out" id="rvOut"></div>
+      <div class="quip" id="quip" hidden></div>
+      <div class="rv-next"><button class="btn solid" id="nextBtn" type="button">Next →</button></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle"></h2>
+      <div class="stats" id="resStats"></div>
+      <div class="quip res-quip" id="resQuip" hidden></div>
+      <div class="lb-note" id="lbNote"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="againBtn" type="button">Play again</button>
+        <button class="btn" id="menuBtn" type="button">Change the settings</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'maffscards', TEN = 10, CAP = 100;
+  // Four boards, first-to-10 wins only, fewest rounds best (LOWER_IS_BETTER): '<deck>-<marvin>'.
+  var BOARDS = ['main-easy', 'main-hard', 'all48-easy', 'all48-hard'];
+  var level = MaffsLevel.resolve({ slug: 'maffscards', levels: ['ks3'], fallback: 'ks3',
+    boards: ['main-easy', 'main-hard', 'all48-easy', 'all48-hard'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  var LINES = JSON.parse($('marvinLines').textContent);
+
+  /* ---------- random numbers: Math.random, or a fixed seed for scripts/verify-maffscards.py ---------- */
+  var rng = Math.random;
+  function seeded(a) {
+    return function () { a |= 0; a = a + 0x6D2B79F5 | 0; var t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+  }
+  function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function pickOne(a) { return a[Math.floor(rng() * a.length)]; }
+
+  /* =====================================================================================================
+     THE RULES: every value comes from cards.json (tools/maffscards/gen.py); nothing here recomputes one.
+     ===================================================================================================== */
+  var DATA = null, CATS = [], BYKEY = {};
+  function measure(card, key) { var v = card[key]; return BYKEY[key].measure === 'length' ? v.length : v; }
+  // 'a' if card a wins on this category, 'b' if card b does, 'tie' if they are equal. Distance: lowest wins.
+  function judge(key, a, b) {
+    var x = measure(a, key), y = measure(b, key);
+    if (x === y) return 'tie';
+    var lowWins = BYKEY[key].winner === 'lowest';
+    return (lowWins ? x < y : x > y) ? 'a' : 'b';
+  }
+  function deckOf(deck) { return DATA.cards.filter(function (c) { return deck === 'all' || c.deck === 'main'; }); }
+  // Hard Marvin sees only his own card: the category in which it beats the most other cards in the deck in use; a tie
+  // between categories goes to the one higher on the card.
+  function hardChoice(card, pool) {
+    var best = null, bestN = -1;
+    CATS.forEach(function (cat) {
+      var n = 0;
+      pool.forEach(function (o) { if (o.n !== card.n && judge(cat.key, card, o) === 'a') n++; });
+      if (n > bestN) { bestN = n; best = cat.key; }
+    });
+    return best;
+  }
+  function easyChoice() { return pickOne(CATS).key; }
+  // What a card shows for a category (the printed deck's rule: lpf 0 is "none"; Roman and superpowers count).
+  function shown(card, key) {
+    if (key === 'lpf' && card.lpf === 0) return 'none';
+    return String(measure(card, key));
+  }
+
+  /* ---------- Marvin's lines: a card line overrides when its condition holds; never the same text twice a game ---------- */
+  var CARD_TESTS = {
+    '64-played': function (x) { return x.you.n === 64 || x.marvin.n === 64; },
+    '1-wins-pi': function (x) { return x.cat === 'pi' && x.you.n === 1 && x.outcome === 'L'; },
+    '1-powers': function (x) { return x.cat === 'powers' && (x.you.n === 1 || x.marvin.n === 1); },
+    '28-sof': function (x) { return x.cat === 'sof' && (x.you.n === 28 || x.marvin.n === 28); },
+    '88-roman': function (x) { return x.cat === 'roman' && (x.you.n === 88 || x.marvin.n === 88); },
+    '37-loses': function (x) { return x.marvin.n === 37 && x.outcome === 'L'; },
+    '100-pi': function (x) { return x.cat === 'pi' && (x.you.n === 100 || x.marvin.n === 100); }
+  };
+  // x: {cat, you, marvin, outcome} with outcome from Marvin's side (W, L, D); used: the texts shown this game.
+  function quipFor(x, used) {
+    for (var i = 0; i < LINES.cards.length; i++) {
+      var c = LINES.cards[i];
+      if (CARD_TESTS[c.id](x) && !used[c.text]) { used[c.text] = true; return { text: c.text, from: 'card:' + c.id }; }
+    }
+    var left = LINES.sets[x.cat][x.outcome].filter(function (t) { return !used[t]; });
+    if (!left.length) return null;                 // every line in the set used: none this round, never a repeat
+    var t = pickOne(left);
+    used[t] = true;
+    return { text: t, from: x.cat + ' ' + x.outcome };
+  }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var opts = { deck: 'main', length: 'ten', marvin: 'easy' };
+  var G = null, state = 'menu', sel = null, R = null;
+
+  function board() { return (G.deck === 'all' ? 'all48' : 'main') + '-' + G.marvin; }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    $('hud').hidden = id !== 'game';
+    MaffsLock.screen($(id));
+  }
+
+  function deal() {
+    MaffsLock.newSession();
+    var pool = deckOf(opts.deck), cards = shuffle(pool.slice());
+    G = { deck: opts.deck, length: opts.length, marvin: opts.marvin, pool: pool, you: [], mar: [], mid: [],
+          round: 0, wins: { you: 0, marvin: 0 }, chooser: 'you', used: {}, quips: [], result: null };
+    cards.forEach(function (c, i) { (i % 2 === 0 ? G.you : G.mar).push(c); });   // dealt one each, face down
+    show('game');
+    ev('game_started', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck' });
+    beginRound();
+  }
+
+  function counts() {
+    $('cYou').textContent = G.you.length; $('cMid').textContent = G.mid.length; $('cMar').textContent = G.mar.length;
+    $('hudRound').textContent = G.round;
+    $('hudCap').textContent = G.length === 'deck' ? ' · ' + CAP + ' max' : ' · first to ' + TEN;
+    $('wYou').textContent = G.wins.you; $('wMar').textContent = G.wins.marvin;
+  }
+
+  function dots(n) {
+    var rows = 1;
+    for (var d = 1; d * d <= n; d++) if (n % d === 0) rows = d;
+    var cols = n / rows, w = 160, h = 34, pitch = Math.min(w / cols, h / rows, 9), r = pitch * 0.36;
+    var x0 = (w - pitch * cols) / 2 + pitch / 2, y0 = (h - pitch * rows) / 2 + pitch / 2, out = '';
+    for (var i = 0; i < rows; i++) for (var j = 0; j < cols; j++) out += '<circle cx="' + (x0 + j * pitch).toFixed(2) + '" cy="' + (y0 + i * pitch).toFixed(2) + '" r="' + r.toFixed(2) + '"/>';
+    var label = rows > 1 ? n + ' dots: ' + rows + ' by ' + cols : n + (n === 1 ? ' dot' : ' dots in a line');
+    return '<svg class="mc-dots" viewBox="0 0 ' + w + ' ' + h + '" width="' + w + '" height="100%" role="img" aria-label="' + label + '">' + out + '</svg>';
+  }
+  function cardHtml(c) {
+    var rows = CATS.map(function (cat) {
+      var lab = esc(cat.label);
+      if (cat.key === 'roman') lab += ' <span class="mc-roman">' + esc(c.roman) + '</span>';
+      if (cat.winner === 'lowest') lab += ' <span class="mc-low">lowest wins</span>';
+      if (cat.key === 'powers') {
+        lab += ' <span class="mc-badges">' + (c.powers.length ? c.powers.map(function (p) { return '<span class="mc-badge">' + esc(p) + '</span>'; }).join('') : '<span class="mc-nobadge">none</span>') + '</span>';
+      }
+      return '<button class="mc-row" type="button" data-key="' + cat.key + '" aria-pressed="false"><span class="mc-lab">' + lab + '</span><span class="mc-val">' + esc(shown(c, cat.key)) + '</span></button>';
+    }).join('');
+    return '<div class="mc-top"><span class="mc-num">' + c.n + '</span><span class="mc-nick">' + esc(c.nickname) + '</span><span class="mc-deck">' + (c.deck === 'main' ? 'Main deck' : 'Extra deck') + '</span></div>' +
+      '<div class="mc-dotbox">' + dots(c.n) + '</div><div class="mc-rows">' + rows + '</div>';
+  }
+
+  function beginRound() {
+    G.round++;
+    sel = null; R = null;
+    counts();
+    $('reveal').hidden = true; $('choose').hidden = false;
+    $('rvGrid').className = 'rv-grid';
+    $('yourCard').innerHTML = cardHtml(G.you[0]);
+    var say = $('say'), start = G.round === 1 ? '<span class="who">Marvin:</span> ' + esc(pickOne(LINES.start)) + ' ' : '';
+    if (G.chooser === 'you') {
+      state = 'choosing';
+      say.innerHTML = start || 'Your choice.';
+      $('playBtn').hidden = true; $('hint').hidden = false;
+    } else {
+      state = 'marvin';
+      var key = G.marvin === 'hard' ? hardChoice(G.mar[0], G.pool) : easyChoice();
+      sel = key;
+      say.innerHTML = '<span class="who">Marvin plays ' + esc(BYKEY[key].label) + '</span>';
+      $('playBtn').textContent = 'Turn Marvin\'s card over';
+      $('playBtn').hidden = false; $('hint').hidden = true;
+      try { $('playBtn').focus({ preventScroll: true }); } catch (e) {}
+    }
+    var rows = $('yourCard').querySelectorAll('.mc-row');
+    for (var i = 0; i < rows.length; i++) {
+      rows[i].disabled = state !== 'choosing';
+      rows[i].setAttribute('aria-pressed', String(rows[i].dataset.key === sel));
+    }
+  }
+
+  // One tap highlights a row and shows "Play <label>: <value>"; a second tap on that row or the button plays it.
+  function tap(key) {
+    if (state !== 'choosing' || !BYKEY[key]) return;
+    if (sel === key) { play(); return; }
+    sel = key;
+    var rows = $('yourCard').querySelectorAll('.mc-row');
+    for (var i = 0; i < rows.length; i++) rows[i].setAttribute('aria-pressed', String(rows[i].dataset.key === key));
+    $('playBtn').textContent = 'Play ' + BYKEY[key].label + ': ' + shown(G.you[0], key);
+    $('playBtn').hidden = false; $('hint').hidden = true;
+  }
+  function play() {
+    if ((state !== 'choosing' && state !== 'marvin') || !sel) return;
+    reveal(sel);
+  }
+
+  function side(c, key, who, won) {
+    return '<div class="rv-who"><span>' + who + ' <span class="rv-num">' + c.n + '</span></span>' + (won ? '<span class="rv-win">Wins</span>' : '') + '</div>' +
+      '<div class="rv-nick">' + esc(c.nickname) + '</div>' +
+      '<div class="rv-val" data-val="' + esc(shown(c, key)) + '">' + esc(shown(c, key)) + '</div>' +
+      '<div class="rv-how">' + esc(c.how[key]) + '</div>';
+  }
+  function reveal(key) {
+    var you = G.you[0], mar = G.mar[0], j = judge(key, you, mar);
+    var winner = j === 'a' ? 'you' : j === 'b' ? 'marvin' : 'tie';
+    var outcome = winner === 'marvin' ? 'W' : winner === 'you' ? 'L' : 'D';
+    var q = quipFor({ cat: key, you: you, marvin: mar, outcome: outcome }, G.used);
+    R = { cat: key, you: you.n, marvin: mar.n, winner: winner, quip: q ? q.text : null, quipFrom: q ? q.from : null, chooser: G.chooser };
+    G.quips.push(R.quip);
+    state = 'reveal';
+    var cat = BYKEY[key];
+    $('choose').hidden = true; $('reveal').hidden = false;
+    $('say').innerHTML = '';
+    $('rvCat').innerHTML = esc(cat.label) + (cat.winner === 'lowest' ? '<span class="mc-low">lowest wins</span>' : '');
+    $('rvYou').className = 'rv-side you' + (winner === 'you' ? ' win' : '');
+    $('rvYou').innerHTML = '<div class="face">' + side(you, key, 'You', winner === 'you') + '</div>';
+    $('rvMar').className = 'rv-side marvin' + (winner === 'marvin' ? ' win' : '');
+    $('rvMarFront').innerHTML = side(mar, key, 'Marvin', winner === 'marvin');
+    var flip = $('rvFlip');
+    flip.classList.remove('turned');
+    void flip.offsetWidth;                         // so the turn is animated (none under prefers-reduced-motion)
+    flip.classList.add('turned');
+    var a = shown(you, key), b = shown(mar, key);
+    $('rvOut').textContent = winner === 'tie' ? 'A tie: ' + a + ' and ' + b + '. Both cards go to the middle pile.'
+      : winner === 'you' ? 'You win the round: ' + a + ' beats ' + b + '.' : 'Marvin wins the round: ' + b + ' beats ' + a + '.';
+    $('quip').hidden = !q;
+    $('quip').innerHTML = q ? '<span class="who">Marvin:</span> ' + esc(q.text) : '';
+    $('nextBtn').textContent = 'Next →';
+    try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+  }
+
+  // Next: the cards slide to the winner's pile (or the middle), then the next round. The page never moves on by itself.
+  function next() {
+    if (state !== 'reveal') return;
+    state = 'moving';
+    var grid = $('rvGrid'), done = false;
+    function go() { if (done) return; done = true; settle(); }
+    var still = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (still || typeof grid.animate !== 'function' && !('onanimationend' in grid)) { go(); return; }
+    grid.addEventListener('animationend', go, { once: true });
+    MaffsLock.timer(go, 700);                      // if the animation never reports its end
+    grid.classList.add(R.winner === 'you' ? 'go-you' : R.winner === 'marvin' ? 'go-marvin' : 'go-mid');
+  }
+  function settle() {
+    var you = G.you.shift(), mar = G.mar.shift();
+    if (R.winner === 'you') { G.you.push(you, mar); G.you = G.you.concat(G.mid); G.mid = []; G.wins.you++; G.chooser = 'you'; }
+    else if (R.winner === 'marvin') { G.mar.push(mar, you); G.mar = G.mar.concat(G.mid); G.mid = []; G.wins.marvin++; G.chooser = 'marvin'; }
+    else G.mid.push(you, mar);                     // a tie: the same player chooses again
+    var end = over();
+    if (end) { G.result = end; finish(); } else beginRound();
+  }
+  // {winner: 'you' | 'marvin' | 'draw', why}, or null to play on.
+  function over() {
+    var y = G.you.length, m = G.mar.length;
+    if (G.length === 'ten') {
+      if (G.wins.you >= TEN) return { winner: 'you', why: 'ten' };
+      if (G.wins.marvin >= TEN) return { winner: 'marvin', why: 'ten' };
+      if (!y || !m) return { winner: y > m ? 'you' : m > y ? 'marvin' : 'draw', why: 'out' };
+      return null;
+    }
+    if (!y || !m) return { winner: y > m ? 'you' : m > y ? 'marvin' : 'draw', why: 'out' };
+    if (G.round >= CAP) return { winner: y > m ? 'you' : m > y ? 'marvin' : 'draw', why: 'cap' };
+    return null;
+  }
+  // A leaderboard score only for a first-to-10 game the player wins by reaching 10: the rounds taken, fewest best.
+  function boardScore() {
+    if (G.length !== 'ten' || G.result.winner !== 'you' || G.result.why !== 'ten') return null;
+    return G.round;
+  }
+
+  // Once per game (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var res = G.result, score = boardScore();
+    ev('game_completed', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', score: G.round, won: res.winner === 'you' });
+    if (score !== null && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board(), score, score).catch(function () {});
+    var end = res.winner === 'you' ? pickOne(LINES.playerWins) : res.winner === 'marvin' ? pickOne(LINES.marvinWins)
+      : res.why === 'cap' ? LINES.draw[0] : null;
+    $('resTitle').textContent = res.winner === 'you' ? 'You win' : res.winner === 'marvin' ? 'Marvin wins' : 'A draw';
+    var why = res.why === 'ten' ? 'First to ' + TEN + ' rounds won' : res.why === 'cap' ? CAP + ' rounds played' : (G.you.length ? 'Marvin' : 'You') + ' ran out of cards';
+    $('resStats').innerHTML = esc(why) + ' · <b>' + G.round + '</b> round' + (G.round === 1 ? '' : 's') +
+      '<br>Rounds won: you <b>' + G.wins.you + '</b>, Marvin <b>' + G.wins.marvin + '</b>' +
+      '<br>Cards: you <b>' + G.you.length + '</b>, middle <b>' + G.mid.length + '</b>, Marvin <b>' + G.mar.length + '</b>';
+    $('resQuip').hidden = !end;
+    $('resQuip').innerHTML = end ? '<span class="who">Marvin:</span> ' + esc(end) : '';
+    $('lbNote').textContent = score !== null ? 'Leaderboard score: ' + score + ' rounds (fewer is better).'
+      : G.length === 'ten' ? 'Win a first-to-10 game to get on the leaderboard.' : 'The entire-deck game has no leaderboard.';
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  function setOpt(name, val) {
+    opts[name] = val;
+    var bs = document.querySelectorAll('.opt-btn[data-opt="' + name + '"]');
+    for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].dataset.val === val));
+  }
+  $('menu').addEventListener('click', function (e) { var b = e.target.closest('.opt-btn'); if (b) setOpt(b.dataset.opt, b.dataset.val); });
+  // Start before cards.json has arrived: the deal waits for it.
+  $('startBtn').addEventListener('click', function () { if (DATA) deal(); else ready.then(function (ok) { if (ok && state === 'menu') deal(); }); });
+  $('yourCard').addEventListener('click', function (e) { var r = e.target.closest('.mc-row'); if (r && !r.disabled) tap(r.dataset.key); });
+  $('playBtn').addEventListener('click', play);
+  $('nextBtn').addEventListener('click', next);
+  $('againBtn').addEventListener('click', function () { if (state === 'over') deal(); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // The deck: cards.json, written by tools/maffscards/gen.py beside this page. XMLHttpRequest, not fetch: the local
+  // test server (scripts/serve-stubbed.py) replaces window.fetch on every page, so a fetch would never load in a check.
+  var ready = new Promise(function (resolve) {
+    function failed() {
+      $('loadMsg').hidden = false;
+      $('loadMsg').textContent = 'The cards did not load. Check your connection and refresh the page.';
+      $('startBtn').disabled = true;
+      resolve(false);
+    }
+    var x = new XMLHttpRequest();
+    x.open('GET', 'cards.json');
+    x.onload = function () {
+      if (x.status !== 200) { failed(); return; }
+      try { var d = JSON.parse(x.responseText); } catch (e) { failed(); return; }
+      DATA = d; CATS = d.categories; CATS.forEach(function (c) { BYKEY[c.key] = c; });
+      resolve(true);
+    };
+    x.onerror = failed;
+    x.send();
+  });
+
+  // Read-only views and drivers, for scripts/verify-maffscards.py.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  window.MC = {
+    SLUG: SLUG, BOARDS: BOARDS, TEN: TEN, CAP: CAP, ready: ready,
+    loaded: function () { return !!DATA; },
+    lines: function () { return copy(LINES); },
+    seed: function (n) { rng = seeded(n); },
+    judge: function (key, a, b) { return judge(key, a, b); },
+    judgeAll: function () {
+      var out = [];
+      DATA.cards.forEach(function (a) { DATA.cards.forEach(function (b) { CATS.forEach(function (c) { out.push([a.n, b.n, c.key, judge(c.key, a, b)]); }); }); });
+      return out;
+    },
+    hardAll: function (deck) { var pool = deckOf(deck); return pool.map(function (c) { return [c.n, hardChoice(c, pool)]; }); },
+    quipFor: function (x, used) { return quipFor(x, used); },
+    ui: {
+      state: function () { return state; },
+      selected: function () { return sel; },
+      set: function (name, val) { setOpt(name, val); },
+      start: function () { deal(); },
+      tap: tap,
+      play: play,
+      next: next,
+      last: function () { return R ? copy(R) : null; },
+      board: function () { return G ? board() : null; },
+      game: function () {
+        return G ? { deck: G.deck, length: G.length, marvin: G.marvin, round: G.round, wins: copy(G.wins), chooser: G.chooser,
+          you: G.you.map(function (c) { return c.n; }), mar: G.mar.map(function (c) { return c.n; }), mid: G.mid.map(function (c) { return c.n; }),
+          quips: G.quips.slice(), result: G.result ? copy(G.result) : null } : null;
+      },
+      // For the cap and end tests: replace the piles (by card number) and the round count mid-game.
+      rig: function (youNs, marNs, round, wins) {
+        var by = {}; DATA.cards.forEach(function (c) { by[c.n] = c; });
+        G.you = youNs.map(function (n) { return by[n]; }); G.mar = marNs.map(function (n) { return by[n]; }); G.mid = [];
+        G.round = round - 1; if (wins) G.wins = copy(wins);
+        beginRound();
+      }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'maffscards');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
