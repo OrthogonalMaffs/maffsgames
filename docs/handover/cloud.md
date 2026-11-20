@@ -72,8 +72,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 ## 2026-11-20 (cloud): PACK-WORDING-VERSIONS (`docs/handover/contracts/2026-11-20-pack-wording-versions.md`; Jon 20 Nov)
 
 Agent Claude Code (cloud), branch `claude/nifty-faraday-13526r` restarted from main cbad9b0. Tier Small.
-**Close-outs carried (first commit):** #845 ESCAPE-WORDING, recorded in its entry below.
-In progress.
+**Close-outs carried (first commit, 1f7cbe3):** #845 ESCAPE-WORDING, recorded in its entry below (check-site 44690793429, phone-fit-full 44690793221, pages 44690792634, all success).
+Done on the branch: `tools/pack-generator/rooms/christmas-tree-fiasco/config.json` pack_version 3 -> 4, wording_approved 2026-11-13 -> 2026-11-20; `heatwave-mutiny/config.json` pack_version 2 -> 3, wording_approved 2026-11-17 -> 2026-11-20. Todo PACKS-V2-UPLOAD (the repo's record of the Tes versions; README :73 points to it) now names christmas-tree-fiasco v4 replacing v3 (Tes 13656567) and heatwave-mutiny v3 replacing v2 (Tes 13669810), for Jon to upload; no PACK-RELIST row (the record exists). New §4 row ESCAPE-KEYPAD-FLAKY.
+**Built here with --final (not committed, uploaded or attached; dist-packs/ is gitignored):** christmas-tree-fiasco-pack-v4.pdf, 36 pages, 21060 KB, no DRAFT, eric-clipboard 15.0 pt (up to 10 lines), prize-leaflet 19.0 pt (up to 7 lines); heatwave-mutiny-pack-v3.pdf, 36 pages, 17764 KB, no DRAFT; the Patrol window brief prints no fit line, and the build fails a locks page whose briefs leave too little working space (its plant), so exit 0 is the proof. Both exit 0.
+**Decided for you:** the replacement note went into the existing PACKS-V2-UPLOAD row rather than a new one, as the contract allows.
 
 ## 2026-11-20 (cloud): ESCAPE-WORDING (`docs/history/contracts/2026-11-20-escape-wording.md`; Jon 20 Nov)
 

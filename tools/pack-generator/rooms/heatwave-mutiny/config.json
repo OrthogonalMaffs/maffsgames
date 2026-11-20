@@ -1,11 +1,11 @@
 {
   "room": "heatwave-mutiny",
-  "pack_version": "2",
+  "pack_version": "3",
   "sets": 6,
   "seed": 1,
   "final_shape": "plus-and-minus",
   "certificate_title": "Cold air, already paid for",
-  "wording_approved": {"by": "Jon", "date": "2026-11-17"},
+  "wording_approved": {"by": "Jon", "date": "2026-11-20"},
   "lock_words": {"patrol-lcm-timer": {"label": "Corridor release"}, "cube-surface-volume": {"label": "Door keypad"}},
   "images": [
     {"file": "art/hw-01-rota.webp", "role": "clue", "object": "rota", "label_box": [221, 163, 1028, 1113], "font": "label",
