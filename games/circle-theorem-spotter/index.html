@@ -61,6 +61,24 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
 body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
+/* "Why" after a wrong answer: a reference card above Next (canon 7.6.2; contract CIRCLE-WORKING, 19 Nov 2026), built as
+   Surd Simplifier's. Two copies (schools/assets/fold.css): .maffs-ref-fits open, .maffs-ref-phone collapsed; nothing shows
+   until a wrong answer (.shown). The open copy shows only where every item's Next stays above the fold with it open. */
+.work-row .maffs-ref{--ref-bg:var(--surface);--ref-edge:var(--accent);text-align:left}
+.work-row:not(.shown) > .maffs-ref{display:none}
+.work-row.shown > .maffs-ref-fits{display:none}
+.work-row.shown > .maffs-ref-phone{display:block}
+/* Open where it fits. Measured 20 Nov 2026 (all 55 items answered wrong, each in its worst pairing of options to a row,
+   normal and Aa, real fonts, every width from 320 to 760 in 10px steps; the fold is the viewport less the 40px fixed
+   footer, as measure-phone-fit reads it): with the card open, Next needs a viewport 1392px tall at 320 wide (Aa), up to
+   1268px from 430 to 759 (Aa), and 1133px from 760, where the column stops growing (Aa; normal 1050). Each band takes its
+   worst width's need plus 30px, so every canon phone and both laptops (1280x720, 1366x768) get the collapsed card. */
+@media (min-width: 320px) and (max-width: 429px) and (min-height: 1430px), (min-width: 430px) and (max-width: 759px) and (min-height: 1300px), (min-width: 760px) and (min-height: 1170px) {
+  .work-row.shown > .maffs-ref-fits{display:block}
+  .work-row.shown > .maffs-ref-phone{display:none}
+}
+.work-row .wl{margin:.3rem 0;line-height:1.7;overflow-wrap:break-word}
+.work-row .wl .katex{font-size:1.05em!important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -81,6 +99,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
 <div class="container">
@@ -109,7 +128,18 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
     </div>
     <div class="options" id="options"></div>
     <div class="feedback" id="feedback" aria-live="polite"></div>
-    <div id="nextMount"></div>
+    <!-- Why, between the answer and Next (canon 7.6.1, 7.6.2): open where it fits, collapsed elsewhere. -->
+    <div class="maffs-ref-row work-row" id="workRow">
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Why</span><span class="maffs-ref-title">Why</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Why</span><span class="maffs-ref-title">Why</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <div id="nextMount"></div>
+    </div>
   </div>
   <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
   <p id="teacherInvite"></p></div></div>
@@ -461,18 +491,102 @@ gcse:[
 ]
 };
 
+// Why, shown on a wrong answer (contract CIRCLE-WORKING, 19 Nov 2026; canon 7.6: any pause has something worth reading).
+// Keyed by the item's position in QUESTIONS.gcse (1-55). scripts/verify-circle-theorem-spotter.py checks every "=" chain.
+const WORKING={
+1:['\\text{The angle at the centre (2x) is twice the angle at the circumference (x), both standing on arc AB}'],
+2:['\\text{C is on the circle and AB is a diameter, so angle ACB = }90^\\circ'],
+3:['\\text{C and D are on the same arc and both stand on chord AB, so the two angles are equal}'],
+4:['\\text{All four corners are on the circle, so opposite angles add up to }180^\\circ'],
+5:['\\text{A tangent meets the radius at the point of contact at }90^\\circ'],
+6:['\\text{The angle between tangent and chord equals the angle in the opposite (alternate) segment}'],
+7:['\\text{From one outside point, the two tangents to a circle are the same length}'],
+8:['\\text{The line from the centre perpendicular to a chord cuts it into two equal halves}'],
+9:['\\text{Same arc AB: the angle at the centre is twice the angle at the circumference}'],
+10:['\\text{AB is a diameter, so the angle in the semicircle is }90^\\circ'],
+11:['\\text{Tangent and chord at A: the angle in the alternate segment equals it}'],
+12:['\\text{Opposite angles of a cyclic quadrilateral add to }180^\\circ','180^\\circ - 72^\\circ = 108^\\circ'],
+13:['\\text{Tangent meets radius at }90^\\circ\\text{, so angle OAT = }90^\\circ'],
+14:['\\text{Two tangents from P are equal, so PB = PA = 8 cm}'],
+15:['\\text{Angle at circumference is half the angle at the centre}','120^\\circ \\div 2 = 60^\\circ'],
+16:['\\text{Angle at centre is twice the angle at the circumference}','2\\times 35^\\circ = 70^\\circ'],
+17:['\\text{Angle at circumference is half the angle at the centre}','98^\\circ \\div 2 = 49^\\circ'],
+18:['\\text{Angle at centre is twice the angle at the circumference}','2\\times 64^\\circ = 128^\\circ'],
+19:['\\text{A point on the major arc stands on the minor arc, which makes 140}^\\circ\\text{ at the centre}','140^\\circ \\div 2 = 70^\\circ'],
+20:['\\text{The major arc makes the reflex 260}^\\circ\\text{ at the centre; half of it is at the circumference}','260^\\circ \\div 2 = 130^\\circ'],
+21:['\\text{Angle at centre is twice the angle at the circumference}','2\\times 90^\\circ = 180^\\circ'],
+22:['\\text{A 180}^\\circ\\text{ angle at the centre means A, O and B are in a straight line, so AB passes through the centre: a diameter}'],
+23:['\\text{C and D are in the same segment, standing on the same chord AB, so the angles are equal: }42^\\circ'],
+24:['\\text{R and S are in the same segment, standing on chord PQ, so the angles are equal: }58^\\circ'],
+25:['\\text{Angles in the same segment are equal}','x = 3x - 80','80 = 2x','x = 40^\\circ'],
+26:['\\text{Angles in opposite segments of the same chord add up to }180^\\circ','180^\\circ - 75^\\circ = 105^\\circ'],
+27:['\\text{Y and W are in the same segment, standing on chord XZ, so the angles are equal: }50^\\circ'],
+28:['\\text{Angles in the same segment are equal}','2x + 10 = 3x - 20','x = 30'],
+29:['\\text{C is opposite A in the cyclic quadrilateral}','180^\\circ - 85^\\circ = 95^\\circ'],
+30:['\\text{D is opposite B in the cyclic quadrilateral}','180^\\circ - 100^\\circ = 80^\\circ'],
+31:['\\text{A and C are opposite, so they add to }180^\\circ','x + 2x - 30 = 180','3x = 210','x = 70'],
+32:['\\text{B and D are opposite, so they add to }180^\\circ','3x + 10 + 2x + 20 = 180','5x = 150','x = 30'],
+33:['\\text{R is opposite P in the cyclic quadrilateral}','180^\\circ - 110^\\circ = 70^\\circ'],
+34:['\\text{C is opposite A and D is opposite B}','C = 180^\\circ - 94^\\circ = 86^\\circ\\text{ and }D = 180^\\circ - 87^\\circ = 93^\\circ','86^\\circ + 93^\\circ = 179^\\circ'],
+35:['\\text{The tangent meets the radius at }90^\\circ\\text{, so angle OAT = }90^\\circ','90^\\circ - 25^\\circ = 65^\\circ'],
+36:['\\text{Alternate segment theorem: the angle in the alternate segment equals the tangent-chord angle: }40^\\circ'],
+37:['\\text{Alternate segment theorem: angle ACB equals the tangent-chord angle: }55^\\circ'],
+38:['\\text{Alternate segment theorem works both ways: the tangent-chord angle equals the angle in the alternate segment: }62^\\circ'],
+39:['\\text{Alternate segment theorem: the angle at the circumference standing on PQ is }48^\\circ','\\text{The angle at the centre is twice that}','2\\times 48^\\circ = 96^\\circ'],
+40:['\\text{OAPB has two right angles where the tangents meet the radii}','360^\\circ - 90^\\circ - 90^\\circ - 50^\\circ = 130^\\circ'],
+41:['\\text{OP cuts the 60}^\\circ\\text{ angle at P into two equal halves}','60^\\circ \\div 2 = 30^\\circ'],
+42:['\\text{Tangent meets radius at }90^\\circ\\text{, so triangle OAP is right-angled at A}','OP^2 = 5^2 + 12^2 = 25 + 144 = 169','OP = \\sqrt{169} = 13\\text{ cm}'],
+43:['\\text{Alternate segment theorem: the angle at the circumference standing on AB is }70^\\circ','\\text{The angle at the centre is twice that}','2\\times 70^\\circ = 140^\\circ'],
+44:['\\text{Alternate segment theorem: angle CED equals the tangent-chord angle TCD: }35^\\circ'],
+45:['\\text{AB is a diameter, so angle ACB = }90^\\circ','\\text{Angles in triangle ABC add to }180^\\circ','180^\\circ - 90^\\circ - 32^\\circ = 58^\\circ'],
+46:['\\text{AB is a diameter and D is on the circle, so angle ADB is the angle in a semicircle: }90^\\circ'],
+47:['\\text{Angle ADB = }90^\\circ\\text{ (semicircle), and the angles in triangle ABD add to }180^\\circ','180^\\circ - 90^\\circ - 28^\\circ = 62^\\circ'],
+48:['\\text{Angle at centre = 2 × angle at circumference}','4x = 2(x + 30)','4x = 2x + 60','x = 30'],
+49:['\\text{A and C are opposite, so they add to }180^\\circ','x + 20 + 2x + 10 = 180','3x = 150','x = 50'],
+50:['\\text{B and D are opposite, so they add to }180^\\circ','3y + 2y + 30 = 180','5y = 150','y = 30'],
+51:['\\text{C on the major arc stands on the minor arc: half the angle at the centre}','130^\\circ \\div 2 = 65^\\circ'],
+52:['\\text{A point on the major arc would see }65^\\circ\\text{; D on the minor arc is opposite it in a cyclic quadrilateral}','180^\\circ - 65^\\circ = 115^\\circ'],
+53:['\\text{Alternate segment theorem: angle BCA equals the tangent-chord angle BAT: }40^\\circ'],
+54:['\\text{A 90}^\\circ\\text{ angle at the circumference stands on a diameter, so AC is the hypotenuse}','AB^2 = 10^2 - 6^2 = 100 - 36 = 64','AB = \\sqrt{64} = 8'],
+55:['\\text{The perpendicular from the centre cuts the chord in half: 4 cm each side}','\\text{Pythagoras with the radius 5 cm as the hypotenuse}','d^2 = 5^2 - 4^2 = 25 - 16 = 9','d = \\sqrt{9} = 3\\text{ cm}'],
+};
+
 let questions=[],qIdx=0,score=0,streak=0,bestStreak=0,correctCount=0,totalQ=20,timerInterval=null,qStartTime=0;
 const BASE=100,T_K=0.15;
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}
 function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');MaffsLock.screen(document.getElementById(id))}
 function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS.gcse]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}show('game');showQ();window._ggAbandoned=true;mfg('game_started',{game_slug:'circle-theorem-spotter',level:resolvedLevel});if(!window._ggUnloadBound){window._ggUnloadBound=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'circle-theorem-spotter',level:resolvedLevel,questions_answered:qIdx})})}}
-function showQ(){const q=questions[qIdx];if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));document.getElementById('feedback').textContent='';document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();clearInterval(timerInterval)}   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
+// One line of WORKING: \text{} runs as words (so a long line wraps), the maths between rendered with rk().
+function workLine(tex){
+  const el=document.createElement('div');el.className='wl';let i=0,math='';
+  const flush=()=>{if(math.trim()){const s=document.createElement('span');if(math.indexOf('=')<0)s.style.whiteSpace='nowrap';rk(s,math);el.appendChild(s)}math=''};
+  while(i<tex.length){
+    if(tex.startsWith('\\text{',i)){let d=0,j=i+5;for(;j<tex.length;j++){d+=(tex[j]==='{')-(tex[j]==='}');if(d===0)break}
+      flush();const s=document.createElement('span');s.textContent=tex.slice(i+6,j);el.appendChild(s);i=j+1;continue}
+    math+=tex[i++];
+  }
+  flush();return el;
+}
+function workingFor(q){return WORKING[QUESTIONS.gcse.indexOf(q)+1]||[]}
+function showWorking(q){
+  const lines=workingFor(q),row=document.getElementById('workRow');
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML='';lines.forEach(t=>w.appendChild(workLine(t)))});
+  row.classList.toggle('shown',lines.length>0);
+}
+// The copy the media query shows: Next keeps its top on screen as it comes into view.
+function shownCard(){return [...document.querySelectorAll('#workRow > .maffs-ref')].find(d=>getComputedStyle(d).display!=='none')||null}
+function clearWorking(){
+  const row=document.getElementById('workRow');row.classList.remove('shown');
+  row.querySelector('.maffs-ref-phone').open=false;row.querySelector('.maffs-ref-fits').open=true;
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML=''});
+}
+function showQ(){const q=questions[qIdx];if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));clearWorking();document.getElementById('feedback').textContent='';document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;document.getElementById('figure').innerHTML=FIG.render(q.fig);document.getElementById('context').textContent=q.ctx;document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();clearInterval(timerInterval)}   // Hidden Count-Up (timer policy): the clock runs for the score and is never shown
 function handle(btn,q){if(!MaffsLock.lock(document.getElementById('options')))return;clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});mfg('question_answered',{game_slug:'circle-theorem-spotter',level:resolvedLevel,correct:ok,question_index:qIdx+1});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;
   // canon §7.6: a right answer moves on briskly; a wrong one names the theorem and waits on Next.
   if(ok){MaffsLock.timer(adv,1000);return}
   document.getElementById('feedback').textContent='The answer: '+q.correct+'.';
-  MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}
+  showWorking(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv,keep:shownCard})}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
