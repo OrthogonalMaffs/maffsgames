@@ -3,6 +3,585 @@
 Moved out of `docs/todo.md` on 10 Oct 2026 (contract TODO-SLIM) without rewording. Item numbers are
 unchanged, so a citation such as §1.10 resolves here. Newest moves at the top of each part.
 
+## Moved by TODO-TRIM, 19 Nov 2026
+
+Contract TODO-TRIM (`docs/history/contracts/2026-11-19-todo-trim.md` once merged). Each block below is the text as it stood in `docs/todo.md` on main 527f8b8, word for word; where a row stayed open, `docs/todo.md` now holds its remainder under the same ID.
+
+### 1.14
+
+| 1.14 | **`test-the-claim`: keys fixed 30 Sep 2026 (every answer key recomputed); Jon's review of the 24 generated explanations still owed.** It started as P3's impossible critical region (Po(3), two-tailed 5%: the region is X ≥ 8 only, with no lower region, but the key was "0 or 7"). The new independent verifier, `scripts/verify-test-the-claim.py` (in CI), recomputes every probability, critical value, p-value and verdict from each item's raw parameters, and found **16 of 48 items wrong**. Two decisions were backwards: **P7** (the true P(X ≤ 9) = 0.0433, so H₀ is rejected; the game marked the right answer wrong), and **Step 6's "Action" on all 24 items that reject H₀** (it keyed "reject the claim that ⟨H₁⟩"). Also: wrong displayed probabilities in B6, B8, B9, B11, P5, P6, P7 and P11; wrong boundaries in B6, B8, P3, P5, P6 and P7; wrong p-values in B6, B8, B9, P5, P7, P9 and P11; draft prose in B8, P9 and P11; five PMCC cells and C5 disagreeing with the Edexcel booklet's Table 8 (the booklet and exact computation agree in all 260 cells); no p-value and no explanation on all 24 Normal and correlation items ("undefined" on screen); the correct Step 6 conclusion shown twice on B8, B10, B12 and P8; and no way to enter "no lower critical region" (P3, B11, P9). All fixed under Jon's rulings of 30 Sep. Two-tailed items now compare the **probability in the tail with half the significance level**, labelled that way at Steps 3 and 4. **Full record, stated → corrected for every field, the 24 generated explanations for Jon's review, and the evidence: `docs/test-the-claim-verification.md`.** | **Follow-up, 30 Sep (later):** Step 6 lists shuffled, and correlation items give their p-value in the scenario (doc §"Follow-up"). Re-checked 2026-11-08 on main f8a287b4: PART — FIXED: every key recomputed by `scripts/verify-test-the-claim.py` (in the public repository since ab701b4c), green in main run 42512282061; the owed `--live` check ran today: `check-site.py --live --only games/test-the-claim/` OK, and the deployed page is byte-identical to main's (SHA-256 140404ab…). Remains: Jon's review of the 24 generated explanations (`docs/test-the-claim-verification.md`). | — fixed; **Jon** — review the 24 generated explanations |
+
+### 1.26
+
+| 1.26 | **Hard-coded distribution values in four more games: the class of §1.14. `normal-navigator`, `core-maths-paper2a` and `maths-court` DONE 30 Sep 2026; `regression-rumble` STOPPED for Jon (37 of 40 scenarios fail).** Found by the class check of 30 Sep 2026 (none shares data or code with `test-the-claim`). **`normal-navigator` — DONE:** `scripts/verify-normal-navigator.py` (in CI) recomputes all 47 questions with `NormalDist` from their own prose (the game's `phi()` is never used) and renders each on the real page. It found **9 of 47 wrong**; Jon ruled to proceed (calculator values throughout). Stated → corrected: Q18 `:218` k = 60.2 → **60.3** (50 + 1.2816 × 8 = 60.2528; shade 60.24 → 60.25); Q23 `:225` P(bolt rejected) = 0.0456 → **0.0455** (2Φ(−2) = 0.045500; 0.0456 was 2 × the rounded 0.0228); Q14 `:212` step "0.8413 − 0.1587 = 0.6827" → "0.84134 − 0.15866 = 0.68268 ≈ 0.6827"; Q15 `:213` and Q36 `:247` "0.9772 − 0.0228 = 0.9545" (which is 0.9544) → "0.97725 − 0.02275 = 0.95450 ≈ 0.9545"; Q16/Q17 steps put on the same 5-d.p. convention (they were arithmetically right); Q37 `:248` "Same process. 1000 items…" (no distribution, and the pool is shuffled) → self-contained, "to the nearest whole number", key 45 → **46** (1000 × 0.04550026 = 45.50026), 45 kept as the truncation distractor with a misconception naming it, the old distractor "5" dropped to make room; Q38 `:251` added "Assume equal numbers of men and women." (without it "Cannot determine" was arguably right) and the unfinished "so equal density..." step rewritten as φ(1)/6 ≈ 0.0403 vs φ(1)/7 ≈ 0.0346; Q29 `:233` and Q39 `:252` `correct_override` folded into `correct` (both keys were right: μ = 25, σ = 5; μ = 16.55 → 17), and `correct_override` no longer appears in the bank (B10 ledger entries retired); Q35 `:244` misconception "for P(X > 100), also use 100.5" → "use 100.5". **Also fixed on Jon's ruling:** the μ/σ labels under the curve gave the answer away on Q29, 30, 31, 34, 39, 45 (`hideParams`: they read "?" until answered); two-region questions Q23, 29, 33, 37, 46 now shade both regions (`drawBell` takes a list of regions). **`regression-rumble`:** 28 scenarios with a hard-coded PMCC critical value (`cv`, 5% two-tailed), 14 of them also stating r beside its Σ sums, so r is recomputable. **`core-maths-paper2a`:** 7 of its 18 §3.5–3.6 items carry a Normal probability or a z critical value. **`maths-court`:** 1 item (`:575`, B(20, 0.5), P(X ≥ 15) = 0.0207, spot-checked correct). `docs/test-the-claim-verification.md` §"Class check" has the exclusions. **30 Sep 2026 (night), the other three:** one shared module, `scripts/stats_common.py` (exact binomial and Poisson, `NormalDist`, PMCC and least squares from sums or data, PMCC critical values from the exact null distribution, half-up rounding, a worked-step arithmetic checker; 42 unit tests against textbook values, in CI). `verify-test-the-claim.py` and `verify-normal-navigator.py` now import it; their output, normal and `--verbose`, is byte-identical before and after. **`core-maths-paper2a` — DONE, 0 of 27 statistics items wrong, no correction.** `scripts/verify-core-maths-paper2a.py` (in CI) recomputes every §3.5–3.7 value from its stem, checks every item's options, arithmetic and rendering (working hidden until answered; Q1's bars drawn at the stated 72/68/74/71), 5/5 injected faults caught. Note for Jon, not a failure: Q14 keys 2.5% by the 68-95-99.7 rule (calculator 2.28%); it is still the nearest option and the stem says "approximately". **`maths-court` — DONE, 0 wrong, no correction.** `scripts/verify-maths-court.py` (in CI) recomputes mc_core_001 (E = £1.50), 002 (68%), 006 (P(X ≤ 8) = 0.3120) and 009 (P(X ≥ 15) = 0.0207), arithmetic-checks every case's correct working and judge's summary, and renders each case (no card marked, summary hidden, before the verdict); 4/4 faults caught. WARN for Jon: mc_core_009 asks "Is the coin fair?" (two-tailed) but tests H₁: p > 0.5; the verdict is the same two-tailed (p = 0.0414). **`regression-rumble` — STOPPED (STOP IF: more than 10% fail), nothing corrected.** `scripts/verify-regression-rumble.py` (NOT in CI until the data is ruled) fails 37 of 40 scenarios, 62 findings: (1) Level 4's stated sums are impossible for 8 of 14 (|r| > 1: L4_1 1.30, L4_2 1.08, L4_6 1.08, L4_8 1.32, L4_9 1.37, L4_10 1.15, L4_11 1.34), and the stated r disagrees with the sums on 5 more (L4_3 −0.76 vs −0.55, L4_4 0.91 vs 0.81, L4_5 −0.71 vs −0.90, L4_7 −0.88 vs −0.74, L4_13 0.93 vs 0.77, L4_14 −0.87 vs −0.98; L4_12 0.74 vs 0.728 is within rounding); L4_3 is keyed significant but |r| = 0.55 < 0.6319; L4_5's prediction is 20, the line gives 21; L4_3's line prints "y = 13.17 − 0x" (b = −0.0049 to 2 d.p.). (2) Every core and A-level scatter contradicts its stated r: the points the game draws from its seed have r ≈ 0.98–1.00 whatever is stated (AL10 states 0.35, weak, not significant, and draws a near-perfect line); CM9 and AL14 draw a different line from the one stated; AL14 clips 7 of 15 points to the axis. (3) Pre-answer leak on all 14 Level 4 scenarios: the regression line and its equation are drawn before "Calculate b and a" is asked. What checks out: all six critical values (n = 10, 12, 15, 18, 20, 25), every other prediction, every sq4Type. Fixing it is new data (and a scatter generator whose r is the stated r), which is Jon's content call. Re-checked 2026-11-08 on main f8a287b4: PART — FIXED: normal-navigator, core-maths-paper2a and maths-court, held by `scripts/verify-normal-navigator.py`, `verify-core-maths-paper2a.py` and `verify-maths-court.py` (in the public repository since ab701b4c), green in main run 42512282061. STILL LIVE: regression-rumble; `scripts/verify-regression-rumble.py` run today ends `FAILED: 62 FAIL(s) across 37 of 40 scenarios`, unchanged, and is still not in CI. The game is withdrawn (holding page; `.claude/rules/game-roster.md:180`), so no student meets its keys. | **Jon** — rule on regression-rumble's data; then **CC** fixes it and wires its verifier into CI |
+
+### 1.34
+
+| 1.34 | **Nine non-game pages scroll sideways on a 320px phone, from their own content.** Found 2 Oct 2026 while measuring the footer (document width at 320×568, identical on `main` and the footer branch, so not the footer): `/spec-map/` 540px, and eight parent guides, `probability-trees` 397, `indices-surds` 364, `fractions` 347 (its `.equiv-table`), `graphs-transformations` 339, `standard-form` 338, `pythagoras` 325, `statistics-data` 325, `coordinates` 324. Six games did the same (~~`estimation-golf` 797~~ fixed PR #47, 4 Oct 2026, `trig-wars` 711, `estimation-engine` 378, `equatle` 348, `better-value` 339, `differentiation-duel` 321); those are §3.9's phone-fit batches. Not traced element by element beyond `fractions`. **2 Oct 2026 (PR 62): recorded, not fixed.** Tier 1 now measures every page at 320×568 and fails on a new overflow; all of these are listed in `tier1_phone_overflow` (`scripts/checker-allowlist.json`) with their widths in the fallback font (e.g. `fractions` 347, `spec-map` 540) and the gate found more: 8 teacher pages (§1.37), 16 more games, and display maths in four of the guides (§1.38, not tables). Each fixing PR removes its entry. **Not in that list (3 Oct 2026): `moments-master` overflows at 320 on two questions only (`alevel[19]`, `alevel[40]`), which the seeded gate does not draw; recorded in §1.40.** Re-checked 2026-11-08 on main f8a287b4: PART — main run 42512282061's Tier 1 measures every page at 320×568 in the real fonts and fails a stale entry, so `tier1_phone_overflow` (`scripts/checker-allowlist.json`) is the evidence. FIXED (no entry): guides `graphs-transformations` and `coordinates`, and `differentiation-duel` (#256, FONT-FIT: they fit in the real fonts); `estimation-golf` (#47); `estimation-engine` (#74); `equatle` (#669). STILL LIVE (entry): `spec-map` 540, `fractions` 321, `standard-form` 338, `trig-wars` 711, `better-value` 339; the four display-maths guides are §1.38. **10 Nov 2026 (PHONE-SCROLL):** PART — `parents/guide.js` wraps every guide table in `div.table-scroll` (`overflow-x:auto`, `parents/guide.css`; the table's margin moved to the box, so the guides look the same at desktop width, pixel-identical at 1366×768). FIXED: `fractions` and `standard-form` (entries removed). standard-form's table fits (314px); its last overflow was prose, the Conversation starter's "5,970,000,000,000,000,000,000,000 kg", which cannot break between digits: Amendment 1 puts `<wbr>` after each comma on that line only (`parents/standard-form/index.html:120`), and "weighs" became "has a mass of" (Jon, 10 Nov). STILL LIVE (entry): `spec-map` 540, `trig-wars` 711, `better-value` 339. **15 Nov 2026 (ESSENTIALS-PHONE-FIT-PAIR PR 1 (#788)):** PART — FIXED: `better-value` (entry removed): `schools/assets/session-length.js` now lets the session-length row wrap (one line in `render()`, all 12 games that use it; Jon ruled the one other visible change, Expectation Station at 320, 15 Nov 18:46). STILL LIVE (entry): `spec-map` 540, `trig-wars` 711. | phone-fit batch, or its own |
+
+### 1.36
+
+| 1.36 | **Live bug class (canon §0.2, tier 1): answer tolerance not tied to the precision the question asks.** Every typed answer is `parseFloat` against a fixed or percentage band; there is no shared answer-marking helper in `schools/assets/`, every game rolls its own, and every money input is `type="number"` (a leading £ empties it). **Case 1, 2 d.p. money (Jon's rule, 2 Oct 2026):** if the correct answer is whole pounds, an integer is accepted (1250 or 1250.00); once pence are part of the answer it MUST be exactly 2 d.p. (1250.70 right; 1250.7 is the right amount in the wrong form). **Corrected 3 Oct 2026 to Jon's actual rule (canon §7.1.3):** the typed amount is compared numerically first; a right amount wrongly written (1250.7, 3050.0, 1250.700) is marked neither right nor wrong: the format message names the student's figure and they resubmit, with no penalty recorded. 1 d.p. is never accepted. Still assumed, not ruled: a leading £ is optional. **Live instance, checked 2 Oct 2026 on `4a04d7e`: `split-it`.** Single answers are marked to ±0.05 (`:543`), so on a pence answer it accepts the wrong value as well as the wrong form: £12.30 and £12.38 both pass for £12.34. That covers the £ unit-cost questions (`:380`) and the € currency questions (`:387`, keyed `toFixed(2)`). Its recipe-scaling answers, keyed to 1 d.p. (`:362`), are marked to ±0.15 (`:536`, `:538`), so 2.4 or 2.6 passes for 2.5. **Not live, checked:** `percentage-flip` (`:259`, `:282`) has no money answers (all 32 keys are whole numbers, no £); the rule applies to its rebuild (§3.11). `tax-theft` (`:1029`) keys whole pounds (`Math.round(expected)`, `:1040`); `growth-and-decay` (`:751`, `:790`) keys money to 3 s.f. Neither has a d.p. form problem; both have a tolerance question (below). **Proposed fix (shared layer):** `schools/assets/answer.js`, `MaffsAnswer.money(raw, correct)`, reading the raw typed string, never a parsed number, with three outcomes: correct / wrong / right value wrong form. Right value wrong form is NOT marked (corrected 3 Oct 2026; this line used to say "marked WRONG"): it gets the format message and a resubmission (canon §7.1.3; `moneyResult()` in tax-theft is the reference). Money inputs become `type="text" inputmode="decimal"`. `percentage-flip` adopts it as part of its rebuild; `split-it` follows as a separate pass, not a sweep, and its ±0.05 and ±0.15 bands go with it (the helper behind a band that admits wrong pence fixes nothing). Needs a checker rule too: any money answer in a bank stored or displayed at 1 d.p. **`tax-theft` and `growth-and-decay` tolerances (found 2 Oct 2026):** `tax-theft` accepted ±£1 (personal allowance, taxable) and ±£2 (tax, NI, deductions, net) of the whole-pound key (`:859`–`:961`), so a pence answer such as 1250.7 passed for £1251; its tax and NI are computed unrounded (only the allowance taper uses `Math.floor`) while the payslip shows rounded figures. `growth-and-decay` accepts 2% of the key + 0.01 on sub-question 1 (`:754`; sub-question 3 gets 0.5%, min 0.05), about ±£163 on CM4's £8,140, and ±0.15 on sub-question 4 (`:793`). **Suspected content bug, verified not fixed: `growth-and-decay` keys disagree with the precision their stems ask.** CM3 `:229` asks for 2 s.f. and keys 1808 (e^7.5 = 1808.04, so 1800); a scan of all 46 keys that carry an `sf` field found two more, AL5 `:380` (3 s.f., keyed 15530, should be 15500; money) and AL8 `:404` (3 s.f., keyed 2172, should be 2170). The `sf` field is never read. The 2% band hides it (1800, 15500 and 2170 are all accepted), but on a right answer the feedback shows the unrounded key. **RULED 2 Oct 2026 (Jon); both are requirements of the shared precision marker, not separate patches.** **`tax-theft`:** every step is keyed from the figures the student can see on screen, never from unrounded internals ("we can't mark a student against numbers they cannot see"), and marked to the penny. (This line used to say "marked as exact whole pounds": a misreading. Jon's 'whole pounds' meant whole-pound amounts need no .00, never round answers to pounds. Corrected 3 Oct 2026.) The ±£1 and ±£2 bands go. **Tax-theft DONE 3 Oct 2026 (START item 4).** **`growth-and-decay`:** correct the three keys (`:229` → 1800, `:380` → 15500, `:404` → 2170) and mark to the precision the question states, using the `sf` field the game already carries. (Jon, 2 Oct 2026.) **The three growth-and-decay keys are corrected in PR #3 (wrong-keys batch 1); marking by `sf` is still open.** **split-it DONE 3 Oct 2026 (PR #12):** every typed answer marked by the shared `MaffsAnswer` (`schools/assets/answer.js`): money (£ unit cost, € currency, £ shares) to the penny with an optional £/€, in `type="text" inputmode="decimal"` inputs; GCSE recipes and the speed questions now say "Give your answer(s) to 1 decimal place." and are marked to it (Jon's rulings; speed keys now exact, half up); everything else exact. The ±0.05 and ±0.15 bands are gone. Best Value's two unit prices now always differ by at least 1p (Jon). `verify-split-it.py` (CI) failed on the old file and passes. The shared helper is the proposed fix above, built; the other money games are START item 5. Re-checked 2026-11-08 on main f8a287b4: PART — FIXED: split-it (#12, `scripts/verify-split-it.py`); tax-theft keyed from the figures on screen and marked to the penny (`scripts/verify-tax-theft.py`, from PR 4); growth-and-decay's three keys (`:265` 1800, `:416` 15500, `:440` 2170) and its marking at the stated precision (#352, `sqMark` `:795`, `scripts/verify-growth-and-decay.py`); all green in main run 42512282061. Remains: money inputs still `type="number"` (`tax-theft:690`, `growth-and-decay:753`), so a leading £ empties the field; no money-at-1-d.p. rule in `scripts/check-banks.py`; Jon's ruling on the assumed point (a leading £ optional). **MONEY-INPUT, 9 Nov 2026 (this row's PR):** Jon ruled the box (9 Nov): a fixed currency sign shown in it, and a typed £ accepted (canon §7.1.3), which settles the assumed point. `MaffsAnswer.moneyInput()` (`schools/assets/answer.js`) makes a game's own input a money box: `type="text" inputmode="decimal"`, the £ or € inside its left edge. Every game that marks with `MaffsAnswer.money()` calls it: `estimation-engine`, `its-on-sale`, `split-it`, `squared-squirrel`, `tax-theft` (no longer `type="number"`; a typed £ now reaches the marker instead of "Please enter a number.") and `the-6-ps`; the £ each showed beside its box went. `scripts/check-banks.py` fails a page that calls `MaffsAnswer.money(` without `MaffsAnswer.moneyInput(` (every .html page; its plant runs in `--ci`); `scripts/test-answer-js.py` covers the helper. `growth-and-decay` is not one of them: it marks every typed sub-question to the significant figures its prompt states (`MaffsAnswer.decimal`, `sqMark`), never by `money()`, so its `type="number"` inputs stay as they are; moving them to `money()` would change its marking. **Still open on this row:** a check-banks rule for money keys stored or displayed at 1 d.p. 9 Nov: the shared helper exists (answer.js MaffsAnswer.money, moneyInput #719); the 'no shared helper' wording above is historical. Remaining: a check for money keys stored or shown at 1 d.p. **MONEY-ANSWERS, 11 Nov 2026 (CLOUD-QUEUE-1111 PR 2):** settles 'money inputs still `type="number"`' for every typed answer in pounds. Money boxes and a leading £ now cover the answers marked by `decimal()`/`exact()` with `opts.currency` (`growth-and-decay`, closing GD-MONEY-INPUT; `stat-attack`; `graph-sketcher`; `squared-squirrel`'s stages 2-3; The 6 P's £ compound measures), and those read by `MaffsAnswer.parse()` (`chart-interrogator`, `graph-sketcher`'s reads); `fermi-lab`'s and `as-you-can-see`'s readers were boxed too. `check-banks.py` now sees money answers by all three routes. `tax-theft:690` is a money box since #720. Not settled here: the money-at-1-d.p. check, and `graph-sketcher` CM11's table keys stored at 1 d.p. (608.3 for £608.30, marked to 1 d.p.: unchanged by contract). Answers in £k, £100s or pence, and the escape rooms, are MONEY-THOUSANDS (§3). **PERCENTAGE-FLIP-BANKS (#793, 16 Nov 2026):** percentage-flip now marks typed answers with MaffsAnswer.money() or MaffsAnswer.exact() as appropriate. The money-at-1-d.p. check and other games' parts remain open. | **Code Claude** (remaining shared precision checks) |
+
+### §1 prose: "Done this session (26 Sep)" and "Checker tier 4, layer A" (all done; canon §8.2c's correction landed, layer A is in CI)
+
+**Done this session (26 Sep):**
+- [x] **1.2 Worked solutions showed the author's self-correction.** The original diagnosis (dead
+  duplicate `c:`/`d:` keys, canon §8.2c Shape 2) was wrong about *where* the leak lived —
+  `showExplain` renders only `q.s`, and the prose was in the `s:` array, never duplicated.
+  Deleting the dead `c:`/`d:` pairs (also done) removed real dead code but would have left the
+  leak untouched. **Fixed** by rewriting both `s:` arrays: `unit-converter:163` drops the "…wait,
+  1.5 × 0.6 = 0.9…" line entirely; `scale-factor-scaling:162` also had a **wrong intermediate
+  step** in the dead draft (`4 × 2.5×10⁹ cm² = 10⁹ cm²` — the correct product is `1×10¹⁰`, not
+  `10⁹`) and now shows the cm²→m² conversion as its own explicit step. **Canon §8.2c's correction
+  is drafted but held out of this commit** — the contract that fixed this named Canon under DO
+  NOT TOUCH, so the canon.md diff sits unstaged for Jon's separate ruling rather than landing
+  with the code fix. See "Held back" below.
+- [x] **A draft-prose scan of every question bank**, report-only, requested alongside 1.2 because
+  three games shipping this now makes it a class (proof-builder, scale-factor-scaling,
+  unit-converter). First pass on a bare "actually" returned 126 hits, nearly all ordinary content
+  prose ("things you actually use"); tightened to high-signal shapes (ellipsis + retraction,
+  "wait,", "let me recalculate", explicit retractions, first-person authoring voice, placeholder
+  markers) and found **17 candidates**: `angle-ace`, `coordinate-geometry-dash`,
+  `factor-theorem` (×3), `formula-unlocked`, `probability-paradox`, `spot-the-muppet`,
+  `terrible-advice` (×4) and `wrong-on-the-internet` (×3). **Not triaged as defects** —
+  `terrible-advice` and `wrong-on-the-internet` are "spot the deliberate error" games where a
+  character's wrong reasoning *is* the content, so most of their hits need reading in context,
+  not fixing. Full list drafted for canon §8.2c, held with the item above.
+- [x] **Expectation Station snag not reproducing.** Moved from a numbered finding to
+  `docs/jon-playtest-2026-08.md`'s new Snagging section — the reported "can be simplified" wording
+  against `A · B` doesn't match any question in the current bank (all `A · B`-shaped questions
+  have `bbLink: null`, which renders the neutral "try Boolean Blitz" line, never a simplification
+  claim). Jon to replay once and either close it or give the exact wording seen.
+- [x] **1.13 — `MaffsSession` built and adopted in 5 games**, migrating Expectation Station off
+  its 1.11 hand fix. Each game verified by a scripted play-through (stub server) driving every
+  offered button, at every level, to completion, asserting `questions_answered` matches the
+  label and `game_completed` fires; no game's PB key depends on session length, so nothing is
+  orphaned. Tiers 1+2 green; tier 3 clean per game (details in the `e8f8a69` commit message).
+  Canon §7.1 now says "Session-length controls use `MaffsSession`... the same pattern as
+  `MaffsOptions`."
+  - **Reported, not touched, per contract (`terrible-advice`, `fermi-lab`, `word-problem-decoder`):**
+    - `terrible-advice` already hand-rolls the identical fix (`updateSessionButtons()`, bank-aware
+      + an explicit "All N"), built before this session knew the shape was a class. One inherited
+      quirk found while reading it: its filter is `[10,20,30].filter(n => n < available)` — strict
+      less-than, not `MaffsSession`'s `>=` — so a bank that lands exactly on a preferred length
+      (GCSE = 20) shows "All 20" instead of a plain "20". Cosmetic, not an over-promise; not fixed,
+      per DO NOT TOUCH.
+    - `fermi-lab` never over-promises: its Quick/Standard/Marathon buttons are 5/10/"all in tier",
+      and every tier's bank (ks3 13, gcse 15, alevel 13, level4 10, core 15) is ≥ 10, so `Math.min`
+      never has anything to truncate. PB key (`fermi_scores_` + tier) is level-only. Would adopt
+      `MaffsSession` with `preferred:[5,10]` cleanly if the roster is ever standardised.
+    - `word-problem-decoder` is a genuinely different shape, not just report-only caution: its
+      "pool" isn't `bank.length` — a `multi` question contributes one phrase per highlighted topic
+      the student has active, so the true servable count is a sum over filtered questions, not a
+      length. That sum is still computable before Start (`currentLevel` + `activeTopics`, both set
+      on the settings screen), so adoption isn't blocked — it would need its own poolSize helper
+      (not a bare bank count) and a re-render on every topic-chip toggle, not just on level change.
+      PB key (`wpd_pb_` + level) is level-only, so no orphan risk. Not attempted this session.
+
+**Checker tier 4, layer A — built later the same day (26 Sep), separate contract.** New files:
+`scripts/bank_common.py`, `scripts/extract-banks.py`, `scripts/check-banks.py`,
+`data/check-ledger.json`, `docs/checker-tier4-design.md`; changed: `.github/workflows/check-site.yml`
+(new CI step), `.gitignore` (`data/banks/` — regenerated, ~8MB, not committed), `CLAUDE.md`.
+**Not yet committed.**
+
+- Extraction reads every game's bank back from the live page under Playwright (post any runtime
+  patch), not from the static source — this is what makes it see the *served* state, the same
+  reason normal-navigator's now-fixed index patches were dangerous. Bank variable candidates are
+  restricted to SCREAMING_SNAKE_CASE names, checked directly: every real bank across all 94 games
+  is named that way; runtime session state (`pool`, `currentQ`, `roundQuestions`) never is. Without
+  that filter, estimation-golf's `roundQuestions` (a live copy of its own bank, populated by page
+  load) registered as a second bank and flagged every one of its own questions as a B3 duplicate
+  of itself.
+- Ten lint rules, B1–B10 (missing/duplicate answers, duplicate questions, bank size,
+  session-length overpromise, draft prose, a KaTeX rendering hazard, duplicate object keys, index
+  patches, `correct_override`). Full rule list and current counts: `docs/checker-tier4-design.md`
+  and the "Report" in this session's transcript.
+- **STOP IF triggered and resolved, not bypassed:** more than 10 games came back with no
+  gradeable static bank on the first honest pass. Investigated each rather than loosening the
+  threshold — resolved into 10 confirmed true generators (no static array anywhere; several
+  explicitly say "Procedural generation" in the roster) and 16 real banks whose correctness is
+  *computed* rather than stored (regression-rumble, chart-interrogator, word-problem-decoder,
+  fermi-lab, ...) — exactly what a future layer C would check, not a gap in layer A. All 94 still
+  land in the ledger, per the success condition.
+- **B7's KaTeX half went through two rejected designs before the one that shipped**, both
+  instructive: rendering every bank string through KaTeX regardless of whether the game ever sends
+  it there flagged 3772 false hits (most banks carry hint/explanation text that's never rendered
+  that way); sampling a handful of live clicks through the game was flaky (0–3 hits across
+  identical runs on the same, unfixed game). Shipped version statically finds which object field
+  each game's OWN source passes to `K()`/`renderToString` (`component-crusher` → `prompt`) and
+  renders every value of just that field, once, deterministically — precise and reproducible,
+  and it is what surfaced `factor-theorem` and `test-the-claim` as two more games with the same
+  class as §1.10, previously unknown.
+- **Regression-proven the same way tiers 1–3 were**, three reverts plus a fourth check with no
+  revert (component-crusher's hits are un-fixed today, so proving they're already in the ledger is
+  the test, not a revert): restoring scale-factor-scaling's "let me recalculate" line and
+  normal-navigator's three `QUESTIONS[n]=` patches each failed `check-banks.py --ci` with the right
+  rule (B6, B9), each reverted after (`git status` clean on `games/` throughout, checked). The
+  scale-factor-scaling revert also incidentally re-triggered B8 on the same dead `c:`/`d:` keys
+  that commit had cleaned up — an unplanned but correct confirmation.
+- **One real bug in the checker itself, found by the regression pass, fixed before this was
+  trusted:** `correct` and `correct_override` resolve in DECLARATION order by default; several
+  games' own runtime reads `correct_override || correct`, override winning when both are present.
+  The first version of B1/B2 read `correct` first and so entirely missed formula-unlocked:296's
+  known duplicate (the override, not `correct`, collides with a distractor) until this was
+  caught and fixed (`bank_common.resolve_correct`, precedence-ordered, not the same list as
+  "does this carry an answer key at all").
+- **New-game gate proposed, not decided:** block a new game's merge on layer A passing (a static
+  bank found, or declared a generator, and zero unrecorded violations). Layers B–E stay advisory
+  until built. `docs/checker-tier4-design.md`'s final section; **Jon's ruling**, §6.
+
+
+### §2 prose: "Still unverified" (done: `node scripts/check-leaderboard-coverage.js` runs in CI, check-site.yml)
+
+- **Still unverified:** `node` is not installed on the Windows machine (checked again 26 Sep,
+  still absent), so the updated `check-leaderboard-coverage.js` has **not been executed** — its
+  logic was mirrored in Python against the real files and reports what it should (93 games with
+  the call, 0 missing, both held games gated, no undeclared gates), but the JavaScript itself is
+  unrun. Run it on the Linux machine before trusting it.
+
+### 3.1
+
+| 3.1 | **Spec mapping contract 1** — boards, crosswalks, the 94-game mapping, checker, review doc with the two resit gap lists. Part-built: `docs/sources/dfe-gcse-maths-subject-content.pdf` vendored under OGL (logo must never appear on the site — this repo is public); `scripts/extract-dfe-tier.py` derives 97 DfE statements as 174 typed parts into `data/dfe-gcse-parts.json`, asserting the source SHA256, the published reference ranges (N16 A25 R16 G25 P9 S6) and the 24 Sep review checkpoint as regressions. Data model: `tier` stores the DfE *printed type* (`standard`/`underlined`/`bold`, never F/H); `depth` (F/H/F+H) required only on standard/underlined, each with an evidence note and `reviewed: false` — no Foundation-only content exists, so a bare F is an editorial judgement, kept separate. Still owed: A-level content the same way; the board crosswalks; the 94-game mapping; `data/spec-mapping.json`; `scripts/check-spec-mapping.py`; `docs/spec-mapping-review-2026-09.md` with its two gap lists. `spec-map/index.html` covers **69** of 94 roster games, not the ~80 assumed, 25 absent, 0 orphan slugs. | **Jon: spot-check 10 of the 34 mixed statements** in `data/dfe-gcse-parts.json` against the PDF |
+
+### 3.4 (done: Six Sevens, Bruv; Don't Count the Zeroes is in §3's Game ideas list)
+
+| 3.4 | **Times-tables recall game (new build) — for resitters and Jon's Level 3 maths-module student. Requested 30 Sep 2026. DONE 30 Sep 2026 as `six-sevens-bruv` (START block); design points 1-4 settled by its contract: reverse questions as missing-factor forms, never "c = ? × ?"; the grid is a mastery map that never shows an unearned product; visible count-up, no countdown; adult register. The second game below, "Don't Count the Zeroes", is still to build and should reuse `schools/assets/progress.js`.** Design points to settle before a build contract: (1) the 12×12 grid must not turn recall into lookup — preferred: reverse questions ("56 = ? × ?", click the cell) and/or the grid as a mastery map with keypad answers; (2) speed via count-up scoring, per canon §5 (no countdown under 30 s); (3) adult register for 16+ users — choose tiers with §7.5.1 in mind; (4) adaptive: weak facts served more often, device-local mastery (localStorage). **Roster check done 30 Sep: no existing times-tables or multiplication game** (roster, `games/`, todo, canon and the idea backlog searched; `factor-race` and `prime-factorisation` practise factors, not recall of products). **Same entry, second game: "Don't Count the Zeroes" — standard form (name ruled by Jon, 30 Sep).** Progression: ×/÷ by powers of 10 on a fixed place-value chart (digits slide, placeholder zeros fill, count the jumps) → large numbers to standard form → small numbers (negative powers) → converting back and ordering → calculating (top tier only). Distractors are named misconceptions: counting zeros (0.00045 → 4.5×10⁻³), A outside 1 ≤ A < 10 (45×10⁻⁵), wrong sign of the power. The counting-zeros feedback line is "Don't count the zeroes — count the jumps." **Existing coverage checked 30 Sep:** `standard-form-blitz` (roster #44, GCSE/A-Level, 50+50, convert/multiply/divide) exists. `docs/resit-coverage-audit.md` finds N9.1 COVERED by it (30 of its 50 GCSE items are Foundation-pitched conversions and comparisons; the 20 multiply/divide items are grade 5-6), and a search of its source finds no place-value chart or jump-counting scaffold. It also contradicts `timer-policy.md` today (item 12). So the new game is a scaffold-first sibling, not a duplicate; to rule: does it sit beside Blitz or replace it, and note the CLAUDE.md rule that a scaffold must fade once the student can work without it. | Jon: design points 1-4. The relationship to Standard Form Blitz is ruled, see 3.5 |
+
+### 3.5
+
+| 3.5 | **Resit strand rulings (Jon, 30 Sep 2026).** (1) **Register: every resit-strand game gets an adult register.** A game entering the strand is restyled to it regardless of what its roster levels give it under canon §7.5.1, which says the lowest tier served decides. **Canon §7.5 / §7.5.1 were rewritten on 2 Oct 2026 (one adult register for every game), which carries this rule; the note that they had not been amended is out of date (corrected 3 Oct 2026).** The audit's §5 lists what needs changing: of the 24 candidate-suite games (audit §10.5 lists **31**; use §10.5, this count is unreconciled), 12 list Year 6 first and 12 render a different row from the one §7.5.1 gives them (measured 30 Sep). (2) **`standard-form-blitz` stays** as it is; standard form is STRETCH (`N9.1`), COVERED by it. (3) **"Don't Count the Zeroes" is built as the resit-strand standard form game** — this rules the relationship question left open in 3.4: it sits beside Blitz, does not replace it, and is scaffold-first with a place-value chart. The 3.4 design points 1-4 are still owed. The item 12 conflict between Blitz and `timer-policy.md` is not touched by this ruling. Banding: audit §10. (4) **Algebra basics is one game (Jon, 30 Sep 2026): `A4.1` (simplifying, surds excluded) and `A1.1` (notation) join `A3.1` (vocabulary) and `A7.1` (function machines)**, so audit §10.4's ranks 7, 8 and 11 are one build of 4 formal parts plus the `A4.3` sub-skill (expanding one bracket). The audit's table is left as the record of the ranking on the day. (5) **Six Sevens, Bruv** follows (1): first game under the amended §7.5.1. | Jon: none on the banding (all ruled 30 Sep); canon §7.5.1 amendment (a canon contract, not started) |
+
+### 3.6 (done: Free Daily Pizza)
+
+| 3.6 | **Free Daily Pizza — FDP equivalence, resit fluency strand game 2. DONE 30 Sep 2026 as `free-daily-pizza` (START block has the full record and ten points for Jon).** Was: QUEUED 30 Sep 2026 for a new session, to start only after Six Sevens, Bruv is merged. Jon's full seven-field contract, with his addendum (the daily pizza is a fixed easiest-first mix: 3 from S1, 3 S2, 2 S3, 2 S4, verified for any date), is recorded verbatim in `docs/next-contract-free-daily-pizza.md`, with notes on leaderboard keying for its two STOP IFs. Top of the audit §10.4 build list (the fractions game, 7 parts incl. `R3.1`/`R6.1`). | Done; Jon: eyeball pass and the ten points in START |
+
+### 3.7 (done: Six Sevens, Bruv fits a phone; Aa mode is §3.9's "Aa mode" ruling)
+
+| 3.7 | **Six Sevens, Bruv fits a phone — DONE 30 Sep 2026.** After a wrong answer, Next is above the fold on all 144 orientations at 320×568, 375×667 and 390×844; before, it was below the fold on every one, with its bottom edge 782–1,006px down the page. Keypad hidden during wrong-answer feedback; grid collapsed to a bar on narrow screens; order fact → hint → array → Next; the array below Next on screens 600px tall or less. The phone rule is canon §7.6.1. Open: Aa mode, and the 41px shared Next control. Full record in START OF NEXT SESSION. | Done; Aa mode for Jon |
+
+### 3.8
+
+| 3.8 | **Leaderboard tidy — BUILT 30 Sep 2026 (PR 23), follow-ups built the same day.** `regression-rumble` Level 4 plays from the button; tier 1 presses every level button (125 controls, 47 games); `binomial-blaster` roster row is A-Level Year 2; `levelLabel()` names every submitted level, on the ticker and the hub; one roster-level table (`scripts/roster-levels.json`); `extract-banks.py` fails loudly on a dead server. Full record in START OF NEXT SESSION. Open: seven other scripts start the stub server unchecked, and 14 games keep in-game level-name maps. | Done; follow-ups listed |
+
+### 3.9
+
+| 3.9 | **Phone fit, every game (Jon's contract, 1 Oct 2026). New Shapes DONE 1 Oct (START block). The rest: fix one game at a time, never by sweep.** `scripts/measure-phone-fit.py` measures each game's first question at 320×568, 375×667 and 390×844 and writes `docs/phone-fit-report.md` (report only, not a CI gate). 56 games failed on 1 Oct; **the order to fix them, in batches of three, is the subsection "3.9 — Phone fit order" directly below this table** (Jon, 1 Oct 2026). **Also worth reading in the report:** 11 games pass but show no Next after a wrong answer (they auto-advance; canon §7.6's open rollout, not a fit problem); 12 pass on the asking screen but the driver could not produce a wrong answer; 10 are UNMEASURABLE (no answer controls the generic driver recognises: the four Core Maths papers, `bearing-blitz`, `equation-builder`, `four-quadrant-explorer`, `shape-shifter`, `spot-the-error`, and `six-sevens-bruv`, measured by hand on all 144 orientations on 30 Sep, item 3.7, though its verifier does not re-measure it). **For each game:** measure every question shape in full first (as New Shapes and Six Sevens were), then apply canon §7.6.1. One sample per size means a game near the fold can flip between runs. Not measured by the script: the on-screen keyboard over a native input, Aa mode, levels other than the default. **Since 2 Oct 2026 (PR 62) tier 1 also gates width at 320×568: each game's batch removes the game's `tier1_phone_overflow` entries (`load` and `start`) in `scripts/checker-allowlist.json`, and CI fails on a stale one.** | Order set 1 Oct (below); one game at a time within each batch **graph-sketcher DONE 9 Oct 2026 (contract GRAPH-SKETCHER-FIT, #PR):** its overflow was its own: the canvas was sized to its panel less 12px (the panel has about 21px of padding and border, so each scenario widened the grid track ~9px more, 361 to 567px) with a 320px floor, and the grid tracks were plain `fr`, so the value table widened its column instead of scrolling in its box. Now `minmax(0,..)` tracks and the canvas sized to the panel's content box: no sideways scroll at 320, 390 and 412 for every one of the 45 scenarios; its `tier1_phone_overflow` entry is removed. |
+
+### 3.10 (done: the portal fits a phone)
+
+| 3.10 | **Portal fits a phone — DONE 1 Oct 2026 (Jon's contract, widened by Jon to the whole top of the page).** First game card, no filter: 4,637 → 1,025px at 320×568 (8.16 → 1.80 screens), 4,284 → 998 at 375×667 (6.42 → 1.50), 4,431 → 946–1,020 at 390×844 (5.25 → 1.12–1.21). With a filter tapped, the first result is on screen at every phone size (before: 5–7.6 screens down). Sticky filter bar 276 → 109px. One `.cmp` mechanism for the fact card, escape band, parents strip and "New for 2026/27"; desktop with no filter pixel-identical. Full record in START. | Jon: 320 is 173px over 1.5 screens; the remaining cuts are features (START, Needs Jon 1) |
+
+### 3.12
+
+| 3.12 | **Theme migration queue (canon §7.5; Jon's contract, 2 Oct 2026). Split It DONE as the pilot (START block). The other 96: one game at a time, never by sweep.** Each migration moves the game from NOT_YET to MIGRATED in `scripts/check-theme.py` in its own PR, with its phone fit re-measured in normal and Aa mode (`measure-phone-fit.py --only <slug>` and `--aa`, both to a scratch `--out`) and every wording change quoted for Jon. **Order. (1) The resit suite first** (`docs/resit-coverage-audit.md` §10.5), **each game's migration and its phone-fit fix done together, in §3.9's batches of three:** batch 2 `distinctly-average`, `estimation-golf`, `angle-ace` (held for this contract by Jon's ruling of 2 Oct 2026); batch 3 `think-of-a-number`, `decimal-detective`, `percentage-flip` (percentage-flip's with its rebuild, §3.11); batch 4 `correlation-or-coincidence`, `prime-or-composite`, `chart-interrogator`; batch 5 `factor-race`, `given-that`, `formula-forge`; batch 6 `prime-factorisation`, `formula-unlocked`, `linear-equation-solver`; batch 7 `estimation-engine`, `probability-pioneer`, `like-terms-collector`. **Then the 12 suite games with no phone fix outstanding**, in threes: `better-value`, `formula-plug-in`, `expected-damage` (fitted in batch 1); `new-shapes`, `sequence-solver`, `unit-converter`; `negative-number-line`, `proportion-blaster`, `bearing-blitz`; `equation-builder`, `four-quadrant-explorer`, `stat-attack`. **(2) Then the rest (66)**, in §3.9's Group 3 batch order where a game has one, then the games with none. **Light to dark (3):** `differentiation-duel`, `integration-duel`, `log-laws` (the light-slate sub-family; all three are in §3.9 batches 8–9). **Dark to light (53):** every game whose roster levels include Year 6, KS3 or GCSE and that renders dark today (measured 2 Oct 2026 by body background), including the resit strand's `six-sevens-bruv` and `free-daily-pizza`. `python scripts/check-theme.py` prints each NOT_YET game's expected palette and findings. **Rulings (Jon, 2 Oct 2026).** (a) **Level names:** a key stage or year group
+becomes Foundation / GCSE / Advanced (the third only where a game needs it; **superseded 3 Oct 2026 by canon SR-11: Year 6 is "Starter", KS3 "Foundation"**, applied to the 31 resit-suite games in one PR); Split It's KS3 is already
+"Foundation". (b) **Firebase level keys never change.** The label a student sees is declared once per game and
+read by the leaderboard hub (today `levelLabel()` in `firebase-leaderboard.js` names every game's `ks3`
+"KS3"); this is done in each game's migration pass, **Split It in the next one**, and folds into `games.json`
+when that is built. (c) **Age wording** (`check-theme.py --verbose`, 27 games) is removed game by game as each
+game migrates, never by sweep; each batch quotes its before and after lines for Jon. (d) **§3.12 is not next:**
+see the START block's NEXT line. | **Code Claude**, batch by batch; **Jon** rules each batch's wording |
+
+### 3.21
+
+| 3.21 | **Phone-fit checks do not model the system keyboard (found 4 Oct 2026, the phone keypad PR).** Every phone-fit measurement (tier 1's phone pass, `measure-phone-fit.py`, the per-game verifiers) loads the page at a full window height. On a real phone, focusing a typed-answer box opens the system keyboard, which takes roughly 40% of the screen, so a game that fits on paper can hide its question or diagram the moment the student starts typing (Just Pythag It, Bruv did; its keypad PR stopped the keyboard opening at all). **Games with a typed answer box (22, survey 4 Oct 2026, `<input>` of type text/number or built in script, leaderboard name fields excluded):** `52dle`, `chart-interrogator`, `component-crusher`, `estimation-engine`, `estimation-golf`, `factor-theorem`, `fermi-lab`, `given-that`, `glorious-gantt`, `graph-sketcher`, `growth-and-decay`, `just-pythag-it-bruv` (done: MaffsCalc's answer target, canon §4.4), `like-terms-collector`, `log-laws`, `percentage-flip`, `quadratic-factoriser`, `screening-room`, `split-it`, `stat-attack`, `suvat`, `tax-theft`, `test-the-claim`. Name or initials fields only (the keyboard opens at the end, over nothing that matters): `equatle`, `prime-or-composite`, `six-sevens-bruv`. **Options, for Jon:** (a) measure each game with the window shortened by a keyboard's height while the answer box has focus (Chromium cannot show the real keyboard; a shortened viewport is the model), and fix what that finds per game, with §3.9's phone fit; (b) give typed-answer games the shared keypad (MaffsCalc's answer target, or a keypad-only mount for games without a calculator), so the keyboard never opens. **Jon ruled (b), 4 Oct 2026:** the shared keypad, which fixes the cause once, in one place. **The shared layer is built (5 Oct 2026, PR #70):** `MaffsKeypad` (`schools/assets/keypad.js`, canon §4.4), the keypad-only form for games without a calculator and for several answer boxes; MaffsCalc's answer mode composes it, so there is one phone keypad. **Still to do: the rollout**, one game per contract, each game's phone fit measured with the keypad. **`estimation-engine` is the first game on MaffsKeypad (PR #74, 6 Oct 2026).** | Code Claude |
+
+### SIX-PS-LOOK-REDS (done: factor-race and distinctly-average load theme.css and use no pixel font, checked on main 527f8b8)
+
+| SIX-PS-LOOK-REDS | **Look audit, 25 Oct: factor-race and distinctly-average use pixel fonts**, which must change before The 6 P's is listed. Check first whether it is done: LOOK-REDS-2 (#554) moved Distinctly Average onto theme.css. | cloud lane (per-game) |
+
+### PRIME-SPRINT-LOOK-REDS
+
+| PRIME-SPRINT-LOOK-REDS | **Prime Sprint (LOOK-REDS) waits for Jon's next contract:** a live tail of the Queue DONE items moved 4 Nov (`docs/history/handover-cloud-archive.md`). Check first whether LOOK-REFRESH-1 (#660, Prime Sprint onto the shared adult theme) settled it. Moved from cloud.md's Queue 8 Nov (BRANCH-CLEANUP). | **Jon** — the contract |
+
+### TAKE-A-WALK-PHONE-LAYOUT
+
+| TAKE-A-WALK-PHONE-LAYOUT | **Take a Walk's walk-or-cover and answer screens overflow a phone** (found by TAKE-A-WALK-SEED's sweep, 12 Nov 2026; Jon's option 1, the split). Measured with measure-phone-fit.py's own `__pfAsking` (the last answer control's bottom against the fold), 200 seeds x 4 stages, 968 question variants, every asking screen, on main 7736de6. **Stage 1's first question, walk or cover** (all phone-fit measures): 375x667 normal 0 of 200 seeds over; 375x667 Aa 7 of 200 (+50, 677/627, CI's red); 320x568 normal 31 of 200 (+36, 564/528, CI's red; seed 168); 320x568 Aa 200 of 200 (+218, the recorded Aa exception). So 36-50 px for the first question. **Every Stage 1 walk-or-cover screen**: up to +111 (320x568 normal) and +120 (375x667 Aa); 375x667 normal fits (-13). **The answer screen** (after walk or cover; every question in Stages 2-4), never measured by phone-fit: 375x667 normal Stage 2 84 of 462 over (+7), Stage 3 28/195 (+32), Stage 4 103/131 (+96, the calculator); 375x667 Aa every screen over, +206 to +394; 320x568 normal every screen but two over, +163 to +272; 320x568 Aa every screen, up to +586. At 320x568 the card starts at 145 px, the question is 74-99 px, the to-scale drawing up to 282 px, the answer row wraps to two lines (96 px, Check on the second); headless Chromium shows no keypad, which adds more on a phone. Not a spacing fix: capping the drawing shrinks its 12 px labels with it (282 to 150 px halves them). Screenshots (main, seed 168, 320x568 normal): `docs/screenshots/take-a-walk-walk-or-cover-seed168-320x568.png`, `docs/screenshots/take-a-walk-answer-seed168-320x568.png`. The Gate is not red over it: with the seed fixed it always measures the same first question (486/528, Aa 599/627, Aa 320x568 668/528 WARN). | **Jon** — a design ruling for the answer screen; then cloud lane |
+
+### DD-LINEUP-FEEDBACK
+
+| DD-LINEUP-FEEDBACK | **Decimal Detective's Line-Up after a wrong answer** (found by ESSENTIALS-AUDIT-LEFTOVERS PR 2, #776, 15 Nov 2026; both as before it). (1) **Done (DD-LINEUP-ORDER, 18 Nov 2026):** a wrong Line-Up now shows "The right order: …" from the item under "Not quite. Check the evidence." (canon §7.6). (2) Open, to the shared Next fix (NEXT-IN-VIEW, not yet contracted): Next Case ends below the fold: 799 at 320×568 (fold 528), 770 at 375×667 (fold 627); Round Up's 548 at 320×568. NEXT-IN-VIEW (19 Nov 2026, Jon's ruling): MaffsNext.wrong() now scrolls Next into reach, which is not fitting; measured in page coordinates the layout is unchanged, so this stays open. In the window after the reveal, 320x568: Line-Up 799 to 518, Round Up 548 to 517 (fold 528). | cloud lane |
+
+### PACKS-V2-UPLOAD
+
+| PACKS-V2-UPLOAD | **Replace the packs on Tes with the FINAL-PADLOCK-FAIR rebuilds** (17 Nov 2026). PADLOCK-EASIEST-HINT merged (#808, 17 Nov 2026): the easiest difficulty class first changed car-trap's (1-digit × 3-digit to 1-digit × 2-digit), library-jam's (1 × 3 to 1 × 2) and pe-shed-rebellion's (2 × 3 to 2 × 2) final padlocks and sets, and Heatwave's hint card and key; build from main, with the same version numbers (none of these had reached Tes). List heatwave-mutiny (v2) on Tes at £3 (approved 17 Nov 2026, HEATWAVE-APPROVE). Every pack was rebuilt with fair final padlocks (no product above 10,000; one difficulty class per pack, largest product at most 3 × the smallest) and the optional final padlock (run sheet step 5, score sheet's "Finished" column, "(if your teacher says so)"), and each PDF is now named `<slug>-pack-v<N>.pdf`. Build each with `python -X utf8 tools/pack-generator/build_pack.py <slug> --final`. Replace the Tes files for car-trap (v2), roll-for-initiative (v2), prom-budget (v2) and the Core bundle with the new versions; list hamster-heist (v2) and pe-shed-rebellion (v2). The other approved packs (christmas-tree-fiasco v3, comic-caper v2, kiln-disaster v3, library-jam v2) were rebuilt too: replace any of them that are on Tes. | Jon |
+
+### §3.9 — Phone fit order (prose and tables)
+
+**The rule for the order.** First, the failing games in the candidate resit suite (`docs/resit-coverage-audit.md` §10.5), worst first; then `like-terms-collector`; then the rest, worst first. "Worst" is the report's ranking: pixels past the fold at the worst size, with sideways-only failures after every fold failure. Batches of three, so each game can be play-tested after its fix. Within a batch, still one game at a time, never by sweep.
+
+**Rulings on this list (Jon, 1 Oct 2026).** (1) New Shapes' right-answer Next: fix, in batch 1. (2) `expected-damage`, `estimation-golf` and `fermi-lab` (WAITS, unmarked) **keep waiting for Next after every answer**: each answer's rating is worth reading (§7.6). Their Next must still be above the fold. (3) **Wrong-answer timers** (the "Seen while reading" list below): fixed in each game's own batch where the game already has an explanation to show; where it has none, it is §7.6 Group C, left on its timer and listed there. (4) `like-terms-collector`: measure its feedback screen first. **The batch contract is one template for every batch** (Jon's "Phone-fit batch <N>" contract of 1 Oct): measure before, apply §7.6.1, apply §7.6 as ruled above, measure after, update the report and this list.
+
+**Batch 1 done (1 Oct, evening; record in START).** The regenerated report also moved three untouched games, each because it samples one random first question: `negative-number-line` (resit suite) and `like-terms-collector` (batch 7) scroll sideways at 320 on some question, and `truth-buster` is 7px over at 320. `negative-number-line` and `truth-buster` are in no batch yet; placing them is Jon's call. `linear-equation-solver` and `moments-master` passed this time; both are within ~25px of the fold, so measure them in full in their batches.
+
+**Not a shared-asset problem (checked 1 Oct, the contract's STOP IF).** The vertical failures come from each game's own content above its controls. The fold already subtracts the fixed footer, and no shared script adds anything to the asking screen: `session-length.js` draws on the start screen only, the leaderboard overlay appears at the end of a game only, and `next-control.js` draws only the Next button itself. All ten sideways scrolls were traced at 320×568 to an element in the game's own markup: game headers (`maths-court`, `probability-pioneer`, `equatle`), game layouts (`tax-theft`, `estimation-golf`, `trig-wars`), `equatle`'s keypad row, `estimation-engine`'s Submit button, and `differentiation-duel`'s Aa button (1px). `decimal-detective` and `proof-builder` did not scroll on the first question at that sample, so theirs shows on a later screen; neither game loads a shared script that draws anything. The shared footer's "☕ Support MaffsGames" link does overrun 320 and 375 phones, but it is `position: fixed`, so it is clipped rather than scrolled. It causes none of the 56 failures; it is the cosmetic defect already noted in START. **One bug shape does repeat, though not through a shared file: a header row too wide for 320px** (`maths-court`, `probability-pioneer`, `equatle`, and New Shapes before its fix). Each is per-game CSS, so it is fixed in each game's own batch.
+
+**What happens after a correct answer**, read from each game's source (no edits). Canon §7.6 says a right answer advances briskly and only a wrong one waits for Next. The flag matters for the fit as well as for §7.6: **wherever a right answer waits, its Next has to be above the fold too, so that screen must be measured alongside the asking and wrong ones**, and canon §7.6.1's "hide the keypad on a wrong answer" becomes "hide it on both", as in New Shapes.
+
+- **advances** — a right answer moves on by itself (delay given). §7.6 satisfied on the right-answer side.
+- **WAITS** — a right answer shows Next and waits for the student. §7.6 says it should not.
+- **WAITS, unmarked** — the game has no right or wrong, only a score or rating, and shows Next after every answer. §7.6's right/wrong split does not map onto it; Jon's call.
+- **n/a** — no question-by-question advance at all.
+
+Tally over the 56: **27 advances, 21 WAITS, 3 WAITS unmarked, 1 by mode, 4 n/a**, plus `like-terms-collector` (WAITS).
+
+**Group 1 — failing games in the resit suite (20 of the suite's 31; the other 11 pass or are UNMEASURABLE).**
+
+| Batch | Game | Fail | After a right answer |
+|---|---|---|---|
+
+| 2 | `distinctly-average` | +353 | advances, 1200ms (`:1421`) |
+| 2 | `estimation-golf` | +322, sideways | **WAITS, unmarked**: strokes, not right/wrong; "Next Hole" every time (`:860`) |
+| 2 | `angle-ace` | +287 | advances: phase 1 to phase 2 at 800ms, then the next question at 1000ms (`:797`, `:825`) |
+| 3 | `think-of-a-number` | +234 | **WAITS**: Next on both (`:642`) |
+| 3 | `decimal-detective` | +212, sideways | ~~**WAITS**: "Next Case" on both, all three question types (`:847`)~~ **advances** (1000 ms) since #776, 15 Nov 2026; a wrong answer waits on MaffsNext |
+| 3 | `percentage-flip` | +180 | advances, 3000ms. The same timer runs on a wrong answer, which gets no Next either (`:300`) |
+| 4 | `correlation-or-coincidence` | +143 | **WAITS**: solution or tinfoil card with Next, on both (`:328`) |
+| 4 | `prime-or-composite` | +139 | advances, 1800ms (`:413`) |
+| 4 | `chart-interrogator` | +126 | **WAITS** at the end: phase 1 sub-questions advance at 600ms; phase 2 shows the model answer and waits (`:817`, `:1042`) |
+| 5 | `factor-race` | +119 | advances, 1600ms. The same on a wrong answer, with no Next (`:348`) |
+| 5 | `given-that` | +119 | **WAITS** at the end: phase 1 to phase 2 at 1200ms; phase 2 shows the worked explanation and waits (`:804`, `:935`) |
+| 5 | `formula-forge` | +83 | advances, 1000ms (`:453`) |
+| 6 | `prime-factorisation` | +77 | advances, 1500ms once the factorisation is complete (`:346`) |
+| 6 | `formula-unlocked` | +69 | advances, 1000ms (`:487`) |
+| 6 | `linear-equation-solver` | +26 | advances: each phase at 700ms, a clean question at 800ms; a question with any miss shows the working and waits (`:422`, `:441`) |
+| 7 | `estimation-engine` | sideways only | advances, 2000ms. The same on a wrong answer, with no Next (`:409`) |
+| 7 | `probability-pioneer` | sideways only | **WAITS**: Next on both, in all three stages, behind its 5s floor (`:513`) |
+
+**`split-it` (resit suite; passes, so in no batch): re-measured for the theme pilot, 2 Oct 2026.** Asking screen,
+bottom edge / fold, normal 410/354/354 → 403/350/350 and Aa (`--aa`) 470/386/386 → 459/378/378 at 320×568,
+375×667 and 390×844, all above the fold, no sideways scroll; the wrong-answer screen is still unmeasurable by the
+driver ("could not get an answer marked"). No worse at any size (§3.12, START block).
+
+**Group 2.**
+
+| Batch | Game | Fail | After a right answer |
+|---|---|---|---|
+| 7 | `like-terms-collector` | **not one of the 56**: passes the asking screen at all three sizes; the driver could not get an answer marked, so its feedback screen is unmeasured | **WAITS**: Next on both (`:469`). Measure its feedback screen, right and wrong, before deciding there is anything to fix |
+
+**Group 3 — the rest, worst first (36).**
+
+| Batch | Game | Fail | After a right answer |
+|---|---|---|---|
+| 8 | `fermi-lab` | +652 | **WAITS, unmarked**: rating only, Next after every chain (`:684`) |
+| 8 | `index-laws` | +588 | advances, 1800ms (`:787`) |
+| 8 | `differentiation-duel` | +572, sideways | advances, 1800ms (`:981`) |
+| 9 | `log-laws` | +570 | advances, 2000ms, Laws and Solve alike (`:1074`, `:1894`) |
+| 9 | `integration-duel` | +562 | advances, 1800ms (`:1005`) |
+| 9 | `boolean-blitz` | +521 | **WAITS**: walkthrough with Next on both (`:819`–`:856`) |
+| 10 | `maths-court` | +401, sideways | **WAITS**: Next Case after 400ms (`:762`) |
+| 10 | `truth-will-set-you-free` | +401 | **WAITS** at both stages (`:798`, `:865`) |
+| 10 | `tax-theft` | +389, sideways | **WAITS** at the end: each step advances at 800ms; the finished payslip waits on "Next Salary" (`:1076`) |
+| 11 | `wrong-on-the-internet` | +383 | **WAITS** at the end: stage 1 to stage 2 at 1200ms; stage 2 shows the explanation, then Next (`:1106`) |
+| 11 | `complex-converter` | +369 | **by mode**: Roulette advances at 1200ms (and on a wrong answer too); Triples advances; Sniper is unmarked and waits on every shot (`:618`, `:849`, `:973`) |
+| 11 | `terrible-advice` | +366 | **WAITS**: Next after 800ms (`:557`) |
+| 12 | `seven-bridges` | +325 | **WAITS**: "Next Puzzle" (`:631`) |
+| 12 | `suvat` | +325 | advances: phase timers of 1200–2400ms (`:737`, `:809`, `:923`) |
+| 12 | `equatle` | +316, sideways | n/a: one puzzle; solving it opens the end modal, and Free Play's "Next Puzzle" waits (`:669`, `:781`) |
+| 13 | `quadratic-factoriser` | +306 | advances, 1400ms; Higher's guided step 4 waits on Continue (`:1269`, `:1442`) |
+| 13 | `word-problem-decoder` | +271 | advances, 1000ms. The same on a wrong answer, with no Next (`:786`) |
+| 13 | `curling-friction` | +261 | advances, 1800ms (`:286`) |
+| 14 | `matrix-crunch` | +255 | advances, 1000ms (`:343`) |
+| 14 | `52dle` | +248 | n/a: one daily puzzle; a right guess ends the game (`:912`) |
+| 14 | `coordinate-geometry-dash` | +247 | **WAITS**: worked solution with "Got it — next question" on both (`:357`) |
+| 15 | `normal-navigator` | +246 | **WAITS**: worked solution with Next on both (`:355`) |
+| 15 | `modular-battle` | +237 | advances, 1200ms (`:311`) |
+| 15 | `spot-the-muppet` | +226 | **WAITS**: Next after about 1.3s (`:522`) |
+| 16 | `trig-worms` | +221 | advances, about 1300ms after the shot animation (`:536`) |
+| 16 | `constructions-lab` | +154 | n/a: a sandbox; nothing is marked (`:447`) |
+| 16 | `circle-theorem-spotter` | +148 | advances, 1000ms. The same on a wrong answer, with no Next (`:445`) |
+| 17 | `partial-fractions-duel` | +111 | advances, 1000ms. The same on a wrong answer, with no Next (`:158`) |
+| 17 | `proof-builder` | +110, sideways | advances, 900–1200ms in every mode (`:432`, `:519`, `:583`) |
+| 17 | `eigenvector-engine` | +109 | advances, 1000ms (`:153`) |
+| 18 | `higher-power` | +87 | advances, 1800ms in Higher-or-Lower; Pairs has no per-question advance (`:591`) |
+| 18 | `expectation-station` | +85 | **WAITS** at the end: stages advance at 800ms; after stage 3, Next (`:1025`) |
+| 18 | `screening-room` | +57 | **WAITS**: Continue after phase 2, Next after phase 3 (`:705`, `:820`) |
+| 19 | `test-the-claim` | +50 | **WAITS** at the end: steps 1–5 advance at 800ms; after step 6, Next (`:2002`) |
+| 19 | `moments-master` | +10 | advances, 1000ms. The same on a wrong answer, with no Next (`:198`) |
+| 19 | `trig-wars` | sideways only | n/a: artillery, no questions (`:886`) |
+
+Line numbers are `games/<slug>/index.html` on 1 Oct 2026. Every one of the 56 appears once: 20 in group 1, 36 in group 3. Two games near the fold may not fail on a re-run (`linear-equation-solver` +26 and `moments-master` +10; the report notes such flips), which is why each game is measured in full before it is fixed.
+
+**Seen while reading, not part of this order:** eight of the games above still run a fixed timer after a **wrong** answer with no Next (`percentage-flip`, `factor-race`, `estimation-engine`, `word-problem-decoder`, `circle-theorem-spotter`, `partial-fractions-duel`, `moments-master`, `complex-converter`'s Roulette), and `suvat`'s phase 0 and phase 2 do too. That is canon §7.6's open rollout. **Ruled 1 Oct: fixed in each game's own batch where it already has an explanation to show; otherwise §7.6 Group C, listed and left.**
+
+**Aa mode: one fix across three games (Jon, 1 Oct 2026).** `six-sevens-bruv`, `free-daily-pizza` and `new-shapes` are each fitted to the phone rule in normal mode. Two are known to be over the fold in Aa (OpenDyslexic) mode: Six Sevens' Next at 320×568 and 375×667 (canon §7.6.1's known gap), and New Shapes' parallelogram asking screen at 320×568, 11px over (Enter at 539 against a fold of 528), because "AREA OF A PARALLELOGRAM" wraps. Free Daily Pizza has not been measured in Aa. To be fixed **once, for all three**, not game by game. All three load the shared `schools/assets/opendyslexic.css`, which makes it the candidate layer; the fix design, and measuring Free Daily Pizza in Aa, are for that contract. Canon §7.6.1's "needs its own ruling" is now ruled.
+
+### §4 item 1, layer A sub-item (done: in CI since 26 Sep; the new-game gate is §4 item 48)
+
+   - **Checker tier 4, layer A — bank extraction + lint. BUILT 26 Sep.**
+     `scripts/extract-banks.py` + `scripts/check-banks.py`, in CI. Every one of the 94 games is in
+     `data/check-ledger.json` (83 banks read live, 1 via a static IIFE fallback, 10 confirmed
+     procedural generators with no static bank at all). Ten rules, B1–B10 — see the design doc and
+     the ledger for the full findings. Two real, previously-unknown defects worth a look when
+     picking: `test-the-claim:538`'s `crBoundaryUpper` duplicate key, a maths content bug
+     tracked at **§1.14** (B8); and §1.10 above, now three games not one (B7, redefined
+     27 Sep around prose rather than space loss). CI fails only on a violation not yet in the ledger, or a
+     ledger entry that no longer reproduces — everything currently in the ledger is tracked, not a
+     blocker. **Not yet committed** — eight new/changed files, listed at the end of this section.
+     New-game gate on layer A passing: proposed in the design doc, **Jon's ruling**, see §6.
+
+### §4 item 2, Group C sub-item (ruled 29 Sep 2026: §4 item 49)
+
+   - **§7.6 Group C — 6 games with no explanation data at all** (`equation-builder`, `factor-race`,
+     `simultaneous-solver` show a bare "WRONG!"; `estimation-engine`, `fraction-equivalence`,
+     `quadratic-factoriser` construct the answer but never the why) is **Jon's call** — author
+     explanations, or accept answer-only and leave these on a timer. See §6.
+
+### §4 items 6 and 7 (done: CLAUDE.md is 15 lines, its history in docs/history/claude-md-archive.md; the shared calculator is schools/assets/calculator.js)
+
+6. **Archive CLAUDE.md's "Previous state" sections into `docs/history.md`.** Every session
+   currently loads ~860 lines of CLAUDE.md, most of it history rather than current state. Cuts
+   the per-session cost without losing the record.
+7. **A shared calculator widget — Jon's idea, unscoped.** Students without a scientific calculator
+   cannot play the trig games at all. Agreed shape: shared `schools/assets/` widget, opt-in per
+   game, visible DEG/RAD indicator (radian-mode error is the most common real trig failure).
+   Needs a "which games actually require one" scan first.
+
+### §4 item 12
+
+12. ~~**Tier 1 loads `index.html` files only (found 2 Oct, §1.33).** `check-site.py`'s
+   `build_page_list()` globs `games/*/index.html`, `escape-rooms/*/{index,teacher}.html` and every
+   other `index.html` via `discover_pages()`, so a served page with any other name is never loaded.
+   Two exist today: `games/sequence-solver/index-original.html` (a redirect stub since PR 58, proved
+   once by hand: lands on the game, no error) and `games/regression-rumble/_withdrawn.html` (the
+   withdrawn game, never loaded by tier 1 since it was moved there on 30 Sep). Jon ruled 2 Oct not to
+   widen discovery in the §1.33 PR. **Fix, its own contract:** discover every served `.html`, not just
+   `index.html`, and decide whether `_withdrawn.html` should then load on every push.~~ **DONE 2 Oct 2026 (PR 62):** `jekyll_serves()` decides what is served, and tier 1 loads every such `.html`; `_withdrawn.html` is not served, so it is not loaded. The `--live` confirmation is still owed (see the START block).
+
+### §4 item 16 (done 3 Oct 2026: the phone pass is seeded)
+
+16. ~~**The tier 1 phone gate measures one random draw, so any game that randomises its first question
+   can flip between runs**~~ **DONE 3 Oct 2026 (§4 item 16's PR): the phone pass is seeded.** `PHONE_SEED` in
+   `check-site.py` replaces `Math.random` before any page script with mulberry32 seeded by the FNV-1a
+   hash of the page's `location.pathname`: one fixed seed per page (the contract's choice), not the set
+   of seeds planned below, so the gate measures one stable draw, not a game's worst question; a game
+   whose width depends on the draw is swept on its own and recorded (`moments-master`, §1.40). Seeding
+   broke no game and revealed no new overflow. `--phone-widths FILE` dumps every measurement; repeated
+   runs gave identical files. No retry logic anywhere. `measure-phone-fit.py` is not seeded (a report,
+   not a gate). Original entry: (found 2 Oct 2026 via §1.40: `moments-master` failed one CI run and passed
+   the next on the same commit). Under the zero-failures merge rule a flaky gate blocks every merge, so
+   **Jon ordered this ahead of everything else (2 Oct 2026), the §4 "after §1–2" rule notwithstanding.**
+   **Fix at the gate:** seed `Math.random` in the page during the phone measurement, over a fixed set
+   of seeds, and take the widest result, so every run measures the same thing and a game is held to its
+   worst question. Then re-run on `main` and record any game whose recorded width changes (and any new
+   overflow, `moments-master` among them: §1.40's entry lands in this PR). Check the pass time against
+   the job's timeout, and whether `measure-phone-fit.py` (same driver) should take the same seeds.
+
+
+### §4 item 18
+
+18. **CI Contract B: triggers, concurrency and local/CI parity** (named "CI Contract B" to keep it apart
+   from Chart Interrogator's 28 Sep "Contract B"; first recorded here 3 Oct 2026). `check-site.yml` runs on
+   `push` to every branch and on `pull_request`, with no `concurrency` group, so every PR commit runs
+   the whole suite twice (PR #3 and #4 each show every job twice). Parity gaps that make local runs
+   disagree with CI: CRLF checkouts (`verify-test-the-claim.py`'s node driver), `node` not on PATH on
+   Windows (Playwright's bundled node works), and the Windows fallback font (14 "stale: now fits" phone
+   entries locally, 0 in CI). Jon adds branch protection after it (none today: API 404, 0 rulesets). M.
+   **Triggers and concurrency DONE 4 Oct 2026 (selective CI, canon §7.8):** push on main only, a PR's new
+   push cancels its running checks, and a `gate` job for branch protection to require. **Parity still open
+   (Windows-only local failures, for a later tidy-up; `check-changed.py` avoids the first by not running
+   tier 1 locally):** (a) tier 1's 13 "stale: now fits" phone entries, from the fallback font; (b)
+   `verify-test-the-claim.py` fails locally with `ReferenceError: generateWrongContexts is not defined`
+   under Playwright's node v24 (it passes in CI; CRLF checkouts are the suspected cause, above); (c) node
+   is not on PATH on Windows (Playwright's bundled node works; `check-changed.py` does not need it unless
+   Test the Claim is selected); (d) the shared calculator check (`test-calculator-js.py`, "Shared on-screen
+   calculator") was reported on 12 Oct as failing locally on every run. **Not reproduced 13 Oct 2026:** it passes
+   here, alone and inside `check-changed.py`. Its only environment-dependent path is the answer-box check, which
+   needs Playwright's WebKit (`python -m playwright install webkit`) and says so when it is missing ("WebKit would
+   not start", line 460); an earlier sandbox without WebKit failed it the same way. Nothing in the harness to fix;
+   if it fails locally, install WebKit first. (e) Under `check-changed.py`'s parallel load, Chromium sometimes
+   crashes in the answer-lock parts and `verify-characteristic-quest.py` ("Page crashed", "Target page, context or
+   browser has been closed", 13 Oct); a re-run or CI passes.
+
+### §4 item 23
+
+23. **LOCAL-CHECKS**: browser verifiers fail intermittently in WSL `maffs`, on clean main too. Lead TESTED 15 Nov 2026 (ANSWER-LOCK-FLAKE): WSL's wall clock runs fast and is stepped back 2.37 to 2.65 s about every 29.8 s (over 40 steps logged against the monotonic clock). Since MONOTONIC-CLOCK (15 Nov 2026) the shared assets' input windows (answer-lock.js, keypad.js, scroll.js) read `performance.now()`, which the steps do not move: `test-answer-lock.py` run 120 times, six at a time, through six steps of about -2.9 s, 0 failed (18 of 120 before). A page's own `Date.now()` timing is still exposed. Local runs measure `screening-room` 717/680 while CI passes it; CI is the authority (AGENTS.md). Owner: home lane. Re-checked 2026-11-08: CI's nightly now reproduces screening-room 717/680 (see SCREENING-ROOM-FOLD), so that case is not local-only. teacher-feedback-line fails locally on prisoners-dilemma's tournament at 390 px; passes in CI. 9 Nov: verifiers of squared-squirrel, its-on-sale, estimation-engine, the-6-ps and the Burst, Chart drawings and two Feedback-that-teaches checks fail locally on clean main; pass in CI (#719).
+
+### §4 item 27
+
+27. **MERGE-PR-VERDICT**: `merge-pr.py --watch` sometimes exits without its final line; find out too why `merge-pr.py` works in some cloud sessions and not others. **MERGE-PR-ROBUST (17 Nov 2026):** one way to lose the line is fixed: after a merge, a failed read of main's head raised out of `merge_and_report()` in place of the report; it is now caught and the report and watch line still print, and GitHub's 5xx reads are retried. Not shown to be the only cause; the some-sessions question is still open. Owner: cloud lane (gate file).
+
+### §4 item 28
+
+28. **MERGE-PR-GRACE** (Low; Jon, 2 Nov, after GATE-FIX): `merge-pr.py` counts "the newest merge has no run of its own" as red even under `--wait`, so in the seconds before GitHub registers a new merge's run it refuses ("start one by hand") instead of waiting. Fix: count it as unfinished for a short grace period (about 5 minutes after the commit), with a plant. Moved from cloud.md's live pointers. **MERGE-PR-ROBUST (17 Nov 2026):** the post-merge watch now waits `REGISTER_GRACE_S` (180 s) for the squash commit's run whatever `--wait` is (#803's NO RUN FOUND); the guard's (b') refusal this row is about is unchanged (that contract kept the guard's wait as it was), so the row stays open. Owner: cloud lane (gate file).
+
+### LEDGER-B4-52DLE
+
+| LEDGER-B4-52DLE | **B4 ledger debt, `52dle`: 2 levels below the 40-question minimum** (ks3 20, gcse 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CHARACTERISTIC-QUEST
+
+| LEDGER-B4-CHARACTERISTIC-QUEST | **B4 ledger debt, `characteristic-quest`: 2 levels below the 40-question minimum** (further 26, level4 26). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-COMPONENT-CRUSHER
+
+| LEDGER-B4-COMPONENT-CRUSHER | **B4 ledger debt, `component-crusher`: 3 levels below the 40-question minimum** (gcse 15, alevel 15, level4 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CONSTRUCTIONS-LAB
+
+| LEDGER-B4-CONSTRUCTIONS-LAB | **B4 ledger debt, `constructions-lab`: 2 levels below the 40-question minimum** (ks3 10, gcse 10). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CORE-MATHS-PAPER1
+
+| LEDGER-B4-CORE-MATHS-PAPER1 | **B4 ledger debt, `core-maths-paper1`: 1 level below the 40-question minimum** (core 36). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CORE-MATHS-PAPER2A
+
+| LEDGER-B4-CORE-MATHS-PAPER2A | **B4 ledger debt, `core-maths-paper2a`: 1 level below the 40-question minimum** (core 36). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CORE-MATHS-PAPER2B
+
+| LEDGER-B4-CORE-MATHS-PAPER2B | **B4 ledger debt, `core-maths-paper2b`: 1 level below the 40-question minimum** (core 36). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CORE-MATHS-PAPER2C
+
+| LEDGER-B4-CORE-MATHS-PAPER2C | **B4 ledger debt, `core-maths-paper2c`: 1 level below the 40-question minimum** (core 36). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-CURLING-FRICTION
+
+| LEDGER-B4-CURLING-FRICTION | **B4 ledger debt, `curling-friction`: 1 level below the 40-question minimum** (level4 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-DIMENSION-CHECKER
+
+| LEDGER-B4-DIMENSION-CHECKER | **B4 ledger debt, `dimension-checker`: 1 level below the 40-question minimum** (level4 28). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-EIGENVALUE-EXTRACTOR
+
+| LEDGER-B4-EIGENVALUE-EXTRACTOR | **B4 ledger debt, `eigenvalue-extractor`: 2 levels below the 40-question minimum** (further 25, level4 25). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-EIGENVECTOR-ENGINE
+
+| LEDGER-B4-EIGENVECTOR-ENGINE | **B4 ledger debt, `eigenvector-engine`: 2 levels below the 40-question minimum** (further 25, level4 25). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-ESTIMATION-GOLF
+
+| LEDGER-B4-ESTIMATION-GOLF | **B4 ledger debt, `estimation-golf`: 5 levels below the 40-question minimum** (year6 20, ks3 9, gcse 9, alevel 9, level4 9). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-EXPECTED-DAMAGE
+
+| LEDGER-B4-EXPECTED-DAMAGE | **B4 ledger debt, `expected-damage`: 3 levels below the 40-question minimum** (ks3 15, gcse 20, core 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-FERMI-LAB
+
+| LEDGER-B4-FERMI-LAB | **B4 ledger debt, `fermi-lab`: 5 levels below the 40-question minimum** (ks3 12, gcse 15, alevel 13, level4 10, core 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-FORCE-RESOLVER
+
+| LEDGER-B4-FORCE-RESOLVER | **B4 ledger debt, `force-resolver`: 1 level below the 40-question minimum** (level4 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-FORMULA-FORGE
+
+| LEDGER-B4-FORMULA-FORGE | **B4 ledger debt, `formula-forge`: level4 16, below the 40-question minimum.** gcse and alevel are 40 (FORMULA-FORGE-40, 19 Nov 2026). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. | cloud lane |
+
+### LEDGER-B4-GIVEN-THAT
+
+| LEDGER-B4-GIVEN-THAT | **B4 ledger debt, `given-that`: 4 levels below the 40-question minimum** (gcse 25, alevel 25, core 20, level4 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-GLORIOUS-GANTT
+
+| LEDGER-B4-GLORIOUS-GANTT | **B4 ledger debt, `glorious-gantt`: 2 levels below the 40-question minimum** (core 15, level4 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-GRADIENT-HUNTER
+
+| LEDGER-B4-GRADIENT-HUNTER | **B4 ledger debt, `gradient-hunter`: 3 levels below the 40-question minimum** (gcse 15, core 20, alevel 10). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-GRAPH-SKETCHER
+
+| LEDGER-B4-GRAPH-SKETCHER | **B4 ledger debt, `graph-sketcher`: 3 levels below the 40-question minimum** (core 15, alevel 15, level4 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-GROWTH-AND-DECAY
+
+| LEDGER-B4-GROWTH-AND-DECAY | **B4 ledger debt, `growth-and-decay`: 3 levels below the 40-question minimum** (core 15, alevel 15, level4 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-MATHS-COURT
+
+| LEDGER-B4-MATHS-COURT | **B4 ledger debt, `maths-court`: 3 levels below the 40-question minimum** (ks3 15, gcse 20, core 10). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-MATRIX-CRUNCH
+
+| LEDGER-B4-MATRIX-CRUNCH | **B4 ledger debt, `matrix-crunch`: 2 levels below the 40-question minimum** (further 35, level4 18). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-MOMENTS-MASTER
+
+| LEDGER-B4-MOMENTS-MASTER | **B4 ledger debt, `moments-master`: 1 level below the 40-question minimum** (level4 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-NEGATIVE-NUMBER-LINE
+
+| LEDGER-B4-NEGATIVE-NUMBER-LINE | **B4 ledger debt, `negative-number-line`: 1 level below the 40-question minimum** (year6 30). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-PRISONERS-DILEMMA
+
+| LEDGER-B4-PRISONERS-DILEMMA | **B4 ledger debt, `prisoners-dilemma`: 4 levels below the 40-question minimum** (ks3 9, gcse 9, alevel 9, core 9). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-PROBABILITY-PARADOX
+
+| LEDGER-B4-PROBABILITY-PARADOX | **B4 ledger debt, `probability-paradox`: 2 levels below the 40-question minimum** (gcse 38, core 38). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-PROOF-BUILDER
+
+| LEDGER-B4-PROOF-BUILDER | **B4 ledger debt, `proof-builder`: 2 levels below the 40-question minimum** (alevel 33, further 10). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-REGRESSION-RUMBLE
+
+| LEDGER-B4-REGRESSION-RUMBLE | **B4 ledger debt, `regression-rumble`: 3 levels below the 40-question minimum** (core 12, alevel 14, level4 14). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-SCREENING-ROOM
+
+| LEDGER-B4-SCREENING-ROOM | **B4 ledger debt, `screening-room`: 4 levels below the 40-question minimum** (gcse 20, alevel 20, core 15, level4 15). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-SEVEN-BRIDGES
+
+| LEDGER-B4-SEVEN-BRIDGES | **B4 ledger debt, `seven-bridges`: 3 levels below the 40-question minimum** (ks3 25, gcse 25, alevel 25). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-STAT-ATTACK
+
+| LEDGER-B4-STAT-ATTACK | **B4 ledger debt, `stat-attack`: 3 levels below the 40-question minimum** (gcse 12, core 12, level4 12). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-TERRIBLE-ADVICE
+
+| LEDGER-B4-TERRIBLE-ADVICE | **B4 ledger debt, `terrible-advice`: 3 levels below the 40-question minimum** (ks3 18, gcse 20, core 12). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-TRUTH-WILL-SET-YOU-FREE
+
+| LEDGER-B4-TRUTH-WILL-SET-YOU-FREE | **B4 ledger debt, `truth-will-set-you-free`: 1 level below the 40-question minimum** (level4 32). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B4-WRONG-ON-THE-INTERNET
+
+| LEDGER-B4-WRONG-ON-THE-INTERNET | **B4 ledger debt, `wrong-on-the-internet`: 3 levels below the 40-question minimum** (ks3 15, gcse 20, core 10). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B7-CHARACTERISTIC-QUEST
+
+| LEDGER-B7-CHARACTERISTIC-QUEST | **B7 ledger debt, `characteristic-quest`: 7 rendered strings lose their spaces.** Survey: `docs/audits/ledger-debt-2026-11.md` §B7. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B7-EIGENVALUE-EXTRACTOR
+
+| LEDGER-B7-EIGENVALUE-EXTRACTOR | **B7 ledger debt, `eigenvalue-extractor`: 6 rendered strings lose their spaces.** Survey: `docs/audits/ledger-debt-2026-11.md` §B7. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B7-EQUATION-BUILDER
+
+| LEDGER-B7-EQUATION-BUILDER | **B7 ledger debt, `equation-builder`: 1 rendered string lose their spaces.** Survey: `docs/audits/ledger-debt-2026-11.md` §B7. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B7-MATRIX-CRUNCH
+
+| LEDGER-B7-MATRIX-CRUNCH | **B7 ledger debt, `matrix-crunch`: 30 rendered strings lose their spaces.** Survey: `docs/audits/ledger-debt-2026-11.md` §B7. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B6
+
+| LEDGER-B6 | **B6 ledger debt: 18 draft-marker hits in 6 games, none a wrong answer** (`expected-damage` 2, `maths-court` 2, `probability-paradox` 5, `terrible-advice` 4, `test-the-claim` 1, `wrong-on-the-internet` 4). One fix across games: let the rule accept deliberate character voice and ordinary uses of "wait", then retire the entries. Survey: `docs/audits/ledger-debt-2026-11.md` §B6. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B3-ANGLE-ACE
+
+| LEDGER-B3-ANGLE-ACE | **B3 ledger debt, `angle-ace`: 7 duplicate questions.** Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### LEDGER-B3-MOMENTS-MASTER
+
+| LEDGER-B3-MOMENTS-MASTER | **B3 ledger debt, `moments-master`: 1 duplicate question.** Possibly a false match: see §4 item 11. Survey: `docs/audits/ledger-debt-2026-11.md` §B3. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+### §5 bullet "Shared calculator widget" (done: schools/assets/calculator.js)
+
+- Shared calculator widget — see §4.7, parked until scoped.
+
 ## Session log
 
 Before that, 5 Oct 2026 (cloud: MaffsKeypad, PR #70): the phone keypad for typed answers is its own shared component (`schools/assets/keypad.js`, canon §4.4); MaffsCalc's answer mode composes it; §3.21's shared layer done, the rollout to follow game by game. Before that, 5 Oct 2026 (home: quoted-statistics audit phases 1 and 2, PR #68): every keyed real-world figure checked (4 contradicted keys cost a student marks), then Screening Room rates and real-year CPI (6 rates and the CPI pair wrong as stated); report only. Before that, 5 Oct 2026 (cloud: Decimal Detective Place It, PR #65): Jon's F4 ruling applied; the marker snaps to half a tick gap, shows no value until Check, is marked by exact match through `MaffsNumberLine` (continuous mode removed; canon §7.1.2), with ◀ ▶ step buttons; audit DD F2-F4 resolved. Before that, 5 Oct 2026 (home: SR-14 keys, PR #66): Jon's option 1 for the content scan: tier-(a) words banned as object keys anywhere, lookup strings are code; self-test cases 23 and 24 added (26 cases). Before that, 5 Oct 2026 (home: Fermi Lab cohort figure, PR #64): eq_sleep_loss and eq_homework read one GCSE cohort figure from Fermi Lab's new `FIG` object (600,000 per year group, DfE KS4 2024/25), so the true figure scores green; 52-dle's atoms claim corrected (Earth, not the observable universe). Before that, 5 Oct 2026 (cloud: Truth Buster, PR #63): tb_t2_012's counterexample opens with an exact r = 1 non-causal case (sibling ages), mozzarella kept as supporting real data. Before that, 5 Oct 2026 (cloud: Truth Buster, PR #62): tb_t2_012's counterexample is mozzarella vs civil engineering doctorates (r = 0.959, CC0 spuriouscorrelations); SR-14 KNOWN = 0. Before that, 5 Oct 2026 (cloud: SR-14 fix batch, PRs #56-#60): the content scan reads displayed text only and allowlists Jon's idioms; given-that, core-maths-paper2a, maths-court and wrong-on-the-internet rewritten to his rulings; KNOWN 27 -> 1 (truth-buster, awaiting Jon: new coincidence pairing). Before that, 5 Oct 2026 (cloud: Negative Number Line, PR #54): placements marked by the shared `MaffsNumberLine` (schools/assets/number-line.js, canon §7.1.2), ◀ ▶ step buttons and arrow keys so every target is reachable on a phone (Jon's ruling (a)); `scripts/verify-negative-number-line.py` in CI; audit F1, F2 resolved. Before that, 5 Oct 2026 (cloud: Expected Damage, PR #52): the two GCSE ties (ed_gcse_011, ed_gcse_018) given a clear winner (SR-5); `scripts/verify-expected-damage.py` in CI; audit F1 resolved, F2 (outcome draw) logged. Before that, 5 Oct 2026 (cloud: Decimal Detective, PR #50): Place It's free mark gone (marker off the line, Check disabled until placed), Line-Up's identical cards replaced (§1.49), Round Up's 9.5/9.50 pair gone (95); `scripts/verify-decimal-detective.py` in CI; audit F1, F6, F7 resolved, F2-F4 open for Jon's F4 ruling. Before that, 5 Oct 2026 (home: Equation Builder rebuilt, PR #49): marking by the SymPy-computed ACCEPTED lists (SR-13, audit F1-F8 resolved), gcse_013 reworded, three unbuildable keys fixed, back on /resit/ (31); canon §7.1 records the class-4 pattern; checkpoint discipline replaces the 60% context stop (CLAUDE.md). Before that, 4 Oct 2026 (cloud: Estimation Golf, PR #47): no sideways scroll on phones, loads at 0,0 (one phone `@media` block); its `tier1_phone_overflow` entries removed; the 320×568 answer box under the footer noted in START. Before that, 4 Oct 2026 (cloud: Probability Pioneer, PR #45): audit F1-F6 and F8 fixed (F7 left as a judgement call), its verifier `scripts/verify-probability-pioneer.py` in CI; START batch 2 and §1.51 updated. Before that, 4 Oct 2026 (home: the teacher feedback line, PR #44): one small line under Start on 97 games, the escape-room engine and /leaderboards/, linking to /feedback/?type=classroom&game=<slug>; /feedback/ gains the classroom type and the prefill; scripts/check-teacher-invite.py in CI; Jon's SR-14 rulings (20:06) recorded in the SR-14 fix batch and canon SR-14. Before that, 4 Oct 2026 (home: Correlation or Coincidence rebuilt, PR #43): 42 items in three kinds with the variables named before the answer, back on /resit/ (30 games); canon SR-14 (sensitive content, three tiers, Jon's amended wording) and scripts/check-content-safety.py in CI, KNOWN = 27 tier-(a) hits in 11 files (the SR-14 fix batch in START); the /updates/ entry live in Jon's wording. Before that, 4 Oct 2026 (home: Jon's resit audit rulings): canon SR-13 (move-based equation games); all eight audit decisions ruled and recorded in the audit file; Estimation Golf's /resit/ card opens at Foundation (`RULED_LEVEL` in check-resit-page.py); START lists the fix batches in order with the rulings applied, Proportion Blaster's run-to-run check first. Before that, 4 Oct 2026 (home: resit safety, PR #36): correlation-or-coincidence, equation-builder and estimation-engine withdrawn from /resit/ pending rebuild (29 games); five games' live faults fixed with regression checks (scripts/check-resit-fixes.py); the unsafe correlation pair removed; SR-12 (estimation by the stated method, exact match); §1.51 files the five games' remaining audit faults; §3.21 ruled (b), the shared keypad. Before that, 4 Oct 2026 (home, very late: the phone keypad, PR #34): on phones MaffsCalc's keypad types the calculator or Just Pythag It, Bruv's answer, so the system keyboard never opens (canon §4.4); §3.21 filed (phone-fit checks do not model the system keyboard; 22 games with typed answers listed); START's listing checklist adds the keypad play-test; the game stays unlisted. Before that, 4 Oct 2026 (home, late night: the calculator dock, PR #33): on wide screens MaffsCalc docks beside the question card (sticky); Just Pythag It, Bruv's feedback is in view after Check at three phone and three desktop sizes; the game stays unlisted. Before that, 4 Oct 2026 (home, late night: the calculator, PR #32): the shared on-screen calculator (`MaffsCalc`, canon §4.4) and Just Pythag It, Bruv's standard header, full-width diagram and "Use a calculator." line; the game stays unlisted; START's listing checklist and §3.20 updated. Before that, 4 Oct 2026 (home, night: Just Pythag It, Bruv): START rewritten (PR #28 /updates/ "more than 30 games"; PR #29 the game merged unlisted, the calculator tag, canon §4.4; Jon to play it, then the listing PR); the old START moved to history. Before that, 4 Oct 2026 (home: docs clear after PRs #21–#26): START rewritten (PRs #21–#26 live: SR-11, /resit/, spec-map GCSE refs, the /updates/ entry, G7 STRETCH and shape-shifter, the Pythagoras build target); Just Pythag It, Bruv held for a fresh session, contract in docs/next-contract-just-pythag-it-bruv.md; the old START moved to history. Before that, 3 Oct 2026 (home, late night: docs clear after PRs #14–#20): START rewritten (PRs #14–#20 live; the resit section is NEXT, with Jon's three calls first); the old START moved to history. Before that, 3 Oct 2026 (home, night: the spec map): §1.42 done (27 games mapped to Jon's rulings, truth-buster an exception, UNMAPPED empty; new AO and HNC Unit 4020 sections; Core Maths titles corrected to AQA 1350 and games re-homed, canon §6.1); §1.49 (Decimal Detective duplicates), §1.50 (Truth Buster −1/12, checked) and §3.14 (portal level labels) filed. Before that, 3 Oct 2026 (home, night: the seeded phone gate): §4 item 16 done (tier 1's phone pass seeds Math.random per page; identical results across runs); §1.40 records moments-master's two overflowing questions (alevel[19], alevel[40]) for its §3.12 pass. Earlier the same night: SR-10 and §1.47 (PR #15), the two /updates/ entries (PR #16). Before that, 3 Oct 2026 (home, night: docs clear after PRs #10–#13): START rewritten (PRs #10–#13 live; canon §0.3 Standing rulings to check before stopping; /updates/ wording and §1.47 for Jon; §1.4 placed under "Also open"); the old START moved to history. Before that, 3 Oct 2026 (home: the shared answer checker): `MaffsAnswer` (schools/assets/answer.js, canon §7.1.3) built and required; tax-theft on it unchanged; split-it's §1.36 case done (PR #12); START item 4 rewritten; §1.47 (3.3 eggs) and §1.48 (speed working) filed. Before that, 3 Oct 2026 (home: Circle Theorem Spotter): §1.3 done (Q48 and Q19 to Jon's rulings, PR #11), new CI verifier, an /updates/ line queued in START. Before that, 3 Oct 2026 (home, late night: docs clear after PRs #5–#9): START rewritten (PRs #6–#9 live; the April rule and its April 2027 deadline; §1.42 for Jon; the moments-master flake's two hits). Before that, 3 Oct 2026 (home, the docs clear): START rewritten from `docs/status-2026-10-03.md`; §1.6 escalated (the About page's "no data collected" is live and false); §1.41 (NI at 12%), §3.13 (resit route, unspecified), §4 items 17 (four check scripts not in CI) and 18 (CI Contract B) filed; drift fixed (canon §7.5.1 note, archive PR labels, counts). Before that, 3 Oct 2026 (home, tax-theft): START item 4 done (band method on taxable income, two medium salaries replaced, penny keys, the money-answer standard as canon §7.1.3, closing line); §1.36 corrected to Jon's actual 'whole pounds' rule; items 5 and 6 are next. Before that, 2 Oct 2026 (home, phone-gate filing): §1.40 (moments-master overflows 320 on some questions) and §4 item 16 (seed the phone gate) filed; NEXT now starts with item 16, then the four correctness items with their Project-doc pointers. Before that, 2 Oct 2026 (home, theme rulings): Jon's rulings on the pilot filed (Split It's KS3 is "Foundation"; level keys never change, labels per game; age wording removed per game; §3.12 waits behind the correctness work, see NEXT). Before that, 2 Oct 2026 (home, the theme pilot): one adult register for every game, canon §7.5 rewritten, schools/assets/theme.css and scripts/check-theme.py in CI, Split It migrated as the pilot; the migration queue is §3.12. Before that, 2 Oct 2026 (cloud, the phone-width gate): tier 1 loads every served page and fails any page or game start over 320px wide, 44 known overflows recorded (§1.34, §4 item 12, PR 62); class findings filed as §1.37–§1.39. Before that, 2 Oct 2026 (cloud, late night: the B7 rebuild): B7 rebuilt (§1.31, PR 59), 277 KaTeX entries in 12 games ledgered; next is fix batch 1, drawn by Project Claude from the per-game counts in START. Before that, 2 Oct 2026 (cloud, late night): §1.33 fixed (PR 58), the stale Sequence Solver copy is a redirect stub; tier 1's index.html-only discovery filed as §4 item 12. Before that, 2 Oct 2026 (cloud, night): one site footer on every page, one stylesheet, checked in CI (§1.28, PR 57); §1.33 and §1.34 filed; next is phone-fit batch 2. Before that, 2 Oct 2026 (cloud, evening): KaTeX wrapper audit done (docs/audit-katex-wrappers.md), 386 strings in 19 games by B7's test, 522 in 25 by the second count; §1.32 filed; next is the fix contract. Before that, 2 Oct 2026 (cloud, late afternoon): Contract 2 live (PR 54), 100 asks name their form; proof-builder split out as §1.30; next is the read-only KaTeX wrapper audit. Before that, 2 Oct 2026 (cloud, afternoon): §4 item 10 live (PR 53), --write-ledger merges and refuses an unread bank; next is Contract 2. Before that, 2 Oct 2026 (cloud): item 7 live (PR 52), ledger identity by content for every rule; next is Contract 2. Before that, 2 Oct 2026 (home): B11 live (PR 51), options equal in value; split A 1 / B 68 / C 88 / D 42; next is item 7. Before that, 1 Oct 2026 (daytime, home): /updates/ launched; footer clipping filed as §1.28. Before that, 1 Oct 2026 (after midnight, home): section click tracking built, PR held for Jon's privacy wording. Before that, 1 Oct 2026 (late night, home): group A FIXED, 39 questions, scan 252 → 210, B11 next. Before that, 1 Oct 2026 (night, home) — the "What's changed" page built at /updates/, unlaunched (noindex, unlinked); check-site.py discovers root pages; the link check is in CI. Before that, 1 Oct 2026 (late, home) — CI in parallel in the Playwright image (~5 min), with a known font gap; before that the value-equivalent options scan made deterministic, group A is 39, see START. Before that, 1 Oct 2026 (late) — the shared Next control. Before that, 1 Oct 2026 (evening) — phone-fit batch 1. Before that, 1 Oct 2026 (afternoon) — the portal fits a phone (item 3.10). Before that, 1 Oct 2026 — New Shapes fits a phone; every game measured (item 3.9), see START. Before that, 30 Sep 2026 — Normal Navigator recomputed, see START. Before that, 29 Sep 2026 — **Graph Transformer: the 3 puzzle-authoring mismatches found

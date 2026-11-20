@@ -67,7 +67,7 @@ cd ~/maffsgames
 python -X utf8 /tmp/maffs-end-task.py <branch>
 ```
 
-- Size limit: check-context-size.py warns past 18 KiB and fails past 20 KiB for AGENTS.md, CLAUDE.md and both handovers. Archivable handovers warn; main archives to 17 KiB; unarchivable excess fails. Todo's cap is 150 KiB without the band; canon is reported only. See canon §12.
+- Size limit: check-context-size.py warns past 18 KiB and fails past 20 KiB for AGENTS.md, CLAUDE.md and both handovers. Archivable handovers warn; main archives to 17 KiB; unarchivable excess fails. Todo's cap is 105 KiB without the band, and any row over 1,200 characters warns; canon is reported only. See canon §12.
 
 ## Lane ownership
 
@@ -80,7 +80,7 @@ python -X utf8 /tmp/maffs-end-task.py <branch>
 - A PR that changes what a student or teacher sees adds its dated line to /updates/ in the same PR, in plain words; internal work does not.
 
 - Corrections arrive as numbered amendments to the in-flight contract (Jon, 30 Oct 2026). Save contracts verbatim in `docs/handover/contracts/` in the task's first commit; work not started or stopped part-way is pointed to by a `docs/todo.md` row, not a Queue line. When the work merges, the file moves to `docs/history/contracts/`. Include contract, amendments and report in the PR. See workflow §3.4.
-- A PR that fixes all or part of a docs/todo.md row updates that row in the same PR, and moves it to docs/history/todo-done.md when nothing is owed. Jon, 8 Nov; LIVE-BUG-RECHECK.
+- A PR that fixes all or part of a docs/todo.md row rewrites the row to what is still owed and moves the finished part, word for word, to docs/history/todo-done.md; the whole row moves when nothing is owed. A row never records history. Jon, 19 Nov; TODO-TRIM.
 - Commit and push at milestones; keep the branch handover current with done, next and discoveries. Context percentage never stops a task: only Jon can measure it and clear the session. Archives are history, not startup reading. Rationale: canon §12, RULEBOOK.
 - A fresh context is a new cloud session, never /clear: /clear keeps the session's original clone, so it reloads the rules of the day it started. Reason: canon §12, CLOUD-LEAN.
 - Handover entry format: every entry starts `## <yyyy-mm-dd> (<lane>): <TASK> ...`, newest first, so check-context-size.py can archive it. “Done” means merged and live, with review state separate. Archived bodies stay unchanged. Reason: canon §12, RULEBOOK.

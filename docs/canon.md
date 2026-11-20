@@ -3457,3 +3457,9 @@ data. The privacy page already gave the purpose ("which questions students find 
 §1's rows recorded live bugs, but nothing tied a fixing PR to its row, so fixes merged elsewhere, or only in part, left
 rows open, and rows marked FIXED or DONE in their own text still sat in §1 owing a remainder. Nobody could tell from the
 backlog which live bugs a student could still hit.
+
+**TODO-TRIM (Jon, 19 Nov 2026):** A PR that fixes all or part of a docs/todo.md row rewrites the row to what is still
+owed and moves the finished part, word for word, to docs/history/todo-done.md; the whole row moves when nothing is owed.
+A row never records history. Why: the rule above moved a row only once nothing was owed, so open rows gathered each
+PR's progress until todo.md was back at 152,931 bytes (its largest row 8,360 characters). `scripts/check-context-size.py`
+now names any row over 1,200 characters as a warning, and its cap was lowered to the trimmed size plus 10 KiB.
