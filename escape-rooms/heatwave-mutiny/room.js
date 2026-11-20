@@ -125,7 +125,8 @@ window.ROOM = {
       grade: 4,
       name: 'Patrol window',
       brief: 'A countdown timer wired into the corridor door release. Set it to the number of minutes after the ' +
-             'Supervisors set off when it is safe to cross, and it will let you through at that moment and no other.',
+             'Supervisors set off until the first time it is safe to cross: the first time all three are back together, and it ' +
+             'will let you through at that moment and no other.',
       instrument: { kind: 'slider', label: 'Corridor release — minutes after they set off', min: 1, max: 200, step: 1,
                     decimals: 0, unit: 'min', start: 1, verb: 'Set the timer' },
       variants: [
