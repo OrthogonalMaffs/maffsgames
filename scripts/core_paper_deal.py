@@ -13,15 +13,26 @@ real sessions (startGame()), checked:
     source order, and must match the page's SECTIONS/SECTION_STARTS where it has them); each section's order
     differs between sessions;
   - each question's options are a permutation of its source options (values 0..n-1, each drawn with its own
-    text, lettered A, B, C, D by position), in more than one order across the sessions; the key lands in each of
-    A-D somewhere on the paper;
-  - every option clicked: marked right exactly when its value is the key or in the item's accept list;
+    text), in more than one order across the sessions; the key lands in each of positions 1-4 somewhere on the
+    paper;
+  - no letter on any button (contract CORE-PAPERS-NO-LETTERS, Jon, 19 Nov 2026: a shuffled position means nothing,
+    and a letter there can be read as one inside an option, "Option A", "School C"): before marking, every
+    .option-letter badge is empty and aria-hidden, so a button's accessible name is its option text alone;
+  - every option clicked: marked right exactly when its value is the key or in the item's accept list; after
+    marking, the pressed button's badge shows the tick if it is accepted, else the cross, every accepted
+    option's badge the tick, and every other badge stays empty;
   - question_answered carries question_index (the position, 1-based) and question_id, the source id
     "<prefix>-qNN" of the question shown, the same in every session;
   - "Q n of 36" counts positions, and the results screen's section scores count the dealt sections.
 
-plants(html) returns the faults the self-test plants: options not shuffled; a question dealt into another
-section; marking by position; question_id from the position. Each must FAIL.
+Then, as a printed report and never a gate (canon 7.6.1's recorded exception, Jon, 20 Nov 2026: the papers carry
+exam-length items and may scroll at every size), every question's fit on the asking screen, in real fonts, against
+the fold less the fixed footer, in page coordinates: normal mode at 320x568, 375x667 and 390x844 and Aa at 375x667 and
+390x844, does the last option end above the fold; Aa at 320x568, do the options start above it. Since the deal (#840)
+any question can come first, so every question is measured, not one seeded sample (measure-phone-fit.py's).
+
+PLANTS lists the faults the self-test plants: options not shuffled; a question dealt into another section;
+marking by position; question_id from the position; the position letters put back. Each must FAIL.
 """
 import re
 
@@ -51,7 +62,8 @@ PLAY_JS = r"""([sessions, mathtext]) => {
       const btns = [...document.querySelectorAll('#optionsContainer .option-btn')];
       const rec = {src: src, counter: document.getElementById('qCounter').textContent,
                    vals: btns.map(b => b.dataset.val),
-                   letters: btns.map(b => b.querySelector('.option-letter').textContent),
+                   badges: btns.map(b => { const e = b.querySelector('.option-letter');
+                                           return [e.textContent, e.getAttribute('aria-hidden')]; }),
                    textOk: btns.every(b => b.querySelector('.option-text').innerHTML === norm(R(q.options[+b.dataset.val]))),
                    marks: [], sent: null};
       for (let v = 0; v < q.options.length; v++) {
@@ -63,6 +75,12 @@ PLAY_JS = r"""([sessions, mathtext]) => {
         b.click();
         const right = b.classList.contains('correct') && answers[0] === true;
         if (right !== ok.includes(v)) rec.marks.push([v, right ? 'marked right' : 'marked wrong']);
+        for (const x of document.querySelectorAll('#optionsContainer .option-btn')) {
+          const xv = +x.dataset.val, got = x.querySelector('.option-letter').textContent;
+          const want = ok.includes(xv) ? '\u2713' : (x === b ? '\u2717' : '');
+          if (got !== want) rec.marks.push([v, 'pressed: option value ' + xv + "'s badge reads " + JSON.stringify(got)
+                                               + ', expected ' + JSON.stringify(want)]);
+        }
         if (v === q.correct) rec.sent = sent.slice();
       }
       ses.qs.push(rec);
@@ -133,8 +151,11 @@ def check(fails, bank, res, prefix):
                 continue
             if not r['textOk']:
                 fails.append('%s: an option is drawn with another option\'s text' % w)
-            if r['letters'] != list('ABCD'[:m]):
-                fails.append('%s: letters %s' % (w, r['letters']))
+            shown = [t for t, _ in r['badges'] if t != '']
+            if shown:
+                fails.append('%s: a button shows %s before marking' % (w, shown))
+            if any(h != 'true' for _, h in r['badges']):
+                fails.append('%s: a badge is not aria-hidden (%s)' % (w, [h for _, h in r['badges']]))
             opt_orders[r['src']].add(tuple(r['vals']))
             key_pos.add(r['vals'].index(str(q['correct'])))
             for v, what in r['marks']:
@@ -155,7 +176,7 @@ def check(fails, bank, res, prefix):
             fails.append('%s: options not shuffled: Q%s drawn in one order in all %d sessions'
                          % (TAG, ','.join(map(str, same[:8])) + ('...' if len(same) > 8 else ''), len(res['sessions'])))
         if key_pos != {0, 1, 2, 3}:
-            fails.append('%s: the key never landed at %s' % (TAG, ', '.join('ABCD'[i] for i in range(4) if i not in key_pos)))
+            fails.append('%s: the key never landed at position %s' % (TAG, ', '.join(str(i + 1) for i in range(4) if i not in key_pos)))
     s0, _, c0 = secs[0]
     want = ['%d / %d' % (c0, c0)] + ['0 / %d' % c for _, _, c in secs[1:]]
     if res['results']['scores'] != want or res['results']['final'] != '%d / %d' % (c0, total):
@@ -190,6 +211,79 @@ def play(html, slug, mathtext=False, sessions=SESSIONS):
         proc.wait()
 
 
+FIT_SIZES = [('normal', 320, 568), ('normal', 375, 667), ('normal', 390, 844),
+             ('aa', 320, 568), ('aa', 375, 667), ('aa', 390, 844)]
+
+FIT_JS = r"""() => {
+  window.setTimeout = () => 0;
+  const fold = () => { const f = document.querySelector('.site-footer');
+    const fx = f && getComputedStyle(f).position === 'fixed';
+    return window.innerHeight - (fx ? Math.round(f.getBoundingClientRect().height) : 0); };
+  startGame();
+  document.getElementById('sectionBanner').style.display = 'none';
+  document.getElementById('questionArea').style.display = 'block';
+  PAPER = QUESTIONS.map((_, i) => i);
+  const out = [];
+  for (let i = 0; i < PAPER.length; i++) {
+    currentQ = i; showQuestion(); window.scrollTo(0, 0);
+    const b = [...document.querySelectorAll('#optionsContainer .option-btn')];
+    out.push({top: Math.round(b[0].getBoundingClientRect().top + window.scrollY),
+              bottom: Math.round(b[b.length - 1].getBoundingClientRect().bottom + window.scrollY), fold: fold()});
+  }
+  return out;
+}"""
+
+
+def fit_report(html, slug):
+    """Print, per size, how many questions' options pass the fold (a report: returns nothing, fails nothing)."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    lines = []
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % re.escape(slug))
+            for mode, w, h in FIT_SIZES:
+                ctx = browser.new_context(viewport={'width': w, 'height': h})
+                ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                if mode == 'aa':
+                    ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
+
+                def route(r):
+                    url = r.request.url
+                    if bc.is_font_cdn(url):          # the faces students see, from the pinned copies
+                        got = bc.real_font_response(url)
+                        return r.fulfill(**got) if got else r.abort()
+                    if page_url.search(url):
+                        return r.fulfill(status=200, content_type='text/html; charset=utf-8', body=html)
+                    return r.continue_() if url.startswith(base) else r.abort()
+                ctx.route('**/*', route)
+                page = ctx.new_page()
+                page.goto(base + '/games/%s/?cb=fit' % slug, wait_until='load', timeout=20000)
+                page.evaluate('document.fonts.ready.then(() => 1)')
+                page.wait_for_function('typeof startGame === "function"', timeout=15000)
+                page.evaluate(FIT_JS)
+                page.evaluate('document.fonts.ready.then(() => 1)')   # every face the questions use, now loaded
+                rows = page.evaluate(FIT_JS)
+                ctx.close()
+                start = mode == 'aa' and w == 320
+                key = 'top' if start else 'bottom'
+                over = [(i + 1, r[key] - r['fold']) for i, r in enumerate(rows) if r[key] > r['fold']]
+                lines.append('  %-6s %dx%d %-12s %2d of %d below the fold%s' % (
+                    mode, w, h, 'options start' if start else 'last option', len(over), len(rows),
+                    ('; worst Q%d, +%d px' % max(over, key=lambda x: x[1])) if over else ''))
+            browser.close()
+    except Exception as e:                           # a report: a failure to measure is printed, never failed
+        lines.append('  not measured: %s' % str(e).splitlines()[0][:160])
+    finally:
+        proc.terminate()
+        proc.wait()
+    print('%s: phone fit, every question on the asking screen (a report, not a gate: canon 7.6.1, the Core Maths'
+          ' papers may scroll)' % slug)
+    for line in lines:
+        print(line)
+
+
 def checked(html, slug, prefix, mathtext=False):
     fails = []
     bank, res, errors = play(html, slug, mathtext)
@@ -213,6 +307,9 @@ PLANTS = [
     ('question_id from the position',
      r'question_id: ?questionId\(PAPER\[currentQ\]\)',
      'question_id: questionId(currentQ)'),
+    ('the position letters put back',
+     r'<span class="option-letter" aria-hidden="true"></span>',
+     '<span class="option-letter" aria-hidden="true">\'+\'ABCD\'[pos]+\'</span>'),
 ]
 
 
@@ -233,4 +330,5 @@ def run(html, slug, prefix, mathtext=False, selftest=True):
             hit = checked(planted, slug, prefix, mathtext)
             ok = ok and bool(hit)
             print('  self-test (deal) %-38s %s' % (name, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+    fit_report(html, slug)
     return ok

@@ -619,7 +619,7 @@ def sideways_sizes(rows):
             if any(m and m["sw"] > m["vw"] for m in (r["ask"], r["wrong"]))]
 
 
-def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=()):
+def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=(), exempt=None):
     """One game's sizes in one mode -> (status, severity, detail).
 
     THE GATE (gate_sizes) and SIDEWAYS SCROLL (sideways_sizes), each against its own list in phone-fit-state.json. A
@@ -628,7 +628,12 @@ def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=
     measure must be on the unmeasurable list (UNMEASURABLE), or it is UNMEASURABLE_NEW: it never reads as passing.
     HARD_FAIL, STALE and UNMEASURABLE_NEW make the run exit 1. On a phone, Next below the fold is FAIL: reported, not a
     gate (on a laptop it is the gate). In Aa at 320x568 an overflow that keeps the options starting above the fold is
-    WARN (Aa at 320)."""
+    WARN (Aa at 320).
+
+    exempt (the game's reason on the "scroll-exempt" list, canon 7.6.1's recorded exception for exam-length items,
+    Jon 20 Nov 2026): the game may scroll at every size, so the fold is measured and reported (SCROLL_EXEMPT), never
+    failed and never STALE. Still required: no sideways scroll (against its sideways list, as for every game), and a
+    Next control after a wrong answer wherever the driver produced one (no Next there is HARD_FAIL)."""
     known, sideways = set(known or ()), set(sideways or ())
     guard = [size_key(r) for r in rows if r.get("inAside")]
     if guard:
@@ -647,6 +652,28 @@ def classify(rows, mode="normal", known=(), unmeasurable_listed=False, sideways=
         return STALE, -10 ** 3, "measured, but on the unmeasurable list: take it off (the lists only shrink)"
 
     by = {size_key(r): r for r in rows}
+    if exempt:
+        side = sideways_sizes(rows)
+        new_side = [k for k in side if k not in sideways]
+        no_next = [size_key(r) for r in wrongs if not r["wrong"].get("found")]
+        if new_side or no_next:
+            parts = (["scrolls sideways, not on the sideways list: " + ", ".join(new_side)] if new_side else []) + (
+                ["no Next after a wrong answer at " + ", ".join(no_next)] if no_next else [])
+            return HARD_FAIL, 0, "scroll-exempt, but " + "; ".join(parts)
+        stale_side = sorted(sideways - set(side))
+        if stale_side:
+            return STALE, -10 ** 3, ("on the sideways list at %s but does not scroll sideways there: take it off (the lists"
+                                     " only shrink)" % ", ".join(stale_side))
+        below = []
+        for r in asks:
+            a = r["ask"]
+            if mode == "aa" and r["w"] == 320:
+                if a.get("top") is not None and a["top"] > a["fold"]:
+                    below.append("%s (options start %d / %d)" % (size_key(r), a["top"], a["fold"]))
+            elif a["bottom"] > a["fold"]:
+                below.append("%s (last option %d / %d)" % (size_key(r), a["bottom"], a["fold"]))
+        return SCROLL_EXEMPT, -10 ** 4, "%s; %s" % (exempt, ("below the fold, reported: " + ", ".join(below))
+                                                    if below else "the sampled questions fit")
     canvas = " (a canvas: its box and the controls beside it)" if any(r["ask"].get("canvas") for r in asks) else ""
 
     def edge(k):
@@ -713,6 +740,7 @@ UNMEASURABLE_NEW = "UNMEASURABLE (not listed)"
 KNOWN_FAIL = "KNOWN FAIL"
 UNMEASURABLE = "UNMEASURABLE"
 WARN_AA = "WARN (Aa at 320)"
+SCROLL_EXEMPT = "SCROLL-EXEMPT (report)"
 GATE_FAILS = (HARD_FAIL, STALE, UNMEASURABLE_NEW)
 ASIDE_GUARD = "answer control inside data-mfg-aside"
 
@@ -722,10 +750,12 @@ STATE = os.path.join(HERE, "phone-fit-state.json")
 
 
 def load_state(mode):
-    """(known failures, unmeasurable games, sideways list) for one mode: "normal", "aa" or "laptop"."""
+    """(known failures, unmeasurable games, sideways list, scroll-exempt games -> reason) for one mode: "normal", "aa"
+    or "laptop". The scroll-exempt list holds for every mode."""
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
-    return st["known-failures"][mode], set(st["unmeasurable"][mode]), st["sideways"][mode]
+    return (st["known-failures"][mode], set(st["unmeasurable"][mode]), st["sideways"][mode],
+            st.get("scroll-exempt", {}).get("games", {}))
 
 # --aa: the stored preference every game's Aa toggle reads on load.
 AA_INIT = "try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}"
@@ -738,21 +768,22 @@ def write_report(results, path, elapsed, mode="normal", only=None, sizes=None, r
     """report=True (--sizes, not the canon sizes): nothing is judged against the lists and nothing fails the run."""
     sizes = sizes or SIZES
     aa = mode == "aa"
-    known, unmeasurable, sideways = ({}, set(), {}) if report else load_state(mode)
+    known, unmeasurable, sideways, exempt = ({}, set(), {}, {}) if report else load_state(mode)
     by = {}
     for r in results:
         by.setdefault(r["slug"], []).append(r)
     games = []
     # A list entry for a game no longer on the roster is stale too (a full run only).
-    for slug in sorted((set(known) | unmeasurable | set(sideways)) - set(by)) if not only else []:
+    for slug in sorted((set(known) | unmeasurable | set(sideways) | set(exempt)) - set(by)) if not only else []:
         games.append((STALE, -10 ** 3, slug, [], "on a phone-fit list but not measured (not on the roster): take it off"))
     for slug, rows in by.items():
         rows.sort(key=lambda r: r["w"])
-        st, sev, detail = classify(rows, mode, known.get(slug, ()), slug in unmeasurable, sideways.get(slug, ()))
+        st, sev, detail = classify(rows, mode, known.get(slug, ()), slug in unmeasurable, sideways.get(slug, ()),
+                                   exempt.get(slug))
         if report:
             st = {HARD_FAIL: BELOW_REPORT, UNMEASURABLE_NEW: UNMEASURABLE}.get(st, st)
         games.append((st, sev, slug, rows, detail))
-    order = {HARD_FAIL: -4, BELOW_REPORT: -4, STALE: -3, UNMEASURABLE_NEW: -2, KNOWN_FAIL: -1, "FAIL": 0, WARN_AA: 1, "PASS (no Next)": 2,
+    order = {HARD_FAIL: -4, BELOW_REPORT: -4, STALE: -3, UNMEASURABLE_NEW: -2, KNOWN_FAIL: -1, "FAIL": 0, WARN_AA: 1, SCROLL_EXEMPT: 1, "PASS (no Next)": 2,
              "PASS (asking only)": 3, "PASS": 4, UNMEASURABLE: 5}
     games.sort(key=lambda g: (order[g[0]], -g[1], g[2]))
 
@@ -885,8 +916,9 @@ async def run(args):
     if report:
         print("report mode (--sizes): nothing judged")
         return
-    print("known failures (reported, never failed): %d game(s); unmeasurable and listed: %d" % (
-        sum(1 for g in games if g[0] == KNOWN_FAIL), sum(1 for g in games if g[0] == UNMEASURABLE)))
+    print("known failures (reported, never failed): %d game(s); unmeasurable and listed: %d; scroll-exempt: %d" % (
+        sum(1 for g in games if g[0] == KNOWN_FAIL), sum(1 for g in games if g[0] == UNMEASURABLE),
+        sum(1 for g in games if g[0] == SCROLL_EXEMPT)))
     bad = [g for g in games if g[0] in GATE_FAILS]
     if bad:
         for st, sev, slug, rows, detail in bad:
@@ -977,7 +1009,31 @@ def selftest():
          False, HARD_FAIL, ()),
         ("canvas: measured now, still on the unmeasurable list", [cv(r) for r in fits], "normal", (), True, STALE, ()),
     ]
+    # Scroll-exempt (canon 7.6.1, Jon 20 Nov 2026, the Core Maths papers): an overflow passes as a report; sideways
+    # scroll and a missing Next still fail; never STALE for the fold.
+    EX = "exam-length items"
+    nonext = [dict(r, wrong=dict(r["wrong"], found=False)) for r in fits]
+    exempt_cases = [
+        ("scroll-exempt: overflows at every size", [row(320, 600, 900, 1000), row(375, 700, 900, 1000), row(390, 850, 900, 1000)],
+         "normal", (), False, SCROLL_EXEMPT, (), EX),
+        ("scroll-exempt: Aa 320 options start below", [row(320, 600, 900, 1000), fits[1], fits[2]], "aa", (), False,
+         SCROLL_EXEMPT, (), EX),
+        ("scroll-exempt: laptop overflow and Next below", [lap(1366, 900, 1000), lap(1280, 900, 1000)], "laptop", (), False,
+         SCROLL_EXEMPT, (), EX),
+        ("scroll-exempt: fits (never STALE)", fits, "normal", (), False, SCROLL_EXEMPT, (), EX),
+        ("scroll-exempt but scrolls sideways", [row(320, 600, 900, 1000, sw=410), fits[1], fits[2]], "normal", (), False,
+         HARD_FAIL, (), EX),
+        ("scroll-exempt, sideways listed", [row(320, 600, 900, 1000, sw=410), fits[1], fits[2]], "normal", (), False,
+         SCROLL_EXEMPT, ("320x568",), EX),
+        ("scroll-exempt but no Next after a wrong answer", nonext, "normal", (), False, HARD_FAIL, (), EX),
+        ("plant: the same overflow, not exempt", [row(320, 600, 900, 1000), fits[1], fits[2]], "normal", (), False,
+         HARD_FAIL, (), None),
+    ]
     ok = True
+    for name, rows, mode, known, unl, want, sw, ex in exempt_cases:
+        got = classify(rows, mode, known, unl, sw, ex)[0]
+        print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
+        ok = ok and got == want
     for name, rows, mode, known, unl, want, sw in side_cases + lap_cases + canvas_cases:
         got = classify(rows, mode, known, unl, sw)[0]
         print("  %s  %-52s %s" % ("ok  " if got == want else "FAIL", name, got))
