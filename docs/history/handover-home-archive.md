@@ -2,6 +2,38 @@
 
 ## Moved 2026-11-20 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-19 (home): NEXT-IN-VIEW (MaffsNext.wrong() brings Next into view on a phone, in every game)
+
+Claude Code (home lane), worktree `~/mg-next-in-view`, branch `claude/next-in-view`; contract `docs/handover/contracts/2026-11-19-next-in-view.md`. Tier Medium. The first commit carries PRINTABLES-CORE's close-out (#830, 006d3d8).
+
+- **`schools/assets/next-control.js`:** wrong() calls `MaffsScroll.reveal(wrap, { keep: opts.keep || wrap })` once its timers are set; new option `keep` (the reason element, or a function returning it). A page without scroll.js gets it once, by a tag whose src is resolved from next-control.js's own (`data-maffs-next="scroll"`); the reveal is skipped if the control was cleared or advanced meanwhile, and for a control inside a position:fixed ancestor (scrolling the page cannot move it). Floor, fallback, advance-once and 44px unchanged; scroll.js unchanged.
+- **Tests:** `scripts/test-next-control.py` gains six in-view cases at 320x568 on pages served two levels down (Next brought up with the reason's top on screen; no scroll.js: loaded once, same result; already in view: no scroll; keep holds when both cannot fit; a touchstart stops the pending passes; clear() before scroll.js arrives: no scroll). Two plants caught: the reveal call removed, scroll.js not loaded. 23 checks pass. check-scroll-reveal.py unchanged, passes.
+- **Re-measure (81 MaffsNext games, 320x568, 375x667, 390x844, main 150bd66 against this branch):** measure-phone-fit.py measures Next from the top of the page after `scrollTo(0, 0)`, so a scroll cannot change it: 0 of 243 rows changed in either mode, known-failures 21 games (normal) and 26 (Aa) before and after, Next below the fold by that measure 55 and 83 rows before and after. **phone-fit-state.json: nothing to take off, nothing added.** The same runs, read in the window after the page settles: Next in view on 95 of 150 wrong screens before, 148 after (normal); 68 before, 147 after (Aa); no screen moved twice or reversed.
+- **Decided for you:** screening-room (2 normal rows, 3 Aa) is unchanged: its own `MaffsScroll.reveal(result, { up: true })` right after wrong() holds its explanation's top, which is taller than the screen, so Next stays below (844 / 528 at 320x568, as before). Same task, so no visible jump. Not changed (game files out of scope); a per-game `keep:` or a shorter result is its fix.
+- **todo (after Jon's ruling, below):** NNL-PHONE-NEXT, DD-LINEUP-FEEDBACK part 2 and SIX-PS-SHORT-WRONG stay open, each noted that the reveal makes Next reachable but the layout still does not fit (in the window after the reveal, 320x568: NNL Order Them 630 to 518, Calculate 585 to 518, DD Line-Up 799 to 518, Round Up 548 to 517, fold 528). SIX-PS-SHORT-WRONG also lists 5 unlisted sweep failures, on main too. New row PHONE-FIT-PAGE-COORDS. todo.md 151867 bytes (cap 153600).
+- **Canon 7.6** sentence under the MaffsNext usage; one /updates/ line.
+- **Gate failure 1 (check-site 44572179542, head 735a008):** ci-deps.py --selftest, "always-run verifiers at most ALWAYS_BUDGET (12)": 133. The loader's `tag.src = src` (a computed value) read to ci-deps as an unknown load on every page loading next-control.js. Fixed in 5c09c245 with `setAttribute('src', ...)`; ci-deps still records schools/assets/scroll.js as next-control.js's dependency (the literal 'scroll.js' resolved beside it). ci-deps.py untouched.
+- **Gate failure 2 (check-site 44573475355, head 5c09c24): STOPPED.** Plan job: verify-decimal-detective.py's line 177s + 15s setup = 192s, 71% of 270s against the 70% line limit, selected because next-control.js selects 136 verifiers; already over on main's timings (run 44566476211), not slowed by this PR. The fix was outside this contract's files, so it stopped and reported.
+- **Route 1 (Project Claude, DD-VERIFIER-SHARD):** #839 put the verifier on ci-shards and merged as f2e6d2a (entry above); main merged into this branch (one conflict, here in home.md), Gate re-run.
+- **Gate failure 3 (check-site 44583202526, head d1fe5b9): STOPPED.** Two plants no longer caught, because wrong() now scrolls Next into view: The 6 P's "the feedback not scrolled into view (the helper never called)" and Sequence Solver's "WORKED: the phone rule undone" (its FIT_JS measured Next in the window). Every other selected verifier passed; the Plan job passed.
+- **Jon's ruling (option c), 19 Nov 2026:** the 6 P's plant retired (test-next-control.py's plants guard the reveal); Sequence Solver's FIT_JS measures Next in page coordinates (rect + scrollY against innerHeight - 40, as measure-phone-fit.py:207), so its plant is caught again; canon 7.6.1 sentence: fit is measured in page coordinates, the reveal makes Next reachable but does not count as fitting; the three todo rows stay open (above); phone-fit-state.json unchanged. Main merged in again (conflict in updates/index.html only).
+- MERGED 19 Nov as 9da4073 (#837) via merge-pr.py, exit 0, last line "main 9da4073 run 44591763818: GREEN". Main on the merge commit: check-site 44591763818 success, phone-fit-full 44591763629 success (both push runs), pages build 44591762538 success (all confirmed from the API). Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-19-next-in-view.md` (closed out by WRONG-PAUSE-NEXT's first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-19 (home): PRINTABLES-CORE (the seven Core rooms and three Core bundles on /printables/)
+
+Claude Code (home lane), worktree `~/mg-printables-core`, branch `claude/printables-core`; contract `docs/handover/contracts/2026-11-19-printables-core.md`. Tier Medium. The first commit carries DASHBOARD-FIXES' close-out (#829, e4ac609).
+
+- **/printables/ (`printables/index.html`):** ten `<article class="pack">` cards after the Warm-up bundle, inside the escape-room packs' div, built as the page's other cards with the ★★ Core chip copied from The Christmas Tree Fiasco's. Seven rooms in /escape-rooms/'s order (Hamster Heist, P.E. Store, Heatwave, Prom Budget, Canteen, Car Trap, Roll for Initiative), each £3 with topics, a Tes link (`tes-<slug>`) and a play link (`play-<slug>`); then Core bundle (£5), Core bundle 2 (£6.50) and the complete Core collection (£10), Tes link only. Every h3 matches the hub's card and every topics line matches the room's meta description word for word; each /escape-rooms/<slug>/ exists. Existing cards unchanged.
+- **/updates/:** one 19 Nov 2026 line.
+- **todo:** PRINTABLES-CORE and CORE-BUNDLES-2 moved word for word to `docs/history/todo-done.md` with a done note; todo.md 153572 to 152846 bytes.
+- MERGED 19 Nov as 006d3d8 (#830) via merge-pr.py, exit 0, last line "main 006d3d8 run 44477099151: GREEN". Main on the merge commit: check-site 44477099151 success, phone-fit-full 44477099247 success (both push runs), pages build 44477099011 success (all confirmed from the API). Contract already in `docs/history/contracts/2026-11-19-printables-core.md` (moved by #831); closed out by NEXT-IN-VIEW's first commit.
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-20 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-18 (home): DASHBOARD-FIXES (every Dashboard chart names its series from its header row; SR-33; two close-outs)
 
 Claude Code (home lane), worktree `~/mg-dashboard-fixes`, branch `claude/dashboard-fixes`; contract `docs/handover/contracts/2026-11-18-dashboard-fixes.md`. Tier Medium. The first commit carries two close-outs:
