@@ -3951,3 +3951,11 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 ## Part closed by SFB-WORKING-GCSE (20 Nov 2026)
 
 Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE now shows a rule-built worked solution ("How to get there", above Next), checked by `scripts/verify-standard-form-blitz.py`. Its A-Level half stays in the row.
+
+## Closed by 52DLE-REBUILD (20 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| LEDGER-B4-52DLE | **B4 ledger debt, `52dle`: 2 levels below the 40-question minimum** (ks3 20, gcse 20). | cloud lane |
+
+**Closed 20 Nov 2026 (52DLE-REBUILD).** Row LEDGER-B4-52DLE, moved word for word above. The 20 hand-written puzzles are gone: 52-dle is generated from clue ladders (`scripts/gen-52dle.py`), every number 1 to 100 at Foundation and 928 of 1 to 1000 at GCSE, five a run. extract-banks now reads it as a generator, so both B4 ledger entries went with the game's ledger entry (`data/check-ledger.json`). Held by `scripts/verify-52dle.py`.

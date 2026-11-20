@@ -57,7 +57,7 @@ ROOM_SLUG = re.compile(r"slug:\s*'([^']+)'")
 RESULTS = {
     "sequence-solver": "results", "estimation-golf": "summaryCard",
     "factor-race": "gameOver", "prime-factorisation": "gameOver", "prime-or-composite": "modal",
-    "percentage-flip": "gameOver", "fraction-equivalence": "gameOver", "equatle": "m-end", "52dle": "modal",
+    "percentage-flip": "gameOver", "fraction-equivalence": "gameOver", "equatle": "m-end", "52dle": "results",
     "split-it": "resultsScreen", "word-problem-decoder": "resultsScreen", "equation-builder": "resultsScreen",
     "spot-the-error": "resultsScreen", "gradient-hunter": "resultsScreen", "truth-buster": "resultsScreen",
     "spot-the-muppet": "resultsScreen", "terrible-advice": "resultsScreen",

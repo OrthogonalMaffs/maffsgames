@@ -1025,10 +1025,8 @@ WRONG_PAUSE_EXEMPT = {
 }
 # Games that fail the pause and wait for their own fix: reported, never failed; only shrinks (Jon, 19 Nov 2026).
 WRONG_PAUSE_KNOWN_FAIL_AT_START = frozenset('''
-52dle
 '''.split())
 WRONG_PAUSE_KNOWN_FAIL = {
-    '52dle': 'moves on by itself after a wrong guess; removed by 52DLE-REBUILD (cloud queue)',
 }
 PAUSE_REPORTED = {}    # slug -> its pause fault (or 'passes'), for a game on one of the three reported lists
 

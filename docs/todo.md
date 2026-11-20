@@ -318,7 +318,6 @@ One row per failing rule-and-game group in `data/check-ledger.json` (B6 is one r
 
 | # | Item | Owner |
 |---|---|---|
-| LEDGER-B4-52DLE | **B4 ledger debt, `52dle`: 2 levels below the 40-question minimum** (ks3 20, gcse 20). | cloud lane |
 | LEDGER-B4-CHARACTERISTIC-QUEST | **B4 ledger debt, `characteristic-quest`: 2 levels below the 40-question minimum** (further 26, level4 26). | cloud lane |
 | LEDGER-B4-COMPONENT-CRUSHER | **B4 ledger debt, `component-crusher`: 3 levels below the 40-question minimum** (gcse 15, alevel 15, level4 15). | cloud lane |
 | LEDGER-B4-CONSTRUCTIONS-LAB | **B4 ledger debt, `constructions-lab`: 2 levels below the 40-question minimum** (ks3 10, gcse 10). | cloud lane |
