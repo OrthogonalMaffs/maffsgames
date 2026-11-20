@@ -69,7 +69,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-19 (cloud): CORE-PAPERS-NO-LETTERS (`docs/handover/contracts/2026-11-19-core-papers-no-letters.md`; Jon 19 Nov)
+## 2026-11-20 (cloud): ESCAPE-WORDING (`docs/handover/contracts/2026-11-20-escape-wording.md`; Jon 20 Nov)
+
+Agent Claude Code (cloud), branch `claude/nifty-faraday-13526r` restarted from main 3d6ce66. Tier Small.
+**Close-outs carried (first commit):** #843 CORE-PAPERS-NO-LETTERS, recorded in its entry below.
+In progress.
+
+## 2026-11-19 (cloud): CORE-PAPERS-NO-LETTERS (`docs/history/contracts/2026-11-19-core-papers-no-letters.md`; Jon 19 Nov)
 
 Agent Claude Code (cloud), branch `claude/nifty-faraday-13526r` from main eb89b6f. Tier Small.
 **Close-outs carried (first commit, b235476):** #841 WORKING-CARD, recorded in its entry below (check-site 44616595773, phone-fit-full 44616595499, pages 44616593785, all success).
@@ -87,4 +93,6 @@ Done on the branch: each paper's builder (paper1 :760-767, 2a :585-592, 2b :539-
 **Checked locally:** measure-phone-fit --only each paper, normal, --aa, --laptop (fallback fonts): all 12 SCROLL-EXEMPT, exit 0, Next found. Five Core Maths verifiers exit 0 (16-59 s); the reports match the 19 Nov figures (paper1 27/12/2/16/30/12, 2a 35/14/5/27/33/22, 2b 30/9/0/18/31/14, 2c 25/3/0/6/23/4: normal 320, 375, 390, Aa 320 start, Aa 375, Aa 390). ci-deps --selftest, ci-groups --check, check-context-size PASS.
 **Decided for you (Amendment 2):** (1) "Next reachable" read as a Next control present after a wrong answer (below the fold is allowed: it scrolls); (2) the exempt list applies in every mode, laptop included; (3) a stale sideways entry for an exempt game is still STALE (the sideways lists only shrink; "never flags them stale" read as the fold); (4) reason text in the state file, not the report's JSON.
 **Decided for you:** (1) aria-hidden stays on the badge after marking too (the contract's attribute; ✓/✗ was the badge's text before and the button's state is in its class), so a screen reader reads the option text alone throughout; (2) the deal check's position wording ("position 1-4", not "A-D").
+**MERGED 20 Nov as 64f56a6 (#843)** via `merge-pr.py 843 --watch --wait 3600`, exit 0, last line "main 64f56a6 run 44686407010: GREEN" (Gate 44684777498 and the branch's dispatched phone-fit-full 44684770397 green on d72eb7b first). Main on the merge commit, read from the API: check-site 44686407010 success, phone-fit-full 44686407025 success (the full measure ran: normal, Aa and laptop all green), pages build and deployment 44686406533 success. Closed out by ESCAPE-WORDING's first commit; contract moved to `docs/history/contracts/`.
+Record: agent Claude Code; wall n/a (spans two days and two rulings, not timed); review cycles 0; amendments 2; usage n/a.
 
