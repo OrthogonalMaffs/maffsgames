@@ -66,11 +66,22 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-20 (cloud): LARGE-SCREEN-PILOT (`docs/handover/contracts/2026-11-20-large-screen-pilot.md`; Project Claude 20 Nov, two parts)
+## 2026-11-20 (cloud): LARGE-SCREEN-PILOT, PARKED (`docs/handover/contracts/2026-11-20-large-screen-pilot.md`, Amendment 1; Project Claude 20 Nov, two parts)
 
-Agent Claude Code (cloud), branch `claude/youthful-fermi-ujam6l` from main 2e7c9d2. Tier Medium. Root cause matched on 2e7c9d2 (maffscards :31 `.container{max-width:760px}`, :75 card 420 px).
-**Close-outs carried (first commit):** #854 FORGE-SUBJECT-PROMPT, recorded in its entry below (check-site 44807672164, phone-fit-full 44807672235, pages 44807671441, all success); its todo row moved word for word to `docs/history/todo-done.md`. The "Cloud lane owns" paragraph replaced by Jon's scope paragraph of 20 Nov.
-Next: schools/assets/large-screen.css, apply/check scripts, the six-game pilot.
+Agent Claude Code (cloud), branch `claude/youthful-fermi-ujam6l` from main 2e7c9d2; this PR from `claude/large-screen-park`. Tier Medium.
+**Close-outs carried (first commit, cherry-picked from 4e90390):** #854 FORGE-SUBJECT-PROMPT, recorded in its entry below (check-site 44807672164, phone-fit-full 44807672235, pages 44807671441, all success); its todo row moved word for word to `docs/history/todo-done.md`. The "Cloud lane owns" paragraph replaced by Jon's scope paragraph of 20 Nov.
+**Stopped at STOP IF, then parked (Jon, 20 Nov, 21:34: "option 2, PARK"; none of (a), (b), (c)).** The layer stays on `claude/youthful-fermi-ujam6l` @ 63b758c, unmerged: `schools/assets/large-screen.css`, `scripts/apply-large-screen.py`, `scripts/check-large-screen.py` (PASS, five plants caught), the six pilot games linked. Nothing of it is on main. The fix and re-pilot: todo LARGE-SCREEN-LAYER.
+**Steps, tuned to the rule (min-width / zoom >= 1200, min-height / zoom >= 760, nothing below 1500x880):** 1.15 from 1500x880, 1.25 from 1500x950 (1920x955 gets 1536x764), 1.4 from 1680x1064, 1.6 from 1920x1216 (2560x1310 gets 1600x819). The starting values broke it: 1.25 at 1500x880 leaves 704 px; 1.6 at 2200x1200 leaves 750. vh is zoomed too (100vh measured 1193.75 px on a 955 px viewport at 1.25), so the layer divides the body's min-height back by the step.
+**Measured** (Chromium 157, real fonts; layer on against off at the same viewport):
+| Game | Result |
+|---|---|
+| core-maths-paper1 | Next below the fold because of zoom on Q2, 4, 15, 26, 36 at 1920x955 (82-215 px; Q4's options too) and those and Q12 at 2560x1310 (17-450 px). Its chart questions need about 1,050 px. At 1366x650 (no zoom) already over on 15 questions. |
+| surd-simplifier | Next 12-60 px below the fold on 25 of 100 items at 1920x955, all fitting with the layer off; none at 2560x1310. Its working card opens by `(min-width:760px) and (min-height:860px)` (:80), which reads 955 while layout has 764. |
+| negative-number-line | Order Them's touch ghost tile 233 px off the finger at 1920x955, 746 px at 2560x1310, 0 at 1366x650 (`style.left/top = clientX/clientY`, :764-765); the drop lands right. Mouse input exact. |
+| maffscards, factor-race, bearing-blitz | Next above the fold at every size (maffscards over 17-24 rounds); canvas clicks and drag 0 degrees out. factor-race's Start is 167 px below the fold with the layer at 1920x955 (60 px above without). |
+No page scrolls sideways at any size; zoom is 1 at 1366x650 and at 320x568, 375x667, 390x844.
+**Todo rows added:** LARGE-SCREEN-LAYER, START-SIDEWAYS-GATE, PERCENTILE-LOWER-IS-BETTER. No canon §7.5.8 or SR-34 (parked); no LARGE-SCREEN-ROLLOUT row (LARGE-SCREEN-LAYER replaces it). No /updates/ line.
+**Correction to Amendment 1's root cause, measured:** scroll.js:42 compares `innerHeight` with `getBoundingClientRect`, and in the pilot's probe both were visual px under zoom (innerHeight 955, rects scaled 1.25), so that comparison is consistent; its scroll units were not measured. The row says so.
 
 ## 2026-11-20 (cloud): FORGE-SUBJECT-PROMPT (`docs/handover/contracts/2026-11-20-forge-subject-prompt.md`; Project Claude 20 Nov, one part)
 

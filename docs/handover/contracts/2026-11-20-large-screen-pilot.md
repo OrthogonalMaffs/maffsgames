@@ -26,3 +26,35 @@ SUCCESS CONDITION: every pilot game not opted out scales up on 1080p and 1440p v
 
 STOP IF: more than two pilot games need opting out (the approach is wrong; report before going further); zoom pushes Next or the answer controls below the fold at any pilot viewport; a shared check (phone-fit, theme, footer) fails because of the new link; merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you").
 END OF CONTRACT
+
+=== AMENDMENT 1 (Project Claude, 20 Nov 2026; Jon's ruling 21:34) ===
+LARGE-SCREEN-PILOT — follow-up from Project Claude. Jon's ruling, 20 Nov 21:34: option 2, PARK.
+None of (a), (b) or (c).
+Recommended: Claude Code, low effort. Docs-only cherry-pick and backlog rows.
+
+Thank you for stopping cleanly at STOP IF. Your measurements are what showed the real cause.
+
+TASK: Land only the FORGE-SUBJECT-PROMPT close-out commit (4e90390) on main. Park the large-screen layer on its branch, and record the finding and the required fix as a todo row.
+
+ROOT CAUSE: Under CSS zoom, media queries and window.innerHeight read the real viewport, but layout is drawn in zoomed px. The site's fold handling assumes those are one unit:
+- fold.css:26-31 gives each game its own viewport-height media query for the working card; about 41 game pages carry height queries.
+- scroll.js:42 computes the fold from innerHeight against getBoundingClientRect.
+- Drag code positions things from clientX (negative-number-line Order Them; 13 game pages use clientX).
+surd-simplifier and the drag offset are instances of this, not exceptions.
+
+CLASS CHECK: A bug class. It is shared infrastructure (the zoom layer breaks an invariant fold.css, scroll.js and per-game fold queries rely on), and it appears in two or more components. So per-game zoom caps (option b) are the call-site patch shape and are rejected. The fix belongs in the layer (fold decisions read the effective height) and is a separate, larger piece of work. Jon: it "can wait a bit, but it is definitely something we need to fix". Nothing in this follow-up fixes it; this only parks the work and records it.
+
+EXACT CHANGE:
+1. Make a new branch from current origin/main. Cherry-pick 4e90390 only: the #854 close-out, the moved todo row, the cloud.md:5-8 scope paragraph replaced with Jon's text, and the saved contract.
+2. In the same PR, add to docs/todo.md (format and entry sizes per AGENTS.md):
+   - LARGE-SCREEN-LAYER. Large screens (SR-34 goal; not yet in canon). The CSS-zoom pilot is parked at claude/youthful-fermi-ujam6l @ 63b758c (large-screen.css, apply/check scripts, tuned steps 1.15/1.25/1.4/1.6, the vh divide-back). Root cause and class: as above. Required fix: make the site's fold decisions read the effective (zoomed) height at the shared layer, e.g. container queries on a full-height root in place of per-game viewport-height media queries, and scroll.js and drag code in the same unit. Then re-pilot the same six games. Not per-game zoom caps. Covers MaffsCards list item (1), large screens.
+   - START-SIDEWAYS-GATE. Jon's ruling (b) from the pilot contract, unchanged: sideways scroll on start screens becomes a CI gate; fold stays report-only; known case formula-forge Aa at 490 px. Independent of zoom.
+   - PERCENTILE-LOWER-IS-BETTER. calculatePercentile (schools/assets/firebase-leaderboard.js:531) ignores LOWER_IS_BETTER. Latent: no page displays a percentile or tier. Fix before any page does.
+3. Carry the measured STOP findings (your results table and the step-tuning figures) from 63b758c's docs/handover/cloud.md into main's cloud.md, within AGENTS.md entry sizes, so they survive the branch. The LARGE-SCREEN-LAYER row points to them.
+4. Merge on green via scripts/merge-pr.py, then the standing close-out.
+
+DO NOT TOUCH: Don't merge, rebase or delete claude/youthful-fermi-ujam6l. Leave 9413388 and 63b758c on it; don't bring them to main. No game page, no schools/assets file, no scripts/ file, no CI wiring. Don't write canon §7.5.8 or SR-34. No LARGE-SCREEN-ROLLOUT row; LARGE-SCREEN-LAYER replaces it.
+
+SUCCESS CONDITION: main has 4e90390's changes, the three new todo rows and the carried findings. main has no large-screen.css, apply/check script or game-page link. The pilot branch still exists at 63b758c. CI is green, the PR is merged, and cloud.md shows the pilot parked, with the branch and SHA, the reason, and Jon's ruling.
+
+STOP IF: The cherry-pick conflicts outside docs/. A CI failure is caused by anything other than these docs changes. Any todo row would break AGENTS.md entry-size rules in a way you can't fix by shortening the row.
