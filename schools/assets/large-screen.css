@@ -1,0 +1,41 @@
+/* Large screens (canon §7.5.8, SR-34; contract LARGE-SCREEN-PILOT, Jon, 20 Nov 2026).
+ *
+ * Scales the whole page up on large viewports, in steps, with CSS zoom, so a game laid out for a
+ * 680-760 px column fills a desktop screen uniformly. Linked once before </head> by
+ * scripts/apply-large-screen.py; scripts/check-large-screen.py holds the pages that link it
+ * (MIGRATED), the pages that opt out (OPT_OUT, each with its reason) and the steps to the rule.
+ *
+ * The rule: no zoom below 1500 x 880 (a 1366 x 768 screen and every phone are unchanged), and at
+ * each step's smallest viewport the page still has at least 1200 x 760 CSS px to lay out in
+ * (min-width / zoom >= 1200, min-height / zoom >= 760). Media queries read the real viewport, which
+ * zoom does not change, so a step never feeds back into itself.
+ *
+ *   step   from viewport   effective at that viewport
+ *   1.15   1500 x  880     1304 x 765
+ *   1.25   1500 x  950     1200 x 760   (1920 x 955, a 1080p browser: 1536 x 764)
+ *   1.4    1680 x 1064     1200 x 760
+ *   1.6    1920 x 1216     1200 x 760   (2560 x 1310, a 1440p browser: 1600 x 819)
+ *
+ * Opt out: <html data-large-screen="off">, listed with its reason in check-large-screen.py's OPT_OUT.
+ *
+ * Under zoom, vh is zoomed too (Chromium: 100vh on a 955 px viewport is 1193.75 px at zoom 1.25), so
+ * the body's min-height is divided back by the step: a game's body{min-height:100vh} still ends at the
+ * bottom of the screen instead of growing an empty scroll. Any other vh a game uses is the rollout's
+ * to check (todo LARGE-SCREEN-ROLLOUT).
+ */
+@media (min-width: 1500px) and (min-height: 880px) {
+  html:not([data-large-screen="off"]) { --maffs-large-zoom: 1.15; }
+}
+@media (min-width: 1500px) and (min-height: 950px) {
+  html:not([data-large-screen="off"]) { --maffs-large-zoom: 1.25; }
+}
+@media (min-width: 1680px) and (min-height: 1064px) {
+  html:not([data-large-screen="off"]) { --maffs-large-zoom: 1.4; }
+}
+@media (min-width: 1920px) and (min-height: 1216px) {
+  html:not([data-large-screen="off"]) { --maffs-large-zoom: 1.6; }
+}
+@media (min-width: 1500px) and (min-height: 880px) {
+  html:not([data-large-screen="off"]) { zoom: var(--maffs-large-zoom); }
+  html:not([data-large-screen="off"]) body { min-height: calc(100vh / var(--maffs-large-zoom)); }
+}
