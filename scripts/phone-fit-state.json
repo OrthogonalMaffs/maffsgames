@@ -41,18 +41,6 @@
       "coordinate-geometry-dash": [
         "320x568"
       ],
-      "core-maths-paper1": [
-        "320x568"
-      ],
-      "core-maths-paper2a": [
-        "320x568"
-      ],
-      "core-maths-paper2b": [
-        "320x568"
-      ],
-      "core-maths-paper2c": [
-        "320x568"
-      ],
       "curling-friction": [
         "320x568"
       ],
@@ -179,22 +167,6 @@
         "390x844"
       ],
       "coordinate-geometry-dash": [
-        "375x667"
-      ],
-      "core-maths-paper1": [
-        "375x667"
-      ],
-      "core-maths-paper2a": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "core-maths-paper2b": [
-        "320x568",
-        "375x667",
-        "390x844"
-      ],
-      "core-maths-paper2c": [
         "375x667"
       ],
       "correlation-or-coincidence": [
@@ -542,5 +514,14 @@
       ]
     },
     "laptop": {}
+  },
+  "scroll-exempt": {
+    "note": "canon 7.6.1's recorded exception (Jon, 20 Nov 2026; contract CORE-PAPERS-NO-LETTERS, Amendment 2). Every mode. scripts/measure-phone-fit.py measures and reports these games (SCROLL-EXEMPT), never fails them on the fold and never flags them STALE; sideways scroll and a missing Next after a wrong answer still fail. Moved here from known-failures: normal core-maths-paper1 320x568, core-maths-paper2a 320x568, core-maths-paper2b 320x568, core-maths-paper2c 320x568; aa core-maths-paper1 375x667, core-maths-paper2a 320x568/375x667/390x844, core-maths-paper2b 320x568/375x667/390x844, core-maths-paper2c 375x667. scripts/core_paper_deal.py prints every question's fit as a report.",
+    "games": {
+      "core-maths-paper1": "Exam-length items: may scroll at every size (canon 7.6.1, Jon 20 Nov 2026). Still required: no sideways scroll, and Next reachable after a wrong answer.",
+      "core-maths-paper2a": "Exam-length items: may scroll at every size (canon 7.6.1, Jon 20 Nov 2026). Still required: no sideways scroll, and Next reachable after a wrong answer.",
+      "core-maths-paper2b": "Exam-length items: may scroll at every size (canon 7.6.1, Jon 20 Nov 2026). Still required: no sideways scroll, and Next reachable after a wrong answer.",
+      "core-maths-paper2c": "Exam-length items: may scroll at every size (canon 7.6.1, Jon 20 Nov 2026). Still required: no sideways scroll, and Next reachable after a wrong answer."
+    }
   }
 }

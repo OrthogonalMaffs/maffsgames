@@ -25,6 +25,12 @@ real sessions (startGame()), checked:
     "<prefix>-qNN" of the question shown, the same in every session;
   - "Q n of 36" counts positions, and the results screen's section scores count the dealt sections.
 
+Then, as a printed report and never a gate (canon 7.6.1's recorded exception, Jon, 20 Nov 2026: the papers carry
+exam-length items and may scroll at every size), every question's fit on the asking screen, in real fonts, against
+the fold less the fixed footer, in page coordinates: normal mode at 320x568, 375x667 and 390x844 and Aa at 375x667 and
+390x844, does the last option end above the fold; Aa at 320x568, do the options start above it. Since the deal (#840)
+any question can come first, so every question is measured, not one seeded sample (measure-phone-fit.py's).
+
 PLANTS lists the faults the self-test plants: options not shuffled; a question dealt into another section;
 marking by position; question_id from the position; the position letters put back. Each must FAIL.
 """
@@ -205,6 +211,79 @@ def play(html, slug, mathtext=False, sessions=SESSIONS):
         proc.wait()
 
 
+FIT_SIZES = [('normal', 320, 568), ('normal', 375, 667), ('normal', 390, 844),
+             ('aa', 320, 568), ('aa', 375, 667), ('aa', 390, 844)]
+
+FIT_JS = r"""() => {
+  window.setTimeout = () => 0;
+  const fold = () => { const f = document.querySelector('.site-footer');
+    const fx = f && getComputedStyle(f).position === 'fixed';
+    return window.innerHeight - (fx ? Math.round(f.getBoundingClientRect().height) : 0); };
+  startGame();
+  document.getElementById('sectionBanner').style.display = 'none';
+  document.getElementById('questionArea').style.display = 'block';
+  PAPER = QUESTIONS.map((_, i) => i);
+  const out = [];
+  for (let i = 0; i < PAPER.length; i++) {
+    currentQ = i; showQuestion(); window.scrollTo(0, 0);
+    const b = [...document.querySelectorAll('#optionsContainer .option-btn')];
+    out.push({top: Math.round(b[0].getBoundingClientRect().top + window.scrollY),
+              bottom: Math.round(b[b.length - 1].getBoundingClientRect().bottom + window.scrollY), fold: fold()});
+  }
+  return out;
+}"""
+
+
+def fit_report(html, slug):
+    """Print, per size, how many questions' options pass the fold (a report: returns nothing, fails nothing)."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    lines = []
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % re.escape(slug))
+            for mode, w, h in FIT_SIZES:
+                ctx = browser.new_context(viewport={'width': w, 'height': h})
+                ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                if mode == 'aa':
+                    ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
+
+                def route(r):
+                    url = r.request.url
+                    if bc.is_font_cdn(url):          # the faces students see, from the pinned copies
+                        got = bc.real_font_response(url)
+                        return r.fulfill(**got) if got else r.abort()
+                    if page_url.search(url):
+                        return r.fulfill(status=200, content_type='text/html; charset=utf-8', body=html)
+                    return r.continue_() if url.startswith(base) else r.abort()
+                ctx.route('**/*', route)
+                page = ctx.new_page()
+                page.goto(base + '/games/%s/?cb=fit' % slug, wait_until='load', timeout=20000)
+                page.evaluate('document.fonts.ready.then(() => 1)')
+                page.wait_for_function('typeof startGame === "function"', timeout=15000)
+                page.evaluate(FIT_JS)
+                page.evaluate('document.fonts.ready.then(() => 1)')   # every face the questions use, now loaded
+                rows = page.evaluate(FIT_JS)
+                ctx.close()
+                start = mode == 'aa' and w == 320
+                key = 'top' if start else 'bottom'
+                over = [(i + 1, r[key] - r['fold']) for i, r in enumerate(rows) if r[key] > r['fold']]
+                lines.append('  %-6s %dx%d %-12s %2d of %d below the fold%s' % (
+                    mode, w, h, 'options start' if start else 'last option', len(over), len(rows),
+                    ('; worst Q%d, +%d px' % max(over, key=lambda x: x[1])) if over else ''))
+            browser.close()
+    except Exception as e:                           # a report: a failure to measure is printed, never failed
+        lines.append('  not measured: %s' % str(e).splitlines()[0][:160])
+    finally:
+        proc.terminate()
+        proc.wait()
+    print('%s: phone fit, every question on the asking screen (a report, not a gate: canon 7.6.1, the Core Maths'
+          ' papers may scroll)' % slug)
+    for line in lines:
+        print(line)
+
+
 def checked(html, slug, prefix, mathtext=False):
     fails = []
     bank, res, errors = play(html, slug, mathtext)
@@ -251,4 +330,5 @@ def run(html, slug, prefix, mathtext=False, selftest=True):
             hit = checked(planted, slug, prefix, mathtext)
             ok = ok and bool(hit)
             print('  self-test (deal) %-38s %s' % (name, ('caught: ' + hit[0][:110]) if hit else '*** MISSED ***'))
+    fit_report(html, slug)
     return ok

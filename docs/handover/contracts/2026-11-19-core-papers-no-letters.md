@@ -28,3 +28,10 @@ Ruling on #843's stop (Jon):
 3. Fix what fails in the pages, the same way in all four (spacing above the options, not the stems or options' text), until every question passes. If more than 10 questions across the four papers fail after reasonable spacing changes, or a fix would change any question's text, stop and report the figures.
 4. One todo row PHONE-FIT-PR (§4, home lane): a PR that changes a game page is never phone-fit measured before merge (phone-fit-full runs on main only, and only when a shared path changed: .github/workflows/phone-fit-full.yml:42-79), so #840 turned main red unseen. Measure the PR's changed games in the Gate. Keep todo.md under its cap.
 5. Then the manual phone-fit-full run on the branch green, Gate green, merge with merge-pr.py. Record this stop and ruling in cloud.md.
+
+AMENDMENT 2 (Jon, 20 Nov 2026), ruling on the second stop, verbatim:
+Ruling (Jon, 20 Nov): option 2 with option 3's report. No page layout change.
+1. canon 7.6.1, a new recorded exception: "The Core Maths papers (core-maths-paper1, -2a, -2b, -2c) carry exam-length items and may scroll at every size (Jon, 20 Nov 2026). Still required: no sideways scroll, and Next reachable after a wrong answer."
+2. scripts/phone-fit-state.json: a new list "scroll-exempt" holding the four papers with that reason. measure-phone-fit.py measures and reports them but never fails them and never flags them stale; move their known-failures entries into it. Self-test: a scroll-exempt game that overflows passes; one that scrolls sideways still fails.
+3. The every-question measurement goes into core_paper_deal.py as a printed report (counts per size), not a gate.
+4. Keep the stale-entry removals and the PHONE-FIT-PR row. Then the manual phone-fit-full run on the branch green, Gate green, merge with merge-pr.py. Record the ruling in cloud.md.
