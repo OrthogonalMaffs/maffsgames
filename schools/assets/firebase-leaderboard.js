@@ -137,6 +137,8 @@
     'level4-stage-1':'Level 4 · Stage 1','level4-stage-2':'Level 4 · Stage 2','level4-stage-3':'Level 4 · Stage 3','level4-all-three':'Level 4 · All three',
     // I Dropped My Ice Cream's fourth stage, one board per level and stage (contract I-DROPPED-MY-ICE-CREAM; Jon's lane exception, Amendment 1, 18 Nov 2026).
     'gcse-stage-4':'GCSE · Stage 4','level3-stage-4':'Level 3 · Stage 4',
+    // MaffsCards: one board per deck and Marvin, first-to-10 wins, fewest rounds best (contract MAFFSCARDS-GAME; Jon's ruling on #853, 20 Nov 2026).
+    'main-easy':'Main deck · Easy','main-hard':'Main deck · Hard','all48-easy':'All 48 · Easy','all48-hard':'All 48 · Hard',
     // Prisoner's Dilemma: one board per level, tournament totals only (SR-22).
     'ks3-tournament':'KS3 · Tournament','gcse-tournament':'GCSE · Tournament',
     'alevel-tournament':'A-Level · Tournament','core-tournament':'Core Maths · Tournament'
