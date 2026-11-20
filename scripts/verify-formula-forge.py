@@ -19,7 +19,7 @@ carry its own TeX reader until the home lane gives bank_common an exact one). Th
   - sessions: startGame() at each level, dealt three times: 6 a stage (or the whole stage when it has fewer), stages in order,
     no item twice;
   - the prompt (FORGE-SUBJECT-PROMPT): the first question at each level has exactly one .subject-chip in #target, its KaTeX
-    annotation the item's subject; the start screen shows "Powers and Multi: have paper handy.";
+    annotation the item's subject, and the end span is " the" + U+00A0 + "subject" (Amendment 1); the start screen shows "Powers and Multi: have paper handy.";
   - in Chromium (390x844) every option of every item is pressed through the game's own buttons: the key is marked correct and
     scores; any other is marked wrong, the key is shown, the worked solution shows the item's lines, and Next is mounted.
 Hint 2's prose keeping its spaces (r-001, t4-004, fixed by FORGE-HINT-SPACES) is held by check-banks.py's B7, not here.
@@ -323,7 +323,8 @@ MARK_JS = r"""([lv, st, i]) => {
 CHIP_JS = r"""() => { const out = [];
   for (const lv of ['gcse', 'alevel', 'level4']) { level = lv; startGame();
     const chips = [...document.querySelectorAll('#target .subject-chip')], a = chips[0] && chips[0].querySelector('.katex annotation');
-    out.push({lv: lv, n: chips.length, tex: a ? a.textContent : null, subject: currentQ.subject});
+    const kids = document.getElementById('target').children;
+    out.push({lv: lv, n: chips.length, tex: a ? a.textContent : null, subject: currentQ.subject, end: kids.length ? kids[kids.length - 1].textContent : null});
     MaffsLock.clearTimers(); }
   return out; }"""
 PAPER_LINE = 'Powers and Multi: have paper handy.'
@@ -390,6 +391,9 @@ def play(fails, html):
                 if r['n'] != 1 or r['tex'] != r['subject']:
                     fails.append('prompt: %s, first question: expected one .subject-chip holding %r in KaTeX, found %d holding %r'
                                  % (r['lv'], r['subject'], r['n'], r['tex']))
+                if r['end'] != ' the\u00a0subject':     # Amendment 1: "the subject" never splits, so "subject" is never alone
+                    fails.append('prompt: %s, first question: the end span must be %r (non-breaking space), found %r'
+                                 % (r['lv'], ' the\u00a0subject', r['end']))
             mark_checks(fails, page, bank)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -422,6 +426,8 @@ PLANTS = [
     ('marking by the first character only', 'marking:', [("const ok=btn.dataset.val===q.correct;", "const ok=btn.dataset.val[0]===q.correct[0];")]),
     ('the subject-chip class removed from the subject', 'prompt:',
      [("sSpan.className='subject-chip';", "")]),
+    ('an ordinary space back between "the" and "subject"', 'prompt:',
+     [("eSpan.textContent=' the\\u00a0subject';", "eSpan.textContent=' the subject';")]),
     ('the start line "Powers and Multi: have paper handy." removed', 'start:',
      [('    <div class="menu-info">Powers and Multi: have paper handy.</div>\n', '')]),
     ('five a stage dealt, not six', 'session:', [("const s1=shuffle([...bank.s1]).slice(0,6);", "const s1=shuffle([...bank.s1]).slice(0,5);")]),

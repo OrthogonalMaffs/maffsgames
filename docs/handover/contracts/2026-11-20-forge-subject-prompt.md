@@ -25,3 +25,6 @@ SUCCESS CONDITION: the subject letter is in an orange chip at 1.6em on every que
 
 STOP IF: phone-fit-full reports a new overflow or Next below the fold on Formula Forge at any size or mode (report the numbers; do not shrink anything else to fit); the chip makes the target line wrap mid-phrase at 320 in Aa; merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you").
 END OF CONTRACT
+
+Amendment 1 (Jon, 20 Nov 2026, ruling on the held merge):
+Ruling on FORGE-SUBJECT-PROMPT: (b). In the end span, join "the" and "subject" with a non-breaking space (U+00A0), so its text is " the\u00a0subject": an ordinary space before "the", a non-breaking one between "the" and "subject". No change to the chip's styling. Verifier: the end span's text is exactly that; a plant restoring an ordinary space between "the" and "subject" must FAIL. Check by eye again at 320, 375 and 390, normal and Aa: "subject" never alone on a line; "Make [chip]" / "the subject" across two lines is acceptable. Then Gate green, merge with merge-pr.py --watch --wait 3600 and report its last line.

@@ -479,7 +479,7 @@ function nextQ(){
   tEl.innerHTML='';
   const tSpan=document.createElement('span');tSpan.textContent='Make ';tEl.appendChild(tSpan);
   const sSpan=document.createElement('span');sSpan.className='subject-chip';rkInline(sSpan,currentQ.subject);tEl.appendChild(sSpan);
-  const eSpan=document.createElement('span');eSpan.textContent=' the subject';tEl.appendChild(eSpan);
+  const eSpan=document.createElement('span');eSpan.textContent=' the\u00a0subject';tEl.appendChild(eSpan);
 
   // Options
   const opts=shuffle([currentQ.correct,...currentQ.distractors]);
