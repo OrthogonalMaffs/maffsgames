@@ -24,10 +24,13 @@
  *                             that does not opt in gets the same markup as before, character for character.
  *
  * Grammar (calculator conventions: -3² = -9; √ opens a bracket, like a Casio; missing closing
- * brackets are closed on =, extra ones are an error; a number, bracket or √ straight after a value
- * multiplies, so 2(3) = 6 and 2√(9) = 6):
+ * brackets are closed on =, extra ones are an error; a number, bracket, constant, function or √ straight
+ * after a value multiplies, and binds tighter than × and ÷, as on a current Casio: 6÷2(1+2) = 1,
+ * 267÷2π = 42.49..., 2(3) = 6 and 2√(9) = 6. An implied factor never takes a leading sign, so 2-3 is a
+ * subtraction. Canon §0.3 SR-28; contract CALC-IMPLIED-MULT, 20 Nov 2026):
  *   expr    := term (('+' | '−') term)*
- *   term    := unary (('×' | '÷') unary | <implicit ×> unary)*
+ *   term    := implied (('×' | '÷') implied)*          × and ÷ left to right: 6÷2×3 = 9
+ *   implied := unary (<implicit ×> power)*             before × and ÷: 6÷2(1+2) = 6÷(2(1+2)) = 1
  *   unary   := ('−' | '+') unary | power
  *   power   := primary '²'* ('^' unary)?           ^ is right-associative and binds tighter than a minus
  *                                                  on its left: 2^3^2 = 512, -2^2 = -4, 2^-1 = 0.5
@@ -169,13 +172,19 @@
       if (c === '+') { i++; return unary(); }
       return power();
     }
-    function term() {
+    // Implied multiplication (a value straight after a value) binds tighter than × and ÷, as on a current
+    // Casio (fx-83GT CW, fx-991CW): 267÷2π = 267÷(2π). Each implied factor is a power(), never a signed unary().
+    function implied() {
       var v = unary();
+      while (startsValue(peek())) v = v * power();
+      return v;
+    }
+    function term() {
+      var v = implied();
       for (;;) {
         var c = peek();
-        if (c === MUL) { i++; v = v * unary(); }
-        else if (c === DIV) { i++; var d = unary(); if (d === 0) fail(); v = v / d; }
-        else if (startsValue(c)) { v = v * unary(); }
+        if (c === MUL) { i++; v = v * implied(); }
+        else if (c === DIV) { i++; var d = implied(); if (d === 0) fail(); v = v / d; }
         else return v;
       }
     }
@@ -437,11 +446,14 @@
     screen.addEventListener('click', function (e) {
       if (e.target !== closeBtn && answerMode()) select('calc');
     });
-    // Keyboard: only while focus is inside the panel. Enter or Space on a focused key presses that key.
+    // Keyboard: only while focus is inside the panel. Enter (and =) is always equals, wherever focus is in the
+    // panel, as on a PC calculator: a mouse click leaves focus on the key it clicked, and Enter must not press
+    // that key again (CALC-IMPLIED-MULT Amendment 1, Jon 20 Nov 2026). Space on a focused key presses that key,
+    // so a keyboard-only user can still reach every key with Tab.
     panel.addEventListener('keydown', function (e) {
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       var onKey = e.target !== panel;
-      if ((e.key === 'Enter' || e.key === ' ') && onKey) return;
+      if (e.key === ' ' && onKey) return;
       var k = e.key;
       if (k === 'Enter' || k === '=') press('eq', '=');
       else if (k === 'Backspace') press('del', '');

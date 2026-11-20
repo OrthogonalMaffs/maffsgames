@@ -4,8 +4,10 @@
 Runs the real file in Chromium, with theme.css for its styles, and checks:
   Engine    arithmetic, order of operations (× and ÷ before + and −, left to right), x², √ (which
             opens a bracket, like a Casio), brackets (missing closing ones closed on =, extra ones an
-            error), unary minus (−3² = −9), implicit multiplication (2(3), 2√(9)), and every error a
-            calculator shows as "Error": divide by 0, √ of a negative, 1.2.3, a trailing operator.
+            error), unary minus (−3² = −9), implicit multiplication (2(3), 2√(9)), which binds tighter
+            than × and ÷ as on a current Casio (267 ÷ 2π = 42.49..., 6 ÷ 2(1 + 2) = 1; CALC-IMPLIED-MULT,
+            two planted faults must fail), and every error a calculator shows as "Error": divide by 0, √ of
+            a negative, 1.2.3, a trailing operator.
   Display   10 significant figures with trailing zeros dropped: 0.1 + 0.2 shows 0.3, never
             0.30000000000000004; 1 ÷ 3 shows 0.3333333333; large and tiny values as a×10^n.
   Keys      sequences pressed on the real buttons: =, then an operator carries the answer on as
@@ -84,6 +86,24 @@ CASES = [
     ('1/0', 'Error'), ('5/(3-3)', 'Error'), ('sqrt(-4)', 'Error'), ('1.2.3', 'Error'), ('3+', 'Error'),
     ('*3', 'Error'), ('(1+2))', 'Error'), (')(', 'Error'), ('', 'Error'), ('()', 'Error'), ('sqrt()', 'Error'),
     ('^2', 'Error'), ('.', 'Error'),
+    # Implied multiplication binds tighter than × and ÷, as on a current Casio (canon §0.3 SR-28; contract
+    # CALC-IMPLIED-MULT, 20 Nov 2026); explicit × and ÷ stay left to right.
+    ('267/2pi', '42.49436981'), ('6/2(1+2)', '1'), ('1/2sqrt(4)', '0.25'), ('10/2pi^2', '0.5066059182'),
+    ('2pi/4', '1.570796327'), ('8/2(2)', '2'), ('6/2*3', '9'), ('2-3', '−1'), ('-2(3)', '−6'),
+    ('2(3)^2', '18'), ('1/0pi', 'Error'),
+]
+# Planted engine faults (CALC-IMPLIED-MULT): each must make a CASES case fail.
+IMPLIED_PLANTS = [
+    ('the old flat term()',
+     '    function term() {\n      var v = implied();\n      for (;;) {\n        var c = peek();\n'
+     '        if (c === MUL) { i++; v = v * implied(); }\n'
+     '        else if (c === DIV) { i++; var d = implied(); if (d === 0) fail(); v = v / d; }\n',
+     '    function term() {\n      var v = unary();\n      for (;;) {\n        var c = peek();\n'
+     '        if (c === MUL) { i++; v = v * unary(); }\n'
+     '        else if (c === DIV) { i++; var d = unary(); if (d === 0) fail(); v = v / d; }\n'
+     '        else if (startsValue(c)) { v = v * unary(); }\n'),
+    ('an implied factor taking a leading minus', 'while (startsValue(peek())) v = v * power();',
+     'while (startsValue(peek()) || peek() === MINUS) v = v * unary();'),
 ]
 
 # (expression, angle mode, expected display): the scientific engine (contract SCI-CALC). ASCII: ^ is xʸ,
@@ -466,6 +486,21 @@ async def run():
             fails.append('format(0.1 + 0.2) is not 0.3')
         if await page.evaluate("MaffsCalc.evaluate('2+3*4')") != 14:
             fails.append('evaluate() does not return a number')
+        # Implied-multiplication plants, each in its own copy of calculator.js
+        isrc = open(CALC_JS, encoding='utf-8').read()
+        for name, old, new in IMPLIED_PLANTS:
+            if isrc.count(old) != 1:
+                fails.append('implied plant %r: its line is no longer in calculator.js' % name)
+                continue
+            pg = await ctx.new_page()
+            await pg.set_content('<html><body></body></html>')
+            await pg.add_script_tag(content=isrc.replace(old, new))
+            pgot = await pg.evaluate("cs => cs.map(c => MaffsCalc.calc(c[0]))", CASES)
+            bad = [c[0] for c, g in zip(CASES, pgot) if g != c[1]]
+            print('  implied fault %-40s %s' % (name, ('caught (%s)' % ', '.join(bad[:3])) if bad else 'NOT CAUGHT'))
+            if not bad:
+                fails.append('implied plant not caught: ' + name)
+            await pg.close()
         # Scientific engine
         got = await page.evaluate("cs => cs.map(c => MaffsCalc.calc(c[0], null, c[1]))", SCI_CASES)
         for (expr, mode, want), g in zip(SCI_CASES, got):
@@ -526,12 +561,9 @@ async def run():
         d = await page.evaluate("(() => { const d = __calc.display(); return [d.expr, d.result]; })()")
         if d != ['1√(16 =', '4']:
             fails.append('typed Delete 12 Backspace r16 Enter: shows %r' % d)
-        await page.focus('.maffs-calc-key[data-val="7"]')
-        await page.keyboard.press('Delete')
-        await page.keyboard.press('Enter')
-        d = await page.evaluate("__calc.display()")
-        if d['expr'] != '7' or d['result'] != '':
-            fails.append('Enter on the focused 7 key gave %r, expected the key pressed (7), not =' % d)
+        # Enter is always equals (CALC-IMPLIED-MULT Amendment 1, Jon 20 Nov 2026): a mouse click leaves focus on
+        # the key it clicked, and Enter must not press it again. Space on a focused key still presses it.
+        fails += await enter_cases(page, '')
         await page.keyboard.press('Delete')
         await page.focus('#answer')
         await page.keyboard.type('12.5')
@@ -543,6 +575,21 @@ async def run():
         await page.keyboard.press('Escape')
         if await page.evaluate("[__calc.isOpen(), document.activeElement.className]") != [False, 'maffs-calc-toggle']:
             fails.append('Escape does not close the panel and return focus to the toggle')
+        # The Enter plant, in its own copy of calculator.js: the old "Enter presses the focused key" branch
+        esrc = open(CALC_JS, encoding='utf-8').read()
+        if esrc.count(ENTER_PLANT[1]) != 1:
+            fails.append('Enter plant: its line is no longer in calculator.js')
+        else:
+            ectx, epage, _ = await fresh()
+            await epage.evaluate("src => { document.querySelectorAll('script').forEach(s => { if ((s.src || '').includes('calculator.js')) s.remove(); }); }", None)
+            await epage.add_script_tag(content=esrc.replace(ENTER_PLANT[1], ENTER_PLANT[2]))
+            await epage.evaluate("""() => { const c = document.getElementById('calc'); c.innerHTML = '';
+                window.__calc = MaffsCalc.mount(c); __calc.open(); }""")
+            bad = await enter_cases(epage, 'plant: ')
+            print('  enter fault %-42s %s' % (ENTER_PLANT[0], ('caught (%s)' % bad[0][:70]) if bad else 'NOT CAUGHT'))
+            if not bad:
+                fails.append('Enter plant not caught: ' + ENTER_PLANT[0])
+            await ectx.close()
         # Privacy
         if reqs:
             fails.append('the calculator made requests: %r' % reqs[:3])
@@ -660,6 +707,36 @@ async def run():
     return fails
 
 
+ENTER_PLANT = ("Enter presses the focused key (the old branch)", "if (e.key === ' ' && onKey) return;",
+               "if ((e.key === 'Enter' || e.key === ' ') && onKey) return;")
+
+
+async def enter_cases(page, tag):
+    """Enter after a mouse click is =, Space on a Tab-focused key presses it, Enter on the panel is =."""
+    out = []
+    await page.click('.maffs-calc-key[data-act="clear"]')
+    await page.click('.maffs-calc-key[data-val="7"]')            # focus stays on the 7 key
+    await page.keyboard.press('Enter')
+    d = await page.evaluate("(() => { const d = __calc.display(); return [d.expr, d.result]; })()")
+    if d != ['7 =', '7']:
+        out.append('%sclick 7, then Enter: screen shows %r, expected [\'7 =\', \'7\'] (Enter is =, 7 not typed again)' % (tag, d))
+    await page.click('.maffs-calc-key[data-act="clear"]')
+    await page.focus('.maffs-calc-key[data-val="7"]')
+    await page.keyboard.press('Tab')                              # Tab to the next key, 8
+    await page.keyboard.press(' ')
+    d = await page.evaluate("[__calc.display().expr, document.activeElement.getAttribute('data-val')]")
+    if d != ['8', '8']:
+        out.append('%sTab to the 8 key, then Space: shows %r, expected 8 typed with focus on the 8 key' % (tag, d))
+    await page.click('.maffs-calc-key[data-act="clear"]')
+    await page.focus('.maffs-calc-panel')
+    await page.keyboard.type('6/2(1+2)')
+    await page.keyboard.press('Enter')
+    d = await page.evaluate("__calc.display().result")
+    if d != '1':
+        out.append('%sfocus on the panel, 6/2(1+2) then Enter: shows %r, expected 1' % (tag, d))
+    return out
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -671,7 +748,8 @@ def main():
     if fails:
         print('\nFAILED: %d problem(s)' % len(fails))
         return 1
-    print('PASS: %d expressions (arithmetic, precedence, x², √, brackets, errors, 10 s.f. display); '
+    print('PASS: %d expressions (arithmetic, precedence, implied × before × and ÷, x², √, brackets, errors, '
+          '10 s.f. display), %d implied-multiplication plants caught; '
           '%d scientific expressions (^, ln, log, e^, trig DEG/RAD, π, e, errors), %d scientific plants caught, '
           'basic panel unchanged, scientific panel fits 320/390/412px; '
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
@@ -681,7 +759,7 @@ def main():
           'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught; '
           'the toggle unchanged without {toggle}, a 44x44 icon named "Calculator" at phone widths with {toggle: \'icon\'}, '
           'the full toggle above them; %d planted toggle faults caught'
-          % (len(CASES), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS), len(TOGGLE_FAULTS)))
+          % (len(CASES), len(IMPLIED_PLANTS), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS), len(TOGGLE_FAULTS)))
     return 0
 
 
