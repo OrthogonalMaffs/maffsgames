@@ -16,6 +16,10 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-20 (home): CALC-IMPLIED-MULT (implied multiplication before × and ÷, as on a current Casio; Enter is equals)
+
+Claude Code (home lane), worktree `~/mg-calc-implied`, branch `claude/calc-implied-mult`; contract `docs/handover/contracts/2026-11-20-calc-implied-mult.md` (Amendments 1-2). Tier Small. The first commit carries TODO-TRIM's close-out (#844, 3d6ce66; its entry below; contract moved to `docs/history/contracts/`).
+
 ## 2026-11-20 (home): TODO-TRIM (todo.md holds only open work; the cap lowered; a row-length warning)
 
 Claude Code (home lane), worktree `~/mg-todo-trim`, branch `claude/todo-trim`; contract `docs/handover/contracts/2026-11-19-todo-trim.md`. Tier Medium. The first commit carries WRONG-PAUSE-NEXT's close-out (#842, 8ab38d1; its entry below; contract moved to `docs/history/contracts/`).
@@ -25,6 +29,10 @@ Claude Code (home lane), worktree `~/mg-todo-trim`, branch `claude/todo-trim`; c
 - **`scripts/check-context-size.py`:** TODO_LIMIT 150 → 105 KiB (96,712 + 10 KiB, rounded up); a todo.md table row over ROW_WARN (1,200) characters is a warning, never a failure; self-tests: 1,201 warns, 1,200 silent; SELFTEST PASS. Five rows warn, all open work: 3.12, 3.20, MONEY-THOUSANDS, GRAPH-SKETCHER-REDESIGN, PACK-ART-EXTRAS. The ci-line label states the new cap (ci-groups --check PASS, warns until main times the new label). AGENTS.md:70 states 105 KiB.
 - **Rule:** AGENTS.md:83 is Jon's sentence of 19 Nov; canon's LIVE-BUG-RECHECK section mirrors it, with the reason. No /updates/ line.
 - **Decided for you:** (1) check-context-size.py is a Gate file (cloud's, AGENTS.md); edited because the contract names it. (2) PRIME-SPRINT-LOOK-REDS: #660 (LOOK-REFRESH-1) put Prime Sprint on theme.css with no pixel font, so the row now asks Jon to close it or contract its one leftover (Aa Start button 657 / 627 at 375x667, "not a gate"). (3) SIX-PS-LOOK-REDS moved as done: factor-race and distinctly-average load theme.css and use no pixel font (main 527f8b8). (4) 3.6 and 3.10 moved whole as the contract lists them, so their blocked-on cells went too: 3.6 "Jon: eyeball pass and the ten points in START"; 3.10 "Jon: 320 is 173px over 1.5 screens". (5) §4 items 6 and 7 judged done: CLAUDE.md is 15 lines with `docs/history/claude-md-archive.md`; `schools/assets/calculator.js` is the shared calculator. (6) Where a row named no owner (3.8, §4 item 12's `--live` confirmation), it now says so. (7) 3.5's blocked-on cell restated: canon has carried ruling (1) since 2 Oct. (8) The heading date is the contract's (19 Nov).
+
+- MERGED 20 Nov as 3d6ce66 (#844) via merge-pr.py, exit 0, last line "main 3d6ce66 run 44688020212: GREEN". Main on the merge commit: check-site 44688020212 success, phone-fit-full 44688020167 success (both push runs), pages build 44688019690 success (all confirmed from the API). Contract moved to `docs/history/contracts/2026-11-19-todo-trim.md` (closed out by CALC-IMPLIED-MULT's first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-19 (home): WRONG-PAUSE-NEXT (four games pause on Next after a wrong answer; check-answer-lock fails a game that stops pausing)
 
