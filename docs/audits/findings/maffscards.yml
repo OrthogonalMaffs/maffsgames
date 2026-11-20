@@ -1,0 +1,11 @@
+# Findings register for maffscards (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract MAFFSCARDS-GAME, 20 Nov 2026; SR-30: checked from its first PR by scripts/verify-maffscards.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: maffscards
+audited:
+  tranche: none (not yet audited)
+  head: c46eb143
+  date: 2026-11-20
+  served: {}
+findings: []
