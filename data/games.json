@@ -1944,8 +1944,8 @@
   },
   {
    "slug": "maffscards",
-   "search_phrase": "Number card game",
-   "description": "A compare-and-win number card game against Marvin, the computer: sum of factors, largest prime factor, Roman numerals, squares, superpowers and pi.",
+   "search_phrase": "MaffsCards Number Card",
+   "description": "Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi.",
    "keywords": [
     "number properties",
     "factors",
