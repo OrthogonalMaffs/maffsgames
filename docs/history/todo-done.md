@@ -3959,3 +3959,11 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | LEDGER-B4-52DLE | **B4 ledger debt, `52dle`: 2 levels below the 40-question minimum** (ks3 20, gcse 20). | cloud lane |
 
 **Closed 20 Nov 2026 (52DLE-REBUILD).** Row LEDGER-B4-52DLE, moved word for word above. The 20 hand-written puzzles are gone: 52-dle is generated from clue ladders (`scripts/gen-52dle.py`), every number 1 to 100 at Foundation and 928 of 1 to 1000 at GCSE, five a run. extract-banks now reads it as a generator, so both B4 ledger entries went with the game's ledger entry (`data/check-ledger.json`). Held by `scripts/verify-52dle.py`.
+
+## Closed by FORGE-SUBJECT-PROMPT (20 Nov 2026; moved by LARGE-SCREEN-PILOT)
+
+| # | Item | Owner |
+|---|---|---|
+| FORGE-SUBJECT-PROMPT | **Formula Forge: the subject letter in "Make … the subject" much more prominent**, and a start-screen line "Powers and Multi: have paper handy". Jon, 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
+
+**Closed 20 Nov 2026 (FORGE-SUBJECT-PROMPT, #854, merge bf019be).** Row FORGE-SUBJECT-PROMPT, moved word for word above. The subject letter sits in an orange chip (`.subject-chip`) and the start screen says "Powers and Multi: have paper handy."; both checked by `scripts/verify-formula-forge.py`. Moved by LARGE-SCREEN-PILOT's close-out commit.
