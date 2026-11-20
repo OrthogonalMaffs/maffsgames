@@ -71,6 +71,26 @@ body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}
 .correct::after{content:' \2713';font-size:.85em;opacity:.8}
 .incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
+/* "How to get there" after a wrong answer at GCSE: a reference card above Next (canon 7.6.2; contract SFB-WORKING-GCSE,
+   19 Nov 2026), built as Surd Simplifier's. Two copies (schools/assets/fold.css): .maffs-ref-fits open, .maffs-ref-phone
+   collapsed; nothing shows until a wrong answer (.shown). The open copy shows only where every GCSE item's Next stays
+   above the fold with it open. */
+.work-row .maffs-ref{--ref-bg:var(--surface);--ref-edge:var(--accent);text-align:left}
+.work-row:not(.shown) > .maffs-ref{display:none}
+.work-row.shown > .maffs-ref-fits{display:none}
+.work-row.shown > .maffs-ref-phone{display:block}
+/* Open where it fits. Measured 20 Nov 2026 (all 50 GCSE items answered wrong, each in its worst pairing of options to a row,
+   normal and Aa, real fonts, every width from 320 to 760 in 10px steps; the fold is the viewport less the 40px fixed
+   footer, as measure-phone-fit reads it): with the card open, Next needs a viewport 1013px tall from 320 to 359 wide (Aa),
+   943px from 360 to 439 (Aa), 902px from 440 to 759 (Aa) and 833px from 760, where the column stops growing (Aa; normal
+   812). Each band takes its worst width's need plus 30px: the canon phones and both laptops (1280x720, 1366x768) get the
+   collapsed card. */
+@media (min-width: 320px) and (max-width: 359px) and (min-height: 1050px), (min-width: 360px) and (max-width: 439px) and (min-height: 980px), (min-width: 440px) and (max-width: 759px) and (min-height: 940px), (min-width: 760px) and (min-height: 870px) {
+  .work-row.shown > .maffs-ref-fits{display:block}
+  .work-row.shown > .maffs-ref-phone{display:none}
+}
+.work-row .wl{margin:.3rem 0;line-height:1.7;overflow-wrap:break-word}
+.work-row .wl .katex{font-size:1.05em!important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -90,6 +110,7 @@ body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}
 }
 -->
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/fold.css">
 </head>
 <body>
 <div class="container">
@@ -119,7 +140,18 @@ body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}
     <div class="progress" id="progress"></div>
     <div class="q-card"><div id="question"></div><div class="prompt" id="prompt"></div></div>
     <div class="options" id="options"></div>
-    <div id="nextMount"></div>
+    <!-- The working, between the options and Next (canon 7.6.1, 7.6.2): open where it fits, collapsed elsewhere. GCSE only. -->
+    <div class="maffs-ref-row work-row" id="workRow">
+      <details class="maffs-ref maffs-ref-phone">
+        <summary><span class="maffs-ref-show">Working</span><span class="maffs-ref-title">How to get there</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <details class="maffs-ref maffs-ref-fits" open>
+        <summary><span class="maffs-ref-show">Working</span><span class="maffs-ref-title">How to get there</span></summary>
+        <div class="maffs-ref-body" aria-live="polite"></div>
+      </details>
+      <div id="nextMount"></div>
+    </div>
   </div>
   <div id="results" class="screen"><div class="results"><h2 id="resultTitle"></h2><div class="final-score" id="finalScore">0</div><div class="stats" id="statsLine"></div><button class="play-again" onclick="showMenu()">Play Again</button>
   <p id="teacherInvite"></p></div></div>
@@ -240,9 +272,69 @@ function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.re
 document.querySelectorAll('.level-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.level-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');level=b.dataset.level})});
 {const lv=MaffsLevel.resolve({slug:'standard-form-blitz',levels:['gcse','alevel'],fallback:'gcse'});if(lv!==level&&QUESTIONS[lv]){level=lv;document.querySelectorAll('.level-btn').forEach(b=>b.classList.toggle('active',b.dataset.level===level))}}
 function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[level]]).slice(0,totalQ);qIdx=0;score=0;streak=0;bestStreak=0;correctCount=0;document.getElementById('score').textContent='0';document.getElementById('streak').textContent='0';const pr=document.getElementById('progress');pr.innerHTML='';for(let i=0;i<totalQ;i++){const d=document.createElement('div');d.className='pip'+(i===0?' current':'');pr.appendChild(d)}mfg('game_started',{game_slug:'standard-form-blitz',level:level});window._ggAbandoned=true;if(!window._ggBeforeUnloadSet){window._ggBeforeUnloadSet=true;window.addEventListener('beforeunload',function(){if(window._ggAbandoned)mfg('game_abandoned',{game_slug:'standard-form-blitz',level:level,questions_answered:qIdx})});}show('game');showQ()}
-function showQ(){if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
+// Worked solutions on a wrong answer at GCSE (contract SFB-WORKING-GCSE, 19 Nov 2026; canon 7.6: any pause has something
+// worth reading). Built by rules from the item's own digits, one rule per kind of ask; exact decimals (BigInt), never floats.
+// scripts/verify-standard-form-blitz.py recomputes every "=" and checks each working ends on the key.
+const Dec=s=>{const[i,f='']=String(s).split('.');return{m:BigInt(i+f),e:-f.length}};   // value m x 10^e
+const mul=(x,y)=>({m:x.m*y.m,e:x.e+y.e});
+function div(x,y){for(let k=0;k<30;k++){const n=x.m*10n**BigInt(k);if(n%y.m===0n)return{m:n/y.m,e:x.e-y.e-k}}throw new Error('not a terminating decimal')}
+function decStr(x){let{m,e}=x;while(m!==0n&&m%10n===0n){m/=10n;e++}if(e>=0)return m.toString()+'0'.repeat(e);
+  const d=m.toString().padStart(-e+1,'0');return d.slice(0,d.length+e)+'.'+d.slice(d.length+e)}
+// x = a x 10^p with 1 <= a < 10
+function sf(x){const L=x.m.toString().replace(/0+$/,'').length,z=x.m.toString().length-L,p=L-1+z+x.e;return{a:{m:x.m,e:x.e-p},p:p}}
+const ten=n=>'1'+'0'.repeat(n);
+const br=b=>b<0?'('+b+')':String(b);
+const SF_RE=/^(\d+(?:\.\d+)?) \\times 10\^\{?(-?\d+)\}?$/;
+function working(q){
+  if(!QUESTIONS.gcse.includes(q))return [];
+  const t=q.q.trim(),ask=q.ask;let m;
+  if(ask==='Write in standard form'){const{a,p}=sf(Dec(t));
+    return ['\\text{Put the point after the first non-zero digit: }'+decStr(a),
+      '\\text{Count the places it moves: }'+Math.abs(p)+(p>=0?'\\text{, left, so the power is positive}':'\\text{, right, so the power is negative}'),
+      t+' = '+decStr(a)+' \\times 10^{'+p+'}']}
+  if((ask==='Write as an ordinary number'||ask==='What is this as an ordinary number?')&&(m=t.match(SF_RE))){const a=m[1],b=+m[2],n=decStr(mul(Dec(a),{m:1n,e:b}));
+    return [a+' \\times 10^{'+b+'} = '+a+(b>=0?' \\times '+(b===0?'1':ten(b)):' \\div '+ten(-b))+' = '+n]}
+  if(ask==='Write in correct standard form'&&(m=t.match(SF_RE))){const a=m[1],b=+m[2],{a:a2,p:k}=sf(Dec(a)),c=decStr(a2);
+    return [a+' = '+c+' \\times 10^{'+k+'}\\text{, so}',a+' \\times 10^{'+b+'} = '+c+' \\times 10^{'+k+'} \\times 10^{'+b+'} = '+c+' \\times 10^{'+(k+b)+'}']}
+  if(ask==='Calculate. Give your answer in standard form.'&&(m=t.match(/^\((.+)\) \\(times|div) \((.+)\)$/))){
+    const x=m[1].match(SF_RE),y=m[3].match(SF_RE),op=m[2];if(!x||!y)return [];
+    const a1=x[1],b1=+x[2],a2=y[1],b2=+y[2],A1=Dec(a1),A2=Dec(a2);
+    const c=op==='times'?mul(A1,A2):div(A1,A2);
+    const e=op==='times'?b1+b2:b1-b2;
+    const L=[op==='times'?'\\text{Multiply the numbers and add the powers}':'\\text{Divide the numbers and subtract the powers}',
+      '('+a1+(op==='times'?' \\times ':' \\div ')+a2+') \\times 10^{'+b1+(op==='times'?' + ':' - ')+br(b2)+'} = '+decStr(c)+' \\times 10^{'+e+'}'];
+    const n=sf(c);if(n.p!==0)L.push(decStr(c)+' \\times 10^{'+e+'} = '+decStr(n.a)+' \\times 10^{'+(n.p+e)+'}');
+    return L}
+  if(/^Which /.test(ask)){const ps=t.split(/,\s*\\quad\s*/);
+    return ['\\text{Write each as an ordinary number}'].concat(ps.map(p=>{const r=p.match(SF_RE);return r?p+' = '+decStr(mul(Dec(r[1]),{m:1n,e:+r[2]})):p}),['\\text{So }'+q.correct])}
+  return [];
+}
+// One line of working: \text{} runs as words (so a long line wraps), the maths between rendered with rk().
+function workLine(tex){
+  const el=document.createElement('div');el.className='wl';let i=0,math='';
+  const flush=()=>{if(math.trim()){const s=document.createElement('span');if(math.indexOf('=')<0)s.style.whiteSpace='nowrap';rk(s,math);el.appendChild(s)}math=''};
+  while(i<tex.length){
+    if(tex.startsWith('\\text{',i)){let d=0,j=i+5;for(;j<tex.length;j++){d+=(tex[j]==='{')-(tex[j]==='}');if(d===0)break}
+      flush();const s=document.createElement('span');s.textContent=tex.slice(i+6,j);el.appendChild(s);i=j+1;continue}
+    math+=tex[i++];
+  }
+  flush();return el;
+}
+function showWorking(q){
+  const lines=working(q),row=document.getElementById('workRow');
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML='';lines.forEach(t=>w.appendChild(workLine(t)))});
+  row.classList.toggle('shown',lines.length>0);
+}
+// The copy the media query shows: Next keeps its top on screen as it comes into view.
+function shownCard(){return [...document.querySelectorAll('#workRow > .maffs-ref')].find(d=>getComputedStyle(d).display!=='none')||null}
+function clearWorking(){
+  const row=document.getElementById('workRow');row.classList.remove('shown');
+  row.querySelector('.maffs-ref-phone').open=false;row.querySelector('.maffs-ref-fits').open=true;
+  row.querySelectorAll('.maffs-ref-body').forEach(w=>{w.innerHTML=''});
+}
+function showQ(){if(window.MaffsNext)MaffsNext.clear(document.getElementById('nextMount'));clearWorking();const q=questions[qIdx];document.getElementById('qNum').textContent=`${qIdx+1}/${totalQ}`;const qEl=document.getElementById('question');qEl.innerHTML='';rk(qEl,q.q);document.getElementById('prompt').textContent=q.ask;const opts=shuffle([q.correct,...q.d]);const oEl=document.getElementById('options');oEl.innerHTML='';opts.forEach(v=>{const b=document.createElement('button');b.className='opt-btn';b.dataset.val=v;if(v.includes('\\')||v.includes('^')||v.includes('{')){rk(b,v)}else{b.textContent=v}b.addEventListener('click',()=>handle(b,q));oEl.appendChild(b)});MaffsLock.fresh(oEl);qStartTime=Date.now();document.getElementById('timer').textContent='0s';clearInterval(timerInterval);timerInterval=setInterval(tick,250)}
 function tick(){const e=Math.floor((Date.now()-qStartTime)/1000);document.getElementById('timer').textContent=e+'s'}
-function handle(btn,q){if(!MaffsLock.lock(document.getElementById('options')))return;clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}mfg('question_answered',{game_slug:'standard-form-blitz',level:level,correct:ok,question_index:qIdx+1});document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;if(ok){MaffsLock.timer(adv,1000)}else{MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv})}}
+function handle(btn,q){if(!MaffsLock.lock(document.getElementById('options')))return;clearInterval(timerInterval);const s=(Date.now()-qStartTime)/1000;const ok=btn.dataset.val===q.correct;document.querySelectorAll('.opt-btn').forEach(b=>{b.classList.add('disabled');if(b.dataset.val===q.correct)b.classList.add('correct')});if(ok){btn.classList.add('correct');const m=1/(1+T_K*Math.log(1+s));score+=Math.max(1,Math.round(BASE*m));streak++;correctCount++;if(streak>bestStreak)bestStreak=streak;pip('done')}else{btn.classList.add('wrong');streak=0;pip('fail')}mfg('question_answered',{game_slug:'standard-form-blitz',level:level,correct:ok,question_index:qIdx+1});document.getElementById('score').textContent=score;document.getElementById('streak').textContent=streak;if(ok){MaffsLock.timer(adv,1000)}else{showWorking(q);MaffsNext.wrong({mount:document.getElementById('nextMount'),onAdvance:adv,keep:shownCard})}}
 function pip(c){const ps=document.querySelectorAll('.pip');if(ps[qIdx]){ps[qIdx].classList.remove('current');ps[qIdx].classList.add(c)}}
 function adv(){qIdx++;if(qIdx>=totalQ){end();return}document.querySelectorAll('.pip')[qIdx]?.classList.add('current');showQ()}
 // Once per session (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.

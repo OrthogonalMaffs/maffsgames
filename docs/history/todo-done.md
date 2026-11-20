@@ -3947,3 +3947,7 @@ Added and closed in the same PR (contract QF-HCF-FIRST, Project Claude 15 Nov 20
 | LEDGER-B4-FACTOR-RACE | **B4 ledger debt, `factor-race`: 2 levels below the 40-question minimum** (year6 20, ks3 20). Survey: `docs/audits/ledger-debt-2026-11.md` §B4. Recorded 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 
 **Closed 19 Nov 2026 (FACTOR-RACE-Y6-40).** Row LEDGER-B4-FACTOR-RACE, moved word for word above. Year 6 is now 40 pairs (20 appended, 13 of them won by the smaller number). KS3 is generated (VALID_PAIRS), not 20: the 9 Nov count misread it, because extract-banks reads YEAR6_BANK for both levels. Both B4 ledger entries cleared (`check-banks.py --write-ledger --only factor-race`). Held by `scripts/verify-factor-race.py`.
+
+## Part closed by SFB-WORKING-GCSE (20 Nov 2026)
+
+Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE now shows a rule-built worked solution ("How to get there", above Next), checked by `scripts/verify-standard-form-blitz.py`. Its A-Level half stays in the row.
