@@ -3,10 +3,7 @@
 The cloud lane's running handover (canon §7.8.2). Only cloud-lane sessions edit this file; the home lane's is
 `docs/handover/home.md`. Newest first. Keep it current on the branch as you go (CLAUDE.md, checkpoint discipline).
 
-**Cloud lane owns:** per-game fixes in games that are currently unlisted, one game per PR, each with its verifier,
-closing its entries in its own `docs/audits/findings/<slug>.yml`. It never edits `schools/assets/`, the shared
-modules in `scripts/`, the workflow, canon, the roster's listed section, `docs/todo.md` or
-`docs/audits/REGISTER.md` (CI regenerates that on main). Relisting a fixed game is the home lane's docs PR.
+**Cloud lane scope (Jon, 20 Nov 2026):** the cloud lane edits what its contract names. Without a contract naming them, it never edits `schools/assets/`, the shared modules in `scripts/`, the workflow, canon, the roster's listed section or `docs/todo.md`. AGENTS.md's TODO-TRIM rule applies to every cloud PR.
 
 **Standing rule (Jon, 7 Oct 2026):** after each game's PR merges and main's full run is green, start the
 next game on the contract's list without asking. Stop only for a STOP IF or an empty list.
@@ -69,6 +66,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-20 (cloud): LARGE-SCREEN-PILOT (`docs/handover/contracts/2026-11-20-large-screen-pilot.md`; Project Claude 20 Nov, two parts)
+
+Agent Claude Code (cloud), branch `claude/youthful-fermi-ujam6l` from main 2e7c9d2. Tier Medium. Root cause matched on 2e7c9d2 (maffscards :31 `.container{max-width:760px}`, :75 card 420 px).
+**Close-outs carried (first commit):** #854 FORGE-SUBJECT-PROMPT, recorded in its entry below (check-site 44807672164, phone-fit-full 44807672235, pages 44807671441, all success); its todo row moved word for word to `docs/history/todo-done.md`. The "Cloud lane owns" paragraph replaced by Jon's scope paragraph of 20 Nov.
+Next: schools/assets/large-screen.css, apply/check scripts, the six-game pilot.
+
 ## 2026-11-20 (cloud): FORGE-SUBJECT-PROMPT (`docs/handover/contracts/2026-11-20-forge-subject-prompt.md`; Project Claude 20 Nov, one part)
 
 Agent Claude Code (cloud), branch `claude/dreamy-knuth-e94w15` from main c46eb14. Tier Small. Root cause matched on c46eb14 (:64-65 the target's style, :475-477 the dead `<strong>` line, :478-480 the three spans, :141-148 no paper line).
@@ -77,6 +80,8 @@ Done on the branch: `games/formula-forge/index.html`: the dead innerHTML line an
 **Measured (all 56 items, branch against main, Chromium):** the chip never leaves "Make" and nothing overflows sideways. **At 375x667 Aa (6 items) and 390x844 Aa (2), the target line now wraps "Make [chip] the / subject"; on main every item fits on one line there.** At 320x568 Aa every item already wrapped on main the same way, so the 320 STOP IF cannot see the case it guards; I read it as applying at 375 and 390 too, and **the merge is held for Jon**. The items: gcse s1 #10 (M); level4 s1 #3 (ΔL), #4 (W), s2 #4 (ΔT), #5 (P_in), s4 #1 (R₁); at 390 only ΔL and ΔT. Normal mode: one line at every size.
 **Amendment 1 (Jon, 20 Nov, ruling (b)):** the end span is " the" + U+00A0 + "subject" (written `\u00a0` in the JS, so the source stays ASCII); the chip's styling unchanged. Verifier: the end span's text exactly that at each level; new plant (an ordinary space back) caught; PASS, all 13 plants caught. Re-measured all 56 items at 320x568, 375x667 and 390x844, normal and Aa: "the" and "subject" always share a line, the chip never leaves "Make", no sideways overflow; "Make [chip]" / "the subject" on 56 items at 320 Aa, 6 at 375 Aa, 2 at 390 Aa (accepted by the ruling); normal mode one line. Merge released.
 The start screen is 490 px wide in Aa at every phone size on main and the branch alike (the stage-preview grid): pre-existing, not touched.
+
+**MERGED 20 Nov as bf019be (#854)** at 20:02:12 UTC (head a68f4f7), route merge-pr.py. Main on the merge commit, read from the API by LARGE-SCREEN-PILOT: check-site 44807672164 success, phone-fit-full 44807672235 success (both push), pages build and deployment 44807671441 success. Closed out by LARGE-SCREEN-PILOT's first commit; contract moved to `docs/history/contracts/`; todo row FORGE-SUBJECT-PROMPT moved word for word to `docs/history/todo-done.md`.
 
 ## 2026-11-20 (cloud): 52DLE-TIDY (`docs/history/contracts/2026-11-20-52dle-tidy.md`; Project Claude 20 Nov, one part)
 
