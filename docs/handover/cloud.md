@@ -80,6 +80,8 @@ Other files: 52dle off WRONG_PAUSE_KNOWN_FAIL (both sets) and in check-theme MIG
 **Gate red on b7630b6 (Site-wide checks, job 136289802146), fixed:** Search titles (`check-meta.py`) failed because the rebuild had rewritten the page's meta and og descriptions, which `data/games.json` generates; restored to the generated text (not in EXACT CHANGE). Every other job passed on b7630b6.
 **OPEN for Jon:** the new look needs his sign-off (the roster keeps the old page's grandfathered line with a note); 521's fact never shows (521 is not in the GCSE pool), and 13, 23, 31, 37, 53, 97 show at Foundation only; timer-policy.md does not list 52-dle (it has no clock).
 
+**MERGED 20 Nov as a675eea (#850)** at 12:59:40 UTC (head 6bf4750), route merge-pr.py. Main on the merge commit, read from the API by MAFFSCARDS-DATA: check-site 44740406716 success, phone-fit-full 44740406495 success (both push, attempt 1), pages build and deployment 44740406391 success. Closed out by MAFFSCARDS-DATA's first commit; contract moved to `docs/history/contracts/`.
+
 ## 2026-11-20 (cloud): SFB-WORKING-GCSE (`docs/history/contracts/2026-11-19-sfb-working-gcse.md`; Project Claude 19 Nov, two parts)
 
 Agent Claude Code (cloud), branch `claude/modest-lamport-bgup39` restarted from main b7ba480. Tier Medium. Root cause matched (handle() :245: marks and Next only). Every GCSE item fits a kind: a 1-10, b 11-18 and 44, c 45-50, d 19-28, e 29-38, f 39-43.
