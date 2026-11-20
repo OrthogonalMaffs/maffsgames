@@ -643,7 +643,7 @@ PLANTS = [
 PLANTS += [
     ('working, rule d: the coefficients added, not multiplied', 'working:',
      [("const c=op==='times'?mul(A1,A2):div(A1,A2);",
-       "const c=op==='times'?{m:A1.m*10n**BigInt(A1.e-Math.min(A1.e,A2.e))+A2.m*10n**BigInt(A2.e-Math.min(A1.e,A2.e)),"
+       "const c=op==='times'?{m:A1.m*BigInt(10**(A1.e-Math.min(A1.e,A2.e)))+A2.m*BigInt(10**(A2.e-Math.min(A1.e,A2.e))),"
        "e:Math.min(A1.e,A2.e)}:div(A1,A2);")]),
     ('working, rule e: the powers subtracted the wrong way round', 'working:',
      [("const e=op==='times'?b1+b2:b1-b2;", "const e=op==='times'?b1+b2:b2-b1;")]),

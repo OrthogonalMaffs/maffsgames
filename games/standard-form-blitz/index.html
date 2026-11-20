@@ -275,10 +275,12 @@ function startGame(){MaffsLock.newSession();questions=shuffle([...QUESTIONS[leve
 // Worked solutions on a wrong answer at GCSE (contract SFB-WORKING-GCSE, 19 Nov 2026; canon 7.6: any pause has something
 // worth reading). Built by rules from the item's own digits, one rule per kind of ask; exact decimals (BigInt), never floats.
 // scripts/verify-standard-form-blitz.py recomputes every "=" and checks each working ends on the key.
+// BigInt() calls, not 10n literals: scripts/bank_common.py reads the page with esprima (ES2017), which has no BigInt syntax.
+const B0=BigInt(0),B1=BigInt(1),B10=BigInt(10);
 const Dec=s=>{const[i,f='']=String(s).split('.');return{m:BigInt(i+f),e:-f.length}};   // value m x 10^e
 const mul=(x,y)=>({m:x.m*y.m,e:x.e+y.e});
-function div(x,y){for(let k=0;k<30;k++){const n=x.m*10n**BigInt(k);if(n%y.m===0n)return{m:n/y.m,e:x.e-y.e-k}}throw new Error('not a terminating decimal')}
-function decStr(x){let{m,e}=x;while(m!==0n&&m%10n===0n){m/=10n;e++}if(e>=0)return m.toString()+'0'.repeat(e);
+function div(x,y){let n=x.m;for(let k=0;k<30;k++,n*=B10){if(n%y.m===B0)return{m:n/y.m,e:x.e-y.e-k}}throw new Error('not a terminating decimal')}
+function decStr(x){let{m,e}=x;while(m!==B0&&m%B10===B0){m/=B10;e++}if(e>=0)return m.toString()+'0'.repeat(e);
   const d=m.toString().padStart(-e+1,'0');return d.slice(0,d.length+e)+'.'+d.slice(d.length+e)}
 // x = a x 10^p with 1 <= a < 10
 function sf(x){const L=x.m.toString().replace(/0+$/,'').length,z=x.m.toString().length-L,p=L-1+z+x.e;return{a:{m:x.m,e:x.e-p},p:p}}
@@ -292,7 +294,7 @@ function working(q){
     return ['\\text{Put the point after the first non-zero digit: }'+decStr(a),
       '\\text{Count the places it moves: }'+Math.abs(p)+(p>=0?'\\text{, left, so the power is positive}':'\\text{, right, so the power is negative}'),
       t+' = '+decStr(a)+' \\times 10^{'+p+'}']}
-  if((ask==='Write as an ordinary number'||ask==='What is this as an ordinary number?')&&(m=t.match(SF_RE))){const a=m[1],b=+m[2],n=decStr(mul(Dec(a),{m:1n,e:b}));
+  if((ask==='Write as an ordinary number'||ask==='What is this as an ordinary number?')&&(m=t.match(SF_RE))){const a=m[1],b=+m[2],n=decStr(mul(Dec(a),{m:B1,e:b}));
     return [a+' \\times 10^{'+b+'} = '+a+(b>=0?' \\times '+(b===0?'1':ten(b)):' \\div '+ten(-b))+' = '+n]}
   if(ask==='Write in correct standard form'&&(m=t.match(SF_RE))){const a=m[1],b=+m[2],{a:a2,p:k}=sf(Dec(a)),c=decStr(a2);
     return [a+' = '+c+' \\times 10^{'+k+'}\\text{, so}',a+' \\times 10^{'+b+'} = '+c+' \\times 10^{'+k+'} \\times 10^{'+b+'} = '+c+' \\times 10^{'+(k+b)+'}']}
@@ -306,7 +308,7 @@ function working(q){
     const n=sf(c);if(n.p!==0)L.push(decStr(c)+' \\times 10^{'+e+'} = '+decStr(n.a)+' \\times 10^{'+(n.p+e)+'}');
     return L}
   if(/^Which /.test(ask)){const ps=t.split(/,\s*\\quad\s*/);
-    return ['\\text{Write each as an ordinary number}'].concat(ps.map(p=>{const r=p.match(SF_RE);return r?p+' = '+decStr(mul(Dec(r[1]),{m:1n,e:+r[2]})):p}),['\\text{So }'+q.correct])}
+    return ['\\text{Write each as an ordinary number}'].concat(ps.map(p=>{const r=p.match(SF_RE);return r?p+' = '+decStr(mul(Dec(r[1]),{m:B1,e:+r[2]})):p}),['\\text{So }'+q.correct])}
   return [];
 }
 // One line of working: \text{} runs as words (so a long line wraps), the maths between rendered with rk().
