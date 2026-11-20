@@ -26,6 +26,7 @@ Claude Code (home lane), worktree `~/mg-download-counts`, branch `claude/downloa
 - **`scripts/test-section-clicks.py`:** also loads the four download pages; each of the 8 downloads fires one section_clicked action download with its item, every ordinary labelled link there still fires open-link, every a[download] on them is tested. Against the old listener it fails all 8.
 - privacy/index.html:151 sentence as the contract. No /updates/ line.
 - **Decided for you:** (1) the test covers the two Ugh, stats pages as well as the two the contract names, so all eight links are proved. (2) The check also fails a download link that has its item but no section (the listener sends nothing then). (3) Not fixed, todo UGH-STATS-BUTTON-DOWNLOADS: half-our-games and whos-playing download a CSV built in the browser from a `<button>`, which the listener cannot count without changing a non-download case.
+- Gate on 33588dc failed only at PR budget (run 44822023902): 52-dle's verifier, selected because its page loads analytics.js, took 200 s against main's median 142 s (limit 189 s); nothing in it changed. The token cannot rerun jobs, so this commit re-runs the Gate.
 
 ## 2026-11-20 (home): COUNTING-PLAYERS (Core Maths practice pack on the site's own data, unlisted)
 
