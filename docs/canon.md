@@ -578,7 +578,9 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
 
 - **Keys:** 0–9, decimal point, + − × ÷, brackets, x², √ (which opens a bracket, as on a Casio), C, DEL,
   =. Order of operations as on a scientific calculator: −3² = −9; a number, bracket or √ straight after a
-  value multiplies (2(3) = 6); missing closing brackets are closed on =, extra ones are an error. After =,
+  value multiplies (2(3) = 6), and binds tighter than × and ÷, as on a current Casio (6 ÷ 2(1 + 2) = 1,
+  267 ÷ 2π = 42.49...; the rule SR-28 states for algebraic terms; contract CALC-IMPLIED-MULT, Jon 20 Nov 2026);
+  missing closing brackets are closed on =, extra ones are an error. After =,
   an operator carries the answer on as "Ans"; a digit starts afresh.
 - **Display:** 10 significant figures, trailing zeros dropped, so 0.1 + 0.2 shows 0.3, never
   0.30000000000000004; 10^10 and over, or under 10^−6, as a×10^n. Divide by 0, √ of a negative,
