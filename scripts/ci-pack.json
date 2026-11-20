@@ -92,7 +92,7 @@
   "GA4 summary Apps Script (mocked Sheet: weekly sums match the raw tabs, partial weeks marked, top ten, three charts created once, values-only rebuilds, GA4 tabs/Sheet1/Dashboard untouched; planted faults caught)": "65",
   "Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; three old faults planted and caught)": "68",
   "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "68",
-  "Glorious Gantt's answer boxes (text boxes, never type=\"number\"; every early time, late time, float and Gantt reading in the pool marked exactly as on the old number boxes for every string a number box can hold, and junk refused; NOT the game's verifier)": "19",
+  "Glorious Gantt's answer boxes (text boxes, never type=\"number\"; every early time, late time, float and Gantt reading in the pool marked exactly as on the old number boxes for every string a number box can hold, and junk refused; NOT the game's verifier)": "50",
   "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
   "Graph Sketcher (keys recomputed from each printed equation)": "27",
   "Graph Transformer (BFS + par; every explanation, checkpoint and phone panel; planted faults)": "35",

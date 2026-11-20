@@ -2,6 +2,22 @@
 
 ## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-18 (home): DASHBOARD-GLANCE (the Dashboard answers Jon's weekly questions; GA4 sources tab; Daily Activity chart fixed)
+
+Claude Code (home lane), worktree `~/mg-dashboard-glance`, branch `claude/dashboard-glance`; contract `docs/handover/contracts/2026-11-18-dashboard-glance.md`. The first commit carries DAILY-ANSWERS' close-out (#825, aba826a). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
+
+- **Dashboard (`docs/apps-script-endpoint.js`, SCRIPT_VERSION 2026-11-18-a):** sections A (growing: 7 days against the previous 7; % correct in points, always grey), B (check-these questions under 10% right on 10+ marked, on red; where students quit), C (probable classes; when it is used; portal filters), D (GA4 channels and landing pages), E (UK share, top 5 countries, devices), F (games launched in the last 14 days, launch-dates.json read from GitHub), G (Table 4b, hints by lock, time per lock), H (Misunderstood Maths), I (the four older tables, content unchanged, moved), J (Daily Activity last: series named by `setNumHeaders(1)`, curveType removed). sendDailyReport and testDashboard pass prevWeekRows (the 7 days before weekAgo); the existing filters are unchanged. A missing or empty GA4 tab gives "GA4 figures not available yet." in A, D and E. The email's text is unchanged.
+- **Time per lock:** included. engine.js `st.openAt[l.id] = st.played` (the room's clock seconds when a lock opened), written by finish() in room.js lock order, "-" if never opened; opened locks sorted by time give the seconds since the previous one opened.
+- **GA4 (`docs/apps-script-ga4-country.js`):** a third GA4C_TABLES entry, 'GA4 sources daily' (date, sessionSource, sessionMedium, deviceCategory, landingPage; sessions, engagedSessions, activeUsers; newest date, then most sessions, then the dimensions). The four dimension names are in Google's Data API schema (landingPage is the path, no query string). No city or region.
+- **Tests:** test-apps-script-report.py section j (A to H on hand-written rows and GA4 tab rows, through sendDailyReport) plus a chart check; 20 plants caught, 7 of them new. Stubs gained only what the sections call: load() takes GA4 tabs and launch dates, setBackground/setFontColor record their colour, and formatDate honours its zone (it ignored it, so a midnight in BST became the day before) and gains 'HH:mm' and 'u'. Section i's curveType clause removed (contract J). test-ga4-country.py: the mock serves the sources table, a check that it asks for exactly the approved dimensions and nothing finer than country, plant 'city' caught. test-ga4-summary.py unchanged and passes.
+- **Docs:** canon §1.2.1 (third tab) and §1.4 (an at-a-glance paragraph); docs/ga4-country-setup.md (the sources tab, re-run ga4CountryBackfill once); docs/apps-script-redeploy.md (no deployment for a Dashboard-only change; step 12's version 2026-11-18-a).
+- **Jon's steps after merge (never Deploy):** 1. paste `docs/apps-script-endpoint.js` into Code.gs, keeping your REPORT_EMAIL line; 2. paste `docs/apps-script-ga4-country.js` into ga4-country.gs; 3. Save; 4. run `ga4CountryBackfill` once (fills GA4 sources daily from 1 Sep 2026); 5. run `testDashboard`.
+- MERGED 18 Nov as bc3d192 (#827) via merge-pr.py, exit 0, last line "main bc3d192 run 44370288253: GREEN". Main on the merge commit: check-site 44370288253 success, phone-fit-full 44370288214 success (both push runs, confirmed from the API). Contract moved to `docs/history/contracts/2026-11-18-dashboard-glance.md` (closed out by DASHBOARD-FIXES' first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-19 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-18 (home): DAILY-ANSWERS (the Dashboard's Daily Activity shows games started and questions answered)
 
 Claude Code (home lane), worktree `~/mg-daily-answers`, branch `claude/daily-answers`; contract `docs/handover/contracts/2026-11-18-daily-answers.md`. The first commit carries CANTEEN-APPROVE's close-out (#819, 6f2d29c). Tier Shared: holds at a green Gate for Project Claude's review and Jon's "merge".
