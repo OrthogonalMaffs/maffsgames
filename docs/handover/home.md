@@ -27,6 +27,8 @@ Claude Code (home lane), worktree `~/mg-calc-implied`, branch `claude/calc-impli
 - **Amendment 2 (a right answer clears the calculator): STOPPED (its STOP IF), nothing changed.** `growth-and-decay` CM2 (`L = k × 0.98^T`, sq_order [3,1,2]) sends `question_answered` correct:true on sub-question 3, "Given that L = 100 when T = 24, find the value of k", then asks sub-question 1, "calculate L when T = 30", which needs that k (not shown in the model). A clear on that correct answer would wipe working still needed. Every other calculator page sends one question_answered per finished question (i-dropped-my-ice-cream and its-a-sine at the last box, stat-attack at the end of the scenario). Question for Jon in todo row CALC-CLEAR-ON-RIGHT.
 - Canon §4.4 note (points at SR-28); one /updates/ line, Amendment 1's wording.
 
+- MERGED 20 Nov as d191f67 (#846) via merge-pr.py, exit 0, last line "main d191f67 run 44692378747: GREEN". Main on the merge commit: check-site 44692378747 success, phone-fit-full 44692378616 success (both push runs), pages build 44692377962 success (all confirmed from the API). Contract moved to `docs/history/contracts/2026-11-20-calc-implied-mult.md` (closed out by MAFFSCARDS-GAME's first commit). Amendment 2 stays open as todo CALC-CLEAR-ON-RIGHT.
+
 ## 2026-11-20 (home): TODO-TRIM (todo.md holds only open work; the cap lowered; a row-length warning)
 
 Claude Code (home lane), worktree `~/mg-todo-trim`, branch `claude/todo-trim`; contract `docs/handover/contracts/2026-11-19-todo-trim.md`. Tier Medium. The first commit carries WRONG-PAUSE-NEXT's close-out (#842, 8ab38d1; its entry below; contract moved to `docs/history/contracts/`).
