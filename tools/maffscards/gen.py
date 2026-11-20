@@ -19,8 +19,13 @@ The six categories, in card order (contract part 2):
   pi      Occurrences of n's digits in a row among the 1,000 decimals of pi after the point (the leading 3 not
           counted), overlaps counted.
 
-    python -X utf8 tools/maffscards/gen.py           # write data/maffscards.json
-    python -X utf8 tools/maffscards/gen.py --check   # exit 1 if the committed file differs from what this computes
+It also writes games/maffscards/cards.json for the online game (contract MAFFSCARDS-GAME, 20 Nov 2026), because data/
+is not part of the live site (_config.yml): the same content as data/maffscards.json plus, on every card, a "how" line
+for each category, the working that ends on the card's value (e.g. "28: 1 + 2 + 4 + 7 + 14 + 28 = 56"). The how lines
+are built from the same functions as the values; the page reads cards.json and never recomputes a value.
+
+    python -X utf8 tools/maffscards/gen.py           # write data/maffscards.json and games/maffscards/cards.json
+    python -X utf8 tools/maffscards/gen.py --check   # exit 1 if either committed file differs from what this computes
 """
 import json
 import pathlib
@@ -28,6 +33,7 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "maffscards.json"
+GAME_OUT = ROOT / "games" / "maffscards" / "cards.json"
 
 PI_DECIMALS = 1000
 
@@ -217,20 +223,78 @@ def build():
     }
 
 
+# ------------------------------------------------------------------------------------------------ the how lines
+# One line per card and category, the working that ends on the value (contract MAFFSCARDS-GAME, item 2). Built from
+# the functions above, never typed; check.py checks every line ends on the card's value.
+MINUS = "\u2212"
+SUPERSCRIPT_2 = "\u00b2"
+
+
+def prime_factors(n):
+    """n's prime factors with repeats, smallest first (68 -> [2, 2, 17])."""
+    out, m, p = [], n, 2
+    while m > 1:
+        while m % p == 0:
+            out, m = out + [p], m // p
+        p += 1
+    return out
+
+
+def how_lines(c):
+    n = c["n"]
+    divs = divisors(n)
+    lines = {"sof": "%d: %s = %d" % (n, " + ".join(str(d) for d in divs), c["sof"])}
+    if n == 1:
+        lines["lpf"] = "1 has no prime factors: 0"
+    elif is_prime(n):
+        lines["lpf"] = "%d is prime: largest prime %d" % (n, c["lpf"])
+    else:
+        lines["lpf"] = "%d = %s: largest prime %d" % (n, " \u00d7 ".join(str(p) for p in prime_factors(n)), c["lpf"])
+    k = len(c["roman"])
+    lines["roman"] = "%d = %s: %d letter%s" % (n, c["roman"], k, "" if k == 1 else "s")
+    if c["dist"] == 0:
+        lines["dist"] = "%d = %d%s: 0" % (n, round(n ** 0.5), SUPERSCRIPT_2)
+    else:
+        sq = next(s for s in SQUARES if abs(n - s) == c["dist"])
+        big, small = max(n, sq), min(n, sq)
+        lines["dist"] = "%d: nearest square %d, %d %s %d = %d" % (n, sq, big, MINUS, small, c["dist"])
+    if c["powers"]:
+        lines["powers"] = "%d: %s: %d" % (n, ", ".join(c["powers"]), len(c["powers"]))
+    else:
+        lines["powers"] = "%d: no superpowers: 0" % n
+    lines["pi"] = "%d appears %d time%s in pi's first 1,000 digits" % (n, c["pi"], "" if c["pi"] == 1 else "s")
+    return {cat["key"]: lines[cat["key"]] for cat in CATEGORIES}
+
+
+def build_game(data, how=how_lines):
+    """cards.json: data/maffscards.json's content, each card with its how lines. `how` is replaceable for check.py's
+    plant (a how line ending on the wrong value)."""
+    out = json.loads(json.dumps(data))
+    for c in out["cards"]:
+        c["how"] = how(c)
+    return out
+
+
 def dumps(data):
     return json.dumps(data, ensure_ascii=False, indent=1) + "\n"
 
 
 def main(argv):
-    text = dumps(build())
+    data = build()
+    outputs = [(OUT, dumps(data)), (GAME_OUT, dumps(build_game(data)))]
     if "--check" in argv:
-        if not OUT.exists() or OUT.read_text(encoding="utf-8") != text:
-            print("FAIL: %s is not gen.py's output; run python -X utf8 tools/maffscards/gen.py" % OUT.relative_to(ROOT))
-            return 1
-        print("PASS: %s is gen.py's output" % OUT.relative_to(ROOT))
-        return 0
-    OUT.write_text(text, encoding="utf-8", newline="\n")
-    print("wrote %s (%d cards)" % (OUT.relative_to(ROOT), len(MAIN) + len(EXTRA)))
+        bad = 0
+        for path, text in outputs:
+            if not path.exists() or path.read_text(encoding="utf-8") != text:
+                print("FAIL: %s is not gen.py's output; run python -X utf8 tools/maffscards/gen.py" % path.relative_to(ROOT))
+                bad = 1
+            else:
+                print("PASS: %s is gen.py's output" % path.relative_to(ROOT))
+        return bad
+    for path, text in outputs:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8", newline="\n")
+        print("wrote %s (%d cards)" % (path.relative_to(ROOT), len(MAIN) + len(EXTRA)))
     return 0
 
 

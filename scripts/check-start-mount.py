@@ -51,7 +51,7 @@ CONTAINERS = {
     "proportion-blaster": "#menu", "quadratic-factoriser": "#startScreen", "scale-factor-scaling": "#menu",
     "screening-room": "#startScreen", "sequence-solver": "#menu", "seven-bridges": "#startScreen",
     "shape-shifter": "#startScreen", "simultaneous-solver": "#menu", "six-sevens-bruv": "#menu",
-    "i-found-a-mark": "#menu", "y-so-steep": "#menu", "whose-side-are-you-on": "#menu", "who-ate-all-the-pies": "#menu", "its-on-sale": "#menu", "as-you-can-see": "#menu", "possibly-maybe": "#menu", "cast-away": "#menu", "its-a-sine": "#menu", "i-dropped-my-ice-cream": "#menu", "52dle": "#menu", "sums-in-disguise": "#menu", "split-it": "#menuScreen", "hc-factor": "#menu", "squared-squirrel": "#menu", "spot-the-error": "#startScreen", "spot-the-muppet": "#startScreen",
+    "i-found-a-mark": "#menu", "y-so-steep": "#menu", "whose-side-are-you-on": "#menu", "who-ate-all-the-pies": "#menu", "its-on-sale": "#menu", "as-you-can-see": "#menu", "possibly-maybe": "#menu", "cast-away": "#menu", "its-a-sine": "#menu", "maffscards": "#menu", "i-dropped-my-ice-cream": "#menu", "52dle": "#menu", "sums-in-disguise": "#menu", "split-it": "#menuScreen", "hc-factor": "#menu", "squared-squirrel": "#menu", "spot-the-error": "#startScreen", "spot-the-muppet": "#startScreen",
     "standard-form-blitz": "#menu", "stat-attack": "#menuScreen", "surd-simplifier": "#menu",
     "suvat": "#startScreen", "take-a-walk": "#menu", "tax-theft": "#diffScreen",
     "terrible-advice": "#startScreen", "test-the-claim": "#menuScreen", "the-perfect-prank": "#scrBrief",
@@ -81,6 +81,7 @@ START_STEPS = {
     "its-a-sine": ["#stageList .stage-btn"],     # contract SINE-NOT-SINE, 17 Nov 2026: a stage is chosen from the menu (the level picker above it)
     "i-dropped-my-ice-cream": ["#stageList .stage-btn"],     # contract I-DROPPED-MY-ICE-CREAM, 18 Nov 2026: a stage is chosen from the menu (the level picker above it)
     "sums-in-disguise": ["#stageList .stage-btn"],
+    "maffscards": ["#startBtn"],     # contract MAFFSCARDS-GAME, 20 Nov 2026: "Deal the cards" starts the game
     "52dle": ["#modeList .mode-btn"],     # contract 52DLE-REBUILD, 20 Nov 2026: the run or the daily is chosen from the menu (the level picker above it)     # contract SUMS-IN-DISGUISE, 18 Nov 2026: a stage is chosen from the menu (no level picker)
     "who-ate-all-the-pies": ["#stageList .stage-btn"],     # contract WHO-ATE-ALL-THE-PIES, 27 Oct 2026: a stage is chosen from the menu     # contract Y-SO-STEEP, 27 Oct 2026: a stage is chosen from the menu
     "its-on-sale": ["#stageList .stage-btn"],     # contract ITS-ON-SALE, 27 Oct 2026: a stage is chosen from the menu     # contract Y-SO-STEEP, 27 Oct 2026: a stage is chosen from the menu

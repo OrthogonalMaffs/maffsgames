@@ -22,8 +22,13 @@ Also: 32 main and 16 extra cards, no number twice, the six categories in card or
 (distance lowest, the rest highest), the pi label stating the 1,000-digit limit, and the phrase the deck must never
 use (a registered trade mark) absent from every MaffsCards file and the printables page.
 
+The online game's copy, games/maffscards/cards.json (contract MAFFSCARDS-GAME, 20 Nov 2026): gen.py's output byte for
+byte, identical to data/maffscards.json once each card's "how" lines are taken out, one how line for every card and
+category, each starting with the card's number and ending on the card's value (the length for Roman numerals and
+superpowers), read back by this file's own patterns, not gen.py's code.
+
 Plants (--selftest; each must FAIL, by plant_common): one pi count off by one; 1 counted as prime; a hand edit in the
-JSON.
+JSON; a how line ending on the wrong value.
 
     python -X utf8 tools/maffscards/check.py [--selftest]
 """
@@ -41,11 +46,49 @@ import gen                     # noqa: E402  (source 1)
 import plant_common as pc      # noqa: E402
 
 JSON_PATH = ROOT / "data" / "maffscards.json"
+GAME_JSON = ROOT / "games" / "maffscards" / "cards.json"
 PI_FIRST10 = "1415926535"
 PI_991_1000 = "2164201989"
 TRADE_MARK = "top" + " " + "trumps"          # split so this file never holds the phrase it scans for
 SCANNED = [HERE / "gen.py", HERE / "check.py", HERE / "build_pdf.py", HERE / "README.md", JSON_PATH,
-           ROOT / "printables" / "index.html"]
+           ROOT / "printables" / "index.html", GAME_JSON, ROOT / "games" / "maffscards" / "index.html"]
+
+# Where each how line states its value: the number this pattern captures must be the card's value (contract
+# MAFFSCARDS-GAME, item 2). Each line also starts with the card's number.
+HOW_END = {
+    "sof": re.compile(r"= (\d+)$"),
+    "lpf": re.compile(r"(?:largest prime |: )(\d+)$"),
+    "roman": re.compile(r": (\d+) letters?$"),
+    "dist": re.compile(r"(?:= |: )(\d+)$"),
+    "powers": re.compile(r": (\d+)$"),
+    "pi": re.compile(r" appears (\d+) times? in pi's first 1,000 digits$"),
+}
+
+
+def measured(card, key):
+    v = card[key]
+    return len(v) if isinstance(v, (list, str)) else v
+
+
+def how_findings(game, data_cards):
+    """Every fault in cards.json's how lines against the data's values."""
+    bad = []
+    keys = [k for k, _ in CATEGORY_SPEC]
+    for c, d in zip(game.get("cards", []), data_cards):
+        how = c.get("how")
+        if not isinstance(how, dict) or sorted(how) != sorted(keys):
+            bad.append("games/maffscards/cards.json card %s: how lines %r, not one per category" % (c.get("n"), how))
+            continue
+        for k in keys:
+            line, want = how[k], measured(d, k)
+            m = HOW_END[k].search(line)
+            if not m or int(m.group(1)) != want:
+                bad.append("games/maffscards/cards.json card %d %s: how line %r does not end on the value %d"
+                           % (d["n"], k, line, want))
+            if not re.match(r"%d\b" % d["n"], line):
+                bad.append("games/maffscards/cards.json card %d %s: how line %r does not start with %d"
+                           % (d["n"], k, line, d["n"]))
+    return bad
 
 # The contract's table, part 2, verbatim: n|sum of factors|largest prime factor (0 = none)|Roman numeral|distance to
 # nearest square|superpowers|pi count|nickname. Main deck, then extra.
@@ -233,13 +276,33 @@ def recompute(n, decimals):
 
 
 # ------------------------------------------------------------------------------------------------ the check
-def run(build=None, json_text=None):
-    """Every finding as a string; [] means PASS. `build` is gen.py's data (a fresh gen.build() by default) and
-    `json_text` the committed file's text (read from disk by default): the plants pass in their own."""
+def run(build=None, json_text=None, game_text=None, how=None):
+    """Every finding as a string; [] means PASS. `build` is gen.py's data (a fresh gen.build() by default),
+    `json_text` and `game_text` the committed files' text (read from disk by default) and `how` gen.py's how-line
+    builder: the plants pass in their own."""
     bad = []
     data = gen.build() if build is None else build
     if json_text is None:
         json_text = JSON_PATH.read_text(encoding="utf-8")
+    if game_text is None:
+        game_text = GAME_JSON.read_text(encoding="utf-8") if GAME_JSON.exists() else ""
+
+    # the game's copy: gen.py's output, the data's content plus how lines, every how line ending on its value
+    game_built = gen.build_game(data, how or gen.how_lines)
+    if game_text != gen.dumps(game_built):
+        bad.append("games/maffscards/cards.json is not gen.py's output (a hand edit, or gen.py changed and was not run)")
+    try:
+        game = json.loads(game_text)
+    except ValueError as e:
+        game = None
+        bad.append("games/maffscards/cards.json does not parse: %s" % e)
+    for name, g in [("gen.py's cards.json", game_built)] + ([("games/maffscards/cards.json", game)] if game else []):
+        stripped = json.loads(json.dumps(g))
+        for c in stripped.get("cards", []):
+            c.pop("how", None)
+        if stripped != data:
+            bad.append("%s is not data/maffscards.json's content once the how lines are taken out" % name)
+        bad += how_findings(g, data.get("cards", []))
 
     # pi, three ways
     machin = machin_pi_decimals(gen.PI_DECIMALS)
@@ -352,9 +415,18 @@ def selftest():
         edited = pc.apply_plant(text, '"sof": 217,', '"sof": 218,', name="a hand edit in the JSON (card 100's sum)")
         return run(json_text=edited)
 
+    def how_wrong_value():
+        def how(c):
+            lines = gen.how_lines(c)
+            if c["n"] == 28:
+                lines["sof"] = pc.apply_plant(lines["sof"], "= 56", "= 57", name="a how line ending on the wrong value")
+            return lines
+        return run(how=how)
+
     plant("one pi count off by one", pi_off_by_one, "gen.py card 37 pi: 13, the contract's table says 12")
     plant("1 counted as prime", one_is_prime, "gen.py card 1 powers")
     plant("a hand edit in the JSON", hand_edit, "data/maffscards.json card 100 sof: 218")
+    plant("a how line ending on the wrong value", how_wrong_value, "cards.json card 28 sof: how line")
     clean = run()
     print("clean run: %s" % ("PASS" if not clean else "FAIL"))
     for f in clean:
@@ -375,7 +447,8 @@ def main(argv):
     if bad:
         return 1
     print("PASS: 48 cards (32 main, 16 extra), every value equal in gen.py, the second method, the contract's table "
-          "and data/maffscards.json; pi's 1,000 decimals equal by Machin and the spigot")
+          "and data/maffscards.json; pi's 1,000 decimals equal by Machin and the spigot; games/maffscards/cards.json "
+          "is the data plus 288 how lines, each ending on its value")
     return 0
 
 

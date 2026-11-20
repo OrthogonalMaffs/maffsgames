@@ -198,7 +198,7 @@
 
   // Games whose leaderboard score is lower-is-better. Single copy — also
   // used by leaderboards/index.html (moved here 28 Sep 2026, was duplicated).
-  var LOWER_IS_BETTER = { 'estimation-golf': true };
+  var LOWER_IS_BETTER = { 'estimation-golf': true, 'maffscards': true };
 
   // Games where the leaderboard node mixes incompatible scoring systems
   // under one key (pre-existing data issue, flagged to Jon, not fixed here).
