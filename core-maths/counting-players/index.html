@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- "Counting Players", first edition (contract COUNTING-PLAYERS, 20 Nov 2026). UNLISTED: noindex, not in the
+     sitemap, linked from nowhere on the site; shared by link for feedback (todo COUNTING-PLAYERS-LIST). The PDFs are
+     built by tools/counting-players/build.py from text.md and the two CSVs here; scripts/check-counting-players.py
+     holds them together. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Counting Players: a free Level 3 Core Maths practice paper built on MaffsGames' own anonymised website data, with preliminary material, the data file and a mark scheme.">
+<link rel="canonical" href="https://maffsgames.co.uk/core-maths/counting-players/">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Counting Players: a Core Maths practice paper built on real website data | MaffsGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="/schools/assets/analytics.js"></script>
+<style>
+  /* Canon 7.5's portal row, as /printables/ uses it: Outfit, white, navy, teal, adult register. */
+  :root {
+    --navy: #1a2744;
+    --teal: #0d9488;
+    --teal-dark: #0f766e;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --border: #e2e8f0;
+    --text: #1e293b;
+    --muted: #64748b;
+    --accent-light: #f0fdfa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    padding-bottom: 44px;   /* clear of the fixed site footer, as /printables/ */
+    font-family: 'Outfit', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+    font-size: 1rem;
+    overflow-wrap: anywhere;
+  }
+  .nav {
+    background: var(--navy);
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .nav a { color: #fff; text-decoration: none; font-weight: 600; }
+  .nav .back { opacity: 0.8; font-size: 0.85rem; font-weight: 400; }
+  .nav .back:hover { opacity: 1; }
+  .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
+  a { color: var(--teal-dark); }
+  a:hover { color: var(--navy); }
+  p { margin-bottom: 0.8rem; }
+  h1 { color: var(--navy); font-size: 2rem; line-height: 1.2; margin-bottom: 1rem; }
+  h2 {
+    color: var(--navy);
+    font-size: 1.4rem;
+    line-height: 1.25;
+    padding-bottom: 0.4rem;
+    border-bottom: 3px solid var(--teal);
+    margin: 2rem 0 0.8rem;
+  }
+  .downloads { list-style: none; display: grid; gap: 0.6rem; margin: 1rem 0 0.5rem; }
+  .downloads li {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1.1rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.2rem 1rem;
+  }
+  .downloads a { font-weight: 600; }
+  .kind { color: var(--muted); font-size: 0.9rem; }
+  .feedback {
+    background: var(--accent-light);
+    border: 1px solid #99f6e4;
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    margin-top: 2rem;
+  }
+  .feedback h2 { border: 0; margin: 0 0 0.4rem; padding: 0; font-size: 1.2rem; }
+  .feedback p:last-child { margin-bottom: 0; }
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+
+<nav class="nav">
+  <a href="/">MaffsGames</a>
+  <a href="/" class="back">&larr; Back to Games</a>
+</nav>
+
+<main class="container">
+<h1>Counting Players: a Core Maths practice paper built on real website data</h1>
+<p>For teachers: Counting Players is a free Level 3 Core Maths practice pack with preliminary material, a data file, a 90-minute practice paper of 56 marks and a mark scheme. It is written in the style of Level 3 Core Maths examinations; it is not an exam board paper and is not endorsed by any exam board. The data is MaffsGames' own site statistics, anonymised. This is a first edition, shared for feedback.</p>
+
+<h2>Downloads</h2>
+<ul class="downloads">
+  <li><a href="counting-players-preliminary-material.pdf" download>Preliminary material</a><span class="kind">PDF</span></li>
+  <li><a href="counting-players-practice-paper.pdf" download>Practice paper</a><span class="kind">PDF</span></li>
+  <li><a href="counting-players-mark-scheme.pdf" download>Mark scheme</a><span class="kind">PDF</span></li>
+  <li><a href="maffsgames-site-data-sep-nov-2026.csv" download>Data file: maffsgames-site-data-sep-nov-2026.csv</a><span class="kind">CSV</span></li>
+  <li><a href="maffsgames-game-records-sep-nov-2026.csv" download>Game records (source of TABLE 5 and CHART 2)</a><span class="kind">CSV</span></li>
+</ul>
+
+<section class="feedback">
+  <h2>Used it, or spotted something wrong? Tell us.</h2>
+  <p>Use the <a href="/feedback/?type=resource">feedback form</a> and say it is about Counting Players, or email <a href="mailto:contact@maffsgames.co.uk">contact@maffsgames.co.uk</a>.</p>
+</section>
+</main>
+
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
