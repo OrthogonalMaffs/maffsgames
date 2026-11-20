@@ -8,6 +8,9 @@
 #
 # test-real-fonts.py compares every file under scripts/fonts/ with its pinned SHA256 (SHA256SUMS).
 scripts/fonts/** -text
+# The Counting Players data files (contract COUNTING-PLAYERS, 20 Nov 2026) are served as Jon uploaded them, CRLF
+# line endings included; scripts/check-counting-players.py and the downloads read these bytes.
+core-maths/counting-players/*.csv -text
 # check-context-size.py caps these by size on disk (os.path.getsize): CRLF adds a byte a line.
 CLAUDE.md eol=lf
 docs/handover/home.md eol=lf
