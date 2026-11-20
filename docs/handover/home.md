@@ -16,6 +16,12 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-20 (home): TODO-TRIM (todo.md holds only open work; the cap lowered; a row-length warning)
+
+Claude Code (home lane), worktree `~/mg-todo-trim`, branch `claude/todo-trim`; contract `docs/handover/contracts/2026-11-19-todo-trim.md`. Tier Medium. The first commit carries WRONG-PAUSE-NEXT's close-out (#842, 8ab38d1; its entry below; contract moved to `docs/history/contracts/`).
+
+- Next: the trim, check-todo-trim.py, AGENTS.md's rule, the cap and the row warning.
+
 ## 2026-11-19 (home): WRONG-PAUSE-NEXT (four games pause on Next after a wrong answer; check-answer-lock fails a game that stops pausing)
 
 Claude Code (home lane), worktree `~/mg-wrong-pause-next`, branch `claude/wrong-pause-next`; contract `docs/handover/contracts/2026-11-19-wrong-pause-next.md`. Tier Medium. The first commit carries the close-outs of #837 NEXT-IN-VIEW and #839 DD-VERIFIER-SHARD (their entries below; both contracts moved to `docs/history/contracts/`).
@@ -25,7 +31,11 @@ Claude Code (home lane), worktree `~/mg-wrong-pause-next`, branch `claude/wrong-
 - **STOP (19 Nov):** the first full run failed 22 other games (17 own Next; 52dle, higher-power, trig-wars, split-it, growth-and-decay with no pause). **Jon's ruling, 19 Nov:** 1 the 17 into OWN_NEXT; 2 `.dismiss-btn` (_addDismiss "Try Again", 8 games) counts as a pause control while the question holds, window 3 s (split-it and growth-and-decay then pass, no game edit); 3 WRONG_PAUSE_EXEMPT higher-power, trig-wars; 4 WRONG_PAUSE_KNOWN_FAIL 52dle (52DLE-REBUILD); 5 UNCHECKED keeps the 6; 6 phone-fit, PR, merge.
 - **Full local in-play run after the ruling (seed 1):** PASS, 110 judged games pass; 9 reported (6 unchecked, 2 exempt, 1 known fail).
 - **Phone fit (measure-phone-fit.py --only, normal and Aa, main 233ce57 against this branch):** the gate (last option) is unchanged at every size for all four; phone-fit-state.json unchanged. Next (reported, not a gate on a phone): binomial-blaster and trig-identity-duel fit at 320/375/390 (first draft: 554 and 562 / 528 at 320, fixed by the beside-Next row); partial-fractions-duel Next 733 / 528 and 627 (its options already fail there), Aa 390 797 / 804 fits; word-problem-decoder Next 1022 / 528, 934 / 627, 905 / 804 (its options already fail at 320 and 375; at 390 Next is reachable by the reveal, not fitting): **reported, not fixed** (about 100 px).
-- todo WRONG-PAUSE-UNCHECKED (covers UNCHECKED and KNOWN_FAIL); one /updates/ line. Next: PR, Gate, merge.
+- todo WRONG-PAUSE-UNCHECKED (covers UNCHECKED and KNOWN_FAIL); one /updates/ line.
+- **Gate:** the first merge-pr.py run refused after 3600 s, "no Gate check": the PR conflicted with main (todo.md and updates/index.html, after #840 and #841), so GitHub started no PR runs (`mergeable_state` dirty). Main merged in, both sides kept (head e653f620); Gate green.
+- MERGED 19 Nov as 8ab38d1 (#842) via merge-pr.py, last line "main 8ab38d1 run 44627354287: GREEN". Main on the merge commit (from the API): check-site 44627354287 success, pages build 44627353664 success, **phone-fit-full 44627354371 failure**, on the Core Maths papers only (paper1 HARD FAIL at 320 in Aa; stale entries on paper2a, 2b and 2c). **Jon, 20 Nov:** from #840's shuffle on the Core papers, not #842: the measurement is deterministic, and #840's shuffle changed Paper 1's first question; the cloud lane fixes it in #843; the home lane touches nothing on the Core papers. Cleaned up 20 Nov by end-task (run from a copy of origin/main's script). Contract moved to `docs/history/contracts/2026-11-19-wrong-pause-next.md` (closed out by TODO-TRIM's first commit).
+
+Record: agent Claude Code; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-19 (home): DD-VERIFIER-SHARD (Decimal Detective's verifier on ci-shards, so #837 fits the per-line limit)
 
