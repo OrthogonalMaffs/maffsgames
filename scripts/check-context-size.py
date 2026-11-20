@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 150 KB; canon reported; contracts CTX, TODO-SLIM and GATE-RESUME) | --selftest && --check
+# ci-line: Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 105 KB, a warning on any row over 1,200 characters; canon reported; contracts CTX, TODO-SLIM, GATE-RESUME and TODO-TRIM) | --selftest && --check
 """What every Claude Code session loads before it starts work stays small (contract CTX, 8 Oct 2026).
 
 CLAUDE.md loads into every session in both lanes, and each lane reads its handover first. On 8 Oct 2026 they
@@ -13,6 +13,11 @@ docs/todo.md has its own cap, TODO_LIMIT (contract TODO-SLIM, 10 Oct 2026): ever
 482 KB it was the one shared file free to grow. Finished work moves to docs/history/todo-done.md word for word.
 The cap was set at the slimmed size plus a little headroom; LOWER IT as open items close. docs/canon.md is
 reported with its size, not capped (for Jon to consider).
+
+TODO-TRIM (Jon, 19 Nov 2026): the cap was never lowered, and todo.md grew back to 152,931 bytes, mostly open rows that
+had become diaries. The trim took it to 96,712 bytes and TODO_LIMIT to that plus 10 KiB, rounded up to a whole KiB. A
+row records what is still owed, never history (AGENTS.md), so any docs/todo.md table row over ROW_WARN characters is
+named with its length as a warning (a GitHub ::warning annotation in CI), never a failure.
 
 A HANDOVER ARCHIVES ITSELF (GATE-WARN-THEN-ENFORCE step 5, Jon 27 Oct 2026; canon 7.8.4): the 20 KB limit failed a Gate
 twice on 27 Oct, each time on a lane that had only added its own entry. Now a handover over the limit is a WARNING when
@@ -34,13 +39,15 @@ under the limit while still listed, so the exemption cannot outlive the trim.
   python scripts/check-context-size.py --fix        archive the oldest handover entries past the limit (step 5)
   python scripts/check-context-size.py --selftest   planted files in a scratch folder: a 25 KB CLAUDE.md fails,
                                                     a todo.md over its cap fails, 18.5 KB warns and passes,
-                                                    17 KB is silent, an AGENTS.md over the limit fails
+                                                    17 KB is silent, an AGENTS.md over the limit fails,
+                                                    a 1,201-character todo row warns, 1,200 does not
 """
 import argparse
 import contextlib
 import datetime
 import io
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -48,7 +55,10 @@ import tempfile
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIMIT = 20 * 1024
 WARN = 18 * 1024                 # GATE-RESUME step 3: a LIMIT file past this warns and passes; past LIMIT it fails
-TODO_LIMIT = 150 * 1024          # TODO-SLIM: 145 KB after the slim (10 Oct 2026); lower it as items close
+TODO_LIMIT = 105 * 1024          # TODO-TRIM: 96,712 bytes after the trim (19 Nov 2026) + 10 KiB, rounded up.
+                                 # Lower it as the file shrinks; never raise it without Jon.
+TODO = "docs/todo.md"
+ROW_WARN = 1200                  # TODO-TRIM: a todo.md table row over this many characters warns (never fails)
 FILES = ["CLAUDE.md", "AGENTS.md", "docs/handover/home.md", "docs/handover/cloud.md", "docs/todo.md"]
 LIMITS = {"docs/todo.md": TODO_LIMIT}
 REPORTED = ["docs/canon.md"]     # size printed, never failed
@@ -113,6 +123,16 @@ def warn(f, n, limit, warnings, annotate):
         warnings.append(f)
 
 
+def long_rows(text):
+    """[(line number, row ID, characters)] for each docs/todo.md table row longer than ROW_WARN characters."""
+    out = []
+    for n, line in enumerate(text.split("\n"), 1):
+        if line.startswith("|") and len(line) > ROW_WARN:
+            m = re.match(r"\| *([^|]+?) *\|", line)
+            out.append((n, m.group(1) if m else "?", len(line)))
+    return out
+
+
 def check(root, deferred, warnings=None, annotate=False):
     """[fault] for the files under root; prints one line per file. A LIMIT file in the warning band (over WARN, at or
     under LIMIT) is appended to `warnings`, if given, and passes; `annotate` (main() only) makes it a CI annotation."""
@@ -143,6 +163,16 @@ def check(root, deferred, warnings=None, annotate=False):
         if over:
             faults.append("%s is %d bytes, over the %d-byte limit: move history to docs/history/ (contract CTX)"
                           % (f, n, limit))
+    p = os.path.join(root, TODO)
+    if os.path.exists(p):
+        for n, rid, k in long_rows(open(p, encoding="utf-8").read()):
+            print("  WARN      %s:%d row %s is %d characters (over %d): keep it to what is still owed, history to "
+                  "docs/history/todo-done.md (TODO-TRIM)" % (TODO, n, rid, k, ROW_WARN))
+            if annotate and os.environ.get("GITHUB_ACTIONS") == "true":
+                print("::warning title=Context size::%s row %s is %d characters, over %d: keep it to what is still owed"
+                      % (TODO, rid, k, ROW_WARN))
+            if warnings is not None:
+                warnings.append("%s row %s" % (TODO, rid))
     for f in REPORTED:
         p = os.path.join(root, f)
         if os.path.exists(p):
@@ -198,6 +228,23 @@ def selftest():
         band("an AGENTS.md over LIMIT fails", {"AGENTS.md": LIMIT + 1}, True, [])
         band("an 18.5 KB AGENTS.md warns and passes", {"AGENTS.md": int(18.5 * 1024)}, False, ["AGENTS.md"])
         band("a docs/todo.md under its own cap is silent (no band on its cap)", {"docs/todo.md": TODO_LIMIT - 1024}, False, [])
+        # TODO-TRIM: a todo.md row over ROW_WARN characters warns and passes; one at ROW_WARN is silent.
+        def row(name, length, want_warn):
+            plant({})
+            head = "| R1 | "
+            line = head + "y" * (length - len(head) - 2) + " |"
+            with open(os.path.join(tmp, TODO), "w", encoding="utf-8", newline="") as fh:
+                fh.write("# To-do\n\n| # | Item |\n|---|---|\n" + line + "\n| R2 | short |\n")
+            print(" %s:" % name)
+            warned = []
+            got = bool(check(tmp, {}, warned))
+            ok = len(line) == length and not got and warned == want_warn
+            print("  %s  %s (warned: %s)" % ("passed" if ok else "WRONG ", name, warned))
+            if not ok:
+                fails.append(name)
+
+        row("a 1,201-character todo.md row warns and passes", ROW_WARN + 1, ["docs/todo.md row R1"])
+        row("a 1,200-character todo.md row is silent", ROW_WARN, [])
         # The self-test's planted files never become CI annotations (a 20 KB "AGENTS.md" warning on every run, #632).
         plant({"AGENTS.md": int(18.5 * 1024)})
         old_env, buf = os.environ.get("GITHUB_ACTIONS"), io.StringIO()
@@ -272,7 +319,8 @@ def main():
             else:
                 print("%s: %d bytes, within the limit; nothing moved" % (h, n))
         return 0
-    print("Context size (contracts CTX, TODO-SLIM): at most %d bytes each, docs/todo.md at most %d" % (LIMIT, TODO_LIMIT))
+    print("Context size (contracts CTX, TODO-SLIM, TODO-TRIM): at most %d bytes each, docs/todo.md at most %d, its rows "
+          "warned past %d characters" % (LIMIT, TODO_LIMIT, ROW_WARN))
     faults = check(ROOT, DEFERRED, annotate=True)
     for f in faults:
         print("FAIL: " + f)
