@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-20 (home): DOWNLOAD-COUNTS (every download link counted on the Events sheet as section_clicked action download)
+
+Claude Code (home lane), worktree `~/mg-download-counts`, branch `claude/download-counts`; contract `docs/handover/contracts/2026-11-20-download-counts.md` (one part). Tier Small. The first commit carries COUNTING-PLAYERS' close-out (#855, 2e7c9d2; its entry below; contract moved to `docs/history/contracts/`).
+
+- **`schools/assets/analytics.js`:** a labelled `<a href>` with a download attribute sends action `download` (filter_value `v1|pos=N;action=download`); every other click's payload unchanged. Comment and canon's section_clicked row name the actions.
+- **Labels:** core-maths/counting-players/ (section `counting-players`; items pdf-preliminary-material, pdf-practice-paper, pdf-mark-scheme, csv-site-data, csv-game-records); ugh-stats/flu-and-answers/ and one-class/ (section `ugh-stats-<slug>` on the "Your turn" box, item csv-data). printables/ unchanged.
+- **`scripts/check-download-labels.py`** (CI ci-line, site-wide so it always runs): every `<a download>` in every served .html (check-publish-scope's rules) has data-mfg-item inside a data-mfg-section. 8 links on 4 pages, no game page. Plants caught: one item label removed; the section removed.
+- **`scripts/test-section-clicks.py`:** also loads the four download pages; each of the 8 downloads fires one section_clicked action download with its item, every ordinary labelled link there still fires open-link, every a[download] on them is tested. Against the old listener it fails all 8.
+- privacy/index.html:151 sentence as the contract. No /updates/ line.
+- **Decided for you:** (1) the test covers the two Ugh, stats pages as well as the two the contract names, so all eight links are proved. (2) The check also fails a download link that has its item but no section (the listener sends nothing then). (3) Not fixed, todo UGH-STATS-BUTTON-DOWNLOADS: half-our-games and whos-playing download a CSV built in the browser from a `<button>`, which the listener cannot count without changing a non-download case.
+
 ## 2026-11-20 (home): COUNTING-PLAYERS (Core Maths practice pack on the site's own data, unlisted)
 
 Claude Code (home lane), worktree `~/mg-counting-players`, branch `claude/counting-players`; contract `docs/handover/contracts/2026-11-20-counting-players.md` (two parts and Amendment 1). Tier Medium. The first commit carries MAFFSCARDS-GAME's close-out (#853, ac85c4f; its entry below; contract moved to `docs/history/contracts/`).
