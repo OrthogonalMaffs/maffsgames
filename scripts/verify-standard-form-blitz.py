@@ -27,6 +27,16 @@ nothing is floated except to print):
   Marking, in Chromium (390x844), through the game's own buttons: every item is shown by showQ() and each of its four
     options pressed; the key is marked right (class correct, +100, streak 1), any other wrong (class wrong on the pressed
     button, class correct on the key, no score, streak 0, the Next control mounted).
+  Working (contract SFB-WORKING-GCSE, 19 Nov 2026): the page's working(q), read for every item: each GCSE item has lines
+    and each A-Level item none; every "=" chain outside \\text{} words is true, worked here exactly in SymPy; a "Write in
+    standard form" item names the key's coefficient and the places moved, in the direction its power's sign says; for every
+    kind but a comparison the last part of the last line is the key as written (braces aside), and a comparison ends
+    "So <the key>". In Chromium every GCSE item answered with each wrong option shows its lines in the card "How to get
+    there" (collapsed "Working"), before Next, both copies alike; a right answer, and any A-Level answer, shows no card.
+  The card's place (WORKING-CARD's rule, run once, not in the self-test): at each size in LAYOUT_SIZES, normal and Aa, every
+    GCSE item answered wrong in each of its three option pairings: with the open card, Next's bottom in page coordinates is
+    within the fold (the viewport less the fixed footer); with the collapsed card, Next ends exactly where it ends with no
+    card (the card costs no height, Jon's ruling of 19 Nov 2026).
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
     python scripts/verify-standard-form-blitz.py [--no-selftest] [--against FILE]
@@ -345,6 +355,185 @@ MARK_JS = r"""(args) => {
 }"""
 
 
+# ---- the working (contract SFB-WORKING-GCSE) -------------------------------------------------------------------------
+WORKING_JS = "() => ({gcse: QUESTIONS.gcse.map(working), alevel: QUESTIONS.alevel.map(working)})"
+
+
+def math_runs(line):
+    """The maths of a working line: the runs outside its top-level \\text{...} groups."""
+    runs, cur, i = [], '', 0
+    while i < len(line):
+        if line.startswith('\\text{', i):
+            _inside, i = group(line, i + 5)
+            runs.append(cur)
+            cur = ''
+            continue
+        cur += line[i]
+        i += 1
+    runs.append(cur)
+    return [r for r in runs if r.strip()]
+
+
+def flat(tex):
+    return re.sub(r'[{}\s]', '', tex)
+
+
+def working_checks(fails, bank, work):
+    """Every GCSE item has working and no A-Level item does; every "=" true; each working ends on the key."""
+    for lv in ('gcse', 'alevel'):
+        for i, (q, lines) in enumerate(zip(bank[lv], work[lv])):
+            where = 'working: %s %d (%s)' % (lv, i + 1, q['q'][:40])
+            if lv == 'alevel':
+                if lines:
+                    fails.append('%s: an A-Level item has working (A-Level is unchanged)' % where)
+                continue
+            if not lines:
+                fails.append('%s: no working (its ask fits none of the six kinds)' % where)
+                continue
+            for k, line in enumerate(lines, 1):
+                try:
+                    for run in math_runs(line):
+                        parts = run.split('=')
+                        vals = [tex_value(x) for x in parts]
+                        if len(parts) > 1 and any(sympy.simplify(v - vals[0]) != 0 for v in vals[1:]):
+                            fails.append('%s line %d: %r is false (%s)' % (where, k, run.strip(), ' = '.join(map(str, vals))))
+                except Exception as e:  # a line this script cannot read fails, never skips
+                    fails.append('%s line %d: cannot read %r (%s)' % (where, k, line, e))
+            if q['ask'].startswith('Which '):
+                if lines[-1] != '\\text{So }' + q['correct']:
+                    fails.append('%s: the working ends %r, not "So" and the key' % (where, lines[-1]))
+                continue
+            last = lines[-1].split('=')[-1]
+            if flat(last) != flat(q['correct']):
+                fails.append('%s: the working ends on %r, the key is %r' % (where, last.strip(), q['correct']))
+            if q['ask'] == 'Write in standard form':
+                m = NUM_RE.fullmatch(q['correct'])
+                m1 = re.fullmatch(r'\\text\{Put the point after the first non-zero digit: \}(\S+)', lines[0])
+                m2 = re.fullmatch(r'\\text\{Count the places it moves: \}(\d+)\\text\{, (left|right), so the power is '
+                                  r'(positive|negative)\}', lines[1] if len(lines) > 1 else '')
+                want = ('left', 'positive') if m and int(m.group(2)) >= 0 else ('right', 'negative')
+                if not (m and m1 and m2) or Rational(m1.group(1)) != Rational(m.group(1)) \
+                        or int(m2.group(1)) != abs(int(m.group(2))) or (m2.group(2), m2.group(3)) != want:
+                    fails.append('%s: the first two lines do not name the coefficient and the places moved: %r'
+                                 % (where, lines[:2]))
+
+
+CARD_JS = r"""() => {
+  window.setTimeout = () => 0; window.setInterval = () => 0;
+  const out = [];
+  for (const lv of ['gcse', 'alevel']) QUESTIONS[lv].forEach((q, i) => {
+    for (const pick of [q.correct, ...q.d]) {
+      level = lv; questions = [q]; qIdx = 0; totalQ = 1; score = 0; streak = 0; correctCount = 0;
+      document.getElementById('progress').innerHTML = '<div class="pip current"></div>';
+      showQ();
+      const btn = [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val === pick);
+      if (!btn) { out.push([lv, i, pick, 'not on screen']); continue; }
+      btn.click();
+      const cards = [...document.querySelectorAll('.maffs-ref')];
+      const shown = cards.filter(c => getComputedStyle(c).display !== 'none');
+      const want = working(q).length, box = shown[0], got = box ? box.querySelectorAll('.wl').length : 0;
+      const next = document.querySelector('#nextMount .maffs-next');
+      if (pick !== q.correct && lv === 'gcse') {
+        if (shown.length > 1) out.push([lv, i, pick, 'answered wrong: ' + shown.length + ' cards show at once']);
+        if (!box || !want || got !== want) out.push([lv, i, pick, 'answered wrong: the card shows ' + got + ' of ' + want + ' lines']);
+        else if (box.querySelector('.katex-error') || [...box.querySelectorAll('.wl')].some(l => !l.textContent.trim()))
+          out.push([lv, i, pick, 'answered wrong: a working line does not render']);
+        else if (cards.some(c => c.querySelector(':scope > summary .maffs-ref-title').textContent !== 'How to get there'
+                              || c.querySelector(':scope > summary .maffs-ref-show').textContent !== 'Working'))
+          out.push([lv, i, pick, 'answered wrong: the card is not titled "How to get there" (open) and "Working" (collapsed)']);
+        else if (cards.some(c => c.querySelectorAll('.wl').length !== want))
+          out.push([lv, i, pick, 'answered wrong: the two copies of the card hold different lines']);
+        if (!next) out.push([lv, i, pick, 'answered wrong: no Next']);
+        else if (box && !(box.compareDocumentPosition(next) & Node.DOCUMENT_POSITION_FOLLOWING))
+          out.push([lv, i, pick, 'answered wrong: the card comes after Next (canon 7.6.1: feedback above Next)']);
+      } else if (shown.length) out.push([lv, i, pick, (pick === q.correct ? 'answered right' : 'A-Level') + ': the card is shown']);
+      MaffsLock.clearTimers();
+    }
+  });
+  return out;
+}"""
+
+# The sizes measured, (width, height): canon phones, a tall phone, the band edges of the page's media query (open at
+# 320x1050, 360x980, 440x940, 760x870; collapsed at 359x1049, 439x979, 759x939, 760x869), the two laptops (ruling R2) and
+# desktops.
+LAYOUT_SIZES = [(320, 568), (375, 667), (390, 844), (412, 915), (320, 1050), (359, 1049), (360, 980), (439, 979),
+                (440, 940), (759, 939), (760, 869), (760, 870), (1280, 720), (1366, 768), (1440, 900), (1920, 1080)]
+NO_HEIGHT_TOL = 0.5
+# Options sit two to a row and a row is as tall as its taller option, so every item is measured in all three pairings.
+LAYOUT_JS = r"""async () => {
+  const res = []; level = 'gcse'; startGame();
+  for (let i = 0; i < QUESTIONS.gcse.length; i++) {
+    const q = QUESTIONS.gcse[i]; questions[qIdx] = q; showQ();
+    [...document.querySelectorAll('#options .opt-btn')].find(x => x.dataset.val !== q.correct).click();
+    await document.fonts.ready;
+    const n = document.querySelector('#nextMount .maffs-next');
+    const box = document.getElementById('options'), bs = [...box.children], row = document.getElementById('workRow');
+    let bottom = null, cost = 0;
+    if (n && row) for (const o of [[0, 1, 2, 3], [0, 2, 1, 3], [0, 3, 1, 2]]) {
+      o.forEach(k => box.appendChild(bs[k]));
+      const withCard = n.getBoundingClientRect().bottom + scrollY;
+      row.classList.remove('shown');
+      const without = n.getBoundingClientRect().bottom + scrollY;
+      row.classList.add('shown');
+      bottom = Math.max(bottom === null ? -1 : bottom, withCard);
+      cost = Math.max(cost, withCard - without);
+    }
+    const c = typeof shownCard === 'function' ? shownCard() : null;
+    let lines = null;
+    if (c && !c.open) {
+      c.open = true;
+      lines = [[...c.querySelectorAll('.wl')].filter(l => l.getBoundingClientRect().height > 0).length, working(q).length];
+      c.open = false;
+    }
+    MaffsLock.clearTimers();
+    const f = document.querySelector('.site-footer');
+    const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? Math.round(f.getBoundingClientRect().height) : 0);
+    res.push([i + 1, bottom, fold, cost, c ? (c.open ? 'open' : 'collapsed') : 'none', lines]);
+  }
+  return res;
+}"""
+
+
+def layout(fails, html, sizes=None):
+    """Next within the fold with the card the media query shows, every GCSE item, normal and Aa."""
+    from playwright.sync_api import sync_playwright
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for mode in ('normal', 'aa'):
+                for w, h in sizes or LAYOUT_SIZES:
+                    ctx = browser.new_context(viewport={'width': w, 'height': h})
+                    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                    ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)
+                    if mode == 'aa':
+                        ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
+                    bc.offline(ctx, base)
+                    ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+                    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                        status=200, content_type='text/html; charset=utf-8', body=html))
+                    page = ctx.new_page()
+                    page.goto(base + '/games/%s/?cb=layout' % SLUG, wait_until='load', timeout=20000)
+                    page.wait_for_function('typeof QUESTIONS !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+                    for i, bottom, fold, cost, card, lines in page.evaluate(LAYOUT_JS):
+                        tag = 'layout %s %dx%d gcse %d' % (mode, w, h, i)
+                        if bottom is None or card == 'none':
+                            fails.append('%s: no card or no Next after a wrong answer' % tag)
+                            continue
+                        if lines and lines[0] != lines[1]:
+                            fails.append('%s: the collapsed card, opened, shows %d of %d lines' % (tag, lines[0], lines[1]))
+                        if card == 'open' and bottom > fold + 0.5:
+                            fails.append('%s: with the card open, Next ends at %.0fpx, past the %dpx fold' % (tag, bottom, fold))
+                        if card == 'collapsed' and cost > NO_HEIGHT_TOL:
+                            fails.append('%s: the collapsed card costs %.0fpx: Next ends lower than with no card' % (tag, cost))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 def mark_checks(fails, page, bank):
     for lv, items in bank.items():
         for i, q in enumerate(items):
@@ -402,6 +591,9 @@ def play(fails, html):
                         fails.append('session: %s dealt %d questions (%d different, from the bank: %s)' % (
                             lv, d['n'], len(set(d['idx'])), min(d['idx']) >= 0))
             mark_checks(fails, page, bank)
+            working_checks(fails, bank, page.evaluate(WORKING_JS))
+            for lv, i, pick, what in page.evaluate(CARD_JS):
+                fails.append('card: %s %d (%s), option %r %s' % (lv, i + 1, bank[lv][i]['q'][:40], pick, what))
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -447,8 +639,23 @@ PLANTS = [
     ('a misspelt TeX command in a key', 'render:',
      [("correct:'3.7 \\\\times 10^4'", "correct:'3.7 \\\\tims 10^4'")]),
 ]
+# SFB-WORKING-GCSE (19 Nov 2026): the working's rules broken, the card not shown, and the card below Next.
+PLANTS += [
+    ('working, rule d: the coefficients added, not multiplied', 'working:',
+     [("const c=op==='times'?mul(A1,A2):div(A1,A2);",
+       "const c=op==='times'?{m:A1.m*BigInt(10**(A1.e-Math.min(A1.e,A2.e)))+A2.m*BigInt(10**(A2.e-Math.min(A1.e,A2.e))),"
+       "e:Math.min(A1.e,A2.e)}:div(A1,A2);")]),
+    ('working, rule e: the powers subtracted the wrong way round', 'working:',
+     [("const e=op==='times'?b1+b2:b1-b2;", "const e=op==='times'?b1+b2:b2-b1;")]),
+    ('working: the card not shown on a wrong answer', 'card:',
+     [("else{showWorking(q);MaffsNext.wrong(", "else{MaffsNext.wrong(")]),
+    ('working: the card moved below Next', 'card:',
+     [('      <div id="nextMount"></div>\n    </div>', '    </div>'),
+      ('    <div class="maffs-ref-row work-row" id="workRow">',
+       '    <div id="nextMount"></div>\n    <div class="maffs-ref-row work-row" id="workRow">')]),
+]
 # the last plant needs the key's source, which is an ordinary number in this item; use the item that has TeX keys instead
-PLANTS[-1] = ('a misspelt TeX command in an option', 'render:',
+PLANTS[[p[0] for p in PLANTS].index('a misspelt TeX command in a key')] = ('a misspelt TeX command in an option', 'render:',
               [("correct:'3.2 \\\\times 10^3',d:['32 \\\\times 10^2'", "correct:'3.2 \\\\tims 10^3',d:['32 \\\\times 10^2'")])
 
 
@@ -479,6 +686,7 @@ def main():
             found = [f for f in rep if tag in f]
             ok = ok and bool(found)
             print('  self-test %-58s %s' % (what, ('caught: ' + found[0][:100]) if found else '*** MISSED ***'))
+    layout(fails, html)
     for f in fails[:40]:
         print('FAIL  ' + f[:400])
     if not ok:
