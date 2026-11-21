@@ -842,8 +842,13 @@ async def play(browser, base, slug, level, page_html):
         faults.append('no continue control after a wrong answer, and the game did not move on')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
     mark = len(await d.ev('() => __lockEvents'))
-    t_end = asyncio.get_event_loop().time() + 180
+    t_end = asyncio.get_event_loop().time() + 180      # the outer guard; OVERRUN_ANSWERS ends a session that never ends
+    tapped = 0
     while asyncio.get_event_loop().time() < t_end:
+        tapped = await d.ev('(m) => __lockEvents.slice(m).filter(r => r.e === "question_answered").length', mark)
+        if tapped > OVERRUN_ANSWERS and not (await d.snap())['completed']:
+            faults.append('overrun: %d answers without game_completed (session never ended)' % tapped)
+            break
         for _ in range(40):                  # wait until the game offers something (a right answer moves on itself)
             if await d.ev('() => __lockActionable()'):
                 break
@@ -867,6 +872,8 @@ async def play(browser, base, slug, level, page_html):
             if (await d.ev('() => !!(__lockContEl && __lockContEl.isConnected && __lockContEl.offsetParent && !__lockContEl.disabled)')):
                 await page.mouse.dblclick(c['rect']['x'], c['rect']['y'])     # Enter did not reach it: click
         await page.wait_for_timeout(60)
+    tapped = await d.ev('(m) => __lockEvents.slice(m).filter(r => r.e === "question_answered").length', mark)
+    TAP_ANSWERS[slug] = max(TAP_ANSWERS.get(slug, 0), tapped)
     for _ in range(12):                      # tap the end screen, as a student does
         pt = await d.ev('() => __lockBlankPoint()')
         if pt:
@@ -974,6 +981,8 @@ async def play_all(games, against, unit=None):
 
 CHECK_SITE = None
 VERBOSE = False
+TAP_ANSWERS = {}       # slug -> the question_answered count of its tap-through (phase 4), this run
+OVERRUN_ANSWERS = 10 ** 9   # MEASURING: set from the measured maximum before commit
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 LOGS = {}              # slug -> {'desktop': [...], 'touch': [...]}: each play's event log (contract DET's proof)
 SWALLOWED = set()      # games where a driver tap landed in a fresh window and was made again: reported
@@ -1202,13 +1211,16 @@ def st_no_lock(games):
     try:
         if not res:
             errs.append('planted %s (no lock: MaffsLock.lock never refuses, no fresh window) played clean: the check cannot see a missing lock' % slug)
+        elif not any(x.startswith('overrun:') for x in res):
+            errs.append('planted %s (a session that never ends) was not stopped by the overrun bound (%d answers): %s'
+                        % (slug, OVERRUN_ANSWERS, res[0][:120]))
         elif not counts(slug, set()):
             errs.append('planted %s fails, off the cloud list, but its failure is not counted' % slug)
         elif counts(slug, {slug}):
             errs.append('planted %s on the cloud list is failed, not reported' % slug)
         else:
             print('  self-test: planted %s (no lock: MaffsLock.lock never refuses, no fresh window), off the cloud list: CAUGHT (%d, e.g. %s);'
-                  ' on the list: reported' % (slug, len(res), res[0][:90]))
+                  ' on the list: reported' % (slug, len(res), next(x for x in res if x.startswith('overrun:'))[:90]))
     finally:
         MIGRATED.clear()
         MIGRATED.update(saved)
