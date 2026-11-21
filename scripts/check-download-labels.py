@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Download links labelled (every <a download> on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; planted faults caught) |
+# ci-line: Download links labelled (every <a download> and every data-mfg-download button on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; a page that builds a download in script has a labelled button; planted faults caught) |
 """Every download link on the site is labelled, so the Events sheet counts it (contract DOWNLOAD-COUNTS, 20 Nov 2026).
 
     python -X utf8 scripts/check-download-labels.py
@@ -15,6 +15,14 @@ check-publish-scope's own rules), either has no data-mfg-item or has no ancestor
 Then it plants two faults in a copy of the first served page that has download links, each of which must be caught
 (plant_common: a plant that did not apply is a STALE PLANT and fails the run): one link's data-mfg-item removed;
 the page's data-mfg-section labels removed. Stdlib only, about a second.
+
+Button downloads (contract UGH-STATS-BUTTON-DOWNLOADS, 21 Nov 2026). A page can also build a file in the browser and
+hand it over from a button: its handler calls a helper's download() (the Ugh, stats helper, the only one), which clicks
+a temporary unlabelled <a download> outside every section, so the listener counts the button instead, when it carries
+data-mfg-download (any element but an <a>, whose download attribute already says it). Also fails when (a) an element
+with data-mfg-download has no data-mfg-item or no data-mfg-section ancestor, or (b) a served page's own script calls
+<name>.download( but the page has no data-mfg-download element. Two more plants, in a copy of the first served page
+with a labelled download button: the button's data-mfg-item removed; its data-mfg-download removed.
 
 No page path is written here on purpose: scripts/ci-deps.py maps a verifier to the pages its strings name, and this
 check must run on every change (a new page with an unlabelled download is exactly what it is for), which it does
@@ -34,6 +42,11 @@ import plant_common as pc  # noqa: E402
 VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
 ITEM_ON_DOWNLOAD = re.compile(r'(<a\b[^>]*\sdownload\b[^>]*?)\sdata-mfg-item="[^"]+"')
 SECTION = re.compile(r'\sdata-mfg-section="[^"]+"')
+# A script call that builds a download in the browser: <helper>.download( (a page's own script; the attribute
+# download="..." or a.download = name is not a call).
+SCRIPT_DOWNLOAD = re.compile(r'\b[A-Za-z_$][\w$]*\.download\s*\(')
+ITEM_ON_BUTTON = re.compile(r'(<(?!a\b)[a-z]+\b[^>]*?)\sdata-mfg-item="[^"]+"(?=[^>]*\sdata-mfg-download\b)')
+BUTTON_FLAG = re.compile(r'\sdata-mfg-download\b(?!-)(?:="[^"]*")?')
 
 
 def load_scope():
@@ -54,18 +67,27 @@ def served_html():
 
 
 class Finder(html.parser.HTMLParser):
-    """Each <a download>: (line, has data-mfg-item, inside a data-mfg-section)."""
+    """Each <a download>: (line, has data-mfg-item, inside a data-mfg-section, href); each other element with
+    data-mfg-download: (line, has data-mfg-item, inside a data-mfg-section, tag); and the page's script text."""
 
     def __init__(self):
         super().__init__(convert_charrefs=True)
         self.stack = []      # [(tag, opens a section)]
         self.links = []
+        self.buttons = []
+        self.script = []
+
+    def handle_data(self, data):
+        if self.stack and self.stack[-1][0] == "script":
+            self.script.append(data)
 
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
+        inside = "data-mfg-section" in a or any(s for _, s in self.stack)
         if tag == "a" and "download" in a:
-            inside = "data-mfg-section" in a or any(s for _, s in self.stack)
             self.links.append((self.getpos()[0], bool(a.get("data-mfg-item")), inside, a.get("href", "")))
+        elif "data-mfg-download" in a:
+            self.buttons.append((self.getpos()[0], bool(a.get("data-mfg-item")), inside, tag))
         if tag not in VOID:
             self.stack.append((tag, "data-mfg-section" in a))
 
@@ -92,7 +114,23 @@ def faults(path, text):
             out.append("%s:%d: download link %r has no data-mfg-item" % (path, line, href))
         if not inside:
             out.append("%s:%d: download link %r is not inside a data-mfg-section" % (path, line, href))
-    return out, len(f.links)
+    for line, has_item, inside, tag in f.buttons:
+        if not has_item:
+            out.append("%s:%d: download button <%s data-mfg-download> has no data-mfg-item" % (path, line, tag))
+        if not inside:
+            out.append("%s:%d: download button <%s data-mfg-download> is not inside a data-mfg-section" % (path, line, tag))
+    calls = SCRIPT_DOWNLOAD.findall("".join(f.script))
+    if calls and not f.buttons:
+        out.append("%s: its script calls %s but no element has data-mfg-download, so that download is never counted"
+                   % (path, calls[0].strip()))
+    return out, len(f.links) + len(f.buttons)
+
+
+def buttons(text):
+    f = Finder()
+    f.feed(text)
+    f.close()
+    return len(f.buttons)
 
 
 def read(path):
@@ -101,15 +139,19 @@ def read(path):
 
 
 def main():
-    found, total, pages, plant_page = [], 0, 0, None
+    found, total, pages, plant_page, button_page = [], 0, 0, None, None
     for p in served_html():
-        got, n = faults(p, read(p))
+        text = read(p)
+        got, n = faults(p, text)
         found += got
         total += n
         pages += 1 if n else 0
-        if n and not got and plant_page is None:
+        nb = buttons(text) if n else 0
+        if n and not got and nb == 0 and plant_page is None:
             plant_page = p
-    print("download links on served pages: %d, on %d page(s)" % (total, pages))
+        if nb and not got and button_page is None:
+            button_page = p
+    print("downloads on served pages (links and data-mfg-download buttons): %d, on %d page(s)" % (total, pages))
     ok = True
     if found:
         ok = False
@@ -121,15 +163,20 @@ def main():
     if plant_page is None:
         print("  STALE PLANT: no served page has a labelled download link to plant in")
         sys.exit(1)
-    src = read(plant_page)
+    print("button plants (in a copy of %s)" % button_page)
+    if button_page is None:
+        print("  STALE PLANT: no served page has a labelled download button to plant in")
+        sys.exit(1)
     plants = [
-        ("one download link's data-mfg-item removed", ITEM_ON_DOWNLOAD, r"\1", 1),
-        ("the page's data-mfg-section labels removed", SECTION, "", 0),
+        (plant_page, "one download link's data-mfg-item removed", ITEM_ON_DOWNLOAD, r"\1", 1),
+        (plant_page, "the page's data-mfg-section labels removed", SECTION, "", 0),
+        (button_page, "a download button's data-mfg-item removed", ITEM_ON_BUTTON, r"\1", 1),
+        (button_page, "the page's data-mfg-download removed (its script still calls download)", BUTTON_FLAG, "", 0),
     ]
-    for name, pattern, repl, count in plants:
+    for page, name, pattern, repl, count in plants:
         try:
-            planted = pc.apply_re_plant(src, pattern.pattern, repl, name=name, count=count)
-            got, err = faults(plant_page, planted)[0], None
+            planted = pc.apply_re_plant(read(page), pattern.pattern, repl, name=name, count=count)
+            got, err = faults(page, planted)[0], None
         except pc.StalePlant as e:
             print("  " + str(e))
             ok = False

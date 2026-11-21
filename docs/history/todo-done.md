@@ -3967,3 +3967,11 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | FORGE-SUBJECT-PROMPT | **Formula Forge: the subject letter in "Make … the subject" much more prominent**, and a start-screen line "Powers and Multi: have paper handy". Jon, 9 Nov 2026 (DOCS-BUNDLE). | cloud lane |
 
 **Closed 20 Nov 2026 (FORGE-SUBJECT-PROMPT, #854, merge bf019be).** Row FORGE-SUBJECT-PROMPT, moved word for word above. The subject letter sits in an orange chip (`.subject-chip`) and the start screen says "Powers and Multi: have paper handy."; both checked by `scripts/verify-formula-forge.py`. Moved by LARGE-SCREEN-PILOT's close-out commit.
+
+## Closed by UGH-STATS-BUTTON-DOWNLOADS (21 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| UGH-STATS-BUTTON-DOWNLOADS | **Two CSV downloads the Events sheet still cannot see** (found by DOWNLOAD-COUNTS, 20 Nov 2026). `ugh-stats/half-our-games/` and `ugh-stats/whos-playing/` build their CSV in the browser: a `<button id="csv">` calls ugh-stats.js `download()`, which clicks a temporary `<a download>` added to `<body>`, outside any section. analytics.js's listener counts only an `<a href>` or a toggle, so labelling the button would send nothing, and check-download-labels.py reads only HTML `<a download>`. Needs a contract: count a labelled button that downloads (or a section_clicked from `download()` itself), and widen the check. | home lane (contract from Project Claude) |
+
+**Closed 21 Nov 2026 (UGH-STATS-BUTTON-DOWNLOADS).** Row UGH-STATS-BUTTON-DOWNLOADS, moved word for word above. Both CSV buttons carry data-mfg-item and data-mfg-download inside a labelled section; analytics.js counts a data-mfg-download element as section_clicked action download; check-download-labels.py fails an unlabelled one and a page whose script calls a download() with none.
