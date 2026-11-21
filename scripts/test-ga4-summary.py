@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: GA4 summary Apps Script (mocked Sheet: weekly sums match the raw tabs, partial weeks marked, top ten, three charts created once, values-only rebuilds, GA4 tabs/Sheet1/Dashboard untouched; planted faults caught) |
+# ci-deps: docs/apps-script-ga4-summary.js docs/apps-script-ga4-country.js docs/apps-script-endpoint.js scripts/plant_common.py
 """Tests for docs/apps-script-ga4-summary.js, the Apps Script that rebuilds the 'GA4 summary' tab (weekly figures
 and three charts) from the two GA4 country tabs. No network: the scripts run in Node's vm module against mocks of
 SpreadsheetApp, Charts, LockService, Utilities and Logger.

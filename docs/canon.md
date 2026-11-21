@@ -1422,6 +1422,8 @@ games move from light to dark (`differentiation-duel`, `integration-duel`, `log-
 light-slate sub-family §7.5 used to leave alone) and 53 move from dark to light (listed in to-do
 §3.12). Withdrawn `regression-rumble` is dark by the rule if it returns.
 
+Games for Year 6 and below give their main objects a character: faces, reactions and a look of their own (Some Thingies is the model).
+
 **One stylesheet: `schools/assets/theme.css`.** It holds the base tokens, the two palettes (chosen
 by `data-theme` on `<html>`) and the font stacks, and loads both fonts itself. Base tokens, which a
 game never redefines: `--bg`, `--surface`, `--surface-alt`, `--text`, `--muted`, `--border`,

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Download links labelled (every <a download> and every data-mfg-download button on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; a page that builds a download in script has a labelled button; planted faults caught) |
+# ci-deps: any-page _config.yml scripts/check-publish-scope.py
 """Every download link on the site is labelled, so the Events sheet counts it (contract DOWNLOAD-COUNTS, 20 Nov 2026).
 
     python -X utf8 scripts/check-download-labels.py

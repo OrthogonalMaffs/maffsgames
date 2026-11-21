@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: GA4 country Apps Script (mocked API and Sheet: replace-by-date is idempotent, other dates untouched, events tab never referenced; planted faults caught) |
+# ci-deps: docs/apps-script-ga4-country.js docs/apps-script-endpoint.js
 """Tests for docs/apps-script-ga4-country.js, the Apps Script that copies GA4's daily figures into three tabs of
 the events Sheet (Jon's rulings, 8 Oct 2026; the third tab, 'GA4 sources daily', 18 Nov 2026, DASHBOARD-GLANCE). No network: the script runs in Node's vm module against
 mocks of AnalyticsData, SpreadsheetApp, DriveApp, Utilities, LockService, ScriptApp and Logger.

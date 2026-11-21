@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Shared settle (bank_common.wait_settled: a page with a late font measured after fonts.ready and settled layout; the premature read is the race, an element truly off screen still fails) |
+# ci-deps: scripts/bank_common.py scripts/fonts/
 """bank_common.wait_settled / settle_js: the one place a verifier waits for fonts and layout before it measures (Jon, 27 Oct 2026).
 
 Two red mains (#566; run 40529609805) came from measuring a page the instant its feedback appeared, while a late font was still about to

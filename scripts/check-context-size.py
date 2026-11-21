@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 105 KB, a warning on any row over 1,200 characters; canon reported; contracts CTX, TODO-SLIM, GATE-RESUME and TODO-TRIM) | --selftest && --check
+# ci-deps: CLAUDE.md AGENTS.md docs/handover/ docs/todo.md docs/canon.md docs/history/handover-home-archive.md docs/history/handover-cloud-archive.md
 """What every Claude Code session loads before it starts work stays small (contract CTX, 8 Oct 2026).
 
 CLAUDE.md loads into every session in both lanes, and each lane reads its handover first. On 8 Oct 2026 they
