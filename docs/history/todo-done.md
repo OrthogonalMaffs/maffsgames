@@ -3991,3 +3991,11 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | SOME-THINGIES-LIST | **Some Thingies (`some-thingies`), merged unlisted** (contract SOME-THINGIES, 21 Nov 2026). **Jon:** play both modes in both looks (`/games/some-thingies/` and `/games/some-thingies/#kids/Maple`), rewrite LINES, send it to Miss O'Brien and ask her: "groups of" or "lots of"; dots or counters; her stage order; multipliers to 10 or 12; is ? × 5 = 15 in her unit. Then rule on listing. Built choice to confirm: a Stage 2 adding item scores only when both the count and the total are right. | Jon; home lane (listing) |
 
 **Rewritten 21 Nov 2026 (SOME-THINGIES-TWEAKS).** Row SOME-THINGIES-LIST, the old wording word for word above. The new row adds "Jon checks the new stage 3 picture, the scaffold and winner stays on".
+
+## Row closed by CI-DEPS-ANY-PAGE (#869, 21 Nov 2026), moved by SIX-PS-BANKS-9's close-out
+
+| # | Item | Owner |
+|---|---|---|
+| CI-DEPS-ANY-PAGE | **`scripts/ci-deps.py` offers only "names its pages" or "always runs"** (ALWAYS_BUDGET = 12, `scripts/ci-deps.py`:422). Site-wide page scanners such as `check-download-labels.py` (#856) must go always-run, and that budget is full (12/12). Add a third dependency type: runs when any page changes, skips docs-only changes. Do it before, or as the first part of, START-SIDEWAYS-GATE, not by raising the budget. | Project Claude (contract), cloud lane |
+
+**Closed 21 Nov 2026 (CI-DEPS-ANY-PAGE, merged as e291c9c).** Row CI-DEPS-ANY-PAGE, moved word for word above. `scripts/ci-deps.py` gained the `any-page` dependency type and selective page-less verifiers; the always-set went from 12 to 2. Jon (21 Nov 2026, 20:03): test-escape-credit.py stays always-run.
