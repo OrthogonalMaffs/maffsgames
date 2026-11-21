@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: lock | Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played) | --selftest && --static
-# ci-shards: lock | Answer lock in play (canon 7.6.0: migrated games played in Chromium) | | 8
+# ci-line: lock | Answer lock, static rules and self-test checks (canon 7.6.0: the static rules, NOT_YET and the cloud list once; nothing played) | --selftest --static && --static
+# ci-shards: lock | Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium) | | 11
 # ci-deps: schools/assets/answer-lock.js schools/assets/next-control.js scripts/check-site.py
 """Does every game mark through MaffsLock (canon §7.6.0), so that no repeat marks twice or finishes twice?
 
@@ -67,16 +67,20 @@ the window closes. A two-option game declares the answer that differs from its k
     python scripts/check-answer-lock.py                    # every migrated game
     python scripts/check-answer-lock.py --game formula-plug-in [--against FILE]
     python scripts/check-answer-lock.py --not-yet          # play the NOT_YET games too (a report, never fails)
-    python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught
+    python scripts/check-answer-lock.py --selftest         # a planted failing game off the cloud list is caught (every play)
+    python scripts/check-answer-lock.py --selftest --static  # CI's static line: the self-test without its plays
     python scripts/check-answer-lock.py --seed 7           # another draw (default 1)
-    python scripts/check-answer-lock.py --shard 2/7        # CI: part 2 of 7 of the games, played only: the static
+    python scripts/check-answer-lock.py --shard 2/7        # CI: part 2 of 7 of the games and self-test plays: the static
                                                            # rules, NOT_YET and the cloud list are the static line's
-    python scripts/check-answer-lock.py --list-units       # the work units: one per judged game ("game: <slug>")
+    python scripts/check-answer-lock.py --list-units       # the work units: one per judged game ("game: <slug>"), then
+                                                           # one per self-test play ("selftest: <plant>")
 
 Work units (contract SHARD, 27 Oct 2026; scripts/ci_shards.py): each judged game is one unit, "game: <slug>", in roster
-order, and CI runs the slice --shard i/k (scripts/ci-groups.py chooses k from the units' times; the "# ci-shards" header
+order, then one per self-test play, "selftest: <plant>" (SELFTEST_PLAYS; contract ANSWER-LOCK-SELFTEST-SPLIT, 21 Nov
+2026: the plays had been one 296 s line), and CI runs the slice --shard i/k (scripts/ci-groups.py chooses k from the units' times; the "# ci-shards" header
 holds k until a main run has timed them). Games play WORKERS at once, so each unit is timed around its own play and
-recorded at its wall time / WORKERS.
+recorded at its wall time / WORKERS; a part's self-test plays run after its games, one at a time, each recorded at its
+wall time.
 """
 import argparse
 import asyncio
@@ -838,8 +842,13 @@ async def play(browser, base, slug, level, page_html):
         faults.append('no continue control after a wrong answer, and the game did not move on')
     # 4: tap through to the end; each continue pressed with two Enters and no gap (shape-shifter-t3-005)
     mark = len(await d.ev('() => __lockEvents'))
-    t_end = asyncio.get_event_loop().time() + 180
+    t_end = asyncio.get_event_loop().time() + 180      # the outer guard; OVERRUN_ANSWERS ends a session that never ends
+    tapped = 0
     while asyncio.get_event_loop().time() < t_end:
+        tapped = await d.ev('(m) => __lockEvents.slice(m).filter(r => r.e === "question_answered").length', mark)
+        if tapped > OVERRUN_ANSWERS and not (await d.snap())['completed']:
+            faults.append('overrun: %d answers without game_completed (session never ended)' % tapped)
+            break
         for _ in range(40):                  # wait until the game offers something (a right answer moves on itself)
             if await d.ev('() => __lockActionable()'):
                 break
@@ -863,6 +872,8 @@ async def play(browser, base, slug, level, page_html):
             if (await d.ev('() => !!(__lockContEl && __lockContEl.isConnected && __lockContEl.offsetParent && !__lockContEl.disabled)')):
                 await page.mouse.dblclick(c['rect']['x'], c['rect']['y'])     # Enter did not reach it: click
         await page.wait_for_timeout(60)
+    tapped = await d.ev('(m) => __lockEvents.slice(m).filter(r => r.e === "question_answered").length', mark)
+    TAP_ANSWERS[slug] = max(TAP_ANSWERS.get(slug, 0), tapped)
     for _ in range(12):                      # tap the end screen, as a student does
         pt = await d.ev('() => __lockBlankPoint()')
         if pt:
@@ -970,6 +981,13 @@ async def play_all(games, against, unit=None):
 
 CHECK_SITE = None
 VERBOSE = False
+TAP_ANSWERS = {}       # slug -> the question_answered count of its tap-through (phase 4), this run
+# The tap-through's answer bound (contract ANSWER-LOCK-SELFTEST-SPLIT, amendment 1, 21 Nov 2026): past it with no
+# game_completed, the session never ends, and the run says so at once ("overrun: ...") instead of answering until the
+# 180 s clock runs out (the no-lock plant made 2,241 answers in 193 s). 2 x the most answers any migrated game makes in a
+# passing tap-through on main 03d1f74 at seed 1: prime-or-composite 65 (then expectation-station 47,
+# probability-pioneer 44, boolean-blitz 41, factor-theorem 39; all 110 measured). A game that passes half of it is noted.
+OVERRUN_ANSWERS = 130
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 LOGS = {}              # slug -> {'desktop': [...], 'touch': [...]}: each play's event log (contract DET's proof)
 SWALLOWED = set()      # games where a driver tap landed in a fresh window and was made again: reported
@@ -1073,17 +1091,20 @@ CI_SHARDS = re.compile(r'^# ci-shards:\s*lock\s*\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*
 
 def layout_errors(games):
     """ANSWER-LOCK-STATIC (22 Oct 2026), from this file's own CI headers: the static report runs on exactly one line
-    (the ci-line), which runs the self-test and plays no game (--static); the games are played by the parts of the one
-    ci-shards header, which runs no self-test and plays every judged game (no --static, no --game), one unit each.
-    Which part plays which unit is ci_shards' deal, a partition by construction (contract SHARD, 27 Oct 2026)."""
+    (the ci-line), which runs the self-test's browserless checks and plays nothing (--static in every run); the games
+    and the self-test's plays are played by the parts of the one ci-shards header, which runs no --selftest and plays
+    every judged game (no --static, no --game), one unit each, and every self-test play, one unit each
+    (ANSWER-LOCK-SELFTEST-SPLIT, 21 Nov 2026). Which part plays which unit is ci_shards' deal, a partition by
+    construction (contract SHARD, 27 Oct 2026)."""
     errs = []
     text = open(os.path.abspath(__file__), encoding='utf-8').read()
     static = CI_LINE.findall(text)
     if len(static) != 1:
         errs.append('%d lines report the static rules (exactly one: the ci-line; the games are the ci-shards parts)'
                     % len(static))
-    elif '--static' not in static[0][1] or '--selftest' not in static[0][1]:
-        errs.append('the static line %r must run --selftest and --static (no games played)' % static[0][1])
+    elif '--selftest' not in static[0][1] or not all(re.search(r'--static\b', run) for run in static[0][1].split('&&')):
+        errs.append('the static line %r must run --selftest, and --static in every run (no game or self-test play: '
+                    'those are the ci-shards parts\' units)' % static[0][1])
     shards = CI_SHARDS.findall(text)
     if len(shards) != 1:
         errs.append('%d lock ci-shards headers play the games (exactly one)' % len(shards))
@@ -1092,16 +1113,18 @@ def layout_errors(games):
     elif re.search(r'--static\b|--game\b', shards[0][1]):
         errs.append('the play parts (%r) must play every judged game: no --static or --game' % shards[0][1])
     judged = [(s, l) for s, l in games if s not in NOT_YET]
-    units = [unit_id(s) for s, _ in judged]
+    units = play_units(judged)
     bad = ci_shards.check_ids(units)
-    if bad or len(units) != len({s for s, _ in judged}):
-        errs.append('the play units are not one per judged game: %s' % ('; '.join(bad) or 'a game twice'))
+    if bad or len(units) != len({s for s, _ in judged}) + len(set(SELFTEST_IDS)):
+        errs.append('the play units are not one per judged game and one per self-test play: %s'
+                    % ('; '.join(bad) or 'a game or a play twice'))
     return errs
 
 
-def selftest(games):
-    """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported."""
-    import tempfile
+def selftest(games, plays=True):
+    """The reported state is bounded: a planted failing game off the cloud lane's list is caught, on it reported. With
+    plays False (--selftest --static, the static line), the checks that need no browser only: the plays are work units
+    of the play parts (SELFTEST_PLAYS)."""
     errs = []
     if cloud_remaining('{"cloud-remaining": ["a", "b"]}') != {'a', 'b'}:
         errs.append('cloud_remaining() misreads a list')
@@ -1139,41 +1162,45 @@ def selftest(games):
             errs.append('a maffs-lock-hint with %s passed' % why)
     if read_hint('<!-- maffs-lock-hint x\n{"answer": ["a;", " b"], "keys": ["p"]}\n-->') != ({'answer': 'a; b', 'keys': ['p']}, []):
         errs.append('read_hint() misreads a declaration')
-    # Every play below runs with the network dead (contract ANSWER-LOCK-FLAKE, 15 Nov 2026): a route registered first, so
-    # it is asked last, takes every request the check's own routes leave for the network and never answers it, the way a
-    # stalled CDN does. Nothing may reach it, and the plants must still be caught with it there.
-    global NETWORK, LOAD_MS
-    waiting = []
-
-    def dead_under(routes):
-        async def network(ctx, base):
-            await ctx.route(lambda u: not u.startswith(base), lambda r: waiting.append(r.request.url))
-            await routes(ctx, base)
-        return network
-
-    async def old_route(ctx, base):     # the line this check carried until 15 Nov 2026: KaTeX left to the CDN
-        await ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())   # offline-ok: the plant
-
-    real_network, real_load = NETWORK, LOAD_MS
-    NETWORK = dead_under(real_network)
-    try:
-        errs += selftest_plays(games, waiting, dead_under, old_route)
-    finally:
-        NETWORK, LOAD_MS = real_network, real_load
+    errs += selftest_unit_faults_proof(games)
+    if plays:
+        for uid in SELFTEST_IDS:
+            errs += run_selftest_play(uid, games)
     for e in errs:
         print('FAIL  self-test: ' + e)
     return errs
 
 
-def selftest_plays(games, waiting, dead_under, old_route):
-    """The self-test's plays in Chromium, each over a dead network (selftest() sets it up and restores it)."""
+# The self-test's plays (contract ANSWER-LOCK-SELFTEST-SPLIT, 21 Nov 2026). Until then they ran one after another inside
+# --selftest, on one CI line of 296 s against a 315 s limit, which a slower job setup (median 26 s) put over it. Now each
+# play is a work unit, "selftest: <plant>", dealt with the games into the "Answer lock in play" parts (ci_shards.deal),
+# and a --shard part plays the self-test units it is dealt after its games. The static line runs --selftest --static:
+# the self-test without its plays. A plain --selftest still runs every play, in order.
+#
+# Every play runs with the network dead (contract ANSWER-LOCK-FLAKE, 15 Nov 2026): a route registered first, so it is
+# asked last, takes every request the check's own routes leave for the network and never answers it, the way a stalled
+# CDN does. Nothing may reach it (except in the old-route plant, which needs it), and the plants must still be caught.
+WAITING = []           # the requests left for the dead network, this play
+
+
+def dead_under(routes):
+    async def network(ctx, base):
+        await ctx.route(lambda u: not u.startswith(base), lambda r: WAITING.append(r.request.url))
+        await routes(ctx, base)
+    return network
+
+
+async def old_route(ctx, base):     # the line this check carried until 15 Nov 2026: KaTeX left to the CDN
+    await ctx.route(lambda u: not u.startswith(base) and '/katex@' not in u, lambda r: r.abort())   # offline-ok: the plant
+
+
+def st_no_lock(games):
+    """The plant: one named migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
+    adopted and has taken off its list. Named, not "the first in MIGRATED": a game that also guards itself
+    (binomial-blaster, first once the cloud lane's games joined) plays clean without the lock, and a plant
+    that cannot fail proves nothing."""
     import tempfile
-    global NETWORK, LOAD_MS
     errs = []
-    # The plant: one named migrated game, its MaffsLock.lock never refusing, played as a game the cloud lane
-    # adopted and has taken off its list. Named, not "the first in MIGRATED": a game that also guards itself
-    # (binomial-blaster, first once the cloud lane's games joined) plays clean without the lock, and a plant
-    # that cannot fail proves nothing.
     slug, level = next(g for g in games if g[0] == PLANT_GAME)
     html = open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8').read()
     m = INCLUDE.search(html)
@@ -1189,61 +1216,75 @@ def selftest_plays(games, waiting, dead_under, old_route):
     try:
         if not res:
             errs.append('planted %s (no lock: MaffsLock.lock never refuses, no fresh window) played clean: the check cannot see a missing lock' % slug)
+        elif not any(x.startswith('overrun:') for x in res):
+            errs.append('planted %s (a session that never ends) was not stopped by the overrun bound (%d answers): %s'
+                        % (slug, OVERRUN_ANSWERS, res[0][:120]))
         elif not counts(slug, set()):
             errs.append('planted %s fails, off the cloud list, but its failure is not counted' % slug)
         elif counts(slug, {slug}):
             errs.append('planted %s on the cloud list is failed, not reported' % slug)
         else:
             print('  self-test: planted %s (no lock: MaffsLock.lock never refuses, no fresh window), off the cloud list: CAUGHT (%d, e.g. %s);'
-                  ' on the list: reported' % (slug, len(res), res[0][:90]))
+                  ' on the list: reported' % (slug, len(res), next(x for x in res if x.startswith('overrun:'))[:90]))
     finally:
         MIGRATED.clear()
         MIGRATED.update(saved)
-    # The PLAY-AGAIN-SCREEN plant: angle-ace with its show() a bare screen change again (no MaffsLock.screen), as
-    # 24 games were before 9 Oct. Its Play again shows the menu, whose controls must then be caught uncovered.
+    return errs
+
+
+def st_bare_show(games):
+    """The PLAY-AGAIN-SCREEN plant: angle-ace with its show() a bare screen change again (no MaffsLock.screen), as
+    24 games were before 9 Oct. Its Play again shows the menu, whose controls must then be caught uncovered."""
+    import tempfile
+    errs = []
     pslug, pcall = 'angle-ace', ';MaffsLock.screen(document.getElementById(id))}'
     phtml = open(os.path.join(ROOT, 'games', pslug, 'index.html'), encoding='utf-8').read()
     if pcall not in phtml:
         errs.append('play-again plant: %s show() no longer ends with %r' % (pslug, pcall))
+        return errs
+    with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
+        f.write(phtml.replace(pcall, '}', 1))
+    try:
+        pres = asyncio.run(play_all([(pslug, dict(games).get(pslug))], f.name)).get(pslug, [])
+    finally:
+        os.unlink(f.name)
+    hit = [x for x in pres if 'is not fresh (not MaffsLock.screen)' in x]
+    if not hit:
+        errs.append('planted %s (bare show(), no MaffsLock.screen) passed the Play again check: %s' % (pslug, pres or 'clean'))
     else:
-        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
-            f.write(phtml.replace(pcall, '}', 1))
-        try:
-            pres = asyncio.run(play_all([(pslug, dict(games).get(pslug))], f.name)).get(pslug, [])
-        finally:
-            os.unlink(f.name)
-        hit = [x for x in pres if 'is not fresh (not MaffsLock.screen)' in x]
-        if not hit:
-            errs.append('planted %s (bare show(), no MaffsLock.screen) passed the Play again check: %s' % (pslug, pres or 'clean'))
-        else:
-            print('  self-test: planted %s (a bare show(): no MaffsLock.screen): CAUGHT (%s)' % (pslug, hit[0][:110]))
-    errs += pause_plants(games)
-    if waiting:
-        errs.append('the plants above left %d request(s) for the network (dead in the self-test), e.g. %s'
-                    % (len(waiting), waiting[0]))
-    # The dead-network plant: a game whose page names KaTeX on the CDN. With this check's routes it plays clean and
-    # nothing is left waiting on the network. With the old route planted, KaTeX's stylesheet and script go to the
-    # network, which never answers, and the page never reaches 'load': main run 43590939932's failure, word for word.
+        print('  self-test: planted %s (a bare show(): no MaffsLock.screen): CAUGHT (%s)' % (pslug, hit[0][:110]))
+    return errs
+
+
+def st_network_clean(games):
+    """The dead network: a game whose page names KaTeX on the CDN plays clean with this check's routes, and nothing is
+    left waiting on the network."""
     kgame = next(g for g in games if g[0] == KATEX_GAME)
-    del waiting[:]
     clean = asyncio.run(play_all([kgame], None)).get(kgame[0], [])
-    left = list(waiting)
-    del waiting[:]
+    left = list(WAITING)
+    if clean:
+        return ['with the network dead, %s does not play clean: %s' % (kgame[0], clean[0][:160])]
+    if left:
+        return ['with the network dead, %s left %d request(s) waiting on it, e.g. %s' % (kgame[0], len(left), left[0])]
+    print('  self-test: the network dead (every request left for it held, never answered): %s plays clean and nothing '
+          'waits on it' % kgame[0])
+    return []
+
+
+def st_network_old(games):
+    """The dead-network plant: with the old route planted, KaTeX's stylesheet and script go to the network, which never
+    answers, and the page never reaches 'load': main run 43590939932's failure, word for word."""
+    global NETWORK, LOAD_MS
+    kgame = next(g for g in games if g[0] == KATEX_GAME)
     NETWORK, LOAD_MS = dead_under(old_route), 4000      # (a short wait is enough: the answer never comes)
     old = asyncio.run(play_all([kgame], None)).get(kgame[0], [])
-    held = sorted(set(u.rsplit('/', 1)[-1] for u in waiting if '/katex@' in u))
-    if clean:
-        errs.append('with the network dead, %s does not play clean: %s' % (kgame[0], clean[0][:160]))
-    elif left:
-        errs.append('with the network dead, %s left %d request(s) waiting on it, e.g. %s' % (kgame[0], len(left), left[0]))
-    elif not any('Page.goto: Timeout' in x for x in old) or not held:
-        errs.append('the old route (KaTeX left to the CDN), planted over a dead network, was not caught: %s; waiting on the '
-                    'network: %s' % (old or 'played clean', held or 'nothing'))
-    else:
-        print('  self-test: the network dead (every request left for it held, never answered): %s plays clean and nothing '
-              'waits on it; the old route (KaTeX left to the CDN) planted: CAUGHT (%s; waiting on the network: %s)'
-              % (kgame[0], old[0].split('\n')[0][:70], ', '.join(held)))
-    return errs
+    held = sorted(set(u.rsplit('/', 1)[-1] for u in WAITING if '/katex@' in u))
+    if not any('Page.goto: Timeout' in x for x in old) or not held:
+        return ['the old route (KaTeX left to the CDN), planted over a dead network, was not caught: %s; waiting on the '
+                'network: %s' % (old or 'played clean', held or 'nothing')]
+    print('  self-test: the old route (KaTeX left to the CDN) planted over the dead network: CAUGHT (%s; waiting on the '
+          'network: %s)' % (old[0].split('\n')[0][:70], ', '.join(held)))
+    return []
 
 
 # WRONG-PAUSE-NEXT's plants: the pause game as it is passes; each change below must FAIL the pause check.
@@ -1258,35 +1299,129 @@ PAUSE_PLANTS = (
 )
 
 
-def pause_plants(games):
-    """[error]: the pause game plays clean, and each plant is caught by the pause check (the touch phase alone)."""
+def pause_play(games, plant=None):
+    """[error]: the pause game as it is plays clean (plant None), or with PAUSE_PLANTS[plant] it is caught by the pause
+    check. The touch phase alone."""
     import tempfile
     global PAUSE_ONLY
     errs = []
     game = next(g for g in games if g[0] == PAUSE_GAME)
-    html = open(os.path.join(ROOT, 'games', PAUSE_GAME, 'index.html'), encoding='utf-8').read()
     PAUSE_ONLY = True
     try:
-        clean = asyncio.run(play_all([game], None)).get(PAUSE_GAME, ['not played'])
-        if clean:
-            errs.append('pause plants: %s as it is does not pass: %s' % (PAUSE_GAME, clean[0][:120]))
-        for why, old, new in PAUSE_PLANTS:
-            if html.count(old) != 1:
-                errs.append('pause plant (%s): %s no longer holds %r once' % (why, PAUSE_GAME, old))
-                continue
-            with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
-                f.write(html.replace(old, new, 1))
-            try:
-                res = asyncio.run(play_all([game], f.name)).get(PAUSE_GAME, [])
-            finally:
-                os.unlink(f.name)
-            hit = [x for x in res if x.startswith('wrong answer:')]
-            if not hit:
-                errs.append('pause plant (%s) passed the pause check: %s' % (why, res or 'clean'))
+        if plant is None:
+            clean = asyncio.run(play_all([game], None)).get(PAUSE_GAME, ['not played'])
+            if clean:
+                errs.append('pause plants: %s as it is does not pass: %s' % (PAUSE_GAME, clean[0][:120]))
             else:
-                print('  self-test: planted %s, %s: CAUGHT (%s)' % (PAUSE_GAME, why, hit[0][:100]))
+                print('  self-test: %s as it is passes the pause check' % PAUSE_GAME)
+            return errs
+        why, old, new = PAUSE_PLANTS[plant]
+        html = open(os.path.join(ROOT, 'games', PAUSE_GAME, 'index.html'), encoding='utf-8').read()
+        if html.count(old) != 1:
+            errs.append('pause plant (%s): %s no longer holds %r once' % (why, PAUSE_GAME, old))
+            return errs
+        with tempfile.NamedTemporaryFile('w', suffix='.html', delete=False, encoding='utf-8', newline='') as f:
+            f.write(html.replace(old, new, 1))
+        try:
+            res = asyncio.run(play_all([game], f.name)).get(PAUSE_GAME, [])
+        finally:
+            os.unlink(f.name)
+        hit = [x for x in res if x.startswith('wrong answer:')]
+        if not hit:
+            errs.append('pause plant (%s) passed the pause check: %s' % (why, res or 'clean'))
+        else:
+            print('  self-test: planted %s, %s: CAUGHT (%s)' % (PAUSE_GAME, why, hit[0][:100]))
     finally:
         PAUSE_ONLY = False
+    return errs
+
+
+# The self-test's plays, one work unit each, in run order: (unit id, play, the play judges the dead network's
+# requests itself). A plant added here is dealt into a part automatically; selftest_unit_faults() proves the parts
+# together run each exactly once.
+SELFTEST_PREFIX = 'selftest: '
+SELFTEST_PLAYS = (
+    (SELFTEST_PREFIX + '%s without the lock' % PLANT_GAME, st_no_lock, False),
+    (SELFTEST_PREFIX + 'angle-ace with a bare show()', st_bare_show, False),
+    (SELFTEST_PREFIX + '%s pause as it is' % PAUSE_GAME, lambda g: pause_play(g), False),
+    (SELFTEST_PREFIX + '%s pause, wrong path on a timer' % PAUSE_GAME, lambda g: pause_play(g, 0), False),
+    (SELFTEST_PREFIX + '%s pause, a self-advancing Next' % PAUSE_GAME, lambda g: pause_play(g, 1), False),
+    (SELFTEST_PREFIX + '%s over the dead network' % KATEX_GAME, st_network_clean, True),
+    (SELFTEST_PREFIX + '%s with the old KaTeX route' % KATEX_GAME, st_network_old, True),
+)
+SELFTEST_IDS = [u for u, _, _ in SELFTEST_PLAYS]
+
+
+def run_selftest_play(uid, games):
+    """[error] from one self-test play, over the dead network (set up here and restored after)."""
+    global NETWORK, LOAD_MS
+    _, play, own = next(p for p in SELFTEST_PLAYS if p[0] == uid)
+    real_network, real_load = NETWORK, LOAD_MS
+    real_taps = dict(TAP_ANSWERS)           # a plant's tap-through is no game's count (the near-the-bound note)
+    NETWORK = dead_under(real_network)
+    del WAITING[:]
+    try:
+        errs = play(games)
+        if WAITING and not own:
+            errs.append('%s left %d request(s) for the network (dead in the self-test), e.g. %s'
+                        % (uid, len(WAITING), WAITING[0]))
+    except Exception as e:      # a crash is a failure, never a pass
+        errs = ['%s: driver error: %s' % (uid, str(e)[:160])]
+    finally:
+        NETWORK, LOAD_MS = real_network, real_load
+        del WAITING[:]
+        TAP_ANSWERS.clear()
+        TAP_ANSWERS.update(real_taps)
+    return errs
+
+
+def play_units(judged):
+    """The play parts' work units, in run order: one per judged game ("game: <slug>"), then each self-test play."""
+    return [unit_id(s) for s, _ in judged] + list(SELFTEST_IDS)
+
+
+def selftest_unit_faults(parts):
+    """[fault] unless the self-test units across the dealt parts are exactly the plays (SELFTEST_IDS): none dropped,
+    none doubled, none unknown."""
+    got = [u for p in parts for u in p if u.startswith(SELFTEST_PREFIX)]
+    out = ['self-test unit %r is in no part (dropped)' % u for u in SELFTEST_IDS if u not in got]
+    out += ['self-test unit %r is in %d parts (doubled)' % (u, got.count(u)) for u in SELFTEST_IDS if got.count(u) > 1]
+    out += ['self-test unit %r is no play of the self-test' % u for u in sorted(set(got) - set(SELFTEST_IDS))]
+    return out
+
+
+def pack_parts():
+    """The play parts' count in scripts/ci-pack.json ("shards"), or None."""
+    try:
+        import json
+        with open(os.path.join(HERE, 'ci-pack.json'), encoding='utf-8') as f:
+            return json.load(f)['shards'][os.path.basename(__file__)]['parts']
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def selftest_unit_faults_proof(games):
+    """[error]: dealt with ci_shards.deal and the committed times into the pack's parts (and 1 to 12), the self-test
+    units are exactly the plays; a deal that drops one, doubles one or adds an unknown one is caught."""
+    errs = []
+    units = play_units([(s, l) for s, l in games if s not in NOT_YET])
+    times = ci_shards.unit_times(__file__)
+    ks = sorted({k for k in range(1, 13)} | ({pack_parts()} - {None}))
+    for k in ks:
+        bad = selftest_unit_faults(ci_shards.deal(units, k, times))
+        if bad:
+            errs.append('dealt into %d parts: %s' % (k, '; '.join(bad)))
+    parts = ci_shards.deal(units, pack_parts() or 8, times)
+    dropped = [[u for u in p if u != SELFTEST_IDS[0]] for p in parts]
+    doubled = [list(p) for p in parts]
+    doubled[next((n for n, p in enumerate(parts) if SELFTEST_IDS[-1] not in p), 0)].append(SELFTEST_IDS[-1])
+    unknown = [parts[0] + [SELFTEST_PREFIX + 'not a play']] + parts[1:]
+    for name, planted in (('dropped', dropped), ('doubled', doubled), ('unknown', unknown)):
+        if not selftest_unit_faults(planted):
+            errs.append('a deal with a self-test unit %s passed selftest_unit_faults()' % name)
+    if not errs:
+        print('  self-test: the %d self-test plays are each in exactly one of the parts (the pack\'s %s, and 1 to 12); '
+              'a dropped, doubled or unknown unit planted: CAUGHT' % (len(SELFTEST_IDS), pack_parts()))
     return errs
 
 
@@ -1311,7 +1446,7 @@ def main():
     CHECK_SITE = load_check_site()
     games = roster_games()
     if args.selftest:
-        errs = selftest(games)
+        errs = selftest(games, plays=not args.static)
         print('FAILED' if errs else 'PASS')
         return 1 if errs else 0
     slugs = {s for s, _ in games}
@@ -1350,9 +1485,11 @@ def main():
     sf, reported = static_results(judged, page, remaining, args.game, args.against)
     fails += sf
     to_play = [(s, l) for s, l in judged if not args.game or s in args.game]
-    # One work unit per game (contract SHARD): a --shard run plays its slice of them.
+    # One work unit per game (contract SHARD) and one per self-test play (ANSWER-LOCK-SELFTEST-SPLIT): a --shard run
+    # plays its slice of them, the games first. A run without --shard plays the games only (--selftest plays the rest).
     shard = bc.Shard(__file__, args, concurrency=WORKERS)
-    mine = set(shard.pick([unit_id(s) for s, _ in to_play]))
+    mine = set(shard.pick(play_units(to_play) if not (args.game or args.against) else [unit_id(s) for s, _ in to_play]))
+    st_mine = [u for u in SELFTEST_IDS if u in mine] if args.shard and not args.static else []
     if args.shard:
         to_play = [(s, l) for s, l in to_play if unit_id(s) in mine]
         # A part plays games only (contract ANSWER-LOCK-STATIC, 22 Oct 2026): the static rules, NOT_YET and the cloud
@@ -1382,6 +1519,15 @@ def main():
                 fails += ['%s: %s' % (s, r) for r in res]
             elif res and s in adopted:
                 reported += ['%s: %s' % (s, r) for r in res]
+    if st_mine:
+        # The self-test's plays, one after another (each changes the module's network and lock state for its play),
+        # each timed at its wall time: they do not share the line with WORKERS games.
+        st_shard = bc.Shard(__file__, concurrency=1)
+        for uid in st_mine:
+            with st_shard.unit(uid):
+                errs = run_selftest_play(uid, games)
+            print('  %-8s %s%s' % ('FAIL' if errs else 'PASS', uid, ('' if not errs else ': ' + '; '.join(errs))))
+            fails += ['self-test: %s' % e for e in errs]
     for s in sorted(adopted):
         print('  note: %s loads answer-lock.js and is on NOT_YET: %s' % (s, (
             'on the cloud lane\'s list, so its failures are reported, not failed' if s in remaining else
@@ -1397,6 +1543,10 @@ def main():
         print('  REPORTED (%s, %s) %s: %s' % (name, why, slug, PAUSE_REPORTED[slug][:120]))
         if name == 'WRONG_PAUSE_KNOWN_FAIL' and PAUSE_REPORTED[slug] == 'passes':
             print('  note: %s now passes the pause: take it off WRONG_PAUSE_KNOWN_FAIL' % slug)
+    near = sorted((n, g) for g, n in TAP_ANSWERS.items() if n > OVERRUN_ANSWERS // 2)
+    if near:
+        print('  note: tap-through answers past half the overrun bound (%d): %s'
+              % (OVERRUN_ANSWERS, ', '.join('%s %d' % (g, n) for n, g in reversed(near))))
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))

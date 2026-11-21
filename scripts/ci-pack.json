@@ -44,7 +44,7 @@
   "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 2 of 2": "50",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
-  "Distinctly Average (independent recomputation)": "7",
+  "Distinctly Average (independent recomputation)": "77",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "32",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
   "End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed)": "31",
@@ -193,7 +193,7 @@
   "Standard Form Blitz (all 100 keys recomputed exactly from the question's own TeX; every option classified; every option pressed in Chromium)": "63",
   "Start-screen back link (every game page, as loaded at 390x844, shows a visible link back to the games list; planted faults caught: a link only in a hidden header, only on a hidden results screen, invisible, see-through, to another page; four controls pass)": "22",
   "Stat Attack (keys recomputed from each question's table)": "27",
-  "Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test), part 1 of 2": "29",
+  "Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test), part 1 of 2": "73",
   "Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test), part 2 of 2": "29",
   "Surd Simplifier (every key recomputed from its stem with SymPy, in simplest form; every option marked in Chromium)": "70",
   "Take a Walk (every pool question's lengths and products inside its stage's range, its key recomputed from its drawn lengths, every missing length determined by the drawing and as many as its stage says, no named slip equal to its key, the worked steps ending on the key, sessions easiest first; every pool question drawn by the game and read back: its labels the data's, every side drawn to one scale within 1 px; at 320 and 1280 px every side, line and label inside its picture, framed round the shape, every half arc half as deep as wide and bulging its own way; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, walk or cover, the find-it-first tap, the unit, the calculator in Stage 4 only, no sideways scroll; fault-injection self-test: sixteen planted faults, each caught), part 1 of 2": "85",
@@ -233,23 +233,24 @@
   "Y So Steep (every item of the six stages, whole-number and with-fractions banks, recomputed from its own printed stem with exact fractions: every m, c and step key; the contract's bank rules: 45 or more distinct items a stage, 40% or more falling lines, grid lines through two lattice points, 75% or more of Stage 5's points off the y-axis, fractions only when switched on; the module's marking against an independent marker on thousands of probe answers; every stage played in the page: one full round at 390 px on the touch keypad, then the first questions at 375, 360, 320, 1280 and 1366 px; keypad, question and Next above the fold; no sideways scroll; each grid line drawn from its data, grid text at least 12 px; named slips named; one board entry a round, none for stage 6; stage 3 and fractions off; fault-injection self-test: planted faults, each caught, including a wrong c, a line drawn off its data and a positive-only bank), part 1 of 1": "58"
  },
  "lock": {
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 1 of 7": "L4",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 2 of 7": "L2",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 3 of 7": "L3",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 4 of 7": "L5",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 5 of 7": "L6",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 6 of 7": "L1",
-  "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 7 of 7": "L8",
-  "Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played)": "L7",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 1 of 8": "L2",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 2 of 8": "L7",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 3 of 8": "L8",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 4 of 8": "L3",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 5 of 8": "L1",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 6 of 8": "L5",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 7 of 8": "L4",
+  "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium), part 8 of 8": "L6",
+  "Answer lock, static rules and self-test checks (canon 7.6.0: the static rules, NOT_YET and the cloud list once; nothing played)": "L14",
   "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error), part 1 of 2": "L14",
   "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error), part 2 of 2": "L14"
  },
  "over-budget": [],
  "shards": {
   "check-answer-lock.py": {
-   "how": "kept from the pack (7 needed)",
-   "label": "Answer lock in play (canon 7.6.0: migrated games played in Chromium)",
-   "parts": 7,
+   "how": "kept from the pack (8 needed)",
+   "label": "Answer lock in play (canon 7.6.0: migrated games and the self-test's plants played in Chromium)",
+   "parts": 8,
    "tier": "lock"
   },
   "check-burst.py": {
@@ -427,12 +428,5 @@
    "tier": "content"
   }
  },
- "split-candidates": [
-  {
-   "label": "Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played)",
-   "median": 296,
-   "percent": 71,
-   "setup": 26
-  }
- ]
+ "split-candidates": []
 }
