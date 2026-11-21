@@ -982,7 +982,12 @@ async def play_all(games, against, unit=None):
 CHECK_SITE = None
 VERBOSE = False
 TAP_ANSWERS = {}       # slug -> the question_answered count of its tap-through (phase 4), this run
-OVERRUN_ANSWERS = 10 ** 9   # MEASURING: set from the measured maximum before commit
+# The tap-through's answer bound (contract ANSWER-LOCK-SELFTEST-SPLIT, amendment 1, 21 Nov 2026): past it with no
+# game_completed, the session never ends, and the run says so at once ("overrun: ...") instead of answering until the
+# 180 s clock runs out (the no-lock plant made 2,241 answers in 193 s). 2 x the most answers any migrated game makes in a
+# passing tap-through on main 03d1f74 at seed 1: prime-or-composite 65 (then expectation-station 47,
+# probability-pioneer 44, boolean-blitz 41, factor-theorem 39; all 110 measured). A game that passes half of it is noted.
+OVERRUN_ANSWERS = 130
 AUTO_ADVANCE = set()   # games that moved on by themselves after a wrong answer (no Next): reported
 LOGS = {}              # slug -> {'desktop': [...], 'touch': [...]}: each play's event log (contract DET's proof)
 SWALLOWED = set()      # games where a driver tap landed in a fresh window and was made again: reported
@@ -1535,6 +1540,10 @@ def main():
         print('  REPORTED (%s, %s) %s: %s' % (name, why, slug, PAUSE_REPORTED[slug][:120]))
         if name == 'WRONG_PAUSE_KNOWN_FAIL' and PAUSE_REPORTED[slug] == 'passes':
             print('  note: %s now passes the pause: take it off WRONG_PAUSE_KNOWN_FAIL' % slug)
+    near = sorted((n, g) for g, n in TAP_ANSWERS.items() if n > OVERRUN_ANSWERS // 2)
+    if near:
+        print('  note: tap-through answers past half the overrun bound (%d): %s'
+              % (OVERRUN_ANSWERS, ', '.join('%s %d' % (g, n) for n, g in reversed(near))))
     if AUTO_ADVANCE:
         print('  note: no Next after a wrong answer (the game moves on by itself; canon 7.6 asks for Next): %s'
               % ', '.join(sorted(AUTO_ADVANCE)))
