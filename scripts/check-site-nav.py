@@ -21,7 +21,10 @@ IN CHROMIUM (--check), served by serve-stubbed.py with the network cut:
   - Free Daily Pizza (stage-exit) opened from /essentials/: its row link and its HUD home link both go to /essentials/;
   - the logo: shown at 1920x1080 on Angle Ace, links to "/", is named "MaffsGames home", and nothing painted comes
     within its clear space at any scroll position (hit-tested with elementsFromPoint, not site-nav.js's own measure);
-    hidden at 390x844 and on a 768x1024 tablet; hidden on Chart Interrogator (its header bar runs the full width); absent on 52-dle.
+    hidden at 390x844 and on a 768x1024 tablet; hidden on Chart Interrogator (its header bar runs the full width); absent on 52-dle;
+  - every distinct label in HUBS on a small phone (SITE-NAV-GUIDE-LABEL, Jon 21 Nov 2026): at 360x640, opened with that
+    hub as referrer, Angle Ace's a.back-link and Free Daily Pizza's stage-exit row link each sit on one line (no text
+    of the link starts below its first line). A 60-character plant label is caught.
 """
 import argparse
 import html as htmllib
@@ -56,6 +59,16 @@ STAGE_GAME = 'games/free-daily-pizza/index.html'   # stage-exit, with a HUD; Ess
 STAGE_HUB = 'essentials/index.html'
 FULL_WIDTH = 'games/chart-interrogator/index.html'   # its header bar runs the full width: no margin
 OWN_LOGO_GAME = 'games/52dle/index.html'
+PHONE = (360, 640)                             # the small phone every hub label must fit on one line at
+
+# Does a visible link's text wrap? Its text's line boxes (Range rects): any that starts below the first line has wrapped.
+WRAP_JS = r"""(sel) => [...document.querySelectorAll(sel)].filter(a => a.getClientRects().length).map(a => {
+  const rg = document.createRange(); rg.selectNodeContents(a);
+  const rs = [...rg.getClientRects()].filter(r => r.width > 0 && r.height > 0);
+  const first = Math.min(...rs.map(r => r.bottom));
+  return {text: a.textContent.trim(), href: a.getAttribute('href'), width: Math.round(a.getBoundingClientRect().width),
+          lines: rs.some(r => r.top >= first - 1) ? 2 : 1};
+})"""
 
 
 def read(rel):
@@ -270,6 +283,27 @@ def browser_faults(swap=None, only=None, js_swap=None):
                     faults.append('from /essentials/: %s stage-exit row links %s and HUD home links %s, not all /essentials/'
                                   % (STAGE_GAME, got[0], got[1]))
                 ctx.close()
+            if want('phone'):
+                js_now = js_swap.get('/schools/assets/site-nav.js') or open(ASSET, encoding='utf-8').read()
+                first_hub = {}
+                for path, label in hubs(js_now).items():
+                    first_hub.setdefault(label, path)
+                for label, path in sorted(first_hub.items(), key=lambda x: x[1]):
+                    for rel, sel, want_text in ((GAME, 'a.back-link', '← Back to ' + label),
+                                                (STAGE_GAME, '.stage-exit-row a.back-link', '← ' + label)):
+                        ctx = context(viewport={'width': PHONE[0], 'height': PHONE[1]}, has_touch=True, is_mobile=True)
+                        page = ctx.new_page()
+                        page.goto(base + url_path(rel), referer=base + path, wait_until='load')
+                        page.wait_for_timeout(300)
+                        got = page.evaluate(WRAP_JS, sel)
+                        where = '%s at %dx%d from %s' % (rel, PHONE[0], PHONE[1], path)
+                        if not got or any(g['href'] != path or g['text'] != want_text for g in got):
+                            faults.append('phone: %s: links %s, not %s and "%s"' % (where, [(g['href'], g['text']) for g in got],
+                                                                                     path, want_text))
+                        for g in got:
+                            if g['lines'] > 1:
+                                faults.append('phone: %s: "%s" wraps onto a second line (%d px wide)' % (where, g['text'], g['width']))
+                        ctx.close()
             if want('logo'):
                 for rel, vp, touch, expect in ((GAME, (1920, 1080), False, 'shown'), (GAME, (390, 844), True, 'hidden'),
                                                (GAME, (768, 1024), True, 'hidden'), (FULL_WIDTH, (1920, 1080), False, 'hidden'),
@@ -365,6 +399,12 @@ def selftest():
     hit = [f for f in got if f.startswith('from /op/')]
     print('  self-test back links not relinked from a hub   %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED ***'))
     fails += [] if hit else ['back links not relinked passed']
+    long_label = 'A' * 60
+    planted_js = js.replace("'/op/': 'OP for Secondary',", "'/op/': '%s'," % long_label, 1)
+    got = browser_faults(only={'phone'}, js_swap={'/schools/assets/site-nav.js': planted_js})
+    hit = [f for f in got if f.startswith('phone:') and long_label in f and 'wraps' in f]
+    print('  self-test a 60-character hub label             %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['a 60-character hub label passed']
     for f in fails:
         print('FAIL  self-test: ' + f)
     print('self-test: %s' % ('FAILED' if fails else 'PASS'))
