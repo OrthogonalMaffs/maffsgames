@@ -8,6 +8,10 @@
       game, nothing changes: every link stays exactly as written. The referrer is read in the page and never sent.
       window.MaffsNav = { backHref, backLabel, shortLabel } (null without a hub) is what other scripts read
       (schools/assets/stage-exit.js's row link and HUD home link).
+      The class page (contract CLASS-PAGE, 21 Nov 2026): when the hub is /class/ and this page's own fragment is a
+      child look with a class name (#kids/<Name>, read by MaffsKids, schools/assets/kids-look.js, which such a page loads
+      before this file), the back link carries the name back as /class/#<Name>. It comes from location.hash on every
+      load, never from storage: only the hub's path is remembered.
    2. A MaffsGames logo, linking to "/", fixed top left in the empty margin beside the page, shown only while the
       measured gap between the viewport's left edge and everything the page paints fits it (no width guess), and only
       on a fine pointer (never phones or tablets). Re-measured on load, on resize and after each click, key or touch. A page that shows
@@ -26,6 +30,7 @@
     '/printables/': 'Printable packs',
     '/escape-rooms/': 'Escape rooms',
     '/leaderboards/': 'Leaderboards',
+    '/class/': 'the class page',
     // Every parents' guide reads "← Back to the guide": a guide's full name wrapped on a phone (SITE-NAV-GUIDE-LABEL,
     // Jon 21 Nov 2026, "back to guide is fine"). scripts/check-site-nav.py proves each label fits one line at 360 px.
     '/parents/algebra-basics/': 'the guide',
@@ -50,11 +55,12 @@
     '/parents/trigonometry/': 'the guide'
   };
   var KEY = 'maffs-nav:';
+  var CLASS_HUB = '/class/';
   var LOGO = { left: 16, top: 16, size: 40, clear: 16 };   // px: where the logo sits, and the space it keeps clear
 
   function norm(path) { return path.replace(/index\.html$/, ''); }
 
-  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS };
+  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS, hub: null };
   try {
     var here = norm(location.pathname), hub = null;
     if (document.referrer) {
@@ -70,11 +76,16 @@
       }
     } catch (e) { /* storage blocked: this load's referrer only */ }
     if (hub) {
+      nav.hub = hub;
       nav.backHref = hub;
+      if (hub === CLASS_HUB && window.MaffsKids) {
+        var kid = window.MaffsKids.read(location.hash);
+        if (kid.kids && kid.name) nav.backHref = hub + window.MaffsKids.classHash(kid.name);
+      }
       nav.backLabel = '← Back to ' + HUBS[hub];
       nav.shortLabel = '← ' + HUBS[hub];      // stage-exit's row keeps its short form (STAGE-EXIT-LABEL)
     }
-  } catch (e) { nav.backHref = nav.backLabel = nav.shortLabel = null; }
+  } catch (e) { nav.backHref = nav.backLabel = nav.shortLabel = nav.hub = null; }
   window.MaffsNav = nav;
 
   function relink() {
@@ -84,9 +95,9 @@
       var a = links[i];
       a.setAttribute('href', nav.backHref);
       var span = a.querySelector('.back-text');       // "←<span class=back-text> Back to Games</span>": the span hides in some modes
-      if (span) span.textContent = ' Back to ' + HUBS[nav.backHref];
+      if (span) span.textContent = ' Back to ' + HUBS[nav.hub];
       else a.textContent = nav.backLabel;
-      if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Back to ' + HUBS[nav.backHref]);
+      if (a.hasAttribute('aria-label')) a.setAttribute('aria-label', 'Back to ' + HUBS[nav.hub]);
     }
   }
 

@@ -251,6 +251,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/next-control.js"></script>
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/options.js"></script>
+<script src="/schools/assets/kids-look.js"></script>
 <script src="/schools/assets/site-nav.js"></script>
 <script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Main Stage 1; 'answer' with i = 0 answers the item on screen right up to question 10, and with i >= 1 picks a decoy (on a Stage 2 adding item, after counting the lots right), so it is marked wrong and waits on Next. Winner stays on (SOME-THINGIES-TWEAKS): a run of right answers never ends, so from question 11 the hint answers wrong, which ends the run as a student's first slip does.
@@ -394,25 +395,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   /* =====================================================================================================
      THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
      ===================================================================================================== */
-  var LOOK = 'grown', CLASS_NAME = null;
-  try {
-    var frag = String(window.location.hash || '').replace(/^#/, '');
-    var low = frag.toLowerCase();
-    if (low === 'kids') LOOK = 'kids';
-    else if (low.indexOf('kids/') === 0) {
-      LOOK = 'kids';
-      var nm = decodeURIComponent(frag.slice(5)).trim();
-      if (/^[\p{L}' ’-]{1,20}$/u.test(nm) && /\p{L}/u.test(nm)) CLASS_NAME = nm;
-    }
-  } catch (e) { CLASS_NAME = null; }
+  // The rule (#kids, #kids/<Name>, the name rule, no second "Class") is schools/assets/kids-look.js's, shared with the
+  // class page /class/ (contract CLASS-PAGE).
+  var KID = MaffsKids.read(window.location.hash);
+  var LOOK = KID.kids ? 'kids' : 'grown', CLASS_NAME = KID.name;
   var L = LINES[LOOK];
   function greeting() {
     if (LOOK !== 'kids') return L.welcome;
     if (!CLASS_NAME) return L.welcome;
-    var g = L.welcome_class.replace('{name}', CLASS_NAME);
-    // A name that already ends with "class" is not given a second "Class".
-    if (/class$/i.test(CLASS_NAME)) g = g.replace(/(class)\s+class\b/i, '$1');
-    return g;
+    return MaffsKids.greeting(L.welcome_class, CLASS_NAME);
   }
   if (LOOK === 'kids') document.body.classList.add('look-kids');
 

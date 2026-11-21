@@ -39,6 +39,8 @@ The rules (Jon, 5 Oct 2026):
     case, trimmed, 2-40 characters, none twice. Every card on the portal (a.game-card) and /essentials/ (a.card)
     carries data-keywords="kw1 | kw2 | ..." from the record its link resolves to: the game's, or for a page that is not
     a game (The 6 P's) its "pages" record's keywords. For on-site search only (schools/assets/search.js), never SEO.
+  - The class page (contract CLASS-PAGE, Jon 21 Nov 2026): /class/'s cards, between its kid-cards markers, are one per
+    game marked "kids": true, in games.json order: the roster name, the game's LINES.kids.title, its class-card.svg.
 
 It fails when:
   - games.json's slugs differ from the roster's numbered rows (a withdrawn game, numbered "—", is
@@ -52,7 +54,9 @@ It fails when:
   - a game's keywords break a rule above; a card's data-keywords are missing, doubled or differ from games.json; a
     card links to a slug with no games.json record (listed, never given invented keywords), or to a record with none;
   - a PENDING game's page already matches (stale: remove it from PENDING in the PR that applies it),
-    or a PENDING slug is not a roster game.
+    or a PENDING slug is not a roster game;
+  - the class page's cards differ from games.json; "kids" is anything but true; a game marked "kids" does not load
+    schools/assets/kids-look.js, or one that loads it is not marked; a marked game has no kid title or class-card.svg.
 
 To change a title, description or keywords: edit data/games.json, run scripts/apply-meta.py, then this.
 Never hand-edit a game's title. Stdlib only; under a second, plus a self-test on every run.
@@ -508,6 +512,101 @@ def write_cards(root):
 
 
 # ---------------------------------------------------------------------------
+# The class page's cards (contract CLASS-PAGE, Jon 21 Nov 2026; canon §7.5.9)
+# ---------------------------------------------------------------------------
+# /class/ shows one card per game with a child look. Which games: data/games.json "kids": true, the one list. Each card's
+# name is the roster's, its line the game's own LINES.kids.title, its picture games/<slug>/class-card.svg (drawn from
+# the game by scripts/draw-class-cards.py). A game marked "kids" must read its fragment through kids-look.js, and a game
+# that does must be marked, so the list and the games cannot drift apart.
+CLASS_PAGE = "class/index.html"
+KID_OPEN = '<!-- kid-cards: written by scripts/apply-meta.py from data/games.json ("kids": true); do not edit by hand -->'
+KID_CLOSE = "<!-- /kid-cards -->"
+KID_CARD_SVG = "games/%s/class-card.svg"
+KIDS_LOADER = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/kids-look\.js"')
+KIDS_TITLE = re.compile(r'\bkids:\s*\{\s*title:\s*"([^"\\]*)"')
+VIEWBOX = re.compile(r'<svg\b[^>]*\bviewBox="0 0 ([\d.]+) ([\d.]+)"')
+
+
+def roster_names(root):
+    """{slug: the roster's Game column} for every numbered row."""
+    out = {}
+    for line in (root / ROSTER).read_text(encoding="utf-8").splitlines():
+        c = [x.strip() for x in line.strip().strip("|").split("|")]
+        if len(c) >= 4 and c[0].isdigit():
+            m = re.match(r"^`([a-z0-9-]+)`$", c[2])
+            if m:
+                out[m.group(1)] = c[1]
+    return out
+
+
+def kid_cards(root, data):
+    """(the class page's card markup, [errors])."""
+    errors, rows = [], []
+    names = roster_names(root)
+    marked = []
+    for g in data.get("games", []):
+        if "kids" not in g:
+            continue
+        if g["kids"] is not True:
+            errors.append('games.json: %s has "kids": %r (only true, or no field)' % (g.get("slug"), g["kids"]))
+            continue
+        marked.append(g["slug"])
+    for d in sorted((root / "games").glob("*/index.html")):
+        slug = d.parent.name
+        if KIDS_LOADER.search(d.read_text(encoding="utf-8")) and slug not in marked:
+            errors.append('games/%s/index.html loads kids-look.js but games.json does not mark it "kids": true '
+                          '(the class page would miss it)' % slug)
+    for slug in marked:
+        page = root / ("games/%s/index.html" % slug)
+        text = page.read_text(encoding="utf-8") if page.is_file() else ""
+        if not KIDS_LOADER.search(text):
+            errors.append('games.json: %s is "kids": true but its page does not load schools/assets/kids-look.js' % slug)
+            continue
+        line = KIDS_TITLE.search(text)
+        svg = root / (KID_CARD_SVG % slug)
+        if not line:
+            errors.append("games/%s/index.html: no LINES.kids.title for the class page's card line" % slug)
+            continue
+        if not svg.is_file():
+            errors.append("%s is missing (python scripts/draw-class-cards.py)" % (KID_CARD_SVG % slug))
+            continue
+        vb = VIEWBOX.search(svg.read_text(encoding="utf-8"))
+        if not vb:
+            errors.append("%s: no viewBox \"0 0 w h\"" % (KID_CARD_SVG % slug))
+            continue
+        w, h = (round(float(x)) for x in vb.groups())
+        rows.append('    <a class="kid-card" data-slug="%s" href="/games/%s/#kids"><span class="kid-pic"><img src="/%s" '
+                    'alt="" width="%d" height="%d"></span><span class="kid-name">%s</span><span class="kid-line">%s</span></a>'
+                    % (slug, slug, KID_CARD_SVG % slug, w, h, _esc(names.get(slug, slug), False), _esc(line.group(1), False)))
+    if not marked:
+        errors.append('games.json: no game is "kids": true, so the class page has no cards')
+    return "\n".join(rows), errors
+
+
+def render_class_page(text, markup):
+    """The class page with its cards block set to markup; nothing else changes. Raises when the markers are not there once."""
+    if text.count(KID_OPEN) != 1 or text.count(KID_CLOSE) != 1 or text.index(KID_OPEN) > text.index(KID_CLOSE):
+        raise ValueError("%s: the kid-cards markers are not there exactly once, in order" % CLASS_PAGE)
+    a = text.index(KID_OPEN) + len(KID_OPEN)
+    b = text.index(KID_CLOSE)
+    return text[:a] + "\n" + (markup + "\n" if markup else "") + text[b:]
+
+
+def class_page_errors(root):
+    markup, errors = kid_cards(root, load(root))
+    p = root / CLASS_PAGE
+    if not p.is_file():
+        return errors + ["%s: no such page" % CLASS_PAGE]
+    text = p.read_text(encoding="utf-8")
+    try:
+        if render_class_page(text, markup) != text:
+            errors.append("%s: its cards differ from data/games.json (python scripts/apply-meta.py)" % CLASS_PAGE)
+    except ValueError as e:
+        errors.append(str(e))
+    return errors
+
+
+# ---------------------------------------------------------------------------
 # The check
 # ---------------------------------------------------------------------------
 
@@ -536,6 +635,7 @@ def check(root):
             continue
         errors += card_errors(path, p.read_text(encoding="utf-8"), cls, kw, known)
     errors += title_assignments(root)
+    errors += class_page_errors(root)
     reports += ["FALLBACK title for %s: %s" % (v["slug"], v["title"]) for v in exp.values() if v.get("fallback")]
     return errors, reports
 
@@ -552,13 +652,19 @@ def apply_all(root):
         p.write_text(render(p.read_text(encoding="utf-8"), values), encoding="utf-8", newline='')
     for path, text in write_cards(root).items():
         (root / path).write_text(text, encoding="utf-8", newline='')
+    p = root / CLASS_PAGE
+    markup, errs = kid_cards(root, load(root))
+    if errs:
+        raise ValueError("; ".join(errs))
+    p.write_text(render_class_page(p.read_text(encoding="utf-8"), markup), encoding="utf-8", newline='')
 
 
 def selftest():
     """Copy what the check reads, write every page from games.json, then plant faults."""
     tmp = pathlib.Path(tempfile.mkdtemp(prefix="check-meta-"))
     try:
-        for rel in [ROSTER, DATA] + list(CARD_PAGES):
+        kid_svgs = [KID_CARD_SVG % g["slug"] for g in load(BASE)["games"] if g.get("kids") is True]
+        for rel in [ROSTER, DATA, CLASS_PAGE] + list(CARD_PAGES) + kid_svgs:
             (tmp / rel).parent.mkdir(parents=True, exist_ok=True)
             shutil.copy(BASE / rel, tmp / rel)
         exp, _ = expected(BASE)
@@ -575,7 +681,7 @@ def selftest():
             shutil.copy(BASE / rel, tmp / rel)
         pristine = {p: (tmp / p).read_text(encoding="utf-8") for p in list(exp) + [DATA]}
         apply_all(tmp)
-        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in set(exp) | set(CARD_PAGES) | set(rooms_read)}
+        applied = {p: (tmp / p).read_text(encoding="utf-8") for p in set(exp) | set(CARD_PAGES) | set(rooms_read) | {CLASS_PAGE}}
         apply_all(tmp)
         if any((tmp / p).read_text(encoding="utf-8") != t for p, t in applied.items()):
             return ["apply is not idempotent: a second run changed a page"]
@@ -642,6 +748,15 @@ def selftest():
              "games/no-such-game/?level=ks3, which has no games.json record"),
             ("a page record a card links to, without keywords", lambda: data(lambda d: d["pages"]["the-6-ps/index.html"].pop("keywords")),
              "the-6-ps/, whose games.json record has no keywords"),
+            # the class page (CLASS-PAGE)
+            ("a class page card edited by hand", lambda: edit(CLASS_PAGE, lambda t: t.replace('<span class="kid-name">', '<span class="kid-name">X', 1)),
+             "class/index.html: its cards differ from data/games.json"),
+            ("a kids game left off the list", lambda: data(lambda d: next(g for g in d["games"] if g.get("kids")).pop("kids")),
+             "loads kids-look.js but games.json does not mark it"),
+            ("a game marked kids without the shared rule", lambda: data(lambda d: d["games"][0].update(kids=True)),
+             "is \"kids\": true but its page does not load schools/assets/kids-look.js"),
+            ("kids given a value other than true", lambda: data(lambda d: next(g for g in d["games"] if g.get("kids")).update(kids="yes")),
+             "has \"kids\": 'yes'"),
             # escape rooms (ROOM-SEARCH-TITLES)
             ("a hand-edited room title", lambda: edit(kiln, lambda t: re.sub(r"<title>.*?</title>", "<title>The Kiln Disaster — MaffsGames</title>", t, 1)),
              "escape-rooms/kiln-disaster/index.html: title is"),

@@ -26,6 +26,7 @@ SITE = [
     "index.html", "CNAME", "robots.txt", "sitemap.xml",
     "6-7/", "about/", "core-maths/", "escape-rooms/", "feedback/", "games/", "leaderboards/", "op/",
     "parents/", "privacy/", "essentials/", "resit/", "schools/", "spec-map/", "the-6-ps/", "ugh-stats/", "printables/", "updates/", "year6/",
+    "class/",
     "docs/art/",
 ]
 

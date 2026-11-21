@@ -1685,6 +1685,26 @@ page outside `games/` that links to a game to being in `HUBS`, and the opt-outs 
 plays the rule in Chromium (from a hub, reloaded, on a level switch, direct, from another game, stage-exit's links, the
 logo by an independent hit test at 1920x1080, 390x844 and a 768x1024 tablet), with planted faults caught.
 
+### 7.5.9 The child look and the class page (Jon, 21 Nov 2026, 19:49; contract CLASS-PAGE)
+
+**Child look: one shared fragment rule (MaffsKids); the class page /class/#<Name> lists every game with a child look.**
+A game with a child look opens in it from `#kids` and greets a class from `#kids/<Name>`. The rule (any case for "kids";
+the name decoded, trimmed, letters, spaces, hyphens and apostrophes only, 1 to 20 characters, at least one letter; a name
+ending in "class" never given a second "Class") lives once, in `schools/assets/kids-look.js` (`MaffsKids`), which both
+games and the class page load; until CLASS-PAGE each game carried its own copy. A teacher gets one link and one QR code
+that never change: `/class/#<Name>` greets the class (by `textContent`) and links every card to `/games/<slug>/#kids/<Name>`;
+with no name the cards link with `#kids` and a line tells teachers how the link works. The page is `noindex`, in no menu,
+no sitemap and no site search. Which games: `data/games.json` `"kids": true`, written into the page by
+`scripts/apply-meta.py` (data/ is not served, so the page cannot fetch it) with each game's roster name, its own
+`LINES.kids.title` and `games/<slug>/class-card.svg` (drawn from the game by `scripts/draw-class-cards.py`).
+`/class/` is a site-nav hub ("the class page"): a game opened from it at `#kids/<Name>` goes back to `/class/#<Name>`,
+read from the game's own fragment on each load, never stored. **The name lives only in the link**: never in the repo,
+never sent, never stored. **Checked:** `scripts/test-kids-look.py` (the rule against the games' old copy, the bare name,
+the greeting, nothing stored or sent, the class page); `scripts/check-meta.py` (the cards against games.json, and every
+game that loads kids-look.js marked); `scripts/check-site-nav.py` (the round trip from `/class/#Maple`); and
+`scripts/check-site.py`'s site-wide part, which fails if any served file names a class: "Maple", the documented example,
+plus any names in the `MAFFS_CLASS_NAMES` environment variable, which keeps the real ones out of the repo.
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths

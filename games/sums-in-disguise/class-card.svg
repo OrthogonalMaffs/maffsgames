@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 104" role="img" aria-label="Glasses and a moustache">
+<!-- The disguise kit: Sums in Disguise's glasses over its moustache. Written by scripts/draw-class-cards.py (contract CLASS-PAGE); do not edit by hand. -->
+<g transform="translate(0 4)"><path d="M17 20 L5 10 M103 20 L115 10" fill="none" stroke="#7e22ce" stroke-width="5px" stroke-linecap="round" stroke-linejoin="miter"></path><circle cx="35" cy="27" r="17" fill="#fde68a" stroke="#7e22ce" stroke-width="5px" stroke-linecap="butt" stroke-linejoin="miter"></circle><circle cx="85" cy="27" r="17" fill="#fde68a" stroke="#7e22ce" stroke-width="5px" stroke-linecap="butt" stroke-linejoin="miter"></circle><path d="M52 25 Q60 17 68 25" fill="none" stroke="#7e22ce" stroke-width="5px" stroke-linecap="round" stroke-linejoin="miter"></path></g>
+<g transform="translate(0 58)"><path d="M60 16 C53 5 36 4 27 13 C21 20 11 22 4 16 C5 29 19 38 34 34 C46 31 54 26 60 21 C66 26 74 31 86 34 C101 38 115 29 116 16 C109 22 99 20 93 13 C84 4 67 5 60 16 Z" fill="#3b2416"></path></g>
+</svg>

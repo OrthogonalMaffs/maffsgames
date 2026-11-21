@@ -2883,6 +2883,73 @@ def site_nav_report():
     return mod.static_report()
 
 
+# ---------------------------------------------------------------------------
+# Class names (contract CLASS-PAGE, Jon 21 Nov 2026; canon §7.5.9)
+# ---------------------------------------------------------------------------
+# A child-look game greets a class from its link's fragment (#kids/<Name>, /class/#<Name>): the name lives in the link
+# only. This holds every published file to that: no served .html, .js, .json, .css, .svg, .xml or .txt file names a
+# class the games have been used with. "Maple" is the documented example (the verifiers and docs, never served, use it);
+# the real names are kept out of the repo, so the list is read from MAFFS_CLASS_NAMES (comma-separated) when it is set.
+CLASS_NAMES_ENV = "MAFFS_CLASS_NAMES"
+CLASS_NAMES_DEFAULT = ("Maple",)
+CLASS_NAME_EXT = (".html", ".js", ".json", ".css", ".svg", ".xml", ".txt", ".webmanifest", ".mjs")
+
+
+def class_names():
+    extra = [n.strip() for n in os.environ.get(CLASS_NAMES_ENV, "").split(",") if n.strip()]
+    return list(CLASS_NAMES_DEFAULT) + [n for n in extra if n not in CLASS_NAMES_DEFAULT]
+
+
+def served_texts():
+    """{path: text} for every published text file (check-publish-scope.py's SITE, minus _config.yml's excludes)."""
+    import subprocess
+    spec = importlib.util.spec_from_file_location("check_publish_scope", os.path.join(ROOT, "scripts", "check-publish-scope.py"))
+    ps = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ps)
+    with open(os.path.join(ROOT, "_config.yml"), encoding="utf-8") as f:
+        excl = ps.read_excludes(f.read())
+    tracked = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True).stdout.split("\n")
+    out = {}
+    for p in tracked:
+        if p.endswith(CLASS_NAME_EXT) and ps.is_site(p) and not ps.excluded(p, excl) and not ps.special(p):
+            with open(os.path.join(ROOT, p), encoding="utf-8", errors="replace") as f:
+                out[p] = f.read()
+    return out
+
+
+def class_name_faults(texts, names):
+    """['path: line n names the class "X"'] for each whole-word, case-sensitive mention of a name in a served file."""
+    out = []
+    for name in names:
+        rx = re.compile(r"(?<![\w-])%s(?![\w-])" % re.escape(name))
+        for p, t in sorted(texts.items()):
+            m = rx.search(t)
+            if m:
+                out.append('%s: line %d names the class "%s" (a class name lives only in the link\'s fragment)'
+                           % (p, t.count("\n", 0, m.start()) + 1, name))
+    return out
+
+
+def class_name_report():
+    texts = served_texts()
+    names = class_names()
+    faults = class_name_faults(texts, names)
+    plants = [("a class name in the class page", "class/index.html", lambda t: t.replace("<h1>", "<h1>Maple ", 1)),
+              ("a class name in a comment of kids-look.js", "schools/assets/kids-look.js", lambda t: "/* e.g. Maple */\n" + t)]
+    missed = []
+    for what, path, plant in plants:
+        if path not in texts or not any(f.startswith(path + ":") for f in class_name_faults({path: plant(texts[path])}, ["Maple"])):
+            missed.append(what)
+    print("  class names (contract CLASS-PAGE): %d served file(s), %d name(s) (%s set: %s); %s"
+          % (len(texts), len(names), CLASS_NAMES_ENV, "yes" if os.environ.get(CLASS_NAMES_ENV) else "no",
+             "PASS" if not faults and not missed else "%d fault(s)" % (len(faults) + len(missed))))
+    for f in faults:
+        print("    FAIL  " + f)
+    for m in missed:
+        print("    FAIL  self-test missed: " + m)
+    return faults + missed
+
+
 def main():
     ap = argparse.ArgumentParser(description="Check that every page on the site runs.")
     ap.add_argument("--tier", choices=["1", "2", "3", "all"], default="all",
@@ -2951,6 +3018,7 @@ def main():
         fails += len(flagged)
         fails += len(clock_seed_report())
         fails += len(site_nav_report())
+        fails += len(class_name_report())
 
     if args.tier == "3":
         pages = build_page_list(args.only)

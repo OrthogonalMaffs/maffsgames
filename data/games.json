@@ -7,7 +7,8 @@
   "  'Year 6' never shown, the levels sentence and 'Free, no sign-up.' generated.",
   "search_phrase is written exactly as it appears in the title; description is what the student practises.",
   "Edit this file, run python scripts/apply-meta.py, then python scripts/check-meta.py. Never hand-edit a game's title.",
-  "\"rooms\": one entry per live escape room (a room whose index.html is not noindex): slug, search_phrase, level, and topics (required, written by a person, always used; never read from the teacher page's lockMeta)."
+  "\"rooms\": one entry per live escape room (a room whose index.html is not noindex): slug, search_phrase, level, and topics (required, written by a person, always used; never read from the teacher page's lockMeta).",
+  "\"kids\": true marks a game with a child look (#kids): the class page /class/ shows a card for each (contract CLASS-PAGE; scripts/apply-meta.py writes the cards, scripts/check-meta.py checks them)."
  ],
  "games": [
   {
@@ -1929,6 +1930,7 @@
   },
   {
    "slug": "sums-in-disguise",
+   "kids": true,
    "search_phrase": "Adding with known facts",
    "description": "Adding within 100 with a fact you know: every big sum is a little sum in disguise, from 44 + 2 and 40 + 20 to crossing a ten.",
    "keywords": [
@@ -1944,6 +1946,7 @@
   },
   {
    "slug": "some-thingies",
+   "kids": true,
    "search_phrase": "Times tables with groups and arrays",
    "description": "Multiplication as equal groups, repeated addition, arrays and facts: the 2, 5 and 10 times tables, and 3, 4 and 8 in pro mode.",
    "keywords": [

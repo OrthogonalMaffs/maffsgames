@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en-GB" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- The class page (contract CLASS-PAGE, Jon 21 Nov 2026; canon §7.5.9). One link for a class: /class/#<Name> greets the
+     class and opens every game with a child look in it (#kids/<Name>). The name lives only in the link's fragment: it is
+     read in this page by MaffsKids (schools/assets/kids-look.js), written with textContent, and never sent or stored.
+     Hidden: noindex, in no menu, no sitemap and no site search. The cards between the kid-cards markers are written by
+     scripts/apply-meta.py from data/games.json ("kids": true) and checked by scripts/check-meta.py. -->
+<meta name="robots" content="noindex">
+<meta name="description" content="Every MaffsGames game with a child look, on one page for a class.">
+<link rel="canonical" href="https://maffsgames.co.uk/class/">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<title>Class page | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="/schools/assets/analytics.js"></script>
+<script src="/schools/assets/kids-look.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+<style>
+:root{
+  --accent:#7e22ce;--accent-dim:#f3e8ff;--on-accent:#ffffff;
+  --card-1:#fef3c7;--card-1-edge:#f59e0b;--card-2:#e0f2fe;--card-2-edge:#0284c7;
+  --card-3:#dcfce7;--card-3-edge:#16a34a;--card-4:#fce7f3;--card-4-edge:#db2777;
+}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--text);font-family:var(--font-text)}
+.wrap{flex:1;width:100%;max-width:860px;margin:0 auto;padding:1.5rem 1rem 2rem}
+h1{margin:.2rem 0 .3rem;text-align:center;font-size:2.3rem;font-weight:800;line-height:1.1;color:var(--accent);text-shadow:0 3px 0 var(--card-1-edge)}
+.welcome{margin:.4rem 0 .2rem;text-align:center;font-size:1.35rem;font-weight:700;color:var(--text)}
+.welcome:empty{display:none}
+.teacher{max-width:34em;margin:.8rem auto 0;padding:.6rem .9rem;border-radius:12px;background:var(--surface);border:1px dashed var(--border);color:var(--muted);font-size:.9rem;line-height:1.45;text-align:center}
+.teacher code{font-family:var(--font-num);color:var(--text)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:1rem;margin:1.4rem 0 0}
+a.kid-card{display:flex;flex-direction:column;align-items:center;gap:.35rem;min-height:44px;padding:1.2rem 1rem 1.1rem;border-radius:20px;border:3px solid var(--card-1-edge);background:var(--card-1);color:var(--text);text-decoration:none;text-align:center;box-shadow:0 5px 0 var(--card-1-edge);transition:transform .12s ease,box-shadow .12s ease}
+a.kid-card:nth-child(4n+2){background:var(--card-2);border-color:var(--card-2-edge);box-shadow:0 5px 0 var(--card-2-edge)}
+a.kid-card:nth-child(4n+3){background:var(--card-3);border-color:var(--card-3-edge);box-shadow:0 5px 0 var(--card-3-edge)}
+a.kid-card:nth-child(4n+4){background:var(--card-4);border-color:var(--card-4-edge);box-shadow:0 5px 0 var(--card-4-edge)}
+a.kid-card:hover{transform:translateY(-2px)}
+a.kid-card:active{transform:translateY(3px);box-shadow:0 2px 0 var(--card-1-edge)}
+a.kid-card:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.kid-pic{display:flex;align-items:center;justify-content:center;height:110px}
+.kid-pic img{display:block;max-width:100%;max-height:110px;width:auto;height:auto}
+.kid-name{font-size:1.5rem;font-weight:800;line-height:1.15;color:var(--accent)}
+.kid-line{font-size:1.1rem;font-weight:600}
+@media (prefers-reduced-motion:reduce){a.kid-card{transition:none}a.kid-card:hover,a.kid-card:active{transform:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>Pick a game!</h1>
+  <p class="welcome" id="welcome"></p>
+  <p class="teacher" id="teacherNote">For teachers: add <code>#YourClass</code> to this page’s address and the games will greet your class by name. The name stays in the link: nothing is sent or stored.</p>
+  <div class="cards" id="cards">
+<!-- kid-cards: written by scripts/apply-meta.py from data/games.json ("kids": true); do not edit by hand -->
+    <a class="kid-card" data-slug="sums-in-disguise" href="/games/sums-in-disguise/#kids"><span class="kid-pic"><img src="/games/sums-in-disguise/class-card.svg" alt="" width="120" height="104"></span><span class="kid-name">Sums in Disguise</span><span class="kid-line">Every sum is in disguise!</span></a>
+    <a class="kid-card" data-slug="some-thingies" href="/games/some-thingies/#kids"><span class="kid-pic"><img src="/games/some-thingies/class-card.svg" alt="" width="72" height="24"></span><span class="kid-name">Some Thingies</span><span class="kid-line">Count the thingies!</span></a>
+<!-- /kid-cards -->
+  </div>
+</main>
+<script>
+(function () {
+  // The class name, from this page's own fragment only (#<Name>): shown as text, put in each game link, nothing else.
+  function show() {
+    var name = MaffsKids.read(window.location.hash, { bare: true }).name;
+    document.getElementById('welcome').textContent = name ? MaffsKids.greeting('Welcome, {name} Class!', name) : '';
+    document.getElementById('teacherNote').hidden = !!name;
+    var cards = document.querySelectorAll('a.kid-card[data-slug]');
+    for (var i = 0; i < cards.length; i++) {
+      cards[i].setAttribute('href', '/games/' + cards[i].getAttribute('data-slug') + '/' + MaffsKids.gameHash(name));
+    }
+  }
+  show();
+  window.addEventListener('hashchange', show);
+})();
+</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>

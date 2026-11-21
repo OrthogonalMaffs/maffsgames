@@ -9,7 +9,8 @@ all come from scripts/check-meta.py, which holds every page to them in CI. For e
 sets <title>, <meta name="description">, og:title and og:description, and twitter:title and
 twitter:description where the page has them. On the portal (index.html) and /essentials/ it sets
 data-keywords on every game card from games.json's keywords (contract SEARCH-KEYWORDS, 4 Nov 2026), for
-on-site search only. Nothing else in the file changes.
+on-site search only. On the class page (class/index.html) it writes the cards between the kid-cards markers, one per
+game marked "kids": true (contract CLASS-PAGE, 21 Nov 2026). Nothing else in the file changes.
 
 Games in check-meta.py's PENDING are skipped. It refuses (exit 1, nothing written) when
 games.json breaks a rule (a slug, a length, a duplicate title) or a page has a head tag in a
@@ -57,6 +58,18 @@ def main():
             return 1
         if new != p.read_text(encoding="utf-8"):
             writes[p] = new
+    p = BASE / cm.CLASS_PAGE
+    markup, errs = cm.kid_cards(BASE, cm.load(BASE))
+    if errs:
+        print("\n".join("REFUSED: " + e for e in errs))
+        return 1
+    try:
+        new = cm.render_class_page(p.read_text(encoding="utf-8"), markup)
+    except ValueError as e:
+        print("REFUSED: %s" % e)
+        return 1
+    if new != p.read_text(encoding="utf-8"):
+        writes[p] = new
     for p, new in writes.items():
         print("%s %s" % ("would write" if a.dry_run else "wrote   ", p.relative_to(BASE)))
         if not a.dry_run:
