@@ -50,6 +50,7 @@ Install once with:  pip install playwright && python -m playwright install chrom
 """
 import argparse
 import asyncio
+import importlib.util
 import json
 import os
 import random
@@ -2872,6 +2873,16 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
 
 # ---------------------------------------------------------------------------
 
+def site_nav_report():
+    """The site-navigation static rule (contract SITE-NAV, 21 Nov 2026; scripts/check-site-nav.py holds it): every page
+    with an a.back-link loads site-nav.js once, every page outside games/ that links to a game is one of its hubs, and
+    the margin logo's opt-outs are listed with reasons. Here, in the site-wide part, so it runs on every pull request."""
+    spec = importlib.util.spec_from_file_location("check_site_nav", os.path.join(ROOT, "scripts", "check-site-nav.py"))
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod.static_report()
+
+
 def main():
     ap = argparse.ArgumentParser(description="Check that every page on the site runs.")
     ap.add_argument("--tier", choices=["1", "2", "3", "all"], default="all",
@@ -2939,6 +2950,7 @@ def main():
         flagged, _ = tier2(tier2_targets())
         fails += len(flagged)
         fails += len(clock_seed_report())
+        fails += len(site_nav_report())
 
     if args.tier == "3":
         pages = build_page_list(args.only)
