@@ -2335,6 +2335,10 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   board ranks its lowest score top; an unrankable board gets percentile and
   tier null. A tie is never counted as worse. Tested by
   `scripts/test-percentile.py` (PERCENTILE-LOWER-IS-BETTER, 21 Nov 2026).
+- The tier is compared in whole numbers, not on the percentile: in the top
+  fraction t when (n - worse) * 100 <= round(t * 100) * n, so the best of
+  exactly 20 gets gold (1 - 19/20 is 0.050000000000000044 in floating point;
+  contract SOME-THINGIES step 1b, 21 Nov 2026).
 
 ## The ticker
 - Location: portal homepage, `index.html:664`

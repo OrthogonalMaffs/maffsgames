@@ -129,6 +129,8 @@
     'foundation-s5':'Foundation · Stage 5',
     // Take a Walk: one board per stage (contract TAKE-A-WALK, 23 Oct 2026; labels by Jon's lane exception, 20:33).
     'stage-1':'Stage 1','stage-2':'Stage 2','stage-3':'Stage 3','stage-4':'Stage 4',
+    // Some Thingies pro mode: contract SOME-THINGIES; Jon approved, 21 Nov 2026
+    'pro-stage-1':'Pro · Stage 1','pro-stage-2':'Pro · Stage 2','pro-stage-3':'Pro · Stage 3','pro-stage-4':'Pro · Stage 4',
     // Football Pitches per Squared Squirrel's fifth stage (contract FOOTBALL-PITCHES, 23 Oct 2026; Jon's lane exception, 23:05).
     'stage-5':'Stage 5',
     // It's a SINE!!: one board per level and stage (contract ITS-A-SINE; Jon's lane exception, 17 Nov 2026).
@@ -543,11 +545,16 @@
    */
   function calculatePercentile(score, allScores, direction) {
     if (!allScores.length) return null;
+    return 1 - (countWorse(score, allScores, direction) / allScores.length);
+  }
+
+  // How many of allScores are worse than score (the rule calculatePercentile describes).
+  function countWorse(score, allScores, direction) {
     var scoresWorse = 0;
     for (var i = 0; i < allScores.length; i++) {
       if (direction === 'lower' ? allScores[i] > score : allScores[i] < score) scoresWorse++;
     }
-    return 1 - (scoresWorse / allScores.length);
+    return scoresWorse;
   }
 
   /**
@@ -558,17 +565,26 @@
   function rankScore(gameSlug, score, allScores) {
     var rules = rankRules(gameSlug);
     var percentile = rules.rankable ? calculatePercentile(score, allScores, rules.direction) : null;
-    return { percentile: percentile, tier: getTier(percentile), totalPlayers: allScores.length };
+    var worse = percentile === null ? null : countWorse(score, allScores, rules.direction);
+    return { percentile: percentile, tier: getTier(allScores.length, worse), totalPlayers: allScores.length };
   }
 
   /**
-   * Determine certificate tier from percentile
+   * Determine certificate tier: n scores on the board, worse of them worse than
+   * this one (null: no tier). Compared in whole numbers, not on the percentile:
+   * 1 - 19/20 is 0.050000000000000044 in floating point, so the best of exactly
+   * 20 used to miss gold (contract SOME-THINGIES step 1b, 21 Nov 2026).
    */
-  function getTier(percentile) {
-    if (percentile === null) return null;
-    if (percentile <= GOLD_THRESHOLD) return 'gold';
-    if (percentile <= SILVER_THRESHOLD) return 'silver';
+  function getTier(n, worse) {
+    if (worse === null || !n) return null;
+    if (inTop(n, worse, GOLD_THRESHOLD)) return 'gold';
+    if (inTop(n, worse, SILVER_THRESHOLD)) return 'silver';
     return null;
+  }
+
+  // In the top fraction t: (n - worse) / n <= t, as (n - worse) * 100 <= round(t * 100) * n.
+  function inTop(n, worse, t) {
+    return (n - worse) * 100 <= Math.round(t * 100) * n;
   }
 
   /**

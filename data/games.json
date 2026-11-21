@@ -1943,6 +1943,23 @@
    ]
   },
   {
+   "slug": "some-thingies",
+   "search_phrase": "Times tables with groups and arrays",
+   "description": "Multiplication as equal groups, repeated addition, arrays and facts: the 2, 5 and 10 times tables, and 3, 4 and 8 in pro mode.",
+   "keywords": [
+    "multiplication",
+    "times tables",
+    "arrays",
+    "repeated addition",
+    "equal groups",
+    "groups of",
+    "2 times table",
+    "5 times table",
+    "10 times table",
+    "essentials"
+   ]
+  },
+  {
    "slug": "maffscards",
    "search_phrase": "MaffsCards Number Card",
    "description": "Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi.",
