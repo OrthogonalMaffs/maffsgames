@@ -1357,6 +1357,7 @@ def run_selftest_play(uid, games):
     global NETWORK, LOAD_MS
     _, play, own = next(p for p in SELFTEST_PLAYS if p[0] == uid)
     real_network, real_load = NETWORK, LOAD_MS
+    real_taps = dict(TAP_ANSWERS)           # a plant's tap-through is no game's count (the near-the-bound note)
     NETWORK = dead_under(real_network)
     del WAITING[:]
     try:
@@ -1369,6 +1370,8 @@ def run_selftest_play(uid, games):
     finally:
         NETWORK, LOAD_MS = real_network, real_load
         del WAITING[:]
+        TAP_ANSWERS.clear()
+        TAP_ANSWERS.update(real_taps)
     return errs
 
 
