@@ -14,7 +14,11 @@ been posted to the Sheet, so it checks the payload as it would land in the colum
   3. no click is held up: the listener never calls preventDefault;
   4. a game card (including one inside the labelled New and updated section) still
      fires game_card_clicked and never section_clicked;
-  5. the Misunderstood Maths card still fires fact_expanded and never section_clicked.
+  5. the Misunderstood Maths card still fires fact_expanded and never section_clicked;
+  6. on every page with download links (contract DOWNLOAD-COUNTS, 20 Nov 2026: core-maths/counting-players/,
+     printables/ and the two Ugh, stats pages with a CSV link), each download link (an <a> with a download
+     attribute) fires one section_clicked with action download and its own item, and each ordinary labelled
+     link on those pages still fires open-link. Every a[download] on those pages is tested.
 
 NOTHING LEAVES THE MACHINE
 --------------------------
@@ -31,12 +35,13 @@ from playwright.async_api import async_playwright
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ORIGIN = "https://maffsgames.co.uk"
 
-def expected_from_page():
-    """([(section, item, position)] for the links, [(section, item, position)] for the toggles), read from
-    index.html's own markup order: a labelled element's position is its place among its section's
+def expected_from_page(rel="index.html"):
+    """([(section, item, position, action)] for the links, [(section, item, position)] for the toggles), read from
+    the page's own markup order (rel: the repo path of its file; action "download" for an <a> with a download
+    attribute, else "open-link"): a labelled element's position is its place among its section's
     data-mfg-item elements, in page order (the rule analytics.js applies). Nothing here is a hand copy of the
     page, so reordering the cards moves the expectation with them (FRONT-PAGE-ROOM-ORDER broke the old table)."""
-    with open(os.path.join(ROOT, "index.html"), encoding="utf-8") as f:
+    with open(os.path.join(ROOT, rel), encoding="utf-8") as f:
         html = f.read()
     links, toggles, section, pos = [], [], None, 0
     for m in re.finditer(r"<(\w+)([^>]*data-mfg-(?:section|item)=[^>]*)>", html):
@@ -47,9 +52,21 @@ def expected_from_page():
             section, pos = sec.group(1), 0
         if item:
             pos += 1
-            is_toggle = tag == "button" and "aria-expanded" in attrs
-            (toggles if is_toggle else links).append((section, item.group(1), pos))
+            if tag == "button" and "aria-expanded" in attrs:
+                toggles.append((section, item.group(1), pos))
+            else:
+                is_download = tag == "a" and re.search(r"(?:^|\s)download(?:[\s=]|$)", attrs)
+                links.append((section, item.group(1), pos, "download" if is_download else "open-link"))
     return links, toggles
+
+
+# Pages with download links: (URL path, repo file). check-download-labels.py fails any unlabelled one.
+DOWNLOAD_PAGES = [
+    ("/core-maths/counting-players/", "core-maths/counting-players/index.html"),
+    ("/printables/", "printables/index.html"),
+    ("/ugh-stats/flu-and-answers/", "ugh-stats/flu-and-answers/index.html"),
+    ("/ugh-stats/one-class/", "ugh-stats/one-class/index.html"),
+]
 
 
 EXPECTED_LINKS, EXPECTED_TOGGLES = expected_from_page()
@@ -70,6 +87,7 @@ window.addEventListener('click', function(e) {
 async def main():
     posts = []
     fails = []
+    downloads = 0
 
     async def route(r):
         url = r.request.url
@@ -129,10 +147,10 @@ async def main():
                     "filter_value": "v1|pos=%d;action=%s" % (pos, action)}
 
         print("labelled links")
-        for sec, item, pos in EXPECTED_LINKS:
+        for sec, item, pos, action in EXPECTED_LINKS:
             sel = '[data-mfg-section="%s"] [data-mfg-item="%s"]' % (sec, item)
             check("%s / %s" % (sec, item), await click(sel), "section_clicked",
-                  fields(sec, item, pos, "open-link"))
+                  fields(sec, item, pos, action))
 
         print("toggles: opening fires, closing does not")
         for sec, item, pos in EXPECTED_TOGGLES:
@@ -158,6 +176,30 @@ async def main():
             fails.append("%d labelled elements on the portal, %d tested" % (labelled, tested))
         if any(await page.evaluate("window.__prevented")):
             fails.append("a click was cancelled before the test's own handler: navigation would be held up")
+
+        print("download links (and the ordinary links beside them)")
+        downloads = 0
+        for url, rel in DOWNLOAD_PAGES:
+            links, toggles = expected_from_page(rel)
+            await page.goto(ORIGIN + url + "?cb=section-clicks", wait_until="load")
+            await page.wait_for_timeout(500)
+            for sec, item, pos, action in links:
+                sel = '[data-mfg-section="%s"] [data-mfg-item="%s"]' % (sec, item)
+                check("%s%s (%s)" % (url, item, action), await click(sel), "section_clicked",
+                      fields(sec, item, pos, action))
+            n_dl = sum(1 for l in links if l[3] == "download")
+            downloads += n_dl
+            on_page = await page.evaluate("document.querySelectorAll('a[download]').length")
+            if n_dl == 0 or on_page != n_dl:
+                fails.append("%s: %d a[download] on the page, %d tested" % (url, on_page, n_dl))
+            labelled_here = await page.evaluate("document.querySelectorAll('[data-mfg-item]').length")
+            if labelled_here != len(links) + len(toggles) or toggles:
+                fails.append("%s: %d labelled elements, %d links tested (toggles here: %d)"
+                             % (url, labelled_here, len(links), len(toggles)))
+            if url == "/printables/" and not any(l[3] == "open-link" for l in links):
+                fails.append("/printables/: no ordinary labelled link left to prove open-link")
+            if any(await page.evaluate("window.__prevented")):
+                fails.append("%s: a click was cancelled before the test's own handler" % url)
         await browser.close()
 
     print()
@@ -166,7 +208,8 @@ async def main():
         for f in fails:
             print("  -", f)
         sys.exit(1)
-    print("OK - %d labelled elements, each one section_clicked; game cards and facts unchanged" % labelled)
+    print("OK - %d labelled elements, each one section_clicked; game cards and facts unchanged; "
+          "%d download links, each one section_clicked action download" % (labelled, downloads))
 
 
 if __name__ == "__main__":
