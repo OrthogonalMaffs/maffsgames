@@ -16,6 +16,12 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): CLASS-PAGE (one hidden /class/ page for every child-look game; the fragment rule shared)
+
+Claude Code (home lane, run in a cloud session), branch `claude/ecstatic-thompson-f35dgo`; contract `docs/handover/contracts/2026-11-21-class-page.md`. The first commit carries SOME-THINGIES-TURN-LABELS' close-out (#870, 7d827fa; its entry below).
+
+- Started. The two games' fragment rules are byte-identical (sums-in-disguise :363-381, some-thingies :396-414), so no STOP.
+
 ## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
 
 Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-labels`; contract `docs/handover/contracts/2026-11-21-some-thingies-turn-labels.md` (the 20:09 reissue with amendment 1, which arrived after I'd started; I carried on). The first commit carries SOME-THINGIES-PERSONALITY's close-out (#868, 8bf4b4e; its entry below).
@@ -24,6 +30,7 @@ Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-
 - Amendment 1: `.arr.turning .th{transform:rotate(-90deg)}`, centred on each thingy, with the array's 0.6 s ease, so every thingy stays eyes up. Measured mid-turn in Chromium: net 0° within 3°.
 - Next is there at once after marking; marking and the lock are untouched.
 - The verifier's new `turn` unit (laptop and phone at full motion, phone with reduced motion) and two plants (labels left visible, no counter-rotation), both caught; 15 plants in all.
+- MERGED 21 Nov 2026, 20:29 UTC, as 7d827fa (#870), the contract's route (merge-pr.py). Main on the merge commit: check-site 44946545379 success, phone-fit-full 44946545381 success, pages build 44946545012 success (read from GitHub by CLASS-PAGE's close-out). Contract moved to `docs/history/contracts/2026-11-21-some-thingies-turn-labels.md` (closed out by CLASS-PAGE's first commit).
 
 ## 2026-11-21 (home): SOME-THINGIES-PERSONALITY (the thingies as characters; the game's own look)
 
