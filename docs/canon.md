@@ -1660,6 +1660,29 @@ scoped to its own class, so a page that uses none is unchanged; colours come fro
 - **Applied** group by group (reference panels, four full-width options, figures), each game's before and after recorded in
   `docs/audits/fold-components-2026-10-27.md` and its entries taken off the lists in `scripts/phone-fit-state.json`.
 
+### 7.5.8 Site navigation: the back link and the margin logo (Jon, 21 Nov 2026, 11:03-11:04; contract SITE-NAV)
+
+**The back link goes back to the hub the student came from.** Every page's `a.back-link` is written in its HTML, and most
+go to the front screen, so a student who opened a game from OP for Secondary was sent to the front screen. One shared
+script, `schools/assets/site-nav.js`, linked on every page with an `a.back-link` (`scripts/apply-site-nav.py`), reads
+`document.referrer` in the page. When it is a same-origin page in its `HUBS` map (path to label, each label from the
+hub's own title), every `a.back-link` goes to that hub and reads "← Back to <label>"; the hub is remembered for that page
+in `sessionStorage`, so a reload or a `?level=` switch keeps it. Opened directly, from another site or from another game,
+nothing changes: every link stays exactly as written. Nothing is sent anywhere. Other scripts read `window.MaffsNav`
+(`backHref`, `backLabel`, `shortLabel`): `stage-exit.js` gives its row link and HUD home link the hub, in its short form
+("← OP for Secondary", as its "← Games" is short: STAGE-EXIT-LABEL). No game's header or back-link markup is edited.
+
+**The margin logo.** A MaffsGames logo (`schools/assets/logo.svg`, the portal's header mark on a navy tile) links to "/",
+fixed top left, named "MaffsGames home". It shows only while nothing the page paints comes within its clear space
+(measured, never a width guess: a fixed element where it is, anything in the flow by its left edge at any height), and
+only on a fine pointer, so never on phones or tablets; re-measured on resize and when the page changes. A page that shows
+a logo of its own carries `<html data-site-logo="off">`, each listed with its reason in `scripts/check-site-nav.py`.
+
+**Checked:** `check-site.py`'s site-wide part holds every page with an `a.back-link` to loading `site-nav.js` once, every
+page outside `games/` that links to a game to being in `HUBS`, and the opt-outs to their reasons; `check-site-nav.py`
+plays the rule in Chromium (from a hub, reloaded, on a level switch, direct, from another game, stage-exit's links, the
+logo by an independent hit test at 1920x1080, 390x844 and a 768x1024 tablet), with planted faults caught.
+
 ## 7.7 What the site publishes — SITE and INTERNAL
 
 GitHub Pages builds `main` with Jekyll and publishes every tracked file except dot-paths

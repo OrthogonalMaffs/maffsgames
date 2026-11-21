@@ -92,7 +92,11 @@
   function build() {
     var link = document.querySelector('a.back-link');
     if (!link || document.querySelector('.stage-exit-row')) return;
-    link.textContent = homeLabel;
+    // The hub the student came from (schools/assets/site-nav.js, contract SITE-NAV), read here so the row link and
+    // the HUD home link agree with it whatever order the two scripts load in; without one, the link as written.
+    var nav = window.MaffsNav && window.MaffsNav.backHref ? window.MaffsNav : null;
+    if (nav) link.setAttribute('href', nav.backHref);
+    link.textContent = nav ? nav.shortLabel : homeLabel;   // short, as homeLabel is (STAGE-EXIT-LABEL)
     var row = document.createElement('div');
     row.className = 'stage-exit-row';
     link.parentNode.insertBefore(row, link);
