@@ -31,9 +31,11 @@
 :root{
   --accent:#115e59;--accent-dim:#ccfbf1;--on-accent:#ffffff;
   --th-1:#0d9488;--th-2:#f59e0b;--th-3:#6366f1;--th-eye:#ffffff;--th-pupil:#111827;
-  --plate:#f1f5f9;--plate-edge:#cbd5e1;--dot:#0f766e;
+  --plate:#f1f5f9;--plate-edge:#cbd5e1;
+  --col-1:#dc2626;--col-2:#ea580c;--col-3:#ca8a04;--col-4:#16a34a;--col-5:#0d9488;
+  --col-6:#0284c7;--col-7:#4f46e5;--col-8:#9333ea;--col-9:#db2777;--col-10:#78350f;
   --kid-accent:#a21caf;--kid-accent-dim:#fae8ff;--kid-bg:#fff7d6;--kid-edge:#f0abfc;
-  --kid-th-1:#ec4899;--kid-th-2:#16a34a;--kid-th-3:#0284c7;--kid-plate:#ffffff;--kid-plate-edge:#f0abfc;--kid-dot:#a21caf
+  --kid-th-1:#ec4899;--kid-th-2:#16a34a;--kid-th-3:#0284c7;--kid-plate:#ffffff;--kid-plate-edge:#f0abfc
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -89,9 +91,21 @@ a.back-link:hover{color:var(--text)}
 .th{display:block;width:14px;height:14px}
 .th .b{fill:var(--th)}.th .e{fill:var(--th-eye)}.th .p{fill:var(--th-pupil)}
 .plate.c0{--th:var(--th-1)}.plate.c1{--th:var(--th-2)}.plate.c2{--th:var(--th-3)}
-.arr{display:grid;gap:5px;padding:6px;transition:transform .6s ease}
-.arr i{display:block;width:13px;height:13px;border-radius:50%;background:var(--dot)}
+/* Stage 3 (SOME-THINGIES-TWEAKS, Jon's option C): the array is thingies, each column its own colour (one fixed set of
+   10, column 1 always the first), a gap of 0.7 of a thingy after the 5th column and after the 5th row. --s is the
+   thingy's size, set by drawArray() to fit (22 px at most). The labels from the scaffold sit above and down the side. */
+.arr-wrap{display:grid;grid-template-columns:auto auto;align-items:center;justify-content:center;column-gap:4px;row-gap:2px;max-width:100%}
+.arr-top{grid-column:2;grid-row:1;text-align:center;font-size:.85rem;font-weight:700;color:var(--text);min-height:1.2em}
+.arr-side{grid-column:1;grid-row:2;writing-mode:vertical-rl;transform:rotate(180deg);font-size:.85rem;font-weight:700;color:var(--text);min-width:1.2em;text-align:center}
+.arr{grid-column:2;grid-row:2;display:flex;flex-direction:column;gap:calc(var(--s) * .3);transition:transform .6s ease}
+.arr .arow{display:flex;gap:calc(var(--s) * .15)}
+.arr .arow.r6{margin-top:calc(var(--s) * .4)}
+.arr .th{width:var(--s);height:var(--s)}
+.arr .th.c6,.arr .th.c11{margin-left:calc(var(--s) * .55)}
 .arr.turning{transform:rotate(90deg)}
+.k1{--th:var(--col-1)}.k2{--th:var(--col-2)}.k3{--th:var(--col-3)}.k4{--th:var(--col-4)}.k5{--th:var(--col-5)}
+.k6{--th:var(--col-6)}.k7{--th:var(--col-7)}.k8{--th:var(--col-8)}.k9{--th:var(--col-9)}.k10{--th:var(--col-10)}
+.end-btn{min-height:44px;padding:.2rem .7rem;font-size:.85rem}
 .sum{font-size:1.4rem;line-height:1.3;min-height:2rem;text-align:center;font-family:var(--font-num);font-weight:700;max-width:100%}
 .sum:empty{display:none}
 .sum .katex{font-size:1em}
@@ -134,7 +148,7 @@ a.back-link:hover{color:var(--text)}
 
 /* The kid look: brighter and rounder; the same layout, items, marking and boards. */
 body.look-kids{background:var(--kid-bg);--accent:var(--kid-accent);--accent-dim:var(--kid-accent-dim);
-  --th-1:var(--kid-th-1);--th-2:var(--kid-th-2);--th-3:var(--kid-th-3);--plate:var(--kid-plate);--plate-edge:var(--kid-plate-edge);--dot:var(--kid-dot)}
+  --th-1:var(--kid-th-1);--th-2:var(--kid-th-2);--th-3:var(--kid-th-3);--plate:var(--kid-plate);--plate-edge:var(--kid-plate-edge)}
 body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid var(--kid-edge);border-radius:22px}
 body.look-kids .btn,body.look-kids .opt{border-radius:999px}
 body.look-kids .stage-btn{border-radius:20px}
@@ -162,12 +176,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/options.js"></script>
 <script src="/schools/assets/site-nav.js"></script>
 <script src="../../schools/assets/stage-exit.js"></script>
-<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Main Stage 1; 'answer' with i = 0 answers the item on screen right, and with i >= 1 picks a decoy (on a Stage 2 adding item, after counting the lots right), so it is marked wrong and waits on Next.
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Main Stage 1; 'answer' with i = 0 answers the item on screen right up to question 10, and with i >= 1 picks a decoy (on a Stage 2 adding item, after counting the lots right), so it is marked wrong and waits on Next. Winner stays on (SOME-THINGIES-TWEAKS): a run of right answers never ends, so from question 11 the hint answers wrong, which ends the run as a student's first slip does.
 {
   "start": "ST.ui.start('main-1');",
   "ready": "!!window.ST && ST.ui.ready()",
   "answer": [
-    "ST.ui.answer(i === 0);"
+    "ST.ui.answer(i === 0 && ST.ui.qi() <= 10);"
   ]
 }
 -->
@@ -194,6 +208,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     <div class="hud">
       <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
       <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <button class="btn end-btn" id="endBtn" type="button" hidden>End</button>
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     </div>
     <div class="qcard" id="qcard">
@@ -239,9 +254,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       title: "Multiplication is equal groups. Count them properly.",
       welcome: "Some thingies need counting.",
       total: "How many thingies?",
-      dots: "How many dots?",
       how_many: "How many {n}s?",
       pick: "Which sum is it?",
+      // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite. (SOME-THINGIES-TWEAKS: the Stage 3 steps and
+      // their labels; winner stays on, at question 11 and on the end screen after a wrong answer past question 10.)
+      rows_q: "How many rows?",
+      cols_q: "How many in each row?",
+      label_rows: "{n} rows",
+      label_cols: "{n} in each row",
+      overtime: "Ten done. From here, one slip ends it.",
+      overtime_end: "One slip. The thingies win this round.",
       right: ["Correct.", "Counted and confirmed.", "The thingies agree.", "Exactly right.", "Spot on.", "Well grouped."],
       wrong: { groups: "Count one plate, then count the plates.", sum: "Count how many times the number is added.", pick: "The same number, added that many times.", array: "Count one row, then count the rows.", fact: "Use the table you know.", missing: "Which number, times this one, makes it?" },
       end: "Every thingy counted. They feel seen."
@@ -251,9 +273,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       welcome: "Welcome, thingy counters!",
       welcome_class: "Welcome, {name} Class!",
       total: "How many thingies?",
-      dots: "How many dots?",
       how_many: "How many {n}s?",
       pick: "Which sum is it?",
+      // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite.
+      rows_q: "How many rows?",
+      cols_q: "How many in each row?",
+      label_rows: "{n} rows",
+      label_cols: "{n} in each row",
+      overtime: "Keep going! One slip ends it.",
+      overtime_end: "What a run! Play again?",
       right: ["Yes!", "Brilliant!", "You got it!", "Super counting!", "The thingies cheer!", "Spot on!"],
       wrong: { groups: "Count one plate first!", sum: "Count the numbers added!", pick: "Find the same number again!", array: "Count one row first!", fact: "Use your times table!", missing: "What times makes it?" },
       end: "All the thingies counted!"
@@ -268,10 +296,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var STAGES = {
     1: { name: 'Plates', about: 'Equal groups' },
     2: { name: 'Adding', about: 'Repeated addition' },
-    3: { name: 'Arrays', about: 'Rows of dots' },
+    3: { name: 'Arrays', about: 'Rows of thingies' },
     4: { name: 'Facts', about: 'Times table facts' }
   };
-  var MENU_NOTE = '10 questions a run. A point for each one right.';
+  var MENU_NOTE = 'At least 10 questions, then keep going until a slip, or press End. A point for each one right.';
 
   /* =====================================================================================================
      THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
@@ -744,21 +772,46 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('pic').dataset.groups = String(g);
     $('pic').dataset.each = String(n);
   }
+  // Stage 3: r rows of c thingies. Each thingy is coloured by its column (k1..k10, the same order every time); once the
+  // array has turned round, the colours follow their thingies, so each row is one colour.
+  // The size: 22 px at most, smaller only where the width (10 across) or the height (10 down, with the options under it,
+  // and once turned round the feedback and Next too) needs it, never below 12 px.
+  function arraySize(r, c, turned) {
+    var across = c + (c - 1) * 0.15 + (c > 5 ? 0.55 : 0), down = r + (r - 1) * 0.3 + (r > 5 ? 0.4 : 0);
+    var w = $('pic').clientWidth || $('qcard').clientWidth || 300;
+    var byW = (w - 30) / across, byH = (window.innerHeight - (turned ? 430 : 310)) / down;
+    return Math.max(12, Math.floor(Math.min(22, byW, byH)));
+  }
   function drawArray(r, c, turned) {
-    $('pic').innerHTML = '<div class="arr" id="arr" style="grid-template-columns:repeat(' + c + ',13px)">' + new Array(r * c + 1).join('<i></i>') + '</div>';
+    var s = arraySize(r, c, turned), h = '';
+    for (var i = 1; i <= r; i++) {
+      h += '<div class="arow' + (i === 6 ? ' r6' : '') + '">';
+      for (var j = 1; j <= c; j++) h += THINGY.replace('class="th"', 'class="th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '"');
+      h += '</div>';
+    }
+    $('pic').innerHTML = '<div class="arr-wrap"><div class="arr-top" id="arrTop"></div><div class="arr-side" id="arrSide"></div>' +
+      '<div class="arr" id="arr" style="--s:' + s + 'px">' + h + '</div></div>';
     $('pic').dataset.rows = String(r);
     $('pic').dataset.cols = String(c);
     $('pic').dataset.turned = turned ? '1' : '0';
   }
-  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned'].forEach(function (k) { delete p.dataset[k]; }); }
+  // The scaffold's labels: "R rows" down the side, "C in each row" along the top (always the right number).
+  function labelArray(kind) {
+    if (kind === 'rows') $('arrSide').textContent = L.label_rows.replace('{n}', String(Q.rows));
+    else $('arrTop').textContent = L.label_cols.replace('{n}', String(Q.cols));
+  }
+  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned', 'steps', 'step1', 'step2'].forEach(function (k) { delete p.dataset[k]; }); }
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
 
   /* =====================================================================================================
      THE GAME
      ===================================================================================================== */
-  // state: menu | count (Stage 2 adding: how many lots) | ask (the options) | done (right, Next) | wrong (MaffsNext)
-  //        | moving | over
-  var mode = 'main-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, countRight = true, lastLine = '', turnTimer = null;
+  // state: menu | count (Stage 2 adding: how many lots) | rows, cols (Stage 3's scaffold steps) | ask (the options)
+  //        | done (right, Next) | wrong (MaffsNext) | moving | over
+  // Winner stays on (SOME-THINGIES-TWEAKS, Jon, 21 Nov 2026): a run is at least PER questions; after that it carries on
+  // until the first wrong answer (runOver) or End. qi is the question number, answered the questions marked.
+  var mode = 'main-1', Q = null, qi = 0, state = 'menu', score = 0, countRight = true, lastLine = '', turnTimer = null;
+  var items = [], deck = [], pending = null, lastId = null, answered = 0, runOver = false, steps = 0;
 
   function show(id) {
     ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
@@ -770,18 +823,27 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var md = modeOf(m), st = stageOf(m);
     return QUESTIONS.filter(function (q) { return q.mode === md && q.stage === st; });
   }
-  // A run: PER items from the mode and stage, no repeat (a Fisher-Yates shuffle of its items, then the first PER).
-  function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
+  // The supply: the stage's items shuffled (Fisher-Yates), dealt with no repeat until all are used, then shuffled
+  // again, never starting with the item just answered.
+  function draw() {
+    if (!deck.length) {
+      deck = MaffsOptions.shuffle(items.slice());
+      if (deck.length > 1 && deck[0].id === lastId) deck.push(deck.shift());
+    }
+    return deck.shift();
+  }
 
-  function begin(m, list) {
+  // first: an item to show first (the verifier's preview), as question number at (default 1).
+  function begin(m, first, at) {
     MaffsLock.newSession();
-    mode = m; qs = list; qi = 0; score = 0;
+    mode = m; items = stageItems(m); deck = []; pending = first || null; lastId = null;
+    qi = at ? at - 1 : 0; score = 0; answered = 0; runOver = false;
     show('game');
     $('hudStage').textContent = (modeOf(m) === 'pro' ? 'Pro ' : '') + stageOf(m);
     ev('game_started', { game_slug: SLUG, level: level, mode: evMode(mode) });
     nextQuestion();
   }
-  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m, run(m)); }
+  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m); }
 
   function setSay(text, key) { $('say').textContent = text || ''; if (key) $('say').dataset.say = key; else delete $('say').dataset.say; }
   function setPrompt(text, key) {
@@ -799,12 +861,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     hush();
     lastLine = '';
     if (turnTimer !== null) { MaffsLock.cancel(turnTimer); turnTimer = null; }
-    if (qi >= qs.length) { finish(); return; }
-    Q = qs[qi++]; countRight = true;
-    $('hudQ').textContent = qi + '/' + qs.length;
+    if (runOver) { finish(); return; }
+    Q = pending || draw(); pending = null; lastId = Q.id; qi++; countRight = true; steps = 0;
+    // "1/10" up to question 10, then just the number; End from question 11.
+    $('hudQ').textContent = qi <= PER ? qi + '/' + PER : String(qi);
+    $('endBtn').hidden = qi <= PER;
     $('hudScore').textContent = String(score);
     $('stageLabel').textContent = MODE_INFO[modeOf(mode)].name + ' · Stage ' + stageOf(mode) + ' · ' + STAGES[stageOf(mode)].name;
-    setSay('');
+    if (qi === PER + 1) setSay(L.overtime, 'overtime'); else setSay('');
     clearPic(); setSum(''); setPrompt('');
     ['opts1', 'opts'].forEach(function (id) { $(id).hidden = true; $(id).innerHTML = ''; });
     var t = Q.type;
@@ -817,7 +881,14 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       setSum(groupsTex(Q.groups, Q.each), Q.groups + ' groups of ' + Q.each);
       setPrompt(L.pick, 'pick');
       ask(MaffsOptions.shuffle([Q.answer_sum].concat(Q.decoy_sums)), true);
-    } else if (t === 'array') { drawArray(Q.rows, Q.cols, false); setPrompt(L.dots, 'dots'); ask(numOpts(Q)); }
+    } else if (t === 'array') {
+      // The scaffold fades over each run: questions 1-4 ask rows, then each row, then the total; 5-7 show the rows
+      // label and ask each row, then the total; from 8, the total only. The steps never score.
+      drawArray(Q.rows, Q.cols, false);
+      if (qi <= 4) askStep('rows');
+      else if (qi <= 7) { labelArray('rows'); askStep('cols'); }
+      else askTotal();
+    }
     else if (t === 'fact') { setSum(Q.a + ' \\times ' + Q.b + ' = {?}', Q.a + 'x' + Q.b); ask(numOpts(Q)); }
     else { setSum('{?} \\times ' + Q.b + ' = ' + Q.product, '?x' + Q.b + '=' + Q.product); ask(numOpts(Q)); }
   }
@@ -854,6 +925,31 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     setSum(plusTex(Q.sum) + ' = {?}', plusVal(Q.sum));
     ask(numOpts(Q));
   }
+  // Stage 3's steps: how many rows, how many in each row. Three options, the number and its two neighbours, made here
+  // from the item (not the bank), marked by dataset.val. A step labels the array with the right number either way and
+  // never changes the score.
+  function askStep(kind) {
+    state = kind;
+    var v = kind === 'rows' ? Q.rows : Q.cols, box = $('opts1');
+    setPrompt(kind === 'rows' ? L.rows_q : L.cols_q, kind === 'rows' ? 'rows_q' : 'cols_q');
+    box.innerHTML = '';
+    MaffsOptions.shuffle([v, v - 1, v + 1]).forEach(function (o) { box.appendChild(optButton(String(o), String(o), null, onStep)); });
+    box.hidden = false;
+    MaffsLock.fresh(box);
+  }
+  function onStep(e) {
+    if (state !== 'rows' && state !== 'cols') return;
+    if (!MaffsLock.lock($('opts1'))) return;
+    var kind = state;
+    steps++;
+    $('pic').dataset.steps = String(steps);
+    $('pic').dataset['step' + steps] = (e.currentTarget.dataset.val === String(kind === 'rows' ? Q.rows : Q.cols)) ? 'right' : 'wrong';
+    labelArray(kind);
+    $('opts1').hidden = true;
+    $('opts1').innerHTML = '';
+    if (kind === 'rows') askStep('cols'); else askTotal();
+  }
+  function askTotal() { setPrompt(L.total, 'total'); ask(numOpts(Q)); }
   // The options: numbers, or (Stage 2 groups-to-sum) sums, dataset.val the terms joined with "+".
   function ask(opts, sums) {
     state = 'ask';
@@ -879,6 +975,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     hush();
     state = right ? 'done' : 'wrong';
     if (right) score++;
+    answered++;
+    // Winner stays on: past question 10, the first wrong answer ends the run (after its feedback).
+    runOver = !right && qi > PER;
     $('hudScore').textContent = String(score);
     btn.classList.add(pickedRight ? 'is-right' : 'is-wrong');
     var kb = $('opts').querySelector('[data-val="' + key + '"]');
@@ -891,17 +990,17 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else { sayKey = 'wrong.' + wrongKey(Q); sayText = L.wrong[wrongKey(Q)]; }
     setSay(sayText, sayKey);
     lastLine = sayText;
-    var w = working(Q), last = qi >= qs.length;
+    var w = working(Q);
     var fb = $('feedback');
     fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '">' +
       '<div class="fb-line work" id="learn" data-learn="' + esc(w[0]) + '">' + tex(w[1]) + '</div>' +
-      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button>' : '') + '</div></div>';
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">Next →</button>' : '') + '</div></div>';
     if (Q.type === 'array') turnArray();
     if (right) {
       MaffsLock.fresh(fb);
       $('nextBtn').addEventListener('click', function () { if (state === 'done') advance(); });
       try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
-    } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, label: runOver ? 'See results →' : 'Next →' });
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('pic') });
   }
   // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
@@ -921,14 +1020,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
   var finish = MaffsLock.finishOnce(function () {
     state = 'over';
+    hush();
+    if (turnTimer !== null) { MaffsLock.cancel(turnTimer); turnTimer = null; }
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('endBtn').hidden = true;
     var b = board();
-    ev('game_completed', { game_slug: SLUG, level: level, mode: evMode(mode), score: score, questions_answered: qs.length, questions_correct: score });
-    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, qs.length).catch(function () {});
+    // The real counts: every question marked in the run, and the score (questions right).
+    ev('game_completed', { game_slug: SLUG, level: level, mode: evMode(mode), score: score, questions_answered: answered, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, answered).catch(function () {});
     if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
     $('resTitle').textContent = MODE_INFO[modeOf(mode)].name + ' · ' + STAGES[stageOf(mode)].name + ': done';
-    $('endLine').textContent = L.end;
+    $('endLine').textContent = runOver ? L.overtime_end : L.end;
     $('resScore').textContent = String(score);
-    $('resOf').textContent = 'out of ' + qs.length;
+    $('resOf').textContent = answered + ' answered';
     $('resStats').textContent = '';
     var st = stageOf(mode);
     $('nextStageBtn').hidden = st >= 4;
@@ -967,11 +1071,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (!Q) return '';
     var t = Q.type;
     if (state === 'count') return words(Q.sum) + '. ' + L.how_many.split('{n}').join(String(Q.each));
+    if (state === 'rows') return L.rows_q;
+    if (state === 'cols') return L.cols_q;
     if (state === 'ask') {
       if (t === 'groups') return Q.say + '. ' + L.total;
       if (t === 'sum-to-groups') return words(Q.sum) + ' equals what?';
       if (t === 'groups-to-sum') return Q.groups + ' groups of ' + Q.each + '. ' + L.pick;
-      if (t === 'array') return Q.rows + ' rows of ' + Q.cols + '. ' + L.dots;
+      if (t === 'array') return Q.rows + ' rows of ' + Q.cols + '. ' + L.total;
       if (t === 'fact') return Q.a + ' times ' + Q.b + ' equals what?';
       return 'What times ' + Q.b + ' equals ' + Q.product + '?';
     }
@@ -1012,6 +1118,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   $('speakBtn').addEventListener('click', function () { speak(toRead()); });
   $('nextStageBtn').addEventListener('click', function () { var st = stageOf(mode); startMode(modeOf(mode) + '-' + Math.min(st + 1, 4)); });
   $('againBtn').addEventListener('click', function () { startMode(mode); });
+  // End (from question 11): the run ends at once, no penalty; a question on screen and not yet answered is not counted.
+  $('endBtn').addEventListener('click', function () { if (state !== 'menu' && state !== 'over' && qi > PER) finish(); });
   $('menuBtn').addEventListener('click', function () { state = 'menu'; if (turnTimer !== null) { MaffsLock.cancel(turnTimer); turnTimer = null; } show('menu'); });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
@@ -1031,21 +1139,28 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     working: function (id) { var q = item(id); return q ? working(q)[0] : null; },
     ui: {
       state: function () { return state; },
-      ready: function () { return state === 'count' || state === 'ask'; },
+      ready: function () { return state === 'count' || state === 'rows' || state === 'cols' || state === 'ask'; },
       mode: function () { return mode; },
       board: board,
       question: function () { return Q ? copy(Q) : null; },
       score: function () { return score; },
+      qi: function () { return qi; },
+      answered: function () { return answered; },
       start: function (m) { startMode(m); },
-      // One item on screen by itself in its mode and stage, so a verifier can see any item.
-      preview: function (id) { var q = item(id); if (q) begin(q.mode + '-' + q.stage, [q]); },
+      // An item on screen first in its mode and stage, as question number at (default 1), so a verifier can see any
+      // item at any point of the scaffold; the run then carries on from the stage's supply.
+      preview: function (id, at) { var q = item(id); if (q) begin(q.mode + '-' + q.stage, q, at); },
       toRead: toRead,
       key: function () { return Q ? keyOf(Q) : null; },
       count: function (v) { return state === 'count' && click($('opts1'), '[data-val="' + v + '"]'); },
+      step: function (v) { return (state === 'rows' || state === 'cols') && click($('opts1'), '[data-val="' + v + '"]'); },
       pick: function (v) { return state === 'ask' && click($('opts'), '[data-val="' + v + '"]'); },
-      // Answer the item on screen: right, or (after counting the lots right) a decoy.
+      end: function () { var b = $('endBtn'); if (!b.hidden) b.click(); return !b.hidden; },
+      // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy.
       answer: function (right) {
         if (state === 'count') this.count(String(Q.groups));
+        if (state === 'rows') this.step(String(Q.rows));
+        if (state === 'cols') this.step(String(Q.cols));
         if (state !== 'ask') return;
         var key = keyOf(Q);
         if (right) { this.pick(key); return; }
