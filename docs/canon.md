@@ -2329,6 +2329,12 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 - Certificate thresholds: `GOLD_THRESHOLD` / `SILVER_THRESHOLD`
   (top 5% / top 10% percentile cutoffs) — unrelated to submission volume,
   no submission-count gate exists anywhere in this feature
+- The percentile and tier `submitScore()` resolves follow the same ranking
+  rules as `standing()`: one helper, `rankRules(gameSlug)` (direction from
+  `LOWER_IS_BETTER`, rankable from `MIXED_UNRELIABLE`). A lower-is-better
+  board ranks its lowest score top; an unrankable board gets percentile and
+  tier null. A tie is never counted as worse. Tested by
+  `scripts/test-percentile.py` (PERCENTILE-LOWER-IS-BETTER, 21 Nov 2026).
 
 ## The ticker
 - Location: portal homepage, `index.html:664`

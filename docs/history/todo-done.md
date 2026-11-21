@@ -3975,3 +3975,11 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | UGH-STATS-BUTTON-DOWNLOADS | **Two CSV downloads the Events sheet still cannot see** (found by DOWNLOAD-COUNTS, 20 Nov 2026). `ugh-stats/half-our-games/` and `ugh-stats/whos-playing/` build their CSV in the browser: a `<button id="csv">` calls ugh-stats.js `download()`, which clicks a temporary `<a download>` added to `<body>`, outside any section. analytics.js's listener counts only an `<a href>` or a toggle, so labelling the button would send nothing, and check-download-labels.py reads only HTML `<a download>`. Needs a contract: count a labelled button that downloads (or a section_clicked from `download()` itself), and widen the check. | home lane (contract from Project Claude) |
 
 **Closed 21 Nov 2026 (UGH-STATS-BUTTON-DOWNLOADS).** Row UGH-STATS-BUTTON-DOWNLOADS, moved word for word above. Both CSV buttons carry data-mfg-item and data-mfg-download inside a labelled section; analytics.js counts a data-mfg-download element as section_clicked action download; check-download-labels.py fails an unlabelled one and a page whose script calls a download() with none.
+
+## Closed by PERCENTILE-LOWER-IS-BETTER (21 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| PERCENTILE-LOWER-IS-BETTER | **`calculatePercentile` (`schools/assets/firebase-leaderboard.js:533`) ignores `LOWER_IS_BETTER`** (:203; estimation-golf, maffscards): it counts scores below as worse, so a lower-is-better board's best score gets the worst percentile. Latent: no page shows a percentile or tier. Fix before any page does (Jon, 20 Nov 2026, LARGE-SCREEN-PILOT follow-up). | Project Claude (contract) |
+
+**Closed 21 Nov 2026 (PERCENTILE-LOWER-IS-BETTER).** Row PERCENTILE-LOWER-IS-BETTER, moved word for word above. calculatePercentile() takes the board's direction, and submitScore() resolves rankScore(), which takes the direction and rankable from rankRules(), the helper standing() now uses too. scripts/test-percentile.py proves it, with three planted faults caught.
