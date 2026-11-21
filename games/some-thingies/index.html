@@ -26,16 +26,23 @@
    This game's own tokens. Two looks on one page (contract SOME-THINGIES, as Sums in Disguise): the grown-up look by
    default, the kid look (body.look-kids) from the link fragment #kids. Every colour is a token here; the kid look only
    points the game's own tokens at its brighter set, never a base token (scripts/check-theme.py).
-   Grown accent: teal-800, 7.6:1 on white. Kid accent: fuchsia-700, 6.3:1 on white and 5.9:1 on the kid look's sunny
-   background, so white text on it and it on the light surfaces both clear 4.5:1. */
+   Its own scheme (SOME-THINGIES-PERSONALITY, Jon 21 Nov 2026): every accent comes from the thingies' fixed set of 10.
+   Grown accent: col-7 indigo, 6.3:1 on white. Kid accent: col-8 purple, 5.4:1 on white and 5.1:1 on the kid look's
+   sunny background, so white text on either and either on the light surfaces clear 4.5:1. The stage circles take their
+   stage's colour (red, pink, indigo, purple: each 4.6:1 or more with white text); the kid look's card edge is the 10
+   colours in a band. */
 :root{
-  --accent:#115e59;--accent-dim:#ccfbf1;--on-accent:#ffffff;
-  --th-1:#0d9488;--th-2:#f59e0b;--th-3:#6366f1;--th-eye:#ffffff;--th-pupil:#111827;
+  --accent:#4f46e5;--accent-dim:#e0e7ff;--on-accent:#ffffff;
+  --th-eye:#ffffff;--th-pupil:#111827;
   --plate:#f1f5f9;--plate-edge:#cbd5e1;
   --col-1:#dc2626;--col-2:#ea580c;--col-3:#ca8a04;--col-4:#16a34a;--col-5:#0d9488;
   --col-6:#0284c7;--col-7:#4f46e5;--col-8:#9333ea;--col-9:#db2777;--col-10:#78350f;
-  --kid-accent:#a21caf;--kid-accent-dim:#fae8ff;--kid-bg:#fff7d6;--kid-edge:#f0abfc;
-  --kid-th-1:#ec4899;--kid-th-2:#16a34a;--kid-th-3:#0284c7;--kid-plate:#ffffff;--kid-plate-edge:#f0abfc
+  --stage-1:#dc2626;--stage-2:#db2777;--stage-3:#4f46e5;--stage-4:#9333ea;
+  --acc-ink:#1f2937;--acc-bow:#facc15;--acc-hair:#7c2d12;--acc-cap:#1d4ed8;--acc-petal:#ffffff;--acc-centre:#facc15;
+  --acc-leaf:#14532d;--acc-hatband:#dc2626;--acc-beanie:#1e3a8a;--acc-cuff:#3b82f6;--acc-pom:#ffffff;--acc-tache:#fef3c7;
+  --medal:#f59e0b;--medal-edge:#92400e;--sarge:#374151;--sarge-cap:#3f6212;--title-shadow:#facc15;--hand:#94a3b8;
+  --pro:#b45309;--on-pro:#ffffff;
+  --kid-accent:#9333ea;--kid-accent-dim:#f3e8ff;--kid-bg:#fff7d6;--kid-plate:#ffffff;--kid-plate-edge:#fde68a
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
@@ -43,7 +50,11 @@ body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;ali
 a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
 a.back-link:hover{color:var(--text)}
 .header{text-align:center;padding:.3rem 0}
-.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header h1{font-size:2.1rem;font-weight:800;letter-spacing:.01em;line-height:1.1;color:var(--accent);text-shadow:2px 2px 0 var(--title-shadow)}
+/* The start screen's crowd: 14 thingies, one of each colour and four more, bouncing gently (still for reduced motion). */
+.crowd-start{display:grid;grid-template-columns:repeat(7,22px);justify-content:center;gap:2px 4px;margin:.25rem auto .1rem}
+.crowd-start .th{width:22px;height:22px;animation:hop 1.6s ease-in-out infinite;animation-delay:calc(var(--i) * -.23s)}
+@keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
 .header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:32em}
 @media (max-width:420px){.header h1{font-size:1.5rem}}
 .screen{display:none}.screen.active{display:block}
@@ -65,7 +76,7 @@ a.back-link:hover{color:var(--text)}
 .stages{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
 .stage-btn{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;min-height:56px;padding:.45rem .7rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
 .stage-btn:hover{border-color:var(--accent)}
-.stage-btn .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--sc, var(--accent));color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
 .stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
 .stage-btn .d{display:block;font-weight:400;font-size:.78rem;color:var(--muted);line-height:1.3}
 @media (max-width:420px){.stages{grid-template-columns:1fr}.stage-btn{min-height:48px}}
@@ -88,9 +99,34 @@ a.back-link:hover{color:var(--text)}
 .pic:empty{display:none}
 .plate{display:grid;gap:2px;padding:4px 5px;border-radius:999px;background:var(--plate);border:2px solid var(--plate-edge)}
 .plate.tall{border-radius:16px}
-.th{display:block;width:14px;height:14px}
+.th{display:block;width:18px;height:18px;overflow:visible}
+/* The thingy's parts (see thingy() in the script): body, eyes, three mouths (one shown), the accessory, a pro medal. */
 .th .b{fill:var(--th)}.th .e{fill:var(--th-eye)}.th .p{fill:var(--th-pupil)}
-.plate.c0{--th:var(--th-1)}.plate.c1{--th:var(--th-2)}.plate.c2{--th:var(--th-3)}
+.th .m{fill:none;stroke:var(--th-pupil);stroke-width:1.2;stroke-linecap:round;display:none}
+.th .m-wait{display:inline}
+.th .a-ink{fill:var(--acc-ink)}.th .a-bow{fill:var(--acc-bow);stroke:var(--acc-ink);stroke-width:.5}
+.th .a-hair{fill:var(--acc-hair)}.th .a-cap{fill:var(--acc-cap)}
+.th .a-petal{fill:var(--acc-petal);stroke:var(--acc-ink);stroke-width:.4}.th .a-centre{fill:var(--acc-centre)}
+.th .a-stem{stroke:var(--acc-leaf);stroke-width:1.3;fill:none}.th .a-leaf{fill:var(--acc-leaf)}
+.th .a-lens{fill:none;stroke:var(--acc-ink);stroke-width:1.3}.th .a-line{fill:none;stroke:var(--acc-ink);stroke-width:1.3;stroke-linecap:round}
+.th .a-band{fill:none;stroke:var(--acc-ink);stroke-width:1.6}
+.th .a-hatband{fill:var(--acc-hatband)}
+.th .a-beanie{fill:var(--acc-beanie)}.th .a-cuff{fill:var(--acc-cuff)}.th .a-pom{fill:var(--acc-pom);stroke:var(--acc-ink);stroke-width:.4}
+.th .a-tache{fill:var(--acc-tache);stroke:var(--acc-ink);stroke-width:.4}
+.th .a-sarge{fill:var(--sarge-cap)}.th.sarge .b{fill:var(--sarge)}
+.th .md-ribbon{fill:none;stroke:var(--medal-edge);stroke-width:1.1}.th .md-disc{fill:var(--medal);stroke:var(--medal-edge);stroke-width:.6}
+/* Reactions (transform and opacity only, never layout): a right answer bounces the pictured thingies once and smiles;
+   a wrong one tilts them, puzzled; a blink now and then. Reduced motion: the faces change, nothing moves. */
+.th .tb{transform-box:fill-box;transform-origin:50% 100%}
+.th .eyes{transform-box:fill-box;transform-origin:50% 50%}
+.react-right .th .m-wait,.react-wrong .th .m-wait{display:none}
+.react-right .th .m-happy{display:inline}
+.react-wrong .th .m-puzzled{display:inline}
+.react-right .th .tb{animation:bounce .5s ease-out 1}
+.react-wrong .th .tb{transform:rotate(-12deg);transition:transform .3s ease}
+.th.blink .eyes{animation:blink .18s ease-in-out 1}
+@keyframes bounce{0%,100%{transform:translateY(0)}40%{transform:translateY(-22%)}70%{transform:translateY(4%)}}
+@keyframes blink{50%{transform:scaleY(.1)}}
 /* Stage 3 (SOME-THINGIES-TWEAKS, Jon's option C): the array is thingies, each column its own colour (one fixed set of
    10, column 1 always the first), a gap of 0.7 of a thingy after the 5th column and after the 5th row. --s is the
    thingy's size, set by drawArray() to fit (22 px at most). The labels from the scaffold sit above and down the side. */
@@ -106,6 +142,36 @@ a.back-link:hover{color:var(--text)}
 .k1{--th:var(--col-1)}.k2{--th:var(--col-2)}.k3{--th:var(--col-3)}.k4{--th:var(--col-4)}.k5{--th:var(--col-5)}
 .k6{--th:var(--col-6)}.k7{--th:var(--col-7)}.k8{--th:var(--col-8)}.k9{--th:var(--col-9)}.k10{--th:var(--col-10)}
 .end-btn{min-height:44px;padding:.2rem .7rem;font-size:.85rem}
+.pro-badge{display:inline-block;font-size:.66rem;font-weight:800;line-height:1;padding:.18rem .34rem;border-radius:999px;background:var(--pro);color:var(--on-pro);vertical-align:middle;margin-right:.15rem}
+.stage-btn[data-stage="1"]{--sc:var(--stage-1)}.stage-btn[data-stage="2"]{--sc:var(--stage-2)}
+.stage-btn[data-stage="3"]{--sc:var(--stage-3)}.stage-btn[data-stage="4"]{--sc:var(--stage-4)}
+/* Stage 2, the conga line: each group one colour, holding hands (a short line between neighbours), a gap between
+   groups, the sum above; one group per line on narrow screens; a gentle sway (still for reduced motion). */
+.qcard.conga .sum{order:1}.qcard.conga .pic{order:2}.qcard.conga .prompt,.qcard.conga .choices,.qcard.conga .say,.qcard.conga .feedback{order:3}
+.qcard.conga .qhead{order:0}
+.qcard.conga{gap:.25rem}.qcard.conga .choices.one .opt{min-height:44px}
+.conga-line{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px 14px;max-width:100%}
+.cgroup{display:flex;align-items:center;animation:sway 2.4s ease-in-out infinite;animation-delay:calc(var(--i) * -.6s)}
+.cgroup .th{width:var(--cs,20px);height:var(--cs,20px)}
+.cgroup .hand{display:block;width:5px;height:2px;background:var(--hand);border-radius:1px}
+@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+@media (max-width:420px){.conga-line{flex-direction:column;gap:var(--cg,5px)}}
+/* Stage 3, the parade ground: Sarge beside the array on wide screens, in the card's top row on phones (no extra
+   height, so the array, the options and Next stay where SOME-THINGIES-TWEAKS put them). */
+.sarge-wide{grid-column:3;grid-row:2;align-self:end;margin-left:10px}
+.sarge-wide .th,.sarge-mini .th{width:30px;height:30px}
+.sarge-mini{display:none}
+.sarge-mini .th{width:22px;height:22px}
+@media (max-width:599px){.sarge-wide{display:none}.qcard.parade .sarge-mini{display:block}}
+/* Winner stays on, the crowd: from question 11 each right answer adds a thingy, wrapping into rows, 48 shown at most
+   ("+n" beyond). The run-ending wrong answer: they faint (reduced motion: they lie down at once). Decoration only. */
+.crowd{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:2px;padding-top:.3rem;border-top:1px dashed var(--border)}
+.crowd:empty{display:none}
+.crowd .th{width:16px;height:16px}
+.crowd .more,.crowd .cheer{font-size:.8rem;font-weight:700;color:var(--text);align-self:center;margin-left:.3rem}
+.crowd .cheer{flex-basis:100%;text-align:center;margin:0 0 .15rem}
+.crowd.faint .th .tb{transform:rotate(90deg) translateY(10%);transition:transform .5s ease-in}
+.crowd.faint .th .m-wait{display:none}.crowd.faint .th .m-puzzled{display:inline}
 .sum{font-size:1.4rem;line-height:1.3;min-height:2rem;text-align:center;font-family:var(--font-num);font-weight:700;max-width:100%}
 .sum:empty{display:none}
 .sum .katex{font-size:1em}
@@ -146,10 +212,13 @@ a.back-link:hover{color:var(--text)}
 @media (max-height:620px){.hud-label{display:none}.stage-label{display:none}}
 @media (min-width:1024px){.container{max-width:clamp(720px,60vw,900px)}}
 
-/* The kid look: brighter and rounder; the same layout, items, marking and boards. */
+/* The kid look: brighter and rounder, its card edges a band of the 10 thingy colours; the same layout, items, marking
+   and boards. */
 body.look-kids{background:var(--kid-bg);--accent:var(--kid-accent);--accent-dim:var(--kid-accent-dim);
-  --th-1:var(--kid-th-1);--th-2:var(--kid-th-2);--th-3:var(--kid-th-3);--plate:var(--kid-plate);--plate-edge:var(--kid-plate-edge)}
-body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid var(--kid-edge);border-radius:22px}
+  --plate:var(--kid-plate);--plate-edge:var(--kid-plate-edge)}
+body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid transparent;border-radius:22px;
+  background:linear-gradient(var(--surface),var(--surface)) padding-box,
+  linear-gradient(90deg,var(--col-1),var(--col-2),var(--col-3),var(--col-4),var(--col-5),var(--col-6),var(--col-7),var(--col-8),var(--col-9),var(--col-10)) border-box}
 body.look-kids .btn,body.look-kids .opt{border-radius:999px}
 body.look-kids .stage-btn{border-radius:20px}
 body.look-kids .header h1{font-size:2.2rem}
@@ -193,7 +262,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <div class="container">
   <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
-    <div class="header"><h1>Some Thingies</h1><div class="sub" id="titleLine"></div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="header"><h1>Some Thingies</h1><div class="crowd-start" id="crowdStart" aria-hidden="true"></div><div class="sub" id="titleLine"></div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <p class="welcome" id="welcome"></p>
     <div class="panel menu-info">
       <div class="badges"><span class="level-tag">Starter</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
@@ -212,7 +281,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     </div>
     <div class="qcard" id="qcard">
-      <div class="qhead"><div class="stage-label" id="stageLabel"></div><button class="speak" id="speakBtn" type="button" aria-label="Read aloud" title="Read aloud" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="s-fill" d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z"/><path class="s-wave" d="M15.5 8.5 Q18 12 15.5 15.5 M18.5 6 Q22.5 12 18.5 18"/></svg></button></div>
+      <div class="qhead"><span class="sarge-mini" id="sargeMini" aria-hidden="true"></span><div class="stage-label" id="stageLabel"></div><button class="speak" id="speakBtn" type="button" aria-label="Read aloud" title="Read aloud" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="s-fill" d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z"/><path class="s-wave" d="M15.5 8.5 Q18 12 15.5 15.5 M18.5 6 Q22.5 12 18.5 18"/></svg></button></div>
       <div class="pic" id="pic" aria-hidden="true"></div>
       <div class="sum" id="sum"></div>
       <div class="prompt" id="prompt"></div>
@@ -220,6 +289,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="choices maffs-options" id="opts" hidden></div>
       <div class="say" id="say" aria-live="polite"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
+      <div class="crowd" id="crowd" aria-hidden="true"></div>
     </div>
   </div>
 
@@ -264,6 +334,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       label_cols: "{n} in each row",
       overtime: "Ten done. From here, one slip ends it.",
       overtime_end: "One slip. The thingies win this round.",
+      // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite. (SOME-THINGIES-PERSONALITY: the stage names,
+      // Sarge's line on a right answer in Stage 3, the crowd's cheer from question 11, and the faint.)
+      stages: { 1: "The Picnic", 2: "The Conga Line", 3: "The Parade Ground", 4: "The Quiz Show" },
+      sarge: "Sarge approves. Do not let it go to your head.",
+      cheer: "A crowd is gathering.",
+      faint: "*thud*",
       right: ["Correct.", "Counted and confirmed.", "The thingies agree.", "Exactly right.", "Spot on.", "Well grouped."],
       wrong: { groups: "Count one plate, then count the plates.", sum: "Count how many times the number is added.", pick: "The same number, added that many times.", array: "Count one row, then count the rows.", fact: "Use the table you know.", missing: "Which number, times this one, makes it?" },
       end: "Every thingy counted. They feel seen."
@@ -282,22 +358,28 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       label_cols: "{n} in each row",
       overtime: "Keep going! One slip ends it.",
       overtime_end: "What a run! Play again?",
+      // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite.
+      stages: { 1: "The Picnic", 2: "The Conga Line", 3: "The Parade Ground", 4: "The Quiz Show" },
+      sarge: "Sarge says: smart work, soldier!",
+      cheer: "The crowd goes wild!",
+      faint: "*thud*",
       right: ["Yes!", "Brilliant!", "You got it!", "Super counting!", "The thingies cheer!", "Spot on!"],
       wrong: { groups: "Count one plate first!", sum: "Count the numbers added!", pick: "Find the same number again!", array: "Count one row first!", fact: "Use your times table!", missing: "What times makes it?" },
       end: "All the thingies counted!"
     }
   };
 
-  // The game's own labels (modes, stage names, the menu note): the frame around the lines, the same in both looks.
+  // The game's own labels (modes, what each stage is, the menu note): the frame around the lines, the same in both
+  // looks. The stage names are LINES' (stages).
   var MODE_INFO = {
     main: { name: 'Main', tables: '2, 5 and 10 times tables' },
     pro: { name: 'Pro', tables: '3, 4 and 8 times tables' }
   };
   var STAGES = {
-    1: { name: 'Plates', about: 'Equal groups' },
-    2: { name: 'Adding', about: 'Repeated addition' },
-    3: { name: 'Arrays', about: 'Rows of thingies' },
-    4: { name: 'Facts', about: 'Times table facts' }
+    1: { about: 'Equal groups' },
+    2: { about: 'Repeated addition' },
+    3: { about: 'Rows of thingies' },
+    4: { about: 'Times table facts' }
   };
   var MENU_NOTE = 'At least 10 questions, then keep going until a slip, or press End. A point for each one right.';
 
@@ -758,22 +840,72 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     return { 'groups': 'groups', 'sum-to-groups': 'sum', 'groups-to-sum': 'pick', 'array': 'array', 'fact': 'fact', 'missing': 'missing' }[q.type];
   }
 
-  /* ---------- the pictures (inline SVG thingies; an array of dots) ---------- */
-  var THINGY = '<svg class="th" viewBox="0 0 20 20" aria-hidden="true"><ellipse class="b" cx="10" cy="11.5" rx="9.5" ry="8.3"/>' +
-    '<circle class="e" cx="6.8" cy="9.6" r="2.7"/><circle class="e" cx="13.2" cy="9.6" r="2.7"/>' +
-    '<circle class="p" cx="7.4" cy="10.1" r="1.25"/><circle class="p" cx="13.8" cy="10.1" r="1.25"/></svg>';
+  /* ---------- the pictures: the thingies, as characters ---------- */
+  // The thingy (SOME-THINGIES-PERSONALITY): one inline SVG character on a 24 x 24 grid. A round body in its colour
+  // (k1..k10, the fixed set of 10), two eyes with pupils, three mouths (waiting, happy, puzzled: CSS shows one), and the
+  // accessory for its colour, so a column is told apart by shape as well as colour. Jon's three (21 Nov 2026): the
+  // oranges' spiky hair, the blues' glasses, the purples' top hat; the other seven Project Claude's, in the contract's
+  // order, for Jon to swap. Pro mode adds a small gold medal.
+  var ACCESSORY = {
+    1: ['bow', '<path class="a-bow" d="M12 6 L7.6 3.2 L7.6 8.8 Z M12 6 L16.4 3.2 L16.4 8.8 Z"/><circle class="a-bow" cx="12" cy="6" r="1.5"/>'],
+    2: ['hair', '<path class="a-hair" d="M4.6 10 L5.6 3.2 L8.2 7.2 L10 1.4 L12 6.4 L14 1.4 L15.8 7.2 L18.4 3.2 L19.4 10 Q12 6.6 4.6 10 Z"/>'],
+    3: ['cap', '<path class="a-cap" d="M5.4 9.4 Q5.8 2.6 12 2.6 Q18.2 2.6 18.6 9.4 Z"/><path class="a-cap" d="M16 8 L23 8.4 L22.6 10 L16 9.6 Z"/>'],
+    4: ['flower', '<circle class="a-petal" cx="12" cy="1.9" r="1.7"/><circle class="a-petal" cx="9.6" cy="3.6" r="1.7"/><circle class="a-petal" cx="14.4" cy="3.6" r="1.7"/><circle class="a-petal" cx="10.5" cy="6.1" r="1.7"/><circle class="a-petal" cx="13.5" cy="6.1" r="1.7"/><circle class="a-centre" cx="12" cy="4.2" r="1.5"/>'],
+    5: ['sprout', '<path class="a-stem" d="M12 7.2 L12 2.6"/><path class="a-leaf" d="M12 3.6 Q7.4 0.4 6 4 Q9 6.2 12 3.6 Z M12 3.2 Q16.6 0 18 3.6 Q15 5.8 12 3.2 Z"/>'],
+    6: ['glasses', '<circle class="a-lens" cx="8.8" cy="12.8" r="3.3"/><circle class="a-lens" cx="15.2" cy="12.8" r="3.3"/><path class="a-line" d="M12.1 12.4 L11.9 12.4 M5.5 12 L3.6 10.8 M18.5 12 L20.4 10.8"/>'],
+    7: ['headphones', '<path class="a-band" d="M4.4 13 Q4.4 3.4 12 3.4 Q19.6 3.4 19.6 13"/><rect class="a-ink" x="2.2" y="10.6" width="3.6" height="6" rx="1.4"/><rect class="a-ink" x="18.2" y="10.6" width="3.6" height="6" rx="1.4"/>'],
+    8: ['tophat', '<rect class="a-ink" x="7.6" y="0.4" width="8.8" height="6.6" rx="0.8"/><rect class="a-hatband" x="7.6" y="4.6" width="8.8" height="1.4"/><rect class="a-ink" x="4.4" y="6.4" width="15.2" height="2" rx="1"/>'],
+    9: ['beanie', '<path class="a-beanie" d="M5.4 9.8 Q5.6 2.4 12 2.4 Q18.4 2.4 18.6 9.8 Z"/><rect class="a-cuff" x="5" y="8.2" width="14" height="2.4" rx="1.2"/><circle class="a-pom" cx="12" cy="2" r="1.8"/>'],
+    10: ['moustache', '<path class="a-tache" d="M12 16.4 Q9.4 14.6 6.6 16.6 Q8.4 18.9 12 17.5 Q15.6 18.9 17.4 16.6 Q14.6 14.6 12 16.4 Z"/>']
+  };
+  var MEDAL = '<g class="medal"><path class="md-ribbon" d="M5.6 15.6 L7.2 18 L8.8 15.6"/><circle class="md-disc" cx="7.2" cy="19.4" r="2"/></g>';
+  function thingy(k, extra) {
+    var a = ACCESSORY[k];
+    return '<svg class="th k' + k + (extra || '') + '" viewBox="0 0 24 24" aria-hidden="true" data-acc="' + a[0] + '">' +
+      '<g class="tb"><ellipse class="b" cx="12" cy="14.6" rx="9.2" ry="8"/>' +
+      '<g class="eyes"><circle class="e" cx="8.8" cy="12.8" r="2.5"/><circle class="e" cx="15.2" cy="12.8" r="2.5"/>' +
+      '<circle class="p" cx="9.3" cy="13.3" r="1.15"/><circle class="p" cx="15.7" cy="13.3" r="1.15"/></g>' +
+      '<path class="m m-wait" d="M10.6 19.2 Q12 20.2 13.4 19.2"/><path class="m m-happy" d="M9.6 18.6 Q12 21.6 14.4 18.6"/>' +
+      '<path class="m m-puzzled" d="M9.8 19.8 Q10.9 18.8 12 19.8 Q13.1 20.8 14.2 19.8"/>' +
+      a[1] + (pro() ? MEDAL : '') + '</g></svg>';
+  }
+  // Pro mode: every thingy in play wears a medal. The start screen's crowd is not in play, so it wears none.
+  function pro() { return modeOf(mode) === 'pro' && $('game').classList.contains('active'); }
+  // Sarge (Stage 3): a dark-grey thingy in a peaked cap. Not one of the 10, so he has no column colour.
+  var SARGE = '<svg class="th sarge" viewBox="0 0 24 24" aria-hidden="true" data-acc="sarge"><g class="tb">' +
+    '<ellipse class="b" cx="12" cy="14.6" rx="9.2" ry="8"/>' +
+    '<g class="eyes"><circle class="e" cx="8.8" cy="12.8" r="2.3"/><circle class="e" cx="15.2" cy="12.8" r="2.3"/>' +
+    '<circle class="p" cx="9" cy="13.1" r="1.1"/><circle class="p" cx="15" cy="13.1" r="1.1"/></g>' +
+    '<path class="m m-wait" d="M10.2 19.2 L13.8 19.2"/><path class="m m-happy" d="M9.8 18.8 Q12 20.6 14.2 18.8"/>' +
+    '<path class="m m-puzzled" d="M10 19.6 L14 18.8"/>' +
+    '<path class="a-sarge" d="M5 9.2 Q5.4 3 12 3 Q18.6 3 19 9.2 Z"/><path class="a-ink" d="M4 8.6 L20 8.6 L18 10.6 L6 10.6 Z"/>' +
+    '<circle class="md-disc" cx="12" cy="6" r="1.4"/></g></svg>';
+
+  // Stage 1, the picnic: g plates of n thingies, each plate one colour (and so one accessory), in the fixed order.
   function plates(g, n) {
     var cols = n <= 5 ? n : Math.ceil(n / 2), h = '';
     for (var i = 0; i < g; i++) {
-      h += '<div class="plate c' + (i % 3) + (n > 5 ? ' tall' : '') + '" style="grid-template-columns:repeat(' + cols + ',14px)">' +
-        new Array(n + 1).join(THINGY) + '</div>';
+      h += '<div class="plate' + (n > 5 ? ' tall' : '') + '" style="grid-template-columns:repeat(' + cols + ',18px)">' +
+        new Array(n + 1).join(thingy((i % 10) + 1)) + '</div>';
     }
     $('pic').innerHTML = h;
     $('pic').dataset.groups = String(g);
     $('pic').dataset.each = String(n);
   }
-  // Stage 3: r rows of c thingies. Each thingy is coloured by its column (k1..k10, the same order every time); once the
-  // array has turned round, the colours follow their thingies, so each row is one colour.
+  // Stage 2, the conga line: g groups of n, each group one colour, its thingies holding hands.
+  function conga(g, n) {
+    var h = '';
+    for (var i = 0; i < g; i++) {
+      var k = (i % 10) + 1, grp = '';
+      for (var j = 0; j < n; j++) grp += (j ? '<i class="hand"></i>' : '') + thingy(k);
+      h += '<div class="cgroup" style="--i:' + i + '">' + grp + '</div>';
+    }
+    $('pic').innerHTML = '<div class="conga-line" id="conga">' + h + '</div>';
+    $('pic').dataset.groups = String(g);
+    $('pic').dataset.each = String(n);
+  }
+  // Stage 3, the parade ground: r rows of c thingies. Each thingy is coloured by its column (k1..k10, the same order
+  // every time); once the array has turned round, the colours follow their thingies, so each row is one colour.
   // The size: 22 px at most, smaller only where the width (10 across) or the height (10 down, with the options under it,
   // and once turned round the feedback and Next too) needs it, never below 12 px.
   function arraySize(r, c, turned) {
@@ -786,11 +918,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var s = arraySize(r, c, turned), h = '';
     for (var i = 1; i <= r; i++) {
       h += '<div class="arow' + (i === 6 ? ' r6' : '') + '">';
-      for (var j = 1; j <= c; j++) h += THINGY.replace('class="th"', 'class="th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '"');
+      for (var j = 1; j <= c; j++) h += thingy(turned ? i : j, j === 6 ? ' c6' : '');
       h += '</div>';
     }
     $('pic').innerHTML = '<div class="arr-wrap"><div class="arr-top" id="arrTop"></div><div class="arr-side" id="arrSide"></div>' +
-      '<div class="arr" id="arr" style="--s:' + s + 'px">' + h + '</div></div>';
+      '<div class="arr" id="arr" style="--s:' + s + 'px">' + h + '</div><div class="sarge-wide" id="sargeWide">' + SARGE + '</div></div>';
     $('pic').dataset.rows = String(r);
     $('pic').dataset.cols = String(c);
     $('pic').dataset.turned = turned ? '1' : '0';
@@ -800,7 +932,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (kind === 'rows') $('arrSide').textContent = L.label_rows.replace('{n}', String(Q.rows));
     else $('arrTop').textContent = L.label_cols.replace('{n}', String(Q.cols));
   }
-  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned', 'steps', 'step1', 'step2'].forEach(function (k) { delete p.dataset[k]; }); }
+  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned', 'steps', 'step1', 'step2', 'conga'].forEach(function (k) { delete p.dataset[k]; }); }
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
 
   /* =====================================================================================================
@@ -837,9 +969,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function begin(m, first, at) {
     MaffsLock.newSession();
     mode = m; items = stageItems(m); deck = []; pending = first || null; lastId = null;
-    qi = at ? at - 1 : 0; score = 0; answered = 0; runOver = false;
+    qi = at ? at - 1 : 0; score = 0; answered = 0; runOver = false; crowdN = 0;
     show('game');
-    $('hudStage').textContent = (modeOf(m) === 'pro' ? 'Pro ' : '') + stageOf(m);
+    // Pro mode: a "Pro" badge in the HUD (and a medal on every thingy, in thingy()).
+    if (modeOf(m) === 'pro') $('hudStage').innerHTML = '<span class="pro-badge">Pro</span>' + stageOf(m);
+    else $('hudStage').textContent = String(stageOf(m));
+    drawCrowd();
     ev('game_started', { game_slug: SLUG, level: level, mode: evMode(mode) });
     nextQuestion();
   }
@@ -867,14 +1002,22 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('hudQ').textContent = qi <= PER ? qi + '/' + PER : String(qi);
     $('endBtn').hidden = qi <= PER;
     $('hudScore').textContent = String(score);
-    $('stageLabel').textContent = MODE_INFO[modeOf(mode)].name + ' · Stage ' + stageOf(mode) + ' · ' + STAGES[stageOf(mode)].name;
+    $('stageLabel').textContent = MODE_INFO[modeOf(mode)].name + ' · Stage ' + stageOf(mode) + ' · ' + L.stages[stageOf(mode)];
     if (qi === PER + 1) setSay(L.overtime, 'overtime'); else setSay('');
     clearPic(); setSum(''); setPrompt('');
+    var tq = Q.type;
+    // The stage's scene: the conga line (Stage 2: the sum above the line), the parade ground (Stage 3, with Sarge).
+    $('qcard').classList.toggle('conga', tq === 'sum-to-groups' || tq === 'groups-to-sum');
+    $('qcard').classList.toggle('parade', tq === 'array');
+    $('sargeMini').innerHTML = tq === 'array' ? SARGE : '';
+    ['pic', 'sargeMini'].forEach(function (id) { $(id).classList.remove('react-right', 'react-wrong'); });
+    if (qi > PER) drawCrowd();
     ['opts1', 'opts'].forEach(function (id) { $(id).hidden = true; $(id).innerHTML = ''; });
     var t = Q.type;
     if (t === 'groups') { plates(Q.groups, Q.each); setPrompt(L.total, 'total'); ask(numOpts(Q)); }
     else if (t === 'sum-to-groups') {
       setSum(plusTex(Q.sum), plusVal(Q.sum));
+      conga(Q.groups, Q.each);
       setPrompt(L.how_many, 'how_many');
       askCount();
     } else if (t === 'groups-to-sum') {
@@ -893,6 +1036,53 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else { setSum('{?} \\times ' + Q.b + ' = ' + Q.product, '?x' + Q.b + '=' + Q.product); ask(numOpts(Q)); }
   }
   function numOpts(q) { return MaffsOptions.shuffle([q.answer].concat(q.decoys)); }
+
+  // The conga line never pushes Next below the fold (contract): on a short phone, its thingies shrink (to 14 px) and its
+  // gaps close; if Next still would not fit, the line steps aside once marked (the working shows the groups).
+  function congaFit() {
+    var line = $('conga'), nb = document.querySelector('#feedback .maffs-next, #nextBtn');
+    if (!line || !nb) return;
+    var f = document.querySelector('.site-footer');
+    var fold = window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+    function over() { return nb.getBoundingClientRect().bottom + window.scrollY > fold + 0.5; }
+    for (var sz = 18; over() && sz >= 14; sz -= 2) { line.style.setProperty('--cs', sz + 'px'); line.style.setProperty('--cg', '2px'); }
+    if (over()) { $('pic').innerHTML = ''; $('pic').dataset.conga = 'off'; }
+  }
+
+  // Winner stays on, the crowd (decoration only: nothing here reads or writes the score or the counts). From question 11
+  // it cheers; each right answer after question 10 adds a thingy, the next colour in order; 48 shown, "+n" beyond.
+  var CROWD_MAX = 48, crowdN = 0;
+  function drawCrowd() {
+    var c = $('crowd');
+    c.classList.remove('faint');
+    if (qi <= PER) { c.innerHTML = ''; return; }
+    var h = '<span class="cheer" id="crowdLine"></span>';
+    for (var i = 0; i < Math.min(crowdN, CROWD_MAX); i++) h += thingy((i % 10) + 1);
+    if (crowdN > CROWD_MAX) h += '<span class="more" id="crowdMore">+' + (crowdN - CROWD_MAX) + '</span>';
+    c.innerHTML = h;
+    $('crowdLine').textContent = L.cheer;
+  }
+  // The run-ending wrong answer: the whole crowd faints (reduced motion: lies down at once).
+  function faint() {
+    if (!$('crowd').innerHTML) return;
+    $('crowd').classList.add('faint');
+    $('crowdLine').textContent = L.faint;
+  }
+  // A blink now and then: a random thingy in the picture, every few seconds, while a question waits. Never with reduced
+  // motion, and never in the way of marking (it only adds a class for a moment).
+  function blinkSoon() {
+    window.setTimeout(function () { // lock-ok: a blink is decoration; it marks, advances, sends and stores nothing
+      if (!reduced() && $('game').classList.contains('active') && (state === 'ask' || state === 'count' || state === 'rows' || state === 'cols')) {
+        var all = $('pic').querySelectorAll('.th');
+        if (all.length) {
+          var t = all[Math.floor(Math.random() * all.length)];
+          t.classList.add('blink');
+          window.setTimeout(function () { t.classList.remove('blink'); }, 260); // lock-ok: ends the blink (a class), nothing else
+        }
+      }
+      blinkSoon();
+    }, 2600 + Math.floor(Math.random() * 2200));
+  }
 
   function optButton(text, val, html, onClick) {
     var b = document.createElement('button');
@@ -978,6 +1168,11 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     answered++;
     // Winner stays on: past question 10, the first wrong answer ends the run (after its feedback).
     runOver = !right && qi > PER;
+    // The scene reacts (decoration: the score above is already set). Stage 2's groups-to-sum shows its conga line now.
+    if (Q.type === 'groups-to-sum') conga(Q.groups, Q.each);
+    ['pic', 'sargeMini'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });
+    if (right && qi > PER) { crowdN++; drawCrowd(); }
+    if (runOver) faint();
     $('hudScore').textContent = String(score);
     btn.classList.add(pickedRight ? 'is-right' : 'is-wrong');
     var kb = $('opts').querySelector('[data-val="' + key + '"]');
@@ -986,7 +1181,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     setPrompt('');
     // ONE line from LINES, then the worked maths.
     var sayKey, sayText;
-    if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
+    // Stage 3: Sarge says his line on a right answer (it is the one line).
+    if (right && Q.type === 'array') { sayKey = 'sarge'; sayText = L.sarge; }
+    else if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
     else { sayKey = 'wrong.' + wrongKey(Q); sayText = L.wrong[wrongKey(Q)]; }
     setSay(sayText, sayKey);
     lastLine = sayText;
@@ -1001,6 +1198,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       $('nextBtn').addEventListener('click', function () { if (state === 'done') advance(); });
       try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
     } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, label: runOver ? 'See results →' : 'Next →' });
+    congaFit();
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('pic') });
   }
   // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
@@ -1029,7 +1227,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ev('game_completed', { game_slug: SLUG, level: level, mode: evMode(mode), score: score, questions_answered: answered, questions_correct: score });
     if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, answered).catch(function () {});
     if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
-    $('resTitle').textContent = MODE_INFO[modeOf(mode)].name + ' · ' + STAGES[stageOf(mode)].name + ': done';
+    $('resTitle').textContent = MODE_INFO[modeOf(mode)].name + ' · ' + L.stages[stageOf(mode)] + ': done';
     $('endLine').textContent = runOver ? L.overtime_end : L.end;
     $('resScore').textContent = String(score);
     $('resOf').textContent = answered + ' answered';
@@ -1092,6 +1290,13 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 
   /* ---------- the start screen: Main or Pro, then a stage ---------- */
   $('titleLine').textContent = L.title;
+  // The start screen's crowd: one thingy of each colour and four more, bouncing gently (still for reduced motion).
+  (function () {
+    var h = '';
+    for (var i = 0; i < 14; i++) h += thingy([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 8, 2, 6, 4][i]).replace('<svg ', '<svg style="--i:' + i + '" ');
+    $('crowdStart').innerHTML = h;
+  })();
+  blinkSoon();
   $('welcome').textContent = greeting();
   $('menuNote').textContent = MENU_NOTE;
   ['main', 'pro'].forEach(function (md) {
@@ -1106,7 +1311,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       var m = md + '-' + n, s = STAGES[n], b = document.createElement('button');
       b.type = 'button'; b.className = 'stage-btn'; b.dataset.mode = m; b.dataset.stage = String(n);
       b.innerHTML = '<span class="n">' + n + '</span><span><span class="t"></span><span class="d"></span></span>';
-      b.querySelector('.t').textContent = s.name;
+      b.querySelector('.t').textContent = L.stages[n];
       b.querySelector('.d').textContent = s.about;
       b.addEventListener('click', function () { startMode(m); });
       grid.appendChild(b);

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -51,7 +51,20 @@ SOME-THINGIES-TWEAKS (Jon, 21 Nov 2026):
             question 11; "n/10" then "n" in the HUD; 50 questions of main Stage 1 use all 22 items before any repeats and
             never serve one twice in a row. Every play run ends at the wrong at question 11 (wrong at 2, 5 and 8 go on).
 
-Work units: "bank" (no browser), "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
+SOME-THINGIES-PERSONALITY (Jon, 21 Nov 2026):
+  Thingies  every thingy (plates, conga, array, crowds; not Sarge) wears the accessory for its colour and no other,
+            read from its SVG's shapes (k1 bow, k2 spiky hair, k3 cap, k4 flower, k5 sprout, k6 glasses, k7 headphones,
+            k8 top hat, k9 beanie, k10 moustache), and a medal exactly in pro mode; nothing animates under reduced
+            motion (document.getAnimations()).
+  Scenes    the start screen's crowd (12-16 thingies) keeps the first Start button above the fold at every phone-fit size,
+            both looks; the conga line (no line before a groups-to-sum item is marked) is g groups of n, one colour each
+            in order, one group per line at 360 px and at 320 px (or stepped aside after marking at 320 x 568), with Next
+            above the fold; Sarge in the top row on a phone and beside the array on a wide screen, Next above the fold for
+            every array, his line on a right answer.
+  Crowd     none in questions 1-10; from 11 the cheer and one more thingy per right answer, in colour order, 48 shown and
+            "+n" beyond; the score always the game's; the run-ending wrong answer makes it faint, with the faint line.
+
+Work units: "bank" (no browser), "scenes", "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
 "play kids 360x640", "winner 360x640", and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
@@ -83,6 +96,40 @@ TABLES = {'main': (2, 5, 10), 'pro': (3, 4, 8)}
 MODES = ['main-1', 'main-2', 'main-3', 'main-4', 'pro-1', 'pro-2', 'pro-3', 'pro-4']
 PHONE = (360, 640)
 WINNER = 'winner %dx%d' % PHONE
+SCENES = 'scenes'
+# SOME-THINGIES-PERSONALITY: the accessory for each of the 10 colours (k1..k10, #866's fixed order: red, orange, amber,
+# green, teal, sky, indigo, purple, pink, brown). Jon's three: the oranges' spiky hair, the blues' glasses, the purples'
+# top hat; the other seven in the contract's order. Each is told by its own shape, read here from the SVG.
+ACC = {1: 'bow', 2: 'hair', 3: 'cap', 4: 'flower', 5: 'sprout', 6: 'glasses', 7: 'headphones', 8: 'tophat', 9: 'beanie', 10: 'moustache'}
+ACC_SHAPE = {'bow': '.a-bow', 'hair': '.a-hair', 'cap': '.a-cap', 'flower': '.a-petal', 'sprout': '.a-leaf', 'glasses': '.a-lens',
+             'headphones': '.a-band', 'tophat': '.a-hatband', 'beanie': '.a-beanie', 'moustache': '.a-tache'}
+# Every phone-fit size (scripts/measure-phone-fit.py: phones, and the laptop mode's two).
+FIT_SIZES = [(320, 568), (375, 667), (390, 844), (1366, 768), (1280, 720)]
+# Every thingy in scope: which colour (k), which accessory its SVG says and which shapes it holds, and a medal or not.
+THINGIES_JS = r"""(scope) => [...document.querySelectorAll(scope + ' svg.th:not(.sarge)')].map(t => {
+  const k = +(((t.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1] || 0);
+  const shapes = %s.filter(([n, sel]) => t.querySelector(sel)).map(([n]) => n);
+  return { k: k, acc: t.dataset.acc || null, shapes: shapes, medal: !!t.querySelector('.medal') }; })""" % json.dumps(sorted(ACC_SHAPE.items()))
+RUNNING_JS = "() => document.getAnimations().filter(a => a.playState === 'running').map(a => (a.animationName || a.constructor.name) + ' on ' + (a.effect && a.effect.target ? (a.effect.target.getAttribute('class') || a.effect.target.tagName) : '?'))"
+
+
+def check_thingies(page, scope, pro, what, out):
+    """Every thingy in scope wears its colour's accessory (and no other), and a medal exactly in pro mode."""
+    for t in page.evaluate(THINGIES_JS, scope):
+        want = ACC.get(t['k'])
+        if not want or t['acc'] != want or t['shapes'] != [want]:
+            out.append('%s: a thingy of colour %s wears %s (shapes %s), expected %s' % (what, t['k'], t['acc'], t['shapes'], want))
+            return
+        if t['medal'] != pro:
+            out.append('%s: a thingy %s a medal in %s mode' % (what, 'wears' if t['medal'] else 'has no', 'pro' if pro else 'main'))
+            return
+
+
+def still(page, what, out):
+    """Reduced motion: nothing animating."""
+    run = page.evaluate(RUNNING_JS)
+    if run:
+        out.append('%s: %d animations running under reduced motion (%s)' % (what, len(run), ', '.join(sorted(set(run))[:3])))
 PER = 10
 EVENTS = {'game_started', 'question_answered', 'game_completed'}
 WRONG_KEY = {'groups': 'groups', 'sum-to-groups': 'sum', 'groups-to-sum': 'pick', 'array': 'array', 'fact': 'fact', 'missing': 'missing'}
@@ -296,7 +343,7 @@ SCREEN_JS = r"""() => {
   const box = (e) => e.getBoundingClientRect();
   const tops = [...new Set(cells.map(d => Math.round(box(d).top)))].sort((a, b) => a - b);
   const lefts = [...new Set(cells.map(d => Math.round(box(d).left)))].sort((a, b) => a - b);
-  const arr = { n: cells.length, thingies: cells.filter(c => c.matches('svg.th') && c.querySelector('ellipse') && c.querySelectorAll('circle').length === 4).length,
+  const arr = { n: cells.length, thingies: cells.filter(c => c.matches('svg.th') && c.querySelector('ellipse.b') && c.querySelectorAll('.eyes circle').length === 4).length,
                 rows: tops.length, cols: lefts.length, cells: [], size: cells.length ? box(cells[0]).width : 0 };
   for (const c of cells) {
     const k = ((c.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1];
@@ -349,7 +396,7 @@ def check_marking(page, html, look, out, info):
             for j, s in enumerate(lines['kids'][k2]):
                 if words(s) > 6:
                     out.append('LINES.kids.%s.%d has %d words' % (k2, j, words(s)))
-        for k2, s in lines['kids']['wrong'].items():
+        for k2, s in list(lines['kids']['wrong'].items()) + [('stages.' + a, b) for a, b in lines['kids']['stages'].items()]:
             if words(s) > 6:
                 out.append('LINES.kids.wrong.%s has %d words' % (k2, words(s)))
     every = set(all_lines(L))
@@ -410,7 +457,9 @@ def check_marking(page, html, look, out, info):
             if s['score'] != (1 if right else 0):
                 out.append('%s: score %d after a %s answer' % (i, s['score'], 'right' if right else 'wrong'))
             # One line from LINES, then the working.
-            if right and s['say'] not in L['right']:
+            if right and t == 'array' and s['say'] != L['sarge']:
+                out.append("%s: the right line %r, expected Sarge's (LINES.%s.sarge)" % (i, s['say'], look))
+            if right and t != 'array' and s['say'] not in L['right']:
                 out.append('%s: the right line %r is not one of LINES.%s.right' % (i, s['say'], look))
             if not right and s['say'] != L['wrong'][WRONG_KEY[t]]:
                 out.append('%s: the wrong line %r, expected LINES.%s.wrong.%s' % (i, s['say'], look, WRONG_KEY[t]))
@@ -419,6 +468,9 @@ def check_marking(page, html, look, out, info):
             hits = [x for x in every if len(x) > 3 and x in fbtext]
             if s['say'] not in every or hits:
                 out.append('%s: feedback holds %d LINES strings (the line %r, under it %s)' % (i, (s['say'] in every) + len(hits), s['say'], hits))
+            if right or n % 7 == 0:
+                check_thingies(page, '#game', q['mode'] == 'pro', '%s (%s, marked)' % (i, look), out)
+                still(page, '%s (%s, marked)' % (i, look), out)
             if s['learn'] != working(q):
                 out.append('%s: the working shown is %r, expected %r' % (i, s['learn'], working(q)))
             if t == 'array' and right:
@@ -655,11 +707,33 @@ def check_winner(page, look, out):
     page.evaluate("document.getElementById('menuBtn').click()")
 
     # (4) the supply: no repeat until every item is used, never the item just answered (main Stage 1 has 22).
+    # And the crowd (SOME-THINGIES-PERSONALITY): none in questions 1-10; from 11 the cheer, and one thingy more per right
+    # answer after question 10, the next colour in order; 48 shown at most, "+n" beyond; the score is the game's, never
+    # the crowd's; the run-ending wrong answer makes the crowd faint, with the faint line.
+    Lw = page.evaluate('ST.lines()')[look]
+    CROWD_JS = """() => { const c = document.getElementById('crowd'); const m = document.getElementById('crowdMore');
+        return { n: c.querySelectorAll('svg.th').length, more: m ? m.textContent : null, line: (document.getElementById('crowdLine') || {}).textContent || null,
+                 faint: c.classList.contains('faint'), ks: [...c.querySelectorAll('svg.th')].map(t => +((t.getAttribute('class').match(/\\bk(\\d+)\\b/) || [])[1])) }; }"""
     page.evaluate("ST.ui.start('main-1')")
     ids = []
-    for k in range(50):
+    for k in range(1, 63):
         ids.append(page.evaluate('ST.ui.question().id'))
         page.evaluate('ST.ui.answer(true)')
+        c = page.evaluate(CROWD_JS)
+        want = max(0, k - 10)
+        shown = min(want, 48)
+        if c['n'] != shown or (want > 48) != (c['more'] is not None) or (want > 48 and c['more'] != '+%d' % (want - 48)):
+            out.append('%s: after %d right the crowd shows %d thingies and %r, expected %d%s' % (tag, k, c['n'], c['more'], shown, ' and +%d' % (want - 48) if want > 48 else ''))
+            break
+        if c['ks'] != [(j % 10) + 1 for j in range(shown)]:
+            out.append('%s: after %d right the crowd\'s colours are %s, not the fixed order' % (tag, k, c['ks'][:12]))
+            break
+        if k > 10 and c['line'] != Lw['cheer']:
+            out.append('%s: at question %d the crowd line is %r, expected LINES.%s.cheer' % (tag, k, c['line'], look))
+            break
+        if page.evaluate('ST.ui.score()') != k:
+            out.append('%s: after %d right the score is %d (the crowd must never change it)' % (tag, k, page.evaluate('ST.ui.score()')))
+            break
         page.evaluate('ST.ui.next()')
     if len(set(ids[:22])) != 22:
         out.append('%s: the first 22 questions repeat an item before all are used' % tag)
@@ -667,7 +741,15 @@ def check_winner(page, look, out):
         if a == b:
             out.append('%s: %s served twice in a row' % (tag, a))
             break
-    page.evaluate('ST.ui.end()')
+    page.evaluate('() => { window.__sub = []; }')
+    page.evaluate('ST.ui.answer(false)')
+    c = page.evaluate(CROWD_JS)
+    if not c['faint'] or c['line'] != Lw['faint'] or c['n'] != 48:
+        out.append('%s: the run-ending wrong: crowd faint %s, line %r, %d shown; expected fainted, LINES.%s.faint, 48' % (tag, c['faint'], c['line'], c['n'], look))
+    still(page, '%s (the crowd fainted)' % tag, out)
+    page.evaluate('ST.ui.next()')
+    if page.evaluate('ST.ui.score()') != 62 or page.evaluate('window.__sub') != [[SLUG, 'stage-1', 62, 63]]:
+        out.append('%s: 62 right then a wrong: score %d, board %s; expected 62 of 63' % (tag, page.evaluate('ST.ui.score()'), page.evaluate('window.__sub')))
     page.evaluate("document.getElementById('menuBtn').click()")
 
     # (5) the Stage 3 scaffold: questions 1-4 three steps, 5-7 two (the rows label from the start), 8+ the total only;
@@ -709,6 +791,85 @@ def check_winner(page, look, out):
         page.evaluate('ST.ui.next()')
     page.evaluate('ST.ui.end()')
     page.evaluate("document.getElementById('menuBtn').click()")
+
+
+CONGA_JS = r"""() => { const line = document.getElementById('conga');
+  if (!line) return null;
+  return [...line.querySelectorAll('.cgroup')].map(g => { const r = g.getBoundingClientRect();
+    return { top: Math.round(r.top), n: g.querySelectorAll('svg.th').length,
+             ks: [...new Set([...g.querySelectorAll('svg.th')].map(t => +((t.getAttribute('class').match(/\bk(\d+)\b/) || [])[1])))] }; }); }"""
+SARGE_JS = r"""() => { const vis = (e) => !!e && e.getBoundingClientRect().width > 0 && getComputedStyle(e).display !== 'none';
+  return { mini: vis(document.querySelector('#sargeMini svg.sarge')), wide: vis(document.querySelector('#sargeWide svg.sarge')) }; }"""
+START_JS = r"""() => { const f = document.querySelector('.site-footer'); const fold = innerHeight - (getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  const b = document.querySelector('#stageList .stage-btn'); return { bottom: b.getBoundingClientRect().bottom + scrollY, fold: fold,
+  crowd: document.querySelectorAll('#crowdStart svg.th').length, sw: document.documentElement.scrollWidth > innerWidth }; }"""
+
+
+def check_scenes(pw, base, html, out, info):
+    """The start screen's crowd at every phone-fit size, the conga line and Sarge (SOME-THINGIES-PERSONALITY)."""
+    items = bank_of(html)
+    for look, frag in (('grown', ''), ('kids', '#kids/Maple')):
+        for size in FIT_SIZES + [PHONE]:
+            tag = '%s %dx%d' % (look, size[0], size[1])
+            br, page, errs = open_page(pw, base, html, size, frag)
+            try:
+                page.evaluate('window.scrollTo(0, 0)')
+                st = page.evaluate(START_JS)
+                if st['crowd'] < 12 or st['crowd'] > 16:
+                    out.append('%s: the start screen\'s crowd has %d thingies (12-16)' % (tag, st['crowd']))
+                if st['bottom'] > st['fold'] + 0.5 or st['sw']:
+                    out.append('%s: the start screen\'s crowd pushes Start to %.0f px, below the fold at %.0f px' % (tag, st['bottom'], st['fold']))
+                check_thingies(page, '#crowdStart', False, '%s start screen' % tag, out)
+                still(page, '%s start screen' % tag, out)
+                if size not in ((320, 568), PHONE, (1280, 720)):
+                    continue
+                phone = size[0] < 600
+                # Stage 2, the conga line: every adding and groups-to-sum item; one group per line at 360 px.
+                for q in items:
+                    if q['type'] not in ('sum-to-groups', 'groups-to-sum'):
+                        continue
+                    i = q['id']
+                    page.evaluate('([id, at]) => ST.ui.preview(id, at)', [i, 1])
+                    cg = page.evaluate(CONGA_JS)
+                    if q['type'] == 'groups-to-sum' and cg is not None:
+                        out.append('%s %s: the conga line shows before marking (it would give the answer away)' % (tag, i))
+                    if q['type'] == 'sum-to-groups':
+                        page.evaluate("ST.ui.count(String(ST.ui.question().groups))")
+                    page.evaluate('ST.ui.answer(false)')
+                    fit(page, '#feedback .maffs-next, #nextBtn', '%s %s (Next, the conga line)' % (tag, i), out)
+                    cg = page.evaluate(CONGA_JS)
+                    off = page.evaluate("document.getElementById('pic').dataset.conga === 'off'")
+                    if cg is None and not (off and size == (320, 568)):
+                        out.append('%s %s: no conga line after marking' % (tag, i))
+                        continue
+                    if cg is None:
+                        continue
+                    if [g['n'] for g in cg] != [q['each']] * q['groups'] or [g['ks'] for g in cg] != [[(j % 10) + 1] for j in range(q['groups'])]:
+                        out.append('%s %s: the conga line is %s, expected %d groups of %d, one colour each in order' % (tag, i, [(g['n'], g['ks']) for g in cg], q['groups'], q['each']))
+                    if phone and size[0] <= 360 and len({g['top'] for g in cg}) != len(cg):
+                        out.append('%s %s: the conga line puts %d groups on %d lines (one group per line on a phone)' % (tag, i, len(cg), len({g['top'] for g in cg})))
+                    check_thingies(page, '#pic', q['mode'] == 'pro', '%s %s conga' % (tag, i), out)
+                # Stage 3, the parade ground: Sarge beside the array on a wide screen, in the top row on a phone; Next
+                # after marking above the fold for every array, as question 1 (labels on) and as question 8.
+                for q in items:
+                    if q['type'] != 'array':
+                        continue
+                    for at in (1, 8):
+                        page.evaluate('([id, at]) => ST.ui.preview(id, at)', [q['id'], at])
+                        sg = page.evaluate(SARGE_JS)
+                        if sg != {'mini': phone, 'wide': not phone}:
+                            out.append('%s %s: Sarge %s, expected %s' % (tag, q['id'], sg, 'in the top row' if phone else 'beside the array'))
+                        page.evaluate('(r) => ST.ui.answer(r)', at == 1)
+                        fit(page, '#feedback .maffs-next, #nextBtn', '%s %s as question %d (Next, with Sarge)' % (tag, q['id'], at), out)
+                        if at == 1 and page.evaluate("document.getElementById('say').textContent") != page.evaluate('ST.lines()')[look]['sarge']:
+                            out.append('%s %s: Sarge does not say his line on a right answer' % (tag, q['id']))
+                    if len(out) > 60:
+                        break
+            except Exception as e:  # noqa: BLE001
+                out.append('scenes %s threw: %s' % (tag, str(e).splitlines()[0][:200]))
+            out.extend('page error (scenes %s): %s' % (tag, e) for e in errs if 'production host' not in e)
+            br.close()
+    info['scenes'] = True
 
 
 def check_largest(page, look, out):
@@ -800,6 +961,12 @@ def check(html, out, units, shard=None):
                         except Exception as e:  # noqa: BLE001
                             out.append('read aloud threw: %s' % str(e).splitlines()[0][:220])
                         continue
+                    if uid == SCENES:
+                        try:
+                            check_scenes(pw, base, html, out, info)
+                        except Exception as e:  # noqa: BLE001
+                            out.append('scenes threw: %s' % str(e).splitlines()[0][:220])
+                        continue
                     if uid == 'greeting':
                         try:
                             check_greeting(pw, base, html, out)
@@ -873,9 +1040,19 @@ PLANTS = [
      edit("    var kind = state;\n    steps++;\n", "    var kind = state;\n    steps++;\n    score++;\n"),
      WINNER, r'a step changed the score'),
     ('a dot drawn instead of a thingy',
-     edit("for (var j = 1; j <= c; j++) h += THINGY.replace('class=\"th\"', 'class=\"th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '\"');",
-          "for (var j = 1; j <= c; j++) h += (j === 1 ? '<i class=\"k1\"></i>' : THINGY.replace('class=\"th\"', 'class=\"th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '\"'));"),
+     edit("for (var j = 1; j <= c; j++) h += thingy(turned ? i : j, j === 6 ? ' c6' : '');",
+          "for (var j = 1; j <= c; j++) h += j === 1 ? '<i class=\"k1\"></i>' : thingy(turned ? i : j, j === 6 ? ' c6' : '');"),
      'marking grown', r'Stage 3 draws \d+ cells, \d+ of them thingies'),
+    # SOME-THINGIES-PERSONALITY's three.
+    ('a thingy with the wrong accessory for its colour',
+     edit("    var a = ACCESSORY[k];", "    var a = ACCESSORY[k === 6 ? 2 : k];"),
+     SCENES, r'a thingy of colour 6 wears hair'),
+    ('an animation running under reduced motion',
+     edit("@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}", ""),
+     SCENES, r'animations running under reduced motion'),
+    ('the crowd changing the score',
+     edit("if (right && qi > PER) { crowdN++; drawCrowd(); }", "if (right && qi > PER) { crowdN++; score++; drawCrowd(); }"),
+     WINNER, r'the score is \d+ \(the crowd must never change it\)'),
 ]
 
 
@@ -907,7 +1084,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER]
+    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -927,6 +1104,8 @@ def main():
         print('%s: %d fragments read for the look and the greeting' % (SLUG, info['greeting']))
     if 'speech' in info:
         print('%s: read aloud against a mocked speechSynthesis: hidden without a local voice, local voices only, nothing before a tap, words from the item' % SLUG)
+    if 'scenes' in info:
+        print('%s: the start screen crowd (Start above the fold at every phone-fit size), the conga line (one group per line on a phone, Next above the fold) and Sarge (Next above the fold), every thingy in its own colour\'s accessory, nothing moving under reduced motion' % SLUG)
     if 'winner' in info:
         print('%s: winner stays on (at least 10, then to the first wrong or End; no End before 11; the supply never repeats at once) and the Stage 3 scaffold (3, 2, then 1 steps; steps never score)' % SLUG)
     if 'played' in info:
