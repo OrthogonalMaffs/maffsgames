@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Multiplication with groups and arrays: equal groups, repeated addition, arrays and facts for the 2, 5 and 10 times tables, and 3, 4 and 8 in pro mode. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/some-thingies/">
+<meta property="og:title" content="Multiplication with groups and arrays Maths Game | MaffsGames">
+<meta property="og:description" content="Multiplication with groups and arrays: equal groups, repeated addition, arrays and facts for the 2, 5 and 10 times tables, and 3, 4 and 8 in pro mode. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/some-thingies/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Multiplication with groups and arrays Maths Game | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster's level is Year 6 (shown as "Starter", SR-11).
+   This game's own tokens. Two looks on one page (contract SOME-THINGIES, as Sums in Disguise): the grown-up look by
+   default, the kid look (body.look-kids) from the link fragment #kids. Every colour is a token here; the kid look only
+   points the game's own tokens at its brighter set, never a base token (scripts/check-theme.py).
+   Grown accent: teal-800, 7.6:1 on white. Kid accent: fuchsia-700, 6.3:1 on white and 5.9:1 on the kid look's sunny
+   background, so white text on it and it on the light surfaces both clear 4.5:1. */
+:root{
+  --accent:#115e59;--accent-dim:#ccfbf1;--on-accent:#ffffff;
+  --th-1:#0d9488;--th-2:#f59e0b;--th-3:#6366f1;--th-eye:#ffffff;--th-pupil:#111827;
+  --plate:#f1f5f9;--plate-edge:#cbd5e1;--dot:#0f766e;
+  --kid-accent:#a21caf;--kid-accent-dim:#fae8ff;--kid-bg:#fff7d6;--kid-edge:#f0abfc;
+  --kid-th-1:#ec4899;--kid-th-2:#16a34a;--kid-th-3:#0284c7;--kid-plate:#ffffff;--kid-plate-edge:#f0abfc;--kid-dot:#a21caf
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:32em}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.welcome{text-align:center;font-weight:700;font-size:1.05rem;color:var(--accent);margin:.2rem 0 .5rem}
+.welcome:empty{display:none}
+.badges{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;margin:.1rem 0 .6rem}
+.level-tag{display:inline-block;font-size:.78rem;font-weight:700;padding:.15rem .55rem;border-radius:999px;background:var(--accent-dim);color:var(--accent)}
+.menu-info{color:var(--text);font-size:.95rem;line-height:1.55}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:.8rem 0 .35rem}
+.mode-h:first-child{margin-top:0}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.stages{display:grid;grid-template-columns:1fr 1fr;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.6rem;width:100%;text-align:left;min-height:56px;padding:.45rem .7rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:32px;height:32px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.78rem;color:var(--muted);line-height:1.3}
+@media (max-width:420px){.stages{grid-template-columns:1fr}.stage-btn{min-height:48px}}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{position:relative;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.5rem .6rem;display:flex;flex-direction:column;gap:.4rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+.qhead{display:flex;align-items:center;justify-content:space-between;gap:.4rem;min-height:18px}
+.speak{flex:none;width:44px;height:44px;margin-left:auto;border-radius:50%;border:2px solid var(--accent);background:var(--surface);color:var(--accent);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0}
+.speak svg{width:22px;height:22px;display:block}
+.speak .s-fill{fill:currentColor}.speak .s-wave{fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+
+/* The picture: plates of thingies (Stages 1), or an array of dots (Stage 3). Sized to fit 320 px: at most 50 thingies,
+   10 plates, 10 rows of 5 or 5 rows of 10. */
+.pic{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:6px;max-width:100%}
+.pic:empty{display:none}
+.plate{display:grid;gap:2px;padding:4px 5px;border-radius:999px;background:var(--plate);border:2px solid var(--plate-edge)}
+.plate.tall{border-radius:16px}
+.th{display:block;width:14px;height:14px}
+.th .b{fill:var(--th)}.th .e{fill:var(--th-eye)}.th .p{fill:var(--th-pupil)}
+.plate.c0{--th:var(--th-1)}.plate.c1{--th:var(--th-2)}.plate.c2{--th:var(--th-3)}
+.arr{display:grid;gap:5px;padding:6px;transition:transform .6s ease}
+.arr i{display:block;width:13px;height:13px;border-radius:50%;background:var(--dot)}
+.arr.turning{transform:rotate(90deg)}
+.sum{font-size:1.4rem;line-height:1.3;min-height:2rem;text-align:center;font-family:var(--font-num);font-weight:700;max-width:100%}
+.sum:empty{display:none}
+.sum .katex{font-size:1em}
+.prompt{font-size:1rem;line-height:1.35;text-align:center;font-weight:600}
+.prompt:empty{display:none}
+.say{position:relative;max-width:30em;margin:.1rem auto 0;padding:.35rem .7rem;border-radius:12px;background:var(--accent-dim);color:var(--text);font-weight:600;font-size:.95rem;line-height:1.35;text-align:center}
+.say:empty{display:none}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:.4rem}
+.choices.three{grid-template-columns:1fr 1fr 1fr}
+.choices.one{grid-template-columns:1fr}
+.opt{min-height:48px;border-radius:12px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.2rem;font-weight:700;cursor:pointer;padding:.3rem .5rem}
+.choices.one .opt{font-size:1.05rem}
+.opt:hover{border-color:var(--accent)}
+.opt.is-right{border-color:var(--correct);color:var(--correct)}
+.opt.is-wrong{border-color:var(--wrong);color:var(--wrong)}
+.opt:disabled{cursor:default}
+
+.fb{border-radius:12px;padding:.45rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.35rem}
+.fb.right{border-color:var(--correct)}
+.fb.wrong{border-color:var(--wrong)}
+.fb-line{font-size:.98rem;line-height:1.45;text-align:center}
+.work{font-size:1.1rem}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.end-line{font-size:1rem;color:var(--text);margin:.2rem auto .4rem;max-width:30em}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem}
+.stats{color:var(--muted);line-height:1.8;font-size:.95rem;margin:.4rem 0 .7rem}
+.stats:empty{display:none}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .5rem;gap:.35rem}
+}
+@media (max-height:620px){.hud-label{display:none}.stage-label{display:none}}
+@media (min-width:1024px){.container{max-width:clamp(720px,60vw,900px)}}
+
+/* The kid look: brighter and rounder; the same layout, items, marking and boards. */
+body.look-kids{background:var(--kid-bg);--accent:var(--kid-accent);--accent-dim:var(--kid-accent-dim);
+  --th-1:var(--kid-th-1);--th-2:var(--kid-th-2);--th-3:var(--kid-th-3);--plate:var(--kid-plate);--plate-edge:var(--kid-plate-edge);--dot:var(--kid-dot)}
+body.look-kids .panel,body.look-kids .qcard,body.look-kids .hud{border:3px solid var(--kid-edge);border-radius:22px}
+body.look-kids .btn,body.look-kids .opt{border-radius:999px}
+body.look-kids .stage-btn{border-radius:20px}
+body.look-kids .header h1{font-size:2.2rem}
+body.look-kids .say{border-radius:18px;font-size:1rem}
+@media (max-width:420px){body.look-kids .header h1{font-size:1.7rem}}
+
+body.accessible p,body.accessible .fb-line{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="/schools/assets/site-nav.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'start' opens Main Stage 1; 'answer' with i = 0 answers the item on screen right, and with i >= 1 picks a decoy (on a Stage 2 adding item, after counting the lots right), so it is marked wrong and waits on Next.
+{
+  "start": "ST.ui.start('main-1');",
+  "ready": "!!window.ST && ST.ui.ready()",
+  "answer": [
+    "ST.ui.answer(i === 0);"
+  ]
+}
+-->
+<script src="../../schools/assets/scroll.js"></script>
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>Some Thingies</h1><div class="sub" id="titleLine"></div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <p class="welcome" id="welcome"></p>
+    <div class="panel menu-info">
+      <div class="badges"><span class="level-tag">Starter</span><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <div id="stageList"></div>
+      <p class="note" id="menuNote"></p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="qhead"><div class="stage-label" id="stageLabel"></div><button class="speak" id="speakBtn" type="button" aria-label="Read aloud" title="Read aloud" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="s-fill" d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z"/><path class="s-wave" d="M15.5 8.5 Q18 12 15.5 15.5 M18.5 6 Q22.5 12 18.5 18"/></svg></button></div>
+      <div class="pic" id="pic" aria-hidden="true"></div>
+      <div class="sum" id="sum"></div>
+      <div class="prompt" id="prompt"></div>
+      <div class="choices three maffs-options" id="opts1" hidden></div>
+      <div class="choices maffs-options" id="opts" hidden></div>
+      <div class="say" id="say" aria-live="polite"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <p class="end-line" id="endLine"></p>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="stats" id="resStats"></div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =====================================================================================================
+     THE LINES: every line the game says, in one place, for each look.
+     ===================================================================================================== */
+  // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite.
+  // Every kid line is 6 words or fewer (not counting {name} or {n}). Feedback shows one of these at a time.
+  var LINES = {
+    grown: {
+      title: "Multiplication is equal groups. Count them properly.",
+      welcome: "Some thingies need counting.",
+      total: "How many thingies?",
+      dots: "How many dots?",
+      how_many: "How many {n}s?",
+      pick: "Which sum is it?",
+      right: ["Correct.", "Counted and confirmed.", "The thingies agree.", "Exactly right.", "Spot on.", "Well grouped."],
+      wrong: { groups: "Count one plate, then count the plates.", sum: "Count how many times the number is added.", pick: "The same number, added that many times.", array: "Count one row, then count the rows.", fact: "Use the table you know.", missing: "Which number, times this one, makes it?" },
+      end: "Every thingy counted. They feel seen."
+    },
+    kids: {
+      title: "Count the thingies!",
+      welcome: "Welcome, thingy counters!",
+      welcome_class: "Welcome, {name} Class!",
+      total: "How many thingies?",
+      dots: "How many dots?",
+      how_many: "How many {n}s?",
+      pick: "Which sum is it?",
+      right: ["Yes!", "Brilliant!", "You got it!", "Super counting!", "The thingies cheer!", "Spot on!"],
+      wrong: { groups: "Count one plate first!", sum: "Count the numbers added!", pick: "Find the same number again!", array: "Count one row first!", fact: "Use your times table!", missing: "What times makes it?" },
+      end: "All the thingies counted!"
+    }
+  };
+
+  // The game's own labels (modes, stage names, the menu note): the frame around the lines, the same in both looks.
+  var MODE_INFO = {
+    main: { name: 'Main', tables: '2, 5 and 10 times tables' },
+    pro: { name: 'Pro', tables: '3, 4 and 8 times tables' }
+  };
+  var STAGES = {
+    1: { name: 'Plates', about: 'Equal groups' },
+    2: { name: 'Adding', about: 'Repeated addition' },
+    3: { name: 'Arrays', about: 'Rows of dots' },
+    4: { name: 'Facts', about: 'Times table facts' }
+  };
+  var MENU_NOTE = '10 questions a run. A point for each one right.';
+
+  /* =====================================================================================================
+     THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
+     ===================================================================================================== */
+  var LOOK = 'grown', CLASS_NAME = null;
+  try {
+    var frag = String(window.location.hash || '').replace(/^#/, '');
+    var low = frag.toLowerCase();
+    if (low === 'kids') LOOK = 'kids';
+    else if (low.indexOf('kids/') === 0) {
+      LOOK = 'kids';
+      var nm = decodeURIComponent(frag.slice(5)).trim();
+      if (/^[\p{L}' ’-]{1,20}$/u.test(nm) && /\p{L}/u.test(nm)) CLASS_NAME = nm;
+    }
+  } catch (e) { CLASS_NAME = null; }
+  var L = LINES[LOOK];
+  function greeting() {
+    if (LOOK !== 'kids') return L.welcome;
+    if (!CLASS_NAME) return L.welcome;
+    var g = L.welcome_class.replace('{name}', CLASS_NAME);
+    // A name that already ends with "class" is not given a second "Class".
+    if (/class$/i.test(CLASS_NAME)) g = g.replace(/(class)\s+class\b/i, '$1');
+    return g;
+  }
+  if (LOOK === 'kids') document.body.classList.add('look-kids');
+
+  var SLUG = 'some-thingies', PER = 10;
+  // A run is a mode and a stage: 'main-1' .. 'main-4', 'pro-1' .. 'pro-4'.
+  var MODES = ['main-1', 'main-2', 'main-3', 'main-4', 'pro-1', 'pro-2', 'pro-3', 'pro-4'];
+  var level = MaffsLevel.resolve({ slug: 'some-thingies', levels: ['year6'], fallback: 'year6',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'pro-stage-1', 'pro-stage-2', 'pro-stage-3', 'pro-stage-4'] });
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function tex(t) {
+    if (window.katex) { try { return katex.renderToString(t, { throwOnError: false, strict: false }); } catch (e) { /* fall through */ } }
+    return esc(t.replace(/\\text\{([^}]*)\}/g, '$1').replace(/\\times/g, '×'));
+  }
+
+  /* =====================================================================================================
+     THE BANK: contract SOME-THINGIES, 21 Nov 2026: tools/some-thingies/bank.py's 369 items, unchanged and in order.
+     scripts/verify-some-thingies.py checks its SHA-256 and recomputes every answer.
+     ===================================================================================================== */
+  var QUESTIONS = [
+    {"id":"m1-2x2","mode":"main","stage":1,"type":"groups","groups":2,"each":2,"answer":4,"decoys":[6,2,5],"say":"2 groups of 2"},
+    {"id":"m1-3x2","mode":"main","stage":1,"type":"groups","groups":3,"each":2,"answer":6,"decoys":[5,8,4],"say":"3 groups of 2"},
+    {"id":"m1-4x2","mode":"main","stage":1,"type":"groups","groups":4,"each":2,"answer":8,"decoys":[6,10,9],"say":"4 groups of 2"},
+    {"id":"m1-5x2","mode":"main","stage":1,"type":"groups","groups":5,"each":2,"answer":10,"decoys":[7,12,8],"say":"5 groups of 2"},
+    {"id":"m1-6x2","mode":"main","stage":1,"type":"groups","groups":6,"each":2,"answer":12,"decoys":[8,14,10],"say":"6 groups of 2"},
+    {"id":"m1-7x2","mode":"main","stage":1,"type":"groups","groups":7,"each":2,"answer":14,"decoys":[9,16,12],"say":"7 groups of 2"},
+    {"id":"m1-8x2","mode":"main","stage":1,"type":"groups","groups":8,"each":2,"answer":16,"decoys":[10,18,14],"say":"8 groups of 2"},
+    {"id":"m1-9x2","mode":"main","stage":1,"type":"groups","groups":9,"each":2,"answer":18,"decoys":[11,20,16],"say":"9 groups of 2"},
+    {"id":"m1-10x2","mode":"main","stage":1,"type":"groups","groups":10,"each":2,"answer":20,"decoys":[12,22,18],"say":"10 groups of 2"},
+    {"id":"m1-2x5","mode":"main","stage":1,"type":"groups","groups":2,"each":5,"answer":10,"decoys":[7,15,5],"say":"2 groups of 5"},
+    {"id":"m1-3x5","mode":"main","stage":1,"type":"groups","groups":3,"each":5,"answer":15,"decoys":[8,20,10],"say":"3 groups of 5"},
+    {"id":"m1-4x5","mode":"main","stage":1,"type":"groups","groups":4,"each":5,"answer":20,"decoys":[9,25,15],"say":"4 groups of 5"},
+    {"id":"m1-5x5","mode":"main","stage":1,"type":"groups","groups":5,"each":5,"answer":25,"decoys":[10,30,20],"say":"5 groups of 5"},
+    {"id":"m1-6x5","mode":"main","stage":1,"type":"groups","groups":6,"each":5,"answer":30,"decoys":[11,35,25],"say":"6 groups of 5"},
+    {"id":"m1-7x5","mode":"main","stage":1,"type":"groups","groups":7,"each":5,"answer":35,"decoys":[12,40,30],"say":"7 groups of 5"},
+    {"id":"m1-8x5","mode":"main","stage":1,"type":"groups","groups":8,"each":5,"answer":40,"decoys":[13,45,35],"say":"8 groups of 5"},
+    {"id":"m1-9x5","mode":"main","stage":1,"type":"groups","groups":9,"each":5,"answer":45,"decoys":[14,50,40],"say":"9 groups of 5"},
+    {"id":"m1-10x5","mode":"main","stage":1,"type":"groups","groups":10,"each":5,"answer":50,"decoys":[15,55,45],"say":"10 groups of 5"},
+    {"id":"m1-2x10","mode":"main","stage":1,"type":"groups","groups":2,"each":10,"answer":20,"decoys":[12,30,10],"say":"2 groups of 10"},
+    {"id":"m1-3x10","mode":"main","stage":1,"type":"groups","groups":3,"each":10,"answer":30,"decoys":[13,40,20],"say":"3 groups of 10"},
+    {"id":"m1-4x10","mode":"main","stage":1,"type":"groups","groups":4,"each":10,"answer":40,"decoys":[14,50,30],"say":"4 groups of 10"},
+    {"id":"m1-5x10","mode":"main","stage":1,"type":"groups","groups":5,"each":10,"answer":50,"decoys":[15,60,40],"say":"5 groups of 10"},
+    {"id":"m2a-2x2","mode":"main","stage":2,"type":"sum-to-groups","sum":[2,2],"groups":2,"each":2,"answer":4,"groups_decoys":[3,1],"decoys":[6,2,5]},
+    {"id":"m2b-2x2","mode":"main","stage":2,"type":"groups-to-sum","groups":2,"each":2,"answer_sum":[2,2],"decoy_sums":[[2,2,2],[4,4],[3,2]]},
+    {"id":"m2a-3x2","mode":"main","stage":2,"type":"sum-to-groups","sum":[2,2,2],"groups":3,"each":2,"answer":6,"groups_decoys":[2,4],"decoys":[5,8,4]},
+    {"id":"m2b-3x2","mode":"main","stage":2,"type":"groups-to-sum","groups":3,"each":2,"answer_sum":[2,2,2],"decoy_sums":[[2,2,2,2],[2,2],[3,2]]},
+    {"id":"m2a-4x2","mode":"main","stage":2,"type":"sum-to-groups","sum":[2,2,2,2],"groups":4,"each":2,"answer":8,"groups_decoys":[2,5],"decoys":[6,10,9]},
+    {"id":"m2b-4x2","mode":"main","stage":2,"type":"groups-to-sum","groups":4,"each":2,"answer_sum":[2,2,2,2],"decoy_sums":[[2,2,2,2,2],[2,2,2],[4,2]]},
+    {"id":"m2a-5x2","mode":"main","stage":2,"type":"sum-to-groups","sum":[2,2,2,2,2],"groups":5,"each":2,"answer":10,"groups_decoys":[2,6],"decoys":[7,12,8]},
+    {"id":"m2b-5x2","mode":"main","stage":2,"type":"groups-to-sum","groups":5,"each":2,"answer_sum":[2,2,2,2,2],"decoy_sums":[[2,2,2,2,2,2],[2,2,2,2],[5,2]]},
+    {"id":"m2a-6x2","mode":"main","stage":2,"type":"sum-to-groups","sum":[2,2,2,2,2,2],"groups":6,"each":2,"answer":12,"groups_decoys":[2,7],"decoys":[8,14,10]},
+    {"id":"m2b-6x2","mode":"main","stage":2,"type":"groups-to-sum","groups":6,"each":2,"answer_sum":[2,2,2,2,2,2],"decoy_sums":[[3,3,3,3,3,3],[2,2,2,2,2],[6,2]]},
+    {"id":"m2a-2x5","mode":"main","stage":2,"type":"sum-to-groups","sum":[5,5],"groups":2,"each":5,"answer":10,"groups_decoys":[5,3],"decoys":[7,15,5]},
+    {"id":"m2b-2x5","mode":"main","stage":2,"type":"groups-to-sum","groups":2,"each":5,"answer_sum":[5,5],"decoy_sums":[[5,5,5],[7,7],[2,5]]},
+    {"id":"m2a-3x5","mode":"main","stage":2,"type":"sum-to-groups","sum":[5,5,5],"groups":3,"each":5,"answer":15,"groups_decoys":[5,4],"decoys":[8,20,10]},
+    {"id":"m2b-3x5","mode":"main","stage":2,"type":"groups-to-sum","groups":3,"each":5,"answer_sum":[5,5,5],"decoy_sums":[[5,5,5,5],[5,5],[3,5]]},
+    {"id":"m2a-4x5","mode":"main","stage":2,"type":"sum-to-groups","sum":[5,5,5,5],"groups":4,"each":5,"answer":20,"groups_decoys":[5,3],"decoys":[9,25,15]},
+    {"id":"m2b-4x5","mode":"main","stage":2,"type":"groups-to-sum","groups":4,"each":5,"answer_sum":[5,5,5,5],"decoy_sums":[[5,5,5,5,5],[5,5,5],[4,5]]},
+    {"id":"m2a-5x5","mode":"main","stage":2,"type":"sum-to-groups","sum":[5,5,5,5,5],"groups":5,"each":5,"answer":25,"groups_decoys":[6,4],"decoys":[10,30,20]},
+    {"id":"m2b-5x5","mode":"main","stage":2,"type":"groups-to-sum","groups":5,"each":5,"answer_sum":[5,5,5,5,5],"decoy_sums":[[5,5,5,5,5,5],[5,5,5,5],[6,5]]},
+    {"id":"m2a-6x5","mode":"main","stage":2,"type":"sum-to-groups","sum":[5,5,5,5,5,5],"groups":6,"each":5,"answer":30,"groups_decoys":[5,7],"decoys":[11,35,25]},
+    {"id":"m2b-6x5","mode":"main","stage":2,"type":"groups-to-sum","groups":6,"each":5,"answer_sum":[5,5,5,5,5,5],"decoy_sums":[[6,6,6,6,6,6],[5,5,5,5,5],[6,5]]},
+    {"id":"m2a-2x10","mode":"main","stage":2,"type":"sum-to-groups","sum":[10,10],"groups":2,"each":10,"answer":20,"groups_decoys":[10,3],"decoys":[12,30,10]},
+    {"id":"m2b-2x10","mode":"main","stage":2,"type":"groups-to-sum","groups":2,"each":10,"answer_sum":[10,10],"decoy_sums":[[10,10,10],[12,12],[2,10]]},
+    {"id":"m2a-3x10","mode":"main","stage":2,"type":"sum-to-groups","sum":[10,10,10],"groups":3,"each":10,"answer":30,"groups_decoys":[10,4],"decoys":[13,40,20]},
+    {"id":"m2b-3x10","mode":"main","stage":2,"type":"groups-to-sum","groups":3,"each":10,"answer_sum":[10,10,10],"decoy_sums":[[10,10,10,10],[10,10],[3,10]]},
+    {"id":"m2a-4x10","mode":"main","stage":2,"type":"sum-to-groups","sum":[10,10,10,10],"groups":4,"each":10,"answer":40,"groups_decoys":[10,5],"decoys":[14,50,30]},
+    {"id":"m2b-4x10","mode":"main","stage":2,"type":"groups-to-sum","groups":4,"each":10,"answer_sum":[10,10,10,10],"decoy_sums":[[10,10,10,10,10],[10,10,10],[4,10]]},
+    {"id":"m2a-5x10","mode":"main","stage":2,"type":"sum-to-groups","sum":[10,10,10,10,10],"groups":5,"each":10,"answer":50,"groups_decoys":[10,6],"decoys":[15,60,40]},
+    {"id":"m2b-5x10","mode":"main","stage":2,"type":"groups-to-sum","groups":5,"each":10,"answer_sum":[10,10,10,10,10],"decoy_sums":[[10,10,10,10,10,10],[10,10,10,10],[5,10]]},
+    {"id":"m3-2r2c","mode":"main","stage":3,"type":"array","rows":2,"cols":2,"answer":4,"decoys":[6,2,5]},
+    {"id":"m3-3r2c","mode":"main","stage":3,"type":"array","rows":3,"cols":2,"answer":6,"decoys":[5,8,4]},
+    {"id":"m3-2r3c","mode":"main","stage":3,"type":"array","rows":2,"cols":3,"answer":6,"decoys":[5,9,3]},
+    {"id":"m3-4r2c","mode":"main","stage":3,"type":"array","rows":4,"cols":2,"answer":8,"decoys":[6,10,12]},
+    {"id":"m3-2r4c","mode":"main","stage":3,"type":"array","rows":2,"cols":4,"answer":8,"decoys":[6,12,4]},
+    {"id":"m3-5r2c","mode":"main","stage":3,"type":"array","rows":5,"cols":2,"answer":10,"decoys":[7,12,8]},
+    {"id":"m3-2r5c","mode":"main","stage":3,"type":"array","rows":2,"cols":5,"answer":10,"decoys":[7,15,5]},
+    {"id":"m3-6r2c","mode":"main","stage":3,"type":"array","rows":6,"cols":2,"answer":12,"decoys":[8,14,10]},
+    {"id":"m3-2r6c","mode":"main","stage":3,"type":"array","rows":2,"cols":6,"answer":12,"decoys":[8,18,6]},
+    {"id":"m3-7r2c","mode":"main","stage":3,"type":"array","rows":7,"cols":2,"answer":14,"decoys":[9,16,12]},
+    {"id":"m3-2r7c","mode":"main","stage":3,"type":"array","rows":2,"cols":7,"answer":14,"decoys":[9,21,7]},
+    {"id":"m3-8r2c","mode":"main","stage":3,"type":"array","rows":8,"cols":2,"answer":16,"decoys":[10,18,14]},
+    {"id":"m3-2r8c","mode":"main","stage":3,"type":"array","rows":2,"cols":8,"answer":16,"decoys":[10,24,8]},
+    {"id":"m3-9r2c","mode":"main","stage":3,"type":"array","rows":9,"cols":2,"answer":18,"decoys":[11,20,16]},
+    {"id":"m3-2r9c","mode":"main","stage":3,"type":"array","rows":2,"cols":9,"answer":18,"decoys":[11,27,9]},
+    {"id":"m3-10r2c","mode":"main","stage":3,"type":"array","rows":10,"cols":2,"answer":20,"decoys":[12,22,18]},
+    {"id":"m3-2r10c","mode":"main","stage":3,"type":"array","rows":2,"cols":10,"answer":20,"decoys":[12,30,10]},
+    {"id":"m3-3r5c","mode":"main","stage":3,"type":"array","rows":3,"cols":5,"answer":15,"decoys":[8,20,10]},
+    {"id":"m3-5r3c","mode":"main","stage":3,"type":"array","rows":5,"cols":3,"answer":15,"decoys":[8,18,12]},
+    {"id":"m3-4r5c","mode":"main","stage":3,"type":"array","rows":4,"cols":5,"answer":20,"decoys":[9,25,15]},
+    {"id":"m3-5r4c","mode":"main","stage":3,"type":"array","rows":5,"cols":4,"answer":20,"decoys":[9,24,16]},
+    {"id":"m3-5r5c","mode":"main","stage":3,"type":"array","rows":5,"cols":5,"answer":25,"decoys":[10,30,20]},
+    {"id":"m3-6r5c","mode":"main","stage":3,"type":"array","rows":6,"cols":5,"answer":30,"decoys":[11,35,25]},
+    {"id":"m3-5r6c","mode":"main","stage":3,"type":"array","rows":5,"cols":6,"answer":30,"decoys":[11,36,24]},
+    {"id":"m3-7r5c","mode":"main","stage":3,"type":"array","rows":7,"cols":5,"answer":35,"decoys":[12,40,30]},
+    {"id":"m3-5r7c","mode":"main","stage":3,"type":"array","rows":5,"cols":7,"answer":35,"decoys":[12,42,28]},
+    {"id":"m3-8r5c","mode":"main","stage":3,"type":"array","rows":8,"cols":5,"answer":40,"decoys":[13,45,35]},
+    {"id":"m3-5r8c","mode":"main","stage":3,"type":"array","rows":5,"cols":8,"answer":40,"decoys":[13,48,32]},
+    {"id":"m3-9r5c","mode":"main","stage":3,"type":"array","rows":9,"cols":5,"answer":45,"decoys":[14,50,40]},
+    {"id":"m3-5r9c","mode":"main","stage":3,"type":"array","rows":5,"cols":9,"answer":45,"decoys":[14,54,36]},
+    {"id":"m3-10r5c","mode":"main","stage":3,"type":"array","rows":10,"cols":5,"answer":50,"decoys":[15,55,45]},
+    {"id":"m3-5r10c","mode":"main","stage":3,"type":"array","rows":5,"cols":10,"answer":50,"decoys":[15,60,40]},
+    {"id":"m3-3r10c","mode":"main","stage":3,"type":"array","rows":3,"cols":10,"answer":30,"decoys":[13,40,20]},
+    {"id":"m3-10r3c","mode":"main","stage":3,"type":"array","rows":10,"cols":3,"answer":30,"decoys":[13,33,27]},
+    {"id":"m3-4r10c","mode":"main","stage":3,"type":"array","rows":4,"cols":10,"answer":40,"decoys":[14,50,30]},
+    {"id":"m3-10r4c","mode":"main","stage":3,"type":"array","rows":10,"cols":4,"answer":40,"decoys":[14,44,36]},
+    {"id":"m4-1x2","mode":"main","stage":4,"type":"fact","a":1,"b":2,"answer":2,"decoys":[4,3,1]},
+    {"id":"m4-2x1","mode":"main","stage":4,"type":"fact","a":2,"b":1,"answer":2,"decoys":[4,3,1]},
+    {"id":"m4-2x2","mode":"main","stage":4,"type":"fact","a":2,"b":2,"answer":4,"decoys":[6,2,5]},
+    {"id":"m4-q2x2","mode":"main","stage":4,"type":"missing","b":2,"product":4,"answer":2,"decoys":[3,1,4]},
+    {"id":"m4-3x2","mode":"main","stage":4,"type":"fact","a":3,"b":2,"answer":6,"decoys":[8,4,5]},
+    {"id":"m4-2x3","mode":"main","stage":4,"type":"fact","a":2,"b":3,"answer":6,"decoys":[8,4,5]},
+    {"id":"m4-q3x2","mode":"main","stage":4,"type":"missing","b":2,"product":6,"answer":3,"decoys":[4,2,5]},
+    {"id":"m4-4x2","mode":"main","stage":4,"type":"fact","a":4,"b":2,"answer":8,"decoys":[10,6,9]},
+    {"id":"m4-2x4","mode":"main","stage":4,"type":"fact","a":2,"b":4,"answer":8,"decoys":[10,6,9]},
+    {"id":"m4-q4x2","mode":"main","stage":4,"type":"missing","b":2,"product":8,"answer":4,"decoys":[5,3,6]},
+    {"id":"m4-5x2","mode":"main","stage":4,"type":"fact","a":5,"b":2,"answer":10,"decoys":[12,8,7]},
+    {"id":"m4-2x5","mode":"main","stage":4,"type":"fact","a":2,"b":5,"answer":10,"decoys":[12,8,7]},
+    {"id":"m4-q5x2","mode":"main","stage":4,"type":"missing","b":2,"product":10,"answer":5,"decoys":[6,4,8]},
+    {"id":"m4-6x2","mode":"main","stage":4,"type":"fact","a":6,"b":2,"answer":12,"decoys":[14,10,8]},
+    {"id":"m4-2x6","mode":"main","stage":4,"type":"fact","a":2,"b":6,"answer":12,"decoys":[14,10,8]},
+    {"id":"m4-q6x2","mode":"main","stage":4,"type":"missing","b":2,"product":12,"answer":6,"decoys":[7,5,10]},
+    {"id":"m4-7x2","mode":"main","stage":4,"type":"fact","a":7,"b":2,"answer":14,"decoys":[16,12,9]},
+    {"id":"m4-2x7","mode":"main","stage":4,"type":"fact","a":2,"b":7,"answer":14,"decoys":[16,12,9]},
+    {"id":"m4-q7x2","mode":"main","stage":4,"type":"missing","b":2,"product":14,"answer":7,"decoys":[8,6,12]},
+    {"id":"m4-8x2","mode":"main","stage":4,"type":"fact","a":8,"b":2,"answer":16,"decoys":[18,14,10]},
+    {"id":"m4-2x8","mode":"main","stage":4,"type":"fact","a":2,"b":8,"answer":16,"decoys":[18,14,10]},
+    {"id":"m4-q8x2","mode":"main","stage":4,"type":"missing","b":2,"product":16,"answer":8,"decoys":[9,7,14]},
+    {"id":"m4-9x2","mode":"main","stage":4,"type":"fact","a":9,"b":2,"answer":18,"decoys":[20,16,11]},
+    {"id":"m4-2x9","mode":"main","stage":4,"type":"fact","a":2,"b":9,"answer":18,"decoys":[20,16,11]},
+    {"id":"m4-q9x2","mode":"main","stage":4,"type":"missing","b":2,"product":18,"answer":9,"decoys":[10,8,16]},
+    {"id":"m4-10x2","mode":"main","stage":4,"type":"fact","a":10,"b":2,"answer":20,"decoys":[22,18,12]},
+    {"id":"m4-2x10","mode":"main","stage":4,"type":"fact","a":2,"b":10,"answer":20,"decoys":[22,18,12]},
+    {"id":"m4-q10x2","mode":"main","stage":4,"type":"missing","b":2,"product":20,"answer":10,"decoys":[11,9,18]},
+    {"id":"m4-11x2","mode":"main","stage":4,"type":"fact","a":11,"b":2,"answer":22,"decoys":[24,20,13]},
+    {"id":"m4-2x11","mode":"main","stage":4,"type":"fact","a":2,"b":11,"answer":22,"decoys":[24,20,13]},
+    {"id":"m4-q11x2","mode":"main","stage":4,"type":"missing","b":2,"product":22,"answer":11,"decoys":[12,10,20]},
+    {"id":"m4-12x2","mode":"main","stage":4,"type":"fact","a":12,"b":2,"answer":24,"decoys":[26,22,14]},
+    {"id":"m4-2x12","mode":"main","stage":4,"type":"fact","a":2,"b":12,"answer":24,"decoys":[26,22,14]},
+    {"id":"m4-q12x2","mode":"main","stage":4,"type":"missing","b":2,"product":24,"answer":12,"decoys":[13,11,22]},
+    {"id":"m4-1x5","mode":"main","stage":4,"type":"fact","a":1,"b":5,"answer":5,"decoys":[10,6,4]},
+    {"id":"m4-5x1","mode":"main","stage":4,"type":"fact","a":5,"b":1,"answer":5,"decoys":[10,6,4]},
+    {"id":"m4-q2x5","mode":"main","stage":4,"type":"missing","b":5,"product":10,"answer":2,"decoys":[3,1,5]},
+    {"id":"m4-3x5","mode":"main","stage":4,"type":"fact","a":3,"b":5,"answer":15,"decoys":[20,10,8]},
+    {"id":"m4-5x3","mode":"main","stage":4,"type":"fact","a":5,"b":3,"answer":15,"decoys":[20,10,8]},
+    {"id":"m4-q3x5","mode":"main","stage":4,"type":"missing","b":5,"product":15,"answer":3,"decoys":[4,2,10]},
+    {"id":"m4-4x5","mode":"main","stage":4,"type":"fact","a":4,"b":5,"answer":20,"decoys":[25,15,9]},
+    {"id":"m4-5x4","mode":"main","stage":4,"type":"fact","a":5,"b":4,"answer":20,"decoys":[25,15,9]},
+    {"id":"m4-q4x5","mode":"main","stage":4,"type":"missing","b":5,"product":20,"answer":4,"decoys":[5,3,15]},
+    {"id":"m4-5x5","mode":"main","stage":4,"type":"fact","a":5,"b":5,"answer":25,"decoys":[30,20,10]},
+    {"id":"m4-q5x5","mode":"main","stage":4,"type":"missing","b":5,"product":25,"answer":5,"decoys":[6,4,20]},
+    {"id":"m4-6x5","mode":"main","stage":4,"type":"fact","a":6,"b":5,"answer":30,"decoys":[35,25,11]},
+    {"id":"m4-5x6","mode":"main","stage":4,"type":"fact","a":5,"b":6,"answer":30,"decoys":[35,25,11]},
+    {"id":"m4-q6x5","mode":"main","stage":4,"type":"missing","b":5,"product":30,"answer":6,"decoys":[7,5,25]},
+    {"id":"m4-7x5","mode":"main","stage":4,"type":"fact","a":7,"b":5,"answer":35,"decoys":[40,30,12]},
+    {"id":"m4-5x7","mode":"main","stage":4,"type":"fact","a":5,"b":7,"answer":35,"decoys":[40,30,12]},
+    {"id":"m4-q7x5","mode":"main","stage":4,"type":"missing","b":5,"product":35,"answer":7,"decoys":[8,6,30]},
+    {"id":"m4-8x5","mode":"main","stage":4,"type":"fact","a":8,"b":5,"answer":40,"decoys":[45,35,13]},
+    {"id":"m4-5x8","mode":"main","stage":4,"type":"fact","a":5,"b":8,"answer":40,"decoys":[45,35,13]},
+    {"id":"m4-q8x5","mode":"main","stage":4,"type":"missing","b":5,"product":40,"answer":8,"decoys":[9,7,35]},
+    {"id":"m4-9x5","mode":"main","stage":4,"type":"fact","a":9,"b":5,"answer":45,"decoys":[50,40,14]},
+    {"id":"m4-5x9","mode":"main","stage":4,"type":"fact","a":5,"b":9,"answer":45,"decoys":[50,40,14]},
+    {"id":"m4-q9x5","mode":"main","stage":4,"type":"missing","b":5,"product":45,"answer":9,"decoys":[10,8,40]},
+    {"id":"m4-10x5","mode":"main","stage":4,"type":"fact","a":10,"b":5,"answer":50,"decoys":[55,45,15]},
+    {"id":"m4-5x10","mode":"main","stage":4,"type":"fact","a":5,"b":10,"answer":50,"decoys":[55,45,15]},
+    {"id":"m4-q10x5","mode":"main","stage":4,"type":"missing","b":5,"product":50,"answer":10,"decoys":[11,9,45]},
+    {"id":"m4-11x5","mode":"main","stage":4,"type":"fact","a":11,"b":5,"answer":55,"decoys":[60,50,16]},
+    {"id":"m4-5x11","mode":"main","stage":4,"type":"fact","a":5,"b":11,"answer":55,"decoys":[60,50,16]},
+    {"id":"m4-q11x5","mode":"main","stage":4,"type":"missing","b":5,"product":55,"answer":11,"decoys":[12,10,50]},
+    {"id":"m4-12x5","mode":"main","stage":4,"type":"fact","a":12,"b":5,"answer":60,"decoys":[65,55,17]},
+    {"id":"m4-5x12","mode":"main","stage":4,"type":"fact","a":5,"b":12,"answer":60,"decoys":[65,55,17]},
+    {"id":"m4-q12x5","mode":"main","stage":4,"type":"missing","b":5,"product":60,"answer":12,"decoys":[13,11,55]},
+    {"id":"m4-1x10","mode":"main","stage":4,"type":"fact","a":1,"b":10,"answer":10,"decoys":[20,11,9]},
+    {"id":"m4-10x1","mode":"main","stage":4,"type":"fact","a":10,"b":1,"answer":10,"decoys":[20,11,9]},
+    {"id":"m4-q2x10","mode":"main","stage":4,"type":"missing","b":10,"product":20,"answer":2,"decoys":[3,1,10]},
+    {"id":"m4-3x10","mode":"main","stage":4,"type":"fact","a":3,"b":10,"answer":30,"decoys":[40,20,13]},
+    {"id":"m4-10x3","mode":"main","stage":4,"type":"fact","a":10,"b":3,"answer":30,"decoys":[40,20,13]},
+    {"id":"m4-q3x10","mode":"main","stage":4,"type":"missing","b":10,"product":30,"answer":3,"decoys":[4,2,20]},
+    {"id":"m4-4x10","mode":"main","stage":4,"type":"fact","a":4,"b":10,"answer":40,"decoys":[50,30,14]},
+    {"id":"m4-10x4","mode":"main","stage":4,"type":"fact","a":10,"b":4,"answer":40,"decoys":[50,30,14]},
+    {"id":"m4-q4x10","mode":"main","stage":4,"type":"missing","b":10,"product":40,"answer":4,"decoys":[5,3,30]},
+    {"id":"m4-q5x10","mode":"main","stage":4,"type":"missing","b":10,"product":50,"answer":5,"decoys":[6,4,40]},
+    {"id":"m4-6x10","mode":"main","stage":4,"type":"fact","a":6,"b":10,"answer":60,"decoys":[70,50,16]},
+    {"id":"m4-10x6","mode":"main","stage":4,"type":"fact","a":10,"b":6,"answer":60,"decoys":[70,50,16]},
+    {"id":"m4-q6x10","mode":"main","stage":4,"type":"missing","b":10,"product":60,"answer":6,"decoys":[7,5,50]},
+    {"id":"m4-7x10","mode":"main","stage":4,"type":"fact","a":7,"b":10,"answer":70,"decoys":[80,60,17]},
+    {"id":"m4-10x7","mode":"main","stage":4,"type":"fact","a":10,"b":7,"answer":70,"decoys":[80,60,17]},
+    {"id":"m4-q7x10","mode":"main","stage":4,"type":"missing","b":10,"product":70,"answer":7,"decoys":[8,6,60]},
+    {"id":"m4-8x10","mode":"main","stage":4,"type":"fact","a":8,"b":10,"answer":80,"decoys":[90,70,18]},
+    {"id":"m4-10x8","mode":"main","stage":4,"type":"fact","a":10,"b":8,"answer":80,"decoys":[90,70,18]},
+    {"id":"m4-q8x10","mode":"main","stage":4,"type":"missing","b":10,"product":80,"answer":8,"decoys":[9,7,70]},
+    {"id":"m4-9x10","mode":"main","stage":4,"type":"fact","a":9,"b":10,"answer":90,"decoys":[100,80,19]},
+    {"id":"m4-10x9","mode":"main","stage":4,"type":"fact","a":10,"b":9,"answer":90,"decoys":[100,80,19]},
+    {"id":"m4-q9x10","mode":"main","stage":4,"type":"missing","b":10,"product":90,"answer":9,"decoys":[10,8,80]},
+    {"id":"m4-10x10","mode":"main","stage":4,"type":"fact","a":10,"b":10,"answer":100,"decoys":[110,90,20]},
+    {"id":"m4-q10x10","mode":"main","stage":4,"type":"missing","b":10,"product":100,"answer":10,"decoys":[11,9,90]},
+    {"id":"m4-11x10","mode":"main","stage":4,"type":"fact","a":11,"b":10,"answer":110,"decoys":[120,100,21]},
+    {"id":"m4-10x11","mode":"main","stage":4,"type":"fact","a":10,"b":11,"answer":110,"decoys":[120,100,21]},
+    {"id":"m4-q11x10","mode":"main","stage":4,"type":"missing","b":10,"product":110,"answer":11,"decoys":[12,10,100]},
+    {"id":"m4-12x10","mode":"main","stage":4,"type":"fact","a":12,"b":10,"answer":120,"decoys":[130,110,22]},
+    {"id":"m4-10x12","mode":"main","stage":4,"type":"fact","a":10,"b":12,"answer":120,"decoys":[130,110,22]},
+    {"id":"m4-q12x10","mode":"main","stage":4,"type":"missing","b":10,"product":120,"answer":12,"decoys":[13,11,110]},
+    {"id":"p1-2x3","mode":"pro","stage":1,"type":"groups","groups":2,"each":3,"answer":6,"decoys":[5,9,3],"say":"2 groups of 3"},
+    {"id":"p1-3x3","mode":"pro","stage":1,"type":"groups","groups":3,"each":3,"answer":9,"decoys":[6,12,10],"say":"3 groups of 3"},
+    {"id":"p1-4x3","mode":"pro","stage":1,"type":"groups","groups":4,"each":3,"answer":12,"decoys":[7,15,9],"say":"4 groups of 3"},
+    {"id":"p1-5x3","mode":"pro","stage":1,"type":"groups","groups":5,"each":3,"answer":15,"decoys":[8,18,12],"say":"5 groups of 3"},
+    {"id":"p1-6x3","mode":"pro","stage":1,"type":"groups","groups":6,"each":3,"answer":18,"decoys":[9,21,15],"say":"6 groups of 3"},
+    {"id":"p1-7x3","mode":"pro","stage":1,"type":"groups","groups":7,"each":3,"answer":21,"decoys":[10,24,18],"say":"7 groups of 3"},
+    {"id":"p1-8x3","mode":"pro","stage":1,"type":"groups","groups":8,"each":3,"answer":24,"decoys":[11,27,21],"say":"8 groups of 3"},
+    {"id":"p1-9x3","mode":"pro","stage":1,"type":"groups","groups":9,"each":3,"answer":27,"decoys":[12,30,24],"say":"9 groups of 3"},
+    {"id":"p1-10x3","mode":"pro","stage":1,"type":"groups","groups":10,"each":3,"answer":30,"decoys":[13,33,27],"say":"10 groups of 3"},
+    {"id":"p1-2x4","mode":"pro","stage":1,"type":"groups","groups":2,"each":4,"answer":8,"decoys":[6,12,4],"say":"2 groups of 4"},
+    {"id":"p1-3x4","mode":"pro","stage":1,"type":"groups","groups":3,"each":4,"answer":12,"decoys":[7,16,8],"say":"3 groups of 4"},
+    {"id":"p1-4x4","mode":"pro","stage":1,"type":"groups","groups":4,"each":4,"answer":16,"decoys":[8,20,12],"say":"4 groups of 4"},
+    {"id":"p1-5x4","mode":"pro","stage":1,"type":"groups","groups":5,"each":4,"answer":20,"decoys":[9,24,16],"say":"5 groups of 4"},
+    {"id":"p1-6x4","mode":"pro","stage":1,"type":"groups","groups":6,"each":4,"answer":24,"decoys":[10,28,20],"say":"6 groups of 4"},
+    {"id":"p1-7x4","mode":"pro","stage":1,"type":"groups","groups":7,"each":4,"answer":28,"decoys":[11,32,24],"say":"7 groups of 4"},
+    {"id":"p1-8x4","mode":"pro","stage":1,"type":"groups","groups":8,"each":4,"answer":32,"decoys":[12,36,28],"say":"8 groups of 4"},
+    {"id":"p1-9x4","mode":"pro","stage":1,"type":"groups","groups":9,"each":4,"answer":36,"decoys":[13,40,32],"say":"9 groups of 4"},
+    {"id":"p1-10x4","mode":"pro","stage":1,"type":"groups","groups":10,"each":4,"answer":40,"decoys":[14,44,36],"say":"10 groups of 4"},
+    {"id":"p1-2x8","mode":"pro","stage":1,"type":"groups","groups":2,"each":8,"answer":16,"decoys":[10,24,8],"say":"2 groups of 8"},
+    {"id":"p1-3x8","mode":"pro","stage":1,"type":"groups","groups":3,"each":8,"answer":24,"decoys":[11,32,16],"say":"3 groups of 8"},
+    {"id":"p1-4x8","mode":"pro","stage":1,"type":"groups","groups":4,"each":8,"answer":32,"decoys":[12,40,24],"say":"4 groups of 8"},
+    {"id":"p1-5x8","mode":"pro","stage":1,"type":"groups","groups":5,"each":8,"answer":40,"decoys":[13,48,32],"say":"5 groups of 8"},
+    {"id":"p1-6x8","mode":"pro","stage":1,"type":"groups","groups":6,"each":8,"answer":48,"decoys":[14,56,40],"say":"6 groups of 8"},
+    {"id":"p2a-2x3","mode":"pro","stage":2,"type":"sum-to-groups","sum":[3,3],"groups":2,"each":3,"answer":6,"groups_decoys":[3,1],"decoys":[5,9,3]},
+    {"id":"p2b-2x3","mode":"pro","stage":2,"type":"groups-to-sum","groups":2,"each":3,"answer_sum":[3,3],"decoy_sums":[[3,3,3],[5,5],[2,3]]},
+    {"id":"p2a-3x3","mode":"pro","stage":2,"type":"sum-to-groups","sum":[3,3,3],"groups":3,"each":3,"answer":9,"groups_decoys":[4,2],"decoys":[6,12,10]},
+    {"id":"p2b-3x3","mode":"pro","stage":2,"type":"groups-to-sum","groups":3,"each":3,"answer_sum":[3,3,3],"decoy_sums":[[3,3,3,3],[3,3],[4,3]]},
+    {"id":"p2a-4x3","mode":"pro","stage":2,"type":"sum-to-groups","sum":[3,3,3,3],"groups":4,"each":3,"answer":12,"groups_decoys":[3,5],"decoys":[7,15,9]},
+    {"id":"p2b-4x3","mode":"pro","stage":2,"type":"groups-to-sum","groups":4,"each":3,"answer_sum":[3,3,3,3],"decoy_sums":[[3,3,3,3,3],[3,3,3],[4,3]]},
+    {"id":"p2a-5x3","mode":"pro","stage":2,"type":"sum-to-groups","sum":[3,3,3,3,3],"groups":5,"each":3,"answer":15,"groups_decoys":[3,6],"decoys":[8,18,12]},
+    {"id":"p2b-5x3","mode":"pro","stage":2,"type":"groups-to-sum","groups":5,"each":3,"answer_sum":[3,3,3,3,3],"decoy_sums":[[3,3,3,3,3,3],[3,3,3,3],[5,3]]},
+    {"id":"p2a-6x3","mode":"pro","stage":2,"type":"sum-to-groups","sum":[3,3,3,3,3,3],"groups":6,"each":3,"answer":18,"groups_decoys":[3,7],"decoys":[9,21,15]},
+    {"id":"p2b-6x3","mode":"pro","stage":2,"type":"groups-to-sum","groups":6,"each":3,"answer_sum":[3,3,3,3,3,3],"decoy_sums":[[4,4,4,4,4,4],[3,3,3,3,3],[6,3]]},
+    {"id":"p2a-2x4","mode":"pro","stage":2,"type":"sum-to-groups","sum":[4,4],"groups":2,"each":4,"answer":8,"groups_decoys":[4,3],"decoys":[6,12,4]},
+    {"id":"p2b-2x4","mode":"pro","stage":2,"type":"groups-to-sum","groups":2,"each":4,"answer_sum":[4,4],"decoy_sums":[[4,4,4],[6,6],[2,4]]},
+    {"id":"p2a-3x4","mode":"pro","stage":2,"type":"sum-to-groups","sum":[4,4,4],"groups":3,"each":4,"answer":12,"groups_decoys":[4,2],"decoys":[7,16,8]},
+    {"id":"p2b-3x4","mode":"pro","stage":2,"type":"groups-to-sum","groups":3,"each":4,"answer_sum":[4,4,4],"decoy_sums":[[4,4,4,4],[4,4],[3,4]]},
+    {"id":"p2a-4x4","mode":"pro","stage":2,"type":"sum-to-groups","sum":[4,4,4,4],"groups":4,"each":4,"answer":16,"groups_decoys":[5,3],"decoys":[8,20,12]},
+    {"id":"p2b-4x4","mode":"pro","stage":2,"type":"groups-to-sum","groups":4,"each":4,"answer_sum":[4,4,4,4],"decoy_sums":[[4,4,4,4,4],[4,4,4],[5,4]]},
+    {"id":"p2a-5x4","mode":"pro","stage":2,"type":"sum-to-groups","sum":[4,4,4,4,4],"groups":5,"each":4,"answer":20,"groups_decoys":[4,6],"decoys":[9,24,16]},
+    {"id":"p2b-5x4","mode":"pro","stage":2,"type":"groups-to-sum","groups":5,"each":4,"answer_sum":[4,4,4,4,4],"decoy_sums":[[4,4,4,4,4,4],[4,4,4,4],[5,4]]},
+    {"id":"p2a-6x4","mode":"pro","stage":2,"type":"sum-to-groups","sum":[4,4,4,4,4,4],"groups":6,"each":4,"answer":24,"groups_decoys":[4,7],"decoys":[10,28,20]},
+    {"id":"p2b-6x4","mode":"pro","stage":2,"type":"groups-to-sum","groups":6,"each":4,"answer_sum":[4,4,4,4,4,4],"decoy_sums":[[5,5,5,5,5,5],[4,4,4,4,4],[6,4]]},
+    {"id":"p2a-2x8","mode":"pro","stage":2,"type":"sum-to-groups","sum":[8,8],"groups":2,"each":8,"answer":16,"groups_decoys":[8,3],"decoys":[10,24,8]},
+    {"id":"p2b-2x8","mode":"pro","stage":2,"type":"groups-to-sum","groups":2,"each":8,"answer_sum":[8,8],"decoy_sums":[[8,8,8],[10,10],[2,8]]},
+    {"id":"p2a-3x8","mode":"pro","stage":2,"type":"sum-to-groups","sum":[8,8,8],"groups":3,"each":8,"answer":24,"groups_decoys":[8,4],"decoys":[11,32,16]},
+    {"id":"p2b-3x8","mode":"pro","stage":2,"type":"groups-to-sum","groups":3,"each":8,"answer_sum":[8,8,8],"decoy_sums":[[8,8,8,8],[8,8],[3,8]]},
+    {"id":"p2a-4x8","mode":"pro","stage":2,"type":"sum-to-groups","sum":[8,8,8,8],"groups":4,"each":8,"answer":32,"groups_decoys":[8,5],"decoys":[12,40,24]},
+    {"id":"p2b-4x8","mode":"pro","stage":2,"type":"groups-to-sum","groups":4,"each":8,"answer_sum":[8,8,8,8],"decoy_sums":[[8,8,8,8,8],[8,8,8],[4,8]]},
+    {"id":"p2a-5x8","mode":"pro","stage":2,"type":"sum-to-groups","sum":[8,8,8,8,8],"groups":5,"each":8,"answer":40,"groups_decoys":[8,6],"decoys":[13,48,32]},
+    {"id":"p2b-5x8","mode":"pro","stage":2,"type":"groups-to-sum","groups":5,"each":8,"answer_sum":[8,8,8,8,8],"decoy_sums":[[8,8,8,8,8,8],[8,8,8,8],[5,8]]},
+    {"id":"p2a-6x8","mode":"pro","stage":2,"type":"sum-to-groups","sum":[8,8,8,8,8,8],"groups":6,"each":8,"answer":48,"groups_decoys":[8,7],"decoys":[14,56,40]},
+    {"id":"p2b-6x8","mode":"pro","stage":2,"type":"groups-to-sum","groups":6,"each":8,"answer_sum":[8,8,8,8,8,8],"decoy_sums":[[9,9,9,9,9,9],[8,8,8,8,8],[6,8]]},
+    {"id":"p3-2r3c","mode":"pro","stage":3,"type":"array","rows":2,"cols":3,"answer":6,"decoys":[5,9,3]},
+    {"id":"p3-3r2c","mode":"pro","stage":3,"type":"array","rows":3,"cols":2,"answer":6,"decoys":[5,8,4]},
+    {"id":"p3-3r3c","mode":"pro","stage":3,"type":"array","rows":3,"cols":3,"answer":9,"decoys":[6,12,10]},
+    {"id":"p3-4r3c","mode":"pro","stage":3,"type":"array","rows":4,"cols":3,"answer":12,"decoys":[7,15,9]},
+    {"id":"p3-3r4c","mode":"pro","stage":3,"type":"array","rows":3,"cols":4,"answer":12,"decoys":[7,16,8]},
+    {"id":"p3-5r3c","mode":"pro","stage":3,"type":"array","rows":5,"cols":3,"answer":15,"decoys":[8,18,12]},
+    {"id":"p3-3r5c","mode":"pro","stage":3,"type":"array","rows":3,"cols":5,"answer":15,"decoys":[8,20,10]},
+    {"id":"p3-6r3c","mode":"pro","stage":3,"type":"array","rows":6,"cols":3,"answer":18,"decoys":[9,21,15]},
+    {"id":"p3-3r6c","mode":"pro","stage":3,"type":"array","rows":3,"cols":6,"answer":18,"decoys":[9,24,12]},
+    {"id":"p3-7r3c","mode":"pro","stage":3,"type":"array","rows":7,"cols":3,"answer":21,"decoys":[10,24,18]},
+    {"id":"p3-3r7c","mode":"pro","stage":3,"type":"array","rows":3,"cols":7,"answer":21,"decoys":[10,28,14]},
+    {"id":"p3-8r3c","mode":"pro","stage":3,"type":"array","rows":8,"cols":3,"answer":24,"decoys":[11,27,21]},
+    {"id":"p3-3r8c","mode":"pro","stage":3,"type":"array","rows":3,"cols":8,"answer":24,"decoys":[11,32,16]},
+    {"id":"p3-9r3c","mode":"pro","stage":3,"type":"array","rows":9,"cols":3,"answer":27,"decoys":[12,30,24]},
+    {"id":"p3-3r9c","mode":"pro","stage":3,"type":"array","rows":3,"cols":9,"answer":27,"decoys":[12,36,18]},
+    {"id":"p3-10r3c","mode":"pro","stage":3,"type":"array","rows":10,"cols":3,"answer":30,"decoys":[13,33,27]},
+    {"id":"p3-3r10c","mode":"pro","stage":3,"type":"array","rows":3,"cols":10,"answer":30,"decoys":[13,40,20]},
+    {"id":"p3-2r4c","mode":"pro","stage":3,"type":"array","rows":2,"cols":4,"answer":8,"decoys":[6,12,4]},
+    {"id":"p3-4r2c","mode":"pro","stage":3,"type":"array","rows":4,"cols":2,"answer":8,"decoys":[6,10,12]},
+    {"id":"p3-4r4c","mode":"pro","stage":3,"type":"array","rows":4,"cols":4,"answer":16,"decoys":[8,20,12]},
+    {"id":"p3-5r4c","mode":"pro","stage":3,"type":"array","rows":5,"cols":4,"answer":20,"decoys":[9,24,16]},
+    {"id":"p3-4r5c","mode":"pro","stage":3,"type":"array","rows":4,"cols":5,"answer":20,"decoys":[9,25,15]},
+    {"id":"p3-6r4c","mode":"pro","stage":3,"type":"array","rows":6,"cols":4,"answer":24,"decoys":[10,28,20]},
+    {"id":"p3-4r6c","mode":"pro","stage":3,"type":"array","rows":4,"cols":6,"answer":24,"decoys":[10,30,18]},
+    {"id":"p3-7r4c","mode":"pro","stage":3,"type":"array","rows":7,"cols":4,"answer":28,"decoys":[11,32,24]},
+    {"id":"p3-4r7c","mode":"pro","stage":3,"type":"array","rows":4,"cols":7,"answer":28,"decoys":[11,35,21]},
+    {"id":"p3-8r4c","mode":"pro","stage":3,"type":"array","rows":8,"cols":4,"answer":32,"decoys":[12,36,28]},
+    {"id":"p3-4r8c","mode":"pro","stage":3,"type":"array","rows":4,"cols":8,"answer":32,"decoys":[12,40,24]},
+    {"id":"p3-9r4c","mode":"pro","stage":3,"type":"array","rows":9,"cols":4,"answer":36,"decoys":[13,40,32]},
+    {"id":"p3-4r9c","mode":"pro","stage":3,"type":"array","rows":4,"cols":9,"answer":36,"decoys":[13,45,27]},
+    {"id":"p3-10r4c","mode":"pro","stage":3,"type":"array","rows":10,"cols":4,"answer":40,"decoys":[14,44,36]},
+    {"id":"p3-4r10c","mode":"pro","stage":3,"type":"array","rows":4,"cols":10,"answer":40,"decoys":[14,50,30]},
+    {"id":"p3-2r8c","mode":"pro","stage":3,"type":"array","rows":2,"cols":8,"answer":16,"decoys":[10,24,8]},
+    {"id":"p3-8r2c","mode":"pro","stage":3,"type":"array","rows":8,"cols":2,"answer":16,"decoys":[10,18,14]},
+    {"id":"p3-5r8c","mode":"pro","stage":3,"type":"array","rows":5,"cols":8,"answer":40,"decoys":[13,48,32]},
+    {"id":"p3-8r5c","mode":"pro","stage":3,"type":"array","rows":8,"cols":5,"answer":40,"decoys":[13,45,35]},
+    {"id":"p3-6r8c","mode":"pro","stage":3,"type":"array","rows":6,"cols":8,"answer":48,"decoys":[14,56,40]},
+    {"id":"p3-8r6c","mode":"pro","stage":3,"type":"array","rows":8,"cols":6,"answer":48,"decoys":[14,54,42]},
+    {"id":"p4-1x3","mode":"pro","stage":4,"type":"fact","a":1,"b":3,"answer":3,"decoys":[6,4,2]},
+    {"id":"p4-3x1","mode":"pro","stage":4,"type":"fact","a":3,"b":1,"answer":3,"decoys":[6,4,2]},
+    {"id":"p4-2x3","mode":"pro","stage":4,"type":"fact","a":2,"b":3,"answer":6,"decoys":[9,3,5]},
+    {"id":"p4-3x2","mode":"pro","stage":4,"type":"fact","a":3,"b":2,"answer":6,"decoys":[9,3,5]},
+    {"id":"p4-q2x3","mode":"pro","stage":4,"type":"missing","b":3,"product":6,"answer":2,"decoys":[3,1,4]},
+    {"id":"p4-3x3","mode":"pro","stage":4,"type":"fact","a":3,"b":3,"answer":9,"decoys":[12,6,10]},
+    {"id":"p4-q3x3","mode":"pro","stage":4,"type":"missing","b":3,"product":9,"answer":3,"decoys":[4,2,6]},
+    {"id":"p4-4x3","mode":"pro","stage":4,"type":"fact","a":4,"b":3,"answer":12,"decoys":[15,9,7]},
+    {"id":"p4-3x4","mode":"pro","stage":4,"type":"fact","a":3,"b":4,"answer":12,"decoys":[15,9,7]},
+    {"id":"p4-q4x3","mode":"pro","stage":4,"type":"missing","b":3,"product":12,"answer":4,"decoys":[5,3,9]},
+    {"id":"p4-5x3","mode":"pro","stage":4,"type":"fact","a":5,"b":3,"answer":15,"decoys":[18,12,8]},
+    {"id":"p4-3x5","mode":"pro","stage":4,"type":"fact","a":3,"b":5,"answer":15,"decoys":[18,12,8]},
+    {"id":"p4-q5x3","mode":"pro","stage":4,"type":"missing","b":3,"product":15,"answer":5,"decoys":[6,4,12]},
+    {"id":"p4-6x3","mode":"pro","stage":4,"type":"fact","a":6,"b":3,"answer":18,"decoys":[21,15,9]},
+    {"id":"p4-3x6","mode":"pro","stage":4,"type":"fact","a":3,"b":6,"answer":18,"decoys":[21,15,9]},
+    {"id":"p4-q6x3","mode":"pro","stage":4,"type":"missing","b":3,"product":18,"answer":6,"decoys":[7,5,15]},
+    {"id":"p4-7x3","mode":"pro","stage":4,"type":"fact","a":7,"b":3,"answer":21,"decoys":[24,18,10]},
+    {"id":"p4-3x7","mode":"pro","stage":4,"type":"fact","a":3,"b":7,"answer":21,"decoys":[24,18,10]},
+    {"id":"p4-q7x3","mode":"pro","stage":4,"type":"missing","b":3,"product":21,"answer":7,"decoys":[8,6,18]},
+    {"id":"p4-8x3","mode":"pro","stage":4,"type":"fact","a":8,"b":3,"answer":24,"decoys":[27,21,11]},
+    {"id":"p4-3x8","mode":"pro","stage":4,"type":"fact","a":3,"b":8,"answer":24,"decoys":[27,21,11]},
+    {"id":"p4-q8x3","mode":"pro","stage":4,"type":"missing","b":3,"product":24,"answer":8,"decoys":[9,7,21]},
+    {"id":"p4-9x3","mode":"pro","stage":4,"type":"fact","a":9,"b":3,"answer":27,"decoys":[30,24,12]},
+    {"id":"p4-3x9","mode":"pro","stage":4,"type":"fact","a":3,"b":9,"answer":27,"decoys":[30,24,12]},
+    {"id":"p4-q9x3","mode":"pro","stage":4,"type":"missing","b":3,"product":27,"answer":9,"decoys":[10,8,24]},
+    {"id":"p4-10x3","mode":"pro","stage":4,"type":"fact","a":10,"b":3,"answer":30,"decoys":[33,27,13]},
+    {"id":"p4-3x10","mode":"pro","stage":4,"type":"fact","a":3,"b":10,"answer":30,"decoys":[33,27,13]},
+    {"id":"p4-q10x3","mode":"pro","stage":4,"type":"missing","b":3,"product":30,"answer":10,"decoys":[11,9,27]},
+    {"id":"p4-11x3","mode":"pro","stage":4,"type":"fact","a":11,"b":3,"answer":33,"decoys":[36,30,14]},
+    {"id":"p4-3x11","mode":"pro","stage":4,"type":"fact","a":3,"b":11,"answer":33,"decoys":[36,30,14]},
+    {"id":"p4-q11x3","mode":"pro","stage":4,"type":"missing","b":3,"product":33,"answer":11,"decoys":[12,10,30]},
+    {"id":"p4-12x3","mode":"pro","stage":4,"type":"fact","a":12,"b":3,"answer":36,"decoys":[39,33,15]},
+    {"id":"p4-3x12","mode":"pro","stage":4,"type":"fact","a":3,"b":12,"answer":36,"decoys":[39,33,15]},
+    {"id":"p4-q12x3","mode":"pro","stage":4,"type":"missing","b":3,"product":36,"answer":12,"decoys":[13,11,33]},
+    {"id":"p4-1x4","mode":"pro","stage":4,"type":"fact","a":1,"b":4,"answer":4,"decoys":[8,5,3]},
+    {"id":"p4-4x1","mode":"pro","stage":4,"type":"fact","a":4,"b":1,"answer":4,"decoys":[8,5,3]},
+    {"id":"p4-2x4","mode":"pro","stage":4,"type":"fact","a":2,"b":4,"answer":8,"decoys":[12,4,6]},
+    {"id":"p4-4x2","mode":"pro","stage":4,"type":"fact","a":4,"b":2,"answer":8,"decoys":[12,4,6]},
+    {"id":"p4-q2x4","mode":"pro","stage":4,"type":"missing","b":4,"product":8,"answer":2,"decoys":[3,1,4]},
+    {"id":"p4-q3x4","mode":"pro","stage":4,"type":"missing","b":4,"product":12,"answer":3,"decoys":[4,2,8]},
+    {"id":"p4-4x4","mode":"pro","stage":4,"type":"fact","a":4,"b":4,"answer":16,"decoys":[20,12,8]},
+    {"id":"p4-q4x4","mode":"pro","stage":4,"type":"missing","b":4,"product":16,"answer":4,"decoys":[5,3,12]},
+    {"id":"p4-5x4","mode":"pro","stage":4,"type":"fact","a":5,"b":4,"answer":20,"decoys":[24,16,9]},
+    {"id":"p4-4x5","mode":"pro","stage":4,"type":"fact","a":4,"b":5,"answer":20,"decoys":[24,16,9]},
+    {"id":"p4-q5x4","mode":"pro","stage":4,"type":"missing","b":4,"product":20,"answer":5,"decoys":[6,4,16]},
+    {"id":"p4-6x4","mode":"pro","stage":4,"type":"fact","a":6,"b":4,"answer":24,"decoys":[28,20,10]},
+    {"id":"p4-4x6","mode":"pro","stage":4,"type":"fact","a":4,"b":6,"answer":24,"decoys":[28,20,10]},
+    {"id":"p4-q6x4","mode":"pro","stage":4,"type":"missing","b":4,"product":24,"answer":6,"decoys":[7,5,20]},
+    {"id":"p4-7x4","mode":"pro","stage":4,"type":"fact","a":7,"b":4,"answer":28,"decoys":[32,24,11]},
+    {"id":"p4-4x7","mode":"pro","stage":4,"type":"fact","a":4,"b":7,"answer":28,"decoys":[32,24,11]},
+    {"id":"p4-q7x4","mode":"pro","stage":4,"type":"missing","b":4,"product":28,"answer":7,"decoys":[8,6,24]},
+    {"id":"p4-8x4","mode":"pro","stage":4,"type":"fact","a":8,"b":4,"answer":32,"decoys":[36,28,12]},
+    {"id":"p4-4x8","mode":"pro","stage":4,"type":"fact","a":4,"b":8,"answer":32,"decoys":[36,28,12]},
+    {"id":"p4-q8x4","mode":"pro","stage":4,"type":"missing","b":4,"product":32,"answer":8,"decoys":[9,7,28]},
+    {"id":"p4-9x4","mode":"pro","stage":4,"type":"fact","a":9,"b":4,"answer":36,"decoys":[40,32,13]},
+    {"id":"p4-4x9","mode":"pro","stage":4,"type":"fact","a":4,"b":9,"answer":36,"decoys":[40,32,13]},
+    {"id":"p4-q9x4","mode":"pro","stage":4,"type":"missing","b":4,"product":36,"answer":9,"decoys":[10,8,32]},
+    {"id":"p4-10x4","mode":"pro","stage":4,"type":"fact","a":10,"b":4,"answer":40,"decoys":[44,36,14]},
+    {"id":"p4-4x10","mode":"pro","stage":4,"type":"fact","a":4,"b":10,"answer":40,"decoys":[44,36,14]},
+    {"id":"p4-q10x4","mode":"pro","stage":4,"type":"missing","b":4,"product":40,"answer":10,"decoys":[11,9,36]},
+    {"id":"p4-11x4","mode":"pro","stage":4,"type":"fact","a":11,"b":4,"answer":44,"decoys":[48,40,15]},
+    {"id":"p4-4x11","mode":"pro","stage":4,"type":"fact","a":4,"b":11,"answer":44,"decoys":[48,40,15]},
+    {"id":"p4-q11x4","mode":"pro","stage":4,"type":"missing","b":4,"product":44,"answer":11,"decoys":[12,10,40]},
+    {"id":"p4-12x4","mode":"pro","stage":4,"type":"fact","a":12,"b":4,"answer":48,"decoys":[52,44,16]},
+    {"id":"p4-4x12","mode":"pro","stage":4,"type":"fact","a":4,"b":12,"answer":48,"decoys":[52,44,16]},
+    {"id":"p4-q12x4","mode":"pro","stage":4,"type":"missing","b":4,"product":48,"answer":12,"decoys":[13,11,44]},
+    {"id":"p4-1x8","mode":"pro","stage":4,"type":"fact","a":1,"b":8,"answer":8,"decoys":[16,9,7]},
+    {"id":"p4-8x1","mode":"pro","stage":4,"type":"fact","a":8,"b":1,"answer":8,"decoys":[16,9,7]},
+    {"id":"p4-2x8","mode":"pro","stage":4,"type":"fact","a":2,"b":8,"answer":16,"decoys":[24,8,10]},
+    {"id":"p4-8x2","mode":"pro","stage":4,"type":"fact","a":8,"b":2,"answer":16,"decoys":[24,8,10]},
+    {"id":"p4-q2x8","mode":"pro","stage":4,"type":"missing","b":8,"product":16,"answer":2,"decoys":[3,1,8]},
+    {"id":"p4-q3x8","mode":"pro","stage":4,"type":"missing","b":8,"product":24,"answer":3,"decoys":[4,2,16]},
+    {"id":"p4-q4x8","mode":"pro","stage":4,"type":"missing","b":8,"product":32,"answer":4,"decoys":[5,3,24]},
+    {"id":"p4-5x8","mode":"pro","stage":4,"type":"fact","a":5,"b":8,"answer":40,"decoys":[48,32,13]},
+    {"id":"p4-8x5","mode":"pro","stage":4,"type":"fact","a":8,"b":5,"answer":40,"decoys":[48,32,13]},
+    {"id":"p4-q5x8","mode":"pro","stage":4,"type":"missing","b":8,"product":40,"answer":5,"decoys":[6,4,32]},
+    {"id":"p4-6x8","mode":"pro","stage":4,"type":"fact","a":6,"b":8,"answer":48,"decoys":[56,40,14]},
+    {"id":"p4-8x6","mode":"pro","stage":4,"type":"fact","a":8,"b":6,"answer":48,"decoys":[56,40,14]},
+    {"id":"p4-q6x8","mode":"pro","stage":4,"type":"missing","b":8,"product":48,"answer":6,"decoys":[7,5,40]},
+    {"id":"p4-7x8","mode":"pro","stage":4,"type":"fact","a":7,"b":8,"answer":56,"decoys":[64,48,15]},
+    {"id":"p4-8x7","mode":"pro","stage":4,"type":"fact","a":8,"b":7,"answer":56,"decoys":[64,48,15]},
+    {"id":"p4-q7x8","mode":"pro","stage":4,"type":"missing","b":8,"product":56,"answer":7,"decoys":[8,6,48]},
+    {"id":"p4-8x8","mode":"pro","stage":4,"type":"fact","a":8,"b":8,"answer":64,"decoys":[72,56,16]},
+    {"id":"p4-q8x8","mode":"pro","stage":4,"type":"missing","b":8,"product":64,"answer":8,"decoys":[9,7,56]},
+    {"id":"p4-9x8","mode":"pro","stage":4,"type":"fact","a":9,"b":8,"answer":72,"decoys":[80,64,17]},
+    {"id":"p4-8x9","mode":"pro","stage":4,"type":"fact","a":8,"b":9,"answer":72,"decoys":[80,64,17]},
+    {"id":"p4-q9x8","mode":"pro","stage":4,"type":"missing","b":8,"product":72,"answer":9,"decoys":[10,8,64]},
+    {"id":"p4-10x8","mode":"pro","stage":4,"type":"fact","a":10,"b":8,"answer":80,"decoys":[88,72,18]},
+    {"id":"p4-8x10","mode":"pro","stage":4,"type":"fact","a":8,"b":10,"answer":80,"decoys":[88,72,18]},
+    {"id":"p4-q10x8","mode":"pro","stage":4,"type":"missing","b":8,"product":80,"answer":10,"decoys":[11,9,72]},
+    {"id":"p4-11x8","mode":"pro","stage":4,"type":"fact","a":11,"b":8,"answer":88,"decoys":[96,80,19]},
+    {"id":"p4-8x11","mode":"pro","stage":4,"type":"fact","a":8,"b":11,"answer":88,"decoys":[96,80,19]},
+    {"id":"p4-q11x8","mode":"pro","stage":4,"type":"missing","b":8,"product":88,"answer":11,"decoys":[12,10,80]},
+    {"id":"p4-12x8","mode":"pro","stage":4,"type":"fact","a":12,"b":8,"answer":96,"decoys":[104,88,20]},
+    {"id":"p4-8x12","mode":"pro","stage":4,"type":"fact","a":8,"b":12,"answer":96,"decoys":[104,88,20]},
+    {"id":"p4-q12x8","mode":"pro","stage":4,"type":"missing","b":8,"product":96,"answer":12,"decoys":[13,11,88]}
+  ];
+
+  /* ---------- the maths, from the item ---------- */
+  function modeOf(m) { return m.split('-')[0]; }
+  function stageOf(m) { return parseInt(m.split('-')[1], 10); }
+  // The analytics mode ("main-stage-1") and the board ("stage-1", or "pro-stage-1").
+  function evMode(m) { return modeOf(m) + '-stage-' + stageOf(m); }
+  function board() { return (modeOf(mode) === 'pro' ? 'pro-' : '') + 'stage-' + stageOf(mode); }
+  function plusTex(terms) { return terms.join(' + '); }
+  function plusVal(terms) { return terms.join('+'); }
+  function groupsTex(g, n) { return g + '\\text{ groups of }' + n; }
+  function rep(n, g) { var a = []; for (var i = 0; i < g; i++) a.push(n); return a; }
+  // The worked maths after marking: [plain text, KaTeX source]. Every number from the item.
+  function working(q) {
+    var t = q.type;
+    if (t === 'groups' || t === 'sum-to-groups' || t === 'groups-to-sum') {
+      var g = q.groups, n = q.each, a = g * n;
+      if (t === 'groups-to-sum') a = q.answer_sum.reduce(function (s, x) { return s + x; }, 0);
+      else a = q.answer;
+      // The sum written out in full only when g <= 6 (contract): otherwise g groups of n = answer.
+      if (g <= 6) return [g + ' groups of ' + n + ' = ' + rep(n, g).join(' + ') + ' = ' + a, groupsTex(g, n) + ' = ' + plusTex(rep(n, g)) + ' = ' + a];
+      return [g + ' groups of ' + n + ' = ' + a, groupsTex(g, n) + ' = ' + a];
+    }
+    if (t === 'array') return [q.rows + ' × ' + q.cols + ' = ' + q.cols + ' × ' + q.rows + ' = ' + q.answer, q.rows + ' \\times ' + q.cols + ' = ' + q.cols + ' \\times ' + q.rows + ' = ' + q.answer];
+    if (t === 'fact') return [q.a + ' × ' + q.b + ' = ' + q.answer, q.a + ' \\times ' + q.b + ' = ' + q.answer];
+    return [q.answer + ' × ' + q.b + ' = ' + q.product, q.answer + ' \\times ' + q.b + ' = ' + q.product];
+  }
+  // The read-aloud words, built from the item: the sums in words, never the class greeting.
+  function words(terms) { return terms.join(' plus '); }
+  function spokenWorking(q) {
+    var t = q.type;
+    if (t === 'groups' || t === 'sum-to-groups' || t === 'groups-to-sum') {
+      var g = q.groups, n = q.each, a = t === 'groups-to-sum' ? g * n : q.answer;
+      return g + ' groups of ' + n + (g <= 6 ? ' is ' + words(rep(n, g)) + ', which' : '') + ' is ' + a + '.';
+    }
+    if (t === 'array') return q.rows + ' times ' + q.cols + ' is ' + q.cols + ' times ' + q.rows + ', which is ' + q.answer + '.';
+    if (t === 'fact') return q.a + ' times ' + q.b + ' is ' + q.answer + '.';
+    return q.answer + ' times ' + q.b + ' is ' + q.product + '.';
+  }
+  function wrongKey(q) {
+    return { 'groups': 'groups', 'sum-to-groups': 'sum', 'groups-to-sum': 'pick', 'array': 'array', 'fact': 'fact', 'missing': 'missing' }[q.type];
+  }
+
+  /* ---------- the pictures (inline SVG thingies; an array of dots) ---------- */
+  var THINGY = '<svg class="th" viewBox="0 0 20 20" aria-hidden="true"><ellipse class="b" cx="10" cy="11.5" rx="9.5" ry="8.3"/>' +
+    '<circle class="e" cx="6.8" cy="9.6" r="2.7"/><circle class="e" cx="13.2" cy="9.6" r="2.7"/>' +
+    '<circle class="p" cx="7.4" cy="10.1" r="1.25"/><circle class="p" cx="13.8" cy="10.1" r="1.25"/></svg>';
+  function plates(g, n) {
+    var cols = n <= 5 ? n : Math.ceil(n / 2), h = '';
+    for (var i = 0; i < g; i++) {
+      h += '<div class="plate c' + (i % 3) + (n > 5 ? ' tall' : '') + '" style="grid-template-columns:repeat(' + cols + ',14px)">' +
+        new Array(n + 1).join(THINGY) + '</div>';
+    }
+    $('pic').innerHTML = h;
+    $('pic').dataset.groups = String(g);
+    $('pic').dataset.each = String(n);
+  }
+  function drawArray(r, c, turned) {
+    $('pic').innerHTML = '<div class="arr" id="arr" style="grid-template-columns:repeat(' + c + ',13px)">' + new Array(r * c + 1).join('<i></i>') + '</div>';
+    $('pic').dataset.rows = String(r);
+    $('pic').dataset.cols = String(c);
+    $('pic').dataset.turned = turned ? '1' : '0';
+  }
+  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned'].forEach(function (k) { delete p.dataset[k]; }); }
+  function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  // state: menu | count (Stage 2 adding: how many lots) | ask (the options) | done (right, Next) | wrong (MaffsNext)
+  //        | moving | over
+  var mode = 'main-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, countRight = true, lastLine = '', turnTimer = null;
+
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+    if (id !== 'game') hush();
+  }
+  function stageItems(m) {
+    var md = modeOf(m), st = stageOf(m);
+    return QUESTIONS.filter(function (q) { return q.mode === md && q.stage === st; });
+  }
+  // A run: PER items from the mode and stage, no repeat (a Fisher-Yates shuffle of its items, then the first PER).
+  function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
+
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; qs = list; qi = 0; score = 0;
+    show('game');
+    $('hudStage').textContent = (modeOf(m) === 'pro' ? 'Pro ' : '') + stageOf(m);
+    ev('game_started', { game_slug: SLUG, level: level, mode: evMode(mode) });
+    nextQuestion();
+  }
+  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m, run(m)); }
+
+  function setSay(text, key) { $('say').textContent = text || ''; if (key) $('say').dataset.say = key; else delete $('say').dataset.say; }
+  function setPrompt(text, key) {
+    var p = $('prompt');
+    if (!text) { p.textContent = ''; delete p.dataset.line; return; }
+    // A line with {n} gets the number as KaTeX; the rest stays text.
+    p.innerHTML = text.split('{n}').map(esc).join(tex(String(Q.each)));
+    p.dataset.line = key;
+  }
+  function setSum(t, val) { $('sum').innerHTML = t ? tex(t) : ''; if (val) $('sum').dataset.sum = val; else delete $('sum').dataset.sum; }
+
+  function nextQuestion() {
+    if (window.MaffsNext) MaffsNext.clear($('feedback'));
+    $('feedback').innerHTML = '';
+    hush();
+    lastLine = '';
+    if (turnTimer !== null) { MaffsLock.cancel(turnTimer); turnTimer = null; }
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++]; countRight = true;
+    $('hudQ').textContent = qi + '/' + qs.length;
+    $('hudScore').textContent = String(score);
+    $('stageLabel').textContent = MODE_INFO[modeOf(mode)].name + ' · Stage ' + stageOf(mode) + ' · ' + STAGES[stageOf(mode)].name;
+    setSay('');
+    clearPic(); setSum(''); setPrompt('');
+    ['opts1', 'opts'].forEach(function (id) { $(id).hidden = true; $(id).innerHTML = ''; });
+    var t = Q.type;
+    if (t === 'groups') { plates(Q.groups, Q.each); setPrompt(L.total, 'total'); ask(numOpts(Q)); }
+    else if (t === 'sum-to-groups') {
+      setSum(plusTex(Q.sum), plusVal(Q.sum));
+      setPrompt(L.how_many, 'how_many');
+      askCount();
+    } else if (t === 'groups-to-sum') {
+      setSum(groupsTex(Q.groups, Q.each), Q.groups + ' groups of ' + Q.each);
+      setPrompt(L.pick, 'pick');
+      ask(MaffsOptions.shuffle([Q.answer_sum].concat(Q.decoy_sums)), true);
+    } else if (t === 'array') { drawArray(Q.rows, Q.cols, false); setPrompt(L.dots, 'dots'); ask(numOpts(Q)); }
+    else if (t === 'fact') { setSum(Q.a + ' \\times ' + Q.b + ' = {?}', Q.a + 'x' + Q.b); ask(numOpts(Q)); }
+    else { setSum('{?} \\times ' + Q.b + ' = ' + Q.product, '?x' + Q.b + '=' + Q.product); ask(numOpts(Q)); }
+  }
+  function numOpts(q) { return MaffsOptions.shuffle([q.answer].concat(q.decoys)); }
+
+  function optButton(text, val, html, onClick) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'opt';
+    b.dataset.val = val;
+    if (html) b.innerHTML = html; else b.textContent = text;
+    // Each option its own handler, where it is built (contract, from PR 811).
+    b.addEventListener('click', onClick);
+    return b;
+  }
+  // Stage 2 adding, part 1: how many lots of n? Three options: groups and its two groups_decoys.
+  function askCount() {
+    state = 'count';
+    var box = $('opts1');
+    box.innerHTML = '';
+    MaffsOptions.shuffle([Q.groups].concat(Q.groups_decoys)).forEach(function (o) { box.appendChild(optButton(String(o), String(o), null, onCount)); });
+    box.hidden = false;
+    MaffsLock.fresh(box);
+  }
+  function onCount(e) {
+    if (state !== 'count') return;
+    if (!MaffsLock.lock($('opts1'))) return;
+    var b = e.currentTarget, val = b.dataset.val, key = String(Q.groups);
+    countRight = val === key;
+    b.classList.add(countRight ? 'is-right' : 'is-wrong');
+    var kb = $('opts1').querySelector('[data-val="' + key + '"]');
+    if (kb) kb.classList.add('is-right');
+    // Part 2: the total, as maths.
+    setPrompt('');
+    setSum(plusTex(Q.sum) + ' = {?}', plusVal(Q.sum));
+    ask(numOpts(Q));
+  }
+  // The options: numbers, or (Stage 2 groups-to-sum) sums, dataset.val the terms joined with "+".
+  function ask(opts, sums) {
+    state = 'ask';
+    var box = $('opts');
+    box.innerHTML = '';
+    box.className = 'choices maffs-options' + (sums ? ' one' : '');
+    opts.forEach(function (o) {
+      box.appendChild(sums ? optButton(null, plusVal(o), tex(plusTex(o)), onOption) : optButton(String(o), String(o), null, onOption));
+    });
+    box.hidden = false;
+    MaffsLock.fresh(box);
+  }
+  function keyOf(q) { return q.type === 'groups-to-sum' ? plusVal(q.answer_sum) : String(q.answer); }
+
+  // Marked by dataset.val only.
+  function onOption(e) {
+    if (state !== 'ask') return;
+    if (!MaffsLock.lock($('opts'))) return;
+    var b = e.currentTarget, val = b.dataset.val, key = keyOf(Q);
+    settle(val === key && countRight, val === key, b, key);
+  }
+  function settle(right, pickedRight, btn, key) {
+    hush();
+    state = right ? 'done' : 'wrong';
+    if (right) score++;
+    $('hudScore').textContent = String(score);
+    btn.classList.add(pickedRight ? 'is-right' : 'is-wrong');
+    var kb = $('opts').querySelector('[data-val="' + key + '"]');
+    if (kb) kb.classList.add('is-right');
+    ev('question_answered', { game_slug: SLUG, level: level, mode: evMode(mode), question_index: qi, question_id: Q.id, correct: right });
+    setPrompt('');
+    // ONE line from LINES, then the worked maths.
+    var sayKey, sayText;
+    if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
+    else { sayKey = 'wrong.' + wrongKey(Q); sayText = L.wrong[wrongKey(Q)]; }
+    setSay(sayText, sayKey);
+    lastLine = sayText;
+    var w = working(Q), last = qi >= qs.length;
+    var fb = $('feedback');
+    fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '">' +
+      '<div class="fb-line work" id="learn" data-learn="' + esc(w[0]) + '">' + tex(w[1]) + '</div>' +
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">' + (last ? 'See results →' : 'Next →') + '</button>' : '') + '</div></div>';
+    if (Q.type === 'array') turnArray();
+    if (right) {
+      MaffsLock.fresh(fb);
+      $('nextBtn').addEventListener('click', function () { if (state === 'done') advance(); });
+      try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
+    } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance });
+    if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('pic') });
+  }
+  // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
+  function turnArray() {
+    var r = Q.rows, c = Q.cols, arr = $('arr');
+    if (reduced() || !arr) { drawArray(c, r, true); return; }
+    arr.classList.add('turning');
+    turnTimer = MaffsLock.timer(function () { turnTimer = null; if (Q && Q.type === 'array' && (state === 'done' || state === 'wrong')) drawArray(c, r, true); }, 650);
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    hush();
+    nextQuestion();
+  }
+
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    var b = board();
+    ev('game_completed', { game_slug: SLUG, level: level, mode: evMode(mode), score: score, questions_answered: qs.length, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, b, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
+    $('resTitle').textContent = MODE_INFO[modeOf(mode)].name + ' · ' + STAGES[stageOf(mode)].name + ': done';
+    $('endLine').textContent = L.end;
+    $('resScore').textContent = String(score);
+    $('resOf').textContent = 'out of ' + qs.length;
+    $('resStats').textContent = '';
+    var st = stageOf(mode);
+    $('nextStageBtn').hidden = st >= 4;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (st + 1);
+    show('results');
+  });
+
+  /* ---------- read aloud: on-device voices only, and only when the speaker is tapped (as Sums in Disguise) ---------- */
+  // A voice whose localService is true is made on the device; a voice that is not local is never used. With no
+  // speechSynthesis, or no local voice (checked again when the voices arrive), the speaker is not shown.
+  // Nothing about it is sent or stored.
+  var voice = null;
+  var canSpeak = typeof window.speechSynthesis === 'object' && window.speechSynthesis !== null && typeof window.SpeechSynthesisUtterance === 'function';
+  function pickVoice() {
+    voice = null;
+    try {
+      var all = window.speechSynthesis.getVoices() || [], local = [];
+      for (var i = 0; i < all.length; i++) if (all[i] && all[i].localService === true) local.push(all[i]);
+      var pref = local.filter(function (v) { return /^en[-_]GB/i.test(v.lang || ''); })
+        .concat(local.filter(function (v) { return /^en/i.test(v.lang || ''); }), local);
+      voice = pref[0] || null;
+    } catch (e) { voice = null; }
+    $('speakBtn').hidden = !voice;
+  }
+  function hush() { try { if (canSpeak) window.speechSynthesis.cancel(); } catch (e) {} }
+  function speak(text) {
+    if (!canSpeak || !voice || voice.localService !== true || !text) return;
+    hush();
+    var u = new window.SpeechSynthesisUtterance(text);
+    u.voice = voice;
+    u.lang = voice.lang;
+    window.speechSynthesis.speak(u);
+  }
+  // What the speaker reads now, built from the item.
+  function toRead() {
+    if (!Q) return '';
+    var t = Q.type;
+    if (state === 'count') return words(Q.sum) + '. ' + L.how_many.split('{n}').join(String(Q.each));
+    if (state === 'ask') {
+      if (t === 'groups') return Q.say + '. ' + L.total;
+      if (t === 'sum-to-groups') return words(Q.sum) + ' equals what?';
+      if (t === 'groups-to-sum') return Q.groups + ' groups of ' + Q.each + '. ' + L.pick;
+      if (t === 'array') return Q.rows + ' rows of ' + Q.cols + '. ' + L.dots;
+      if (t === 'fact') return Q.a + ' times ' + Q.b + ' equals what?';
+      return 'What times ' + Q.b + ' equals ' + Q.product + '?';
+    }
+    if (state === 'done' || state === 'wrong') return lastLine + ' ' + spokenWorking(Q);
+    return '';
+  }
+  if (canSpeak) {
+    pickVoice();
+    try { window.speechSynthesis.addEventListener('voiceschanged', pickVoice); } catch (e) {}
+  }
+  window.addEventListener('pagehide', hush);
+
+  /* ---------- the start screen: Main or Pro, then a stage ---------- */
+  $('titleLine').textContent = L.title;
+  $('welcome').textContent = greeting();
+  $('menuNote').textContent = MENU_NOTE;
+  ['main', 'pro'].forEach(function (md) {
+    var h = document.createElement('div');
+    h.className = 'mode-h';
+    h.textContent = MODE_INFO[md].name + ': the ' + MODE_INFO[md].tables;
+    $('stageList').appendChild(h);
+    var grid = document.createElement('div');
+    grid.className = 'stages';
+    grid.dataset.mode = md;
+    [1, 2, 3, 4].forEach(function (n) {
+      var m = md + '-' + n, s = STAGES[n], b = document.createElement('button');
+      b.type = 'button'; b.className = 'stage-btn'; b.dataset.mode = m; b.dataset.stage = String(n);
+      b.innerHTML = '<span class="n">' + n + '</span><span><span class="t"></span><span class="d"></span></span>';
+      b.querySelector('.t').textContent = s.name;
+      b.querySelector('.d').textContent = s.about;
+      b.addEventListener('click', function () { startMode(m); });
+      grid.appendChild(b);
+    });
+    $('stageList').appendChild(grid);
+  });
+
+  /* ---------- wiring ---------- */
+  $('speakBtn').addEventListener('click', function () { speak(toRead()); });
+  $('nextStageBtn').addEventListener('click', function () { var st = stageOf(mode); startMode(modeOf(mode) + '-' + Math.min(st + 1, 4)); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; if (turnTimer !== null) { MaffsLock.cancel(turnTimer); turnTimer = null; } show('menu'); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of the bank and live state, for scripts/verify-some-thingies.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var i = 0; i < QUESTIONS.length; i++) if (QUESTIONS[i].id === id) return QUESTIONS[i]; return null; }
+  function click(container, sel) { MaffsLock.fresh(container, 0); var el = container.querySelector(sel); if (el) el.click(); return !!el; }
+  window.ST = {
+    SLUG: SLUG, MODES: MODES, LOOK: LOOK,
+    bank: function () { return copy(QUESTIONS); },
+    lines: function () { return copy(LINES); },
+    working: function (id) { var q = item(id); return q ? working(q)[0] : null; },
+    ui: {
+      state: function () { return state; },
+      ready: function () { return state === 'count' || state === 'ask'; },
+      mode: function () { return mode; },
+      board: board,
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in its mode and stage, so a verifier can see any item.
+      preview: function (id) { var q = item(id); if (q) begin(q.mode + '-' + q.stage, [q]); },
+      toRead: toRead,
+      key: function () { return Q ? keyOf(Q) : null; },
+      count: function (v) { return state === 'count' && click($('opts1'), '[data-val="' + v + '"]'); },
+      pick: function (v) { return state === 'ask' && click($('opts'), '[data-val="' + v + '"]'); },
+      // Answer the item on screen: right, or (after counting the lots right) a decoy.
+      answer: function (right) {
+        if (state === 'count') this.count(String(Q.groups));
+        if (state !== 'ask') return;
+        var key = keyOf(Q);
+        if (right) { this.pick(key); return; }
+        var bs = $('opts').querySelectorAll('.opt');
+        for (var i = 0; i < bs.length; i++) if (bs[i].dataset.val !== key) { this.pick(bs[i].dataset.val); return; }
+      },
+      next: function () { var b = $('nextBtn') || document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); else if (state === 'done' || state === 'wrong') advance(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'some-thingies');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>

@@ -178,6 +178,8 @@ const NOT_ON_HUB = {
   'i-dropped-my-ice-cream': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract SUMS-IN-DISGUISE, 18 Nov 2026): merged unlisted for Jon to play in both looks; the hub row is added at listing.
   'sums-in-disguise': 'new, unlisted until Jon has played and approved it; hub row added at listing',
+  // New (contract SOME-THINGIES, 21 Nov 2026): merged unlisted for Jon to play in both modes and looks; the hub row is added at listing.
+  'some-thingies': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract MAFFSCARDS-GAME, 20 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'maffscards': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };

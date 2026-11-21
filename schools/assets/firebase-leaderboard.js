@@ -129,6 +129,8 @@
     'foundation-s5':'Foundation · Stage 5',
     // Take a Walk: one board per stage (contract TAKE-A-WALK, 23 Oct 2026; labels by Jon's lane exception, 20:33).
     'stage-1':'Stage 1','stage-2':'Stage 2','stage-3':'Stage 3','stage-4':'Stage 4',
+    // Some Thingies pro mode: contract SOME-THINGIES; Jon approved, 21 Nov 2026
+    'pro-stage-1':'Pro · Stage 1','pro-stage-2':'Pro · Stage 2','pro-stage-3':'Pro · Stage 3','pro-stage-4':'Pro · Stage 4',
     // Football Pitches per Squared Squirrel's fifth stage (contract FOOTBALL-PITCHES, 23 Oct 2026; Jon's lane exception, 23:05).
     'stage-5':'Stage 5',
     // It's a SINE!!: one board per level and stage (contract ITS-A-SINE; Jon's lane exception, 17 Nov 2026).

@@ -92,6 +92,7 @@ RESULTS = {
     "its-a-sine": "results",
     "i-dropped-my-ice-cream": "results",
     "sums-in-disguise": "results",
+    "some-thingies": "results",
     "maffscards": "results",
 }
 
