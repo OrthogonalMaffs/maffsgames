@@ -45,6 +45,7 @@
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "77",
+  "Download links labelled (every <a download> on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; planted faults caught)": "29",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "32",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
   "End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed)": "31",
@@ -356,7 +357,7 @@
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (1 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 2,
    "tier": "content"
@@ -380,7 +381,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
