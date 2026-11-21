@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex,follow">
+<title>Class games — MaffsGames</title>
+<meta name="description" content="Every MaffsGames game with a child look, in one link for a class.">
+<link rel="canonical" href="https://maffsgames.co.uk/class/">
+<link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<!-- The class page (contract CLASS-PAGE, Jon 21 Nov 2026; canon §7.5). One link a teacher keeps: /class/#<Name> greets the
+     class and passes #kids/<Name> to every game with a child look (the documented example is /class/#Maple). The name
+     lives only in the link: MaffsKids (schools/assets/kids-look.js) reads it, it is written with textContent only, and
+     the page never stores or sends it (analytics.js's GA4 page view leaves the fragment out, GA4's default; no event). Hidden: no menu link, no search entry, no sitemap entry, noindex.
+     The cards are written from data/games.json ("kids": true) by scripts/apply-class-page.py. -->
+<script src="/schools/assets/analytics.js" defer></script>
+<script src="/schools/assets/kids-look.js"></script>
+<style>
+:root{
+  --accent:#9333ea;--accent-dim:#f3e8ff;
+  --sky-top:#fff7d6;--sun:#facc15;--hello-bg:#fde68a;--hello-edge:#f59e0b;
+  --edge-1:#9333ea;--edge-2:#0284c7;--edge-3:#16a34a;--art-bg:#fef9c3;
+  --th-eye:#ffffff;--th-pupil:#111827;--acc-ink:#1f2937;--acc-hair:#7c2d12;--acc-hatband:#dc2626;
+  --col-2:#ea580c;--col-6:#0284c7;--col-8:#9333ea
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-text);color:var(--text);background:linear-gradient(180deg,var(--sky-top) 0,var(--bg) 420px) no-repeat,var(--bg);
+  min-height:100vh;display:flex;flex-direction:column;padding-bottom:56px}
+[hidden]{display:none !important}
+.wrap{width:100%;max-width:760px;margin:0 auto;padding:28px 16px 32px;flex:1}
+.hello{display:inline-block;max-width:100%;overflow-wrap:anywhere;margin-bottom:12px;padding:8px 18px;border-radius:999px;
+  background:var(--hello-bg);border:3px solid var(--hello-edge);font-size:1.5rem;font-weight:800;line-height:1.25}
+h1{font-size:2.5rem;font-weight:800;line-height:1.1;letter-spacing:-.01em;text-shadow:3px 3px 0 var(--sun);margin-bottom:18px}
+.teacher{margin-bottom:20px;padding:12px 14px;border:2px dashed var(--border);border-radius:14px;background:var(--surface);
+  color:var(--muted);font-size:.95rem;line-height:1.45}
+.teacher b{color:var(--text)}
+.teacher code{font-family:var(--font-num);color:var(--text);background:var(--accent-dim);padding:1px 5px;border-radius:6px}
+.cards{display:grid;grid-template-columns:1fr;gap:22px}
+@media (min-width:640px){.cards{grid-template-columns:1fr 1fr}}
+.card{--edge:var(--edge-1);display:flex;flex-direction:column;padding:12px 12px 16px;border:4px solid var(--edge);border-radius:24px;
+  background:var(--surface);color:var(--text);text-decoration:none;box-shadow:0 6px 0 var(--edge);transition:transform .15s ease,box-shadow .15s ease}
+.card:nth-child(3n+2){--edge:var(--edge-2)}
+.card:nth-child(3n+3){--edge:var(--edge-3)}
+.card:hover{transform:translateY(-3px);box-shadow:0 9px 0 var(--edge)}
+.card:active{transform:translateY(3px);box-shadow:0 3px 0 var(--edge)}
+.card:focus-visible{outline:4px solid var(--accent);outline-offset:4px}
+.art{display:flex;align-items:center;justify-content:center;aspect-ratio:1600/873;border-radius:16px;overflow:hidden;background:var(--art-bg)}
+.art img{display:block;width:100%;height:100%;object-fit:cover}
+.name{display:block;margin-top:12px;font-size:1.6rem;font-weight:800;line-height:1.15}
+.line{display:block;margin-top:4px;color:var(--muted);font-size:1rem;line-height:1.35}
+.crowd{display:flex;align-items:flex-end;justify-content:center;gap:6%;width:100%;padding:0 8%}
+.th{display:block;width:28%;max-width:96px;height:auto;aspect-ratio:1;overflow:visible;animation:bob 2.4s ease-in-out infinite}
+.th:nth-child(2){animation-delay:-.8s}.th:nth-child(3){animation-delay:-1.6s}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8%)}}
+@media (prefers-reduced-motion:reduce){.th{animation:none}.card{transition:none}}
+.th .b{fill:var(--th)}.th .e{fill:var(--th-eye)}.th .p{fill:var(--th-pupil)}
+.th .m{fill:none;stroke:var(--th-pupil);stroke-width:1.2;stroke-linecap:round}
+.th .a-ink{fill:var(--acc-ink)}.th .a-hair{fill:var(--acc-hair)}.th .a-hatband{fill:var(--acc-hatband)}
+.th .a-lens{fill:none;stroke:var(--acc-ink);stroke-width:1.3}.th .a-line{fill:none;stroke:var(--acc-ink);stroke-width:1.3;stroke-linecap:round}
+.k2{--th:var(--col-2)}.k6{--th:var(--col-6)}.k8{--th:var(--col-8)}
+@media (max-width:380px){h1{font-size:2.1rem}.hello{font-size:1.3rem}.name{font-size:1.4rem}}
+</style>
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<main class="wrap">
+  <p class="hello" id="hello" hidden></p>
+  <h1>Pick a game!</h1>
+  <p class="teacher" id="teacher"><b>Teachers:</b> Add <code>#YourClass</code> to this page's address, with your class's name in place of YourClass, and every game here greets your class by name. The name stays in the link: it is never sent or stored.</p>
+  <div class="cards" id="cards">
+<!-- class-cards: written by scripts/apply-class-page.py from data/games.json ("kids": true); never edit by hand -->
+<a class="card" href="/games/sums-in-disguise/#kids" data-game="/games/sums-in-disguise/">
+  <span class="art"><img src="/games/sums-in-disguise/assets/start.webp" width="1600" height="873" alt=""></span>
+  <span class="name">Sums in Disguise</span>
+  <span class="line">Adding with known facts</span>
+</a>
+<a class="card" href="/games/some-thingies/#kids" data-game="/games/some-thingies/">
+  <span class="art"><span class="crowd"><svg class="th k2" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="b" cx="12" cy="14.6" rx="9.2" ry="8"/><circle class="e" cx="8.8" cy="12.8" r="2.5"/><circle class="e" cx="15.2" cy="12.8" r="2.5"/><circle class="p" cx="9.3" cy="13.3" r="1.15"/><circle class="p" cx="15.7" cy="13.3" r="1.15"/><path class="m" d="M9.6 18.6 Q12 21.6 14.4 18.6"/><path class="a-hair" d="M4.6 10 L5.6 3.2 L8.2 7.2 L10 1.4 L12 6.4 L14 1.4 L15.8 7.2 L18.4 3.2 L19.4 10 Q12 6.6 4.6 10 Z"/></svg><svg class="th k6" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="b" cx="12" cy="14.6" rx="9.2" ry="8"/><circle class="e" cx="8.8" cy="12.8" r="2.5"/><circle class="e" cx="15.2" cy="12.8" r="2.5"/><circle class="p" cx="9.3" cy="13.3" r="1.15"/><circle class="p" cx="15.7" cy="13.3" r="1.15"/><path class="m" d="M9.6 18.6 Q12 21.6 14.4 18.6"/><circle class="a-lens" cx="8.8" cy="12.8" r="3.3"/><circle class="a-lens" cx="15.2" cy="12.8" r="3.3"/><path class="a-line" d="M12.1 12.4 L11.9 12.4 M5.5 12 L3.6 10.8 M18.5 12 L20.4 10.8"/></svg><svg class="th k8" viewBox="0 0 24 24" aria-hidden="true"><ellipse class="b" cx="12" cy="14.6" rx="9.2" ry="8"/><circle class="e" cx="8.8" cy="12.8" r="2.5"/><circle class="e" cx="15.2" cy="12.8" r="2.5"/><circle class="p" cx="9.3" cy="13.3" r="1.15"/><circle class="p" cx="15.7" cy="13.3" r="1.15"/><path class="m" d="M9.6 18.6 Q12 21.6 14.4 18.6"/><rect class="a-ink" x="7.6" y="0.4" width="8.8" height="6.6" rx="0.8"/><rect class="a-hatband" x="7.6" y="4.6" width="8.8" height="1.4"/><rect class="a-ink" x="4.4" y="6.4" width="15.2" height="2" rx="1"/></svg></span></span>
+  <span class="name">Some Thingies</span>
+  <span class="line">Times tables with groups and arrays</span>
+</a>
+<!-- /class-cards -->
+  </div>
+</main>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+<script>
+(function () {
+  'use strict';
+  // The class name from this page's own fragment (#<Name>; the documented example is #Maple), read by MaffsKids and
+  // written with textContent only. The cards carry #kids/<Name>, or #kids with no valid name. The name is never kept or sent.
+  var TEMPLATE = 'Welcome, {name} Class!';
+  function render() {
+    var hash = String(location.hash || '');
+    var k = window.MaffsKids ? window.MaffsKids.read(hash, 'bare') : { kids: false, name: null };
+    var hello = document.getElementById('hello');
+    hello.textContent = k.name ? window.MaffsKids.greeting(TEMPLATE, k.name) : '';
+    hello.hidden = !k.name;
+    document.getElementById('teacher').hidden = hash.replace(/^#/, '') !== '';
+    var frag = window.MaffsKids ? window.MaffsKids.gameLink(k.name) : '#kids';
+    var cards = document.querySelectorAll('#cards a.card[data-game]');
+    for (var i = 0; i < cards.length; i++) cards[i].setAttribute('href', cards[i].getAttribute('data-game') + frag);
+  }
+  render();
+  window.addEventListener('hashchange', render);
+})();
+</script>
+</body>
+</html>

@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): CLASS-PAGE (one hidden /class/ page for every child-look game; MaffsKids shared)
+
+Claude Code (home lane), worktree `~/mg-class-page`, branch `claude/class-page`; contract `docs/handover/contracts/2026-11-21-class-page.md` (stored verbatim but for one teacher's first name, written "[a teacher's]"). The first commit carries SOME-THINGIES-TURN-LABELS' close-out (#870, 7d827fa).
+
+- The two games' fragment rules were identical (no STOP). `schools/assets/kids-look.js` (MaffsKids: `read(hash)`, `read(hash, 'bare')`, `greeting()`, `gameLink()`, `classLink()`) is now the one copy. Each game passes its own `location.hash` once and keeps `LOOK`, `CLASS_NAME` and `greeting()`, so both verifiers pass unchanged with every plant caught.
+- `/class/`: noindex, no menu, search or sitemap entry. Cards come from `"kids": true` in `data/games.json`, written in by `scripts/apply-class-page.py` (data/ is never published, so a fetch could not work). It loads analytics.js (the loader rule holds noindex pages to it); GA4's default page view leaves the fragment out.
+- site-nav: `/class/` in HUBS ("the class page"); a game opened from `/class/#<Name>` goes back to `/class/#<Name>`, the name read from its own hash through MaffsKids; only the hub's path is in sessionStorage. Both games show stage-exit's short form, "← the class page" (STAGE-EXIT-LABEL).
+- Checks: `scripts/test-kids-look.py` (Node vm, selective; 10 plants); check-site-nav's `class` unit and plant; check-site's site-wide class-name rule (Maple, plus `MAFFS_CLASS_NAMES`). For cloud: ci-deps' KNOWN_TOP lacks `class` (like printables, ugh-stats, core-maths), so a `class/` change counts as shared.
+
 ## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
 
 Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-labels`; contract `docs/handover/contracts/2026-11-21-some-thingies-turn-labels.md` (the 20:09 reissue with amendment 1, which arrived after I'd started; I carried on). The first commit carries SOME-THINGIES-PERSONALITY's close-out (#868, 8bf4b4e; its entry below).
