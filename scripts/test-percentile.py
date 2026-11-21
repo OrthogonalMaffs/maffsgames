@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before; planted faults caught) |
+# ci-deps: games/estimation-golf/ games/maffscards/ games/higher-power/ schools/assets/firebase-leaderboard.js
 """Tests the percentile and certificate tier that MaffsLeaderboard.submitScore() resolves
 (schools/assets/firebase-leaderboard.js; contract PERCENTILE-LOWER-IS-BETTER, 21 Nov 2026). No network and no
 browser: the script runs in Node's vm module with no Firebase SDK, as scripts/check-leaderboard-coverage.js loads it.
