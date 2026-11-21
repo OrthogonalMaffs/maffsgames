@@ -97,6 +97,7 @@ MODES = ['main-1', 'main-2', 'main-3', 'main-4', 'pro-1', 'pro-2', 'pro-3', 'pro
 PHONE = (360, 640)
 WINNER = 'winner %dx%d' % PHONE
 SCENES = 'scenes'
+TURN = 'turn'
 # SOME-THINGIES-PERSONALITY: the accessory for each of the 10 colours (k1..k10, #866's fixed order: red, orange, amber,
 # green, teal, sky, indigo, purple, pink, brown). Jon's three: the oranges' spiky hair, the blues' glasses, the purples'
 # top hat; the other seven in the contract's order. Each is told by its own shape, read here from the SVG.
@@ -872,6 +873,70 @@ def check_scenes(pw, base, html, out, info):
     info['scenes'] = True
 
 
+TURN_WATCH_JS = r"""() => { window.__turn = null; const arr = document.getElementById('arr');
+  new MutationObserver(() => {
+    if (window.__turn || !arr.classList.contains('turning')) return;
+    const t = document.getElementById('arrTop'), s = document.getElementById('arrSide');
+    const shown = (e) => !!e && e.textContent.trim() !== '' && parseFloat(getComputedStyle(e).opacity) > 0.01;
+    window.__turn = { top: shown(t) ? t.textContent : null, side: shown(s) ? s.textContent : null, mid: null };
+    // Halfway through the turn (300 of 600 ms): each thingy's net rotation, the array's angle plus its own.
+    const ang = (e) => { const m = getComputedStyle(e).transform; if (!m || m === 'none') return 0;
+      const v = m.match(/matrix\(([^)]+)\)/); if (!v) return NaN; const p = v[1].split(',').map(Number);
+      return Math.atan2(p[1], p[0]) * 180 / Math.PI; };
+    setTimeout(() => { const ths = [...arr.querySelectorAll('svg.th')];
+      const pick = [ths[0], ths[Math.floor(ths.length / 2)], ths[ths.length - 1]].filter(Boolean);
+      window.__turn.mid = { arr: ang(arr), net: pick.map(th => ang(arr) + ang(th)) }; }, 300);
+  }).observe(arr, { attributes: true, attributeFilter: ['class'] }); }"""
+
+
+def check_turn(pw, base, html, out, info):
+    """SOME-THINGIES-TURN-LABELS (Jon, 21 Nov 2026): with full motion, the scaffold's labels are gone (empty, or faded
+    to nothing) the moment the array starts to turn, and the turned array never shows the old rows or columns; Next is
+    there at once (the fade never delays it). With reduced motion, the turned array is drawn at once with no labels."""
+    for size, motion in (((1280, 800), 'no-preference'), (PHONE, 'no-preference'), (PHONE, 'reduce')):
+        tag = 'turn %dx%d %s' % (size[0], size[1], 'full motion' if motion != 'reduce' else 'reduced motion')
+        br, page, errs = open_page(pw, base, html, size)
+        try:
+            page.emulate_media(reduced_motion=motion)
+            for qid in ('m3-4r5c', 'p3-8r6c', 'm3-10r5c'):
+                page.evaluate('([id, at]) => ST.ui.preview(id, at)', [qid, 1])
+                q = page.evaluate('ST.ui.question()')
+                page.evaluate("ST.ui.step(String(ST.ui.question().rows))")
+                page.evaluate("ST.ui.step(String(ST.ui.question().cols))")
+                a = page.evaluate(SCREEN_JS)['arr']
+                if not a['top'] or not a['side']:
+                    out.append('%s %s: the labels are not up before marking (%r, %r)' % (tag, qid, a['top'], a['side']))
+                    continue
+                page.evaluate(TURN_WATCH_JS)
+                page.evaluate('ST.ui.answer(true)')
+                if not page.evaluate("!!document.querySelector('#nextBtn')"):
+                    out.append('%s %s: Next is not there at once after marking' % (tag, qid))
+                page.wait_for_function("document.getElementById('pic').dataset.turned === '1'", timeout=5000)
+                seen = page.evaluate('window.__turn')
+                if motion != 'reduce':
+                    if seen is None:
+                        out.append('%s %s: the array never turned' % (tag, qid))
+                    elif seen['top'] or seen['side']:
+                        out.append('%s %s: labels still showing as the turn starts (%r, %r)' % (tag, qid, seen['top'], seen['side']))
+                    if seen is not None:
+                        mid = seen.get('mid')
+                        if not mid or not (10 <= abs(mid['arr']) <= 80):
+                            out.append('%s %s: no mid-turn sample (the array at %s degrees)' % (tag, qid, mid and round(mid['arr'], 1)))
+                        elif any(not (abs(n) <= 3) for n in mid['net']):
+                            out.append('%s %s: a thingy is not upright mid-turn (array %.0f degrees, thingies net %s)' % (tag, qid, mid['arr'], [round(n) for n in mid['net']]))
+                a = page.evaluate(SCREEN_JS)['arr']
+                old = {str(q['rows']), str(q['cols'])}
+                stale = [x for x in (a['top'], a['side']) if x.strip() and any(n in x for n in old)]
+                if stale:
+                    out.append('%s %s: the turned array shows a label from before the turn: %s' % (tag, qid, stale))
+                if a['rows'] != q['cols'] or a['cols'] != q['rows']:
+                    out.append('%s %s: after the turn the array is %d rows of %d' % (tag, qid, a['rows'], a['cols']))
+        finally:
+            br.close()
+        out.extend('page error (%s): %s' % (tag, e) for e in errs if 'production host' not in e)
+    info['turn'] = True
+
+
 def check_largest(page, look, out):
     for i in LARGEST:
         for at in (1, 8):
@@ -960,6 +1025,12 @@ def check(html, out, units, shard=None):
                             check_speech(pw, base, html, out, info)
                         except Exception as e:  # noqa: BLE001
                             out.append('read aloud threw: %s' % str(e).splitlines()[0][:220])
+                        continue
+                    if uid == TURN:
+                        try:
+                            check_turn(pw, base, html, out, info)
+                        except Exception as e:  # noqa: BLE001
+                            out.append('turn threw: %s' % str(e).splitlines()[0][:220])
                         continue
                     if uid == SCENES:
                         try:
@@ -1053,6 +1124,15 @@ PLANTS = [
     ('the crowd changing the score',
      edit("if (right && qi > PER) { crowdN++; drawCrowd(); }", "if (right && qi > PER) { crowdN++; score++; drawCrowd(); }"),
      WINNER, r'the score is \d+ \(the crowd must never change it\)'),
+    # SOME-THINGIES-TURN-LABELS.
+    ('labels left visible during the turn',
+     lambda html, what: pc.apply_plant(pc.apply_plant(html,
+         "    arr.parentNode.classList.add('labels-off');\n", "", name=what),
+         "      $('arrTop').textContent = ''; $('arrSide').textContent = '';\n", "", name=what),
+     TURN, r'labels still showing as the turn starts'),
+    ('a thingy not counter-rotated',
+     edit(".arr.turning .th{transform:rotate(-90deg)}", ""),
+     TURN, r'a thingy is not upright mid-turn'),
 ]
 
 
@@ -1084,7 +1164,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES]
+    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES, TURN]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])

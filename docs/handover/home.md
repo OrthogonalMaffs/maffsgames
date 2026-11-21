@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
+
+Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-labels`; contract `docs/handover/contracts/2026-11-21-some-thingies-turn-labels.md` (the 20:09 reissue with amendment 1, which arrived after I'd started; I carried on). The first commit carries SOME-THINGIES-PERSONALITY's close-out (#868, 8bf4b4e; its entry below).
+
+- `turnArray()`: the labels fade (120 ms) and are cleared, then the array turns on `MaffsLock.timer`. The turned array is redrawn with empty labels. With reduced motion it is drawn at once.
+- Amendment 1: `.arr.turning .th{transform:rotate(-90deg)}`, centred on each thingy, with the array's 0.6 s ease, so every thingy stays eyes up. Measured mid-turn in Chromium: net 0° within 3°.
+- Next is there at once after marking; marking and the lock are untouched.
+- The verifier's new `turn` unit (laptop and phone at full motion, phone with reduced motion) and two plants (labels left visible, no counter-rotation), both caught; 15 plants in all.
+
 ## 2026-11-21 (home): SOME-THINGIES-PERSONALITY (the thingies as characters; the game's own look)
 
 Claude Code (home lane), worktree `~/mg-stp`, branch `claude/some-thingies-personality`; contract `docs/handover/contracts/2026-11-21-some-thingies-personality.md` (Jon approved the mock-ups, 21 Nov 18:40-18:43). The first commit carries SOME-THINGIES-TWEAKS' close-out (#866, e2ac03a; its entry below; contract moved to `docs/history/contracts/`).
