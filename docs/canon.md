@@ -1672,7 +1672,7 @@ nothing changes: every link stays exactly as written. Nothing is sent anywhere. 
 (`backHref`, `backLabel`, `shortLabel`): `stage-exit.js` gives its row link and HUD home link the hub, in its short form
 ("← OP for Secondary", as its "← Games" is short: STAGE-EXIT-LABEL). No game's header or back-link markup is edited.
 
-**The margin logo.** A MaffsGames logo (`schools/assets/logo.svg`, the portal's header mark on a navy tile) links to "/",
+**The margin logo.** A MaffsGames logo (`schools/assets/favicon.svg`, the mark on its navy tile, one of check-logo.py's registered copies) links to "/",
 fixed top left, named "MaffsGames home". It shows only while nothing the page paints comes within its clear space
 (measured, never a width guess: a fixed element where it is, anything in the flow by its left edge at any height), and
 only on a fine pointer, so never on phones or tablets; re-measured on load, on resize and after each click, key or touch (never on a timer or every DOM change: a page's own ticking clock would re-measure it every second). A page that shows

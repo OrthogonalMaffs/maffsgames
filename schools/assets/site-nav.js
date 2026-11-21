@@ -92,7 +92,7 @@
   var logo = null, src = null;
   try {
     var me = document.currentScript && document.currentScript.src;
-    if (me) src = me.replace(/site-nav\.js(\?.*)?$/, 'logo.svg');
+    if (me) src = me.replace(/site-nav\.js(\?.*)?$/, 'favicon.svg');
   } catch (e) { src = null; }
 
   function painted(el, cs) {

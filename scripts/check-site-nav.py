@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the margin logo only where it fits; planted faults caught) | --selftest && --check
-# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/logo.svg games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html
+# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html
 """Site navigation (contract SITE-NAV, Jon 21 Nov 2026; canon §7.5.8): schools/assets/site-nav.js.
 
     python scripts/check-site-nav.py --static     # the static rule (check-site.py runs this in its site-wide part)
