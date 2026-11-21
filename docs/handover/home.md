@@ -20,7 +20,10 @@
 
 Claude Code (home lane, run in a cloud session), branch `claude/ecstatic-thompson-f35dgo`; contract `docs/handover/contracts/2026-11-21-class-page.md`. The first commit carries SOME-THINGIES-TURN-LABELS' close-out (#870, 7d827fa; its entry below).
 
-- Started. The two games' fragment rules are byte-identical (sums-in-disguise :363-381, some-thingies :396-414), so no STOP.
+- The two games' fragment rules were byte-identical (sums-in-disguise :363-381, some-thingies :396-414), so no STOP. `schools/assets/kids-look.js` (MaffsKids) holds the rule; both games read it with `MaffsKids.read(window.location.hash)` (so each page still reads location.hash once, as their verifiers check) and keep `LOOK`, `CLASS_NAME` and `greeting()`.
+- `/class/`: noindex, light, one card per `"kids": true` game, written by apply-meta.py (data/ is not served, so no fetch); the pictures are `games/<slug>/class-card.svg`, drawn from each game's kid look by `scripts/draw-class-cards.py`.
+- site-nav: `/class/` is a hub ("the class page"); from `#kids/<Name>` the back link is `/class/#<Name>`, read from the game's own fragment. The two games show stage-exit's short form, "← the class page" (STAGE-EXIT-LABEL).
+- Checks: test-kids-look.py (new, selective), check-meta (cards), check-site-nav (`class` case and two plants), check-site site-wide (no served file names a class; `MAFFS_CLASS_NAMES` adds names from the environment).
 
 ## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
 
