@@ -45,7 +45,7 @@
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "77",
-  "Download links labelled (every <a download> on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; planted faults caught)": "29",
+  "Download links labelled (every <a download> and every data-mfg-download button on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; a page that builds a download in script has a labelled button; planted faults caught)": "29",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "32",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
   "End-of-task helper (end-task.py: a squash-merged branch is removed; an unmerged branch, an extra local commit and a dirty worktree each refuse; gh stubbed)": "31",
