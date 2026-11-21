@@ -139,6 +139,14 @@ a.back-link:hover{color:var(--text)}
 .arr .th{width:var(--s);height:var(--s)}
 .arr .th.c6,.arr .th.c11{margin-left:calc(var(--s) * .55)}
 .arr.turning{transform:rotate(90deg)}
+/* SOME-THINGIES-TURN-LABELS (Jon, 21 Nov 2026): the labels fade out (120 ms) before the array turns, so it never
+   sweeps across them. */
+.arr-top,.arr-side{transition:opacity .12s ease}
+/* Amendment 1 (Jon, 20:09): as the array turns 90° clockwise, each thingy turns 90° anticlockwise about its own centre,
+   with the same duration and easing, so it stays eyes up (accessories too) throughout. */
+.arr .th{transform-origin:50% 50%;transition:transform .6s ease}
+.arr.turning .th{transform:rotate(-90deg)}
+.arr-wrap.labels-off .arr-top,.arr-wrap.labels-off .arr-side{opacity:0}
 .k1{--th:var(--col-1)}.k2{--th:var(--col-2)}.k3{--th:var(--col-3)}.k4{--th:var(--col-4)}.k5{--th:var(--col-5)}
 .k6{--th:var(--col-6)}.k7{--th:var(--col-7)}.k8{--th:var(--col-8)}.k9{--th:var(--col-9)}.k10{--th:var(--col-10)}
 .end-btn{min-height:44px;padding:.2rem .7rem;font-size:.85rem}
@@ -1204,9 +1212,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
   function turnArray() {
     var r = Q.rows, c = Q.cols, arr = $('arr');
+    // Reduced motion: no turn, so the turned array is drawn at once, with empty labels (drawArray makes them anew).
     if (reduced() || !arr) { drawArray(c, r, true); return; }
-    arr.classList.add('turning');
-    turnTimer = MaffsLock.timer(function () { turnTimer = null; if (Q && Q.type === 'array' && (state === 'done' || state === 'wrong')) drawArray(c, r, true); }, 650);
+    // The labels fade out first (SOME-THINGIES-TURN-LABELS), then are cleared, and only then does the array turn. The
+    // turned array is drawn with empty labels, so the old rows and columns never show on it. Marking, Next and the lock
+    // are already done by now; nextQuestion() cancels turnTimer if the student moves on first.
+    arr.parentNode.classList.add('labels-off');
+    turnTimer = MaffsLock.timer(function () {
+      turnTimer = null;
+      if (!(Q && Q.type === 'array' && (state === 'done' || state === 'wrong'))) return;
+      $('arrTop').textContent = ''; $('arrSide').textContent = '';
+      arr.classList.add('turning');
+      turnTimer = MaffsLock.timer(function () { turnTimer = null; if (Q && Q.type === 'array' && (state === 'done' || state === 'wrong')) drawArray(c, r, true); }, 650);
+    }, 130);
   }
   function advance() {
     if (state !== 'done' && state !== 'wrong') return;

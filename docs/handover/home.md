@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
+
+Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-labels`; contract `docs/handover/contracts/2026-11-21-some-thingies-turn-labels.md` (the 20:09 reissue with amendment 1, which arrived after I'd started; I carried on). The first commit carries SOME-THINGIES-PERSONALITY's close-out (#868, 8bf4b4e; its entry below).
+
+- `turnArray()`: the labels fade (120 ms) and are cleared, then the array turns on `MaffsLock.timer`. The turned array is redrawn with empty labels. With reduced motion it is drawn at once.
+- Amendment 1: `.arr.turning .th{transform:rotate(-90deg)}`, centred on each thingy, with the array's 0.6 s ease, so every thingy stays eyes up. Measured mid-turn in Chromium: net 0° within 3°.
+- Next is there at once after marking; marking and the lock are untouched.
+- The verifier's new `turn` unit (laptop and phone at full motion, phone with reduced motion) and two plants (labels left visible, no counter-rotation), both caught; 15 plants in all.
+
 ## 2026-11-21 (home): SOME-THINGIES-PERSONALITY (the thingies as characters; the game's own look)
 
 Claude Code (home lane), worktree `~/mg-stp`, branch `claude/some-thingies-personality`; contract `docs/handover/contracts/2026-11-21-some-thingies-personality.md` (Jon approved the mock-ups, 21 Nov 18:40-18:43). The first commit carries SOME-THINGIES-TWEAKS' close-out (#866, e2ac03a; its entry below; contract moved to `docs/history/contracts/`).
@@ -31,6 +40,7 @@ Claude Code (home lane), worktree `~/mg-stp`, branch `claude/some-thingies-perso
 - **LINES:** the stage names, Sarge, the cheer and the faint, in both looks (kid lines 6 words or fewer). The stage buttons and the HUD label use the names.
 - **Verifier:** every thingy's accessory read from its SVG shapes against the colour map, and medals exactly in pro; nothing animating under reduced motion; a `scenes` unit (start screen at every phone-fit size in both looks, the conga line on every Stage 2 item at 320×568, 360×640 and 1280×720, Sarge and Next on every array); the crowd growing, capped and never scoring, then fainting. Three new plants (a wrong accessory, an animation under reduced motion, the crowd changing the score); all 13 are caught.
 - Roster note updated. Local runs: the verifier, check-theme, check-answer-lock (some-thingies), measure-phone-fit `--only some-thingies` in normal, aa and laptop modes, check-site `--only some-thingies`, check-start-mount, check-teacher-invite, verify-stage-exit and check-meta all pass.
+- MERGED 21 Nov as 8bf4b4e (#868) via merge-pr.py, exit 0, last line "main 8bf4b4e run 44943720706: GREEN". Main on the merge commit: check-site 44943720706 success, phone-fit-full 44943720773 success (some-thingies PASS in normal, aa and laptop modes), pages build 44943720464 success. Jon accepted the conga fallback at 320 px (21 Nov, 19:46). Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-21-some-thingies-personality.md` (closed out by SOME-THINGIES-TURN-LABELS' first commit).
 
 ## 2026-11-21 (home): SOME-THINGIES-TWEAKS (Stage 3 as coloured thingies, a fading scaffold, winner stays on)
 
