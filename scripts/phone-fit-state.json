@@ -1,5 +1,5 @@
 {
-  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Per mode (normal, aa, laptop): known-failures, each game with the entries at which it fails the gate (phones: the size; laptop, ruling R2: the size and 'option' or 'next'), reported, never failed; sideways, each game with the sizes at which a measured screen scrolls sideways; unmeasurable, each game the driver cannot measure, with the reason (they never read as passing). Take a game (or an entry) off in the PR that fixes it. A list grows only when the measurement itself improves, with Jon's ruling, never because of a new fault. Recorded 26 Oct 2026 (branch claude/theme-distinctly-average-2), re-recorded the same day under PHONE-FIT-DRIVER (docs/audits/phone-fit-runs-2026-10-26/), and on 27 Oct 2026 under FOLD-COMPONENTS: the laptop and sideways lists added and the canvas games measured (docs/audits/fold-components-2026-10-27.md).",
+  "note": "canon 7.6.1, Jon's rulings of 26 Oct 2026. Read by scripts/measure-phone-fit.py. Per mode (normal, aa, laptop): known-failures, each game with the entries at which it fails the gate (phones: the size; laptop, ruling R2: the size and 'option' or 'next'), reported, never failed; sideways, each game with the sizes at which a measured screen scrolls sideways; unmeasurable, each game the driver cannot measure, with the reason (they never read as passing). Take a game (or an entry) off in the PR that fixes it. A list grows only when the measurement itself improves, with Jon's ruling, never because of a new fault. Recorded 26 Oct 2026 (branch claude/theme-distinctly-average-2), re-recorded the same day under PHONE-FIT-DRIVER (docs/audits/phone-fit-runs-2026-10-26/), and on 27 Oct 2026 under FOLD-COMPONENTS: the laptop and sideways lists added and the canvas games measured (docs/audits/fold-components-2026-10-27.md). On 21 Nov 2026, under PHONE-FIT-WAIT-NEXT (Jon, 21 Nov 2026, 16:24: \"we fix them gradually, or nothing gets built\"), the driver began waiting for Next after a wrong answer, and the next entries it newly found were listed: laptop/probability-paradox (1366x768 next, 1280x720 next) and laptop/trig-worms (1366x768 next, 1280x720 next); todo row PHONE-FIT-NEXT-FOLD.",
   "known-failures": {
     "normal": {
       "bearing-blitz": [
@@ -351,6 +351,10 @@
         "1280x720 next",
         "1280x720 option"
       ],
+      "probability-paradox": [
+        "1366x768 next",
+        "1280x720 next"
+      ],
       "quadratic-factoriser": [
         "1280x720 option"
       ],
@@ -363,7 +367,9 @@
       ],
       "trig-worms": [
         "1366x768 option",
-        "1280x720 option"
+        "1280x720 option",
+        "1366x768 next",
+        "1280x720 next"
       ],
       "truth-buster": [
         "1280x720 next"
