@@ -17,6 +17,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/kids-look.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
 <script src="/schools/assets/fold.js" defer></script>
 <link rel="stylesheet" href="/schools/assets/fold.css">
@@ -361,25 +362,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   /* =====================================================================================================
      THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
      ===================================================================================================== */
+  // The rule ("#kids", "#kids/<name>") is schools/assets/kids-look.js's, the one copy (MaffsKids, contract CLASS-PAGE).
   var LOOK = 'grown', CLASS_NAME = null;
-  try {
-    var frag = String(window.location.hash || '').replace(/^#/, '');
-    var low = frag.toLowerCase();
-    if (low === 'kids') LOOK = 'kids';
-    else if (low.indexOf('kids/') === 0) {
-      LOOK = 'kids';
-      var nm = decodeURIComponent(frag.slice(5)).trim();
-      if (/^[\p{L}' ’-]{1,20}$/u.test(nm) && /\p{L}/u.test(nm)) CLASS_NAME = nm;
-    }
-  } catch (e) { CLASS_NAME = null; }
+  var KIDS = window.MaffsKids ? MaffsKids.read(window.location.hash) : { kids: false, name: null };
+  if (KIDS.kids) { LOOK = 'kids'; CLASS_NAME = KIDS.name; }
   var L = LINES[LOOK];
   function greeting() {
     if (LOOK !== 'kids') return L.welcome;
     if (!CLASS_NAME) return L.welcome;
-    var g = L.welcome_class.replace('{name}', CLASS_NAME);
-    // A name that already ends with "class" is not given a second "Class".
-    if (/class$/i.test(CLASS_NAME)) g = g.replace(/(class)\s+class\b/i, '$1');
-    return g;
+    return MaffsKids.greeting(L.welcome_class, CLASS_NAME);
   }
   if (LOOK === 'kids') document.body.classList.add('look-kids');
 

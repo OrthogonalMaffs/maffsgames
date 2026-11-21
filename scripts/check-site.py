@@ -2883,6 +2883,76 @@ def site_nav_report():
     return mod.static_report()
 
 
+# The class names the child look has been used with (contract CLASS-PAGE, Jon 21 Nov 2026). A real class's name never
+# enters a served file: it lives only in a link's fragment (#kids/<Name>, /class/#<Name>; schools/assets/kids-look.js).
+# The real names are kept out of the repo, so they come from MAFFS_CLASS_NAMES (comma-separated) when it is set; the
+# documented example, "Maple", is always held, and may appear only in comments.
+CLASS_NAME_EXAMPLE = "Maple"
+HARD_CODED_CLASS = re.compile(r'(?:#kids/|/class/#)[^\s"<>)\x27]*[^\W\d_]')
+CLASS_PAGE_FILES = ("class/index.html", "schools/assets/kids-look.js")
+
+
+def strip_comments(text):
+    """text without HTML comments, /* */ comments and // line comments (a // after ':' is a URL, kept)."""
+    text = re.sub(r"<!--.*?-->", " ", text, flags=re.S)
+    text = re.sub(r"/\*.*?\*/", " ", text, flags=re.S)
+    return re.sub(r"(?<![:\\'\"])//[^\n]*", " ", text)
+
+
+def class_name_names():
+    extra = [n.strip() for n in os.environ.get("MAFFS_CLASS_NAMES", "").split(",") if n.strip()]
+    return [CLASS_NAME_EXAMPLE] + [n for n in extra if n != CLASS_NAME_EXAMPLE]
+
+
+def served_code():
+    """{rel: text} for every published .html and .js file: tracked, under a SITE path, not excluded by _config.yml
+    (scripts/check-publish-scope.py's definition, as check-analytics-loader.py reads it)."""
+    import subprocess
+    spec = importlib.util.spec_from_file_location("check_publish_scope", os.path.join(ROOT, "scripts", "check-publish-scope.py"))
+    ps = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ps)
+    with open(os.path.join(ROOT, "_config.yml"), encoding="utf-8") as fh:
+        excl = ps.read_excludes(fh.read())
+    tracked = subprocess.run(["git", "ls-files", "*.html", "*.js"], cwd=ROOT, capture_output=True, text=True).stdout.split()
+    out = {}
+    for rel in sorted(tracked):
+        if ps.is_site(rel) and not ps.excluded(rel, excl) and not ps.special(rel):
+            with open(os.path.join(ROOT, rel), encoding="utf-8", errors="replace") as fh:
+                out[rel] = fh.read()
+    return out
+
+
+def class_name_faults(texts=None, names=None):
+    """[fault]: a class name (whole word, case as written) outside comments in a served .html or .js file; and in the
+    class page or kids-look.js, any hard-coded #kids/<name> or /class/#<name> outside comments."""
+    texts = served_code() if texts is None else texts
+    names = class_name_names() if names is None else names
+    out = []
+    for rel, text in sorted(texts.items()):
+        code = strip_comments(text)
+        for n in names:
+            if re.search(r"(?<![\w-])" + re.escape(n) + r"(?![\w-])", code):
+                out.append("%s: names a class (%s) outside a comment: a class name lives only in a link's fragment"
+                           % (rel, "the example" if n == CLASS_NAME_EXAMPLE else "from MAFFS_CLASS_NAMES"))
+        if rel in CLASS_PAGE_FILES:
+            m = HARD_CODED_CLASS.search(code)
+            if m:
+                out.append("%s: a hard-coded class link %r (only #kids and #YourClass-style placeholders)" % (rel, m.group(0)))
+    return out
+
+
+def class_name_report():
+    """For the site-wide part: print the class-name rule's result, return the faults."""
+    names = class_name_names()
+    f = class_name_faults(names=names)
+    print("  class names (contract CLASS-PAGE): %d name(s) held (%s); %s"
+          % (len(names), "the example" + (" and MAFFS_CLASS_NAMES" if len(names) > 1 else ", MAFFS_CLASS_NAMES not set"),
+             "PASS" if not f else "%d fault(s)" % len(f)))
+    for x in f:
+        print("    FAIL  " + x)
+    return f
+
+
 def main():
     ap = argparse.ArgumentParser(description="Check that every page on the site runs.")
     ap.add_argument("--tier", choices=["1", "2", "3", "all"], default="all",
@@ -2951,6 +3021,7 @@ def main():
         fails += len(flagged)
         fails += len(clock_seed_report())
         fails += len(site_nav_report())
+        fails += len(class_name_report())
 
     if args.tier == "3":
         pages = build_page_list(args.only)
