@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -38,8 +38,21 @@ byte). This script never uses the page's numbers to check the page's numbers:
             (10 x 5 and 5 x 10) and the longest sum (6 terms) on screen at 360 x 640 with every option above the fold and
             no sideways scroll.
 
+SOME-THINGIES-TWEAKS (Jon, 21 Nov 2026):
+  Stage 3   every array cell a thingy (an svg with its body, two eyes, two pupils), never a dot; coloured by column (by
+            row once turned round) from one fixed set of 10 distinct colours, the same colour for each k everywhere; a
+            gap of 0.6-0.8 of a thingy after the 5th column and the 5th row, the ordinary gaps smaller; the 5 x 10 and
+            10 x 5 arrays at 360 x 640 with their options above the fold, no sideways scroll, thingies at least 18 px.
+  Scaffold  in a Stage 3 run, questions 1-4 ask rows, each row, then the total; 5-7 show the rows label from the start
+            and ask each row, then the total; 8+ the total only; each step labels the array with the right number,
+            right or wrong, and never changes the score.
+  Winner    10 right then a wrong ends the run at 11 answered, score 10, one submission [slug, board, 10, 11]; a wrong
+            at question 3 does not end it; End at question 12 ends it with the score so far; no End button before
+            question 11; "n/10" then "n" in the HUD; 50 questions of main Stage 1 use all 22 items before any repeats and
+            never serve one twice in a row. Every play run ends at the wrong at question 11 (wrong at 2, 5 and 8 go on).
+
 Work units: "bank" (no browser), "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
-"play kids 360x640", and "plant: <what>" (one per planted fault).
+"play kids 360x640", "winner 360x640", and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
     python scripts/verify-some-thingies.py --selftest   # the planted faults only
@@ -69,6 +82,7 @@ COUNTS = {('main', 1): 22, ('main', 2): 28, ('main', 3): 36, ('main', 4): 96,
 TABLES = {'main': (2, 5, 10), 'pro': (3, 4, 8)}
 MODES = ['main-1', 'main-2', 'main-3', 'main-4', 'pro-1', 'pro-2', 'pro-3', 'pro-4']
 PHONE = (360, 640)
+WINNER = 'winner %dx%d' % PHONE
 PER = 10
 EVENTS = {'game_started', 'question_answered', 'game_completed'}
 WRONG_KEY = {'groups': 'groups', 'sum-to-groups': 'sum', 'groups-to-sum': 'pick', 'array': 'array', 'fact': 'fact', 'missing': 'missing'}
@@ -277,11 +291,27 @@ SCREEN_JS = r"""() => {
   const $ = (id) => document.getElementById(id);
   const vals = (id) => [...$(id).querySelectorAll('.opt')].map(b => b.dataset.val);
   const plates = [...$('pic').querySelectorAll('.plate')].map(p => p.querySelectorAll('svg.th').length);
-  const dots = [...$('pic').querySelectorAll('.arr i')];
-  const tops = new Set(dots.map(d => Math.round(d.getBoundingClientRect().top)));
-  const lefts = new Set(dots.map(d => Math.round(d.getBoundingClientRect().left)));
+  // Stage 3: every cell of the array, its row and column from where it is drawn, what it is and its colour.
+  const cells = [...$('pic').querySelectorAll('.arr .arow > *')];
+  const box = (e) => e.getBoundingClientRect();
+  const tops = [...new Set(cells.map(d => Math.round(box(d).top)))].sort((a, b) => a - b);
+  const lefts = [...new Set(cells.map(d => Math.round(box(d).left)))].sort((a, b) => a - b);
+  const arr = { n: cells.length, thingies: cells.filter(c => c.matches('svg.th') && c.querySelector('ellipse') && c.querySelectorAll('circle').length === 4).length,
+                rows: tops.length, cols: lefts.length, cells: [], size: cells.length ? box(cells[0]).width : 0 };
+  for (const c of cells) {
+    const k = ((c.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1];
+    const body = c.querySelector('ellipse');
+    arr.cells.push([tops.indexOf(Math.round(box(c).top)) + 1, lefts.indexOf(Math.round(box(c).left)) + 1, k ? +k : null,
+                    body ? getComputedStyle(body).fill : null]);
+  }
+  // Gaps, in thingies: after column 1 and column 5, after row 1 and row 5 (from the cells of the first row and column).
+  const at = (r, c) => cells.find(x => tops.indexOf(Math.round(box(x).top)) + 1 === r && lefts.indexOf(Math.round(box(x).left)) + 1 === c);
+  const gapC = (c) => (at(1, c) && at(1, c + 1)) ? (box(at(1, c + 1)).left - box(at(1, c)).right) / arr.size : null;
+  const gapR = (r) => (at(r, 1) && at(r + 1, 1)) ? (box(at(r + 1, 1)).top - box(at(r, 1)).bottom) / arr.size : null;
+  arr.gc1 = gapC(1); arr.gc5 = gapC(5); arr.gr1 = gapR(1); arr.gr5 = gapR(5);
+  arr.top = ($('arrTop') || {}).textContent || ''; arr.side = ($('arrSide') || {}).textContent || '';
   const ann = (el) => [...el.querySelectorAll('annotation')].map(a => a.textContent).join(' ');
-  return { state: ST.ui.state(), plates: plates, dots: dots.length, rows: tops.size, cols: lefts.size,
+  return { state: ST.ui.state(), plates: plates, arr: arr, dots: cells.length, rows: tops.length, cols: lefts.length,
            sum: ann($('sum')), opts1: $('opts1').hidden ? null : vals('opts1'), opts: $('opts').hidden ? null : vals('opts'),
            say: $('say').textContent, sayKey: $('say').dataset.say || null,
            learn: ($('learn') || {}).dataset ? ($('learn').dataset.learn || null) : null,
@@ -325,17 +355,19 @@ def check_marking(page, html, look, out, info):
     every = set(all_lines(L))
     items = bank_of(html)
     marked = 0
+    fills = {}
     for n, q in enumerate(items):
         i, t = q['id'], q['type']
         for right in (True, False):
-            page.evaluate('(id) => ST.ui.preview(id)', i)
+            # As question 8: Stage 3's scaffold is gone by then (check_winner covers questions 1-7).
+            page.evaluate('([id, at]) => ST.ui.preview(id, at)', [i, 8])
             s = page.evaluate(SCREEN_JS)
             if right:
                 # The picture, counted from the DOM.
                 if t == 'groups' and s['plates'] != [q['each']] * q['groups']:
                     out.append('%s: the picture shows plates of %s, expected %d plates of %d' % (i, s['plates'], q['groups'], q['each']))
-                if t == 'array' and (s['dots'] != q['rows'] * q['cols'] or s['rows'] != q['rows'] or s['cols'] != q['cols']):
-                    out.append('%s: the array shows %d dots in %d rows and %d columns, expected %d x %d' % (i, s['dots'], s['rows'], s['cols'], q['rows'], q['cols']))
+                if t == 'array':
+                    check_array(i, q, s['arr'], False, out, fills)
                 if t == 'fact' and s['sum'].replace(' ', '') != '%d\\times%d={?}' % (q['a'], q['b']):
                     out.append('%s: the question reads %r' % (i, s['sum']))
                 if t == 'missing' and s['sum'].replace(' ', '') != '{?}\\times%d=%d' % (q['b'], q['product']):
@@ -389,12 +421,47 @@ def check_marking(page, html, look, out, info):
                 out.append('%s: feedback holds %d LINES strings (the line %r, under it %s)' % (i, (s['say'] in every) + len(hits), s['say'], hits))
             if s['learn'] != working(q):
                 out.append('%s: the working shown is %r, expected %r' % (i, s['learn'], working(q)))
-            if t == 'array':
-                a = page.evaluate(SCREEN_JS)
-                if a['dots'] != q['rows'] * q['cols'] or a['rows'] != q['cols'] or a['cols'] != q['rows']:
+            if t == 'array' and right:
+                a = page.evaluate(SCREEN_JS)['arr']
+                if a['rows'] != q['cols'] or a['cols'] != q['rows']:
                     out.append('%s: after marking the array is %d rows of %d, expected it turned round to %d rows of %d' % (i, a['rows'], a['cols'], q['cols'], q['rows']))
+                else:
+                    check_array(i + ' (turned)', {'rows': q['cols'], 'cols': q['rows']}, a, True, out, fills)
             marked += 1
+    # One fixed set of 10 distinct colours, k1..k10, the same everywhere (check_array records each one's fill).
+    if sorted(fills) != list(range(1, 11)) or len(set(fills.values())) != 10:
+        out.append('the array colours: %d of the 10 seen, %d distinct (%s)' % (len(fills), len(set(fills.values())), fills))
     info['marked'] = info.get('marked', 0) + marked
+
+
+def check_array(i, q, a, turned, out, fills):
+    """Stage 3's picture (Jon's option C): rows x cols thingies, coloured by column (by row once turned round, the
+    colours following their thingies), from one fixed set; a gap of about 0.7 of a thingy after the 5th column and the
+    5th row, the ordinary gaps smaller."""
+    r, c = q['rows'], q['cols']
+    if a['n'] != r * c or a['thingies'] != a['n']:
+        out.append('%s: Stage 3 draws %d cells, %d of them thingies, expected %d thingies' % (i, a['n'], a['thingies'], r * c))
+        return
+    if a['rows'] != r or a['cols'] != c:
+        out.append('%s: the array is %d rows of %d, expected %d of %d' % (i, a['rows'], a['cols'], r, c))
+        return
+    for row, col, k, fill in a['cells']:
+        want = row if turned else col
+        if k != want:
+            out.append('%s: the thingy at row %d, column %d has colour %s, expected %d' % (i, row, col, k, want))
+            return
+        if fills.setdefault(k, fill) != fill:
+            out.append('%s: colour %d is %s here, %s elsewhere' % (i, k, fill, fills[k]))
+            return
+    g = {'gc1': a['gc1'], 'gc5': a['gc5'], 'gr1': a['gr1'], 'gr5': a['gr5']}
+    if c > 1 and not (0.05 <= g['gc1'] <= 0.35):
+        out.append('%s: the gap between columns is %.2f of a thingy' % (i, g['gc1']))
+    if c > 5 and not (0.6 <= g['gc5'] <= 0.8):
+        out.append('%s: the gap after the 5th column is %.2f of a thingy, expected about 0.7' % (i, g['gc5'] or -1))
+    if r > 1 and not (0.2 <= g['gr1'] <= 0.45):
+        out.append('%s: the gap between rows is %.2f of a thingy' % (i, g['gr1']))
+    if r > 5 and not (0.6 <= g['gr5'] <= 0.8):
+        out.append('%s: the gap after the 5th row is %.2f of a thingy, expected about 0.7' % (i, g['gr5'] or -1))
 
 
 GREETINGS = [
@@ -468,16 +535,17 @@ def play(page, look, m, out):
     page.evaluate('(m) => ST.ui.start(m)', m)
     md, st = m.split('-')
     tag = '%s %s' % (look, m)
+    # Wrong at questions 2, 5, 8 and 11: the first three never end the run; the wrong at 11 does (winner stays on).
     seen, right, k = [], 0, 0
-    for _ in range(80):
+    for _ in range(120):
         s = page.evaluate('ST.ui.state()')
         if s == 'over':
             break
-        if s in ('count', 'ask'):
+        if s in ('count', 'rows', 'cols', 'ask'):
             q = page.evaluate('ST.ui.question()')
             seen.append(q['id'])
             if k < 2:
-                fit(page, '#opts1 .opt' if s == 'count' else '#opts .opt', '%s %s (the options)' % (tag, q['id']), out)
+                fit(page, '#opts .opt' if s == 'ask' else '#opts1 .opt', '%s %s (the options)' % (tag, q['id']), out)
             ok = k % 3 != 1
             page.evaluate('(r) => ST.ui.answer(r)', ok)
             if k < 2:
@@ -490,18 +558,22 @@ def play(page, look, m, out):
         out.append('%s: the run did not finish' % tag)
         return
     pre = ('m' if md == 'main' else 'p') + st
-    if len(seen) != PER or len(set(seen)) != PER or any(not (x.startswith(pre + '-') or x.startswith(pre + 'a-') or x.startswith(pre + 'b-')) for x in seen):
-        out.append('%s: the run served %s, not %d different %s stage %s items' % (tag, seen, PER, md, st))
+    n = len(seen)
+    if n != 11 or len(set(seen)) != n or any(not (x.startswith(pre + '-') or x.startswith(pre + 'a-') or x.startswith(pre + 'b-')) for x in seen):
+        out.append('%s: the run served %s, expected 11 different %s stage %s items (wrong at 2, 5 and 8 go on; wrong at 11 ends it)' % (tag, seen, md, st))
+    PER_ = n
     ev = page.evaluate('window.__ev')
     sub = page.evaluate('window.__sub')
     evm = '%s-stage-%s' % (md, st)
     done = [p for n, p in ev if n == 'game_completed']
     if len(done) != 1 or done[0].get('score') != right or done[0].get('level') != 'year6' or done[0].get('mode') != evm:
         out.append('%s: game_completed %s, expected one with score %d, mode %s' % (tag, done, right, evm))
-    if sub != [[SLUG, board_of(m), right, PER]]:
-        out.append('%s: the leaderboard got %s, expected one submission on %s with %d' % (tag, sub, board_of(m), right))
-    qa = [p for n, p in ev if n == 'question_answered']
-    if len(qa) != PER or [p.get('question_id') for p in qa] != seen or any(p.get('mode') != evm or p.get('level') != 'year6' for p in qa):
+    if sub != [[SLUG, board_of(m), right, PER_]]:
+        out.append('%s: the leaderboard got %s, expected one submission on %s with %d of %d' % (tag, sub, board_of(m), right, PER_))
+    if not done or done[0].get('questions_answered') != PER_ or done[0].get('questions_correct') != right:
+        out.append('%s: game_completed counts %s, expected %d answered, %d correct' % (tag, done, PER_, right))
+    qa = [p for n_, p in ev if n_ == 'question_answered']
+    if len(qa) != PER_ or [p.get('question_id') for p in qa] != seen or any(p.get('mode') != evm or p.get('level') != 'year6' for p in qa):
         out.append('%s: question_answered %s, expected one per item with its id' % (tag, [p.get('question_id') for p in qa]))
     names = sorted({n for n, _ in ev})
     if not set(names) <= EVENTS:
@@ -512,21 +584,152 @@ def play(page, look, m, out):
             out.append('%s: an mfg() payload contains %r' % (tag, bad))
     if bad_in_storage(page):
         out.append('%s: browser storage holds %s' % (tag, bad_in_storage(page)))
-    if page.evaluate("document.getElementById('endLine').textContent") != L['end']:
-        out.append('%s: the end line reads %r' % (tag, page.evaluate("document.getElementById('endLine').textContent")))
-    if page.evaluate("document.getElementById('resScore').textContent") != str(right):
-        out.append('%s: the end screen does not show %d' % (tag, right))
+    if page.evaluate("document.getElementById('endLine').textContent") != L['overtime_end']:
+        out.append('%s: the end line reads %r, expected LINES.%s.overtime_end' % (tag, page.evaluate("document.getElementById('endLine').textContent"), look))
+    if page.evaluate("document.getElementById('resScore').textContent") != str(right) or \
+            page.evaluate("document.getElementById('resOf').textContent") != '%d answered' % PER_:
+        out.append('%s: the end screen does not show %d and "%d answered"' % (tag, right, PER_))
+    page.evaluate("document.getElementById('menuBtn').click()")
+
+
+# ---------------------------------------------------------------- winner stays on and the Stage 3 scaffold
+def hud(page):
+    return page.evaluate("""() => ({ q: document.getElementById('hudQ').textContent, end: !document.getElementById('endBtn').hidden,
+        endShown: document.getElementById('endBtn').getBoundingClientRect().width > 0, state: ST.ui.state(), score: ST.ui.score(),
+        qi: ST.ui.qi(), id: (ST.ui.question() || {}).id })""")
+
+
+def check_winner(page, look, out):
+    tag = look + ' winner'
+    # (1) 10 right, then a wrong at 11: the run ends there, 11 answered, score 10, submitted once.
+    page.evaluate("() => { window.__ev = []; window.__sub = []; }")
+    page.evaluate("ST.ui.start('main-4')")
+    ids = []
+    for k in range(1, 12):
+        h = hud(page)
+        ids.append(h['id'])
+        if h['qi'] != k:
+            out.append('%s: question %d is numbered %s' % (tag, k, h['qi']))
+            return
+        want_q = '%d/10' % k if k <= 10 else str(k)
+        if h['q'] != want_q:
+            out.append('%s: the HUD reads %r at question %d, expected %r' % (tag, h['q'], k, want_q))
+        if h['end'] != (k > 10) or (k > 10 and not h['endShown']):
+            out.append('%s: the End button is %s at question %d' % (tag, 'shown' if h['end'] else 'hidden', k))
+        page.evaluate('(r) => ST.ui.answer(r)', k <= 10)
+        if k == 11:
+            nb = page.evaluate("(document.querySelector('#feedback .maffs-next') || {}).textContent || ''")
+            if 'See results' not in nb:
+                out.append('%s: after the wrong at question 11 the button reads %r, expected "See results →"' % (tag, nb))
+        page.evaluate('ST.ui.next()')
+    st = page.evaluate('ST.ui.state()')
+    sub = page.evaluate('window.__sub')
+    if st != 'over' or page.evaluate('ST.ui.answered()') != 11 or page.evaluate('ST.ui.score()') != 10:
+        out.append('%s: 10 right then a wrong: state %s, %d answered, score %d; expected over, 11, 10' % (tag, st, page.evaluate('ST.ui.answered()'), page.evaluate('ST.ui.score()')))
+    if sub != [[SLUG, 'stage-4', 10, 11]]:
+        out.append('%s: 10 right then a wrong: the leaderboard got %s, expected [[%r, stage-4, 10, 11]]' % (tag, sub, SLUG))
+    page.evaluate("document.getElementById('menuBtn').click()")
+
+    # (2) a wrong at question 3 does not end the run; (3) End at question 12 ends it with the score so far.
+    page.evaluate("() => { window.__ev = []; window.__sub = []; }")
+    page.evaluate("ST.ui.start('pro-1')")
+    right = 0
+    for k in range(1, 12):
+        ok = k != 3
+        page.evaluate('(r) => ST.ui.answer(r)', ok)
+        right += ok
+        page.evaluate('ST.ui.next()')
+        if k == 3 and page.evaluate('ST.ui.state()') == 'over':
+            out.append('%s: a wrong answer at question 3 ended the run' % tag)
+            return
+    h = hud(page)
+    if h['qi'] != 12 or not h['end']:
+        out.append('%s: at question 12 the run is at %s, End %s' % (tag, h['qi'], 'shown' if h['end'] else 'hidden'))
+        return
+    page.evaluate('ST.ui.end()')
+    sub = page.evaluate('window.__sub')
+    done = [p for n, p in page.evaluate('window.__ev') if n == 'game_completed']
+    if page.evaluate('ST.ui.state()') != 'over' or sub != [[SLUG, 'pro-stage-1', right, 11]] or len(done) != 1 or \
+            done[0].get('questions_answered') != 11 or done[0].get('questions_correct') != right:
+        out.append('%s: End at question 12: state %s, board %s, game_completed %s; expected score %d of 11 answered, once' % (tag, page.evaluate('ST.ui.state()'), sub, done, right))
+    page.evaluate("document.getElementById('menuBtn').click()")
+
+    # (4) the supply: no repeat until every item is used, never the item just answered (main Stage 1 has 22).
+    page.evaluate("ST.ui.start('main-1')")
+    ids = []
+    for k in range(50):
+        ids.append(page.evaluate('ST.ui.question().id'))
+        page.evaluate('ST.ui.answer(true)')
+        page.evaluate('ST.ui.next()')
+    if len(set(ids[:22])) != 22:
+        out.append('%s: the first 22 questions repeat an item before all are used' % tag)
+    for a, b in zip(ids, ids[1:]):
+        if a == b:
+            out.append('%s: %s served twice in a row' % (tag, a))
+            break
+    page.evaluate('ST.ui.end()')
+    page.evaluate("document.getElementById('menuBtn').click()")
+
+    # (5) the Stage 3 scaffold: questions 1-4 three steps, 5-7 two (the rows label from the start), 8+ the total only;
+    # each step labels the array with the right number, right or wrong, and never changes the score.
+    L = page.evaluate('ST.lines()')[look]
+    page.evaluate("ST.ui.start('pro-3')")
+    for k in range(1, 13):
+        q = page.evaluate('ST.ui.question()')
+        lab = lambda: page.evaluate(SCREEN_JS)['arr']
+        rows_lab, cols_lab = L['label_rows'].replace('{n}', str(q['rows'])), L['label_cols'].replace('{n}', str(q['cols']))
+        want = ['rows', 'cols', 'ask'] if k <= 4 else ['cols', 'ask'] if k <= 7 else ['ask']
+        got = []
+        a0 = lab()
+        if k in (5, 6, 7) and a0['side'] != rows_lab:
+            out.append('%s question %d: the rows label is %r at the start, expected %r' % (tag, k, a0['side'], rows_lab))
+        if k >= 8 and (a0['side'] or a0['top']):
+            out.append('%s question %d: labels %r / %r with no steps' % (tag, k, a0['side'], a0['top']))
+        for _ in range(4):
+            s = page.evaluate('ST.ui.state()')
+            got.append(s)
+            if s == 'ask':
+                break
+            before = page.evaluate('ST.ui.score()')
+            v = q['rows'] if s == 'rows' else q['cols']
+            wrong_step = k % 2 == 0
+            page.evaluate('(v) => ST.ui.step(v)', str(v + 1 if wrong_step else v))
+            if page.evaluate('ST.ui.score()') != before:
+                out.append('%s question %d: a step changed the score (%d -> %d)' % (tag, k, before, page.evaluate('ST.ui.score()')))
+            a1 = lab()
+            want_lab = rows_lab if s == 'rows' else cols_lab
+            if (a1['side'] if s == 'rows' else a1['top']) != want_lab:
+                out.append('%s question %d: after the %s step the label reads %r, expected %r' % (tag, k, s, a1['side'] if s == 'rows' else a1['top'], want_lab))
+        if got != want:
+            out.append('%s question %d: the steps were %s, expected %s' % (tag, k, got, want))
+        before = page.evaluate('ST.ui.score()')
+        page.evaluate('ST.ui.answer(true)')
+        if page.evaluate('ST.ui.score()') != before + 1:
+            out.append('%s question %d: the total right scored %d' % (tag, k, page.evaluate('ST.ui.score()') - before))
+        page.evaluate('ST.ui.next()')
+    page.evaluate('ST.ui.end()')
     page.evaluate("document.getElementById('menuBtn').click()")
 
 
 def check_largest(page, look, out):
     for i in LARGEST:
-        page.evaluate('(id) => ST.ui.preview(id)', i)
-        q = page.evaluate('ST.ui.question()')
-        if not q or q['id'] != i:
-            out.append('largest: %s is not in the bank' % i)
-            continue
-        fit(page, '#opts1 .opt, #opts .opt', '%s %s at %dx%d (largest)' % (look, i, PHONE[0], PHONE[1]), out)
+        for at in (1, 8):
+            page.evaluate('([id, at]) => ST.ui.preview(id, at)', [i, at])
+            q = page.evaluate('ST.ui.question()')
+            if not q or q['id'] != i:
+                out.append('largest: %s is not in the bank' % i)
+                break
+            # Stage 3 as question 1: both steps answered, so both labels are on and the total's options are showing.
+            if q['type'] == 'array' and at == 1:
+                page.evaluate("ST.ui.step(String(ST.ui.question().rows))")
+                page.evaluate("ST.ui.step(String(ST.ui.question().cols))")
+            fit(page, '#opts1 .opt, #opts .opt', '%s %s as question %d at %dx%d (largest)' % (look, i, at, PHONE[0], PHONE[1]), out)
+            if q['type'] == 'array':
+                a = page.evaluate(SCREEN_JS)['arr']
+                if a['size'] < 18:
+                    out.append('%s %s at %dx%d: the thingies are %.0f px (at least 18 to read)' % (look, i, PHONE[0], PHONE[1], a['size']))
+            if q['type'] != 'array':
+                break
 
 
 # ---------------------------------------------------------------- read aloud, against a mocked speechSynthesis
@@ -554,10 +757,11 @@ def check_speech(pw, base, html, out, info):
                 out.append('read aloud: spoke %s before any tap' % page.evaluate('window.__spoken'))
             if not shown:
                 continue
-            for qid, want in (('m1-3x5', '3 groups of 5. How many thingies?'), ('m3-4r5c', '4 rows of 5. How many dots?'),
-                              ('p4-3x4', '3 times 4 equals what?'), ('p4-q7x8', 'What times 8 equals 56?'),
-                              ('m2a-3x5', '5 plus 5 plus 5. How many 5s?')):
-                page.evaluate('(id) => ST.ui.preview(id)', qid)
+            for qid, at, want in (('m1-3x5', 1, '3 groups of 5. How many thingies?'), ('m3-4r5c', 8, '4 rows of 5. How many thingies?'),
+                                  ('m3-4r5c', 1, 'How many rows?'), ('m3-4r5c', 5, 'How many in each row?'),
+                                  ('p4-3x4', 1, '3 times 4 equals what?'), ('p4-q7x8', 1, 'What times 8 equals 56?'),
+                                  ('m2a-3x5', 1, '5 plus 5 plus 5. How many 5s?')):
+                page.evaluate('([id, at]) => ST.ui.preview(id, at)', [qid, at])
                 page.evaluate("window.__spoken = []; document.getElementById('speakBtn').click()")
                 sp = page.evaluate('window.__spoken')
                 if [x['text'] for x in sp] != [want]:
@@ -612,6 +816,9 @@ def check(html, out, units, shard=None):
                             out.append('%s: the page is not in the %s look' % (uid, look))
                         if uid.startswith('marking'):
                             check_marking(page, html, look, out, info)
+                        elif uid.startswith('winner'):
+                            check_winner(page, look, out)
+                            info['winner'] = True
                         else:
                             check_largest(page, look, out)
                             for m in MODES:
@@ -655,6 +862,20 @@ PLANTS = [
     ('an option marked by its text',
      edit('var b = e.currentTarget, val = b.dataset.val, key = keyOf(Q);', 'var b = e.currentTarget, val = b.textContent, key = keyOf(Q);'),
      'marking grown', r'option \S+ marked wrong, expected done'),
+    # SOME-THINGIES-TWEAKS' four.
+    ('a run that ends at the first wrong before question 10',
+     edit('runOver = !right && qi > PER;', 'runOver = !right;'),
+     WINNER, r'a wrong answer at question 3 ended the run'),
+    ('an End button visible at question 5',
+     edit("$('endBtn').hidden = qi <= PER;", "$('endBtn').hidden = qi <= 4;"),
+     WINNER, r'the End button is shown at question 5'),
+    ('a step answer that changes the score',
+     edit("    var kind = state;\n    steps++;\n", "    var kind = state;\n    steps++;\n    score++;\n"),
+     WINNER, r'a step changed the score'),
+    ('a dot drawn instead of a thingy',
+     edit("for (var j = 1; j <= c; j++) h += THINGY.replace('class=\"th\"', 'class=\"th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '\"');",
+          "for (var j = 1; j <= c; j++) h += (j === 1 ? '<i class=\"k1\"></i>' : THINGY.replace('class=\"th\"', 'class=\"th k' + (turned ? i : j) + (j === 6 ? ' c6' : '') + '\"'));"),
+     'marking grown', r'Stage 3 draws \d+ cells, \d+ of them thingies'),
 ]
 
 
@@ -686,7 +907,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE]
+    units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -706,6 +927,8 @@ def main():
         print('%s: %d fragments read for the look and the greeting' % (SLUG, info['greeting']))
     if 'speech' in info:
         print('%s: read aloud against a mocked speechSynthesis: hidden without a local voice, local voices only, nothing before a tap, words from the item' % SLUG)
+    if 'winner' in info:
+        print('%s: winner stays on (at least 10, then to the first wrong or End; no End before 11; the supply never repeats at once) and the Stage 3 scaffold (3, 2, then 1 steps; steps never score)' % SLUG)
     if 'played' in info:
         print('%s: %d runs played at %dx%d (every mode and stage, the looks in this shard), the largest pictures and sum fitting' % (SLUG, info['played'], PHONE[0], PHONE[1]))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)

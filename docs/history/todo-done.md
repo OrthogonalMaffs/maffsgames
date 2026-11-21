@@ -3983,3 +3983,11 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | PERCENTILE-LOWER-IS-BETTER | **`calculatePercentile` (`schools/assets/firebase-leaderboard.js:533`) ignores `LOWER_IS_BETTER`** (:203; estimation-golf, maffscards): it counts scores below as worse, so a lower-is-better board's best score gets the worst percentile. Latent: no page shows a percentile or tier. Fix before any page does (Jon, 20 Nov 2026, LARGE-SCREEN-PILOT follow-up). | Project Claude (contract) |
 
 **Closed 21 Nov 2026 (PERCENTILE-LOWER-IS-BETTER).** Row PERCENTILE-LOWER-IS-BETTER, moved word for word above. calculatePercentile() takes the board's direction, and submitScore() resolves rankScore(), which takes the direction and rankable from rankRules(), the helper standing() now uses too. scripts/test-percentile.py proves it, with three planted faults caught.
+
+## Row rewritten by SOME-THINGIES-TWEAKS (21 Nov 2026)
+
+| # | Item | Owner |
+|---|---|---|
+| SOME-THINGIES-LIST | **Some Thingies (`some-thingies`), merged unlisted** (contract SOME-THINGIES, 21 Nov 2026). **Jon:** play both modes in both looks (`/games/some-thingies/` and `/games/some-thingies/#kids/Maple`), rewrite LINES, send it to Miss O'Brien and ask her: "groups of" or "lots of"; dots or counters; her stage order; multipliers to 10 or 12; is ? × 5 = 15 in her unit. Then rule on listing. Built choice to confirm: a Stage 2 adding item scores only when both the count and the total are right. | Jon; home lane (listing) |
+
+**Rewritten 21 Nov 2026 (SOME-THINGIES-TWEAKS).** Row SOME-THINGIES-LIST, the old wording word for word above. The new row adds "Jon checks the new stage 3 picture, the scaffold and winner stays on".
