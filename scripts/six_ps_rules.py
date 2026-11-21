@@ -354,6 +354,82 @@ def py_slips(q):
 SLIP_RULES.update({"averages": avg_slips, "compound-measures": cm_slips, "pythagoras": py_slips})
 
 
+# hcf-lcm (SIX-PS-BANKS batch 9, 21 Nov 2026): every value read from the stem alone, never from the generator.
+_PF = re.compile(r"\\\(([AB]) = ([^\\]*(?:\\times[^\\]*)*)\\\)")
+
+
+def _pf_value(tx):
+    """'2^3 \\times 3 \\times 5' -> ({2: 3, 3: 1, 5: 1}, 120)."""
+    pf, v = {}, 1
+    for part in tx.split("\\times"):
+        m = re.fullmatch(r"\s*(\d+)(?:\^\{?(\d+)\}?)?\s*", part)
+        if not m:
+            raise ValueError("not a prime power: %r" % part)
+        p, e = int(m.group(1)), int(m.group(2) or 1)
+        pf[p] = pf.get(p, 0) + e
+        v *= p ** e
+    return pf, v
+
+
+def hcf_stem(q):
+    """(ask 'hcf' or 'lcm', a, b, pf of a or None, pf of b or None) from an hcf-lcm question's stem."""
+    st = q["stem"]
+    pfs = dict((m.group(1), _pf_value(m.group(2))) for m in _PF.finditer(st))
+    if pfs:
+        (pa, a), (pb, b) = pfs["A"], pfs["B"]
+    else:
+        nums = [int(x) for x in re.findall(r"\d+", outside_maths(st))]
+        if len(nums) != 2:
+            raise ValueError("expected two numbers in the stem, found %s" % nums)
+        (a, b), pa, pb = nums, None, None
+    if re.search(r"highest common factor|greatest number of", st):
+        ask = "hcf"
+    elif re.search(r"lowest common multiple|until they next", st):
+        ask = "lcm"
+    else:
+        raise ValueError("the stem asks neither an HCF nor an LCM")
+    return ask, a, b, pa, pb
+
+
+def hcf_slips(q):
+    """hcf-lcm: each named slip's value, worked out from the stem by the misconception its line names."""
+    ask, a, b, pa, pb = hcf_stem(q)
+    h, l = math.gcd(a, b), math.lcm(a, b)
+    below = [f for f in range(2, h) if h % f == 0]
+    rules = [
+        (("That's the lowest common multiple", "That's the LCM"), l, "the LCM of %d and %d" % (a, b)),
+        (("That goes into both, but it isn't the highest",), below[-1] if below else None, "the next common factor below the HCF"),
+        (("That's the two numbers multiplied", "That multiplies everything"), a * b, "%d x %d" % (a, b)),
+        (("That's the highest common factor", "That's the HCF"), h, "the HCF of %d and %d" % (a, b)),
+        (("That's a multiple of",), max(a, b), "the larger number, %d" % max(a, b)),
+        (("That's the total number of", "Adding the two times"), a + b, "%d + %d" % (a, b)),
+    ]
+    out = []
+    for i, sl in enumerate(q["slip"]):
+        line = sl["line"]
+        if re.search(r"is a common multiple, but not the lowest|is a time they .* but not the first", line):
+            out.append((i, a * b, "%d x %d" % (a, b)))
+            continue
+        if line.startswith("You took the higher power of each shared prime"):
+            if not (pa and pb):
+                out.append((i, None, "a powers slip on a question without prime factors"))
+                continue
+            v = 1
+            for p in set(pa) & set(pb):
+                v *= p ** max(pa[p], pb[p])
+            out.append((i, v, "the shared primes at their higher powers"))
+            continue
+        hit = next(((v, why) for starts, v, why in rules if line.startswith(starts)), None)
+        if hit is None or hit[0] is None:
+            out.append((i, None, "the slip line names no hcf-lcm misconception this rule knows: %r" % line[:50]))
+        else:
+            out.append((i, hit[0], hit[1]))
+    return out
+
+
+SLIP_RULES["hcf-lcm"] = hcf_slips
+
+
 def rule_c(q):
     fn = SLIP_RULES.get(q.get("topic"))
     if not fn:

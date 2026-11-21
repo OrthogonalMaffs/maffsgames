@@ -1,0 +1,2262 @@
+{
+ "topic": "hcf-lcm",
+ "schema": 1,
+ "questions": [
+  {
+   "id": "hcf-lcm-a1483f82",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 42 and 33.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "Factors of 42: \\(1, 2, 3, 6, 7, 14, 21, 42\\).",
+    "Factors of 33: \\(1, 3, 11, 33\\).",
+    "The highest number in both lists is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 462
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 1386
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-305bf5d9",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 54 and 24.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Factors of 54: \\(1, 2, 3, 6, 9, 18, 27, 54\\).",
+    "Factors of 24: \\(1, 2, 3, 4, 6, 8, 12, 24\\).",
+    "The highest number in both lists is \\(6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 216
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 1296
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-68f1e567",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 50 and 30.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 10
+   },
+   "worked": [
+    "Factors of 50: \\(1, 2, 5, 10, 25, 50\\).",
+    "Factors of 30: \\(1, 2, 3, 5, 6, 10, 15, 30\\).",
+    "The highest number in both lists is \\(10\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 150
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 5
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 1500
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-d1d0b08d",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:3"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 49 and 35.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "worked": [
+    "Factors of 49: \\(1, 7, 49\\).",
+    "Factors of 35: \\(1, 5, 7, 35\\).",
+    "The highest number in both lists is \\(7\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 245
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 1715
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-fcb3c9f6",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:4"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 10 and 14.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "Factors of 10: \\(1, 2, 5, 10\\).",
+    "Factors of 14: \\(1, 2, 7, 14\\).",
+    "The highest number in both lists is \\(2\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 70
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 140
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-f403a567",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:5"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 33 and 39.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "Factors of 33: \\(1, 3, 11, 33\\).",
+    "Factors of 39: \\(1, 3, 13, 39\\).",
+    "The highest number in both lists is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 429
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 1287
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-1cdf254d",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:6"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 28 and 52.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "Factors of 28: \\(1, 2, 4, 7, 14, 28\\).",
+    "Factors of 52: \\(1, 2, 4, 13, 26, 52\\).",
+    "The highest number in both lists is \\(4\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 364
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 2
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 1456
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-3d9a9be9",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:7"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 50 and 26.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "Factors of 50: \\(1, 2, 5, 10, 25, 50\\).",
+    "Factors of 26: \\(1, 2, 13, 26\\).",
+    "The highest number in both lists is \\(2\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 650
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 1300
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-3611cedd",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:8"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 54 and 9.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 9
+   },
+   "worked": [
+    "Factors of 54: \\(1, 2, 3, 6, 9, 18, 27, 54\\).",
+    "Factors of 9: \\(1, 3, 9\\).",
+    "The highest number in both lists is \\(9\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 54
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 486
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-61af9412",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:9"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 16 and 40.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "Factors of 16: \\(1, 2, 4, 8, 16\\).",
+    "Factors of 40: \\(1, 2, 4, 5, 8, 10, 20, 40\\).",
+    "The highest number in both lists is \\(8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 80
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 640
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-ef2a536b",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:10"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 6 and 32.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 2
+   },
+   "worked": [
+    "Factors of 6: \\(1, 2, 3, 6\\).",
+    "Factors of 32: \\(1, 2, 4, 8, 16, 32\\).",
+    "The highest number in both lists is \\(2\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 96
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 192
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-239ccba8",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:1:11"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the highest common factor (HCF) of 56 and 16.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "Factors of 56: \\(1, 2, 4, 7, 8, 14, 28, 56\\).",
+    "Factors of 16: \\(1, 2, 4, 8, 16\\).",
+    "The highest number in both lists is \\(8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 112
+     },
+     "line": "That's the lowest common multiple. The HCF is the biggest number that goes into both."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That goes into both, but it isn't the highest."
+    },
+    {
+     "answer": {
+      "value": 896
+     },
+     "line": "That's the two numbers multiplied together. The HCF goes into both, so it can't be bigger than either."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-130e8197",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:0"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 8 and 14.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 56
+   },
+   "worked": [
+    "Count up in 14s: \\(14, 28, 42, 56\\).",
+    "\\(56 \\div 8 = 7\\), so 8 goes into 56: it is the first number in both times tables.",
+    "The lowest common multiple is \\(56\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 112
+     },
+     "line": "\\(8 \\times 14 = 112\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 2
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 14
+     },
+     "line": "That's a multiple of 14, but 8 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-02f783c0",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:1"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 9 and 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 45
+   },
+   "worked": [
+    "Count up in 15s: \\(15, 30, 45\\).",
+    "\\(45 \\div 9 = 5\\), so 9 goes into 45: it is the first number in both times tables.",
+    "The lowest common multiple is \\(45\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 135
+     },
+     "line": "\\(9 \\times 15 = 135\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "That's a multiple of 15, but 9 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-6b82bf01",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:2"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 6 and 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Count up in 12s: \\(12\\).",
+    "\\(12 \\div 6 = 2\\), so 6 goes into 12: it is the first number in both times tables.",
+    "The lowest common multiple is \\(12\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 72
+     },
+     "line": "\\(6 \\times 12 = 72\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 6
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-214ec90e",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:3"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 3 and 6.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "Count up in 6s: \\(6\\).",
+    "\\(6 \\div 3 = 2\\), so 3 goes into 6: it is the first number in both times tables.",
+    "The lowest common multiple is \\(6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 18
+     },
+     "line": "\\(3 \\times 6 = 18\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-5565cdb6",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:4"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 9 and 12.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 36
+   },
+   "worked": [
+    "Count up in 12s: \\(12, 24, 36\\).",
+    "\\(36 \\div 9 = 4\\), so 9 goes into 36: it is the first number in both times tables.",
+    "The lowest common multiple is \\(36\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 108
+     },
+     "line": "\\(9 \\times 12 = 108\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 12
+     },
+     "line": "That's a multiple of 12, but 9 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-568bf875",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:5"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 12 and 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "Count up in 15s: \\(15, 30, 45, 60\\).",
+    "\\(60 \\div 12 = 5\\), so 12 goes into 60: it is the first number in both times tables.",
+    "The lowest common multiple is \\(60\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 180
+     },
+     "line": "\\(12 \\times 15 = 180\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 3
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "That's a multiple of 15, but 12 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-97bbd11c",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:6"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 12 and 4.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "Count up in 12s: \\(12\\).",
+    "\\(12 \\div 4 = 3\\), so 4 goes into 12: it is the first number in both times tables.",
+    "The lowest common multiple is \\(12\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 48
+     },
+     "line": "\\(12 \\times 4 = 48\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-46304480",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:7"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 5 and 14.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 70
+   },
+   "worked": [
+    "Count up in 14s: \\(14, 28, 42, 56, 70\\).",
+    "\\(70 \\div 5 = 14\\), so 5 goes into 70: it is the first number in both times tables.",
+    "The lowest common multiple is \\(70\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 14
+     },
+     "line": "That's a multiple of 14, but 5 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-ccf2453b",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:8"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 12 and 8.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 24
+   },
+   "worked": [
+    "Count up in 12s: \\(12, 24\\).",
+    "\\(24 \\div 8 = 3\\), so 8 goes into 24: it is the first number in both times tables.",
+    "The lowest common multiple is \\(24\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 96
+     },
+     "line": "\\(12 \\times 8 = 96\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 12
+     },
+     "line": "That's a multiple of 12, but 8 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-b74b36c8",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:9"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 4 and 8.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 8
+   },
+   "worked": [
+    "Count up in 8s: \\(8\\).",
+    "\\(8 \\div 4 = 2\\), so 4 goes into 8: it is the first number in both times tables.",
+    "The lowest common multiple is \\(8\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 32
+     },
+     "line": "\\(4 \\times 8 = 32\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-989a7f41",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:10"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 2 and 4.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "worked": [
+    "Count up in 4s: \\(4\\).",
+    "\\(4 \\div 2 = 2\\), so 2 goes into 4: it is the first number in both times tables.",
+    "The lowest common multiple is \\(4\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 8
+     },
+     "line": "\\(2 \\times 4 = 8\\) is a common multiple, but not the lowest."
+    },
+    {
+     "answer": {
+      "value": 2
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-dff25924",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:2:11"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Find the lowest common multiple (LCM) of 4 and 15.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 60
+   },
+   "worked": [
+    "Count up in 15s: \\(15, 30, 45, 60\\).",
+    "\\(60 \\div 4 = 15\\), so 4 goes into 60: it is the first number in both times tables.",
+    "The lowest common multiple is \\(60\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. The LCM is the smallest number that both go into."
+    },
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "That's a multiple of 15, but 4 doesn't go into it."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-e2510c26",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:0"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 3 \\times 7\\) and \\(B = 2^3 \\times 3^2\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(2, 3\\). A prime in only one number is left out.",
+    "\\(2 \\times 3 = 6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 504
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 72
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-764be76f",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:1"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2^3 \\times 3 \\times 5\\) and \\(B = 2^2 \\times 3\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 12
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(2^2, 3\\). A prime in only one number is left out.",
+    "\\(2^2 \\times 3 = 12\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 120
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 24
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-a774ecdd",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:2"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 3^3 \\times 7\\) and \\(B = 3^2 \\times 5 \\times 7\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 63
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(3^2, 7\\). A prime in only one number is left out.",
+    "\\(3^2 \\times 7 = 63\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1890
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 189
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-52d6e378",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:3"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 7\\) and \\(B = 2^3 \\times 5 \\times 7\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(2, 7\\). A prime in only one number is left out.",
+    "\\(2 \\times 7 = 14\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 280
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 56
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-92627c0a",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:4"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 3 \\times 7\\) and \\(B = 2 \\times 3^2\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(3\\). A prime in only one number is left out.",
+    "\\(3 = 3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 126
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 9
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-27fb0756",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:5"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 3 \\times 5\\) and \\(B = 2^2 \\times 5^2\\). Find the highest common factor (HCF) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 5
+   },
+   "worked": [
+    "The HCF takes each prime that is in both, at the lower of its two powers.",
+    "The primes in both: \\(5\\). A prime in only one number is left out.",
+    "\\(5 = 5\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 300
+     },
+     "line": "That's the LCM. The HCF takes the lower power of each prime the two numbers share."
+    },
+    {
+     "answer": {
+      "value": 25
+     },
+     "line": "You took the higher power of each shared prime. The HCF takes the lower one."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-93760bb2",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:6"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 7\\) and \\(B = 2^2 \\times 3 \\times 5 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 420
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2^2, 3, 5, 7\\).",
+    "\\(2^2 \\times 3 \\times 5 \\times 7 = 420\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 14
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 5880
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-f155d0d3",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:7"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2^2 \\times 5^2\\) and \\(B = 2^2 \\times 5 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 700
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2^2, 5^2, 7\\).",
+    "\\(2^2 \\times 5^2 \\times 7 = 700\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 14000
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-60c035df",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:8"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 3 \\times 5 \\times 7\\) and \\(B = 3^2 \\times 5 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 630
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2, 3^2, 5, 7\\).",
+    "\\(2 \\times 3^2 \\times 5 \\times 7 = 630\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 105
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 66150
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-22d0e6c8",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:9"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2^2 \\times 3 \\times 5\\) and \\(B = 2 \\times 3^2 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 1260
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2^2, 3^2, 5, 7\\).",
+    "\\(2^2 \\times 3^2 \\times 5 \\times 7 = 1260\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 6
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 7560
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-163567d0",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:10"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 2 \\times 5 \\times 7^2\\) and \\(B = 2 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 490
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2, 5, 7^2\\).",
+    "\\(2 \\times 5 \\times 7^2 = 490\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 14
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 6860
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-ae2b9d67",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:3:11"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "\\(A = 3^2 \\times 7\\) and \\(B = 2 \\times 3 \\times 7\\). Find the lowest common multiple (LCM) of \\(A\\) and \\(B\\).",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 126
+   },
+   "worked": [
+    "The LCM takes every prime in either number, at the higher of its two powers.",
+    "Every prime at its higher power: \\(2, 3^2, 7\\).",
+    "\\(2 \\times 3^2 \\times 7 = 126\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 21
+     },
+     "line": "That's the HCF. The LCM takes the higher power of every prime in either number."
+    },
+    {
+     "answer": {
+      "value": 2646
+     },
+     "line": "That multiplies everything in both numbers together. The LCM takes each prime once, at its higher power."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-ff302ee6",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:0"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "76 red counters and 72 blue counters are put into identical packs, with none left over. What is the greatest number of packs?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4
+   },
+   "unit": "packs",
+   "worked": [
+    "The number of packs must go into both 76 and 72 exactly: the greatest is the HCF.",
+    "Factors of 76: \\(1, 2, 4, 19, 38, 76\\).",
+    "Factors of 72: \\(1, 2, 3, 4, 6, 8, 9, 12, 18, 24, 36, 72\\).",
+    "The greatest number of packs is \\(4\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1368
+     },
+     "line": "That's the lowest common multiple. The number of packs has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 148
+     },
+     "line": "That's the total number of counters, not the number of packs."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-a9fff7ec",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "18 tomato plants and 84 pepper plants are planted in identical rows, with none left over. What is the greatest number of rows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "unit": "rows",
+   "worked": [
+    "The number of rows must go into both 18 and 84 exactly: the greatest is the HCF.",
+    "Factors of 18: \\(1, 2, 3, 6, 9, 18\\).",
+    "Factors of 84: \\(1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42, 84\\).",
+    "The greatest number of rows is \\(6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 252
+     },
+     "line": "That's the lowest common multiple. The number of rows has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 102
+     },
+     "line": "That's the total number of plants, not the number of rows."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-48aa179e",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:2"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "70 black pens and 49 blue pens are packed into identical boxes, with none left over. What is the greatest number of boxes?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 7
+   },
+   "unit": "boxes",
+   "worked": [
+    "The number of boxes must go into both 70 and 49 exactly: the greatest is the HCF.",
+    "Factors of 70: \\(1, 2, 5, 7, 10, 14, 35, 70\\).",
+    "Factors of 49: \\(1, 7, 49\\).",
+    "The greatest number of boxes is \\(7\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 490
+     },
+     "line": "That's the lowest common multiple. The number of boxes has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 119
+     },
+     "line": "That's the total number of pens, not the number of boxes."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-5752c50d",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:3"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "57 red counters and 66 blue counters are put into identical packs, with none left over. What is the greatest number of packs?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "packs",
+   "worked": [
+    "The number of packs must go into both 57 and 66 exactly: the greatest is the HCF.",
+    "Factors of 57: \\(1, 3, 19, 57\\).",
+    "Factors of 66: \\(1, 2, 3, 6, 11, 22, 33, 66\\).",
+    "The greatest number of packs is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1254
+     },
+     "line": "That's the lowest common multiple. The number of packs has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 123
+     },
+     "line": "That's the total number of counters, not the number of packs."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-4930aaea",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:4"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "31 tomato plants and 62 pepper plants are planted in identical rows, with none left over. What is the greatest number of rows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 31
+   },
+   "unit": "rows",
+   "worked": [
+    "The number of rows must go into both 31 and 62 exactly: the greatest is the HCF.",
+    "Factors of 31: \\(1, 31\\).",
+    "Factors of 62: \\(1, 2, 31, 62\\).",
+    "The greatest number of rows is \\(31\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 62
+     },
+     "line": "That's the lowest common multiple. The number of rows has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 93
+     },
+     "line": "That's the total number of plants, not the number of rows."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-0b5818e9",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:5"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "22 black pens and 33 blue pens are packed into identical boxes, with none left over. What is the greatest number of boxes?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 11
+   },
+   "unit": "boxes",
+   "worked": [
+    "The number of boxes must go into both 22 and 33 exactly: the greatest is the HCF.",
+    "Factors of 22: \\(1, 2, 11, 22\\).",
+    "Factors of 33: \\(1, 3, 11, 33\\).",
+    "The greatest number of boxes is \\(11\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 66
+     },
+     "line": "That's the lowest common multiple. The number of boxes has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 55
+     },
+     "line": "That's the total number of pens, not the number of boxes."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-048b6697",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "81 red counters and 24 blue counters are put into identical packs, with none left over. What is the greatest number of packs?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "packs",
+   "worked": [
+    "The number of packs must go into both 81 and 24 exactly: the greatest is the HCF.",
+    "Factors of 81: \\(1, 3, 9, 27, 81\\).",
+    "Factors of 24: \\(1, 2, 3, 4, 6, 8, 12, 24\\).",
+    "The greatest number of packs is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 648
+     },
+     "line": "That's the lowest common multiple. The number of packs has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 105
+     },
+     "line": "That's the total number of counters, not the number of packs."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-8f350233",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:7"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "84 tomato plants and 54 pepper plants are planted in identical rows, with none left over. What is the greatest number of rows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 6
+   },
+   "unit": "rows",
+   "worked": [
+    "The number of rows must go into both 84 and 54 exactly: the greatest is the HCF.",
+    "Factors of 84: \\(1, 2, 3, 4, 6, 7, 12, 14, 21, 28, 42, 84\\).",
+    "Factors of 54: \\(1, 2, 3, 6, 9, 18, 27, 54\\).",
+    "The greatest number of rows is \\(6\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 756
+     },
+     "line": "That's the lowest common multiple. The number of rows has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 138
+     },
+     "line": "That's the total number of plants, not the number of rows."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-068296d3",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:8"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "48 black pens and 87 blue pens are packed into identical boxes, with none left over. What is the greatest number of boxes?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "boxes",
+   "worked": [
+    "The number of boxes must go into both 48 and 87 exactly: the greatest is the HCF.",
+    "Factors of 48: \\(1, 2, 3, 4, 6, 8, 12, 16, 24, 48\\).",
+    "Factors of 87: \\(1, 3, 29, 87\\).",
+    "The greatest number of boxes is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1392
+     },
+     "line": "That's the lowest common multiple. The number of boxes has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 135
+     },
+     "line": "That's the total number of pens, not the number of boxes."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-2745c652",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:9"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "56 red counters and 70 blue counters are put into identical packs, with none left over. What is the greatest number of packs?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 14
+   },
+   "unit": "packs",
+   "worked": [
+    "The number of packs must go into both 56 and 70 exactly: the greatest is the HCF.",
+    "Factors of 56: \\(1, 2, 4, 7, 8, 14, 28, 56\\).",
+    "Factors of 70: \\(1, 2, 5, 7, 10, 14, 35, 70\\).",
+    "The greatest number of packs is \\(14\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 280
+     },
+     "line": "That's the lowest common multiple. The number of packs has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 126
+     },
+     "line": "That's the total number of counters, not the number of packs."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-b657ee91",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "51 tomato plants and 33 pepper plants are planted in identical rows, with none left over. What is the greatest number of rows?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "rows",
+   "worked": [
+    "The number of rows must go into both 51 and 33 exactly: the greatest is the HCF.",
+    "Factors of 51: \\(1, 3, 17, 51\\).",
+    "Factors of 33: \\(1, 3, 11, 33\\).",
+    "The greatest number of rows is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 561
+     },
+     "line": "That's the lowest common multiple. The number of rows has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 84
+     },
+     "line": "That's the total number of plants, not the number of rows."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-51e65793",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:4:11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "75 black pens and 57 blue pens are packed into identical boxes, with none left over. What is the greatest number of boxes?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 3
+   },
+   "unit": "boxes",
+   "worked": [
+    "The number of boxes must go into both 75 and 57 exactly: the greatest is the HCF.",
+    "Factors of 75: \\(1, 3, 5, 15, 25, 75\\).",
+    "Factors of 57: \\(1, 3, 19, 57\\).",
+    "The greatest number of boxes is \\(3\\)."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1425
+     },
+     "line": "That's the lowest common multiple. The number of boxes has to go into both numbers exactly, so it is a common factor."
+    },
+    {
+     "answer": {
+      "value": 132
+     },
+     "line": "That's the total number of pens, not the number of boxes."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-b82875c1",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:0"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two buses leave the station together. One leaves every 10 minutes, the other every 30 minutes. How many minutes until they next leave together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next leave together after the first time in both times tables: the LCM.",
+    "Count up in 30s: \\(30\\).",
+    "\\(30 \\div 10 = 3\\), so 10 goes into 30: it is the first number in both times tables.",
+    "They next leave together after \\(30\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 300
+     },
+     "line": "\\(10 \\times 30 = 300\\) is a time they leave together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 10
+     },
+     "line": "That's the highest common factor. They next leave together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 40
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-9911ab82",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:1"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two lights flash together. One flashes every 11 seconds, the other every 10 seconds. How many seconds until they next flash together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 110
+   },
+   "unit": "seconds",
+   "worked": [
+    "They next flash together after the first time in both times tables: the LCM.",
+    "Count up in 11s: \\(11, 22, 33, 44, 55, 66, 77, 88, 99, 110\\).",
+    "\\(110 \\div 10 = 11\\), so 10 goes into 110: it is the first number in both times tables.",
+    "They next flash together after \\(110\\) seconds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. They next flash together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 21
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-efe2e7c0",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:2"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two bells ring together. One rings every 10 minutes, the other every 9 minutes. How many minutes until they next ring together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 90
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next ring together after the first time in both times tables: the LCM.",
+    "Count up in 10s: \\(10, 20, 30, 40, 50, 60, 70, 80, 90\\).",
+    "\\(90 \\div 9 = 10\\), so 9 goes into 90: it is the first number in both times tables.",
+    "They next ring together after \\(90\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. They next ring together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 19
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-59af7703",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:3"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two buses leave the station together. One leaves every 7 minutes, the other every 10 minutes. How many minutes until they next leave together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 70
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next leave together after the first time in both times tables: the LCM.",
+    "Count up in 10s: \\(10, 20, 30, 40, 50, 60, 70\\).",
+    "\\(70 \\div 7 = 10\\), so 7 goes into 70: it is the first number in both times tables.",
+    "They next leave together after \\(70\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. They next leave together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 17
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-1b005a5d",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:4"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two lights flash together. One flashes every 21 seconds, the other every 7 seconds. How many seconds until they next flash together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 21
+   },
+   "unit": "seconds",
+   "worked": [
+    "They next flash together after the first time in both times tables: the LCM.",
+    "Count up in 21s: \\(21\\).",
+    "\\(21 \\div 7 = 3\\), so 7 goes into 21: it is the first number in both times tables.",
+    "They next flash together after \\(21\\) seconds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 147
+     },
+     "line": "\\(21 \\times 7 = 147\\) is a time they flash together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 7
+     },
+     "line": "That's the highest common factor. They next flash together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 28
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-12515cfe",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:5"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two bells ring together. One rings every 10 minutes, the other every 24 minutes. How many minutes until they next ring together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next ring together after the first time in both times tables: the LCM.",
+    "Count up in 24s: \\(24, 48, 72, 96, 120\\).",
+    "\\(120 \\div 10 = 12\\), so 10 goes into 120: it is the first number in both times tables.",
+    "They next ring together after \\(120\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 240
+     },
+     "line": "\\(10 \\times 24 = 240\\) is a time they ring together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 2
+     },
+     "line": "That's the highest common factor. They next ring together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 34
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-03df7abc",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:6"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two buses leave the station together. One leaves every 16 minutes, the other every 6 minutes. How many minutes until they next leave together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 48
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next leave together after the first time in both times tables: the LCM.",
+    "Count up in 16s: \\(16, 32, 48\\).",
+    "\\(48 \\div 6 = 8\\), so 6 goes into 48: it is the first number in both times tables.",
+    "They next leave together after \\(48\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 96
+     },
+     "line": "\\(16 \\times 6 = 96\\) is a time they leave together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 2
+     },
+     "line": "That's the highest common factor. They next leave together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 22
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-cc85cf74",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:7"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two lights flash together. One flashes every 30 seconds, the other every 15 seconds. How many seconds until they next flash together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 30
+   },
+   "unit": "seconds",
+   "worked": [
+    "They next flash together after the first time in both times tables: the LCM.",
+    "Count up in 30s: \\(30\\).",
+    "\\(30 \\div 15 = 2\\), so 15 goes into 30: it is the first number in both times tables.",
+    "They next flash together after \\(30\\) seconds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 450
+     },
+     "line": "\\(30 \\times 15 = 450\\) is a time they flash together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "That's the highest common factor. They next flash together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 45
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-a712249f",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:8"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two bells ring together. One rings every 24 minutes, the other every 30 minutes. How many minutes until they next ring together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 120
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next ring together after the first time in both times tables: the LCM.",
+    "Count up in 30s: \\(30, 60, 90, 120\\).",
+    "\\(120 \\div 24 = 5\\), so 24 goes into 120: it is the first number in both times tables.",
+    "They next ring together after \\(120\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 720
+     },
+     "line": "\\(24 \\times 30 = 720\\) is a time they ring together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 6
+     },
+     "line": "That's the highest common factor. They next ring together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 54
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-8ee62dba",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:9"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two buses leave the station together. One leaves every 7 minutes, the other every 4 minutes. How many minutes until they next leave together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 28
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next leave together after the first time in both times tables: the LCM.",
+    "Count up in 7s: \\(7, 14, 21, 28\\).",
+    "\\(28 \\div 4 = 7\\), so 4 goes into 28: it is the first number in both times tables.",
+    "They next leave together after \\(28\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. They next leave together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 11
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-5bb64a53",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:10"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two lights flash together. One flashes every 4 seconds, the other every 16 seconds. How many seconds until they next flash together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 16
+   },
+   "unit": "seconds",
+   "worked": [
+    "They next flash together after the first time in both times tables: the LCM.",
+    "Count up in 16s: \\(16\\).",
+    "\\(16 \\div 4 = 4\\), so 4 goes into 16: it is the first number in both times tables.",
+    "They next flash together after \\(16\\) seconds."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 64
+     },
+     "line": "\\(4 \\times 16 = 64\\) is a time they flash together, but not the first."
+    },
+    {
+     "answer": {
+      "value": 4
+     },
+     "line": "That's the highest common factor. They next flash together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 20
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  },
+  {
+   "id": "hcf-lcm-201bde4c",
+   "topic": "hcf-lcm",
+   "source": {
+    "game": "hcf-lcm-gen",
+    "ref": "generator:MaffsHcfLcm.bank:5:11"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Two bells ring together. One rings every 11 minutes, the other every 4 minutes. How many minutes until they next ring together?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 44
+   },
+   "unit": "minutes",
+   "worked": [
+    "They next ring together after the first time in both times tables: the LCM.",
+    "Count up in 11s: \\(11, 22, 33, 44\\).",
+    "\\(44 \\div 4 = 11\\), so 4 goes into 44: it is the first number in both times tables.",
+    "They next ring together after \\(44\\) minutes."
+   ],
+   "slip": [
+    {
+     "answer": {
+      "value": 1
+     },
+     "line": "That's the highest common factor. They next ring together after a time both numbers go into: a common multiple."
+    },
+    {
+     "answer": {
+      "value": 15
+     },
+     "line": "Adding the two times does not give a time both numbers go into."
+    }
+   ]
+  }
+ ]
+}
