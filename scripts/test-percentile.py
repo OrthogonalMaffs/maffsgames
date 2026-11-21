@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before; planted faults caught) |
+# ci-line: Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before, tiers exact at the thresholds; planted faults caught) |
 # ci-deps: games/estimation-golf/ games/maffscards/ games/higher-power/ schools/assets/firebase-leaderboard.js
 """Tests the percentile and certificate tier that MaffsLeaderboard.submitScore() resolves
 (schools/assets/firebase-leaderboard.js; contract PERCENTILE-LOWER-IS-BETTER, 21 Nov 2026). No network and no
@@ -15,12 +15,17 @@ that same function. What it proves:
   (c) the worst score gets the bottom percentile (1) and no tier, both ways round;
   (d) every MIXED_UNRELIABLE game gets percentile null and tier null, with totalPlayers still counted;
   (e) higher-is-better ties are counted exactly as before this change: random boards with many ties give the
-      same result as the old calculatePercentile, copied here unchanged.
+      same percentile as the old calculatePercentile, copied here unchanged, and the tier a whole-number
+      reference gives;
+  (f) the tier is exact at the thresholds (SOME-THINGIES step 1b, 21 Nov 2026): the best of exactly 20 gets
+      gold and the second of 20 silver, both ways round (1 - 19/20 is 0.050000000000000044 in floating
+      point, which used to miss gold).
 Also: rankRules() agrees with LOWER_IS_BETTER and MIXED_UNRELIABLE; standing() takes its direction and rankable
 from rankRules() and resolves as before with no Firebase; submitScore() returns rankScore()'s result.
 
-Then three planted faults, each a one-line change to the file, and each must make its check fail: the direction
-argument ignored (b), the rankable rule ignored (d), and a higher-is-better tie counted as worse (e).
+Then four planted faults, each a one-line change to the file, and each must make its check fail: the direction
+argument ignored (b), the rankable rule ignored (d), a higher-is-better tie counted as worse (e), and the old
+floating-point threshold comparison (f).
 
 Node: the runner's, or the copy the Playwright package ships (as test-ga4-country.py does).
 """
@@ -53,7 +58,9 @@ function oldPercentile(score, allScores) {
   for (let i = 0; i < allScores.length; i++) if (allScores[i] < score) below++;
   return 1 - below / allScores.length;
 }
-function oldTier(p) { return p === null ? null : p <= L.GOLD_THRESHOLD ? 'gold' : p <= L.SILVER_THRESHOLD ? 'silver' : null; }
+// The tier in whole numbers: in the top 5% when (n - worse) / n <= 1/20, the top 10% when <= 1/10.
+function refTier(n, worse) { return (n - worse) * 20 <= n ? 'gold' : (n - worse) * 10 <= n ? 'silver' : null; }
+check('setup', L.GOLD_THRESHOLD === 0.05 && L.SILVER_THRESHOLD === 0.10, 'the thresholds are not 0.05 and 0.10 (refTier assumes them)');
 
 const HIGHER = 'differentiation-duel';
 const LOWER = Object.keys(L.LOWER_IS_BETTER);
@@ -114,9 +121,32 @@ for (let t = 0; t < 2000; t++) {
   const score = board[rnd(n)];
   r = L.rankScore(HIGHER, score, board);
   const p = oldPercentile(score, board);
-  if (r.percentile !== p || r.tier !== oldTier(p) || r.totalPlayers !== n) {
+  const worse = board.filter(x => x < score).length;
+  if (r.percentile !== p || r.tier !== refTier(n, worse) || r.totalPlayers !== n) {
     check('e', false, 'board ' + JSON.stringify(board) + ' score ' + score + ': ' + JSON.stringify(r) + ', old ' + p);
     break;
+  }
+}
+
+// (f) exact at the thresholds, both ways round
+r = L.rankScore(HIGHER, 20, range(20));
+check('f', r.tier === 'gold', 'higher: best of exactly 20: ' + JSON.stringify(r));
+r = L.rankScore(HIGHER, 19, range(20));
+check('f', r.tier === 'silver', 'higher: second of 20: ' + JSON.stringify(r));
+r = L.rankScore(HIGHER, 18, range(20));
+check('f', r.tier === null, 'higher: third of 20: ' + JSON.stringify(r));
+r = L.rankScore(HIGHER, 10, range(10));
+check('f', r.tier === 'silver', 'higher: best of exactly 10: ' + JSON.stringify(r));
+for (const g of LOWER) {
+  r = L.rankScore(g, 1, range(20));
+  check('f', r.tier === 'gold', g + ': best (1) of exactly 20: ' + JSON.stringify(r));
+  r = L.rankScore(g, 2, range(20));
+  check('f', r.tier === 'silver', g + ': second (2) of 20: ' + JSON.stringify(r));
+}
+for (let n = 1; n <= 200; n++) {
+  for (let rank = 1; rank <= Math.min(n, 25); rank++) {
+    r = L.rankScore(HIGHER, n - rank + 1, range(n));
+    if (r.tier !== refTier(n, n - rank)) { check('f', false, 'rank ' + rank + ' of ' + n + ': ' + r.tier + ', want ' + refTier(n, n - rank)); n = 999; break; }
   }
 }
 
@@ -145,6 +175,9 @@ PLANTS = [
     ("rankable ignored",
      "var percentile = rules.rankable ? calculatePercentile(score, allScores, rules.direction) : null;",
      "var percentile = calculatePercentile(score, allScores, rules.direction);", "d"),
+    ("the old floating-point threshold comparison",
+     "return (n - worse) * 100 <= Math.round(t * 100) * n;",
+     "return 1 - worse / n <= t;", "f"),
     ("higher-is-better tie counted as worse",
      "if (direction === 'lower' ? allScores[i] > score : allScores[i] < score) scoresWorse++;",
      "if (direction === 'lower' ? allScores[i] > score : allScores[i] <= score) scoresWorse++;", "e"),
@@ -207,7 +240,7 @@ def main():
             print("FAIL  " + x)
         failed += fails
         if not fails:
-            print("PASS  (a)-(e), rankRules and standing() on the real file")
+            print("PASS  (a)-(f), rankRules and standing() on the real file")
         for name, old, new, tag in PLANTS:
             if src.count(old) != 1:
                 print("FAIL  plant %r: its line is not in the file once (update the plant)" % name)
