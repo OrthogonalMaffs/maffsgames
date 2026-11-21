@@ -17,6 +17,7 @@
   "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 6 of 7": 184,
   "Answer lock in play (canon 7.6.0: migrated games played in Chromium), part 7 of 7": 174,
   "Answer lock, static rules and self-test (canon 7.6.0: the static rules, NOT_YET and the cloud list once; no games played)": 296,
+  "Answer lock, static rules and self-test checks (canon 7.6.0: the static rules, NOT_YET and the cloud list once; nothing played)": 1,
   "Answer logging (no roster game logs only right answers: a page whose every question_answered call passes a literal correct:true fails; escape rooms out of scope; six plants caught and three controls pass)": 1,
   "As You Can See (the 60-question fixed-seed bank and 20 seeds of every slot recomputed from each question's own chart data and ask, never from the bank's or the game's code: pictogram rows, bar, dual and stacked heights, line readings, scatter correlation, line of best fit, outlier, every stage-5 flaw read off the chart; accepted intervals; slips outside them; the game's marking compared with an independent marker; every drawn chart read back from its SVG against its data; all five stages played in the page at 390 px and the first questions at 375, 360, 320, 1280 and 1366 px with a wide font; fault-injection self-test)": 84,
   "Background launcher (bg.py starts a command detached and records its PID in <worktree>/.claude/pids.json; the registry reads back and is gitignored)": 1,
@@ -359,7 +360,14 @@
    "game: whose-side-are-you-on": 7.3,
    "game: word-problem-decoder": 8.3,
    "game: wrong-on-the-internet": 19.8,
-   "game: y-so-steep": 6.0
+   "game: y-so-steep": 6.0,
+   "selftest: angle-ace with a bare show()": 49.1,
+   "selftest: binomial-blaster pause as it is": 4.9,
+   "selftest: binomial-blaster pause, a self-advancing Next": 5.8,
+   "selftest: binomial-blaster pause, wrong path on a timer": 6.0,
+   "selftest: decimal-detective without the lock": 23.1,
+   "selftest: trig-identity-duel over the dead network": 35.7,
+   "selftest: trig-identity-duel with the old KaTeX route": 4.6
   },
   "check-burst.py": {
    "control": 1.1,
