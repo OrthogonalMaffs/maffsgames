@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Shared initials overlay (schools/assets/firebase-leaderboard.js: no key typed into it reaches a game, in every game that loads it; the old overlay planted and caught) |
-# ci-deps: schools/assets/firebase-leaderboard.js
+# ci-deps: any-page schools/assets/firebase-leaderboard.js
 """Browser test for the shared initials overlay's key containment (contract OVERLAY-KEYS, 9 Oct 2026).
 
     python scripts/test-initials-overlay.py                 # every game, then the planted fault

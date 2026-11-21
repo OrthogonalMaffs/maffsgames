@@ -27,10 +27,17 @@ A verifier's dependencies, derived from its source and the pages it tests:
     folder, plus every local file the game's page loads (src/href and quoted asset paths), followed through
     the shared JS and CSS it loads in turn;
   - every path its own "# ci-deps:" header names (a dependency the derivation cannot see; a games/<slug>/
-    folder there counts as a game it names). No central per-verifier rule: a verifier declares its own.
-A verifier that names no page and is not a library's own self-test (`python scripts/<module>.py --selftest`
-for a module other scripts import) cannot be mapped, so it ALWAYS runs; so does one whose pages load a local
-file through a computed path (a fetch, import() or script element whose target is not a literal).
+    folder there counts as a game it names; a pattern with "*", such as docs/lock-bank-batch*.txt, matches as a
+    glob, so a file added later is covered). No central per-verifier rule: a verifier declares its own.
+  - "# ci-deps: any-page" (CI-DEPS-ANY-PAGE, 21 Nov 2026), for a site-wide page scanner: selected by a change to a
+    served page (an .html outside docs/, scripts/ and tools/), to anything under schools/assets/, escape-rooms/assets/
+    or data/, or to any other file a served page loads (page_deps: parents/guide.css, a room's room.js); never by a
+    docs-only, scripts-only or .md-only change. It may sit beside paths in the same header.
+A verifier that names no page, declares nothing in a "# ci-deps:" header and is not a library's own self-test
+(`python scripts/<module>.py --selftest` for a module other scripts import) cannot be mapped, so it ALWAYS runs;
+so does one whose pages load a local file through a computed path (a fetch, import() or script element whose
+target is not a literal). A page-less verifier that does declare its inputs is selected by them (and by what it
+derives: itself, its modules, its literals) (CI-DEPS-ANY-PAGE: the always-set was full at ALWAYS_BUDGET).
 
 A changed path selects:
   - ALL verifiers: anything under .github/, scripts/ci-*, requirements*.txt, or a path in no known area;
@@ -38,7 +45,7 @@ A changed path selects:
   - nothing extra: a known area no verifier depends on (other games and pages, docs, data, site-wide check
     scripts). The site-wide checks, which always run, cover those.
 """
-import argparse, ast, json, os, re, subprocess, sys
+import argparse, ast, fnmatch, json, os, re, subprocess, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SELECTIVE_PREFIX = "Content verifiers"
@@ -51,6 +58,9 @@ KNOWN_ROOT_FILES = {"index.html", "sitemap.xml", "robots.txt", "CNAME", "_config
 # Folders too wide to be a dependency: a literal naming one is a URL prefix or a search root, not a file
 # the verifier reads (its games come from the slugs it names). Never a prefix match.
 WIDE = {"", ".", "..", "games", "schools", "schools/assets", "docs", "data", "scripts", "escape-rooms"}
+ANY_PAGE = "any-page"       # the "# ci-deps:" token for a site-wide page scanner
+ANY_PAGE_PREFIXES = ("schools/assets/", "escape-rooms/assets/", "data/")
+NOT_SERVED = ("docs/", "scripts/", "tools/")
 ASSET_EXT = (".js", ".css", ".json", ".csv", ".txt", ".svg", ".png", ".webp", ".jpg", ".woff2", ".woff", ".mjs")
 
 
@@ -328,17 +338,52 @@ def dependency_map():
             loaded, hz = page_deps(pg)
             deps |= loaded
             hazards += hz
-        always = None
-        if hazards:
-            always = "; ".join(sorted(set(hazards)))
-        elif not games and not pages and not (s in libs and "--selftest" in cmd):
-            always = "names no page and is not a library's self-test"
-        out[s] = {"deps": deps, "games": games, "always": always, "selective": sel, "label": label}
+        any_page = ANY_PAGE in extra
+        deps.discard(ANY_PAGE)
+        always = always_reason(hazards, games, pages, s in libs and "--selftest" in cmd, extra)
+        out[s] = {"deps": deps, "games": games, "always": always, "selective": sel, "label": label, "any_page": any_page}
     return out
 
 
+def always_reason(hazards, games, pages, lib_selftest, declared):
+    """Why a verifier must run on every change, or None (it is selective). Pure, so --selftest plants each case.
+    A computed load (hazards) always runs. A verifier that names no game or page, is not a library's self-test and
+    declares nothing in its "# ci-deps:" header (paths or any-page) always runs: nothing says what it reads. One
+    that declares its inputs is selected by them (CI-DEPS-ANY-PAGE, 21 Nov 2026)."""
+    if hazards:
+        return "; ".join(sorted(set(hazards)))
+    if not games and not pages and not lib_selftest and not declared:
+        return "names no page, declares no ci-deps and is not a library's self-test"
+    return None
+
+
 def in_deps(path, deps):
-    return any(path == d or (d.endswith("/") and path.startswith(d)) for d in deps)
+    return any(path == d or (d.endswith("/") and path.startswith(d)) or ("*" in d and fnmatch.fnmatchcase(path, d))
+               for d in deps)
+
+
+_PAGE_LOADED = None
+
+
+def served_pages():
+    """Every tracked .html outside docs/, scripts/ and tools/: the pages the site serves."""
+    out = subprocess.run(["git", "ls-files", "*.html"], cwd=ROOT, capture_output=True, text=True, check=True)
+    return [p for p in out.stdout.split() if not p.startswith(NOT_SERVED)]
+
+
+def is_any_page(path):
+    """True when a change to this path selects an any-page verifier: a served page, anything under schools/assets/,
+    escape-rooms/assets/ or data/, or any other file a served page loads (built once per process)."""
+    global _PAGE_LOADED
+    if path.endswith(".html") and not path.startswith(NOT_SERVED):
+        return True
+    if path.startswith(ANY_PAGE_PREFIXES):
+        return True
+    if _PAGE_LOADED is None:
+        _PAGE_LOADED = set()
+        for pg in served_pages():
+            _PAGE_LOADED |= page_deps(pg)[0]
+    return path in _PAGE_LOADED
 
 
 def classify(path):
@@ -404,7 +449,8 @@ def select(changed, dmap=None):
         if kind == "all":
             reasons.append("%s changes CI itself: everything runs" % path)
             return True, reasons, {}
-        hit = [s for s, info in dmap.items() if info["selective"] and in_deps(path, info["deps"])]
+        hit = [s for s, info in dmap.items() if info["selective"] and (in_deps(path, info["deps"])
+                                                                        or (info.get("any_page") and is_any_page(path)))]
         for s in hit:
             picked.setdefault(s, []).append(path)
         if not hit and kind == "unknown":
@@ -433,6 +479,7 @@ def selftest():
             fails.append(name)
 
     always = {s for s, i in sel.items() if i["always"]}
+    anyp = {s for s, i in sel.items() if i.get("any_page")}       # selected by every page or shared-asset change
     # Assertions that do not lean on the always-set (each (a)-(b) check below is "expected | always", so it
     # passed while the always-set swallowed the suite).
     for line, want in (("x.src = 'a.js';", False), ("x.src = path;", True), ("x.src = 'games/' + slug + '.js';", True),
@@ -448,14 +495,14 @@ def selftest():
     every_game = {t for t, j in sel.items() if "games/" in j["deps"]}
     for g in sorted({g for i in sel.values() for g in i["games"]}):
         _, _, picked = select(["games/%s/index.html" % g], dmap)
-        want = {t for t, j in sel.items() if g in j["games"]} | every_game | always
+        want = {t for t, j in sel.items() if g in j["games"]} | every_game | always | anyp
         check("(a) games/%s/index.html" % g, set(picked) == want and bool(picked),
               "-> " + ", ".join(sorted(os.path.basename(p) for p in picked)))
     # (b) a shared asset fans out to every verifier whose pages load it, and to none that don't.
     for asset in ("schools/assets/answer.js", "schools/assets/theme.css", "schools/assets/calculator.js",
                   "schools/assets/keypad.js", "schools/assets/teacher-invite.js"):
         _, _, picked = select([asset], dmap)
-        want = {s for s, i in sel.items() if asset in i["deps"]} | always
+        want = {s for s, i in sel.items() if asset in i["deps"]} | always | anyp
         loaders = {s for s, i in sel.items() for g in i["games"]
                    if re.search(re.escape(os.path.basename(asset)), open(os.path.join(ROOT, "games", g, "index.html"), encoding="utf-8").read())}
         check("(b) %s" % asset, set(picked) == want and loaders <= set(picked),
@@ -464,10 +511,15 @@ def selftest():
     for p in (".github/workflows/check-site.yml", "scripts/ci-deps.py", "requirements-ci.txt", "newdir/x.txt", "package.json"):
         run_all, why, _ = select([p], dmap)
         check("(c) %s runs everything" % p, run_all, why[0] if why else "")
-    # A doc-only change runs no verifier (beyond any that always run).
-    _, _, picked = select(["docs/todo.md", "CLAUDE.md"], dmap)
-    check("docs-only change runs no verifier", set(picked) == always,
+    # A doc-only change runs no verifier beyond any that always run and those that declare those very docs in their own
+    # "# ci-deps:" header (check-context-size.py measures CLAUDE.md and todo.md: CI-DEPS-ANY-PAGE); never an any-page one.
+    docs = ["docs/todo.md", "CLAUDE.md"]
+    _, _, picked = select(docs, dmap)
+    readers = {s for s, i in sel.items() if any(in_deps(d, i["deps"]) for d in docs)}
+    check("docs-only change runs only verifiers that read those docs", set(picked) == always | readers
+          and not (set(picked) - always) & anyp,
           "-> %d: %s" % (len(picked), ", ".join(sorted(os.path.basename(p) for p in set(picked) - always))))
+    check_header_kinds(check, dmap, sel, always, anyp)
     # A picture in docs/art/ that no page loads selects only the verifiers that read docs/art/ themselves: never one
     # through a site-wide check it loads (check-publish-scope.py names docs/art/ as published; #792).
     loaded = "".join(open(os.path.join(dp, f), encoding="utf-8", errors="replace").read()
@@ -510,6 +562,44 @@ def selftest():
     return 1 if fails else 0
 
 
+def check_header_kinds(check, dmap, sel, always, anyp):
+    """CI-DEPS-ANY-PAGE (21 Nov 2026): planted verifiers through always_reason() and select(), then the real ones."""
+    def plant(name, declared, any_page=False, games=(), pages=()):
+        s = "scripts/plant-%s.py" % name
+        deps = {s} | (set(declared) - {ANY_PAGE})
+        return s, {"deps": deps, "games": set(games), "selective": True, "label": name, "any_page": any_page,
+                   "always": always_reason([], set(games), set(pages), False, set(declared))}
+    hdr, hdr_i = plant("header", {"data/plant-input.json", "docs/plant-batch*.txt"})
+    anyv, any_i = plant("any-page", {ANY_PAGE}, any_page=True)
+    bare, bare_i = plant("bare", set())
+    lone = {hdr: hdr_i, anyv: any_i, bare: bare_i}
+    check("plant: a header-only verifier is selective", hdr_i["always"] is None, str(hdr_i["always"]))
+    check("plant: a page-less verifier with no header always runs", bool(bare_i["always"]), str(bare_i["always"]))
+    check("plant: a hazard still forces always, header or not",
+          bool(always_reason(["x.html: fetch(p) loads a computed path"], set(), set(), False, {"data/x.json"})), "")
+    cases = ((hdr, "data/plant-input.json", True), (hdr, "docs/plant-batch12.txt", True), (hdr, "docs/todo.md", False),
+             (hdr, "games/split-it/index.html", False),
+             (anyv, "games/split-it/index.html", True), (anyv, "schools/assets/theme.css", True),
+             (anyv, "parents/guide.css", True), (anyv, "data/roster-levels.json", True), (anyv, "about/index.html", True),
+             (anyv, "docs/todo.md", False), (anyv, "scripts/verify-split-it.py", False), (anyv, "README.md", False),
+             (anyv, "docs/art/x.png", False), (bare, "docs/todo.md", True))
+    for s, path, want in cases:
+        _, _, picked = select([path], lone)
+        check("plant: %s %s by %s" % (os.path.basename(s), "selected" if want else "not selected", path),
+              (s in picked) == want, "")
+    # The real headers: the any-page scanner, a glob that covers batches added after its header was written, a header
+    # the derivation could not see.
+    dl, lb, cx = "scripts/check-download-labels.py", "scripts/check-lock-bank.py", "scripts/check-context-size.py"
+    for s, path, want in ((dl, "games/split-it/index.html", True), (dl, "schools/assets/answer.js", True),
+                          (dl, "docs/handover/cloud.md", False), (dl, "scripts/verify-split-it.py", False),
+                          (lb, "docs/lock-bank-batch13.txt", True), (lb, "docs/lock-bank-batch99.txt", True),
+                          (lb, "docs/todo.md", False), (cx, "docs/handover/home.md", True), (cx, "games/split-it/index.html", False)):
+        _, _, picked = select([path], dmap)
+        check("%s %s by %s" % (os.path.basename(s), "selected" if want else "not selected", path),
+              s in sel and (s in picked) == want, "")
+    check("check-download-labels.py is any-page, not always", dl in anyp and dl not in always, "")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--files", nargs="*")
@@ -526,7 +616,7 @@ def main():
         for s, i in dmap.items():
             if not i["selective"]:
                 continue
-            print("%s%s" % (s, "   [ALWAYS: %s]" % i["always"] if i["always"] else ""))
+            print("%s%s%s" % (s, "   [ALWAYS: %s]" % i["always"] if i["always"] else "", "   [any-page]" if i.get("any_page") else ""))
             print("   games: %s" % (", ".join(sorted(i["games"])) or "-"))
             print("   deps:  %s" % ", ".join(sorted(d for d in i["deps"] if d != s)))
         return 0

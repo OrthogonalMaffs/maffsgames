@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: Escape-room lock bank (every lock-bank-batch*.txt: each VERIFY has exactly one answer, none is a restatement; a multi-line NOTE stays out of VERIFY; bad entries planted and caught) | --selftest
-# ci-deps: docs/lock-bank-batch3.txt docs/lock-bank-batch4.txt docs/lock-bank-batch5.txt docs/lock-bank-batch6.txt docs/lock-bank-batch7.txt docs/lock-bank-batch8.txt docs/lock-bank-batch9.txt
+# ci-deps: docs/lock-bank-batch*.txt
 """Check a bank of escape-room locks for the only rule that really matters:
 exactly one answer.
 
