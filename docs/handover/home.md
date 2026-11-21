@@ -16,6 +16,16 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): UGH-STATS-BUTTON-DOWNLOADS (the two browser-built CSV downloads counted on the Events sheet)
+
+Claude Code (home lane), worktree `~/mg-ugh-buttons`, branch `claude/ugh-stats-button-downloads`; contract `docs/handover/contracts/2026-11-21-ugh-stats-button-downloads.md`. Tier Small. The first commit carries QUIT-TIME's close-out (#860, 6b74f94, and Jon's Apps Script redeploy at 12:18, version 2026-11-21-a; its entry below; contract moved to `docs/history/contracts/`).
+
+- **`schools/assets/analytics.js`:** one new branch in the section listener, after toggles and links: any element but an `<a>` with `data-mfg-download` sends action `download`. Toggles and links unchanged; payload layout unchanged. U.download()'s temporary `<a download>` has no data-mfg-item and is outside every section, so one click is one event.
+- **Labels:** ugh-stats/half-our-games/ ("Your turn" box `ugh-stats-half-our-games`, button `csv-answers-today`) and ugh-stats/whos-playing/ (`ugh-stats-whos-playing`, `csv-starts-by-hour`). The CSV button is the only labelled element in each box (the questions carry no data-mfg-item), so nothing else starts counting.
+- **`scripts/check-download-labels.py`:** also fails (a) a data-mfg-download element with no data-mfg-item or outside a data-mfg-section and (b) a served page whose own script calls `<name>.download(` with no data-mfg-download element. Two more plants (the button's item removed; its data-mfg-download removed), both caught. Still names no page, so still ALWAYS (ci-deps --explain). On main's pages (before the labels) it fails both pages, the gap it is for.
+- **`scripts/test-section-clicks.py`:** loads both pages with their data served locally (the repo's answer-counts.json and ugh-stats.json through the route), waits for the button to show, clicks it: exactly one section_clicked, action download, its section and item, and exactly one blob download from the helper. Against the listener without the new branch it fails both. Every existing case passes.
+- canon's section_clicked row names data-mfg-download. Todo row UGH-STATS-BUTTON-DOWNLOADS moved word for word to `docs/history/todo-done.md` (check-todo-trim.py: nothing lost). No Apps Script change, no privacy change.
+
 ## 2026-11-21 (home): QUIT-TIME (time to quit on game_abandoned; B2 tells a bounce from a stuck student)
 
 Claude Code (home lane), worktree `~/mg-quit-time`, branch `claude/quit-time`; contract `docs/handover/contracts/2026-11-21-quit-time.md`. Tier Small (data collection, Jon approved 21 Nov 09:05). The first commit carries DOWNLOAD-COUNTS' close-out (#856, e1a5f3d; its entry below; contract moved to `docs/history/contracts/`).

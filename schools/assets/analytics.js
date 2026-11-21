@@ -227,12 +227,17 @@
   //   <div data-mfg-section="escape-rooms">                   the section
   //     <a data-mfg-item="hamster-heist" href="...">            each element to count
   //     <button data-mfg-item="show-all" aria-expanded="false">  a show/hide toggle
+  //     <button data-mfg-item="csv-data" data-mfg-download>     a button that starts a download
   // A click on a labelled item fires section_clicked: section, item, position (1-based
   // among the section's labelled items) and action. A link is "open-link", or "download"
   // when it has a download attribute (DOWNLOAD-COUNTS, 20 Nov 2026: GA4's own file_download
   // is blocked by ad-blockers and many school networks, so the Sheet counts downloads here;
   // scripts/check-download-labels.py fails any download link left unlabelled); a toggle
   // (aria-expanded) is "toggle-open" and fires only when opening, as fact_expanded does.
+  // Any other element with data-mfg-download (a button whose handler builds a file in the
+  // browser, e.g. UghStats.download()) is "download" too (UGH-STATS-BUTTON-DOWNLOADS, 21 Nov
+  // 2026). The temporary <a download> such a handler clicks carries no data-mfg-item and sits
+  // outside every section, so it is never counted: one click, one event.
   // Capture phase, so the toggle is read before the page's own handler flips it.
   // Never preventDefault or delay: mfg() posts with keepalive, so the event survives
   // the navigation. The Sheet keeps a fixed column list, so the fields ride in columns
@@ -250,6 +255,8 @@
       action = 'toggle-open';
     } else if (el.tagName === 'A' && el.getAttribute('href')) {
       action = el.hasAttribute('download') ? 'download' : 'open-link';
+    } else if (el.tagName !== 'A' && el.hasAttribute('data-mfg-download')) {
+      action = 'download';
     } else {
       return;
     }

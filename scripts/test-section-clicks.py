@@ -19,6 +19,11 @@ been posted to the Sheet, so it checks the payload as it would land in the colum
      printables/ and the two Ugh, stats pages with a CSV link), each download link (an <a> with a download
      attribute) fires one section_clicked with action download and its own item, and each ordinary labelled
      link on those pages still fires open-link. Every a[download] on those pages is tested.
+  7. a download built in the browser (contract UGH-STATS-BUTTON-DOWNLOADS, 21 Nov 2026: the CSV buttons on
+     ugh-stats/half-our-games/ and whos-playing/, data-mfg-download): with the page's data served locally, so the
+     button is shown, one click fires exactly ONE section_clicked with action download and its section and item
+     (not two: the helper's temporary <a download> is not counted; not zero), and the helper's blob download did
+     run once. Every data-mfg-download element on those pages is tested.
 
 NOTHING LEAVES THE MACHINE
 --------------------------
@@ -55,7 +60,8 @@ def expected_from_page(rel="index.html"):
             if tag == "button" and "aria-expanded" in attrs:
                 toggles.append((section, item.group(1), pos))
             else:
-                is_download = tag == "a" and re.search(r"(?:^|\s)download(?:[\s=]|$)", attrs)
+                is_download = (tag == "a" and re.search(r"(?:^|\s)download(?:[\s=]|$)", attrs)) or \
+                    (tag != "a" and re.search(r"(?:^|\s)data-mfg-download(?:[\s=]|$)", attrs))
                 links.append((section, item.group(1), pos, "download" if is_download else "open-link"))
     return links, toggles
 
@@ -66,6 +72,9 @@ DOWNLOAD_PAGES = [
     ("/printables/", "printables/index.html"),
     ("/ugh-stats/flu-and-answers/", "ugh-stats/flu-and-answers/index.html"),
     ("/ugh-stats/one-class/", "ugh-stats/one-class/index.html"),
+    # Download buttons (data-mfg-download): the CSV is built in the browser once the page's data has loaded.
+    ("/ugh-stats/half-our-games/", "ugh-stats/half-our-games/index.html"),
+    ("/ugh-stats/whos-playing/", "ugh-stats/whos-playing/index.html"),
 ]
 
 
@@ -76,9 +85,11 @@ EXPECTED_LINKS, EXPECTED_TOGGLES = expected_from_page()
 # it runs after every listener the page has.
 INIT = """
 window.__prevented = [];
+window.__blobs = 0;
 window.addEventListener('click', function(e) {
   window.__prevented.push(e.defaultPrevented);
   var a = e.target.closest && e.target.closest('a[href]');
+  if (a && a.hasAttribute('download') && /^blob:/.test(a.href)) window.__blobs++;   // a download built in the page
   if (a) e.preventDefault();
 });
 """
@@ -183,15 +194,35 @@ async def main():
             links, toggles = expected_from_page(rel)
             await page.goto(ORIGIN + url + "?cb=section-clicks", wait_until="load")
             await page.wait_for_timeout(500)
+            n_buttons = 0
             for sec, item, pos, action in links:
                 sel = '[data-mfg-section="%s"] [data-mfg-item="%s"]' % (sec, item)
-                check("%s%s (%s)" % (url, item, action), await click(sel), "section_clicked",
+                is_button = await page.evaluate("s => { const e = document.querySelector(s); return !!e && e.tagName !== 'A' "
+                                                "&& e.hasAttribute('data-mfg-download'); }", sel)
+                if is_button:
+                    n_buttons += 1
+                    try:   # shown only once the page's data has loaded (served locally by the route)
+                        await page.wait_for_selector(sel, state="visible", timeout=10000)
+                    except Exception:
+                        fails.append("%s%s: the download button never appeared (its data did not load)" % (url, item))
+                        continue
+                    blobs = await page.evaluate("window.__blobs")
+                got = await click(sel)
+                check("%s%s (%s%s)" % (url, item, action, ", button" if is_button else ""), got, "section_clicked",
                       fields(sec, item, pos, action))
+                if is_button:
+                    made = await page.evaluate("window.__blobs") - blobs
+                    if made != 1:
+                        fails.append("%s%s: the button made %d blob download(s), expected 1 (its handler did not run?)"
+                                     % (url, item, made))
             n_dl = sum(1 for l in links if l[3] == "download")
             downloads += n_dl
-            on_page = await page.evaluate("document.querySelectorAll('a[download]').length")
+            on_page = await page.evaluate("document.querySelectorAll('a[download], [data-mfg-download]').length")
             if n_dl == 0 or on_page != n_dl:
-                fails.append("%s: %d a[download] on the page, %d tested" % (url, on_page, n_dl))
+                fails.append("%s: %d a[download] or data-mfg-download on the page, %d tested" % (url, on_page, n_dl))
+            want_button = url in ("/ugh-stats/half-our-games/", "/ugh-stats/whos-playing/")
+            if (n_buttons == 1) != want_button or n_buttons > 1:
+                fails.append("%s: %d download button(s) tested, expected %d" % (url, n_buttons, 1 if want_button else 0))
             labelled_here = await page.evaluate("document.querySelectorAll('[data-mfg-item]').length")
             if labelled_here != len(links) + len(toggles) or toggles:
                 fails.append("%s: %d labelled elements, %d links tested (toggles here: %d)"
@@ -209,7 +240,7 @@ async def main():
             print("  -", f)
         sys.exit(1)
     print("OK - %d labelled elements, each one section_clicked; game cards and facts unchanged; "
-          "%d download links, each one section_clicked action download" % (labelled, downloads))
+          "%d downloads (links and buttons), each one section_clicked action download" % (labelled, downloads))
 
 
 if __name__ == "__main__":
