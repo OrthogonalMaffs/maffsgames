@@ -118,7 +118,7 @@
   "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 2 of 3": "2",
   "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 3 of 3": "55",
   "Launch sash (schools/assets/launch-sash.js carries an end date and hides itself after it; homepage only; planted faults caught)": "57",
-  "Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before; planted faults caught)": "68",
+  "Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before, tiers exact at the thresholds; planted faults caught)": "72",
   "Level logged (every mfg event carries the level the game resolved through MaffsLevel, never a string literal; 'all' only where the declaration lists it in boards; one plant)": "35",
   "Level resolver (MaffsLevel declarations equal the roster; every internal ?level= link and portal card names a level its game serves; no migrated game reads ?level itself; three planted faults)": "35",
   "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "34",
@@ -187,6 +187,7 @@
   "Simultaneous Solver (staged elimination: every solution and bank rule recomputed; SR-13 step marking and a Stage 4 problem on the phone keypad in Chromium; Stage 5 word problems: unique solutions, every key form marked, tiles build every key, a session played)": "22",
   "Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the margin logo only where it fits; planted faults caught)": "73",
   "Six Sevens, Bruv (independent recomputation + session simulation)": "12",
+  "Some Thingies (the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test), part 1 of 1": "73",
   "Split It (every generator's keys recomputed + marking at the stated precision)": "49",
   "Spot the Error (every item's steps, key, explanation and misread phrase checked against a reviewed table; all 125 played in Chromium)": "30",
   "Spot the Muppet (every equation in the advice and the keys recomputed; every key recomputed from its own givens; no distractor ends on the key's value (SR-16); answer once and Next once, played in Chromium)": "28",
@@ -380,6 +381,12 @@
    "how": "kept from the pack (9 needed)",
    "label": "Shape Shifter (every translation, reflection (in the axes, y = x, y = -x, x = k and y = k), rotation (90° each way and 180°, about (0,0) and other points) and enlargement image recomputed from its words; every rotation option classified; every vertex and every letter tapped on the real canvas in Chromium; each mode card's data-mode its own mode, a burst at random-mix starting Random Mix once, each card starting its mode once without a burst; fault-injection self-test: every planted fault caught)",
    "parts": 9,
+   "tier": "content"
+  },
+  "verify-some-thingies.py": {
+   "how": "chosen from 13 timed unit(s)",
+   "label": "Some Thingies (the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test)",
+   "parts": 1,
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
