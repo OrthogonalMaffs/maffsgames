@@ -207,6 +207,17 @@
   // Single copy — also used by leaderboards/index.html.
   var MIXED_UNRELIABLE = { 'higher-power': true };
 
+  // A game's ranking rules: which way round its scores rank, and whether its
+  // board can be ranked at all. The one copy: standing() and submitScore()'s
+  // percentile both use it (PERCENTILE-LOWER-IS-BETTER, 21 Nov 2026; until then
+  // the percentile ranked every board higher-is-better and ranked unrankable ones).
+  function rankRules(gameSlug) {
+    return {
+      direction: LOWER_IS_BETTER[gameSlug] ? 'lower' : 'higher',
+      rankable: !MIXED_UNRELIABLE[gameSlug]
+    };
+  }
+
   // Eligibility is completion, not a question count. Every game calls
   // submitScore() at its own natural end — pool exhausted, out of lives,
   // timer up, puzzle won or lost — so reaching the call IS the qualification.
@@ -495,9 +506,6 @@
           }
         }
 
-        var percentile = calculatePercentile(score, allScores);
-        var tier = getTier(percentile);
-
         // Push to recent_scores feed (fire-and-forget). highScore/weeklyBest/best
         // used to be computed here and frozen into the entry — removed 28 Sep 2026,
         // see docs/canon.md §9: the ticker now derives them live via standing().
@@ -518,7 +526,7 @@
         // it; docs/firebase-rules-deploy.md has the occasional manual prune.
         recentRef.push(entry).catch(function() {});
 
-        return { percentile: percentile, tier: tier, totalPlayers: allScores.length };
+        return rankScore(gameSlug, score, allScores);
       });
 
     }).catch(function(error) {
@@ -529,14 +537,28 @@
   /**
    * Calculate what percentile a score is in
    * Returns 0.05 if score is better than 95% of scores (top 5%)
+   * direction: 'lower' for a lower-is-better game (a score above is worse);
+   * anything else ranks higher-is-better (a score below is worse). A tie is
+   * never counted as worse.
    */
-  function calculatePercentile(score, allScores) {
+  function calculatePercentile(score, allScores, direction) {
     if (!allScores.length) return null;
-    var scoresBelow = 0;
+    var scoresWorse = 0;
     for (var i = 0; i < allScores.length; i++) {
-      if (allScores[i] < score) scoresBelow++;
+      if (direction === 'lower' ? allScores[i] > score : allScores[i] < score) scoresWorse++;
     }
-    return 1 - (scoresBelow / allScores.length);
+    return 1 - (scoresWorse / allScores.length);
+  }
+
+  /**
+   * What submitScore() resolves once the board is read: the score's percentile
+   * and certificate tier under the game's rankRules(), with no percentile or
+   * tier for a board that cannot be ranked. allScores includes this score.
+   */
+  function rankScore(gameSlug, score, allScores) {
+    var rules = rankRules(gameSlug);
+    var percentile = rules.rankable ? calculatePercentile(score, allScores, rules.direction) : null;
+    return { percentile: percentile, tier: getTier(percentile), totalPlayers: allScores.length };
   }
 
   /**
@@ -572,8 +594,9 @@
    */
   var standingCache = {};
   function standing(gameSlug, levelKey) {
-    var direction = LOWER_IS_BETTER[gameSlug] ? 'lower' : 'higher';
-    var rankable = !MIXED_UNRELIABLE[gameSlug];
+    var rules = rankRules(gameSlug);
+    var direction = rules.direction;
+    var rankable = rules.rankable;
     var cacheKey = gameSlug + '_' + levelKey;
 
     if (standingCache[cacheKey]) return standingCache[cacheKey];
@@ -662,6 +685,8 @@
     watchRecent: watchRecent,
     submitScore: submitScore,
     formatPercentile: formatPercentile,
+    rankRules: rankRules,
+    rankScore: rankScore,
     standing: standing,
     levelLabel: levelLabel,
     levelKeyFromLabel: levelKeyFromLabel,

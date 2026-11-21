@@ -16,6 +16,16 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-21 (home): PERCENTILE-LOWER-IS-BETTER (submitScore's percentile and tier follow standing()'s ranking rules)
+
+Claude Code (home lane), worktree `~/mg-percentile`, branch `claude/percentile-lower-is-better`; contract `docs/handover/contracts/2026-11-21-percentile-lower-is-better.md` (with Project Claude's follow-up). Tier Small. The first commit carries UGH-STATS-BUTTON-DOWNLOADS' close-out (#861, 84424d3; its entry below; contract moved to `docs/history/contracts/`).
+
+- **Stopped once, then cleared:** the first STOP IF fired on `scripts/check-burst.py:293`, which reads `res.get("percentile")`. Project Claude ruled it a sentinel for the burst early-return (`reject()`, percentile null), not a reader of a calculated percentile. reject(), the burst return and check-burst.py are unchanged; check-burst passes locally.
+- **`schools/assets/firebase-leaderboard.js`:** new `rankRules(gameSlug)` → `{direction, rankable}` from LOWER_IS_BETTER and MIXED_UNRELIABLE. standing() takes its two values from it (behaviour unchanged). `calculatePercentile(score, allScores, direction)` counts a score above as worse for `'lower'`; a tie is never worse, as before. New `rankScore(gameSlug, score, allScores)` is what submitScore()'s then-block returns: percentile and tier null on an unrankable board, totalPlayers as before. Both are exported on MaffsLeaderboard. Nothing written to Firebase changed; LOWER_IS_BETTER, MIXED_UNRELIABLE and both thresholds are untouched.
+- **`scripts/test-percentile.py`** (new, Node vm, no Firebase; ci-line, ALWAYS): (a)-(e) of the contract, plus rankRules against the two maps, standing() with no Firebase, and the wiring (submitScore returns rankScore; standing uses rankRules). (e) compares 2000 random tie-heavy boards with the old function, copied unchanged. Three plants caught: the direction ignored (b), rankable ignored (d), a higher-is-better tie counted as worse (e). Against main's file it fails.
+- **Found, not changed:** a score that beats exactly 95% of a board does not get gold. 1 − 19/20 is 0.050000000000000044 in floating point, above GOLD_THRESHOLD 0.05, so the best of 20 gets silver (old code the same; the test's gold board is 21 players). Reported to Project Claude.
+- canon's certificate bullet names rankRules. Todo row PERCENTILE-LOWER-IS-BETTER moved word for word to `docs/history/todo-done.md`.
+
 ## 2026-11-21 (home): UGH-STATS-BUTTON-DOWNLOADS (the two browser-built CSV downloads counted on the Events sheet)
 
 Claude Code (home lane), worktree `~/mg-ugh-buttons`, branch `claude/ugh-stats-button-downloads`; contract `docs/handover/contracts/2026-11-21-ugh-stats-button-downloads.md`. Tier Small. The first commit carries QUIT-TIME's close-out (#860, 6b74f94, and Jon's Apps Script redeploy at 12:18, version 2026-11-21-a; its entry below; contract moved to `docs/history/contracts/`).
