@@ -43,6 +43,10 @@ UNMEASURABLE is not a failure. It means the driver could not reach that state
 could not produce), exactly as tier 3's UNSUPPORTED. "no Next" means a wrong
 answer was produced and no Next control appeared: the game auto-advances or
 waits on something else, which is canon §7.6's business, not this report's.
+After the wrong answer the driver waits for Next (PHONE-FIT-WAIT-NEXT, 21 Nov
+2026): up to NEXT_WAIT_MS after the layout settles, until a Next has held still
+for 500 ms (measured there) or the question changes (no Next). Before, it looked
+once, and a Next that came after the layout first went quiet read as no Next.
 
 What it cannot see: the on-screen keyboard over a native text input (headless
 Chromium has none), any level but the default, and any question but the first
@@ -368,6 +372,60 @@ async def settle(page):
         await page.wait_for_timeout(STEP_MS)
 
 
+NEXT_WAIT_MS = 6000   # PHONE-FIT-WAIT-NEXT (21 Nov 2026): how long after settle() a wrong answer's Next may take to appear
+
+# One sample after a wrong answer: Next as __pfNext() finds it, and the option group's keys. __mfgProbe() overwrites
+# window.__mfgGroup, which __pfNext() reads to leave the options out, so the group is put back as it was.
+NEXT_SAMPLE_JS = """() => {
+  const next = window.__pfNext();
+  const g = window.__mfgGroup;
+  const p = window.__mfgProbe();
+  window.__mfgGroup = g;
+  return {next: next, n: p.n, keys: p.keys};
+}"""
+
+
+def next_point(samples, asked_keys=(), wait=NEXT_WAIT_MS, quiet=QUIET_MS):
+    """samples: [(t_ms from the first look, {"next": __pfNext(), "n", "keys"}), ...] in time order, taken after a wrong
+    answer once settle() has returned. -> (t, the __pfNext() reading to record, why) or None (keep sampling).
+
+    why: "settled", a Next found and its bottom unchanged for `quiet` ms (measured there); "advanced", no Next yet and
+    the question has changed (an enabled option group of two or more whose keys differ from asked_keys: the game moved
+    on by itself), recorded as no Next, as before; "timeout", `wait` ms passed: the last reading, a Next found but still
+    moving or none at all. A typed-answer question has no keys to compare, so an auto-advance there runs to the
+    timeout and is still no Next. Pure, so --selftest plants a late Next and an auto-advance through it.
+    Before this contract the driver recorded samples[0] alone: a Next that came after settle() read as no Next."""
+    since = None
+    asked = list(asked_keys or ())
+    for t, s in samples:
+        nxt = s["next"]
+        if nxt.get("found"):
+            if since is None or nxt["bottom"] != since[1]:
+                since = (t, nxt["bottom"])
+            if t - since[0] >= quiet:
+                return t, nxt, "settled"
+        else:
+            since = None
+            if asked and s.get("n", 0) >= 2 and list(s.get("keys") or ()) != asked:
+                return t, nxt, "advanced"
+        if t >= wait:
+            return t, nxt, "timeout"
+    return None
+
+
+async def wait_next(page, asked_keys=()):
+    """After a wrong answer and settle(): sample every 100 ms until next_point() decides (NEXT_WAIT_MS at most)."""
+    samples, t0 = [], time.monotonic()
+    while True:
+        s = await asyncio.wait_for(page.evaluate(NEXT_SAMPLE_JS), timeout=10)
+        samples.append((int((time.monotonic() - t0) * 1000), s))
+        got = next_point(samples, asked_keys)
+        if got:
+            t, nxt, why = got
+            return dict(nxt, waited=t, why=why)
+        await page.wait_for_timeout(STEP_MS)
+
+
 # Why a game could not be measured, in the driver's own words: whether it started and what it could press.
 SEEN_JS = r"""() => {
   const st = window.__mfgStats ? window.__mfgStats() : {};
@@ -558,7 +616,9 @@ async def measure_one(browser, base, slug, size, args):
             if last["c"] is False:
                 await settle(page)
                 await ev("window.scrollTo(0, 0)")
-                out["wrong"] = await ev("window.__pfNext()")
+                # Wait for Next (PHONE-FIT-WAIT-NEXT): a Next that appears after the layout first goes quiet is
+                # measured where it settles, never read as no Next.
+                out["wrong"] = await wait_next(page, p["keys"] if p["n"] >= 2 else ())   # the phase that was marked
                 break
             # Right by chance: carry on to the next question and try again.
             keys = probe["keys"]
@@ -1061,6 +1121,7 @@ def selftest():
     ceiling = settle_point([(t, "move%d" % t, 0) for t in range(0, 6000, 100)])
     print("  %s  %-52s %s" % ("ok  " if ceiling == (5000, False) else "FAIL", "a layout that never settles: the 5 s ceiling", ceiling))
     ok = ok and good and caught and still == (500, True) and ceiling == (5000, False)
+    ok = next_plants(lap) and ok
     with open(STATE, encoding="utf-8") as fh:
         st = json.load(fh)
     phone = {"%dx%d" % s for s in SIZES}
@@ -1079,6 +1140,96 @@ def selftest():
     ok = aside_plant() and ok
     print("selftest: %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
+
+
+def next_plants(lap):
+    """PHONE-FIT-WAIT-NEXT (21 Nov 2026). Through next_point() and classify(): a Next that appears 1.5 s after settle(),
+    below the fold at 1280x720, read once as the driver used to (samples[0]) is no Next, a pass; waited for, it is
+    measured where it settles and is a HARD FAIL. A game that auto-advances with no Next is still no Next, and is decided
+    when the question changes, not at the timeout. Then the same two in Chromium, through wait_next() on planted pages."""
+    ok = True
+    keys = ["v:1", "v:2", "v:3"]
+    miss = {"found": False, "bottom": None, "fold": 680, "sw": 1280, "vw": 1280}
+    late_next = dict(miss, found=True, bottom=853, label="Next")
+    late = [(t, {"next": late_next if t >= 1500 else miss, "n": 0, "keys": []}) for t in range(0, 7000, 100)]
+
+    def rows(nxt):
+        return [lap(1366, 500, None, found=False), {"w": 1280, "h": 720, "note": "", "ask": {"top": 300, "bottom": 500, "fold": 680,
+                                                                             "sw": 1280, "vw": 1280}, "wrong": nxt}]
+    old = classify(rows(late[0][1]["next"]), "laptop")[0]
+    got = next_point(late, keys)
+    new = classify(rows(got[1]), "laptop")[0] if got else None
+    checks = [
+        ("plant: a late Next, read once (the old driver)", old == "PASS (no Next)", old),
+        ("a late Next, waited for: measured settled", bool(got) and got[2] == "settled" and got[1]["bottom"] == 853
+         and 2000 <= got[0] < NEXT_WAIT_MS, got and got[:1] + got[2:]),
+        ("a late Next below the fold at 1280x720: HARD FAIL", new == HARD_FAIL, new),
+    ]
+    adv = [(t, {"next": miss, "n": 3 if t >= 800 else 0, "keys": ["v:7", "v:8", "v:9"] if t >= 800 else []})
+           for t in range(0, 7000, 100)]
+    got = next_point(adv, keys)
+    checks.append(("an auto-advance, no Next: no Next, decided early",
+                   bool(got) and got[2] == "advanced" and not got[1]["found"] and got[0] < 1000, got and got[:1] + got[2:]))
+    moving = [(t, {"next": dict(late_next, bottom=600 + t // 100), "n": 0, "keys": []}) for t in range(0, 7000, 100)]
+    got = next_point(moving, keys)
+    checks.append(("a Next that never stops moving: the timeout",
+                   bool(got) and got[2] == "timeout" and got[0] == NEXT_WAIT_MS, got and got[:1] + got[2:]))
+    for name, good, seen in checks:
+        print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, seen))
+        ok = ok and good
+    return chromium_next_plants() and ok
+
+
+def chromium_next_plants():
+    """The page side: wait_next() on two planted pages at 1280x720, after settle() as the driver runs it. (a) a wrong
+    answer whose Next is added 1.5 s later, 900 px down: one __pfNext() after settle() finds nothing, wait_next() finds
+    it below the fold; (b) a wrong answer that swaps in the next question's options after 0.8 s: no Next, "advanced"."""
+    try:
+        from playwright.async_api import async_playwright
+    except ImportError:
+        print("  FAIL  next plant: Playwright is not installed")
+        return False
+    opts = "".join("<button data-val='%d' onclick='1'>%d</button>" % (n, n) for n in (1, 2, 3))
+    late = ("<div id='q'>%s</div><script>setTimeout(function () { var b = document.createElement('button');"
+            " b.className = 'maffs-next'; b.textContent = 'Next'; b.style.marginTop = '900px'; b.style.display = 'block';"
+            " document.body.appendChild(b); }, 1500);</script>" % opts)
+    adv = ("<div id='q'>%s</div><script>setTimeout(function () { document.getElementById('q').innerHTML ="
+           " [7, 8, 9].map(function (n) { return \"<button data-val='\" + n + \"' onclick='1'>\" + n + '</button>'; })"
+           ".join(''); }, 800);</script>" % opts)
+
+    async def go():
+        out = {}
+        async with async_playwright() as p:
+            b = await p.chromium.launch()
+            for key, body in (("late", late), ("adv", adv)):
+                pg = await b.new_page(viewport={"width": 1280, "height": 720})
+                await pg.set_content("<!doctype html><html><head><meta name='viewport' content='width=device-width'>"
+                                     "</head><body style='margin:0'>" + body + "</body></html>")
+                await pg.evaluate(cs.TIER3_INIT)
+                await pg.evaluate(CORRECT_INIT)
+                asked = (await pg.evaluate("window.__mfgProbe()"))["keys"]
+                await settle(pg)
+                once = await pg.evaluate("window.__pfNext()")
+                out[key] = (once, await wait_next(pg, asked))
+                await pg.close()
+            await b.close()
+        return out
+    got = asyncio.run(go())
+    once, waited = got["late"]
+    aonce, awaited = got["adv"]
+    checks = [
+        ("next plant: a late Next, one look after settle()", not once["found"], "found=%s" % once["found"]),
+        ("next plant: a late Next, waited for, below the fold", waited["found"] and waited["why"] == "settled"
+         and waited["bottom"] > waited["fold"], "%s %s / %s after %s ms" % (waited["why"], waited["bottom"],
+                                                                            waited["fold"], waited["waited"])),
+        ("next plant: an auto-advance, no Next", not aonce["found"] and not awaited["found"] and awaited["why"] == "advanced",
+         "%s after %s ms" % (awaited["why"], awaited["waited"])),
+    ]
+    ok = True
+    for name, good, seen in checks:
+        print("  %s  %-52s %s" % ("ok  " if good else "FAIL", name, seen))
+        ok = ok and good
+    return ok
 
 
 def canvas_plant():
