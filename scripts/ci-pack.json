@@ -118,6 +118,7 @@
   "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 2 of 3": "2",
   "Just Pythag It, Bruv (every key and triangle recomputed over 300 sessions, named errors, WebKit, play-through, fit at four phone and three desktop sizes, the planted layout faults, fault-injection self-test), part 3 of 3": "55",
   "Launch sash (schools/assets/launch-sash.js carries an end date and hides itself after it; homepage only; planted faults caught)": "57",
+  "Leaderboard percentile ranking rules (submitScore's percentile and tier follow standing()'s rankRules: lower-is-better ranked the right way round, unrankable boards get none, higher-is-better ties as before; planted faults caught)": "68",
   "Level logged (every mfg event carries the level the game resolved through MaffsLevel, never a string literal; 'all' only where the declaration lists it in boards; one plant)": "35",
   "Level resolver (MaffsLevel declarations equal the roster; every internal ?level= link and portal card names a level its game serves; no migrated game reads ?level itself; three planted faults)": "35",
   "Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px)": "34",
@@ -334,7 +335,7 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (5 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
