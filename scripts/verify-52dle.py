@@ -144,8 +144,19 @@ def names(code, n):
     return {x for x in (a, b) if x is not None}
 
 
+_LADDER_MEMO = {}
+
+
 def check_ladder(level, n, codes):
-    """[fault] for one ladder of n at level, against item 3."""
+    """[fault] for one ladder of n at level, against item 3. A pure function of its arguments, so each verdict is worked
+    once a process (52DLE-SELFTEST-LAYERS, 21 Nov 2026): a planted page recomputes only the ladders it changed."""
+    key = (level, n, tuple(codes))
+    if key not in _LADDER_MEMO:
+        _LADDER_MEMO[key] = _check_ladder(level, n, codes)
+    return list(_LADDER_MEMO[key])
+
+
+def _check_ladder(level, n, codes):
     top = TOP[level]
     out = []
     if not 3 <= len(codes) <= 5:
@@ -293,9 +304,14 @@ def page_ladders(html):
     return out
 
 
+_GEN_BLOCK = []      # gen-52dle.py's ladder block, built once a process (it reads no page)
+
+
 def check_static(fails, html):
-    data, _ = GEN.build()
-    want = GEN.block(data)
+    if not _GEN_BLOCK:
+        data, _ = GEN.build()
+        _GEN_BLOCK.append(GEN.block(data))
+    want = _GEN_BLOCK[0]
     have = GEN.current(html)
     if have != want:
         fails.append('generator: the page\'s ladder block is not gen-52dle.py\'s output (run python scripts/gen-52dle.py)')
@@ -361,7 +377,9 @@ def load(page, base, query=''):
     page.evaluate(RECORD_JS)
 
 
-def browser_checks(fails, html, lad):
+def browser_checks(fails, html, lad, play=True):
+    """The Chromium layers: 'quick' (D52's functions read on one page: generator, wording, closeness, scoring, run, daily,
+    facts), then, with play, 'play' (marking, feedback and broken clues, whole runs and a daily played)."""
     from playwright.sync_api import sync_playwright
     import datetime
     proc, base = bc.start_stub_server()
@@ -445,6 +463,10 @@ def browser_checks(fails, html, lad):
             for k in sorted(facts, key=int):
                 if lad and not any(int(k) in lad[lv] for lv in lad):
                     fails.append('facts: %s is in no pool, so its "Did you know?" can never show' % k)
+            if not play:                          # LAYER BOUNDARY: 'quick' above, 'play' below
+                ctx.close()
+                browser.close()
+                return played
 
             # marking and feedback, in the page: 23 at KS3 (its first ladder), every clue shown
             def preview(level, n, k=0):
@@ -604,12 +626,37 @@ def browser_checks(fails, html, lad):
     return played
 
 
-def run_all(html, lad_override=None):
+LAYERS = ('static', 'quick', 'play')
+
+
+def run_all(html, layers=LAYERS):
+    """(fails, ladders, ladder count, games played) from the given layers: 'static' (check_static: generator, labels,
+    ladders), 'quick' and 'play' (browser_checks). The real run takes every layer; a plant takes only those it names."""
     fails = []
-    res = check_static(fails, html)
-    lad, n_lad = res if res else (None, 0)
-    played = browser_checks(fails, html, lad)
+    if 'static' in layers:
+        res = check_static(fails, html)
+        lad, n_lad = res if res else (None, 0)
+    else:
+        lad, n_lad = page_ladders(html), 0
+    played = 0
+    if 'quick' in layers or 'play' in layers:
+        played = browser_checks(fails, html, lad, play='play' in layers)
     return fails, lad, n_lad, played
+
+
+def layer_source():
+    """{layer: its source}: where each layer's fault messages are written (the guard reads the tags from it)."""
+    import inspect
+    b = inspect.getsource(browser_checks)
+    cut = b.index('# LAYER BOUNDARY')
+    return {'static': inspect.getsource(check_static) + inspect.getsource(_check_ladder),
+            'quick': b[:cut] + inspect.getsource(check_facts), 'play': b[cut:]}
+
+
+def emitters(tag):
+    """The layers whose source writes a fault starting with the tag's head ('ladders:', 'facts:', ...)."""
+    head = tag.split(':')[0] + ':'
+    return {l for l, src in layer_source().items() if re.search(r"fails\.append\(\s*'%s" % re.escape(head), src)}
 
 
 # ---------- plants ----------
@@ -651,8 +698,8 @@ def plants(html):
     l23 = lad['ks3'][23][0]
     false = ['E'] + l23[1:] if l23[0] != 'E' else ['O'] + l23[1:]
     out = [
-        ('ladders: ks3 23', 'a false clue (even for 23)', plant_ladder(html, 'ks3', 23, false), 'false clue'),
-        ('ladders: ks3 23', 'a ladder leaving two numbers', plant_ladder(html, 'ks3', 23, two_left('ks3', 23, l23)), 'leaves 2 numbers'),
+        ('ladders: ks3 23', 'a false clue (even for 23)', plant_ladder(html, 'ks3', 23, false), 'false clue', ('static',)),
+        ('ladders: ks3 23', 'a ladder leaving two numbers', plant_ladder(html, 'ks3', 23, two_left('ks3', 23, l23)), 'leaves 2 numbers', ('static',)),
     ]
     # two digit clues: a ladder with a digit clue gains the other one, true of n, before its last clue
     for n, ls in sorted(lad['ks3'].items()):
@@ -661,15 +708,15 @@ def plants(html):
         if len(dig) == 1 and len(l) < 5:
             other = ('L%d' % (n % 10)) if dig[0][0] == 'U' else ('U%d' % digit_sum(n))
             if other not in l and n not in names(other, n):
-                out.append(('ladders: ks3 %d' % n, 'two digit clues', plant_ladder(html, 'ks3', n, l[:-1] + [other, l[-1]]), 'two digit clues'))
+                out.append(('ladders: ks3 %d' % n, 'two digit clues', plant_ladder(html, 'ks3', n, l[:-1] + [other, l[-1]]), 'two digit clues', ('static',)))
                 break
     out.append(('labels:', '"Foundation" restored', html.replace('aria-pressed="false">KS3<span', 'aria-pressed="false">Foundation<span')
-                .replace("{ ks3: 'KS3', gcse: 'GCSE' }", "{ ks3: 'Foundation', gcse: 'GCSE' }"), 'Foundation'))
+                .replace("{ ks3: 'KS3', gcse: 'GCSE' }", "{ ks3: 'Foundation', gcse: 'GCSE' }"), 'Foundation', ('static',)))
     out.append(('facts: 521', 'a fact for a number in no pool', html.replace(
-        '    314: "π', '    521: "2⁵²¹ − 1 is a Mersenne prime. I am the exponent.",\n    314: "π'), 'in no pool'))
-    out.append(('closeness: gcse', 'a fixed-size warmth band', html.replace('WARMTH[i][0] * top', 'WARMTH[i][0] * 100'), 'closeness'))
+        '    314: "π', '    521: "2⁵²¹ − 1 is a Mersenne prime. I am the exponent.",\n    314: "π'), 'in no pool', ('quick',)))
+    out.append(('closeness: gcse', 'a fixed-size warmth band', html.replace('WARMTH[i][0] * top', 'WARMTH[i][0] * 100'), 'closeness', ('quick',)))
     out.append(('run: ', 'a run with a repeated number', html.replace('out.push({ n: p[i], ladder', 'out.push({ n: p[0], ladder')
-                .replace('var ls = laddersOf(lv, p[i]);', 'var ls = laddersOf(lv, p[0]);'), 'five different'))
+                .replace('var ls = laddersOf(lv, p[i]);', 'var ls = laddersOf(lv, p[0]);'), 'five different', ('quick',)))
     return out
 
 
@@ -686,15 +733,33 @@ def main():
           % (SLUG, n_lad, len((lad or {}).get('ks3', {})), len((lad or {}).get('gcse', {})), played))
     ok = True
     if not args.no_selftest and not args.against:
-        for tag, what, bad, word in plants(html):
+        # Each plant runs only through the layers it names (52DLE-SELFTEST-LAYERS, 21 Nov 2026: until then each replayed
+        # the whole verifier, browser and all, seven times). The names are checked against the source: a plant's layers
+        # must include one that writes its tag.
+        planted = plants(html)
+        for tag, what, bad, word, layers in planted:
+            if not set(layers) & emitters(tag):
+                print('  self-test %-34s *** WRONG LAYER *** %s named, its tag %r is written in %s'
+                      % (what, '+'.join(layers), tag.split(':')[0] + ':', '+'.join(sorted(emitters(tag))) or 'no layer'))
+                ok = False
+                continue
             if bad == html:
                 print('  self-test %-34s *** CANNOT PLANT ***' % what)
                 ok = False
                 continue
-            rep, _, _, _ = run_all(bad)
+            rep, _, _, _ = run_all(bad, layers)
             hit = [f for f in rep if f.startswith(tag) and word in f]
             ok = ok and bool(hit)
             print('  self-test %-34s %s' % (what, ('caught: ' + hit[0][:120]) if hit else '*** MISSED *** ' + '; '.join(rep[:2])[:200]))
+        # The guard's own proof: a browser plant routed to static only is not caught there, so a plant sent to the
+        # wrong layer shows as MISSED rather than passing.
+        tag, what, bad, word, layers = next(p for p in planted if p[0].startswith('closeness'))
+        rep, _, _, _ = run_all(bad, ('static',))
+        if [f for f in rep if f.startswith(tag) and word in f] or 'static' in emitters(tag):
+            print('  self-test wrong-layer guard: %s through static only was caught there: the guard proves nothing' % what)
+            ok = False
+        else:
+            print('  self-test wrong-layer guard: %s through static only: MISSED, as it must be' % what)
     for f in fails[:60]:
         print('FAIL  ' + f)
     if len(fails) > 60:
