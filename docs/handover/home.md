@@ -24,6 +24,7 @@ Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-
 - Amendment 1: `.arr.turning .th{transform:rotate(-90deg)}`, centred on each thingy, with the array's 0.6 s ease, so every thingy stays eyes up. Measured mid-turn in Chromium: net 0° within 3°.
 - Next is there at once after marking; marking and the lock are untouched.
 - The verifier's new `turn` unit (laptop and phone at full motion, phone with reduced motion) and two plants (labels left visible, no counter-rotation), both caught; 15 plants in all.
+- MERGED 21 Nov as 7d827fa (#870) via merge-pr.py, exit 0, last line "main 7d827fa run 44946545379: GREEN". Main on the merge commit: check-site 44946545379 success, pages build 44946545012 success, phone-fit-full 44946545381 success with its matrix skipped (a game-only change selects no shared path), so some-thingies was measured locally on main 4ac9b3af: PASS in normal, aa and laptop modes. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-21-some-thingies-turn-labels.md` (closed out by CLASS-PAGE's first commit).
 
 ## 2026-11-21 (home): SOME-THINGIES-PERSONALITY (the thingies as characters; the game's own look)
 
