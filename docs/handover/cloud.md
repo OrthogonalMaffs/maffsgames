@@ -83,6 +83,8 @@ No page scrolls sideways at any size; zoom is 1 at 1366x650 and at 320x568, 375x
 **Todo rows added:** LARGE-SCREEN-LAYER, START-SIDEWAYS-GATE, PERCENTILE-LOWER-IS-BETTER. No canon §7.5.8 or SR-34 (parked); no LARGE-SCREEN-ROLLOUT row (LARGE-SCREEN-LAYER replaces it). No /updates/ line.
 **Correction to Amendment 1's root cause, measured:** scroll.js:42 compares `innerHeight` with `getBoundingClientRect`, and in the pilot's probe both were visual px under zoom (innerHeight 955, rects scaled 1.25), so that comparison is consistent; its scroll units were not measured. The row says so.
 
+**MERGED 20 Nov as ce6308c (#857)** at 22:02:21 UTC (head 7c4d555), route merge-pr.py. Main on the merge commit, read from the API by ANSWER-LOCK-SELFTEST-SPLIT: check-site 44825525834 success on attempt 2 (attempt 1 failed at checkout in Content verifiers 60 and Answer lock L1, the network to github.com: a flake, one rerun), phone-fit-full 44825525844 success, pages build and deployment 44825525170 success. Closed out by ANSWER-LOCK-SELFTEST-SPLIT's first commit. The contract stays in `docs/handover/contracts/`: the pilot is parked, not done, and todo row LARGE-SCREEN-LAYER points to it (AGENTS.md: stopped work is pointed to by a row).
+
 ## 2026-11-20 (cloud): FORGE-SUBJECT-PROMPT (`docs/handover/contracts/2026-11-20-forge-subject-prompt.md`; Project Claude 20 Nov, one part)
 
 Agent Claude Code (cloud), branch `claude/dreamy-knuth-e94w15` from main c46eb14. Tier Small. Root cause matched on c46eb14 (:64-65 the target's style, :475-477 the dead `<strong>` line, :478-480 the three spans, :141-148 no paper line).
