@@ -70,6 +70,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Claude Code (cloud), branch `claude/affectionate-carson-k1bg8h` restarted from main 7bbf875. Tier Medium. First commit closes out #859.
 New `schools/assets/site-nav.js` (HUBS, 29 hubs; MaffsNav) and `logo.svg`; linked on the 128 pages with an a.back-link by `scripts/apply-site-nav.py` (idempotent). `stage-exit.js` reads MaffsNav for its row and HUD links, in the short form ("← OP for Secondary", STAGE-EXIT-LABEL). Logo opt-outs (`data-site-logo="off"`): equatle, 52dle, as-you-can-see, possibly-maybe, wrong-on-the-internet. Static rule in check-site.py's site-wide part; `scripts/check-site-nav.py` (Chromium, 5 plants caught). Survey at 1920x1080: logo on 111 pages touching nothing; hidden on 17 (4 opt-outs, 13 full-width headers or bars). Canon §7.5.8; todo 3.20 clause; /updates/ line. 20 games have no a.back-link and are not covered (listed in the PR).
+**First Gate red on time (PR budget):** Escape-room times 246 s against a 119 s median: the logo re-measured on every DOM change, so a room's ticking clock measured the page each second (602 measures in 600 fake seconds). Now on load, resize and after input only (4); fixed on the branch.
 
 ## 2026-11-21 (cloud): 52DLE-SELFTEST-LAYERS (`docs/history/contracts/2026-11-21-52dle-selftest-layers.md`)
 

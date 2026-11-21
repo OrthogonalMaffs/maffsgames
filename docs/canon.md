@@ -1675,7 +1675,7 @@ nothing changes: every link stays exactly as written. Nothing is sent anywhere. 
 **The margin logo.** A MaffsGames logo (`schools/assets/logo.svg`, the portal's header mark on a navy tile) links to "/",
 fixed top left, named "MaffsGames home". It shows only while nothing the page paints comes within its clear space
 (measured, never a width guess: a fixed element where it is, anything in the flow by its left edge at any height), and
-only on a fine pointer, so never on phones or tablets; re-measured on resize and when the page changes. A page that shows
+only on a fine pointer, so never on phones or tablets; re-measured on load, on resize and after each click, key or touch (never on a timer or every DOM change: a page's own ticking clock would re-measure it every second). A page that shows
 a logo of its own carries `<html data-site-logo="off">`, each listed with its reason in `scripts/check-site-nav.py`.
 
 **Checked:** `check-site.py`'s site-wide part holds every page with an `a.back-link` to loading `site-nav.js` once, every

@@ -10,7 +10,7 @@
       (schools/assets/stage-exit.js's row link and HUD home link).
    2. A MaffsGames logo, linking to "/", fixed top left in the empty margin beside the page, shown only while the
       measured gap between the viewport's left edge and everything the page paints fits it (no width guess), and only
-      on a fine pointer (never phones or tablets). Re-measured on resize and when the page changes. A page that shows
+      on a fine pointer (never phones or tablets). Re-measured on load, on resize and after each click, key or touch. A page that shows
       a logo of its own opts out with <html data-site-logo="off">; scripts/check-site-nav.py lists each with its reason.
 
    No dependencies. Any failure leaves the page as written. */
@@ -182,12 +182,15 @@
     place();
     window.addEventListener('resize', function () { later(150); });
     window.addEventListener('load', function () { later(0); });
-    if (window.MutationObserver) {
-      new MutationObserver(function (recs) {
-        for (var i = 0; i < recs.length; i++) if (!logo.contains(recs[i].target)) { later(500); return; }   // not its own
-      }).observe(document.body,
-        { subtree: true, childList: true, attributes: true, attributeFilter: ['class', 'style', 'hidden'] });
-    }
+    // A screen changes after the student does something, so the logo is re-measured after each click, key or touch
+    // (once the screen has changed, and again once any short transition has run), never on a timer or every DOM
+    // change: a page's own ticking clock would otherwise re-measure the whole page every second for the whole session
+    // (it doubled test-escape-times.py's run, 119 s to 246 s, on this contract's first Gate).
+    var afterInput = function () {
+      later(300);
+      setTimeout(function () { later(0); }, 1500);   // lock-ok: layout only, marks nothing
+    };
+    ['click', 'keyup', 'touchend'].forEach(function (ev) { document.addEventListener(ev, afterInput, true); });
   }
 
   function ready() {
