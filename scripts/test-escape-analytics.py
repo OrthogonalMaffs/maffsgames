@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; three old faults planted and caught) |
-# ci-deps: schools/assets/analytics.js escape-rooms/assets/engine.js games/prime-or-composite/
+# ci-line: Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; every abandon path carries elapsed_s, the seconds since this visit's real start, and a level switch does not reset it; old faults planted and caught) |
+# ci-deps: schools/assets/analytics.js escape-rooms/assets/engine.js games/prime-or-composite/ games/estimation-golf/
 """What one play sends to GA4 and to the Sheet (contract ESCAPE-ANALYTICS, Jon's rulings of 11 Oct 2026).
 
     python scripts/test-escape-analytics.py
@@ -23,6 +23,16 @@ Playwright route, as test-section-clicks.py does; nothing leaves the machine):
               Start, two answers, a tab switch, then its own endGame(). Sheet and GA4: 0 game_abandoned,
               1 game_completed.
 
+Time to quit (contract QUIT-TIME, Jon 21 Nov 2026): analytics.js stamps elapsed_s, whole seconds since this visit's
+real game_started, on every game_abandoned, in mfg() and nowhere else; no other event carries it.
+  room-leave  (above) the page is left about 4 s after Start: elapsed_s within 2 s of the measured time.
+  room-engine The Rightful King: Start, about 2.5 s, then a beforeunload with no pagehide, so the abandon is the
+              engine's own call (engine.js begin()'s beforeunload listener): elapsed_s within 2 s of the wait.
+  golf-switch estimation-golf, which starts on load and starts again from its level buttons: about 4 s, then
+              Starter with nothing answered (a level_selected, not a new start), about 1.5 s, then the page is
+              left: elapsed_s within 2 s of the whole time since load, so the switch did not reset the clock.
+  Every scenario: no event other than game_abandoned carries elapsed_s, and it is a whole number.
+
 The Sheet is read from the posts to the Apps Script endpoint (beacons included); GA4 from what gtag()
 receives (window.dataLayer, which is all gtag.js ever sends; the real gtag.js is not loaded).
 
@@ -30,6 +40,8 @@ Planted faults, each in a copy served by routing (no file is edited), must each 
   search      the engine logging each first search as question_answered at index 0
   hidden      analytics.js sending game_abandoned on visibilitychange (the old listener, no pagehide gate)
   twice       the engine sending game_completed twice
+  no-time     analytics.js without the elapsed_s backfill (QUIT-TIME)
+  reset       the start clock set before "Browsing is not starting", so a level switch resets it (QUIT-TIME)
 """
 import asyncio
 import json
@@ -37,6 +49,7 @@ import mimetypes
 import os
 import re
 import sys
+import time
 from urllib.parse import urlsplit, unquote
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -102,20 +115,36 @@ def plant_tag_twice(analytics):
     return analytics.replace(s, s + " var _dup = document.createElement('script'); _dup.async = true; _dup.src = _gtagScript.src + '&dup=1'; document.head.appendChild(_dup);", 1)
 
 
+def plant_no_time(analytics):
+    a = "        params.elapsed_s = Math.round((Date.now() - window._mfgStartMs) / 1000);\n"
+    assert analytics.count(a) == 1, "plant no-time: anchor"
+    return analytics.replace(a, "")
+
+
+def plant_reset(analytics):
+    a = "      window._mfgStartMs = Date.now();\n"
+    b = "    // ── Browsing is not starting"
+    assert analytics.count(a) == 1 and analytics.count(b) == 1, "plant reset: anchors"
+    return analytics.replace(a, "").replace(b, "    if (eventName === 'game_started') window._mfgStartMs = Date.now();\n" + b)
+
+
 def plant_twice(engine):
     a = "    track('game_completed', {"
     assert engine.count(a) == 1, "plant twice: anchor"
     return engine.replace(a, "    track('game_completed', {});\n" + a)
 
 
-async def run(served):
-    """served: {repo path: replacement text}. -> {scenario: {"sheet": [...], "ga4": [...]} or an error string}"""
+async def run(served, only=None):
+    """served: {repo path: replacement text}; only: the scenario names to play (all when None).
+    -> {scenario: {"sheet": [...], "ga4": [...]} or an error string}"""
     from playwright.async_api import async_playwright
     out = {}
     async with async_playwright() as p:
         browser = await p.chromium.launch()
 
         async def scenario(name, body):
+            if only is not None and name not in only:
+                return
             posts = []
             ctx = await browser.new_context(viewport={"width": 1280, "height": 900})
             google = {"attempted": [], "reached": []}
@@ -158,7 +187,7 @@ async def run(served):
                 ga4 = await body(page)
                 await page.wait_for_timeout(400)
                 out[name] = {"sheet": posts, "ga4": ga4, "google": google, "navs": navs[0],
-                             "config": await page.evaluate(DL_CONFIG)}
+                             "config": await page.evaluate(DL_CONFIG), "waited": waited.pop(name, None)}
             except Exception as exc:
                 out[name] = "%s: %s" % (name, str(exc).splitlines()[0][:200])
             finally:
@@ -184,13 +213,41 @@ async def run(served):
             await page.wait_for_timeout(500)
             return await page.evaluate(GA4)
 
+        waited = {}   # scenario -> seconds from its start to its leaving, measured here
+
         async def room_leave(page):
             await page.goto(ORIGIN + "/escape-rooms/%s/" % ROOM, wait_until="load")
             await page.wait_for_selector("#startBtn", state="visible", timeout=15000)
+            t0 = time.monotonic()
             await page.click("#startBtn")
             await page.wait_for_timeout(300)
             await page.evaluate(ROOM_STEP + "(true)")
+            await page.wait_for_timeout(max(0, int(4000 - (time.monotonic() - t0) * 1000)))
+            waited["room-leave"] = time.monotonic() - t0
+            await page.goto(ORIGIN + "/about/", wait_until="load")
+            return None
+
+        async def room_engine(page):
+            # The engine's own abandon (begin()'s beforeunload listener): a beforeunload with no pagehide after it.
+            await page.goto(ORIGIN + "/escape-rooms/%s/" % ROOM, wait_until="load")
+            await page.wait_for_selector("#startBtn", state="visible", timeout=15000)
+            t0 = time.monotonic()
+            await page.click("#startBtn")
+            await page.wait_for_timeout(2500)
+            waited["room-engine"] = time.monotonic() - t0
+            await page.evaluate("window.dispatchEvent(new Event('beforeunload'))")
             await page.wait_for_timeout(300)
+            return await page.evaluate(GA4)
+
+        async def golf_switch(page):
+            # estimation-golf starts on load and again from each level button: a switch with nothing answered is a
+            # level_selected, and must not reset the start that elapsed_s counts from.
+            t0 = time.monotonic()
+            await page.goto(ORIGIN + "/games/estimation-golf/", wait_until="load")
+            await page.wait_for_timeout(4000)
+            await page.click("[onclick=\"setLevel('year6')\"]")
+            await page.wait_for_timeout(1500)
+            waited["golf-switch"] = time.monotonic() - t0
             await page.goto(ORIGIN + "/about/", wait_until="load")
             return None
 
@@ -210,6 +267,8 @@ async def run(served):
         await scenario("room-win", room_win)
         await scenario("room-leave", room_leave)
         await scenario("game", game)
+        await scenario("room-engine", room_engine)
+        await scenario("golf-switch", golf_switch)
         await browser.close()
     return out
 
@@ -226,6 +285,9 @@ def judge(res):
     def names(evs):
         return [e[0] for e in evs]
 
+    faults += judge_time(res)
+    if not all(k in res for k in ("room-win", "room-leave", "game")):
+        return faults
     win = res["room-win"]
     sheet = [(p.get("event"), p) for p in win["sheet"]]
     ga4 = [(e[0], e[1]) for e in win["ga4"]]
@@ -264,6 +326,42 @@ def judge(res):
     return faults
 
 
+TIME_SCENARIOS = ("room-leave", "room-engine", "golf-switch")
+
+
+def judge_time(res):
+    """QUIT-TIME: each abandon carries elapsed_s within 2 s of the measured time; nothing else carries it."""
+    faults = []
+    for name, r in res.items():
+        if isinstance(r, str):
+            continue
+        for p in r["sheet"]:
+            if p.get("event") != "game_abandoned" and "elapsed_s" in p:
+                faults.append("%s: %s carries elapsed_s %r (only game_abandoned may)" % (name, p.get("event"), p["elapsed_s"]))
+        for e in r["ga4"] or []:
+            if e[0] != "game_abandoned" and "elapsed_s" in e[1]:
+                faults.append("%s, GA4: %s carries elapsed_s" % (name, e[0]))
+        if name not in TIME_SCENARIOS:
+            continue
+        ab = [p for p in r["sheet"] if p.get("event") == "game_abandoned"]
+        if len(ab) != 1:
+            faults.append("%s: %d game_abandoned (want 1)" % (name, len(ab)))
+            continue
+        t, want = ab[0].get("elapsed_s"), r["waited"]
+        if not isinstance(t, int) or isinstance(t, bool):
+            faults.append("%s: game_abandoned has no whole-number elapsed_s (got %r; time to quit)" % (name, t))
+        elif abs(t - want) > 2:
+            faults.append("%s: game_abandoned elapsed_s %d, measured %.1f s since the real start (want within 2 s; time to quit)"
+                          % (name, t, want))
+    g = res.get("golf-switch")
+    if isinstance(g, dict):
+        evs = [p.get("event") for p in g["sheet"]]
+        if evs.count("game_started") != 1 or evs.count("level_selected") != 1:
+            faults.append("golf-switch: %d game_started and %d level_selected (want 1 and 1: the switch is not a start)"
+                          % (evs.count("game_started"), evs.count("level_selected")))
+    return faults
+
+
 def summary(res):
     def count(evs, n):
         return sum(1 for e in evs if e == n)
@@ -279,6 +377,9 @@ def summary(res):
             name, count(s, "question_answered"), count(s, "game_completed"), count(s, "game_abandoned"),
             "" if g is None else "; GA4: %d, %d, %d" % (count(g, "question_answered"), count(g, "game_completed"),
                                                          count(g, "game_abandoned"))))
+        ab = [p for p in r["sheet"] if p.get("event") == "game_abandoned"]
+        if ab and r.get("waited") is not None:
+            lines.append("  %-10s time to quit: elapsed_s %s, measured %.1f s" % (name, ab[0].get("elapsed_s"), r["waited"]))
     return lines
 
 
@@ -291,13 +392,17 @@ def main():
     for f in faults:
         print("  FAIL " + f)
     engine, analytics = read(ENGINE), read(ANALYTICS)
-    plants = [("the engine logs each first search as an answer", {ENGINE: plant_search(engine)}, "room-win"),
-              ("analytics.js sends game_abandoned on a hidden tab", {ANALYTICS: plant_hidden(analytics)}, "abandoned"),
-              ("the engine sends game_completed twice", {ENGINE: plant_twice(engine)}, "game_completed"),
-              ("analytics.js loads the GA4 tag twice", {ANALYTICS: plant_tag_twice(analytics)}, "gtag.js attempted")]
+    old = ("room-win", "room-leave", "game")
+    plants = [("the engine logs each first search as an answer", {ENGINE: plant_search(engine)}, "room-win", old),
+              ("analytics.js sends game_abandoned on a hidden tab", {ANALYTICS: plant_hidden(analytics)}, "abandoned", old),
+              ("the engine sends game_completed twice", {ENGINE: plant_twice(engine)}, "game_completed", old),
+              ("analytics.js loads the GA4 tag twice", {ANALYTICS: plant_tag_twice(analytics)}, "gtag.js attempted", old),
+              ("analytics.js without the elapsed_s backfill", {ANALYTICS: plant_no_time(analytics)}, "time to quit",
+               ("room-engine",)),
+              ("the start clock reset by a level switch", {ANALYTICS: plant_reset(analytics)}, "golf-switch", ("golf-switch",))]
     caught = True
-    for what, served, expect in plants:
-        got = judge(asyncio.run(run(served)))
+    for what, served, expect, only in plants:
+        got = judge(asyncio.run(run(served, only)))
         ok = any(expect in g for g in got)
         caught = caught and ok
         print("plant (%s): %s" % (what, "CAUGHT" if ok else "MISSED: " + ("; ".join(got) or "no fault")))

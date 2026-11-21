@@ -111,6 +111,12 @@
       if (!params.game_slug) params.game_slug = window._mfgSlug || '';
       if (!params.level) params.level = window._mfgLevel || '';
       if (!params.question_index) params.question_index = window._mfgQuestionIndex || 0;
+      // Time to quit (QUIT-TIME, Jon, 21 Nov 2026): whole seconds since this visit's real start, so the
+      // Dashboard can tell a bounce from a student stuck on a question. Set here, the one point every abandon
+      // passes through, never in a game file. No start known: left unset, never 0.
+      if (params.elapsed_s == null && typeof window._mfgStartMs === 'number') {
+        params.elapsed_s = Math.round((Date.now() - window._mfgStartMs) / 1000);
+      }
     }
 
     // ── Browsing is not starting ─────────────────────────────────────
@@ -164,7 +170,10 @@
     }
 
     // Auto-capture slug/level from game_started for abandon tracking
+    // eventName is final here: a switch or re-click was renamed by "Browsing is not starting" above, so only a
+    // real new start (an escape room's resumed visit included) sets the clock that elapsed_s counts from.
     if (eventName === 'game_started') {
+      window._mfgStartMs = Date.now();
       window._mfgSlug = params.game_slug || '';
       window._mfgLevel = params.level || '';
       window._mfgCompleted = false;

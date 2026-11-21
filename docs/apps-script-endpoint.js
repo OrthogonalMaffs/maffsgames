@@ -39,7 +39,11 @@ const EXPECTED_HEADERS = [
   //            hint_used, fresh/resumed on game_started, and on game_completed the outcome, wrongs, hints and the
   //            times ("escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567"; canon §1.3). The portal's
   //            score ticker: high, weekly or plain on ticker_clicked (contract TICKER-LINKS, 7 Nov 2026).
-  'detail'
+  'detail',
+  // Appended 2026-11-21 (contract QUIT-TIME) — also at the end. Rows written before the redeploy have it blank.
+  //   elapsed_s — on game_abandoned only: whole seconds from this visit's game_started to the abandon (analytics.js
+  //               mfg(); an escape room's resumed visit counts from its own start). Blank when no start was known.
+  'elapsed_s'
 ];
 
 // ============================================================
@@ -59,7 +63,8 @@ function doPost(e) {
       cellValue(data.questions_correct), cellValue(data.previous_score),
       cellValue(data.difficulty), cellValue(data.filter_type), cellValue(data.filter_value),
       cellValue(data.client_ts), cellValue(data.seq),
-      cellValue(data.question_id), cellValue(data.detail)
+      cellValue(data.question_id), cellValue(data.detail),
+      cellValue(data.elapsed_s)
     ]);
 
     var rowCount = sheet.getLastRow();
@@ -76,7 +81,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-19-a';
+const SCRIPT_VERSION = '2026-11-21-a';
 
 function doGet(e) {
   return jsonResponse({
@@ -555,20 +560,35 @@ function rptBroken(dash, r, weekRows, monthRows, col, kinds) {
 
   // B2: where students quit.
   r = rptTitle(dash, r, 'Where students quit (last 7 days, games with ' + RPT_QUIT_MIN + '+ quits)');
-  var quit = rptMap(), qStarts = rptMap();
+  // QUIT-TIME (21 Nov 2026): an escape room's returning visit sends game_started with detail "resumed", so starts
+  // are split; elapsed_s tells a bounce from a stuck student. A quit with no elapsed_s (every row before the
+  // redeploy, or a Sheet without the column) is left out of both time columns, never read as 0.
+  var quit = rptMap(), qFresh = rptMap(), qResumed = rptMap();
+  var secs = function(v) {
+    if (v === '' || v === null || v === undefined) return null;
+    var n = Number(v);
+    return isFinite(n) && n >= 0 ? n : null;
+  };
   weekRows.forEach(function(x) {
     var ev = x[col['event']], slug = String(x[col['game_slug']]);
-    if (ev === 'game_started') rptAdd(qStarts, slug);
+    if (ev === 'game_started') rptAdd(String(x[col['detail']]) === 'resumed' ? qResumed : qFresh, slug);
     else if (ev === 'game_abandoned') {
-      if (!rptHas(quit, slug)) quit[slug] = {slug: slug, n: 0, at: rptMap()};
+      if (!rptHas(quit, slug)) quit[slug] = {slug: slug, n: 0, at: rptMap(), times: []};
       quit[slug].n++;
       rptAdd(quit[slug].at, String(x[col['question_index']]));
+      var t = col['elapsed_s'] === undefined ? null : secs(x[col['elapsed_s']]);
+      if (t !== null) quit[slug].times.push(t);
     }
   });
   var lower = function(a, b) { var x = Number(a), y = Number(b); return isNaN(x) || isNaN(y) ? a < b : x < y; };
   var quits = Object.keys(quit).map(function(k) { return quit[k]; }).filter(function(q) { return q.n >= RPT_QUIT_MIN; })
     .map(function(q) {
-      q.starts = rptGet(qStarts, q.slug, 0);
+      q.fresh = rptGet(qFresh, q.slug, 0);
+      q.resumed = rptGet(qResumed, q.slug, 0);
+      q.starts = q.fresh + q.resumed;
+      var ts = q.times.slice().sort(function(a, b) { return a - b; }), mid = Math.floor(ts.length / 2);
+      q.median = !ts.length ? '' : ts.length % 2 ? ts[mid] : (ts[mid - 1] + ts[mid]) / 2;
+      q.fast = !ts.length ? '' : ts.filter(function(t) { return t <= 30; }).length;
       q.rate = q.starts > 0 ? q.n / q.starts : null;
       var best = null;
       Object.keys(q.at).forEach(function(k) {
@@ -583,13 +603,15 @@ function rptBroken(dash, r, weekRows, monthRows, col, kinds) {
   if (!quits.length) {
     r = rptLine(dash, r, 'None: no game was quit ' + RPT_QUIT_MIN + ' or more times this week.');
   } else {
-    r = rptHead(dash, r, ['Game', 'Starts', 'Abandoned', '% abandoned', 'Most quit at position', 'Quit there']);
+    r = rptHead(dash, r, ['Game', 'Starts (fresh)', 'Starts (resumed)', 'Abandoned', '% abandoned', 'Most quit at position',
+      'Quit there', 'Median time to quit (s)', 'Quit within 30 s']);
     quits.forEach(function(q) {
-      rptRow(dash, r, [q.slug, q.starts, q.n, q.rate === null ? '' : q.rate, q.pos, q.posN]);
-      dash.getRange(r, 4).setNumberFormat('0%');
+      rptRow(dash, r, [q.slug, q.fresh, q.resumed, q.n, q.rate === null ? '' : q.rate, q.pos, q.posN, q.median, q.fast]);
+      dash.getRange(r, 5).setNumberFormat('0%');
       r++;
     });
-    r = rptLine(dash, r, 'Position in the run, not which question: game_abandoned carries question_index only.');
+    r = rptLine(dash, r, "Position is the last question answered (0 = none). Times count from this visit's Start; " +
+      'older quits carry no time and are left out of the two time columns.');
   }
   return r + 1;
 }
