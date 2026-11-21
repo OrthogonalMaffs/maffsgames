@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail last; planted faults caught) |
+# ci-line: Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail then elapsed_s last; B2's fresh and resumed starts and time to quit; planted faults caught) |
 # ci-deps: docs/apps-script-endpoint.js data/games.json
 """Does the daily email and Dashboard (docs/apps-script-endpoint.js) report each kind of game by a measure that means
 something for it? Contract DASHBOARD-METRICS (Jon, 3 Nov 2026; Amendment 2: games.json is read from GitHub).
@@ -28,6 +28,12 @@ with no question_id in hardest questions, a minimum below 30, a pre-29-Sep blank
 room game_completed counted as escaped, doPost leaving detail out of the row, doPost writing detail before question_id.
   - f. doPost (ROOM-TIMES): EXPECTED_HEADERS is the 18 earlier columns in order then detail; each posted field lands
     under its own header, detail last; an old 18-header row 1 gains "detail" in S1; no detail leaves it blank.
+    QUIT-TIME (21 Nov 2026): elapsed_s is appended after detail; an 18-header row 1 gains it in T1 and the live
+    19-header row 1 gains it in T1 with every other header in place; no elapsed_s leaves it blank, 0 is written as 0.
+    B2 (in j.): Starts (fresh) and Starts (resumed) (detail "resumed"), % abandoned over both, Median time to quit (s)
+    and Quit within 30 s (30 included) over the quits that carry elapsed_s; blank ones (before the redeploy) are left
+    out of both, never 0. Plants: elapsed_s left out of the row, written before detail, a blank read as 0, resumed
+    starts counted as fresh, a quit at exactly 30 s not counted.
   - g. safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026): four games whose game_slug and level are "constructor",
     "__proto__", "toString" and "hasOwnProperty" are reported like any other game, in the model, the email and the
     Dashboard (figures written by hand), every other line is unchanged, and no tally lands on a built-in object.
@@ -87,7 +93,7 @@ HARNESS = r"""
 
   const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
     'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value',
-    'client_ts', 'seq', 'question_id', 'detail'];
+    'client_ts', 'seq', 'question_id', 'detail', 'elapsed_s'];
   const col = {}; HEAD.forEach((h, i) => col[h] = i);
   const row = (ts, event, slug, level, correct, qid) => {
     const r = HEAD.map(() => ''); r[0] = ts; r[1] = event; r[2] = slug; r[3] = level;
@@ -255,24 +261,47 @@ HARNESS = r"""
     {
       const OLD = HEAD.slice(0, 18);
       ({ api, env } = load('ok', OLD.slice()));
-      ok('doPost: EXPECTED_HEADERS is the 18 earlier columns in order, then detail',
-         JSON.stringify(api.EXPECTED_HEADERS) === JSON.stringify(OLD.concat(['detail'])), JSON.stringify(api.EXPECTED_HEADERS));
+      ok('doPost: EXPECTED_HEADERS is the 18 earlier columns in order, then detail, then elapsed_s (QUIT-TIME)',
+         JSON.stringify(api.EXPECTED_HEADERS) === JSON.stringify(OLD.concat(['detail', 'elapsed_s'])), JSON.stringify(api.EXPECTED_HEADERS));
       const sent = {};
       api.EXPECTED_HEADERS.forEach(h => { if (h !== 'timestamp') sent[h] = 'v_' + h; });
       sent.detail = 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567';
+      sent.elapsed_s = 247;
       const res = api.doPost({ postData: { contents: JSON.stringify(sent) } });
       const got = env.events.getDataRange().getValues().slice(-1)[0];
       const misplaced = api.EXPECTED_HEADERS.filter((h, i) => h !== 'timestamp' && got[i] !== sent[h]);
-      ok('doPost: every field is written under its own header, detail in the last column',
-         res && res.ok && got.length === api.EXPECTED_HEADERS.length && !misplaced.length && got[got.length - 1] === sent.detail,
+      ok('doPost: every field is written under its own header, detail then elapsed_s in the last two columns',
+         res && res.ok && got.length === api.EXPECTED_HEADERS.length && !misplaced.length && got[got.length - 2] === sent.detail &&
+         got[got.length - 1] === 247,
          JSON.stringify({ res, misplaced, got }));
-      ok('doPost: an old row 1 gains "detail" in S1 on the first post',
-         env.events.cells['1,19'] === 'detail' && env.events.cells['1,18'] === 'question_id', JSON.stringify(env.events.cells));
+      ok('doPost: an old row 1 gains "detail" in S1 and "elapsed_s" in T1 on the first post',
+         env.events.cells['1,19'] === 'detail' && env.events.cells['1,18'] === 'question_id' && env.events.cells['1,20'] === 'elapsed_s',
+         JSON.stringify(env.events.cells));
       const bare = Object.assign({}, sent); delete bare.detail;
       api.doPost({ postData: { contents: JSON.stringify(bare) } });
       const g2 = env.events.getDataRange().getValues().slice(-1)[0];
-      ok('doPost: an event with no detail leaves the last column blank', g2.length === api.EXPECTED_HEADERS.length && g2[g2.length - 1] === '',
-         JSON.stringify(g2));
+      ok('doPost: an event with no detail leaves its column blank', g2.length === api.EXPECTED_HEADERS.length && g2[g2.length - 2] === '' &&
+         g2[g2.length - 1] === 247, JSON.stringify(g2));
+      const noTime = Object.assign({}, sent); delete noTime.elapsed_s;
+      api.doPost({ postData: { contents: JSON.stringify(noTime) } });
+      const g3 = env.events.getDataRange().getValues().slice(-1)[0];
+      const zero = Object.assign({}, sent, { elapsed_s: 0 });
+      api.doPost({ postData: { contents: JSON.stringify(zero) } });
+      const g4 = env.events.getDataRange().getValues().slice(-1)[0];
+      ok('doPost: no elapsed_s leaves the last column blank; elapsed_s 0 is written as 0',
+         g3.length === api.EXPECTED_HEADERS.length && g3[g3.length - 1] === '' && g3[g3.length - 2] === sent.detail && g4[g4.length - 1] === 0,
+         JSON.stringify([g3, g4]));
+    }
+    // ---- doPost (QUIT-TIME): the live Sheet's 19-header row 1 gains "elapsed_s" in T1; every other header stays put.
+    {
+      const LIVE = HEAD.slice(0, 19);
+      ({ api, env } = load('ok', LIVE.slice()));
+      const sent = { event: 'game_abandoned', game_slug: 'quiz-g', level: 'gcse', question_index: 0, elapsed_s: 5 };
+      api.doPost({ postData: { contents: JSON.stringify(sent) } });
+      const got = env.events.getDataRange().getValues().slice(-1)[0];
+      ok('doPost: a 19-header row 1 gains "elapsed_s" in T1, the other 19 unchanged, and the value lands under it',
+         LIVE.every((h, i) => env.events.cells['1,' + (i + 1)] === h) && env.events.cells['1,20'] === 'elapsed_s' &&
+         got[HEAD.indexOf('elapsed_s')] === 5 && got[HEAD.indexOf('question_index')] === 0, JSON.stringify([env.events.cells, got]));
     }
 
     // ---- games.json unreadable: every game a question game, one line saying so
@@ -322,7 +351,7 @@ HARNESS = r"""
         correct: true, attempts: 2, score: 1480, questions_answered: 20, questions_correct: 17, previous_score: 1210,
         difficulty: 'mixed', filter_type: 'search', filter_value: 'v1|level=gcse;topic=all;fresh=0;su=1;sl=5;q=ratio;n=12',
         client_ts: '2026-11-14T11:00:00.000Z', seq: 41, question_id: 'h1a2b3c4d',
-        detail: 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567' };
+        detail: 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567', elapsed_s: 247 };
       const realRow = post(real);
       ok('h. doPost: an ordinary event is written exactly as it was sent, field for field',
          HEAD.every((h, i) => h === 'timestamp' || realRow[i] === real[h]), JSON.stringify(realRow));
@@ -473,7 +502,7 @@ HARNESS = r"""
     // (14 days) is 21 Oct. Each run goes through sendDailyReport, so its real weekRows, monthRows and prevWeekRows.
     {
       const at = (d, hm) => d + 'T' + hm + ':00.000Z';
-      const QI = 5, COR = 6, QA = 9, QC = 10, FT = 13, FV = 14, QID = 17, DET = 18;
+      const QI = 5, COR = 6, QA = 9, QC = 10, FT = 13, FV = 14, QID = 17, DET = 18, EL = 19;
       const ev = (ts, event, slug, f) => Object.assign(row(ts, event, slug, 'gcse'), f || {});
       const lines = sh => sh ? dashText(sh).split('\n') : [];
       const block = (ls, title) => {
@@ -561,6 +590,13 @@ HARNESS = r"""
       hourly('quiz-d', 12, '2026-10-29'); quits('quiz-d', '2026-10-29', [3, 3, 3, 3, 3, 3, 5, 5, 5, 5]);   // 10 of 12, most at 3 (6)
       hourly('quiz-f', 10, '2026-10-30'); quits('quiz-f', '2026-10-30', [2, 2, 2, 2, 2, 4, 4, 4, 4, 4]);   // 10 of 10, a tie: 2 (5)
       hourly('quiz-e', 9, '2026-10-31'); quits('quiz-e', '2026-10-31', [1, 1, 1, 1, 1, 1, 1, 1, 1]);       // 9 quits: left out
+      // QUIT-TIME: quiz-g, 10 fresh starts (detail "fresh" on 5, none on 5) and 5 resumed; 10 quits at position 0, 7 timed
+      // (0, 5, 12, 30, 31, 240, 600: median 30, 4 within 30 s, the 0 counted) and 3 from before the redeploy (blank:
+      // left out, never 0). quiz-d and quiz-f quit before the redeploy too: both time columns blank.
+      hourly('quiz-g', 10, '2026-11-01');
+      for (let i = 0; i < 5; i++) rb[rb.length - 1 - i][DET] = 'fresh';
+      for (let i = 0; i < 5; i++) rb.push(ev(at('2026-11-01', '19:0' + i), 'game_started', 'quiz-g', { [DET]: 'resumed' }));
+      [0, 5, 12, 30, 31, 240, 600, '', '', ''].forEach(t => rb.push(ev(at('2026-11-01', '20:00'), 'game_abandoned', 'quiz-g', { [QI]: 0, [EL]: t })));
       // C1: class-a, 10 starts 29 minutes apart from 09:00 (last 13:21); answers at 09:05 x5 and 13:50 x2 are in, 13:52
       // (31 minutes after the last) and 08:59 (before the first) are out: 7. class-b, 6 + 6 starts with a 31-minute gap
       // between: two runs of 6, none counted. class-c, 9 starts 10 minutes apart: not counted.
@@ -577,9 +613,13 @@ HARNESS = r"""
       ok('j. B1: each flagged row on a red background',
          fmtOf(d.sh, d.ls, 'quiz-c | gcse | q4 | 12 | 0', 1).setBackground === '#fee2e2' && fmtOf(d.sh, d.ls, 'quiz-c | gcse | q1 | 11 | 9%', 5).setBackground === '#fee2e2');
       const b2 = block(d.ls, 'Where students quit');
-      ok('j. B2: 10+ quits, highest % first, the position most quit at; 9 quits left out',
-         same(b2, ['Game | Starts | Abandoned | % abandoned | Most quit at position | Quit there', 'quiz-f | 10 | 10 | 1 | 2 | 5',
-           'quiz-d | 12 | 10 | 83% | 3 | 6', 'Position in the run, not which question: game_abandoned carries question_index only.']), JSON.stringify(b2));
+      ok('j. B2: 10+ quits, highest % first, the position most quit at; 9 quits left out; fresh and resumed starts apart; ' +
+         'median time to quit and quits within 30 s over timed quits only (blank rows left out, never 0)',
+         same(b2, ['Game | Starts (fresh) | Starts (resumed) | Abandoned | % abandoned | Most quit at position | Quit there | ' +
+           'Median time to quit (s) | Quit within 30 s', 'quiz-f | 10 | 0 | 10 | 1 | 2 | 5 |  | ',
+           'quiz-d | 12 | 0 | 10 | 83% | 3 | 6 |  | ', 'quiz-g | 10 | 5 | 10 | 67% | 0 | 10 | 30 | 4',
+           "Position is the last question answered (0 = none). Times count from this visit's Start; older quits carry no time and are left out of the two time columns."]),
+         JSON.stringify(b2));
       const c1 = block(d.ls, 'Probably a class');
       ok('j. C1: 10 starts 29 minutes apart counted; a 31-minute gap splits a run; 9 starts not counted',
          same(c1, ['Game | Date | First start | Last start | Starts | Questions answered', 'class-a | 2026-11-02 | 09:00 | 13:21 | 10 | 7']), JSON.stringify(c1));
@@ -703,10 +743,18 @@ PLANTS = [
      "  if (c === '' && new Date(x[col['timestamp']]) < RPT_BLANK_WAS_WRONG_UNTIL) return false;\n", ""),
     ("every room game_completed counted as escaped",
      "{ if (rptEscaped(x, col)) rm.escaped++; else rm.timedOut++; }", "rm.escaped++;"),
-    ("doPost leaves detail out of the row", "      cellValue(data.question_id), cellValue(data.detail)\n",
-     "      cellValue(data.question_id)\n"),
-    ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail)\n",
-     "      cellValue(data.detail), cellValue(data.question_id)\n"),
+    ("doPost leaves detail out of the row", "      cellValue(data.question_id), cellValue(data.detail),\n",
+     "      cellValue(data.question_id),\n"),
+    ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail),\n",
+     "      cellValue(data.detail), cellValue(data.question_id),\n"),
+    ("doPost leaves elapsed_s out of the row (QUIT-TIME)", "cellValue(data.detail),\n      cellValue(data.elapsed_s)\n",
+     "cellValue(data.detail)\n"),
+    ("doPost writes elapsed_s before detail", "cellValue(data.detail),\n      cellValue(data.elapsed_s)\n",
+     "cellValue(data.elapsed_s),\n      cellValue(data.detail)\n"),
+    ("B2: a quit with no elapsed_s read as 0", "    if (v === '' || v === null || v === undefined) return null;\n",
+     "    if (v === null || v === undefined) return null;\n"),
+    ("B2: resumed starts counted as fresh", "String(x[col['detail']]) === 'resumed' ? qResumed : qFresh", "qFresh"),
+    ("B2: a quit at exactly 30 s not within 30 s", "return t <= 30;", "return t < 30;"),
     ("cellValue writes a posted formula as it came", "))) return \"'\" + v;\n", "))) return v;\n"),
     ("the Dashboard writes a posted slug without cellValue", "setValues([[slug, gc[slug], comp, frac].map(cellValue)]);",
      "setValues([[slug, gc[slug], comp, frac]]);"),

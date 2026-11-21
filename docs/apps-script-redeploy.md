@@ -138,6 +138,11 @@ Then play any game for a few questions and check the **MaffsGames Events** sheet
   writes it, as R1 was), and an escape room's `game_completed` row has its times in column **S**, e.g.
   `escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567` (canon §1.3). Its other rows carry the lock id
   (`question_answered`), `lock:step` (`hint_used`) or `fresh`/`resumed` (`game_started`). Other games leave S blank.
+- From `2026-11-21-a` (QUIT-TIME): no new permission. Cell **T1** reads `elapsed_s` (the first post after the deploy
+  writes it, as S1 was; columns A to S stay where they are), and a `game_abandoned` row has whole seconds in column
+  **T**: the time since that visit's Start. Every other row leaves T blank. The Dashboard's "Where students quit"
+  table gains Starts (fresh), Starts (resumed), Median time to quit (s) and Quit within 30 s; quits from before the
+  deploy have no time and are left out of the two time columns.
 
 ---
 
