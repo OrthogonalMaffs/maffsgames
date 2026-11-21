@@ -66,7 +66,7 @@
   "Escape-room token minus sign (formatToken in rating.js and format_token in escape_set_checks.py print a fixed table identically, negatives with U+2212; a hyphen-printing JS rule and a hyphen-printing Python rule planted and caught)": "68",
   "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section (including Exam technique) and its data-calc is the roster's Calculator field read separately with the named CALC_ACROSS_PAPERS exception, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "69",
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
-  "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "16",
+  "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "68",
   "Expectation Station (every table, E(X) and explanation figure exact; all 480 Stage 3 cards reviewed against the distribution; Stage 1 has exactly one completion; every stage played in Chromium)": "7",
   "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "61",
   "Factor Race (every pair's key and factor counts recomputed, the KS3 pair table rebuilt and compared, every pair answered both ways in Chromium)": "51",
@@ -395,7 +395,7 @@
    "tier": "content"
   },
   "verify-sums-in-disguise.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test)",
    "parts": 2,
    "tier": "content"
