@@ -43,7 +43,11 @@ const EXPECTED_HEADERS = [
   // Appended 2026-11-21 (contract QUIT-TIME) — also at the end. Rows written before the redeploy have it blank.
   //   elapsed_s — on game_abandoned only: whole seconds from this visit's game_started to the abandon (analytics.js
   //               mfg(); an escape room's resumed visit counts from its own start). Blank when no start was known.
-  'elapsed_s'
+  'elapsed_s',
+  // Appended 2026-11-22 (contract AA-USAGE) — also at the end. Rows written before the redeploy have it blank.
+  //   aa — on game_started only: true when the dyslexia-friendly (Aa) font was on, false when the page has an Aa
+  //        toggle and it was off; blank on a page with no toggle (analytics.js mfg()).
+  'aa'
 ];
 
 // ============================================================
@@ -64,7 +68,8 @@ function doPost(e) {
       cellValue(data.difficulty), cellValue(data.filter_type), cellValue(data.filter_value),
       cellValue(data.client_ts), cellValue(data.seq),
       cellValue(data.question_id), cellValue(data.detail),
-      cellValue(data.elapsed_s)
+      cellValue(data.elapsed_s),
+      cellValue(data.aa)
     ]);
 
     var rowCount = sheet.getLastRow();
@@ -81,7 +86,7 @@ function doPost(e) {
 // Bump SCRIPT_VERSION whenever this file is redeployed. Hitting the /exec URL
 // in a browser then tells you which code is actually live — without it there is
 // no way to confirm a deploy landed, or which of several projects serves the URL.
-const SCRIPT_VERSION = '2026-11-21-a';
+const SCRIPT_VERSION = '2026-11-22-a';
 
 function doGet(e) {
   return jsonResponse({

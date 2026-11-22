@@ -32,7 +32,9 @@ room game_completed counted as escaped, doPost leaving detail out of the row, do
     19-header row 1 gains it in T1 with every other header in place; no elapsed_s leaves it blank, 0 is written as 0.
     B2 (in j.): Starts (fresh) and Starts (resumed) (detail "resumed"), % abandoned over both, Median time to quit (s)
     and Quit within 30 s (30 included) over the quits that carry elapsed_s; blank ones (before the redeploy) are left
-    out of both, never 0. Plants: elapsed_s left out of the row, written before detail, a blank read as 0, resumed
+    out of both, never 0. AA-USAGE (22 Nov 2026): aa is appended after elapsed_s; the live 20-header row 1 gains it in
+    U1 with every other header in place; false is written as false, no aa leaves it blank.
+    Plants: elapsed_s left out of the row, written before detail, aa left out or written before elapsed_s, a blank read as 0, resumed
     starts counted as fresh, a quit at exactly 30 s not counted.
   - g. safe tallies (COUNTS-SAFE-TALLY, 14 Nov 2026): four games whose game_slug and level are "constructor",
     "__proto__", "toString" and "hasOwnProperty" are reported like any other game, in the model, the email and the
@@ -93,7 +95,7 @@ HARNESS = r"""
 
   const HEAD = ['timestamp', 'event', 'game_slug', 'level', 'mode', 'question_index', 'correct', 'attempts', 'score',
     'questions_answered', 'questions_correct', 'previous_score', 'difficulty', 'filter_type', 'filter_value',
-    'client_ts', 'seq', 'question_id', 'detail', 'elapsed_s'];
+    'client_ts', 'seq', 'question_id', 'detail', 'elapsed_s', 'aa'];
   const col = {}; HEAD.forEach((h, i) => col[h] = i);
   const row = (ts, event, slug, level, correct, qid) => {
     const r = HEAD.map(() => ''); r[0] = ts; r[1] = event; r[2] = slug; r[3] = level;
@@ -261,36 +263,46 @@ HARNESS = r"""
     {
       const OLD = HEAD.slice(0, 18);
       ({ api, env } = load('ok', OLD.slice()));
-      ok('doPost: EXPECTED_HEADERS is the 18 earlier columns in order, then detail, then elapsed_s (QUIT-TIME)',
-         JSON.stringify(api.EXPECTED_HEADERS) === JSON.stringify(OLD.concat(['detail', 'elapsed_s'])), JSON.stringify(api.EXPECTED_HEADERS));
+      ok('doPost: EXPECTED_HEADERS is the 18 earlier columns in order, then detail, elapsed_s (QUIT-TIME), aa (AA-USAGE)',
+         JSON.stringify(api.EXPECTED_HEADERS) === JSON.stringify(OLD.concat(['detail', 'elapsed_s', 'aa'])), JSON.stringify(api.EXPECTED_HEADERS));
+      const D = HEAD.indexOf('detail'), T = HEAD.indexOf('elapsed_s'), A = HEAD.indexOf('aa');
       const sent = {};
       api.EXPECTED_HEADERS.forEach(h => { if (h !== 'timestamp') sent[h] = 'v_' + h; });
       sent.detail = 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567';
       sent.elapsed_s = 247;
+      sent.aa = true;
       const res = api.doPost({ postData: { contents: JSON.stringify(sent) } });
       const got = env.events.getDataRange().getValues().slice(-1)[0];
       const misplaced = api.EXPECTED_HEADERS.filter((h, i) => h !== 'timestamp' && got[i] !== sent[h]);
-      ok('doPost: every field is written under its own header, detail then elapsed_s in the last two columns',
-         res && res.ok && got.length === api.EXPECTED_HEADERS.length && !misplaced.length && got[got.length - 2] === sent.detail &&
-         got[got.length - 1] === 247,
+      ok('doPost: every field is written under its own header, detail, elapsed_s then aa in the last three columns',
+         res && res.ok && got.length === api.EXPECTED_HEADERS.length && !misplaced.length && A === got.length - 1 && T === A - 1 &&
+         D === T - 1 && got[D] === sent.detail && got[T] === 247 && got[A] === true,
          JSON.stringify({ res, misplaced, got }));
-      ok('doPost: an old row 1 gains "detail" in S1 and "elapsed_s" in T1 on the first post',
-         env.events.cells['1,19'] === 'detail' && env.events.cells['1,18'] === 'question_id' && env.events.cells['1,20'] === 'elapsed_s',
+      ok('doPost: an old row 1 gains "detail" in S1, "elapsed_s" in T1 and "aa" in U1 on the first post',
+         env.events.cells['1,19'] === 'detail' && env.events.cells['1,18'] === 'question_id' && env.events.cells['1,20'] === 'elapsed_s' &&
+         env.events.cells['1,21'] === 'aa',
          JSON.stringify(env.events.cells));
       const bare = Object.assign({}, sent); delete bare.detail;
       api.doPost({ postData: { contents: JSON.stringify(bare) } });
       const g2 = env.events.getDataRange().getValues().slice(-1)[0];
-      ok('doPost: an event with no detail leaves its column blank', g2.length === api.EXPECTED_HEADERS.length && g2[g2.length - 2] === '' &&
-         g2[g2.length - 1] === 247, JSON.stringify(g2));
+      ok('doPost: an event with no detail leaves its column blank', g2.length === api.EXPECTED_HEADERS.length && g2[D] === '' &&
+         g2[T] === 247, JSON.stringify(g2));
       const noTime = Object.assign({}, sent); delete noTime.elapsed_s;
       api.doPost({ postData: { contents: JSON.stringify(noTime) } });
       const g3 = env.events.getDataRange().getValues().slice(-1)[0];
       const zero = Object.assign({}, sent, { elapsed_s: 0 });
       api.doPost({ postData: { contents: JSON.stringify(zero) } });
       const g4 = env.events.getDataRange().getValues().slice(-1)[0];
-      ok('doPost: no elapsed_s leaves the last column blank; elapsed_s 0 is written as 0',
-         g3.length === api.EXPECTED_HEADERS.length && g3[g3.length - 1] === '' && g3[g3.length - 2] === sent.detail && g4[g4.length - 1] === 0,
+      ok('doPost: no elapsed_s leaves its column blank; elapsed_s 0 is written as 0',
+         g3.length === api.EXPECTED_HEADERS.length && g3[T] === '' && g3[D] === sent.detail && g4[T] === 0,
          JSON.stringify([g3, g4]));
+      const noAa = Object.assign({}, sent); delete noAa.aa;
+      api.doPost({ postData: { contents: JSON.stringify(noAa) } });
+      const g5 = env.events.getDataRange().getValues().slice(-1)[0];
+      api.doPost({ postData: { contents: JSON.stringify(Object.assign({}, sent, { aa: false })) } });
+      const g6 = env.events.getDataRange().getValues().slice(-1)[0];
+      ok('doPost (AA-USAGE): no aa leaves the last column blank; aa false is written as false, not blank',
+         g5.length === api.EXPECTED_HEADERS.length && g5[A] === '' && g5[T] === 247 && g6[A] === false, JSON.stringify([g5, g6]));
     }
     // ---- doPost (QUIT-TIME): the live Sheet's 19-header row 1 gains "elapsed_s" in T1; every other header stays put.
     {
@@ -302,6 +314,17 @@ HARNESS = r"""
       ok('doPost: a 19-header row 1 gains "elapsed_s" in T1, the other 19 unchanged, and the value lands under it',
          LIVE.every((h, i) => env.events.cells['1,' + (i + 1)] === h) && env.events.cells['1,20'] === 'elapsed_s' &&
          got[HEAD.indexOf('elapsed_s')] === 5 && got[HEAD.indexOf('question_index')] === 0, JSON.stringify([env.events.cells, got]));
+    }
+
+    // ---- doPost (AA-USAGE): the live Sheet's 20-header row 1 gains "aa" in U1; every other header stays put.
+    {
+      const LIVE = HEAD.slice(0, 20);
+      ({ api, env } = load('ok', LIVE.slice()));
+      api.doPost({ postData: { contents: JSON.stringify({ event: 'game_started', game_slug: 'quiz-g', level: 'gcse', aa: false }) } });
+      const got = env.events.getDataRange().getValues().slice(-1)[0];
+      ok('doPost: a 20-header row 1 gains "aa" in U1, the other 20 unchanged, and false lands under it',
+         LIVE.every((h, i) => env.events.cells['1,' + (i + 1)] === h) && env.events.cells['1,21'] === 'aa' &&
+         got[HEAD.indexOf('aa')] === false && got[HEAD.indexOf('elapsed_s')] === '', JSON.stringify([env.events.cells, got]));
     }
 
     // ---- games.json unreadable: every game a question game, one line saying so
@@ -351,7 +374,7 @@ HARNESS = r"""
         correct: true, attempts: 2, score: 1480, questions_answered: 20, questions_correct: 17, previous_score: 1210,
         difficulty: 'mixed', filter_type: 'search', filter_value: 'v1|level=gcse;topic=all;fresh=0;su=1;sl=5;q=ratio;n=12',
         client_ts: '2026-11-14T11:00:00.000Z', seq: 41, question_id: 'h1a2b3c4d',
-        detail: 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567', elapsed_s: 247 };
+        detail: 'escaped wrongs:1 hints:2 used:612 played:567 locks:182,431,567', elapsed_s: 247, aa: true };
       const realRow = post(real);
       ok('h. doPost: an ordinary event is written exactly as it was sent, field for field',
          HEAD.every((h, i) => h === 'timestamp' || realRow[i] === real[h]), JSON.stringify(realRow));
@@ -747,10 +770,14 @@ PLANTS = [
      "      cellValue(data.question_id),\n"),
     ("doPost writes detail before question_id", "      cellValue(data.question_id), cellValue(data.detail),\n",
      "      cellValue(data.detail), cellValue(data.question_id),\n"),
-    ("doPost leaves elapsed_s out of the row (QUIT-TIME)", "cellValue(data.detail),\n      cellValue(data.elapsed_s)\n",
-     "cellValue(data.detail)\n"),
-    ("doPost writes elapsed_s before detail", "cellValue(data.detail),\n      cellValue(data.elapsed_s)\n",
-     "cellValue(data.elapsed_s),\n      cellValue(data.detail)\n"),
+    ("doPost leaves elapsed_s out of the row (QUIT-TIME)", "cellValue(data.detail),\n      cellValue(data.elapsed_s),\n",
+     "cellValue(data.detail),\n"),
+    ("doPost writes elapsed_s before detail", "cellValue(data.detail),\n      cellValue(data.elapsed_s),\n",
+     "cellValue(data.elapsed_s),\n      cellValue(data.detail),\n"),
+    ("doPost leaves aa out of the row (AA-USAGE)", "      cellValue(data.elapsed_s),\n      cellValue(data.aa)\n",
+     "      cellValue(data.elapsed_s)\n"),
+    ("doPost writes aa before elapsed_s", "      cellValue(data.elapsed_s),\n      cellValue(data.aa)\n",
+     "      cellValue(data.aa),\n      cellValue(data.elapsed_s)\n"),
     ("B2: a quit with no elapsed_s read as 0", "    if (v === '' || v === null || v === undefined) return null;\n",
      "    if (v === null || v === undefined) return null;\n"),
     ("B2: resumed starts counted as fresh", "String(x[col['detail']]) === 'resumed' ? qResumed : qFresh", "qFresh"),
