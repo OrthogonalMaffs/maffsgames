@@ -70,7 +70,10 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` from main f343ac7. Tier Shared: stops at Gate green for Project Claude's review and Jon's "merge". First commit: #877's close-out (entry below), given-that unclaimed (`scripts/answer-lock-state.json` back to `[]`), its contract moved, this contract saved. #875's owed live proof stays owed: a docs-only PR and a /class/ PR (#877 was neither).
 
-- Next: `state_games()` in ci-deps.py, is_shared/measured_pages through it, the workflow passing the base text; selftest; the simulation of #877.
+- **Done on the branch:** ci-deps.py `state_games(base, head)` (the slugs whose entries differ in known-failures, sideways or unmeasurable, any mode; None for anything else); `is_shared(path, state)` and `measured_pages(paths, state=)` decide the state file through it; `state_report()` logs it; the workflow's "changed" step passes the file at BEFORE and HEAD (`git show`). Selftest PASS, 34 new checks; mutation (off-roster rule dropped) caught.
+- **Simulation (the step's Python from the yml, on c6d51b4):** BEFORE c6d51b4^ (#877's own diff): given-that only, not shared; main's old code on the same diff: shared, every game. The contract's range 2107eef..c6d51b4 adds three bot commits (ci-timings, ci-pack, answer-counts: shared on their own), so it is shared there; the state file alone still gives given-that.
+- **Decided for you:** `scroll-exempt` is a fourth key, per-slug but every mode, with its own note: any change to it is shared (the conservative reading of "anything else"). A state-file slug off the phone-fit roster makes the change shared and is named in the log (`--only` cannot measure it; the full run reports it stale). No current slug is off the roster (114 games). A missing side (file added or deleted) is shared.
+- Next: PR, Gate green (its own phone-fit run is a full measure: Gate files), then wait for Project Claude's review and Jon's "merge".
 
 ## 2026-11-22 (cloud): GIVEN-THAT-FIT-WHY (`docs/history/contracts/2026-11-22-given-that-fit-why.md`)
 

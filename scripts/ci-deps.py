@@ -405,6 +405,12 @@ PHONE_FIT_CHECKER = "scripts/measure-phone-fit.py"
 # PHONE-FIT-FULL-WORKFLOW Amendment 1): its own default output, and the cloud lane's claim list, which changes on
 # every claim and unclaim commit. Counting either would start a full measure for no change to any game.
 NOT_CHECKER_DEPS = {"docs/phone-fit-report.md", "scripts/answer-lock-state.json"}
+# The checker's lists (PHONE-FIT-STATE-SELECTIVE, 22 Nov 2026): per-game data, so rule 3 does not decide it; state_games()
+# reads which games' entries a change touches from the file's text before and after. Every PR that fixes a game takes
+# it off these lists, and counting the file as shared turned each such one-game run (#876: 1m38s) into a full one
+# (#877: 16m58s).
+STATE_FILE = "scripts/phone-fit-state.json"
+STATE_LISTS = ("known-failures", "sideways", "unmeasurable")     # each {mode: {slug: entry}}
 _SHARED_INDEX = None
 
 
@@ -421,19 +427,71 @@ def _shared_index():
     return _SHARED_INDEX
 
 
-def is_shared(path):
+def state_games(base_text, head_text):
+    """The games whose entries scripts/phone-fit-state.json's change touches, sorted, or None: treat it as shared
+    (PHONE-FIT-STATE-SELECTIVE, 22 Nov 2026). base_text and head_text are the file's text before and after (None for a
+    side where it does not exist). A game is listed when its entry differs, in any of STATE_LISTS, in any mode: added,
+    removed or changed. None when either side does not parse, or when anything else changed: a mode or list added or
+    removed, a list or mode that is not a {slug: entry} object, the note, or any other key (scroll-exempt, whose
+    entries hold in every mode, among them)."""
+    try:
+        base, head = json.loads(base_text), json.loads(head_text)
+    except (TypeError, ValueError):
+        return None
+    if not (isinstance(base, dict) and isinstance(head, dict)) or set(base) != set(head):
+        return None
+    missing, games = object(), set()
+    for key in base:
+        b, h = base[key], head[key]
+        if key not in STATE_LISTS:
+            if b != h:
+                return None
+            continue
+        if not (isinstance(b, dict) and isinstance(h, dict)) or set(b) != set(h):
+            return None
+        for mode in b:
+            bm, hm = b[mode], h[mode]
+            if not (isinstance(bm, dict) and isinstance(hm, dict)):
+                return None
+            games |= {g for g in set(bm) | set(hm) if bm.get(g, missing) != hm.get(g, missing)}
+    return sorted(games)
+
+
+def state_report(state):
+    """One line for the workflow's log: what the state file's change selects, and why it is shared when it is. A slug
+    off the phone-fit roster is named here, never dropped: --only cannot measure it, so the change is shared, and the
+    full run reports its entry stale (measure-phone-fit.py's write_report)."""
+    games = state_games(*state) if state else None
+    if games is None:
+        return ("%s: not only per-game entries changed (or a side is unreadable or absent): shared, every game"
+                % STATE_FILE)
+    off = sorted(set(games) - phone_fit_games())
+    if off:
+        return "%s: entries changed for %s; NOT on the phone-fit roster: %s: shared, every game" % (
+            STATE_FILE, ", ".join(games), ", ".join(off))
+    return "%s: entries changed for %s" % (STATE_FILE, ", ".join(games) or "no game (formatting only)")
+
+
+def is_shared(path, state=None):
     """True when a change to this path can change a game it does not belong to, so the whole library is measured
     (.github/workflows/phone-fit-full.yml, contract PHONE-FIT-FULL-WORKFLOW, 7 Nov 2026). The one definition of
     "shared"; three rules, any one of which makes a path shared:
       1. classify(path) is not "known": CI itself (.github/, scripts/ci-*, requirements*) or a path in no known area;
       2. two or more game pages load it (page_deps over game_slugs(), followed through the JS and CSS they load);
       3. it is scripts/measure-phone-fit.py or one of its dependencies (script_deps and the paths its literals name),
-         except NOT_CHECKER_DEPS: the checker's own output and the claim list.
+         except NOT_CHECKER_DEPS: the checker's own output and the claim list;
+         and except STATE_FILE, the checker's lists, which are per-game data (PHONE-FIT-STATE-SELECTIVE, 22 Nov 2026):
+         state is its (base text, head text), and state_games() decides. None (not only per-game entries changed, or
+         a side unreadable), a slug off the phone-fit roster, or no state given: shared. A list of roster games: not
+         shared, and measured_pages() adds those games to the measure.
     Plan's selection (select()) does not call it; nothing here changes what Plan runs."""
     path = path.replace("\\", "/").strip()
     if classify(path) != "known":
         return True
     multi, checker = _shared_index()
+    if path == STATE_FILE:
+        games = state_games(*state) if state else None
+        return path in multi or games is None or bool(set(games) - phone_fit_games())
     return path in multi or in_deps(path, checker)
 
 
@@ -462,10 +520,12 @@ def phone_fit_games():
     return _MEASURED
 
 
-def measured_pages(changed_paths, measured=None):
+def measured_pages(changed_paths, measured=None, state=None):
     """The phone-fit-measured games whose own files (games/<slug>/...) a change touches, sorted
-    (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026). Games only: phone-fit measures nothing else, so /class/, the escape rooms and
-    the hubs give none. A shared path is is_shared()'s question, not this one's: the workflow asks both."""
+    (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026), and, when the change includes STATE_FILE and state is its (base text, head
+    text), the roster games whose entries there changed (state_games(), PHONE-FIT-STATE-SELECTIVE). Games only: phone-fit
+    measures nothing else, so /class/, the escape rooms and the hubs give none. A shared path is is_shared()'s question,
+    not this one's: the workflow asks both (a state-file slug off the roster makes the change shared there)."""
     measured = phone_fit_games() if measured is None else measured
     out = set()
     for p in changed_paths:
@@ -473,6 +533,8 @@ def measured_pages(changed_paths, measured=None):
         parts = p.split("/")
         if len(parts) >= 3 and parts[0] == "games" and parts[1] in measured:
             out.add(parts[1])
+        if p == STATE_FILE and state:
+            out |= set(state_games(*state) or ()) & set(measured)
     return sorted(out)
 
 
@@ -620,9 +682,67 @@ def selftest():
         got = measured_pages(paths)
         check("measured_pages(%s) is %s" % (", ".join(paths), want or "none"), got == want, ", ".join(got))
     check("class/index.html is not shared", not is_shared("class/index.html"), "")
+    state_proofs(check)
     check("schools/assets/theme.css is shared (measured_pages leaves it to is_shared)", is_shared("schools/assets/theme.css"), "")
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
     return 1 if fails else 0
+
+
+def state_proofs(check):
+    """PHONE-FIT-STATE-SELECTIVE (22 Nov 2026): state_games() on #877's real change and on planted ones."""
+    def show(rev):
+        r = subprocess.run(["git", "show", "%s:%s" % (rev, STATE_FILE)], cwd=ROOT, capture_output=True, text=True)
+        return r.stdout if r.returncode == 0 else None
+    real = (show("2107eef"), show("c6d51b4"))
+    check("#877's state-file change (2107eef -> c6d51b4) gives given-that", state_games(*real) == ["given-that"],
+          str(state_games(*real)))
+    check("#877's state-file change is not shared", real[0] is not None and not is_shared(STATE_FILE, real), "")
+    pr877 = ["docs/handover/cloud.md", "games/given-that/index.html", "scripts/answer-lock-state.json", STATE_FILE,
+             "scripts/verify-given-that.py", "updates/index.html"]
+    check("measured_pages(#877's paths, its state) is given-that", measured_pages(pr877, state=real) == ["given-that"],
+          ", ".join(measured_pages(pr877, state=real)))
+    check("measured_pages(the state file alone, #877's state) is given-that",
+          measured_pages([STATE_FILE], state=real) == ["given-that"], "")
+    base_text = open(os.path.join(ROOT, STATE_FILE), encoding="utf-8").read()
+    base = json.loads(base_text)
+    kf = base["known-failures"]
+    g1, g2 = sorted(kf["normal"])[:2]
+
+    def planted(edit):
+        head = json.loads(base_text)
+        edit(head)
+        return base_text, json.dumps(head, indent=2)
+    two = planted(lambda h: (h["known-failures"]["normal"].pop(g1), h["known-failures"]["laptop"].update({g2: ["1280x720 next"]})))
+    added = planted(lambda h: h["sideways"]["aa"].update({g1: ["320x568"]}))
+    note = planted(lambda h: h.update({"note": h["note"] + " (edited)"}))
+    mode = planted(lambda h: h["known-failures"].update({"tablet": {}}))
+    lst = planted(lambda h: h.update({"new-list": {"normal": {}}}))
+    exempt = planted(lambda h: h["scroll-exempt"]["games"].pop(sorted(h["scroll-exempt"]["games"])[0]))
+    shape = planted(lambda h: h["unmeasurable"].update({"normal": ["glorious-gantt"]}))
+    off = planted(lambda h: h["known-failures"]["normal"].update({"not-a-roster-game": ["320x568"]}))
+    for name, state, want in (("two games' entries (one removed, one changed)", two, sorted([g1, g2])),
+                              ("an entry added", added, [g1]), ("no change", (base_text, base_text), []),
+                              ("formatting only", (base_text, json.dumps(base)), []),
+                              ("the note", note, None), ("a new mode key", mode, None), ("a new list", lst, None),
+                              ("a scroll-exempt entry (every mode, not per-mode)", exempt, None),
+                              ("a mode that is not a {slug: entry} object", shape, None),
+                              ("unparseable JSON", (base_text, base_text[:-20]), None),
+                              ("no base (the file is new)", (None, base_text), None),
+                              ("no head (the file is deleted)", (base_text, None), None)):
+        got = state_games(*state)
+        check("state_games: %s gives %s" % (name, "None (shared)" if want is None else want or "none"), got == want,
+              str(got))
+        check("is_shared(state file): %s is %s" % (name, want is None), is_shared(STATE_FILE, state) == (want is None), "")
+    check("is_shared(state file) with no base and head given is True (it cannot tell)", is_shared(STATE_FILE), "")
+    check("measured_pages(state file, two games) gives both", measured_pages([STATE_FILE], state=two) == sorted([g1, g2]), "")
+    # A slug off the phone-fit roster is reported and makes the change shared (a full run reports its entry stale);
+    # it is never dropped to measure nothing (STOP IF).
+    check("state_games: a slug off the roster is listed", state_games(*off) == ["not-a-roster-game"], str(state_games(*off)))
+    check("is_shared(state file): a slug off the roster is shared", is_shared(STATE_FILE, off), "")
+    check("state_report names the slug off the roster", "NOT on the phone-fit roster: not-a-roster-game" in state_report(off),
+          state_report(off))
+    check("state_report on #877 names given-that", state_report(real) == "%s: entries changed for given-that" % STATE_FILE,
+          state_report(real))
 
 
 def check_header_kinds(check, dmap, sel, always, anyp):

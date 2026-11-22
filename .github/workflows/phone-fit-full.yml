@@ -15,6 +15,9 @@
 # WHICH PATHS ARE SHARED. A `paths:` filter here would be a second list, so every push to main starts the small "changed"
 # job, which asks scripts/ci-deps.py, the Plan job's own selection code: its is_shared() is the one definition (CI itself
 # or an unknown path, a file two or more games load, the checker and what it reads). Nothing is listed.
+# The checker's lists, scripts/phone-fit-state.json, are per-game data (PHONE-FIT-STATE-SELECTIVE, 22 Nov 2026): the
+# "changed" job gives ci-deps.py the file's text at the base and at HEAD, and a change to only some games' entries
+# measures those games; a change to its note, its shape or its scroll-exempt list still measures every game.
 # This file is under .github/, which classify() counts as CI itself, so the push that adds or changes it runs the full measure.
 #
 # ONE JOB PER MODE (Jon's ruling, 7 Nov 2026, after the first run took 30m42s with the modes in series): normal, Aa and
@@ -71,11 +74,20 @@ jobs:
           spec.loader.exec_module(deps)
           diff = subprocess.run(["git", "diff", "--name-only", os.environ["BEFORE"], "HEAD"], capture_output=True, text=True)
           paths = [p for p in diff.stdout.split("\n") if p]
+          # The checker's lists are per-game data (PHONE-FIT-STATE-SELECTIVE): is_shared and measured_pages read which
+          # games' entries changed from the file's text at the base and at HEAD. A side git cannot give is None: shared.
+          state = None
+          if deps.STATE_FILE in paths:
+              base = subprocess.run(["git", "show", "%s:%s" % (os.environ["BEFORE"], deps.STATE_FILE)],
+                                    capture_output=True, text=True)
+              head = subprocess.run(["git", "show", "HEAD:%s" % deps.STATE_FILE], capture_output=True, text=True)
+              state = (base.stdout if base.returncode == 0 else None, head.stdout if head.returncode == 0 else None)
+              print(deps.state_report(state))
           if diff.returncode:                  # a new branch or a rewritten history: nothing to compare, so measure
               why = ["no usable diff from %s" % os.environ["BEFORE"]]
           else:
-              why = [p for p in paths if deps.is_shared(p)]
-          games = [] if why else deps.measured_pages(paths)
+              why = [p for p in paths if deps.is_shared(p, state)]
+          games = [] if why else deps.measured_pages(paths, state=state)
           print("shared paths in this change:", why or "none")
           print("measured games it changes:", ", ".join(games) or "none" if not why else "(every game: a shared path)")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8", newline="") as fh:
