@@ -165,4 +165,17 @@
   <url><loc>https://maffsgames.co.uk/parents/statistics-data/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://maffsgames.co.uk/parents/circle-theorems/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://maffsgames.co.uk/parents/probability-trees/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <!-- When will I use this? (written by scripts/build-uses.py from data/uses.json) -->
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/ratio/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/percentages/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/area-perimeter/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/averages/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/agriculture/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/catering/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/construction/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/creative/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/hair-and-beauty/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://maffsgames.co.uk/when-will-i-use-this/route/health-and-science/</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <!-- /When will I use this? -->
 </urlset>

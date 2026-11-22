@@ -2084,6 +2084,50 @@
     "resit",
     "grade 4"
    ]
+  },
+  "when-will-i-use-this/area-perimeter/index.html": {
+   "title": "Area and perimeter: when will I use this? | MaffsGames",
+   "description": "Real jobs that use area and perimeter: painting a room, marking out a pitch and spreading fertiliser, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/averages/index.html": {
+   "title": "Averages and statistics: when will I use this? | MaffsGames",
+   "description": "Real jobs that use averages: blood pressure readings, growth charts, counting wild orchids and the weather, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/index.html": {
+   "title": "When Will I Use This? Maths in Real Jobs | MaffsGames",
+   "description": "Where the maths you practise is used at work: real jobs that use ratio, percentages, area and averages, with worked examples and sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/percentages/index.html": {
+   "title": "Percentages: when will I use this? | MaffsGames",
+   "description": "Real jobs that use percentages: VAT on a bill, voltage drop, bread dough and gold, with worked examples and their sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/ratio/index.html": {
+   "title": "Ratio: when will I use this? | MaffsGames",
+   "description": "Real jobs that use ratio: mixing concrete, hair colour and medicine doses, with worked examples and their sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/agriculture/index.html": {
+   "title": "Maths at work: agriculture and animal care | MaffsGames",
+   "description": "The maths used in agriculture, environmental and animal care: pitch lines, fertiliser rates and counting orchids, worked out. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/catering/index.html": {
+   "title": "Maths at work: catering and hospitality | MaffsGames",
+   "description": "The maths used in catering and hospitality: baker's percentages for bread dough, with a worked example and its source. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/construction/index.html": {
+   "title": "Maths at work: construction | MaffsGames",
+   "description": "The maths used in construction and the built environment: concrete mixes, VAT, voltage drop and paint, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/creative/index.html": {
+   "title": "Maths at work: creative and design | MaffsGames",
+   "description": "The maths used in creative and design jobs: how much gold is in 9 carat jewellery, with a worked example and its source. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/hair-and-beauty/index.html": {
+   "title": "Maths at work: hair and beauty | MaffsGames",
+   "description": "The maths used in hair and beauty: mixing hair colour with developer in the right ratio, with a worked example and its source. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/health-and-science/index.html": {
+   "title": "Maths at work: health and science | MaffsGames",
+   "description": "The maths used in health and science: medicine doses, blood pressure averages and growth chart centiles, with worked examples. Free, no sign-up."
   }
  }
 }

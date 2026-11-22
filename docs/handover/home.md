@@ -16,6 +16,18 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
+
+Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-this`; contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md` (verbatim, with Jon's HUBS ruling below it). The first commit carries GIVEN-THAT-POLISH's close-out (#881, 7660e2f).
+
+- One source: `data/uses.json` (4 topics, the 15 Skills England routes, 14 scenarios verbatim, 18 sources). `scripts/build-uses.py` writes 11 committed pages (hub, 4 topics, 6 routes with scenarios) and sitemap.xml's block. Heads come from games.json "pages" via check-meta's render(); the footer is check-footer's CANONICAL. Maths is set in KaTeX at display only.
+- `scripts/check-uses.py` (CI line, `--selftest && --check`): (a) to (f) as the contract lists, plus a guard that the build's own pages are whole. 27 steps with "=": 26 signs recomputed, 2 labels, and 5 steps marked noCheck ("% of" three times, a ratio, a unit change). Self-test: 41 of 41 caught. Chromium: 11 pages x 320/390 x normal/Aa, no sideways scroll.
+- Outside EXACT CHANGE, needed by site-wide checks: `check-publish-scope.py` SITE gains `when-will-i-use-this/`; site-nav.js HUBS gains the 4 topic pages (Jon's ruling, 18:05). Hub has no back link: "Back to games" scrolled 4 px at 320 in Aa. parents/index.html has that same 4 px scroll on main (reported, not fixed: DO NOT TOUCH).
+- Footer: defined once (check-footer.py `_LINKS`) but written into 159 pages on main (170 with these 11) by apply-footer.py, every game among them: not changed (DO NOT TOUCH any game).
+- `check-uses-links.py --live` (not CI): on the first run 17 of 18 answered 200 and RCN's dosage page was 404; Project Claude's review moved it to RCN Learn, also 404 (the course is withdrawn); ruling (Project Claude with Jon): the source is now Gloucestershire Hospitals NHS FT's IV drug calculation practice formulae (PDF).
+- Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
+- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+
 ## 2026-11-22 (home): GIVEN-THAT-POLISH (a first-try hint, full-size fractions, slip lines that say what was computed, KaTeX in every worked answer, every fade stored)
 
 Claude Code (home lane), worktree `~/mg-gtp`, branch `claude/given-that-polish`; contract `docs/handover/contracts/2026-11-22-given-that-polish.md` (verbatim). The first commit carries GIVEN-THAT-VENN-FADE's close-out (#879, 873befe).
@@ -28,6 +40,7 @@ Claude Code (home lane), worktree `~/mg-gtp`, branch `claude/given-that-polish`;
 - Fade: phase2.greyOut is stored on all 90 items ("none" on the 27 Bayes trees); inferGreyOut is deleted. Tables carry data-row and data-col on every cell, so rows fade. Totals rule, from SPEC: the reduced sample space is the condition's group and its own total. For a column condition, the other columns, the Total column and the grand total fade, and the condition column's total stays. For a row condition, the same with rows. A Venn's "Total" and a tree's root fade too.
 - The open Why card's thresholds were re-measured for the taller card. Needs: 827 at 320 wide, 1183 for 601 to 899, 854 at 900, 797 from 1200. New thresholds: 860, 1220, 890, 830. It is collapsed at all five fit sizes, which fit. Reported (not gated) Next below the fold on phones rose from 592 to 916 entries, all in Aa.
 - Verifier: 13 plants, all caught. The 3 new: core_01 stored "none"; inferGreyOut restored with core_09's greyOut removed; the stored fade inside the condition (gcse_03's Bus, from #879).
+- MERGED 22 Nov as 7660e2f (#881) via merge-pr.py, exit 0, last line "main 7660e2f run 45050898255: GREEN". Main on the merge commit: check-site 45050898255 success, phone-fit-full 45050898282 success, pages build 45050898271 success. The PR's own phone-fit runs measured given-that only: 45047801409 (head f312901) and 45049760979 (head 294beba), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-given-that-polish.md` (closed out by WHEN-WILL-I-USE-THIS's first commit).
 
 ## 2026-11-22 (home): GIVEN-THAT-VENN-FADE and DOCS-TRUTH (Given That's Phase 2 fade made real and proved; two stale doc lines)
 
