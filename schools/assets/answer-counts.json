@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-21T22:21:41Z",
+ "as_of": "2026-11-22T13:35:41Z",
  "games": {
   "52dle": 22,
   "angle-ace": 52,
@@ -11,7 +11,7 @@
   "cast-away": 131,
   "chart-interrogator": 15,
   "circle-theorem-spotter": 611,
-  "complex-converter": 19,
+  "complex-converter": 22,
   "component-crusher": 1,
   "coordinate-geometry-dash": 10,
   "core-maths-paper1": 168,
@@ -28,7 +28,7 @@
   "eigenvector-engine": 47,
   "equation-builder": 9,
   "equatle": 31,
-  "escape-big-school-begins": 670,
+  "escape-big-school-begins": 681,
   "escape-canteen-hack": 189,
   "escape-car-trap": 149,
   "escape-christmas-tree-fiasco": 7,
@@ -41,7 +41,7 @@
   "escape-pe-shed-rebellion": 301,
   "escape-prom-budget": 168,
   "escape-rightful-king": 120,
-  "escape-roll-for-initiative": 9,
+  "escape-roll-for-initiative": 50,
   "escape-rugby-mud": 253,
   "estimation-engine": 172,
   "estimation-golf": 618,
@@ -64,7 +64,7 @@
   "how-many-parts": 51,
   "i-dropped-my-ice-cream": 3,
   "i-found-a-mark": 65,
-  "index-laws": 436,
+  "index-laws": 442,
   "integration-duel": 87,
   "its-a-sine": 54,
   "its-on-sale": 10,
@@ -95,14 +95,14 @@
   "shape-shifter": 45,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4387,
-  "some-thingies": 43,
+  "some-thingies": 65,
   "split-it": 985,
   "spot-the-error": 48,
   "spot-the-muppet": 70,
   "squared-squirrel": 40,
   "standard-form-blitz": 317,
   "sums-in-disguise": 278,
-  "surd-simplifier": 300,
+  "surd-simplifier": 302,
   "suvat": 19,
   "take-a-walk": 23,
   "tax-theft": 423,
@@ -124,5 +124,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 29969
+ "total": 30054
 }
