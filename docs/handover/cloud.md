@@ -72,7 +72,8 @@ Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier
 
 - STOP before any edit (measured, every item): besides the set names (black, 1.25:1), `--muted` #7a7f90 is 4.22:1 on #1a1d27 (Venn Total, tree branch labels, tree list root and connectors). Amendment 1: `--muted` to #8a8fa0 (5.22:1); the check also covers the start and results screens.
 - Done on the branch: `.venn-set-label` fill `var(--text)`; `--muted` #8a8fa0; the verifier's contrast sweep (CONTRAST_JS: fill or colour with opacity, over SVG fills and ancestor backgrounds; faded and disabled exempt), not yet wired into main(). Every diagram label passes (10,988 judged across 390x844 and 1366x768, normal and Aa).
-- **STOP 2 (22 Nov):** the start and results screens fail: Start Game (once a level is picked) and Play Again, `color:#fff` on `--accent` #f59e0b, 2.15:1, every size and mode. Waiting on Jon's colour ruling.
+- **STOP 2 (22 Nov):** the start and results screens fail: Start Game (once a level is picked) and Play Again, `color:#fff` on `--accent` #f59e0b, 2.15:1, every size and mode. Amendment 2: `color:#0f1117` on the amber (8.79:1).
+- Done: both buttons; the `contrast` unit in main() with 3 plants (the set names' fill removed, caught on all 14 Venns; --muted back; Start Game white). Verifier PASS locally, 16 plants caught. Seen, not changed: `.submit-btn` (typed answers, game screen, outside the sweep) is also white on the amber.
 
 ## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/history/contracts/2026-11-22-decimal-detective-fit.md`)
 

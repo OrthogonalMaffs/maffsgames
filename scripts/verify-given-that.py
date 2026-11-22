@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade, stored per item, judged against the condition, both drawings, with and without reduced motion; the first-try hint; every worked answer typeset) | | 3
+# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade, stored per item, judged against the condition, both drawings, with and without reduced motion; the first-try hint; every worked answer typeset; every unfaded diagram label and the start and results screens' text at 4.5:1 contrast) | | 3
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a
@@ -62,6 +62,13 @@ GIVEN-THAT-POLISH also: after a first wrong pick in Phase 2 the feedback is the 
 (the Why card's working and the Worked Answer panel) shows the stored text exactly, read back from its KaTeX, with
 no a/b left as text. Plants: the Venn's fade rule removed; gcse_03's greyOut fading the condition's own column;
 core_01 stored "none"; inferGreyOut restored with core_09's stored greyOut removed.
+The contrast (contract GIVEN-THAT-SET-LABELS, 22 Nov 2026, Amendments 1 and 2; CONTRAST_JS, contrast_faults()): every
+item's diagram in Phase 1 and Phase 2 (both drawings: 390x844 and 1366x768), the start screen before and after a level
+is picked, and the results screen, normal and Aa. Every text element (an SVG text's fill, otherwise its colour, with
+its own and its ancestors' opacity) has a WCAG contrast of at least 4.5:1 against what is painted beneath it: an SVG
+shape in its drawing whose fill holds the text's centre, then each ancestor's background, layered until opaque. Faded
+text (greyed, or inside a greyed element) and disabled controls are exempt. Plants: the set names' fill removed (must
+be caught on every Venn), --muted back to #7a7f90 (4.22:1), Start Game's white text on the amber.
 
     python scripts/verify-given-that.py [--no-selftest] [--against FILE]
 """
@@ -1507,14 +1514,26 @@ PLANTS = [
      [('phase2:{greyOut:"col_< 2 hours,col_2-4 hours",condition:"the teenager', 'phase2:{condition:"the teenager'),
       ('/* ---------- RENDER ANSWER AREA ---------- */', OLD_INFER + '/* ---------- RENDER ANSWER AREA ---------- */'),
       ('  // Grey-out animation\n', '  inferGreyOut(q);\n  // Grey-out animation\n')], None),
+    # GIVEN-THAT-SET-LABELS's (contract step 3; Amendments 1 and 2).
+    ('~venn-set-label', "the set names' fill removed (SVG's default black)",
+     "font-weight:700;text-anchor:middle;fill:var(--text);dominant-baseline", "font-weight:700;text-anchor:middle;dominant-baseline"),
+    ('~ is 4.22:1 (', 'the old muted grey (#7a7f90, 4.22:1)', '--muted:#8a8fa0;', '--muted:#7a7f90;'),
+    ('~#startBtn', "Start Game's white text on the amber back", "background:var(--accent);color:#0f1117;font-family:'Outfit',sans-serif;font-size:17px",
+     "background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px"),
 ]
+# A plant that must be caught on every item of a kind: the ids, from the page's bank, each must be named in a fault.
+PLANT_EVERY = {"the set names' fill removed (SVG's default black)":
+               lambda bank: [q['id'] for lv in bank for q in bank[lv] if q['data']['type'] == 'venn']}
 # The stage each plant needs: the bank's own checks catch most; marking and slips need the play; the layout the fit.
 PLANT_STAGES = {'r-002/r-003: marked within 0.005, no precision': ('play',),
                 'r-004: decimals only, the fraction unreadable': ('play',),
                 'a slip named for a value it does not give': ('play',),
                 "the diagram's padding restored (20px), options below the fold": ('fit',),
                 "the Venn's fade rule removed": ('fade',),
-                "a greyOut fading the condition's own column (Bus)": ('fade',)}
+                "a greyOut fading the condition's own column (Bus)": ('fade',),
+                "the set names' fill removed (SVG's default black)": ('contrast',),
+                'the old muted grey (#7a7f90, 4.22:1)': ('contrast',),
+                "Start Game's white text on the amber back": ('contrast',)}
 
 
 def main():
@@ -1527,7 +1546,7 @@ def main():
     # Work units (ci_shards, canon 7.8.1): the bank and the play at 390x844, the fit sweep a size at a time (both
     # modes), and each plant. With no --shard, all of them.
     shard = bc.Shard(__file__, args)
-    checks = ['bank and play', 'fade'] + ['fit %dx%d' % s for s in FIT_SIZES]
+    checks = ['bank and play', 'fade', 'contrast'] + ['fit %dx%d' % s for s in FIT_SIZES]
     plants = [] if args.no_selftest or args.against else ['plant: ' + p[1] for p in PLANTS]
     mine = shard.pick(checks + plants)
     html = open(args.against or GAME, encoding='utf-8').read()
@@ -1546,6 +1565,12 @@ def main():
                 print('  fade: %d items into Phase 2 at %s, with and without reduced motion, every one judged against '
                       'SPEC: %d fade their condition\'s outside, %d Bayes trees store "none" (by design): %s'
                       % (n, ', '.join('%dx%d' % s for s in FADE_SIZES), n - len(bayes), len(bayes), ', '.join(bayes)))
+            elif u == 'contrast':
+                f, n = run(html, ('bank', 'contrast'))
+                print('  contrast: every text element at least %.1f:1 against what is painted beneath it, at %s, normal '
+                      'and Aa (faded and disabled exempt): %s judged'
+                      % (MIN_CONTRAST, ', '.join('%dx%d' % s for s in CONTRAST_SIZES),
+                         ', '.join('%s %d' % kv for kv in sorted(CONTRAST_TALLY.items()))))
             else:
                 w, h = (int(x) for x in u.split()[1].split('x'))
                 f, n = run(html, ('bank', 'fit'), [(w, h)])
@@ -1553,7 +1578,7 @@ def main():
         fails += [x for x in f if x not in fails]       # the bank's own faults come back from every unit: once each
     print('%s: %d questions (%d phases): every diagram, key and option checked; every answer marked in Chromium; '
           'every wrong answer\'s Why card checked; fitted at %s in normal and Aa'
-          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks[2:] if u in mine) or 'no size in this part'))
+          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks if u.startswith('fit ') and u in mine) or 'no size in this part'))
     if tally:
         print('  slips named, by family (wrong values; GCSE options, then every wrong ratio a typed level can take):')
         for (where, ph, fam), k in sorted(tally.items()):
@@ -1585,6 +1610,15 @@ def main():
             stages = ('bank',) + PLANT_STAGES.get(what, ())
             rep, _ = run(planted, stages, [(320, 568)], (False,))
             hit = [f for f in rep if (tag[1:] in f if tag.startswith('~') else f.startswith(tag))]
+            if hit and what in PLANT_EVERY:
+                need = PLANT_EVERY[what](load_bank(planted) or {})
+                missed = [i for i in need if not any(('diagram %s ' % i) in f for f in hit)]
+                if missed or not need:
+                    print('  self-test %-48s *** caught on %d of %d: missed %s ***'
+                          % (what, len(need) - len(missed), len(need), ', '.join(missed)))
+                    hit = []
+                else:
+                    hit = ['every one of the %d: ' % len(need) + hit[0]]
             ok = ok and bool(hit)
             print('  self-test %-48s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
     for f in fails:
