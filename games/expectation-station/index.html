@@ -102,7 +102,10 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 
 /* E(X) calculation area */
 .ex-calc-wrap{background:var(--surface);border-radius:12px;padding:24px;margin-bottom:20px}
-.ex-formula{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:2.2;color:#cbd5e1;text-align:center;flex-wrap:wrap;display:flex;align-items:center;justify-content:center;gap:4px}
+.ex-formula{font-family:'JetBrains Mono',monospace;font-size:14px;line-height:1.4;color:#cbd5e1;display:grid;grid-template-columns:repeat(2,max-content);justify-content:center;gap:6px 12px}
+.ex-line{display:inline-flex;align-items:center;gap:8px;padding:4px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);white-space:nowrap}
+.ex-lhs .katex{font-size:1.1em}
+.ex-sum{margin-top:14px;padding-top:12px;border-top:1px solid var(--border);text-align:center;color:var(--text);font-size:15px;line-height:1.8}
 .ex-slot{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:6px 10px;border:2px dashed var(--teal);border-radius:6px;cursor:pointer;background:rgba(13,148,136,0.08);color:var(--teal);font-weight:600;transition:all 0.15s}
 .ex-slot:hover{background:rgba(13,148,136,0.15)}
 .ex-slot.selected-slot{background:rgba(13,148,136,0.25);box-shadow:0 0 0 2px var(--teal)}
@@ -166,7 +169,11 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .prob-table{font-size:13px}
 .prob-table th,.prob-table td{padding:10px 8px;min-width:48px}
 .tile{padding:8px 14px;font-size:13px}
-.ex-formula{font-size:12px}
+.ex-formula{font-size:12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.ex-calc-wrap{padding:12px 10px;margin-bottom:14px}
+.ex-line{padding:2px 8px;gap:6px}
+.ex-line .ex-slot{padding:4px 8px}
+.ex-sum{margin-top:10px;padding-top:8px;font-size:14px}
 .ex-result-value{font-size:36px}
 .start-title{font-size:26px}
 }
@@ -212,6 +219,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     " if (on('stage2Wrap') && document.getElementById('checkStage2').style.display !== 'none') {",
     " completedTable.forEach((r, i) => { filledSlots[i] = '999/1'; });",
     " renderStage2(); document.getElementById('checkStage2').click(); return; }",
+    " if (on('stage2Wrap') && on('contStage2')) { document.getElementById('contStage2').click(); return; }",
     " if (on('stage3Wrap') && document.getElementById('checkStage3').style.display !== 'none') {",
     " const open = currentQ._shuffledInterps.map((x, k) => k).filter(k => !document.getElementById('interp_' + k).classList.contains('disabled-interp'));",
     " const k = open.find(k => !currentQ._shuffledInterps[k].correct) ?? open[0]; if (k === undefined) return;",
@@ -306,9 +314,11 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
     </div>
     <div class="ex-calc-wrap">
       <div class="ex-formula" id="exFormula"></div>
+      <div class="ex-sum" id="exSum" style="display:none"></div>
     </div>
     <div class="tile-bank" id="stage2Tiles"></div>
     <button class="check-btn" id="checkStage2" onclick="checkStage2()" disabled>Check Calculation</button>
+    <button class="check-btn" id="contStage2" onclick="continueStage2()" data-maffs-lock-skip style="display:none">Continue</button>
   </div>
 
   <!-- Stage 3: Interpretation -->
@@ -888,22 +898,26 @@ function renderStage2() {
     completedTable.map(r => '<td>' + pDisplayHTML(r) + '</td>').join('') + '</tr>';
   tableFinal.innerHTML = headerRow + dataRow;
 
-  // Build E(X) formula with slots for products
+  // One line per value of x, "x \u00d7 P(X = x) = [box]", so every equals sign is true
+  // (EXPECTATION-STATION-LINES: a single chained line read as a running total).
+  // The sum line is shown only once Stage 2 has been checked (showStage2Sum).
   const formula = document.getElementById('exFormula');
-  formula.innerHTML = '<span>E(X) = </span>';
+  formula.innerHTML = '';
+  document.getElementById('exSum').style.display = 'none';
+  document.getElementById('contStage2').style.display = 'none';
+  document.getElementById('stage2Tiles').style.display = '';
 
   // Compute expected products exactly
   const products = productRats();
 
   completedTable.forEach((r, i) => {
-    if (i > 0) {
-      const plus = document.createElement('span');
-      plus.textContent = ' + ';
-      formula.appendChild(plus);
-    }
-    const wrap = document.createElement('span');
-    wrap.innerHTML = '(' + formatX(r.x) + ' \u00d7 ' + pDisplayHTML(r) + ') = ';
-    formula.appendChild(wrap);
+    const line = document.createElement('div');
+    line.className = 'ex-line';
+    line.id = 'exLine_' + i;
+    const lhs = document.createElement('span');
+    lhs.className = 'ex-lhs';
+    texInto(lhs, xTex(r.x) + ' \\times ' + pTex(r) + ' =', formatX(r.x) + ' \u00d7 ' + pPlain(r) + ' =');
+    line.appendChild(lhs);
 
     const slot = document.createElement('span');
     slot.className = 'ex-slot';
@@ -915,7 +929,8 @@ function renderStage2() {
       slot.textContent = '?';
     }
     slot.addEventListener('click', () => selectSlot(i));
-    formula.appendChild(slot);
+    line.appendChild(slot);
+    formula.appendChild(line);
   });
 
   // Tile bank for stage 2: correct products + distractors, carried as keys
@@ -1000,7 +1015,7 @@ function checkStage2() {
     showStageFeedback('E(X) calculated correctly!', 'good');
     document.getElementById('stage2Tiles').innerHTML = '';
     document.getElementById('checkStage2').style.display = 'none';
-    MaffsLock.timer(() => transitionToStage3(), 800);
+    showStage2Sum();
   } else if (stage2Attempts >= 2) {
     stage2Perfect = false;
     completedTable.forEach((r, i) => {
@@ -1012,7 +1027,7 @@ function checkStage2() {
     showStageFeedback('Correct products revealed', 'bad');
     document.getElementById('stage2Tiles').innerHTML = '';
     document.getElementById('checkStage2').style.display = 'none';
-    MaffsLock.timer(() => transitionToStage3(), 1200);
+    showStage2Sum();
   } else {
     stage2Perfect = false;
     showStageFeedback('Some products are incorrect. Try again.', 'bad');
@@ -1031,6 +1046,33 @@ function checkStage2() {
       hideFeedback();
     }, 1000);
   }
+}
+
+// After Stage 2 is checked (right, or revealed after the last try): one line adding
+// the products (the sum of x times P(X = x), each product, then the total), not a
+// slot and not scored, then Continue. The total is exactEX(), the value Stage 3
+// shows. The working stays on screen until the student moves on, so the addition
+// can be read.
+function showStage2Sum() {
+  const prods = productRats();
+  const terms = prods.map((a, i) => {
+    const neg = a.n < 0, abs = { n: Math.abs(a.n), d: a.d };
+    if (i === 0) return { tex: valTex(a), plain: valPlain(a) };
+    return { tex: (neg ? ' - ' : ' + ') + valTex(abs), plain: (neg ? ' \u2212 ' : ' + ') + valPlain(abs) };
+  });
+  const total = exactEX();
+  const el = document.getElementById('exSum');
+  texInto(el, 'E(X) = \\sum xP(x) = ' + terms.map(t => t.tex).join('') + ' = ' + valTex(total),
+    'E(X) = \u03a3 xP(x) = ' + terms.map(t => t.plain).join('') + ' = ' + valPlain(total));
+  el.dataset.val = ratKey(total);
+  el.style.display = '';
+  document.getElementById('stage2Tiles').style.display = 'none';   // empty once checked
+  document.getElementById('contStage2').style.display = '';
+}
+
+function continueStage2() {
+  if (currentStage !== 2) return;   // a second tap after moving on does nothing
+  transitionToStage3();
 }
 
 // ============================================================
@@ -1357,6 +1399,32 @@ function formatX(x) {
   if (x < 0) return '\u2212' + Math.abs(x);
   return '' + x;
 }
+
+// Stage 2's working in KaTeX (canon §7.1.1), with a plain-text fallback.
+function texInto(el, tex, plain) {
+  if (typeof katex !== 'undefined') {
+    el.innerHTML = '';
+    katex.render(tex, el, { throwOnError: false });
+  } else {
+    el.textContent = plain;
+  }
+}
+function xTex(x) { return (x < 0 ? '-' + Math.abs(x) : '' + x); }
+// P(X = x) as TeX / text, in exactly the form pDisplayHTML shows it.
+function pTex(r) {
+  if (displayMode === 'FRACTION' && r.pr.d !== 1) return ratTex(r.pr);
+  if (displayMode === 'FRACTION') return ratDecimalString(r.pr).replace('\u2212', '-');
+  return formatPNum(r.p);
+}
+function pPlain(r) {
+  if (displayMode === 'FRACTION' && r.pr.d !== 1) return r.pr.n + '/' + r.pr.d;
+  if (displayMode === 'FRACTION') return ratDecimalString(r.pr);
+  return formatPNum(r.p);
+}
+// A product or total as TeX / text, in the form renderValue draws a tile or slot.
+function valIsFrac(a) { return a.d !== 1 && (displayMode === 'FRACTION' || !ratIsDecimal(a)); }
+function valTex(a) { return valIsFrac(a) ? ratTex(a) : ratDecimalString(a).replace('\u2212', '-'); }
+function valPlain(a) { return valIsFrac(a) ? (a.n < 0 ? '\u2212' : '') + Math.abs(a.n) + '/' + a.d : ratDecimalString(a); }
 
 function formatP(p) {
   if (typeof p === 'string') return p;
