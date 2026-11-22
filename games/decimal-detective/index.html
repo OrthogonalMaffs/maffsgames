@@ -158,6 +158,45 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .type-row{flex-direction:column;align-items:center}
 }
 
+/* Phone fit (contract DECIMAL-DETECTIVE-FIT, 22 Nov 2026; canon 7.6.1). Every card, option and the number line, then
+   Check, above the fold on every item; after a wrong answer the feedback and Next Case too; no sideways scroll in
+   either mode. Measured on every item by scripts/verify-decimal-detective.py's fit unit.
+   A marked card's tick or cross sits on its corner: inline, it widened every card by a character after Check, so the
+   row re-wrapped onto a third line (and a second on a laptop in Aa) and pushed the feedback and Next down. */
+.suspect-card.correct::after,.suspect-card.incorrect::after,.feedback.correct::after,.feedback.incorrect::after{position:absolute;top:-9px;right:-8px;width:20px;height:20px;line-height:18px;border-radius:50%;background:var(--surface);border:1px solid currentColor;font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;letter-spacing:0;text-align:center;opacity:1}
+.suspect-card.correct::after,.feedback.correct::after{color:var(--green)}
+.suspect-card.incorrect::after,.feedback.incorrect::after{color:var(--red)}
+/* The feedback's own tick or cross likewise: after the note it took a line of its own; it sits on the box's corner. */
+.feedback{position:relative}
+@media(max-width:480px){
+/* One header row in play: the back link, Aa, the type and the score (the title is on the start screen). It wraps
+   rather than overflows: in Aa, or with a longer back link (site-nav.js), the right-hand group drops to a second
+   row; before, it ran off the right edge, so the page scrolled sideways in Aa at every phone size. */
+.header{padding:5px 12px;gap:8px;flex-wrap:wrap;row-gap:2px}
+.header-div,.header-title{display:none}
+.header-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}
+#gameScreen{padding:8px 12px 12px}
+/* The results title: in Aa at 28px "Investigation" alone was 307px wide, past a 320px phone's edge. */
+.results-title{font-size:24px}
+.question-prompt{margin:4px 0 8px;padding:10px 14px;border-radius:12px}
+.question-prompt h2{line-height:1.35}
+.question-prompt p{font-size:13px}
+.options-grid{margin:8px 0}
+.number-line-container{margin:4px 0;padding:4px 0}
+.check-btn{margin:8px 0}
+.feedback{padding:8px 10px;margin:8px 0;font-size:14px}
+.feedback-note{margin-top:4px}
+/* Line-Up: less space round the cards and the arrow. */
+.arrow-hint{margin:2px 0;font-size:15px}
+.arrow-hint span[style]{font-size:18px !important}
+.lineup-zone{gap:8px;margin:4px 0 8px;padding:8px 6px;min-height:0}
+.suspect-card{padding:8px 12px;line-height:1.35}
+/* Once Next Case shows, Line-Up's prompt and arrow are spent (canon 7.6.1: hide what cannot be used): the prompt is
+   its title, which the header's pill also shows, and its instruction. The right order in the feedback takes their room. */
+#gameScreen:has(#nextMount .maffs-next):has(#lineupZone) .arrow-hint,
+#gameScreen:has(#nextMount .maffs-next):has(#lineupZone) #questionPrompt{display:none}
+}
+
 /* === Accessibility === */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}

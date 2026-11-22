@@ -4014,3 +4014,9 @@ Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word f
 ## Part closed by GIVEN-THAT-FIT-WHY (22 Nov 2026)
 
 Row WRONG-PAUSE-REASONS, its clause under **Answer shown, no reason:**, moved word for word: given-that. A wrong answer in either phase now shows a "Why" reference card (canon 7.6.2, between the feedback and Next) that works the probability from the diagram's own counts (a new Phase 1 explanation for all 90 items; Phase 2's stored one, unchanged) and names the slip when the wrong value is one family's by computation; checked for every option and every wrong ratio by `scripts/verify-given-that.py`. The rest of the row stays.
+
+## Closed by DECIMAL-DETECTIVE-FIT (22 Nov 2026)
+
+| DD-LINEUP-FEEDBACK | **Decimal Detective: after a wrong answer, Next ends below the fold on small phones** (found by ESSENTIALS-AUDIT-LEFTOVERS PR 2, #776, 15 Nov 2026): Line-Up's Next Case at 799 at 320×568 (fold 528) and 770 at 375×667 (fold 627); Round Up's 548 at 320×568. NEXT-IN-VIEW (19 Nov 2026, Jon's ruling): MaffsNext.wrong() now scrolls Next into reach, which is not fitting; measured in page coordinates the layout is unchanged, so this stays open. Part (1), the right order shown after a wrong Line-Up, is done (DD-LINEUP-ORDER, 18 Nov 2026); history in `docs/history/todo-done.md` under DD-LINEUP-FEEDBACK. | cloud lane |
+
+**Closed 22 Nov 2026 (DECIMAL-DETECTIVE-FIT).** Row DD-LINEUP-FEEDBACK, moved word for word above. The page's own phone layout now fits: after a wrong answer Next Case ends above the fold on every item of every type at 320x568, 375x667 and 390x844 in normal and Aa mode and on both laptop sizes, measured in page coordinates by `scripts/verify-decimal-detective.py`'s fit units, with the right order shown in full (no collapse). decimal-detective is off every list in `scripts/phone-fit-state.json`.
