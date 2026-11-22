@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium) |
+# ci-line: Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium; every wrong answer's Why card recomputed and its slip checked; the back link clear of every header) |
 """Complex Converter: every Form Roulette key is the given number, in the one form the question asks for.
 
 Form Roulette (55 items, Level 4 and Further Maths share one bank) shows a complex number in one form and asks
@@ -22,8 +22,19 @@ Calculator hints (SWEEP-1, batch 11; complex-converter-t6-005): every CALC_HINTS
 distractor expressions parsed from their own TeX and evaluated (degrees where the argument carries °, arctan in
 the entry's DEG or RAD mode), and each printed result must equal the computed value to its printed decimals, with
 the unit matching the mode. Six hand-typed results had been wrong (6.65 for 6.67, 1.73 for 17.32 ...).
+Why (contract COMPLEX-CONVERTER-WHY, Jon 21 Nov 2026): a wrong answer in Form Roulette shows a reference card
+that works the conversion with the item's own numbers and names the slip when the picked option is one slip by
+computation. Every card (55 items, all 165 distractors, built by the page's WHY.card()) is checked: each value shown
+recomputes from the numbers beside it (to its shown places; = only where exact, an approx sign only where the given
+number was itself rounded), the working's inputs are the item's Re and Im, or r and θ, arctan is of Im over Re, its
+last values are the key's, and the slip named is the one this script finds by its own computation (none when no one
+slip gives the option). In Chromium, Jon's q16 (6 + 8j, picked 10e^{j0.644}) shows the card before Next, naming the
+upside-down fraction, in j under Level 4 and i under Further Maths. The back link, in the page's flow since this
+contract (it was fixed over each mode's title), may not touch any title or header on any screen (menu, the three
+modes, end) at 320x568, 390x844 and 1366x768, and reads site-nav's label.
 A self-test plants the audit's item, one item's old positive-angle key and two old hint figures back into a copy
-of the page; each must FAIL naming its item.
+of the page, and three Why faults (arctan of Re over Im, a slip named for an option it does not give, the back link
+fixed over the title); each must FAIL naming its item.
 
     python scripts/verify-complex-converter.py [--no-selftest] [--against FILE] [--katex-dir DIR]
 """
@@ -203,6 +214,7 @@ SWEEP_JS = r"""(words) => {
   return out;
 }"""
 KATEX_DIR = None
+CARDS = []          # the last run's Why cards, for the report
 
 
 def hint_value(tex, mode):
@@ -250,6 +262,330 @@ def check_hints(fails, hints):
                 fails.append('CALC_HINTS id %s: %s = %.*f but the hint shows %s' % (qid, tex, dec + 2, got, res))
 
 
+
+# ---- WHY (contract COMPLEX-CONVERTER-WHY, Jon 21 Nov 2026) ----------------------------------------------------------
+# After a wrong answer in Form Roulette the page shows a "Why" reference card: the conversion worked with the item's own
+# numbers and, when the picked option is one slip by computation, that slip named. Here every card (55 items, every
+# distractor: 165) is rebuilt by the page's WHY.card() and checked against this script's own computation: every value
+# shown recomputes from the numbers beside it (to its shown places, = only where exact, \approx only where the given
+# number was itself rounded), the working's inputs are the item's re, im, r and angle, its last value is the key's, and
+# the slip named is the one this script finds (or none, when no one slip gives the option).
+
+def parts(tex):
+    """(form, a, b, flag): polar (r, angle as written, written in degrees?), exponential (r, angle as written, None),
+    cartesian (re, im, None). An angle with \\pi is read in radians, as written."""
+    t = tex.strip()
+    if '\\angle' in t:
+        r, th = t.split('\\angle')
+        return 'polar', real(r), real(th.replace('°', '')), '°' in th
+    m = re.fullmatch(r'(.*?)e\^\{(.*)\}', t)
+    if m:
+        ex = m.group(2).replace('\\cdot', '').replace(' ', '')
+        sign = -1 if ex.startswith('-') else 1
+        body = ex.lstrip('-')
+        body = body[1:] if body.startswith('j') else body
+        return 'exponential', real(m.group(1)), (sign * real(body)) if body else 0.0, None
+    z = value(t)[0]
+    return 'cartesian', z.real, z.imag, None
+
+
+def near(a, b, tol=None):
+    return abs(a - b) <= (tol if tol is not None else 0.002 * max(1.0, abs(b)))
+
+
+def slip_of(q, pick):
+    """The slip family that gives `pick` from the item's numbers, or None (no family, or two at once)."""
+    re_, im, r, deg, rad = q['re'], q['im'], q['r'], q['argDeg'], q['argRad']
+    form, a, b, in_deg = parts(pick)
+    found = set()
+    if q['target'] == 'cartesian':
+        if form != 'cartesian':
+            return None
+        same_size = near(abs(re_), abs(im))
+        if not same_size and near(a, im) and near(b, re_):
+            found.add('cos_sin')                                          # r sin θ + (r cos θ) j
+        if (not same_size and min(abs(re_), abs(im)) > 1e-9 and (a < 0) == (re_ < 0) and (b < 0) == (im < 0)
+                and near(abs(a), abs(im)) and near(abs(b), abs(re_))):
+            found.add('cos_sin')                                          # the sizes swapped, the quadrant's signs kept
+        for sa, sb in ((-1, 1), (1, -1), (-1, -1)):
+            if (sa < 0 and abs(re_) < 1e-9) or (sb < 0 and abs(im) < 1e-9):
+                continue
+            if near(a, sa * re_) and near(b, sb * im):
+                found.add('signs')
+    else:
+        if form != q['target']:
+            return None
+        polar = form == 'polar'
+        want = deg if polar else rad
+        tol = 0.02 if polar else 0.002
+        ang = (b if in_deg else float('nan')) if polar else b
+        unit = (lambda x: x) if polar else math.radians
+        r_ok = near(a, r)
+        if q['source'] == 'cartesian' and re_ != 0 and im != 0:
+            ref = math.degrees(math.atan(abs(im) / abs(re_)))
+            sg = 1 if im > 0 else -1
+            principal_of = (lambda x: sg * x) if re_ > 0 else (lambda x: sg * (180 - x))
+            if r_ok and near(ang, unit(principal_of(90 - ref)), tol):
+                found.add('upside')                                       # arctan(Re/Im), then the item's own step
+            if r_ok and re_ < 0 and (near(ang, unit(ref), tol) or near(ang, unit(-ref), tol)):
+                found.add('quadrant_missing')
+            if r_ok and re_ > 0 and near(ang, unit(sg * (180 - ref)), tol):
+                found.add('quadrant_extra')
+        if q['source'] == 'cartesian' and near(ang, want, tol) and not r_ok:
+            if near(a, abs(re_)) or near(a, abs(im)):
+                found.add('mod_part')
+            if near(a, abs(re_) + abs(im)):
+                found.add('mod_sum')
+            if near(a, re_ * re_ + im * im):
+                found.add('mod_noroot')
+        if r_ok and abs(deg) > 0.01 and abs(abs(deg) - 180) > 0.01 and near(ang, -want, tol):
+            found.add('conjugate')
+        if not polar and r_ok and abs(deg) > 3.5 and near(b, deg, 0.02):
+            found.add('deg_in_exp')
+        if polar and r_ok and abs(rad) > 0.01 and near(b, rad, 0.002):
+            found.add('rad_as_deg')
+        if q['source'] != 'cartesian' and near(a, parts(q['givenLatex'])[2]) and near(b, r):
+            found.add('r_theta_swap')
+    groups = {('mod' if f.startswith('mod_') else f) for f in found}
+    if len(groups) != 1:
+        return None
+    if groups == {'mod'}:
+        mods = sorted(found)
+        return mods[0] if len(mods) == 1 else 'mod_both'
+    return groups.pop()
+
+
+def tex_value(seg):
+    """A worked value's TeX as a number in radians where it is an angle (° is pi/180), or None for a symbolic one."""
+    s = seg.strip()
+    if not s or re.search(r'\\mathrm\{(Re|Im)\}|\\theta|\\tan|^r$|r\\(cos|sin)', s):
+        return None
+    t = s.replace('\\left', '').replace('\\right', '').replace('\\,', '').replace('\\mathrm{rad}', '')
+    t = t.replace('\\times', '*').replace('\\arctan', 'atan').replace('\\cos', 'cos').replace('\\sin', 'sin')
+    t = t.replace('\\pi', 'pi').replace('°', '*(pi/180)')
+    for _ in range(6):
+        t = re.sub(r'\\dfrac\{([^{}]*)\}\{([^{}]*)\}', r'((\1)/(\2))', t)
+        t = re.sub(r'\\sqrt\{([^{}]*)\}', r'sqrt(\1)', t)
+    t = t.replace('^2', '**2').replace('{', '(').replace('}', ')')
+    t = re.sub(r'(\d|\))\s*(?=[a-z(])', r'\1*', t)
+    if '\\' in t or re.search(r'[^0-9a-z+\-*/(). ]', t):
+        raise ValueError('unread TeX %r' % seg)
+    return float(eval(t, {'__builtins__': {}}, {k: getattr(math, k) for k in ('pi', 'sqrt', 'cos', 'sin', 'atan')}))
+
+
+def chain(math_tex):
+    """Split a line's maths at its top-level = and \\approx: ([segments], [operators])."""
+    segs, ops, d, cur, i = [], [], 0, '', 0
+    while i < len(math_tex):
+        c = math_tex[i]
+        if c in '{(':
+            d += 1
+        elif c in '})':
+            d -= 1
+        if d == 0 and c == '=':
+            segs.append(cur); ops.append('='); cur = ''; i += 1; continue
+        if d == 0 and math_tex.startswith('\\approx', i):
+            segs.append(cur); ops.append('~'); cur = ''; i += 7; continue
+        cur += c
+        i += 1
+    segs.append(cur)
+    return [s.strip() for s in segs], ops
+
+
+def agrees(left, seg, op):
+    """Does the shown `seg` equal the computed `left` (radians for angles): to its decimals for '=', or near it for '~'?"""
+    right = tex_value(seg)
+    scale = math.pi / 180 if '°' in seg else 1.0
+    lv, rv = left / scale, right / scale
+    m = re.fullmatch(r'-?\d+\.(\d+)°?(\\,\\mathrm\{rad\})?', seg.strip())
+    p = len(m.group(1)) if m else 0
+    if op == '=':
+        return abs(lv - rv) <= (0.5 * 10 ** -p + 1e-9 if p else 1e-4 * max(1.0, abs(rv)))
+    return abs(lv - rv) <= max(0.5 * 10 ** -p if p else 0, 0.005 * max(1.0, abs(rv)))
+
+
+def angle_ok(v, q):
+    return v is not None and abs(v - math.radians(q['argDeg'])) <= 6e-4
+
+
+def why_faults(q, pick, card):
+    w = 'id %d (%s → %s, %s, picked %s)' % (q['id'], q['source'], q['target'], q['givenLatex'], pick)
+    out = []
+    kind, lines = card['kind'], card['lines']
+    want = slip_of(q, pick)
+    if kind != want:
+        out.append('%s: Why names the slip %r, by computation from the item it is %r' % (w, kind, want))
+    if kind:
+        head, lines = lines[0], lines[1:]
+        if kind == 'signs':
+            c, s = math.cos(math.radians(q['argDeg'])), math.sin(math.radians(q['argDeg']))
+            word = lambda x: 'positive' if x > 1e-9 else 'negative' if x < -1e-9 else '0'
+            if 'cos θ is %s and sin θ is %s' % (word(c), word(s)) not in head:
+                out.append('%s: the slip line %r has the wrong signs for cos and sin' % (w, head))
+    if not lines or lines[-1] != '\\text{So the answer is }' + q['correctLatex']:
+        out.append('%s: Why does not end "So the answer is %s"' % (w, q['correctLatex']))
+    G = parts(q['givenLatex'])
+    got = set()
+    for line in lines[:-1]:
+        maths = re.sub(r'\\text\{[^{}]*\}', ' ', line)
+        segs, ops = chain(maths)
+        try:
+            vals = [tex_value(s) for s in segs]
+        except (ValueError, SyntaxError, ZeroDivisionError) as e:
+            out.append('%s: Why line %r cannot be read: %s' % (w, line, e))
+            continue
+        for k, op in enumerate(ops):
+            if vals[k] is not None and vals[k + 1] is not None and not agrees(vals[k], segs[k + 1], op):
+                out.append('%s: Why line %r: %s %s %s is not true' % (w, line, segs[k], '=' if op == '=' else '≈', segs[k + 1]))
+        last = vals[-1] if vals else None
+        if line.startswith('r = \\sqrt{\\mathrm{Re}^2 + \\mathrm{Im}^2} = '):
+            m = re.fullmatch(r'\\sqrt\{\(?(.+?)\)?\^2 \+ \(?(.+?)\)?\^2\}', segs[2])
+            if not (m and near(tex_value(m.group(1)), q['re']) and near(tex_value(m.group(2)), q['im'])):
+                out.append('%s: Why squares %r, not the item\'s Re %s and Im %s' % (w, segs[2], q['re'], q['im']))
+            if last is None or not near(last, q['r']):
+                out.append('%s: Why gives r = %s, the item\'s r is %s' % (w, segs[-1], q['r']))
+            got.add('r')
+        elif '\\arctan' in line:
+            if '\\arctan\\left(\\dfrac{\\mathrm{Im}}{\\mathrm{Re}}\\right)' not in line:
+                out.append('%s: Why line %r is not arctan(Im / Re)' % (w, line))
+            m = re.search(r'\\arctan\\left\(\\dfrac\{([^{}]*(?:\{[^{}]*\})?[^{}]*)\}\{([^{}]*(?:\{[^{}]*\})?[^{}]*)\}\\right\)', segs[-2] if len(segs) > 1 else '')
+            if not (m and near(tex_value(m.group(1)), q['im']) and near(tex_value(m.group(2)), q['re'])):
+                out.append('%s: Why line %r: the arctan is not of the item\'s Im over its Re (%s / %s)' % (w, line, q['im'], q['re']))
+            if line.startswith('\\theta'):
+                got.add('theta') if angle_ok(last, q) else out.append('%s: Why gives θ = %s, the key\'s angle is %s°' % (w, segs[-1], q['argDeg']))
+        elif re.search(r'[+-] (180°|\\pi) = ', maths):
+            got.add('theta') if angle_ok(last, q) else out.append('%s: Why\'s quadrant step gives %s, the key\'s angle is %s°' % (w, segs[-1], q['argDeg']))
+        elif line.startswith('\\mathrm{Re} = r\\cos\\theta = ') or line.startswith('\\mathrm{Im} = r\\sin\\theta = '):
+            part, fn = ('re', 'cos') if line.startswith('\\mathrm{Re}') else ('im', 'sin')
+            m = re.fullmatch(r'(.*)\\%s\((.*)\)' % fn, segs[2])
+            given_rad = math.radians(G[2]) if G[3] else G[2]
+            if not (m and near(tex_value(m.group(1)) if m.group(1) else 1.0, G[1]) and near(tex_value(m.group(2)), given_rad)):
+                out.append('%s: Why line %r does not use the given r and θ' % (w, line))
+            if last is None or not near(last, q[part]):
+                out.append('%s: Why gives %s = %s, the item\'s is %s' % (w, part.title(), segs[-1], q[part]))
+            got.add(part)
+        elif '\\times \\dfrac{' in line:
+            given_rad = math.radians(G[2]) if G[0] == 'polar' else G[2]
+            if not near(tex_value(segs[1].split('\\times')[0]), given_rad, 0.001):
+                out.append('%s: Why converts %s, the given angle is %s' % (w, segs[1], q['givenLatex']))
+            got.add('converted')
+            if angle_ok(last, q):
+                got.add('theta')
+        elif re.search(r' - (360°|2\\pi) = ', maths):
+            got.add('theta') if angle_ok(last, q) else out.append('%s: Why\'s range step gives %s, the key\'s angle is %s°' % (w, segs[-1], q['argDeg']))
+        elif line.startswith('\\text{r stays the same: }r = '):
+            got.add('r') if near(last, q['r']) else out.append('%s: Why keeps r = %s, the item\'s r is %s' % (w, segs[-1], q['r']))
+        elif re.match(r'\\text\{(Re|Im) is 0: the point is on the (positive|negative) (real|imaginary) axis, so \}\\theta = ', line):
+            got.add('theta') if angle_ok(last, q) else out.append('%s: Why puts θ = %s on the axis, the key\'s angle is %s°' % (w, segs[-1], q['argDeg']))
+        elif re.fullmatch(r'\\text\{The point is on the (positive|negative) (real|imaginary) axis\.\}', line):
+            pass
+        elif line.startswith('\\text{(') and 'is itself rounded' in line:
+            pass
+        else:
+            out.append('%s: Why line %r is not one this check knows' % (w, line))
+    need = {'r', 'theta'} if q['target'] != 'cartesian' else {'re', 'im'}
+    if not need <= got:
+        out.append('%s: Why never reaches the key\'s %s' % (w, ', '.join(sorted(need - got))))
+    return out
+
+
+CARDS_JS = r"""() => QUESTIONS.level4.flatMap(q => q.distractors.map(d => ({id: q.id, pick: d, card: WHY.card(q, d)})))"""
+
+
+def check_why(fails, bank, cards):
+    by_id = {q['id']: q for q in bank}
+    if len(cards) != 3 * COUNT:
+        fails.append('Why: %d cards built, expected %d' % (len(cards), 3 * COUNT))
+    for c in cards:
+        fails.extend(why_faults(by_id[c['id']], c['pick'], c['card']))
+
+
+def why_report(bank, cards):
+    """The PR report's table: distractors per slip family, and the ids left unnamed."""
+    from collections import Counter
+    kinds = Counter(c['card']['kind'] or 'none' for c in cards)
+    unnamed = sorted({c['id'] for c in cards if not c['card']['kind']})
+    return kinds, unnamed
+
+
+# The live checks: a wrong answer shows Why before Next, in the level's notation; the back link clear of every header.
+LIVE_JS = r"""([qid, pick]) => {
+  const q = QUESTIONS.level4.find(x => x.id === qid);
+  rQuestions = [q, q]; rIndex = 0; rScore = 0; rCorrect = 0; rTimes = []; rDirStats = {}; rCalcUses = 0;
+  showScreen('rouletteScreen'); showRouletteQ();
+  [...document.querySelectorAll('#rOptions .opt-btn')].find(b => b.dataset.val === pick).click();
+  const card = [...document.querySelectorAll('#rWhyRow > .maffs-ref')].filter(d => getComputedStyle(d).display !== 'none');
+  const nx = document.querySelector('#rNext .maffs-next');
+  const tex = card.length ? [...card[0].querySelectorAll('annotation')].map(a => a.textContent) : [];
+  return {cards: card.length, before: !!(card.length && nx && (card[0].compareDocumentPosition(nx) & Node.DOCUMENT_POSITION_FOLLOWING)),
+          tex, text: card.length ? card[0].textContent : '', errors: card.length ? card[0].querySelectorAll('.katex-error').length : 0}; }"""
+SCREENS_JS = r"""() => {
+  const out = [];
+  const box = e => { const r = e.getBoundingClientRect(); return {l: r.left, t: r.top + scrollY, r: r.right, b: r.bottom + scrollY, w: r.width, h: r.height}; };
+  const hit = (a, b) => a.l < b.r - 0.5 && b.l < a.r - 0.5 && a.t < b.b - 0.5 && b.t < a.b - 0.5;
+  const screens = [['menu', () => showMenu()], ['roulette', () => startMode('roulette')], ['triples', () => startMode('triples')],
+                   ['sniper', () => startMode('sniper')], ['end', () => showScreen('endScreen')]];
+  for (const [name, go] of screens) {
+    go(); window.scrollTo(0, 0);
+    const links = [...document.querySelectorAll('a.back-link')].filter(a => a.getClientRects().length);
+    if (links.length !== 1) { out.push([name, links.length + ' back links shown']); continue; }
+    const bl = box(links[0]);
+    if (bl.w < 1 || bl.h < 1) { out.push([name, 'the back link has no box']); continue; }
+    const scr = document.getElementById(name === 'menu' ? 'menuScreen' : name + 'Screen');
+    const heads = [...scr.querySelectorAll('.game-header, .game-header *, .menu-title, .menu-sub, .level-pill, .end-title, .end-score')]
+      .filter(e => e.getClientRects().length);
+    for (const h of heads) if (hit(bl, box(h))) { out.push([name, 'the back link overlaps ' + (h.className || h.tagName) + ' "' + h.textContent.trim().slice(0, 30) + '"']); break; }
+  }
+  return out; }"""
+
+
+def live_why(fails, browser, base, html, page_url):
+    def ctx_for(w, h, referer_hub=False):
+        ctx = browser.new_context(viewport={'width': w, 'height': h})
+        ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+        bc.offline(ctx, base)
+        if KATEX_DIR:
+            ctx.route(lambda url: '/katex@' in url and '/dist/' in url, lambda route: route.fulfill(
+                path=os.path.join(KATEX_DIR, route.request.url.split('/dist/', 1)[1].split('?')[0])))
+        else:
+            ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+        ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+            status=200, content_type='text/html; charset=utf-8', body=html))
+        return ctx
+    # q16 (Jon's item): 6 + 8j, picked 10e^{j0.644}, arctan(6/8).
+    for level, unit in (('level4', 'j'), ('further', 'i')):
+        ctx = ctx_for(390, 844)
+        page = ctx.new_page()
+        page.goto(base + '/games/%s/?level=%s&cb=why' % (SLUG, level), wait_until='load', timeout=20000)
+        page.wait_for_function('typeof WHY !== "undefined" && typeof katex !== "undefined"', timeout=15000)
+        got = page.evaluate(LIVE_JS, [16, '10e^{j0.644}'])
+        where = 'Why in Chromium (%s, id 16 picked 10e^{j0.644})' % level
+        if got['cards'] != 1 or not got['before']:
+            fails.append('%s: %d cards shown, %s Next' % (where, got['cards'], 'before' if got['before'] else 'not before'))
+        if 'The fraction is upside down' not in got['text']:
+            fails.append('%s: no "The fraction is upside down" line: %r' % (where, got['text'][:120]))
+        joined = ' '.join(got['tex'])
+        other = 'i' if unit == 'j' else 'j'
+        if ('e^{%s0.927}' % unit) not in joined or re.search(r'(?<![a-z\\])%s(?![a-z])' % other, joined.replace('\\mathrm{Im}', '')):
+            fails.append('%s: the working is not in %s: %r' % (where, unit, joined[:160]))
+        if got['errors']:
+            fails.append('%s: %d KaTeX errors in the card' % (where, got['errors']))
+        ctx.close()
+    # The back link: in every screen, at every size, clear of the titles and headers; relabelled by site-nav.
+    for w, h in ((320, 568), (390, 844), (1366, 768)):
+        ctx = ctx_for(w, h)
+        page = ctx.new_page()
+        page.goto(base + '/games/%s/?level=level4&cb=back' % SLUG, wait_until='load', timeout=20000,
+                  referer=base + '/essentials/')
+        page.wait_for_function('typeof startMode !== "undefined"', timeout=15000)
+        for screen, what in page.evaluate(SCREENS_JS):
+            fails.append('back link at %dx%d, %s screen: %s' % (w, h, screen, what))
+        label = page.evaluate("() => [document.querySelector('a.back-link').textContent, window.MaffsNav && MaffsNav.backLabel]")
+        if label[1] and label[0] != label[1]:
+            fails.append('back link at %dx%d: reads %r, site-nav says %r' % (w, h, label[0], label[1]))
+        ctx.close()
+
+
 def play(fails, html):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
@@ -276,6 +612,10 @@ def play(fails, html):
             check_hints(fails, page.evaluate('() => CALC_HINTS'))
             for qid, pick, what in page.evaluate(SWEEP_JS, RANGE_WORDS):
                 fails.append('id %d in Chromium: option %s %s' % (qid, pick, what))
+            cards = page.evaluate(CARDS_JS)
+            check_why(fails, bank, cards)
+            CARDS[:] = cards
+            live_why(fails, browser, base, html, page_url)
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -306,6 +646,12 @@ PLANTS = [
     ('id 20 ', 'the old positive-angle key 5∠233.13°',
      'correct:"5\\\\angle -126.87°",correctLatex:"5\\\\angle -126.87°"',
      'correct:"5\\\\angle 233.13°",correctLatex:"5\\\\angle 233.13°"'),
+    ('id 1 ', 'Why: arctan(Re / Im) for arctan(Im / Re)',
+     "\\\\dfrac{' + G.imTex + '}{' + G.reTex + '}\\\\right) = ';", "\\\\dfrac{' + G.reTex + '}{' + G.imTex + '}\\\\right) = ';"),
+    ('id 3 ', 'Why: a slip named for an option it does not give',
+     "    if (fams.length !== 1) return null;\n", "    if (fams.length !== 1) return fams.length ? null : 'upside';\n"),
+    ('back link', 'the back link fixed over the title',
+     '.back-link{display:inline-block;margin:8px 16px 4px;', '.back-link{position:fixed;top:16px;left:16px;z-index:200;margin:0;'),
 ]
 
 
@@ -325,6 +671,11 @@ def main():
         check_bank(fails, bank)
     print('%s: %d Form Roulette items, every option read as a number and clicked in Chromium'
           % (SLUG, len(bank or [])))
+    if CARDS:
+        kinds, unnamed = why_report(bank, CARDS)
+        print('  Why: %d cards, slips named %s; no slip named for %d distractors (ids %s)' % (
+            len(CARDS), ', '.join('%s %d' % kv for kv in sorted(kinds.items()) if kv[0] != 'none'),
+            kinds.get('none', 0), ' '.join(map(str, unnamed))))
     ok = True
     if not args.no_selftest and not args.against:
         for tag, what, new, old in PLANTS:

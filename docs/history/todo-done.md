@@ -4000,6 +4000,10 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 
 **Closed 21 Nov 2026 (CI-DEPS-ANY-PAGE, merged as e291c9c).** Row CI-DEPS-ANY-PAGE, moved word for word above. `scripts/ci-deps.py` gained the `any-page` dependency type and selective page-less verifiers; the always-set went from 12 to 2. Jon (21 Nov 2026, 20:03): test-escape-credit.py stays always-run.
 
+## Part closed by COMPLEX-CONVERTER-WHY (22 Nov 2026)
+
+Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word for word: complex-converter (Roulette). A wrong answer in Form Roulette now shows a "Why" reference card (canon 7.6.2, above Next) that works the conversion with the item's own numbers and names the slip when the picked option is one slip by computation; checked for all 55 items and 165 distractors by `scripts/verify-complex-converter.py`. The rest of the row stays.
+
 ## Closed by PHONE-FIT-CHANGED-GAMES (22 Nov 2026)
 
 29. **CI-DEPS-TOOLS** (PACK-GENERATOR, Amendment 2): `tools` is not in `scripts/ci-deps.py` KNOWN_TOP, so a `tools/` change selects every verifier. Moved from cloud.md's live pointers. Owner: Project Claude to triage; cloud lane (gate file).
