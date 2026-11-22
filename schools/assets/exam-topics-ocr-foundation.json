@@ -598,6 +598,17 @@
     5
    ],
    "route": null
+  },
+  {
+   "id": "hcf-lcm",
+   "name": "HCF and LCM",
+   "marks": 5.3,
+   "series": 6,
+   "band": [
+    2,
+    4
+   ],
+   "route": null
   }
  ],
  "coming_soon": [
@@ -619,13 +630,6 @@
    "id": "volume-surface-area",
    "name": "Volume and surface area",
    "marks": 5.5,
-   "series": 6,
-   "planned": null
-  },
-  {
-   "id": "hcf-lcm",
-   "name": "HCF and LCM",
-   "marks": 5.3,
    "series": 6,
    "planned": null
   },

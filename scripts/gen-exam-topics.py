@@ -88,6 +88,9 @@ COVERED = [
     # Bank-first (Jon, 27 Oct 2026; contract PERCENTAGES-MONEY-BANK): percentage change and reverse percentages (36 marks) and interest and
     # depreciation (44 marks) of 1,800 over 18 papers; they were two coming-soon rows (6.0 and 7.3 a series). "It's on Sale!" is the planned game.
     ("percentages-money", "Percentages, interest and depreciation", 13.3, 6, (3, 5), None, None, [], []),
+    # Bank-first (Jon, 21 Nov 2026; contract SIX-PS-BANKS batch 9): no live game asks for an HCF or an LCM, so the bank comes from
+    # schools/assets/hcf-lcm-gen.js, which a future game will load. Band (2, 4): its stages' bands, 2 to 4 (decided for Jon to confirm).
+    ("hcf-lcm", "HCF and LCM", 5.3, 6, (2, 4), None, None, [], []),
 ]
 
 # id, name, avg marks per series, series appeared (of 6), planned game name (or None)
@@ -95,7 +98,6 @@ COMING_SOON = [
     ("everyday-multi-step", "Everyday multi-step problems", 14.3, 6, None),
     ("scatter-graphs", "Scatter graphs", 6.2, 6, None),
     ("volume-surface-area", "Volume and surface area", 5.5, 6, None),
-    ("hcf-lcm", "HCF and LCM", 5.3, 6, None),
     ("expand-factorise", "Expanding and factorising", 5.3, 6, "The HC Factor"),
     ("tree-diagrams", "Tree diagrams", 5.3, 5, None),
     ("bar-pictogram-line", "Bar charts, pictograms and line graphs", 5.2, 5, None),

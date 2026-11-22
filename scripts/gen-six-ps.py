@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: The 6 P's banks (every bank regenerated from its game's own questions and compared with the committed file; every answer recomputed from its stem; a topic is covered only by a bank of 30 or more) | --check
-# ci-deps: scripts/six_ps_rules.py docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py schools/assets/pie-chart-generator.js
+# ci-deps: scripts/six_ps_rules.py docs/six-ps-schema.md schools/assets/exam-topics-ocr-foundation.json scripts/gen-exam-topics.py scripts/bank_common.py schools/assets/pie-chart-generator.js schools/assets/hcf-lcm-gen.js
 """The 6 P's question banks, built from the games' own questions (contract SIX-PS-BANKS, 25 Oct 2026).
 
     python scripts/gen-six-ps.py                       # build every bank in memory and report
@@ -4281,6 +4281,100 @@ async def topic_percentages_money(h):
     return [pm_question(q) for q in qs]
 
 
+# ───────────────────────────── HCF and LCM (contract SIX-PS-BANKS batch 9, Jon, 21 Nov 2026): bank-first ─────────────────────────────
+# The questions come from schools/assets/hcf-lcm-gen.js (MaffsHcfLcm), the file a future HCF and LCM game will load (canon 8.2.1). Every
+# answer is recomputed here from the numbers in the stem with math.gcd and math.lcm (check_hcf_lcm), and every named slip by its line
+# (six_ps_rules.hcf_slips), separate code paths from the module's own gcd and lcm.
+HL_JS = os.path.join(ROOT, "schools", "assets", "hcf-lcm-gen.js")
+HL_SOURCE = "hcf-lcm-gen"
+HL_PLANT = ("function lcm(a, b) { return a / gcd(a, b) * b; }", "function lcm(a, b) { return a * b; }")
+
+
+async def hl_generate(h, js_text=None):
+    """MaffsHcfLcm.bank(stage) for the five stages, run in the browser: the module's fixed seeds, so --check is stable."""
+    pg = await h.browser.new_page()
+    await pg.goto("about:blank")
+    await pg.add_script_tag(content=js_text if js_text is not None else open(HL_JS, encoding="utf-8").read())
+    data = await pg.evaluate("() => MaffsHcfLcm.STAGES.map(s => MaffsHcfLcm.bank(s.n)).flat()")
+    await pg.close()
+    return data
+
+
+def check_hcf_lcm(q):
+    """Faults of one generated question: its answer recomputed from the stem alone, each slip by the misconception its line names,
+    and no slip equal to the answer."""
+    f = []
+    try:
+        ask, a, b, _, _ = RULES.hcf_stem({"stem": q["stem"]})
+    except ValueError as e:
+        return ["the stem cannot be read: %s" % e]
+    want = math.gcd(a, b) if ask == "hcf" else math.lcm(a, b)
+    if q["answer"]["value"] != want:
+        f.append("%s of %d and %d is %d, the module says %d" % (ask.upper(), a, b, want, q["answer"]["value"]))
+    if (ask == "hcf") != (q["ask"] == "hcf"):
+        f.append("the stem asks the %s, the module's question the %s" % (ask.upper(), q["ask"].upper()))
+    for s_ in q["slips"]:
+        if s_["answer"]["value"] == want:
+            f.append("the slip %r equals the answer" % s_["line"][:40])
+    if len({s_["answer"]["value"] for s_ in q["slips"]}) != len(q["slips"]):
+        f.append("two slips have the same value")
+    for i, v, why in RULES.hcf_slips({"stem": q["stem"], "slip": q["slips"]}):
+        if v is None or q["slips"][i]["answer"]["value"] != v:
+            f.append("slip %d stores %s but %s is %s" % (i + 1, q["slips"][i]["answer"]["value"], why, v))
+    if not q["slips"]:
+        f.append("no named slip")
+    return f
+
+
+async def hl_selftest(h, clean):
+    """The module planted to give a x b for an LCM: check_hcf_lcm must catch it on the LCM stages."""
+    out = []
+    for q in clean[:2]:
+        if check_hcf_lcm(q):
+            out.append("hcf-lcm check: a clean question was flagged: %s" % check_hcf_lcm(q)[:2])
+    src = open(HL_JS, encoding="utf-8").read()
+    if src.count(HL_PLANT[0]) != 1:
+        return out + ["hcf-lcm check: the plant's text is not in hcf-lcm-gen.js once"]
+    planted = await hl_generate(h, src.replace(*HL_PLANT))
+    caught = [q for q in planted if q["ask"] == "lcm" and check_hcf_lcm(q)]
+    lcm_qs = [q for q in planted if q["ask"] == "lcm" and math.gcd(*q["nums"]) > 1]
+    if not lcm_qs or len(caught) < len(lcm_qs):
+        out.append("hcf-lcm check: planted fault not caught: the module returning a x b for an LCM (%d of %d caught)"
+                   % (len(caught), len(lcm_qs)))
+    return out
+
+
+def hl_question(q):
+    """One generated question as a schema-1 bank question."""
+    ref = "generator:MaffsHcfLcm.bank:%d:%d" % (q["stage"], q["index"])
+    slips = [{"answer": {"value": s_["answer"]["value"]}, "line": s_["line"]} for s_ in q["slips"]]
+    return mk("hcf-lcm", HL_SOURCE, ref, q["band"], False, q["stem"], "number", {"value": q["answer"]["value"]},
+              unit=q["unit"], worked=q["worked"], slip=slips)
+
+
+async def topic_hcf_lcm(h):
+    """HCF and LCM in five stages of 12: two numbers (HCF, then LCM), from prime factors, then each in context (packs, rows and
+    boxes; buses, lights and bells), generated by hcf-lcm-gen.js and each answer recomputed by check_hcf_lcm() from its stem."""
+    qs = await hl_generate(h)
+    bad = ["stage %d item %d: %s" % (q["stage"], q["index"], x) for q in qs for x in check_hcf_lcm(q)]
+    bad += await hl_selftest(h, qs)
+    if len({q["stem"] for q in qs}) != len(qs):
+        bad.append("the module made two questions alike")
+    for st in range(1, 6):
+        if sum(1 for q in qs if q["stage"] == st) != 12:
+            bad.append("stage %d does not have 12 questions" % st)
+    s1 = [q for q in qs if q["stage"] == 1]
+    if sum(1 for q in s1 if q["nums"][0] % q["nums"][1] == 0 or q["nums"][1] % q["nums"][0] == 0) > 4:
+        bad.append("stage 1 has more than 4 items where one number divides the other")
+    if sum(1 for q in qs if q["stage"] == 2 and math.gcd(*q["nums"]) > 1) < 6:
+        bad.append("stage 2 has fewer than half its items with an HCF above 1")
+    if [q["ask"] for q in qs if q["stage"] == 3] != ["hcf"] * 6 + ["lcm"] * 6:
+        bad.append("stage 3 is not 6 HCF then 6 LCM")
+    if bad:
+        raise AssertionError("hcf-lcm: " + "; ".join(bad[:8]))
+    return [hl_question(q) for q in qs]
+
+
 # ───────────────────────────── the registry ─────────────────────────────
 # topic id -> (builder, rule notes). Topics not here have no bank yet (coming soon).
 BUILDERS = {
@@ -4318,6 +4412,7 @@ BUILDERS = {
     "coordinates": topic_coordinates,
     "pie-charts": topic_pie_charts,
     "percentages-money": topic_percentages_money,
+    "hcf-lcm": topic_hcf_lcm,
 }
 
 
