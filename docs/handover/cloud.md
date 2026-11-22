@@ -71,7 +71,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 Claude Code (cloud), branch `claude/funny-keller-2thbao` from main 67ade5e. First commit closes out #873 (SIX-PS-BANKS-9, entry below).
 
 - **#871's branch (closed unmerged, duplicate of #872):** a deletion of `claude/ecstatic-thompson-f35dgo` failed in an earlier session. That session's command and its exact error reached neither this session nor any file (no unpushed note here), so neither is recorded. The branch stays on origin at a2a254f; no further attempts.
-- Next: measure-phone-fit `--only` list, ci-deps KNOWN_TOP and its self-test, `measured_pages()`, phone-fit-full on pull requests, merge-pr's phone-fit wait.
+- Implemented (commit 2): measure-phone-fit `--only a,b`; ci-deps KNOWN_TOP + the tracked-folder self-test (planted) + `measured_pages()`; phone-fit-full on pull requests (shared: all; else the changed games; else nothing; per-PR concurrency); merge-pr (a'), the PR head's phone-fit run, waited for and never waived; AGENTS.md line; todo CI-DEPS-TOOLS and CI-DEPS-UGH-STATS to todo-done. Local: all three self-tests PASS, ci-groups --check and --worst-case PASS.
+- Next: the PR's own phone-fit run (it changes .github/, so it measures every game), then step 7's one-game, docs-only and /class/ runs.
 
 ## 2026-11-21 (cloud): SIX-PS-BANKS-9 (`docs/history/contracts/2026-11-21-six-ps-banks-9.md`)
 
