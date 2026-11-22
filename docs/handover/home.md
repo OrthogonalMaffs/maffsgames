@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-22 (home): WWIUT-STAND-OUT ("When will I use this?" gets its own navy strip on the home page; the section leads with coloured course tiles and a sum on every job card)
+
+Claude Code (home lane), worktree `~/mg-wwiut`, branch `claude/wwiut-stand-out`; contract `docs/handover/contracts/2026-11-22-wwiut-stand-out.md` (verbatim). The first commit carries WHEN-WILL-I-USE-THIS's close-out (#883, 2710eed).
+
+- Portal: a navy strip (`#usesStrip`, `.par-strip uses-strip cmp`) above the parents strip, with a New flag dated 2026-11-22 and the button "See the jobs" (`data-mfg-item="open-wwiut"`, section `when-will-i-use-this`). The parents strip has its one button again. `applyParFlag()` became `applyStripFlags()`: every `.par-flag[data-badge-date]` expires on BADGE_DAYS; game cards are untouched.
+- `verify-new-and-updated.py` checks each strip flag on its last shown day and its first hidden day, read from the markup. A new plant (the expiry ignores the new flag) is caught: 4 of 4.
+- Data: 15 route colours, white at 4.92:1 or better, the closest pair delta E 16.4, the nearest to teal delta E 33.5. The 14 headlines are as the contract gives them, and all recompute.
+- Pages: the hub runs "Pick your course" tiles, then 14 job cards (each with its headline in KaTeX, linked to `<topic>/#<id>`), then "By maths topic", in a 1040 px container. Scenario cards get a route-colour top band, a route chip and the headline. Route headers are filled with their colour. The hub's foot line drops its self-link. The look is in `when-will-i-use-this/uses.css`, written by build-uses.py.
+- check-uses.py: headlines, colours, anchors, no hub self-link, and Chromium contrast on tiles, chips and headers. Self-test 50 of 50. A route header scrolled 9 px at 320 in Aa ("environmental"); fixed with overflow-wrap and less phone padding.
+- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+
 ## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
 
 Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-this`; contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md` (verbatim, with Jon's HUBS ruling below it). The first commit carries GIVEN-THAT-POLISH's close-out (#881, 7660e2f).
@@ -27,6 +38,7 @@ Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-th
 - `check-uses-links.py --live` (not CI): on the first run 17 of 18 answered 200 and RCN's dosage page was 404; Project Claude's review moved it to RCN Learn, also 404 (the course is withdrawn); ruling (Project Claude with Jon): the source is now Gloucestershire Hospitals NHS FT's IV drug calculation practice formulae (PDF).
 - Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
 - Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+- MERGED 22 Nov as 2710eed (#883) via merge-pr.py, exit 0, last line "main 2710eed run 45061326436: GREEN", after Project Claude's review (the RCN source replaced, by ruling, with Gloucestershire Hospitals NHS FT's calculation formulae; 18 of 18 links 200) and a merge of main for #882's conflict. Main on the merge commit: check-site 45061326436 success, phone-fit-full 45061326451 success (every game), pages build 45061325860 success. The PR's last Gate: check-site 45059668766 and phone-fit-full 45059668793 (head d0c21e3), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-when-will-i-use-this.md` (closed out by WWIUT-STAND-OUT's first commit).
 
 ## 2026-11-22 (home): GIVEN-THAT-POLISH (a first-try hint, full-size fractions, slip lines that say what was computed, KaTeX in every worked answer, every fade stored)
 
