@@ -66,7 +66,7 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): EXPECTATION-STATION-LINES (`docs/handover/contracts/2026-11-22-expectation-station-lines.md`)
+## 2026-11-22 (cloud): EXPECTATION-STATION-LINES (`docs/history/contracts/2026-11-22-expectation-station-lines.md`)
 
 Claude Code (cloud), branch `claude/magical-einstein-7072g0` from main bc0496c. Tier Small. First commit: #884's close-out (entry below), this contract saved, given-that unclaimed, expectation-station claimed.
 
@@ -74,6 +74,7 @@ Claude Code (cloud), branch `claude/magical-einstein-7072g0` from main bc0496c. 
 - **Decided for you (SR-31):** Continue rather than the timed move to Stage 3 (as written, the sum line would have shown for 0.8 s); two columns above 520px (one column pushed Check Calculation below the fold on 12 laptop items, 23 in Aa); the total in the scenario's form (a fraction in a fraction scenario, e.g. 4/3, where Stage 3 shows 4/3 ≈ 1.33).
 - **Fit (all 120 items, Check Calculation's bottom, page coordinates, before / after):** no item pushed below the fold at any size; above the fold at 375x667 66 / 68, Aa 375x667 0 / 13, Aa 390x844 99 / 116, laptop 120 / 120 (worst 641 / 680), Aa laptop 119 / 119. measure-phone-fit (Stage 1 only) unchanged in normal, Aa and laptop: no known-failures entry grows or can go.
 - **Verifier:** KaTeX from the pinned copy (`bc.offline`); `lines_fails` for every item; plants: the old chained line (all 120 items), no sum line after the reveal, the sum adding P(X = x). PASS, 13 plants caught. check-answer-lock `--game expectation-station` PASS, the same as main's page.
+- **MERGED 22 Nov as 3af3b62 (#886)**, route merge-pr.py --watch. Main on 3af3b62: check-site 45068923835, phone-fit-full 45068923807, pages 45068923283, all success. The PR's own runs on 2b3c3ed: check-site 45067739391, phone-fit-full 45067739315, both success. Contract moved, game unclaimed. Closed out by SITE-CONTRAST.
 
 ## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/history/contracts/2026-11-22-given-that-set-labels.md`)
 
