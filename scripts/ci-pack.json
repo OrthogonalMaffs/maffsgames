@@ -38,7 +38,7 @@
   "Core Maths Paper 2B (Q28's policy recomputed from its table, no wrong option picking the same policy; every option marked in Chromium)": "65",
   "Core Maths Paper 2C (every option marked against its key or accepted set; Jon's rulings on Q12 and Q35; a double-tap on Next answers nothing; Chromium)": "24",
   "Correlation or Coincidence (bank, graphs' r, labels before the answer, phone fit)": "71",
-  "Counting Players pack (core-maths/counting-players/: build.py --check, every Values key recomputed from the two CSVs and every Condition true; the CSVs carry no fbclid, no query key but level, game, type, mode, topic, and no source naming a single school or college; each committed PDF's text holds every value its section fills; five planted faults caught)": "77",
+  "Counting Players pack (core-maths/counting-players/: build.py --check, every Values key recomputed from the two CSVs and every Condition true; the CSVs carry no fbclid, no query key but level, game, type, mode, topic, and no source naming a single school or college; each committed PDF's text holds every value its section fills; five planted faults caught)": "3",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
   "Dash before a number (no em dash or spaced en dash directly before a number, a variable or a minus sign in student-facing text; planted faults)": "30",
   "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 1 of 2": "62",
@@ -159,7 +159,7 @@
   "Quadratic Factoriser (every pooled item recomputed, SymPy; every Higher item's six guided steps, seven with the HCF step, played in Chromium, each HCF, split, factor and line recomputed; Formula roots on the keypad with a minus key)": "20",
   "Quadratic Factoriser self-test (the old HCF flow and eleven other faults planted in the guided steps and the keypad; each must fail)": "53",
   "Question id (question_answered names its question: analytics.js hashes question_text to question_id and never sends the text, GA4 and the Sheet alike; Sequence Solver's ids decode with no collision; shrink-only warn list; planted faults)": "70",
-  "Real fonts for the phone checks (scripts/fonts/ pinned and complete; the phone pass measures in them, the old font-blocking planted and caught)": "17",
+  "Real fonts for the phone checks (scripts/fonts/ pinned and complete; the phone pass measures in them, the old font-blocking planted and caught)": "42",
   "Resit fixes of 4 Oct 2026 (five games' fixed faults, each fails on the old code)": "12",
   "SUVAT Selector (every key from the data both ways, at its stated precision; marking through MaffsAnswer in Chromium)": "62",
   "Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium)": "61",
@@ -386,7 +386,7 @@
    "tier": "content"
   },
   "verify-some-thingies.py": {
-   "how": "chosen from 25 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test)",
    "parts": 2,
    "tier": "content"
