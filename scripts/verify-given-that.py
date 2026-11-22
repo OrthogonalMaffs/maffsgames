@@ -865,9 +865,155 @@ def fade(fails, html, bank, sizes=None, motions=(False, True)):
         proc.wait()
 
 
+
+CONTRAST_SIZES = [(390, 844), (1366, 768)]     # the narrow drawings, then the wide ones
+MIN_CONTRAST = 4.5                             # WCAG 2.2 AA (1.4.3), applied to every size of text
+
+# Every text element in a root, read as drawn: its colour (an SVG text's fill, otherwise its colour) with the opacity
+# of it and its ancestors, over the nearest painted background beneath it: any SVG shape in its drawing whose fill
+# contains the text's centre (painted before it), then each ancestor's background colour, layered until one is
+# opaque. Faded text (a "greyed" element or inside one) and disabled controls are exempt (WCAG 1.4.3's inactive
+# components); the caller skips nothing else. Returns [label, text, fg rgb, bg rgb] with both colours composited.
+CONTRAST_JS = r"""(rootSel) => {
+  const out = [], roots = [...document.querySelectorAll(rootSel)];
+  const rgba = s => { const m = (s || '').match(/rgba?\(([^)]+)\)/); if (!m) return null;
+    const v = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [v[0], v[1], v[2], v.length > 3 ? v[3] : 1]; };
+  const opac = el => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity); return o; };
+  const over = (top, a, bot) => top.map((c, i) => a * c + (1 - a) * bot[i]);
+  const own = el => [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
+  const SHAPES = 'rect,circle,ellipse,path,polygon';
+  for (const root of roots) root.querySelectorAll('*').forEach(el => {
+    const texts = own(el);
+    if (!texts.length || !el.getClientRects().length) return;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none') return;
+    if (el.closest('.greyed') || el.closest(':disabled')) return;
+    const range = document.createRange(); range.selectNodeContents(texts[0]);
+    const r = range.getClientRects()[0] || el.getClientRects()[0];
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const isSvg = el instanceof SVGElement;
+    const fg = rgba(isSvg ? cs.fill : cs.color);
+    const label = el.tagName.toLowerCase() + (el.getAttribute('class') ? '.' + el.getAttribute('class').trim().split(/\s+/).join('.') : '')
+      + (el.id ? '#' + el.id : '');
+    const text = el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40);
+    if (!fg) { out.push([label, text, null, null, isSvg ? cs.fill : cs.color]); return; }
+    const layers = [];
+    const svg = isSvg ? el.ownerSVGElement : null;
+    if (svg) {
+      const shapes = [...svg.querySelectorAll(SHAPES)].filter(sh =>
+        (sh.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) && !el.contains(sh));
+      for (const sh of shapes.reverse()) {
+        const sc = getComputedStyle(sh), f = rgba(sc.fill);
+        if (!f || !sh.getClientRects().length) continue;
+        const p = new DOMPoint(x, y).matrixTransform(sh.getScreenCTM().inverse());
+        if (!sh.isPointInFill(p)) continue;
+        layers.push([f, f[3] * parseFloat(sc.fillOpacity) * opac(sh)]);
+      }
+    }
+    for (let n = isSvg ? svg.parentElement : el; n; n = n.parentElement) {
+      const b = rgba(getComputedStyle(n).backgroundColor);
+      if (b && b[3] > 0) layers.push([b, b[3] * opac(n)]);
+    }
+    let i = layers.findIndex(l => l[1] >= 0.999);
+    let bg = i < 0 ? [255, 255, 255] : layers[i][0].slice(0, 3);
+    for (let j = (i < 0 ? layers.length : i) - 1; j >= 0; j--) bg = over(layers[j][0].slice(0, 3), layers[j][1], bg);
+    out.push([label, text, over(fg.slice(0, 3), fg[3] * opac(el), bg), bg]);
+  });
+  return out;
+}"""
+
+
+def luminance(rgb):
+    def lin(c):
+        c /= 255.0
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+    r, g, b = (lin(c) for c in rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast_ratio(a, b):
+    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+CONTRAST_TALLY = {}
+
+
+def contrast_faults(rows, where):
+    """[fault] for every text element under MIN_CONTRAST; counts each judged element into CONTRAST_TALLY."""
+    fails = []
+    for label, text, fg, bg, *raw in rows:
+        kind = where.split(' at ')[0].split(' ')[0].rstrip(',')
+        CONTRAST_TALLY[kind] = CONTRAST_TALLY.get(kind, 0) + 1
+        if fg is None:
+            fails.append('%s: %s "%s" has no colour to read (%s)' % (where, label, text, raw[0] if raw else '?'))
+            continue
+        cr = contrast_ratio(fg, bg)
+        if cr < MIN_CONTRAST - 1e-9:
+            fails.append('%s: %s "%s" is %.2f:1 (rgb%s on rgb%s), under %.1f:1'
+                         % (where, label, text, cr, tuple(round(c) for c in fg), tuple(round(c) for c in bg), MIN_CONTRAST))
+    return fails
+
+
+def contrast(fails, html, sizes=None, modes=(False, True)):
+    """The contrast sweep: every item's diagram in Phase 1 and Phase 2 (both drawings), the start screen (before and
+    after a level is picked) and the results screen, at each CONTRAST_SIZES size, normal and Aa."""
+    from playwright.sync_api import sync_playwright
+    hooked = hook(html)
+    if hooked is None:
+        fails.append('page: cannot find the end of the game script to expose its functions to the sweep')
+        return
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for w, h in sizes or CONTRAST_SIZES:
+                for aa in modes:
+                    at = ' at %dx%d%s' % (w, h, ' Aa' if aa else '')
+                    ctx = browser.new_context(viewport={'width': w, 'height': h}, reduced_motion='reduce')
+                    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                    bc.offline(ctx, base)
+                    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                        status=200, content_type='text/html; charset=utf-8', body=hooked))
+                    ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+                    page = ctx.new_page()
+                    errors = []
+                    page.on('pageerror', lambda e: errors.append(str(e)))
+                    page.goto(base + '/games/%s/?cb=contrast' % SLUG, wait_until='load', timeout=20000)
+                    page.wait_for_function('window.__gt && typeof katex !== "undefined"', timeout=15000)
+                    page.evaluate("(aa) => document.body.classList.toggle('accessible', aa)", aa)
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#startScreen'), 'start' + at))
+                    page.click('#levelSelect .level-btn[data-level="gcse"]')
+                    page.evaluate('() => document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} })')
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#startScreen'),
+                                                 'start, a level picked' + at))
+                    ids = page.evaluate("""() => { const G = window.__gt, o = [];
+                      for (const lv of Object.keys(G.Q)) G.Q[lv].forEach((q, i) => o.push([lv, i, q.id])); return o; }""")
+                    for lv, i, qid in ids:
+                        for ph in ('p1', 'p2'):
+                            page.evaluate("""([lv, i, ph]) => { const G = window.__gt, q = G.Q[lv][i];
+                              G.set(lv, q); G.showQuestion(); if (ph === 'p2') G.toPhase2(q);
+                              document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} }); }""",
+                                          [lv, i, ph])
+                            fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#dataContainer'),
+                                                         'diagram %s %s%s' % (qid, ph, at)))
+                    page.evaluate('() => window.__gt.results(31)')
+                    bc.wait_settled(page)
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#resultsScreen'), 'results' + at))
+                    if errors:
+                        fails.append('page errors%s: %s' % (at, '; '.join(errors[:3])))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 HOOK = ('window.__gt={Q:QUESTIONS,set:function(lv,q){currentLevel=lv;sessionQuestions=[q];currentQIndex=0;'
         'phase2Attempt=0;startScreen.classList.remove("active");gameScreen.classList.add("active");'
-        'gameHeader.style.display=""},showQuestion:showQuestion,toPhase2:transitionToPhase2};\n')
+        'gameHeader.style.display=""},showQuestion:showQuestion,toPhase2:transitionToPhase2,'
+        'results:function(sc){totalScore=sc;showResults()}};\n')
 
 SWEEP_JS = r"""(free) => {
   window.setTimeout = () => 0;
@@ -1249,6 +1395,9 @@ def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, 
         play(fails, html, free, ex_text)
     if 'fade' in stages:
         fade(fails, html, bank)
+    if 'contrast' in stages:
+        CONTRAST_TALLY.clear()
+        contrast(fails, html, fit_sizes, fit_modes)
     global FIT_REPORT
     FIT_REPORT = fit(fails, html, free, bank, fit_sizes, fit_modes) if 'fit' in stages else []
     return fails, sum(len(v) for v in bank.values())
