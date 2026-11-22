@@ -60,10 +60,6 @@
         "375x667",
         "390x844"
       ],
-      "given-that": [
-        "320x568",
-        "375x667"
-      ],
       "growth-and-decay": [
         "320x568",
         "375x667"
@@ -186,11 +182,6 @@
         "390x844"
       ],
       "fermi-lab": [
-        "375x667",
-        "390x844"
-      ],
-      "given-that": [
-        "320x568",
         "375x667",
         "390x844"
       ],
@@ -326,12 +317,6 @@
         "1280x720 option"
       ],
       "four-quadrant-explorer": [
-        "1280x720 option"
-      ],
-      "given-that": [
-        "1366x768 next",
-        "1366x768 option",
-        "1280x720 next",
         "1280x720 option"
       ],
       "gradient-hunter": [

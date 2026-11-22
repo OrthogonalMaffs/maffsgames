@@ -4010,3 +4010,7 @@ Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word f
 51. **CI-DEPS-UGH-STATS** (UGH-STATS-PAGES, 14 Nov 2026; Jon: log it, do not change): `scripts/ci-deps.py` KNOWN_TOP does not name `ugh-stats`, so a change under `ugh-stats/` is a path in no known area and selects every verifier in the Gate. Add the folder to KNOWN_TOP. Owner: cloud lane (a Gate file).
 
 **Closed 22 Nov 2026 (PHONE-FIT-CHANGED-GAMES).** Rows CI-DEPS-TOOLS and CI-DEPS-UGH-STATS, moved word for word above. `scripts/ci-deps.py` KNOWN_TOP gained class, printables, ugh-stats, core-maths, tools and firebase, and its self-test now fails on any tracked top-level folder in neither KNOWN_TOP nor ALL_PREFIXES.
+
+## Part closed by GIVEN-THAT-FIT-WHY (22 Nov 2026)
+
+Row WRONG-PAUSE-REASONS, its clause under **Answer shown, no reason:**, moved word for word: given-that. A wrong answer in either phase now shows a "Why" reference card (canon 7.6.2, between the feedback and Next) that works the probability from the diagram's own counts (a new Phase 1 explanation for all 90 items; Phase 2's stored one, unchanged) and names the slip when the wrong value is one family's by computation; checked for every option and every wrong ratio by `scripts/verify-given-that.py`. The rest of the row stays.
