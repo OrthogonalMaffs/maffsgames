@@ -1,0 +1,7 @@
+{
+  "note": "scripts/check-contrast.py's list (contract SITE-CONTRAST, 22 Nov 2026). known-failures, per mode: each game whose failing text is not a colour value (text on a picture or gradient, a canvas), with its reason. A failure not listed fails; a listed game that passes fails as stale, so the list only shrinks.",
+  "known-failures": {
+    "normal": {},
+    "aa": {}
+  }
+}
