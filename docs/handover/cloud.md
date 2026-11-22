@@ -66,7 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): GIVEN-THAT-FIT-WHY (`docs/handover/contracts/2026-11-22-given-that-fit-why.md`)
+## 2026-11-22 (cloud): PHONE-FIT-STATE-SELECTIVE (`docs/handover/contracts/2026-11-22-phone-fit-state-selective.md`)
+
+Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` from main f343ac7. Tier Shared: stops at Gate green for Project Claude's review and Jon's "merge". First commit: #877's close-out (entry below), given-that unclaimed (`scripts/answer-lock-state.json` back to `[]`), its contract moved, this contract saved. #875's owed live proof stays owed: a docs-only PR and a /class/ PR (#877 was neither).
+
+- Next: `state_games()` in ci-deps.py, is_shared/measured_pages through it, the workflow passing the base text; selftest; the simulation of #877.
+
+## 2026-11-22 (cloud): GIVEN-THAT-FIT-WHY (`docs/history/contracts/2026-11-22-given-that-fit-why.md`)
 
 Claude Code (cloud), branch `ccr-bcba17c0-u8yhyf` from main e12f99a. First commit: the close-outs of #876 (CC-TRIG-SLIP, entry below) and #875's live proof so far (PHONE-FIT-CHANGED-GAMES, entry below), the contract saved, given-that claimed in `scripts/answer-lock-state.json` (the contract's step 1: claim in the same commit). No other merged contract was left in `docs/handover/contracts/` (the other five are unstarted or parked work, each with a todo row).
 
@@ -78,6 +84,7 @@ Claude Code (cloud), branch `ccr-bcba17c0-u8yhyf` from main e12f99a. First commi
 - **STOP IF hit, parked (standing STOP rules):** core_10 p2 and l4_07 p2 at Aa 320x568: the answer box starts 23 and 30px below the fold (the indented tree's labels wrap in OpenDyslexic). In the verifier's PARKED, reported; Jon to rule. Phone-fit does not see them (default level GCSE).
 - **Seen, not changed:** the Venn grey-out never fades: `.venn-region.greyed` matches no element (the labels carry `.venn-label`), so only the condition's regions turn amber; grey-out is DO NOT TOUCH. site-nav's big-screen logo overlaps "Back to Games" at 1280 (shared).
 - Next: the PR; its own phone-fit run must measure given-that only.
+- **MERGED 22 Nov as c6d51b4 (#877)**, route merge-pr.py. Main on c6d51b4: check-site 45028817739 success, phone-fit-full 45028817763 success (every game: the state file was shared; normal, Aa and laptop, 13:41 to 13:58), pages 45028817113 success. The PR's own phone-fit run 45027281256 (head 1b17e3e) measured every game, not given-that only, 16m58s, success: the state-file edit counted as shared (fixed by PHONE-FIT-STATE-SELECTIVE). Given That unclaimed, contract moved to `docs/history/contracts/`. Closed out by PHONE-FIT-STATE-SELECTIVE.
 
 ## 2026-11-22 (cloud): CC-TRIG-SLIP and PHONE-FIT-DOCS (`docs/history/contracts/2026-11-22-cc-trig-slip.md`)
 
