@@ -45,7 +45,7 @@
   "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 2 of 2": "50",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
-  "Distinctly Average (independent recomputation)": "77",
+  "Distinctly Average (independent recomputation)": "75",
   "Download links labelled (every <a download> and every data-mfg-download button on a served page has data-mfg-item inside a data-mfg-section, so analytics.js counts it as section_clicked action download; a page that builds a download in script has a labelled button; planted faults caught)": "29",
   "Eigenvalue Extractor (every characteristic equation solved in SymPy; every option read as its list of eigenvalues and classified; every worked line and check sum recomputed; every option pressed in Chromium)": "32",
   "Eigenvector Engine (every key an eigenvector, no option a multiple of one or of another; working recomputed; every option clicked)": "11",
@@ -94,7 +94,8 @@
   "GA4 loads on the live host only (analytics.js in Chromium: on the stub server and on a local host no request reaches Google's analytics hosts and no gtag is defined; on the live host one gtag.js load and one page_view with the old config; two faults planted)": "35",
   "GA4 summary Apps Script (mocked Sheet: weekly sums match the raw tabs, partial weeks marked, top ten, three charts created once, values-only rebuilds, GA4 tabs/Sheet1/Dashboard untouched; planted faults caught)": "65",
   "Game analytics (an escape room won with a search and a tab switch: 3 lock question_answered, 1 game_completed, 0 game_abandoned, to GA4 and the Sheet; a room left mid-game: 1 abandon; an ordinary game with a tab switch: 0 abandons, 1 completion; every abandon path carries elapsed_s, the seconds since this visit's real start, and a level switch does not reset it; old faults planted and caught)": "64",
-  "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium)": "68",
+  "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa), part 1 of 2": "75",
+  "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa), part 2 of 2": "68",
   "Glorious Gantt's answer boxes (text boxes, never type=\"number\"; every early time, late time, float and Gantt reading in the pool marked exactly as on the old number boxes for every string a number box can hold, and junk refused; NOT the game's verifier)": "50",
   "Gradient Hunter (every chord gradient exact from its own points; stated tangents are the drawn curve's; one true interpretation; the typed gradient marked, clicking scores nothing; answer once and Next once, played in Chromium)": "9",
   "Graph Sketcher (keys recomputed from each printed equation)": "27",
@@ -331,6 +332,12 @@
    "parts": 2,
    "tier": "content"
   },
+  "verify-given-that.py": {
+   "how": "chosen from 15 timed unit(s)",
+   "label": "Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa)",
+   "parts": 2,
+   "tier": "content"
+  },
   "verify-hc-factor.py": {
    "how": "kept from the pack (2 needed)",
    "label": "The HC Factor (every question of the six stages recomputed from its own printed expression by polynomial multiplication, never from the module's parameters: expansions, factorisations fully factorised, sign-grid answers against b and c, every slip different from the answer; 40 distinct questions a stage; the module's marking compared with an independent marker on thousands of probe answers; all six stages played in the page at 375, 360, 320, 1280 and 1366 px: typed answers, both bracket orders, a named slip, a partial factorisation, the sign grid marked on its own; answer boxes and Next above the fold; no sideways scroll; one board submission a round, none for round 6; fault-injection self-test: planted faults, each caught, including a wrong middle term, a sign-grid answer contradicting c, and a partial factorisation accepted in Stage 3)",
@@ -338,7 +345,7 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "kept from the pack (5 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
@@ -362,7 +369,7 @@
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "kept from the pack (1 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 2,
    "tier": "content"
@@ -386,7 +393,7 @@
    "tier": "content"
   },
   "verify-some-thingies.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (1 needed)",
    "label": "Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test)",
    "parts": 2,
    "tier": "content"
