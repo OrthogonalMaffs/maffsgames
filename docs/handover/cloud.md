@@ -70,6 +70,11 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Claude Code (cloud), branch `claude/magical-einstein-7072g0` from main bc0496c. Tier Small. First commit: #884's close-out (entry below), this contract saved, given-that unclaimed, expectation-station claimed.
 
+- **Done on the branch:** `renderStage2()` draws one line per row, `x \times P(X = x) =` in KaTeX and its slot (ids, tiles, marking unchanged); phones (520px and down) one line under another, wider screens two columns. Once Stage 2 is checked (right, or revealed), `showStage2Sum()` adds the line E(X) = \sum xP(x) = p1 + ... = total (exactEX(), Stage 3's value), the empty tile bank hides, and a Continue button (`data-maffs-lock-skip`) replaces the 0.8 s / 1.2 s auto-advance, so the sum can be read; the lock hint presses it.
+- **Decided for you (SR-31):** Continue rather than the timed move to Stage 3 (as written, the sum line would have shown for 0.8 s); two columns above 520px (one column pushed Check Calculation below the fold on 12 laptop items, 23 in Aa); the total in the scenario's form (a fraction in a fraction scenario, e.g. 4/3, where Stage 3 shows 4/3 ≈ 1.33).
+- **Fit (all 120 items, Check Calculation's bottom, page coordinates, before / after):** no item pushed below the fold at any size; above the fold at 375x667 66 / 68, Aa 375x667 0 / 13, Aa 390x844 99 / 116, laptop 120 / 120 (worst 641 / 680), Aa laptop 119 / 119. measure-phone-fit (Stage 1 only) unchanged in normal, Aa and laptop: no known-failures entry grows or can go.
+- **Verifier:** KaTeX from the pinned copy (`bc.offline`); `lines_fails` for every item; plants: the old chained line (all 120 items), no sum line after the reveal, the sum adding P(X = x). PASS, 13 plants caught. check-answer-lock `--game expectation-station` PASS, the same as main's page.
+
 ## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/history/contracts/2026-11-22-given-that-set-labels.md`)
 
 Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier Small. First commit: #882's close-out (entry below), this contract saved with its STOP and Amendment 1, given-that claimed.
