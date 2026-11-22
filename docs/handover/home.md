@@ -24,6 +24,7 @@ Claude Code (home lane), worktree `~/mg-class-page`, branch `claude/class-page`;
 - `/class/`: noindex, no menu, search or sitemap entry. Cards come from `"kids": true` in `data/games.json`, written in by `scripts/apply-class-page.py` (data/ is never published, so a fetch could not work). It loads analytics.js (the loader rule holds noindex pages to it); GA4's default page view leaves the fragment out.
 - site-nav: `/class/` in HUBS ("the class page"); a game opened from `/class/#<Name>` goes back to `/class/#<Name>`, the name read from its own hash through MaffsKids; only the hub's path is in sessionStorage. Both games show stage-exit's short form, "← the class page" (STAGE-EXIT-LABEL).
 - Checks: `scripts/test-kids-look.py` (Node vm, selective; 10 plants); check-site-nav's `class` unit and plant; check-site's site-wide class-name rule (Maple, plus `MAFFS_CLASS_NAMES`). For cloud: ci-deps' KNOWN_TOP lacks `class` (like printables, ugh-stats, core-maths), so a `class/` change counts as shared.
+- MERGED 21 Nov as 10ab776 (#872) via merge-pr.py (the Gate's 101 runs green). Main on the merge commit: check-site 44956845120 success, phone-fit-full 44956845115 success, pages build 44956845097 success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-21-class-page.md` (closed out by COMPLEX-CONVERTER-WHY's first commit).
 
 ## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
 
