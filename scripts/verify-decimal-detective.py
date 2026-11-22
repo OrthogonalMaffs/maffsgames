@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium) | | 2
+# ci-shards: Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium, every item's phone fit) | | 2
 """Decimal Detective: every key recomputed, and every answer marked through the real page.
 
 The bank (45 items, one level: 15 Line-Up, 15 Round Up, 15 Place It) was keyed by hand and never
@@ -46,6 +46,16 @@ The bank is read from the live page (post any runtime patch), then:
       buttons, reach it with no value visible, and Check marks it right; after a right answer the
       feedback, and after a wrong answer the feedback and Next (the MaffsNext control), are on
       screen, above the 40px footer.
+    Fit (contract DECIMAL-DETECTIVE-FIT, 22 Nov 2026; canon 7.6.1), in normal and Aa mode, at 320x568,
+      375x667 and 390x844 (a touch profile) and 1366x768 and 1280x720: every item of every type, in page
+      coordinates (rect + scrollY, as measure-phone-fit.py), against the fold (innerHeight - the 40px
+      footer). Asking screen: every card, option, the number line with its tick labels and its marker
+      (placed on the value), the step buttons and Check end above the fold; in Aa at 320x568, canon 7.6.1's
+      exception, they start above it. After a wrong answer (every wrong option of a Round Up; a reversed
+      Line-Up; a Place It one step off) and after a right Line-Up that carries the equal-value note: the
+      feedback and then Next Case, in that order, end above the fold, at every size in both modes
+      (NEXT_RECORDED, the sizes excused by a collapsed right order, is empty: it fits in full). No sideways
+      scroll on the start screen, any asking or feedback screen, the reveal or the results screen.
     The session is never finished, so nothing is submitted; every request off the stub server is
     aborted.
 A fault-injection self-test must FAIL each time: identical cards in a row and an equal-value
@@ -53,12 +63,14 @@ distractor (patched bank copies), a wrong Round Up key, and patched pages served
 the file (scripts/plant_common.py: a plant that does not apply is a STALE PLANT and fails the run):
 the marker starting at 50% with Check enabled, a one-step tolerance in the marking, a live value
 readout on the marker, Check enabled when a question loads, a Line-Up start left as shuffled (so
-some seed starts on the key), a right answer that waits, and a wrong answer that moves on by
-itself. It runs unless --no-selftest. The file is never touched.
+some seed starts on the key), a right answer that waits, a wrong answer that moves on by
+itself, the old phone header (its right-hand group runs off the edge in Aa: sideways scroll) and
+Line-Up's old phone spacing (Next below the fold at 320x568). A fit plant stops at its first
+finding (STALE-PLANTS-STOP). It runs unless --no-selftest. The file is never touched.
 
     python scripts/verify-decimal-detective.py [--verbose] [--no-selftest] [--chromium PATH]
     python scripts/verify-decimal-detective.py --shard 1/2      # part 1 of 2 of its work units (CI, # ci-shards)
-    python scripts/verify-decimal-detective.py --list-units     # the units: desktop, each phone, bank, each page plant
+    python scripts/verify-decimal-detective.py --list-units     # the units: desktop, each phone, fit, bank, each page plant
 """
 import argparse
 import copy
@@ -110,10 +122,25 @@ PATCHES = {
     'order-removed': ("             : 'The right order: ' + data.sorted.join(', ') + (equal ? ' ' + equal : '');",
                       "             : equal;"),
     'order-reversed': ("data.sorted.join(', ')", "data.sorted.slice().reverse().join(', ')"),
+    # The phone header before DECIMAL-DETECTIVE-FIT: no wrap, so in Aa its right-hand group ran off the right edge.
+    'aa-header': ('.header{padding:5px 12px;gap:8px;flex-wrap:wrap;row-gap:2px}\n'
+                  '.header-div,.header-title{display:none}\n'
+                  '.header-right{gap:8px;flex-wrap:wrap;justify-content:flex-end;min-width:0}\n', ''),
+    # Line-Up's phone spacing before it: the arrow, the zone and the cards as they were, the prompt kept after Check.
+    'lineup-spacing': ('.arrow-hint{margin:2px 0;font-size:15px}\n'
+                       '.arrow-hint span[style]{font-size:18px !important}\n'
+                       '.lineup-zone{gap:8px;margin:4px 0 8px;padding:8px 6px;min-height:0}\n'
+                       '.suspect-card{padding:8px 12px;line-height:1.35}\n'
+                       '/* Once Next Case shows, Line-Up\'s prompt and arrow are spent (canon 7.6.1: hide what cannot be used): the prompt is\n'
+                       '   its title, which the header\'s pill also shows, and its instruction. The right order in the feedback takes their room. */\n'
+                       '#gameScreen:has(#nextMount .maffs-next):has(#lineupZone) .arrow-hint,\n'
+                       '#gameScreen:has(#nextMount .maffs-next):has(#lineupZone) #questionPrompt{display:none}\n', ''),
     'wrong-moves-on': ("else MaffsNext.wrong({ mount: nextMount, onAdvance: nextQuestion, label: 'Next Case \\u2192' });",
                        "else MaffsLock.timer(nextQuestion, RIGHT_ADVANCE_MS);"),
 }
 PLACEIT_PATCHES = ('start', 'tolerance', 'readout')   # their self-test run is the desktop Place It pass
+# The fit plants run the fit pass only where the fault shows: (mode, sizes).
+FIT_PATCHES = {'aa-header': ('aa', [(320, 568), (375, 667), (390, 844)]), 'lineup-spacing': (None, [(320, 568)])}
 NOTE_PATCHES = ('order-removed', 'order-reversed')     # theirs is the moving-on pass alone (the CI budget)
 
 
@@ -282,11 +309,13 @@ def verdict(text):
     return 'right' if text.startswith('Correct') else 'wrong' if text.startswith('Not quite') else text
 
 
-def open_page(pw, base, chromium, viewport, touch, patch):
+def open_page(pw, base, chromium, viewport, touch, patch, aa=False, start=True):
     page_url = base + '/games/' + SLUG + '/'
     browser = pw.chromium.launch(**({'executable_path': chromium} if chromium else {}))
     ctx = browser.new_context(viewport={'width': viewport[0], 'height': viewport[1]},
                               has_touch=touch, is_mobile=touch)
+    if aa:                                       # the shared toggle's stored preference, as a student who turned it on
+        ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
     ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
     ctx.add_init_script(bc.NO_NEXT_FLOOR_INIT)   # MaffsNext's 3 s floor: Next Case is pressed at once
     planted = None                               # a plant that does not apply raises StalePlant here, before anything is served
@@ -309,7 +338,8 @@ def open_page(pw, base, chromium, viewport, touch, patch):
     page.route(lambda u: bc.is_font_cdn(u), bc.serve_real_font)  # FONT-FIT: KaTeX and the text faces from scripts/fonts/, the fonts students see
     page.goto(page_url + '?cb=verify', wait_until='load', timeout=20000)
     page.wait_for_function('typeof PLACEIT_QUESTIONS !== "undefined" && window.MaffsNumberLine', timeout=8000)
-    page.evaluate('startGame()')
+    if start:
+        page.evaluate('startGame()')
     return browser, page, errors
 
 
@@ -480,6 +510,127 @@ def phone_placeit(rep, page, items, size, verbose):
           '(innerHeight - %dpx footer)' % (tag, len(items), presses, worst or 0, fold, FOOTER))
 
 
+# ---------------------------------------------------------------------------------------------
+# Fit (contract DECIMAL-DETECTIVE-FIT): every item, both modes, five sizes
+# ---------------------------------------------------------------------------------------------
+LAPTOPS = [(1366, 768), (1280, 720)]
+MODES = ('normal', 'aa')
+# (mode, size) -> why Next may end below the fold there after a wrong answer: the sizes where the right order would be
+# collapsed (canon 7.6.2). None: the right order fits in full at every size in both modes (measured 22 Nov 2026).
+NEXT_RECORDED = {}
+# Everything on the page in page coordinates (rect + scrollY). The controls are what a student answers with: Line-Up's
+# cards, Round Up's options, the number line with its tick labels and marker, the step buttons, and Check.
+JS_FIT = """() => { const vis = e => e.getClientRects().length && getComputedStyle(e).visibility !== 'hidden';
+  const box = e => { const b = e.getBoundingClientRect(); return [b.top + scrollY, b.bottom + scrollY]; };
+  const ctl = [...document.querySelectorAll('#lineupZone .suspect-card, .option-btn, #numberLine, #lineMarker, '
+    + '.tick-label, .step-btn, #checkBtn')].filter(vis).map(box);
+  const fb = document.getElementById('feedback'), n = document.querySelector('#nextMount .maffs-next');
+  return {sw: document.documentElement.scrollWidth, vw: innerWidth, fold: innerHeight - 40,
+          aa: document.body.classList.contains('accessible'),
+          first: ctl.length ? Math.min(...ctl.map(c => c[0])) : null, last: ctl.length ? Math.max(...ctl.map(c => c[1])) : null,
+          n: ctl.length, fb: vis(fb) ? box(fb) : null, next: n && vis(n) ? box(n) : null}; }"""
+JS_SCREEN = """(id) => { showScreen(id); scrollTo(0, 0);
+  return {sw: document.documentElement.scrollWidth, vw: innerWidth}; }"""
+
+
+def fit_cases(bank):
+    """Every item's asking screen and every Next it can show: (where, type, item, answer, ask). `answer` is how it is
+    answered (a wrong order, option or position; or a right order with the equal-value note)."""
+    for i, q in enumerate(bank['LINEUP'], 1):
+        right = sorted(q['suspects'], key=D)
+        yield 'Line-Up %d' % i, 'lineup', q, ('order', right[::-1]), True
+        if equal_notes(q):
+            yield 'Line-Up %d (right, with its note)' % i, 'lineup', q, ('order', right), False
+    for i, q in enumerate(bank['ROUNDUP'], 1):
+        for k, o in enumerate(o for o in q['options'] if o != q['answer']):
+            yield 'Round Up %d (%s, picked %s)' % (i, q['value'], o), 'roundup', q, ('option', o), k == 0
+    for i, q in enumerate(bank['PLACEIT'], 1):
+        kt = grid_index(q)
+        if kt is not None:
+            yield 'Place It %d (%s)' % (i, q['value']), 'placeit', q, ('step', kt - 1 if kt > 0 else kt + 1), True
+
+
+def fit_pass(rep, pw, base, chromium, mode, size, bank, patch=None):
+    """One mode at one size: every item's asking screen, every Next, and the width of every screen. Returns
+    (worst asking end, worst Next end, the cases measured). A plant (patch) stops at its first finding."""
+    tag = '%s %dx%d' % (mode, size[0], size[1])
+    phone = size in PHONES
+    browser, page, errors = open_page(pw, base, chromium, size, phone, patch, aa=(mode == 'aa'), start=False)
+    worst_ask, worst_next, n = (0, ''), (0, ''), 0
+
+    # Judged against the device's own size, never innerWidth or innerHeight: on a mobile profile Chromium widens the
+    # layout viewport to the content, so a page 448px wide reports innerWidth 448 on a 320px phone.
+    def sideways(where, st):
+        if max(st['sw'], st['vw']) > size[0]:
+            rep.fail(tag, where, 'the page scrolls sideways: %dpx wide on a %dpx screen' % (max(st['sw'], st['vw']), size[0]))
+
+    try:
+        st = page.evaluate(JS_FIT)
+        if st['aa'] != (mode == 'aa'):
+            rep.fail(tag, 'mode', 'Aa is %s, expected %s' % ('on' if st['aa'] else 'off', mode))
+            return worst_ask, worst_next, n
+        sideways('start screen', st)
+        page.evaluate('startGame()')
+        for where, kind, q, (how, val), ask in fit_cases(bank):
+            if patch and rep.fails:
+                break
+            page.evaluate(JS_LOAD, [kind, q])
+            if kind == 'placeit':     # the marker on the line: placed on the value, then moved to the answer
+                page.evaluate('(k) => setMarkerPosition(k / 20)', grid_index(q))
+            page.evaluate('scrollTo(0, 0)')
+            if ask:
+                st = page.evaluate(JS_FIT)
+                n += 1
+                sideways(where + ', asking', st)
+                aa320 = mode == 'aa' and size == (320, 568)
+                edge, what = (st['first'], 'start') if aa320 else (st['last'], 'end')
+                st['fold'] = size[1] - FOOTER
+                if not st['n'] or edge > st['fold']:
+                    rep.fail(tag, where, 'asking: the answer controls %s at %s, below the fold (%d)%s'
+                             % (what, edge, st['fold'], ' (Aa at 320x568: they must start above it)' if aa320 else ''))
+                if st['last'] > worst_ask[0]:
+                    worst_ask = (st['last'], where)
+            if how == 'order':
+                page.evaluate(JS_ORDER, val)
+            elif how == 'option':
+                page.evaluate('(o) => selectOption([...document.querySelectorAll(".option-btn")].find(b => b.dataset.option === o))', val)
+            else:
+                page.evaluate('(k) => setMarkerPosition(k / 20)', val)
+            page.evaluate('checkAnswer()')
+            page.wait_for_timeout(30)          # MaffsScroll.reveal's frame; page coordinates ignore its scroll
+            page.evaluate('scrollTo(0, 0)')
+            st = page.evaluate(JS_FIT)
+            st['fold'] = size[1] - FOOTER
+            n += 1
+            sideways(where + ', feedback', st)
+            if not st['next'] or not st['fb']:
+                rep.fail(tag, where, 'no %s after answering' % ('Next Case' if not st['next'] else 'feedback'))
+                continue
+            if st['fb'][1] > st['next'][0] + 0.5:
+                rep.fail(tag, where, 'the feedback (ends %.0f) is not above Next (starts %.0f)' % (st['fb'][1], st['next'][0]))
+            if st['next'][1] > st['fold'] and (mode, size) not in NEXT_RECORDED:
+                rep.fail(tag, where, 'after answering, Next Case ends at %.0f, below the fold (%d)' % (st['next'][1], st['fold']))
+            if st['next'][1] > worst_next[0]:
+                worst_next = (st['next'][1], where)
+        if not (patch and rep.fails):
+            sideways('results screen', page.evaluate(JS_SCREEN, 'resultsScreen'))
+            page.evaluate("document.getElementById('revealOverlay').classList.add('active')")
+            st = page.evaluate(JS_FIT)
+            page.evaluate("document.getElementById('revealOverlay').classList.remove('active')")
+            sideways('reveal', st)
+        for e in errors:
+            rep.fail(tag, 'page error', e)
+        print('  fit %s: %d screens; controls end by %.0f (%s), Next by %.0f (%s); fold %d'
+              % (tag, n, worst_ask[0], worst_ask[1], worst_next[0], worst_next[1], size[1] - FOOTER))
+        return worst_ask, worst_next, n
+    finally:
+        close(browser, page)
+
+
+def fit_unit(mode):
+    return 'fit ' + mode
+
+
 def marked_right(order, q):
     """Would the key mark this order right? Value by value against the row sorted here (Decimal)."""
     return [D(x) for x in order] == sorted(D(x) for x in q['suspects'])
@@ -646,7 +797,9 @@ PAGE_PLANTS = (('start', 'Place It marker at 50%, Check enabled (page)'),       
                ('right-waits', 'a right answer waits (page)'),                    # canon 7.6
                ('wrong-moves-on', 'a wrong answer moves on by itself (page)'),
                ('order-removed', 'a wrong Line-Up without the order (page)'),     # DD-LINEUP-ORDER
-               ('order-reversed', 'a wrong Line-Up order smallest-last (page)'))
+               ('order-reversed', 'a wrong Line-Up order smallest-last (page)'),
+               ('aa-header', 'the old phone header, Aa sideways (page)'),        # DECIMAL-DETECTIVE-FIT
+               ('lineup-spacing', 'Line-Up\'s old phone spacing (page)'))
 
 
 def close(browser, page):
@@ -670,6 +823,14 @@ def plant_run(rep, chromium, patch):
     proc, base = bc.start_stub_server()
     try:
         with sync_playwright() as pw:
+            if patch in FIT_PATCHES:
+                bank = read_bank(pw, base, chromium)
+                mode, sizes = FIT_PATCHES[patch]
+                for m in ((mode,) if mode else MODES):
+                    for size in sizes:
+                        if not rep.fails:
+                            fit_pass(rep, pw, base, chromium, m, size, bank, patch=patch)
+                return bank
             browser, page, errors = open_page(pw, base, chromium, DESKTOP, False, patch)
             bank = page.evaluate(JS_BANK)
             if patch in PLACEIT_PATCHES:
@@ -774,6 +935,13 @@ def page_units(rep, chromium, verbose, mine, shard):
                         if bank is None:
                             bank = read_bank(pw, base, chromium)
                         phone_pass(rep, pw, base, chromium, size, bank, verbose)
+            for mode in MODES:
+                if fit_unit(mode) in mine:
+                    with shard.unit(fit_unit(mode)):
+                        if bank is None:
+                            bank = read_bank(pw, base, chromium)
+                        for size in PHONES + LAPTOPS:
+                            fit_pass(rep, pw, base, chromium, mode, size, bank)
             if verbose and 'desktop' in mine:
                 print('  %d answers marked in Chromium' % actions)
             return bank, actions
@@ -850,14 +1018,14 @@ def main():
 
     # Work units (SHARD, canon 7.8.1): the desktop pass, each phone, the bank's keys with the bank plants, and each
     # page plant. A full run (no --shard) runs them all, in this order, as the verifier always has.
-    units = ['desktop'] + [phone_unit(s) for s in PHONES] + ['bank']
+    units = ['desktop'] + [phone_unit(s) for s in PHONES] + [fit_unit(m) for m in MODES] + ['bank']
     if not args.no_selftest:
         units += ['plant: ' + patch for patch, _ in PAGE_PLANTS]
     mine = shard.pick(units)
 
     rep = Report()
     bank, actions = None, 0
-    if any(u == 'desktop' or u.startswith('phone ') for u in mine):
+    if any(u == 'desktop' or u.startswith('phone ') or u.startswith('fit ') for u in mine):
         bank, actions = page_units(rep, args.chromium, args.verbose, mine, shard)
     lines, s_ok = [], True
     if 'bank' in mine:
