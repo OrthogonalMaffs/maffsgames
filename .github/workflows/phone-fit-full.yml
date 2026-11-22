@@ -24,6 +24,13 @@
 # laptop run as three parallel jobs of one matrix, each measuring every live game, and the "verdict" job fails the run
 # if any of them failed. No mode is dropped and no game is sampled.
 #
+# CONTRAST (SITE-CONTRAST, 22 Nov 2026; canon 7.5): scripts/check-contrast.py, WCAG AA text contrast on every game, runs
+# here beside phone-fit as two more modes of the same matrix (contrast-normal, contrast-aa), because it reaches each
+# game's screens through measure-phone-fit.py's own driver: the same games on the same events (every game nightly and
+# for a shared path, only the changed games otherwise), and the same verdict job, so merge-pr.py refuses a red one as
+# it refuses a phone-fit failure. Each contrast job runs the check's self-test first. One job per mode: both modes in
+# one job measured about 2 x 11 minutes.
+#
 # Same image, fallback fonts and write guards as check-site.yml's jobs, so a verdict here is a verdict there.
 name: phone-fit-full
 
@@ -96,7 +103,7 @@ jobs:
           PY
 
   measure:
-    name: Phone fit, ${{ matrix.mode }} mode
+    name: ${{ startsWith(matrix.mode, 'contrast-') && 'Contrast' || 'Phone fit' }}, ${{ matrix.mode }} mode
     needs: changed
     # always(): `changed` is skipped on the schedule and a manual run, which measure everything regardless. A push or a
     # pull request measures everything for a shared path, else only the games it changes, else nothing.
@@ -108,7 +115,7 @@ jobs:
     strategy:
       fail-fast: false             # every mode runs to the end even after one fails, so one run reports every failure
       matrix:
-        mode: [normal, aa, laptop]
+        mode: [normal, aa, laptop, contrast-normal, contrast-aa]
     container:
       image: mcr.microsoft.com/playwright/python:v1.63.0-noble   # check-site.yml's; requirements-ci.txt pins the same version
       options: >-
@@ -156,14 +163,25 @@ jobs:
           [ -n "$ONLY" ] && { flag="$flag --only $ONLY"; echo "measuring only the games this change touches: $ONLY"; }
           [ -z "$ONLY" ] && echo "measuring every live game"
           t0=$(date +%s); rc=0
-          python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$MODE.md" --json "phone-fit-reports/$MODE.json" \
-            > "phone-fit-reports/$MODE.log" 2>&1 || rc=$?
+          case "$MODE" in
+            contrast-*)
+              python -X utf8 scripts/check-contrast.py --selftest || { echo "::error::check-contrast.py's self-test failed"; exit 1; }
+              only=""; [ -n "$ONLY" ] && only="--only $ONLY"
+              python -X utf8 scripts/check-contrast.py --mode "${MODE#contrast-}" $only --json "phone-fit-reports/$MODE.json" \
+                > "phone-fit-reports/$MODE.log" 2>&1 || rc=$? ;;
+            *)
+              python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$MODE.md" --json "phone-fit-reports/$MODE.json" \
+                > "phone-fit-reports/$MODE.log" 2>&1 || rc=$? ;;
+          esac
           cat "phone-fit-reports/$MODE.log"
           line="$MODE: exit $rc in $(($(date +%s) - t0)) s${ONLY:+ (only $ONLY)}"
           echo "$line"
           { echo "### $line"; sed -n 's/^GATE /- /p' "phone-fit-reports/$MODE.log"; } >> "$GITHUB_STEP_SUMMARY"
           if [ "$rc" -ne 0 ]; then
-            echo "::error::a phone-fit failure not on scripts/phone-fit-state.json's lists, in $MODE mode (the job summary lists them)"
+            case "$MODE" in
+              contrast-*) echo "::error::a contrast failure not on scripts/contrast-state.json, or a stale entry, in $MODE mode (the job summary lists them)" ;;
+              *) echo "::error::a phone-fit failure not on scripts/phone-fit-state.json's lists, in $MODE mode (the job summary lists them)" ;;
+            esac
             exit 1
           fi
       - name: Upload the full report
@@ -187,7 +205,7 @@ jobs:
         env:
           RESULT: ${{ needs.measure.result }}   # a matrix's result is "success" only when every mode job succeeded
         run: |
-          echo "mode jobs (normal, aa, laptop): $RESULT"
+          echo "mode jobs (normal, aa, laptop, contrast-normal, contrast-aa): $RESULT"
           if [ "$RESULT" != success ]; then
             echo "::error::a mode job did not pass ($RESULT): see the failed mode's job summary"
             exit 1
