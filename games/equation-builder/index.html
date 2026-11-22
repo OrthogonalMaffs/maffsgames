@@ -22,9 +22,10 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 :root{
+--gapfill:#f59e0b;
 --bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
---text:#e8eaf0;--muted:#7a7f90;
---teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--text:#e8eaf0;--muted:#818696;
+--teal:#0d968a;--teal-dim:rgba(13,148,136,0.25);
 --green:#22c55e;--green-dim:rgba(34,197,94,0.15);
 --red:#ef4444;--red-dim:rgba(239,68,68,0.15);
 --ks3:#22c55e;--gcse:#3b82f6;--l4:#ef4444;
@@ -69,7 +70,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .session-btn:hover{border-color:var(--teal)}
 .session-btn.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
 .session-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
-.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;transition:opacity 0.15s;width:100%}
+.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:var(--bg);cursor:pointer;transition:opacity 0.15s;width:100%}
 .start-go:hover{opacity:0.9}
 .start-go:disabled{opacity:0.4;cursor:default}
 
@@ -77,7 +78,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .question-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:28px 24px;margin-bottom:20px;line-height:1.7;font-size:16px}
 .type-pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 10px;border-radius:8px;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.04em}
 .type-pill.assembly{color:var(--teal);background:rgba(13,148,136,0.1);border:1px solid rgba(13,148,136,0.2)}
-.type-pill.gapfill{color:#f59e0b;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
+.type-pill.gapfill{color:var(--gapfill);background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2)}
 
 /* Equation zone */
 .equation-zone{display:flex;flex-wrap:wrap;gap:0;margin-bottom:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;min-height:56px;align-items:center;justify-content:center}
@@ -87,7 +88,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .slot.empty.selected{border-color:var(--teal);background:var(--teal-dim);box-shadow:0 0 0 2px rgba(13,148,136,0.3)}
 .slot.filled{border:2px solid var(--border);background:var(--surface-alt);color:var(--text)}
 .slot.filled:hover{border-color:var(--teal)}
-.slot.prefilled{border:2px solid rgba(42,47,69,0.5);background:#141620;color:#6b7280;cursor:default;pointer-events:none}
+.slot.prefilled{border:2px solid rgba(42,47,69,0.5);background:#141620;color:#7a8190;cursor:default;pointer-events:none}
 .slot.correct{border-color:var(--green)!important;background:var(--green-dim)!important;color:var(--green)!important}
 .slot.correct::after{content:' \2713';font-weight:800}
 .slot.incorrect{border-color:var(--red)!important;background:var(--red-dim)!important;color:var(--red)!important;animation:shake 0.3s}
@@ -120,14 +121,14 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .stat-val{font-size:22px;font-weight:700}
 .stat-label{font-size:11px;color:var(--muted);margin-top:2px}
 .pb-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:#f59e0b;border-radius:10px;padding:12px;font-weight:600;margin-bottom:16px;font-size:14px}
-.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%;transition:opacity 0.15s}
+.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:var(--bg);cursor:pointer;width:100%;transition:opacity 0.15s}
 .play-again:hover{opacity:0.9}
 
 /* Accessibility toggle */
 /* Aa mode's cream palette and larger text, moved from the game's former second Aa button (HEADER-FIT Amendment 1).
    The standard mode's wider letter and word spacing is kept. The larger text applies above 480px only: on a phone, with
    OpenDyslexic, it pushed Next below the fold (canon 7.6.1). */
-body.accessible{background:#fdf6e3;color:#2d2006;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#15803d;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--ks3:#15803d;--gcse:#1d4ed8;--l4:#b91c1c}
+body.accessible{background:#fdf6e3;color:#2d2006;--gapfill:#976106;--bg:#fdf6e3;--surface:#fff8ec;--surface-alt:#fef3d8;--border:#9a8654;--text:#2d2006;--muted:#6b5c3e;--teal:#087568;--teal-dim:rgba(8,117,104,0.18);--green:#137638;--green-dim:rgba(21,128,61,0.12);--red:#b91c1c;--red-dim:rgba(185,28,28,0.1);--ks3:#147839;--gcse:#1d4ed8;--l4:#b91c1c}
 @media(min-width:481px){
 body.accessible .screen{font-size:18px;line-height:1.8}
 body.accessible .question-card{font-size:18px;line-height:1.8}
@@ -167,7 +168,7 @@ body.accessible .header-right>.a11y-toggle+*{margin-left:auto}
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 .correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
 .incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
 </style>

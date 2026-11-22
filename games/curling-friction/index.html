@@ -33,7 +33,7 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
 .level-btn:hover{border-color:var(--primary)}
 .level-btn.active{border-color:var(--primary);background:var(--primary);color:#000}
-.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316;color:#fff}
+.level-btn[data-level="alevel"].active{background:#f97316;border-color:#f97316;color:var(--bg)}
 .level-btn[data-level="level4"].active{background:#ef4444;border-color:#ef4444;color:#fff}
 .hud{display:flex;justify-content:space-between;align-items:center;padding:.8rem 1rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:1rem}
 .hud-item{text-align:center}.hud-label{font-size:.7rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}.hud-val{font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:700}
@@ -84,8 +84,8 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .tag-friction{background:rgba(251,191,36,.15);color:#fbbf24}
 .tag-suvat{background:rgba(56,189,248,.15);color:#38bdf8}
 .tag-momentum{background:rgba(163,230,53,.15);color:#a3e635}
-.tag-collision{background:rgba(244,63,94,.15);color:#f43f5e}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+.tag-collision{background:rgba(244,63,94,.15);color:#f54c69}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>

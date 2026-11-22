@@ -53,7 +53,7 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .level-select{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin:1rem 0}
 .level-btn{padding:.5rem 1.2rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:600;cursor:pointer;transition:all .2s}
 .level-btn:hover{border-color:var(--primary)}
-.level-btn.active{background:var(--primary);border-color:var(--primary);color:#fff}
+.level-btn.active{background:var(--primary);border-color:var(--primary);color:var(--bg)}
 .screen{display:none}.screen.active{display:block}
 .back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}.back-link:hover{color:var(--text)}
 .btn-primary{padding:.7rem 1.8rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
@@ -67,7 +67,7 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 .opp-card{display:flex;align-items:center;gap:.8rem;padding:.8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface);cursor:pointer;transition:all .15s}
 .opp-card:hover{border-color:var(--primary);box-shadow:0 0 12px rgba(217,119,6,.2)}
 .opp-card.locked{opacity:.45;pointer-events:none}
-.opp-card .avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:#fff;flex-shrink:0}
+.opp-card .avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.1rem;color:var(--bg);flex-shrink:0}
 .opp-card .opp-info{flex:1;min-width:0}
 .opp-card .opp-name{font-weight:600;font-size:.9rem}
 .opp-card .opp-hint{font-size:.75rem;color:var(--muted);margin-top:.15rem}
@@ -176,7 +176,7 @@ body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);co
 
 /* Opponent avatar in game */
 .game-opponent{display:flex;align-items:center;gap:.6rem;margin-bottom:.8rem}
-.game-opponent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;color:#fff;flex-shrink:0}
+.game-opponent .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9rem;color:var(--bg);flex-shrink:0}
 .game-opponent .opp-name{font-weight:600;font-size:.95rem}
 .game-opponent .opp-round{font-size:.75rem;color:var(--muted);margin-left:auto;font-family:'JetBrains Mono',monospace}
 
@@ -185,7 +185,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
 body.accessible p,body.accessible .round-tooltip,body.accessible .opp-hint{line-height:2;max-width:65ch}
 body.accessible{background-color:#12141f!important}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
