@@ -66,7 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): PHONE-FIT-STATE-SELECTIVE (`docs/handover/contracts/2026-11-22-phone-fit-state-selective.md`)
+## 2026-11-22 (cloud): AA-USAGE (`docs/handover/contracts/2026-11-22-aa-usage.md`)
+
+Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` restarted from main ec7ea02. Tier Shared. First commit: #878's close-out (entry below), this contract saved.
+
+- Next: the flag in mfg, check-aa-flag.py, the Sheet mirror, privacy and /updates/.
+
+## 2026-11-22 (cloud): PHONE-FIT-STATE-SELECTIVE (`docs/history/contracts/2026-11-22-phone-fit-state-selective.md`)
 
 Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` from main f343ac7. Tier Shared: stops at Gate green for Project Claude's review and Jon's "merge". First commit: #877's close-out (entry below), given-that unclaimed (`scripts/answer-lock-state.json` back to `[]`), its contract moved, this contract saved. #875's owed live proof stays owed: a docs-only PR and a /class/ PR (#877 was neither).
 
@@ -74,6 +80,7 @@ Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` from main f343ac7. T
 - **Simulation (the step's Python from the yml, on c6d51b4):** BEFORE c6d51b4^ (#877's own diff): given-that only, not shared; main's old code on the same diff: shared, every game. The contract's range 2107eef..c6d51b4 adds three bot commits (ci-timings, ci-pack, answer-counts: shared on their own), so it is shared there; the state file alone still gives given-that.
 - **Decided for you:** `scroll-exempt` is a fourth key, per-slug but every mode, with its own note: any change to it is shared (the conservative reading of "anything else"). A state-file slug off the phone-fit roster makes the change shared and is named in the log (`--only` cannot measure it; the full run reports it stale). No current slug is off the roster (114 games). A missing side (file added or deleted) is shared.
 - Next: PR, Gate green (its own phone-fit run is a full measure: Gate files), then wait for Project Claude's review and Jon's "merge".
+- **MERGED 22 Nov as d8af6c8 (#878)**, route merge-pr.py --watch (after main's #879 was merged in; Gate re-run green on 61e8d5c). Main on d8af6c8: check-site 45036401634 success, phone-fit-full 45036401639 success (every game: the workflow changed), pages 45036400816 success. Contract moved. Still owed: a PR taking a game off the state file measures that game only; #875's docs-only and /class/ PRs. Closed out by AA-USAGE.
 
 ## 2026-11-22 (cloud): GIVEN-THAT-FIT-WHY (`docs/history/contracts/2026-11-22-given-that-fit-why.md`)
 
