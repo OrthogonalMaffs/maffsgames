@@ -70,7 +70,8 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 
 Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` restarted from main ec7ea02. Tier Shared. First commit: #878's close-out (entry below), this contract saved.
 
-- Next: the flag in mfg, check-aa-flag.py, the Sheet mirror, privacy and /updates/.
+- Done on the branch: aaState() in mfg (AA_CLASSES, AA_TOGGLE `#a11yToggle, #aaBtn, .a11y-toggle`); check-aa-flag.py (pass, 3 plants caught); the mirror's `aa` column (test-apps-script-report.py updated); privacy; /updates/.
+- Contract corrected: 4 of its 5 "no toggle" games have one (#aaBtn, #a11yBtn); complex-converter alone has none. Seen: spot-the-error and word-problem-decoder show two Aa buttons. Privacy date set to 22 Nov: change it if the merge is later.
 
 ## 2026-11-22 (cloud): PHONE-FIT-STATE-SELECTIVE (`docs/history/contracts/2026-11-22-phone-fit-state-selective.md`)
 
