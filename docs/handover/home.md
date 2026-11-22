@@ -25,7 +25,7 @@ Claude Code (home lane), worktree `~/mg-wwiut`, branch `claude/wwiut-stand-out`;
 - Data: 15 route colours, white at 4.92:1 or better, the closest pair delta E 16.4, the nearest to teal delta E 33.5. The 14 headlines are as the contract gives them, and all recompute.
 - Pages: the hub runs "Pick your course" tiles, then 14 job cards (each with its headline in KaTeX, linked to `<topic>/#<id>`), then "By maths topic", in a 1040 px container. Scenario cards get a route-colour top band, a route chip and the headline. Route headers are filled with their colour. The hub's foot line drops its self-link. The look is in `when-will-i-use-this/uses.css`, written by build-uses.py.
 - check-uses.py: headlines, colours, anchors, no hub self-link, and Chromium contrast on tiles, chips and headers. Self-test 50 of 50. A route header scrolled 9 px at 320 in Aa ("environmental"); fixed with overflow-wrap and less phone padding.
-- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+- MERGED 22 Nov as 66a29e7 (#885) via merge-pr.py, exit 0, last line "main 66a29e7 run 45075943570: GREEN", on Jon's "merge", after a merge of main for #886's conflict on updates/index.html (both lines kept; head 662f42a, Gate check-site 45074183522 and phone-fit-full 45074183455, both success). Main on the merge commit: check-site 45075943570 success, phone-fit-full 45075943580 success, pages build 45075943027 success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-wwiut-stand-out.md` (closed out by WWIUT-BATCH-1-2's first commit).
 
 ## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
 
