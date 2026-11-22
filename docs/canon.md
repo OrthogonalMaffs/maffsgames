@@ -1330,7 +1330,7 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
   question at its default level at the three sizes. The gate's asking-screen rule fails the run (exit 1); Next
   below the fold and sideways scroll are reported, not gated, because a generic driver sees one question and a
   game's own all-items measurement is the proof (Distinctly Average's: every item, every wrong option, three
-  sizes, both modes). The script is not yet in CI; that is a later contract.
+  sizes, both modes). CI runs it through `.github/workflows/phone-fit-full.yml` ("The full run", below).
 - **Two lists that only shrink** (the `check-theme.py` and answer-lock pattern), in
   `scripts/phone-fit-state.json`, per mode. **`known-failures`**: each game already failing the gate, with
   the sizes at which it fails; reported, never failed. **`unmeasurable`**: the games the driver cannot
@@ -1347,8 +1347,11 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
   `scripts/measure-phone-fit.py` neither counts nor presses anything inside it. It may never contain any part of the
   question's answer controls: an option group found inside one fails the run, whatever the lists say.
 
-**The full run.** `.github/workflows/phone-fit-full.yml` runs `scripts/measure-phone-fit.py` over every live game in
-every mode (normal, Aa, laptop) nightly on main, and after a push to main that changes a shared path or the workflow itself.
+**The full run.** `.github/workflows/phone-fit-full.yml` runs `scripts/measure-phone-fit.py` in every mode (normal, Aa,
+laptop) on three triggers (#875, PHONE-FIT-CHANGED-GAMES, 22 Nov 2026). Every pull request: every live game if it changes
+a shared path (`scripts/ci-deps.py` `is_shared()`, the workflow itself included), else only the games whose own files it
+changes (`measured_pages()`, `--only`), else nothing; its result shows on the PR, and `scripts/merge-pr.py` refuses a red
+one. A push to main: the same rule. Nightly and manual runs: every live game.
 A red full run on main is fixed before new game work.
 
 ### 7.6.2 The reference card — the house pattern for help and reference panels (26 Oct 2026, Jon's ruling)

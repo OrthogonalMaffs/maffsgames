@@ -312,6 +312,13 @@ def slip_of(q, pick):
                 continue
             if near(a, sa * re_) and near(b, sb * im):
                 found.add('signs')
+        # CC-TRIG-SLIP (Jon, 22 Nov 2026): a part written as r or r/2 instead of r cos θ or r sin θ, where no family
+        # above fits. Every wrong part is one of the right part's sign times r or r/2; a right part is never the slip.
+        if not found:
+            wrong = [(got, want) for got, want in ((a, re_), (b, im)) if not near(got, want)]
+            if wrong and all(abs(want) > 1e-9 and any(near(got, math.copysign(k * r, want)) for k in (1.0, 0.5))
+                             for got, want in wrong):
+                found.add('r_part')
     else:
         if form != q['target']:
             return None
@@ -417,6 +424,12 @@ def why_faults(q, pick, card):
         out.append('%s: Why names the slip %r, by computation from the item it is %r' % (w, kind, want))
     if kind:
         head, lines = lines[0], lines[1:]
+        if kind == 'r_part':
+            # the slip line repeats the card's own Re and Im working lines, which are checked below with the rest
+            re_l = next((l for l in lines if l.startswith('\\mathrm{Re} = r\\cos\\theta = ')), None)
+            im_l = next((l for l in lines if l.startswith('\\mathrm{Im} = r\\sin\\theta = ')), None)
+            if not (re_l and im_l and head == '\\text{Re and Im aren’t r: }' + re_l + '\\text{, }' + im_l + '\\text{.}'):
+                out.append('%s: the r slip line %r does not give Re = r cos θ and Im = r sin θ from the working' % (w, head))
         if kind == 'signs':
             c, s = math.cos(math.radians(q['argDeg'])), math.sin(math.radians(q['argDeg']))
             word = lambda x: 'positive' if x > 1e-9 else 'negative' if x < -1e-9 else '0'
@@ -570,6 +583,16 @@ def live_why(fails, browser, base, html, page_url):
             fails.append('%s: the working is not in %s: %r' % (where, unit, joined[:160]))
         if got['errors']:
             fails.append('%s: %d KaTeX errors in the card' % (where, got['errors']))
+        # CC-TRIG-SLIP: q17 6∠45°, picked 6 + 6j: the r slip's line above the working, in the level's unit.
+        got = page.evaluate(LIVE_JS, [17, '6 + 6j'])
+        where = 'Why in Chromium (%s, id 17 picked 6 + 6j)' % level
+        t = got['text']
+        if got['cards'] != 1 or not got['before'] or got['errors']:
+            fails.append('%s: %d cards shown, %s Next, %d KaTeX errors' % (where, got['cards'], 'before' if got['before'] else 'not before', got['errors']))
+        if not ("Re and Im aren’t r" in t and "So the answer is" in t and t.index("Re and Im aren’t r") < t.index("So the answer is")):
+            fails.append('%s: no "Re and Im aren’t r" line above the working: %r' % (where, t[:120]))
+        if not any('6\\cos(45°) = 3\\sqrt{2}' in x for x in got['tex']) or not any('6\\sin(45°) = 3\\sqrt{2}' in x for x in got['tex']):
+            fails.append('%s: the slip line does not give Re = 6 cos 45° = 3√2 and Im = 6 sin 45° = 3√2: %r' % (where, got['tex'][:3]))
         ctx.close()
     # The back link: in every screen, at every size, clear of the titles and headers; relabelled by site-nav.
     for w, h in ((320, 568), (390, 844), (1366, 768)):
@@ -650,6 +673,9 @@ PLANTS = [
      "\\\\dfrac{' + G.imTex + '}{' + G.reTex + '}\\\\right) = ';", "\\\\dfrac{' + G.reTex + '}{' + G.imTex + '}\\\\right) = ';"),
     ('id 3 ', 'Why: a slip named for an option it does not give',
      "    if (fams.length !== 1) return null;\n", "    if (fams.length !== 1) return fams.length ? null : 'upside';\n"),
+    ('id 5 ', 'Why: the r slip named where a wrong part is not ±r or ±r/2',
+     "        if (a !== 'other' && b !== 'other' && (a === 'r' || b === 'r')) hits.push('r_part');\n",
+     "        if (a !== 'right' || b !== 'right') hits.push('r_part');\n"),
     ('back link', 'the back link fixed over the title',
      '.back-link{display:inline-block;margin:8px 16px 4px;', '.back-link{position:fixed;top:16px;left:16px;z-index:200;margin:0;'),
 ]
