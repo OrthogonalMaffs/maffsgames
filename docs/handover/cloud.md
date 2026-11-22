@@ -66,7 +66,16 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/handover/contracts/2026-11-22-decimal-detective-fit.md`)
+## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/handover/contracts/2026-11-22-given-that-set-labels.md`)
+
+Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier Small. First commit: #882's close-out (entry below), this contract saved with its STOP and Amendment 1, given-that claimed.
+
+- STOP before any edit (measured, every item): besides the set names (black, 1.25:1), `--muted` #7a7f90 is 4.22:1 on #1a1d27 (Venn Total, tree branch labels, tree list root and connectors). Amendment 1: `--muted` to #8a8fa0 (5.22:1); the check also covers the start and results screens.
+- Done on the branch: `.venn-set-label` fill `var(--text)`; `--muted` #8a8fa0; the verifier's contrast sweep (CONTRAST_JS: fill or colour with opacity, over SVG fills and ancestor backgrounds; faded and disabled exempt), not yet wired into main(). Every diagram label passes (10,988 judged across 390x844 and 1366x768, normal and Aa).
+- **STOP 2 (22 Nov):** the start and results screens fail: Start Game (once a level is picked) and Play Again, `color:#fff` on `--accent` #f59e0b, 2.15:1, every size and mode. Amendment 2: `color:#0f1117` on the amber (8.79:1).
+- Done: both buttons; the `contrast` unit in main() with 3 plants (the set names' fill removed, caught on all 14 Venns; --muted back; Start Game white). Verifier PASS locally, 16 plants caught. Seen, not changed: `.submit-btn` (typed answers, game screen, outside the sweep) is also white on the amber.
+
+## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/history/contracts/2026-11-22-decimal-detective-fit.md`)
 
 Claude Code (cloud), branch `claude/trusting-dijkstra-s3mpss` from main 7660e2f. Tier Medium. First commit: #880's close-out (entry below), this contract saved, decimal-detective claimed.
 
@@ -75,6 +84,7 @@ Claude Code (cloud), branch `claude/trusting-dijkstra-s3mpss` from main 7660e2f.
 - **Verifier:** fit units `fit normal`, `fit aa` (five sizes each, 122 screens a size). Sideways is judged against the device size: on the mobile profile Chromium widens innerWidth to the content (448 on a 320 phone), so scrollWidth against innerWidth never fails; the old-header plant was missed until this was fixed. Plants `aa-header` and `lineup-spacing` (normal 320x568 Line-Up 3, Next 537/528) caught, each stopping at its first finding.
 - **Measured (verifier fit units, every item, page coordinates):** controls end by 361 (normal 320), 420 (Aa phones), 515 (Aa laptop); Next by 364 normal phones, 469 Aa 320 (fold 528), 459 Aa 375, 599 normal laptop, 655 Aa laptop (fold 680). measure-phone-fit `--only decimal-detective` PASS in normal, Aa and laptop with the game off every list.
 - **Seen, not changed:** a wrong Line-Up with an equal pair reads "... 0.770 0.77 and 0.770 are equal" (no full stop between the order and the note: the display's content is DO NOT TOUCH); the global ✗ replaces Place It's marker dot after a wrong answer; site-nav's logo overlaps "Back to Games" at 1280 in Aa (shared).
+- **MERGED 22 Nov as 29c1749 (#882)**, route merge-pr.py --watch. Main on 29c1749: check-site 45054990712, phone-fit-full 45054990723, pages 45054990303, all success. The PR's own phone-fit run 45053722874 measured decimal-detective only (normal, Aa, laptop, 1m39s): #878's first live proof, done. Still owed: #875's docs-only and /class/ PRs. Contract moved, game unclaimed. Closed out by GIVEN-THAT-SET-LABELS.
 
 ## 2026-11-22 (cloud): AA-USAGE (`docs/history/contracts/2026-11-22-aa-usage.md`)
 

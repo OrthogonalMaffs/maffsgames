@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade, stored per item, judged against the condition, both drawings, with and without reduced motion; the first-try hint; every worked answer typeset) | | 3
+# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade, stored per item, judged against the condition, both drawings, with and without reduced motion; the first-try hint; every worked answer typeset; every unfaded diagram label and the start and results screens' text at 4.5:1 contrast) | | 3
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a
@@ -62,6 +62,13 @@ GIVEN-THAT-POLISH also: after a first wrong pick in Phase 2 the feedback is the 
 (the Why card's working and the Worked Answer panel) shows the stored text exactly, read back from its KaTeX, with
 no a/b left as text. Plants: the Venn's fade rule removed; gcse_03's greyOut fading the condition's own column;
 core_01 stored "none"; inferGreyOut restored with core_09's stored greyOut removed.
+The contrast (contract GIVEN-THAT-SET-LABELS, 22 Nov 2026, Amendments 1 and 2; CONTRAST_JS, contrast_faults()): every
+item's diagram in Phase 1 and Phase 2 (both drawings: 390x844 and 1366x768), the start screen before and after a level
+is picked, and the results screen, normal and Aa. Every text element (an SVG text's fill, otherwise its colour, with
+its own and its ancestors' opacity) has a WCAG contrast of at least 4.5:1 against what is painted beneath it: an SVG
+shape in its drawing whose fill holds the text's centre, then each ancestor's background, layered until opaque. Faded
+text (greyed, or inside a greyed element) and disabled controls are exempt. Plants: the set names' fill removed (must
+be caught on every Venn), --muted back to #7a7f90 (4.22:1), Start Game's white text on the amber.
 
     python scripts/verify-given-that.py [--no-selftest] [--against FILE]
 """
@@ -865,9 +872,155 @@ def fade(fails, html, bank, sizes=None, motions=(False, True)):
         proc.wait()
 
 
+
+CONTRAST_SIZES = [(390, 844), (1366, 768)]     # the narrow drawings, then the wide ones
+MIN_CONTRAST = 4.5                             # WCAG 2.2 AA (1.4.3), applied to every size of text
+
+# Every text element in a root, read as drawn: its colour (an SVG text's fill, otherwise its colour) with the opacity
+# of it and its ancestors, over the nearest painted background beneath it: any SVG shape in its drawing whose fill
+# contains the text's centre (painted before it), then each ancestor's background colour, layered until one is
+# opaque. Faded text (a "greyed" element or inside one) and disabled controls are exempt (WCAG 1.4.3's inactive
+# components); the caller skips nothing else. Returns [label, text, fg rgb, bg rgb] with both colours composited.
+CONTRAST_JS = r"""(rootSel) => {
+  const out = [], roots = [...document.querySelectorAll(rootSel)];
+  const rgba = s => { const m = (s || '').match(/rgba?\(([^)]+)\)/); if (!m) return null;
+    const v = m[1].split(/[ ,\/]+/).filter(Boolean).map(Number); return [v[0], v[1], v[2], v.length > 3 ? v[3] : 1]; };
+  const opac = el => { let o = 1; for (let n = el; n && n.nodeType === 1; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity); return o; };
+  const over = (top, a, bot) => top.map((c, i) => a * c + (1 - a) * bot[i]);
+  const own = el => [...el.childNodes].filter(n => n.nodeType === 3 && n.textContent.trim());
+  const SHAPES = 'rect,circle,ellipse,path,polygon';
+  for (const root of roots) root.querySelectorAll('*').forEach(el => {
+    const texts = own(el);
+    if (!texts.length || !el.getClientRects().length) return;
+    const cs = getComputedStyle(el);
+    if (cs.visibility === 'hidden' || cs.display === 'none') return;
+    if (el.closest('.greyed') || el.closest(':disabled')) return;
+    const range = document.createRange(); range.selectNodeContents(texts[0]);
+    const r = range.getClientRects()[0] || el.getClientRects()[0];
+    const x = r.left + r.width / 2, y = r.top + r.height / 2;
+    const isSvg = el instanceof SVGElement;
+    const fg = rgba(isSvg ? cs.fill : cs.color);
+    const label = el.tagName.toLowerCase() + (el.getAttribute('class') ? '.' + el.getAttribute('class').trim().split(/\s+/).join('.') : '')
+      + (el.id ? '#' + el.id : '');
+    const text = el.textContent.trim().replace(/\s+/g, ' ').slice(0, 40);
+    if (!fg) { out.push([label, text, null, null, isSvg ? cs.fill : cs.color]); return; }
+    const layers = [];
+    const svg = isSvg ? el.ownerSVGElement : null;
+    if (svg) {
+      const shapes = [...svg.querySelectorAll(SHAPES)].filter(sh =>
+        (sh.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING) && !el.contains(sh));
+      for (const sh of shapes.reverse()) {
+        const sc = getComputedStyle(sh), f = rgba(sc.fill);
+        if (!f || !sh.getClientRects().length) continue;
+        const p = new DOMPoint(x, y).matrixTransform(sh.getScreenCTM().inverse());
+        if (!sh.isPointInFill(p)) continue;
+        layers.push([f, f[3] * parseFloat(sc.fillOpacity) * opac(sh)]);
+      }
+    }
+    for (let n = isSvg ? svg.parentElement : el; n; n = n.parentElement) {
+      const b = rgba(getComputedStyle(n).backgroundColor);
+      if (b && b[3] > 0) layers.push([b, b[3] * opac(n)]);
+    }
+    let i = layers.findIndex(l => l[1] >= 0.999);
+    let bg = i < 0 ? [255, 255, 255] : layers[i][0].slice(0, 3);
+    for (let j = (i < 0 ? layers.length : i) - 1; j >= 0; j--) bg = over(layers[j][0].slice(0, 3), layers[j][1], bg);
+    out.push([label, text, over(fg.slice(0, 3), fg[3] * opac(el), bg), bg]);
+  });
+  return out;
+}"""
+
+
+def luminance(rgb):
+    def lin(c):
+        c /= 255.0
+        return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+    r, g, b = (lin(c) for c in rgb)
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast_ratio(a, b):
+    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+CONTRAST_TALLY = {}
+
+
+def contrast_faults(rows, where):
+    """[fault] for every text element under MIN_CONTRAST; counts each judged element into CONTRAST_TALLY."""
+    fails = []
+    for label, text, fg, bg, *raw in rows:
+        kind = where.split(' at ')[0].split(' ')[0].rstrip(',')
+        CONTRAST_TALLY[kind] = CONTRAST_TALLY.get(kind, 0) + 1
+        if fg is None:
+            fails.append('%s: %s "%s" has no colour to read (%s)' % (where, label, text, raw[0] if raw else '?'))
+            continue
+        cr = contrast_ratio(fg, bg)
+        if cr < MIN_CONTRAST - 1e-9:
+            fails.append('%s: %s "%s" is %.2f:1 (rgb%s on rgb%s), under %.1f:1'
+                         % (where, label, text, cr, tuple(round(c) for c in fg), tuple(round(c) for c in bg), MIN_CONTRAST))
+    return fails
+
+
+def contrast(fails, html, sizes=None, modes=(False, True)):
+    """The contrast sweep: every item's diagram in Phase 1 and Phase 2 (both drawings), the start screen (before and
+    after a level is picked) and the results screen, at each CONTRAST_SIZES size, normal and Aa."""
+    from playwright.sync_api import sync_playwright
+    hooked = hook(html)
+    if hooked is None:
+        fails.append('page: cannot find the end of the game script to expose its functions to the sweep')
+        return
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for w, h in sizes or CONTRAST_SIZES:
+                for aa in modes:
+                    at = ' at %dx%d%s' % (w, h, ' Aa' if aa else '')
+                    ctx = browser.new_context(viewport={'width': w, 'height': h}, reduced_motion='reduce')
+                    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                    bc.offline(ctx, base)
+                    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                        status=200, content_type='text/html; charset=utf-8', body=hooked))
+                    ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+                    page = ctx.new_page()
+                    errors = []
+                    page.on('pageerror', lambda e: errors.append(str(e)))
+                    page.goto(base + '/games/%s/?cb=contrast' % SLUG, wait_until='load', timeout=20000)
+                    page.wait_for_function('window.__gt && typeof katex !== "undefined"', timeout=15000)
+                    page.evaluate("(aa) => document.body.classList.toggle('accessible', aa)", aa)
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#startScreen'), 'start' + at))
+                    page.click('#levelSelect .level-btn[data-level="gcse"]')
+                    page.evaluate('() => document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} })')
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#startScreen'),
+                                                 'start, a level picked' + at))
+                    ids = page.evaluate("""() => { const G = window.__gt, o = [];
+                      for (const lv of Object.keys(G.Q)) G.Q[lv].forEach((q, i) => o.push([lv, i, q.id])); return o; }""")
+                    for lv, i, qid in ids:
+                        for ph in ('p1', 'p2'):
+                            page.evaluate("""([lv, i, ph]) => { const G = window.__gt, q = G.Q[lv][i];
+                              G.set(lv, q); G.showQuestion(); if (ph === 'p2') G.toPhase2(q);
+                              document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} }); }""",
+                                          [lv, i, ph])
+                            fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#dataContainer'),
+                                                         'diagram %s %s%s' % (qid, ph, at)))
+                    page.evaluate('() => window.__gt.results(31)')
+                    bc.wait_settled(page)
+                    fails.extend(contrast_faults(page.evaluate(CONTRAST_JS, '#resultsScreen'), 'results' + at))
+                    if errors:
+                        fails.append('page errors%s: %s' % (at, '; '.join(errors[:3])))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 HOOK = ('window.__gt={Q:QUESTIONS,set:function(lv,q){currentLevel=lv;sessionQuestions=[q];currentQIndex=0;'
         'phase2Attempt=0;startScreen.classList.remove("active");gameScreen.classList.add("active");'
-        'gameHeader.style.display=""},showQuestion:showQuestion,toPhase2:transitionToPhase2};\n')
+        'gameHeader.style.display=""},showQuestion:showQuestion,toPhase2:transitionToPhase2,'
+        'results:function(sc){totalScore=sc;showResults()}};\n')
 
 SWEEP_JS = r"""(free) => {
   window.setTimeout = () => 0;
@@ -1249,6 +1402,9 @@ def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, 
         play(fails, html, free, ex_text)
     if 'fade' in stages:
         fade(fails, html, bank)
+    if 'contrast' in stages:
+        CONTRAST_TALLY.clear()
+        contrast(fails, html, fit_sizes, fit_modes)
     global FIT_REPORT
     FIT_REPORT = fit(fails, html, free, bank, fit_sizes, fit_modes) if 'fit' in stages else []
     return fails, sum(len(v) for v in bank.values())
@@ -1358,14 +1514,26 @@ PLANTS = [
      [('phase2:{greyOut:"col_< 2 hours,col_2-4 hours",condition:"the teenager', 'phase2:{condition:"the teenager'),
       ('/* ---------- RENDER ANSWER AREA ---------- */', OLD_INFER + '/* ---------- RENDER ANSWER AREA ---------- */'),
       ('  // Grey-out animation\n', '  inferGreyOut(q);\n  // Grey-out animation\n')], None),
+    # GIVEN-THAT-SET-LABELS's (contract step 3; Amendments 1 and 2).
+    ('~venn-set-label', "the set names' fill removed (SVG's default black)",
+     "font-weight:700;text-anchor:middle;fill:var(--text);dominant-baseline", "font-weight:700;text-anchor:middle;dominant-baseline"),
+    ('~ is 4.22:1 (', 'the old muted grey (#7a7f90, 4.22:1)', '--muted:#8a8fa0;', '--muted:#7a7f90;'),
+    ('~#startBtn', "Start Game's white text on the amber back", "background:var(--accent);color:#0f1117;font-family:'Outfit',sans-serif;font-size:17px",
+     "background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px"),
 ]
+# A plant that must be caught on every item of a kind: the ids, from the page's bank, each must be named in a fault.
+PLANT_EVERY = {"the set names' fill removed (SVG's default black)":
+               lambda bank: [q['id'] for lv in bank for q in bank[lv] if q['data']['type'] == 'venn']}
 # The stage each plant needs: the bank's own checks catch most; marking and slips need the play; the layout the fit.
 PLANT_STAGES = {'r-002/r-003: marked within 0.005, no precision': ('play',),
                 'r-004: decimals only, the fraction unreadable': ('play',),
                 'a slip named for a value it does not give': ('play',),
                 "the diagram's padding restored (20px), options below the fold": ('fit',),
                 "the Venn's fade rule removed": ('fade',),
-                "a greyOut fading the condition's own column (Bus)": ('fade',)}
+                "a greyOut fading the condition's own column (Bus)": ('fade',),
+                "the set names' fill removed (SVG's default black)": ('contrast',),
+                'the old muted grey (#7a7f90, 4.22:1)': ('contrast',),
+                "Start Game's white text on the amber back": ('contrast',)}
 
 
 def main():
@@ -1378,7 +1546,7 @@ def main():
     # Work units (ci_shards, canon 7.8.1): the bank and the play at 390x844, the fit sweep a size at a time (both
     # modes), and each plant. With no --shard, all of them.
     shard = bc.Shard(__file__, args)
-    checks = ['bank and play', 'fade'] + ['fit %dx%d' % s for s in FIT_SIZES]
+    checks = ['bank and play', 'fade', 'contrast'] + ['fit %dx%d' % s for s in FIT_SIZES]
     plants = [] if args.no_selftest or args.against else ['plant: ' + p[1] for p in PLANTS]
     mine = shard.pick(checks + plants)
     html = open(args.against or GAME, encoding='utf-8').read()
@@ -1397,6 +1565,12 @@ def main():
                 print('  fade: %d items into Phase 2 at %s, with and without reduced motion, every one judged against '
                       'SPEC: %d fade their condition\'s outside, %d Bayes trees store "none" (by design): %s'
                       % (n, ', '.join('%dx%d' % s for s in FADE_SIZES), n - len(bayes), len(bayes), ', '.join(bayes)))
+            elif u == 'contrast':
+                f, n = run(html, ('bank', 'contrast'))
+                print('  contrast: every text element at least %.1f:1 against what is painted beneath it, at %s, normal '
+                      'and Aa (faded and disabled exempt): %s judged'
+                      % (MIN_CONTRAST, ', '.join('%dx%d' % s for s in CONTRAST_SIZES),
+                         ', '.join('%s %d' % kv for kv in sorted(CONTRAST_TALLY.items()))))
             else:
                 w, h = (int(x) for x in u.split()[1].split('x'))
                 f, n = run(html, ('bank', 'fit'), [(w, h)])
@@ -1404,7 +1578,7 @@ def main():
         fails += [x for x in f if x not in fails]       # the bank's own faults come back from every unit: once each
     print('%s: %d questions (%d phases): every diagram, key and option checked; every answer marked in Chromium; '
           'every wrong answer\'s Why card checked; fitted at %s in normal and Aa'
-          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks[2:] if u in mine) or 'no size in this part'))
+          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks if u.startswith('fit ') and u in mine) or 'no size in this part'))
     if tally:
         print('  slips named, by family (wrong values; GCSE options, then every wrong ratio a typed level can take):')
         for (where, ph, fam), k in sorted(tally.items()):
@@ -1436,6 +1610,15 @@ def main():
             stages = ('bank',) + PLANT_STAGES.get(what, ())
             rep, _ = run(planted, stages, [(320, 568)], (False,))
             hit = [f for f in rep if (tag[1:] in f if tag.startswith('~') else f.startswith(tag))]
+            if hit and what in PLANT_EVERY:
+                need = PLANT_EVERY[what](load_bank(planted) or {})
+                missed = [i for i in need if not any(('diagram %s ' % i) in f for f in hit)]
+                if missed or not need:
+                    print('  self-test %-48s *** caught on %d of %d: missed %s ***'
+                          % (what, len(need) - len(missed), len(need), ', '.join(missed)))
+                    hit = []
+                else:
+                    hit = ['every one of the %d: ' % len(need) + hit[0]]
             ok = ok and bool(hit)
             print('  self-test %-48s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
     for f in fails:
