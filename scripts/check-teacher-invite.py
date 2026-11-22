@@ -229,7 +229,7 @@ STYLE = r"""(() => {
   const p = document.getElementById('teacherInvite');
   if (!p) return null;
   const a = p.querySelector('a') || p, q = p.parentElement, pc = getComputedStyle(q);
-  return {ratio: MC.measure(a).ratio,
+  return {ratio: MC.measure(a, {opacity: false}).ratio,
           row: (/flex/.test(pc.display) && pc.flexDirection.startsWith('row')) || /grid/.test(pc.display),
           parent: (q.id ? '#' + q.id : '') + (q.className ? '.' + String(q.className).split(' ')[0] : q.id ? '' : q.tagName.toLowerCase())};
 })()"""

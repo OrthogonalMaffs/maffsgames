@@ -13,7 +13,9 @@ Python side
 
 Page side
   CONTRAST_JS              an expression that defines (once) and returns window.__mc:
-    __mc.measure(el)       one element's text colour against what is behind it:
+    __mc.measure(el, opts) one element's text colour against what is behind it (opts {opacity: false}: colours
+                           alone, for a caller measuring a line on a screen that may not be showing, whose
+                           opacity is then an animation's or a hidden screen's, not the reader's):
                              - the background: the element's own and its ancestors' background colours, composited
                                through translucent layers down to the first opaque one, on white (the canvas) if none
                                is opaque; SVG text instead takes the painted SVG shapes beneath it at its own centre
@@ -163,7 +165,8 @@ CONTRAST_JS = r"""(() => {
     const s = stackAt(el);
     return !!s && s.above.some(e => !el.contains(e) && !(e instanceof SVGElement) && opaqueBox(e));
   };
-  function measure(el) {
+  function measure(el, opts) {
+    const withOpacity = !(opts && opts.opacity === false);
     const cs = getComputedStyle(el), svg = el instanceof SVGElement;
     let unmeasurable = null, opaque = false, stop = null;
     const layers = [];          // top first: {c, a}
@@ -212,7 +215,7 @@ CONTRAST_JS = r"""(() => {
       c = rgb(cs.color);
     }
     if (!c) return {unmeasurable: 'colour not in rgb(): ' + (svg ? cs.fill : cs.color), ratio: null};
-    const opacity = opacityOf(el);
+    const opacity = withOpacity ? opacityOf(el) : 1;
     const fg = over(c, c.a * opacity, bg);
     const size = parseFloat(cs.fontSize), weight = parseInt(cs.fontWeight, 10) || 400;
     const large = size >= LARGE || (size >= LARGE_BOLD && weight >= 700);

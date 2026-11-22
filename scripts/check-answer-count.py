@@ -138,7 +138,7 @@ PROBE = r"""(sel) => {
   return {text: p.textContent, count: p.getAttribute('data-maffs-count'), shown: p.checkVisibility() && r.width > 0 && r.height > 0,
           inside: r.left >= -0.5 && r.right <= document.documentElement.clientWidth + 0.5,
           sw: document.scrollingElement.scrollWidth, vw: document.documentElement.clientWidth,
-          ratio: MC.measure(p).ratio,
+          ratio: MC.measure(p, {opacity: false}).ratio,
           row: (/flex/.test(pc.display) && pc.flexDirection.startsWith('row')) || /grid/.test(pc.display),
           parent: (q.id ? '#' + q.id : '') + (q.className ? '.' + String(q.className).split(' ')[0] : q.id ? '' : q.tagName.toLowerCase())};
 }"""
@@ -215,7 +215,7 @@ async def _check_one(browser, base, rel, slug, sel, want):
 HEAD_PROBE = r"""() => {
   const m = document.querySelector('[data-maffs-answer-total]');
   const MC = """ + cc.CONTRAST_JS + r""";
-  const ratio = el => MC.measure(el).ratio;
+  const ratio = el => MC.measure(el, {opacity: false}).ratio;
   const num = m && m.querySelector('.ac-num'), lab = m && m.querySelector('.ac-label');
   const upd = document.querySelector('[data-maffs-answer-updated]');
   const hdr = document.querySelector('.header');

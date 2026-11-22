@@ -310,7 +310,8 @@ def selftest():
     from playwright.async_api import async_playwright
     want = {"grey3": "fail", "large32": "pass", "small32": "fail", "faded": "exempt", "layer-span": "fail",
             "grad": "unmeasurable", "ok": "pass", "svgt": "fail", "disabled": "exempt",
-            "kx": "fail", "deco": "exempt", "nohit": "pass"}
+            "kx": "fail", "deco": "exempt", "nohit": "pass",
+            "faded-alone": "pass"}
 
     async def go():
         async with async_playwright() as p:
@@ -318,6 +319,10 @@ def selftest():
             page = await b.new_page(viewport={"width": 800, "height": 600})
             await page.set_content(FIXTURE)
             recs = await page.evaluate("(%s).scan()" % cc.CONTRAST_JS)
+            # colours alone (the older checks' option): the faded black text reads 21:1 without its opacity
+            alone = await page.evaluate("(%s).measure(document.getElementById('faded'), {opacity: false}).ratio" % cc.CONTRAST_JS)
+            recs.append({"el": "p#faded-alone", "parent": "", "kind": "pass" if alone > 20.9 else "fail", "ratio": alone,
+                         "fg": "#000000", "bg": "#ffffff"})
             await b.close()
             return recs
     recs = asyncio.run(go())
@@ -367,7 +372,7 @@ def selftest():
         bad.append("lightness_fix")
     if cc.lightness_fix("#808080", ["#000000", "#ffffff"], target=10) is not None:
         bad.append("lightness_fix impossible")
-    print("selftest: %s (%d plants)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(want) + 7))
+    print("selftest: %s (%d plants)" % ("FAILED: " + ", ".join(bad) if bad else "PASS", len(want) + 6))
     return 1 if bad else 0
 
 
