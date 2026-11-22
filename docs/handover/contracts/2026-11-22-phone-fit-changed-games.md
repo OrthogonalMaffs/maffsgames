@@ -30,3 +30,11 @@ DO NOT TOUCH: What phone-fit measures and its pass/fail rules, the known-failure
 SUCCESS CONDITION: A PR that changes one game shows a phone-fit run that measures exactly that game in normal, Aa and laptop modes, and merge-pr.py won't merge it red. A push to main that changes one game measures it after merge too. Shared changes still measure everything; docs-only and /class/ changes measure nothing. The ci-deps self-test passes and its new plant is caught. CI is green, the PR is merged, and cloud.md records the #873 close-out and the branch-deletion failure.
 
 STOP IF: A PR-triggered run needs secrets or permissions a pull_request run doesn't have. The changed-games measure would take more than about 10 minutes for a typical one-game PR. merge-pr.py's waiting logic can't tell "no run" from "run not started yet" reliably. Adding a folder to KNOWN_TOP would leave a change there selecting no verifier that reads it. The home lane's open PR would be blocked or re-measured in a way that breaks its merge. Main goes red for a reason outside this change (one rerun per AGENTS.md, then stop and report).
+
+## Amendment 1 (Jon, 22 Nov 2026, in this session, answering the step 7 question), verbatim
+
+Neither alone: do options 3 and 2 together. No throwaway branches (we can't delete them; see this morning's failed deletion).
+1. Before merging, run the "changed" job's exact Python locally against three diffs (a one-game touch, a docs-only change, a /class/ change) and show each result: the selected games and whether it's shared. Put the output in the PR.
+2. Show merge-pr.py's self-test covering: a phone-fit run passed, failed, not yet started, and none expected.
+3. Merge #875 on green via merge-pr.py, with step 7 recorded as "simulated locally; live proof pending".
+4. The live proof goes in the close-out: the first real one-game PR, docs-only PR and /class/ PR after the merge, with each one's run ID and what it measured. If any selects wrongly, stop and report before the lane takes other work.

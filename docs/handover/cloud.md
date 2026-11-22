@@ -72,7 +72,8 @@ Claude Code (cloud), branch `claude/funny-keller-2thbao` from main 67ade5e. Firs
 
 - **#871's branch (closed unmerged, duplicate of #872):** a deletion of `claude/ecstatic-thompson-f35dgo` failed in an earlier session. That session's command and its exact error reached neither this session nor any file (no unpushed note here), so neither is recorded. The branch stays on origin at a2a254f; no further attempts.
 - Implemented (commit 2): measure-phone-fit `--only a,b`; ci-deps KNOWN_TOP + the tracked-folder self-test (planted) + `measured_pages()`; phone-fit-full on pull requests (shared: all; else the changed games; else nothing; per-PR concurrency); merge-pr (a'), the PR head's phone-fit run, waited for and never waived; AGENTS.md line; todo CI-DEPS-TOOLS and CI-DEPS-UGH-STATS to todo-done. Local: all three self-tests PASS, ci-groups --check and --worst-case PASS.
-- Next: the PR's own phone-fit run (it changes .github/, so it measures every game), then step 7's one-game, docs-only and /class/ runs.
+- PR #875. Its own phone-fit run (45001991098) diffed exactly its own files and chose every game (shared paths: the workflow, ci-deps.py, measure-phone-fit.py), so step 7 cannot be shown on it. **Amendment 1 (Jon, 22 Nov):** no throwaway branches; step 7 simulated locally (the changed job's Python, extracted from the yml, against local commits in a scratch clone: one game -> split-it; docs-only and /class/ -> nothing, not shared; output in the PR) and merge-pr's self-test; merge on green; step 7 recorded as "simulated locally; live proof pending".
+- **Owed in the close-out (Amendment 1.4):** the first real one-game PR, docs-only PR and /class/ PR after the merge, each one's phone-fit run ID and what it measured. If any selects wrongly, STOP and report before other work.
 
 ## 2026-11-21 (cloud): SIX-PS-BANKS-9 (`docs/history/contracts/2026-11-21-six-ps-banks-9.md`)
 
