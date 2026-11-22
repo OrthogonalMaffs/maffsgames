@@ -3999,3 +3999,10 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | CI-DEPS-ANY-PAGE | **`scripts/ci-deps.py` offers only "names its pages" or "always runs"** (ALWAYS_BUDGET = 12, `scripts/ci-deps.py`:422). Site-wide page scanners such as `check-download-labels.py` (#856) must go always-run, and that budget is full (12/12). Add a third dependency type: runs when any page changes, skips docs-only changes. Do it before, or as the first part of, START-SIDEWAYS-GATE, not by raising the budget. | Project Claude (contract), cloud lane |
 
 **Closed 21 Nov 2026 (CI-DEPS-ANY-PAGE, merged as e291c9c).** Row CI-DEPS-ANY-PAGE, moved word for word above. `scripts/ci-deps.py` gained the `any-page` dependency type and selective page-less verifiers; the always-set went from 12 to 2. Jon (21 Nov 2026, 20:03): test-escape-credit.py stays always-run.
+
+## Closed by PHONE-FIT-CHANGED-GAMES (22 Nov 2026)
+
+29. **CI-DEPS-TOOLS** (PACK-GENERATOR, Amendment 2): `tools` is not in `scripts/ci-deps.py` KNOWN_TOP, so a `tools/` change selects every verifier. Moved from cloud.md's live pointers. Owner: Project Claude to triage; cloud lane (gate file).
+51. **CI-DEPS-UGH-STATS** (UGH-STATS-PAGES, 14 Nov 2026; Jon: log it, do not change): `scripts/ci-deps.py` KNOWN_TOP does not name `ugh-stats`, so a change under `ugh-stats/` is a path in no known area and selects every verifier in the Gate. Add the folder to KNOWN_TOP. Owner: cloud lane (a Gate file).
+
+**Closed 22 Nov 2026 (PHONE-FIT-CHANGED-GAMES).** Rows CI-DEPS-TOOLS and CI-DEPS-UGH-STATS, moved word for word above. `scripts/ci-deps.py` KNOWN_TOP gained class, printables, ugh-stats, core-maths, tools and firebase, and its self-test now fails on any tracked top-level folder in neither KNOWN_TOP nor ALL_PREFIXES.

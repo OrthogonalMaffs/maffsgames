@@ -50,9 +50,12 @@ import argparse, ast, fnmatch, json, os, re, subprocess, sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SELECTIVE_PREFIX = "Content verifiers"
 ALL_PREFIXES = (".github/", "scripts/ci-", "requirements")
-# Top-level areas whose files are classified (not "unknown"): the published site, docs and the checks.
+# Top-level areas whose files are classified (not "unknown"): the published site, docs and the checks. The self-test
+# fails on a folder git tracks that is in neither this set nor ALL_PREFIXES (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026: six
+# folders, /class/ the newest, had drifted out, so a change there selected every verifier and the full phone-fit run).
 KNOWN_TOP = {"games", "escape-rooms", "schools", "parents", "about", "feedback", "leaderboards", "privacy",
-             "essentials", "resit", "spec-map", "the-6-ps", "updates", "year6", "op", "6-7", "data", "docs", ".claude", "scripts"}
+             "essentials", "resit", "spec-map", "the-6-ps", "updates", "year6", "op", "6-7", "data", "docs", ".claude", "scripts",
+             "class", "printables", "ugh-stats", "core-maths", "tools", "firebase"}
 KNOWN_ROOT_FILES = {"index.html", "sitemap.xml", "robots.txt", "CNAME", "_config.yml", "CLAUDE.md",
                     ".gitignore", ".gitleaks.toml"}
 # Folders too wide to be a dependency: a literal naming one is a URL prefix or a search root, not a file
@@ -434,6 +437,45 @@ def is_shared(path):
     return path in multi or in_deps(path, checker)
 
 
+def unclassified_tops(tracked=None):
+    """Top-level folders git tracks that classify() would call "unknown": in neither KNOWN_TOP nor ALL_PREFIXES."""
+    if tracked is None:
+        out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True)
+        tracked = out.stdout.splitlines()
+    tops = {p.split("/", 1)[0] for p in tracked if "/" in p}
+    return sorted(t for t in tops if t not in KNOWN_TOP and not (t + "/").startswith(ALL_PREFIXES))
+
+
+# ---------------------------------------------------------------- the games a change touches (the PR phone-fit run)
+_MEASURED = None
+
+
+def phone_fit_games():
+    """The games scripts/measure-phone-fit.py measures: its own roster_slugs(), the one definition (loaded once)."""
+    global _MEASURED
+    if _MEASURED is None:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("measure_phone_fit", os.path.join(ROOT, PHONE_FIT_CHECKER))
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        _MEASURED = set(mod.roster_slugs())
+    return _MEASURED
+
+
+def measured_pages(changed_paths, measured=None):
+    """The phone-fit-measured games whose own files (games/<slug>/...) a change touches, sorted
+    (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026). Games only: phone-fit measures nothing else, so /class/, the escape rooms and
+    the hubs give none. A shared path is is_shared()'s question, not this one's: the workflow asks both."""
+    measured = phone_fit_games() if measured is None else measured
+    out = set()
+    for p in changed_paths:
+        p = p.replace("\\", "/").strip()
+        parts = p.split("/")
+        if len(parts) >= 3 and parts[0] == "games" and parts[1] in measured:
+            out.add(parts[1])
+    return sorted(out)
+
+
 def select(changed, dmap=None):
     """(run_all, reasons, {script: [why]}) for a list of changed paths."""
     dmap = dependency_map() if dmap is None else dmap
@@ -558,6 +600,27 @@ def selftest():
                     ("docs/handover/cloud.md", False), ("updates/index.html", False),
                     ("docs/phone-fit-report.md", False), ("scripts/answer-lock-state.json", False)):
         check("is_shared(%s) is %s" % (p, want), is_shared(p) == want, "")
+    # Every folder git tracks is classified (PHONE-FIT-CHANGED-GAMES): a new one in neither KNOWN_TOP nor ALL_PREFIXES
+    # fails here by name, before it can make every change under it select everything. Planted: an unlisted folder.
+    loose = unclassified_tops()
+    check("every tracked top-level folder is in KNOWN_TOP or ALL_PREFIXES", not loose, ", ".join(loose))
+    planted = unclassified_tops(["games/split-it/index.html", "newfolder/x.html", ".github/workflows/x.yml", "README.md"])
+    check("plant: a new tracked top-level folder in neither is caught", planted == ["newfolder"], ", ".join(planted))
+    # measured_pages: a game's own files give that game; docs, /class/ and shared assets give none (a shared path is
+    # is_shared's question); a /class/ change is not shared either, so it measures nothing.
+    pf = phone_fit_games()
+    check("phone-fit measures split-it and not the-perfect-prank (roster only)", "split-it" in pf
+          and "the-perfect-prank" not in pf, "%d games" % len(pf))
+    for paths, want in ((["games/split-it/index.html"], ["split-it"]),
+                        (["games/split-it/art/x.svg", "games/new-shapes/index.html", "games/split-it/index.html"],
+                         ["new-shapes", "split-it"]),
+                        (["docs/todo.md", "docs/handover/cloud.md"], []), (["class/index.html"], []),
+                        (["schools/assets/theme.css"], []), (["games/the-perfect-prank/index.html"], []),
+                        (["games/index.html"], [])):
+        got = measured_pages(paths)
+        check("measured_pages(%s) is %s" % (", ".join(paths), want or "none"), got == want, ", ".join(got))
+    check("class/index.html is not shared", not is_shared("class/index.html"), "")
+    check("schools/assets/theme.css is shared (measured_pages leaves it to is_shared)", is_shared("schools/assets/theme.css"), "")
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
     return 1 if fails else 0
 
