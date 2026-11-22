@@ -28,6 +28,12 @@ The bank is read from the live page, then for every item:
   Chromium (390x844), through the game's own stages: the right tiles complete the table; on es_alevel_006 the
     wrong tile 0.0004 placed for 0.0001 is marked wrong (audit t2-012); the right products complete E(X), and
     the E(X) shown is the exact sum; every wrong card is marked wrong and the true card right.
+  Stage 2's lines (EXPECTATION-STATION-LINES, 22 Nov 2026), KaTeX served from the pinned copy: one line per row,
+    "x \\times P(X = x) = [box]", no box between two equals signs, each left side computed equal to the table's
+    x times P(X = x) and to its box's key; after a right answer and after the reveal, the sum line
+    "E(X) = \\sum xP(x) = p1 + p2 + ... = total": its terms are the products, its total E(X) exactly, its own value,
+    and the E(X) Stage 3 shows. Plants: the old single chained line (caught on every item), no sum line after the
+    reveal, the sum line adding P(X = x) instead of xP(x).
 A self-test plants four faults back into a copy of the page (t2-002: the true card "The median of X is 3"; t2-012:
 the 0.001 tolerance; t2-013: "A biased coin"; pc-001: es_core_001 without its stated relation, CLUES ('none',));
 each must FAIL naming its item.
@@ -1964,6 +1970,27 @@ SWEEP_JS = r"""() => {
   const out = [];
   const items = [...QUESTIONS.core, ...QUESTIONS.gcse, ...QUESTIONS.alevel];
   const fb = () => document.getElementById('stageFeedback').textContent;
+  // EXPECTATION-STATION-LINES. The TeX a KaTeX element was drawn from (null when it is not typeset).
+  const tex = (el) => { const a = el && el.querySelector('annotation[encoding="application/x-tex"]'); return a ? a.textContent : null; };
+  // An element's visible text (KaTeX's hidden MathML copy left out), each slot written as a box.
+  const vis = (el) => { let s = ''; el.childNodes.forEach(n => {
+    if (n.nodeType === 3) s += n.textContent;
+    else if (n.nodeType === 1 && !n.classList.contains('katex-mathml')) s += /^slot_/.test(n.id || '') ? '\u25a1' : vis(n);
+  }); return s; };
+  // Stage 2's lines: each slot's line is its ancestor directly inside #exFormula (the whole formula if the slot
+  // sits there itself, as in the old single line).
+  const stage2Lines = () => {
+    const f = document.getElementById('exFormula'), lines = [];
+    f.querySelectorAll('[id^="slot_"]').forEach(sl => {
+      let l = sl.parentElement === f ? f : sl;
+      while (l !== f && l.parentElement !== f) l = l.parentElement;
+      if (!lines.includes(l)) lines.push(l);
+    });
+    return lines.map(l => ({text: vis(l), slots: [...l.querySelectorAll('[id^="slot_"]')].map(s => s.id),
+      tex: l === f ? null : tex(l.querySelector('.ex-lhs'))}));
+  };
+  const sumLine = () => { const e = document.getElementById('exSum');
+    return e && e.style.display !== 'none' ? {tex: tex(e), text: vis(e), val: e.dataset.val || null} : null; };
   for (const q of items) {
     const r = {id: q.id, problems: [], ex: null};
     const start = () => { questionQueue = [q]; currentQIndex = 0; totalScore = 0; maxScore = 0; loadQuestion(); };
@@ -2001,12 +2028,29 @@ SWEEP_JS = r"""() => {
     start();
     fill1(missing.map(i => [i, val(i)]));
     if (currentStage !== 2) { r.problems.push('the right tiles did not complete the table'); out.push(r); continue; }
+    r.keys = productRats().map(ratKey);   // what the marking accepts in each slot
+    r.lines = stage2Lines();                // Stage 2 as drawn, before anything is placed
     const prods = productRats();
     prods.forEach((p, i) => { selectedSlot = i; placeTileInSlot(ratKey(p), 0); });
     checkStage2(); drain();
+    r.sum = sumLine();
+    const cont = document.getElementById('contStage2');
+    if (cont) cont.click(); drain();        // the student moves on when ready (the button is outside the lock)
     if (currentStage !== 3) { r.problems.push('the right products did not complete E(X)'); out.push(r); continue; }
     r.ex = ratKey(exactEX());
     r.exShown = document.getElementById('exResultValue').textContent;
+    r.exTex = tex(document.getElementById('exResultValue'));
+    // the reveal after two wrong tries shows the sum line too
+    start();
+    fill1(missing.map(i => [i, val(i)]));
+    for (let t = 0; t < 2 && currentStage === 2; t++) {
+      completedTable.forEach((_, i) => { selectedSlot = i; placeTileInSlot('999/1', 0); }); checkStage2(); drain();
+    }
+    r.sumReveal = sumLine();
+    // back to Stage 3 on the right answer, for the card checks below
+    start(); fill1(missing.map(i => [i, val(i)]));
+    prods.forEach((p, i) => { selectedSlot = i; placeTileInSlot(ratKey(p), 0); }); checkStage2(); drain();
+    if (cont) cont.click(); drain();
     // every card: the wrong ones marked wrong, the true one right (two attempts per question, so re-render)
     for (let j = 0; j < q.interpretations.length; j++) {
       stage3Attempts = 0; MaffsLock.fresh(document.getElementById('stage3Wrap')); renderStage3();   // a new attempt, so a fresh lock
@@ -2062,6 +2106,88 @@ def notation_fails(html):
     return out
 
 
+TERM = re.compile(r'\s*([+-]?)\s*(\\frac\{(\d+)\}\{(\d+)\}|\d+(?:\.\d+)?)\s*')
+
+
+def tex_terms(t):
+    """'0 + 0.12 - \\frac{1}{3}' -> [Fraction, ...] (a leading '-' allowed); None if it is anything else."""
+    out, pos = [], 0
+    while pos < len(t):
+        m = TERM.match(t, pos)
+        if not m or m.end() == pos or (out and not m.group(1)):
+            return None
+        v = F(int(m.group(3)), int(m.group(4))) if m.group(3) else F(m.group(2))
+        out.append(-v if m.group(1) == '-' else v)
+        pos = m.end()
+    return out or None
+
+
+def shown_value(tex, text):
+    """The value Stage 3 shows: from its TeX when typeset, else its text ('0.31', '4/3 ≈ 1.33')."""
+    if tex:
+        v = tex_terms(tex)
+        return v[0] if v and len(v) == 1 else None
+    m = re.match(r'\s*(−?)(\d+(?:\.\d+)?(?:/\d+)?)', text or '')
+    return (-1 if m.group(1) else 1) * F(m.group(2)) if m else None
+
+
+def lines_fails(q, r):
+    r"""EXPECTATION-STATION-LINES (Jon, 22 Nov 2026). Stage 2 read "E(X) = (0 x 0.80) = [] + (1 x 0.12) = [] + ...",
+    every box between two equals signs, so a student added as they went (es_core_012: 0.22 in the third box, where
+    the game wants 0.1). Each product now has its own line, x \times P(X = x) = [box], typeset in KaTeX, and once
+    Stage 2 is checked (right, or revealed) a sum line E(X) = \sum xP(x) = p1 + p2 + ... = total. For every item:
+    one line per row, in the table's order, one box a line, never a box between two '='; each line's left side,
+    computed, is x times the table's P(X = x) and its box's key; the sum line's terms are the products, their total
+    is E(X) exactly, the line's own value and the E(X) Stage 3 shows."""
+    if 'lines' not in r:
+        return []
+    out, d = [], dist(q)
+    lines, keys = r['lines'], r['keys']
+    if len(lines) != len(d):
+        out.append('%d line(s) for %d values of x: %s' % (len(lines), len(d), ' | '.join(l['text'] for l in lines)[:160]))
+    for i, l in enumerate(lines):
+        if re.search('=[^=]*□[^=]*=', l['text']):
+            out.append('a box sits between two equals signs: %r' % l['text'][:120])
+        if l['slots'] != ['slot_%d' % i] or i >= len(d):
+            out.append('line %d holds boxes %s, not slot_%d alone' % (i + 1, l['slots'], i))
+            continue
+        x, p = d[i]
+        m = re.fullmatch(r'\s*(-?\d+)\s*\\times\s*(.+?)\s*=\s*', l['tex'] or '')
+        if not m:
+            out.append('line %d is not typeset as "x \\times P(X = x) =": %r' % (i + 1, l['tex'] or l['text']))
+            continue
+        pv = tex_terms(m.group(2))
+        if F(m.group(1)) != x or not pv or len(pv) != 1 or pv[0] != p:
+            out.append('line %d reads %r, the table has x = %s, P(X = x) = %s' % (i + 1, l['tex'], x, p))
+            continue
+        key = F(*map(int, keys[i].split('/')))
+        if x * p != key:
+            out.append('line %d: %s = %s, but its box takes %s' % (i + 1, l['tex'], x * p, key))
+    E = D(d).E
+    for name in ('sum', 'sumReveal'):
+        sl = r.get(name)
+        how = 'after a right answer' if name == 'sum' else 'after the reveal'
+        if not sl:
+            out.append('no sum line %s' % how)
+            continue
+        parts = (sl['tex'] or '').split('=')
+        terms = tex_terms(parts[2]) if len(parts) == 4 else None
+        total = tex_terms(parts[3]) if len(parts) == 4 else None
+        if (len(parts) != 4 or parts[0].strip() != 'E(X)' or parts[1].strip() != r'\sum xP(x)' or not terms
+                or not total or len(total) != 1):
+            out.append('the sum line %s is not "E(X) = \\sum xP(x) = terms = total": %r' % (how, sl['tex'] or sl['text']))
+            continue
+        if terms != [x * p for x, p in d]:
+            out.append('the sum line %s adds %s; the products are %s' % (how, [str(t) for t in terms], [str(x * p) for x, p in d]))
+        if sum(terms) != total[0] or total[0] != E:
+            out.append('the sum line %s ends = %s: its terms add to %s, E(X) is %s' % (how, total[0], sum(terms), E))
+        if sl['val'] != '%d/%d' % (E.numerator, E.denominator):
+            out.append('the sum line %s carries %s, E(X) is %s' % (how, sl['val'], E))
+        if name == 'sum' and r.get('ex') is not None and shown_value(r.get('exTex'), r.get('exShown')) != total[0]:
+            out.append('the sum line ends = %s; Stage 3 shows E(X) as %r' % (total[0], r.get('exShown')))
+    return out
+
+
 def play(fails, html):
     fails.extend(notation_fails(html))
     from playwright.sync_api import sync_playwright
@@ -2072,7 +2198,7 @@ def play(fails, html):
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)   # MaffsLock's 300 ms window: the sweep answers at once
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+            bc.offline(ctx, base)   # KaTeX from the pinned copy: Stage 2's lines are checked as typeset
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
@@ -2087,8 +2213,9 @@ def play(fails, html):
             for r in swept:
                 for p in r['problems']:
                     fails.append('%s in Chromium: %s' % (where(r['id']), p))
+                q = next(q for lv in COUNTS for q in bank[lv] if q['id'] == r['id'])
+                fails.extend('%s Stage 2: %s' % (where(r['id']), p) for p in lines_fails(q, r))
                 if r['ex'] is not None:
-                    q = next(q for lv in COUNTS for q in bank[lv] if q['id'] == r['id'])
                     n, dd = r['ex'].split('/')
                     if F(int(n), int(dd)) != D(dist(q)).E:
                         fails.append('%s in Chromium: E(X) shown as %s, exactly %s' % (where(r['id']), r['exShown'], D(dist(q)).E))
@@ -2104,6 +2231,51 @@ def play(fails, html):
 
 def u(s):
     return ''.join('\\u%04x' % ord(c) if ord(c) > 126 else c for c in s)
+
+
+# The Stage 2 builder as it is (one line per product) and as it was before EXPECTATION-STATION-LINES, for the plant.
+STAGE2_LINES = r'''    const line = document.createElement('div');
+    line.className = 'ex-line';
+    line.id = 'exLine_' + i;
+    const lhs = document.createElement('span');
+    lhs.className = 'ex-lhs';
+    texInto(lhs, xTex(r.x) + ' \\times ' + pTex(r) + ' =', formatX(r.x) + ' \u00d7 ' + pPlain(r) + ' =');
+    line.appendChild(lhs);
+
+    const slot = document.createElement('span');
+    slot.className = 'ex-slot';
+    slot.id = 'slot_' + i;
+    if (filledSlots[i] !== undefined) {
+      renderValue(slot, ratFromKey(filledSlots[i]));
+      slot.classList.add('filled-slot');
+    } else {
+      slot.textContent = '?';
+    }
+    slot.addEventListener('click', () => selectSlot(i));
+    line.appendChild(slot);
+    formula.appendChild(line);
+'''
+STAGE2_CHAINED = r'''    if (i > 0) {
+      const plus = document.createElement('span');
+      plus.textContent = ' + ';
+      formula.appendChild(plus);
+    }
+    const wrap = document.createElement('span');
+    wrap.innerHTML = '(' + formatX(r.x) + ' \u00d7 ' + pDisplayHTML(r) + ') = ';
+    formula.appendChild(wrap);
+
+    const slot = document.createElement('span');
+    slot.className = 'ex-slot';
+    slot.id = 'slot_' + i;
+    if (filledSlots[i] !== undefined) {
+      renderValue(slot, ratFromKey(filledSlots[i]));
+      slot.classList.add('filled-slot');
+    } else {
+      slot.textContent = '?';
+    }
+    slot.addEventListener('click', () => selectSlot(i));
+    formula.appendChild(slot);
+'''
 
 
 PLANTS = [
@@ -2124,6 +2296,15 @@ PLANTS = [
      "cell.textContent = formatP(completedTable[i].p);"),
     ('es_alevel_001', 's1-001: the k-cells shown as "?" only',
      "const blank = /k/.test(String(r.p)) ? formatP(r.p) + ' = ?' : '?';", "const blank = '?';"),
+    # EXPECTATION-STATION-LINES: Stage 2 as it was, one line with every box between two equals signs
+    ('es_core_012', 'lines: the single chained line back', STAGE2_LINES, STAGE2_CHAINED),
+    ('es_core_012', 'lines: no sum line after the reveal',
+     "showStageFeedback('Correct products revealed', 'bad');\n    document.getElementById('stage2Tiles').innerHTML = '';\n"
+     "    document.getElementById('checkStage2').style.display = 'none';\n    showStage2Sum();",
+     "showStageFeedback('Correct products revealed', 'bad');\n    document.getElementById('stage2Tiles').innerHTML = '';\n"
+     "    document.getElementById('checkStage2').style.display = 'none';\n    MaffsLock.timer(() => transitionToStage3(), 1200);"),
+    ('es_core_012', 'lines: the sum line adds P(X = x), not xP(x)',
+     '  const prods = productRats();\n  const terms = prods.map(', '  const prods = completedTable.map(r => r.pr);\n  const terms = prods.map('),
     # pc-001: es_core_001 as it was, with no stated relation, so its two missing tiles can swap
     ('es_core_001', 'pc-001: es_core_001 with no relation (two completions)',
      ' P(X = 2) is 0.05 more than P(X = 4).\'', '\'', {'es_core_001': ('none',)}),

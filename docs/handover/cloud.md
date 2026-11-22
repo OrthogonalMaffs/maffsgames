@@ -66,7 +66,16 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/handover/contracts/2026-11-22-given-that-set-labels.md`)
+## 2026-11-22 (cloud): EXPECTATION-STATION-LINES (`docs/handover/contracts/2026-11-22-expectation-station-lines.md`)
+
+Claude Code (cloud), branch `claude/magical-einstein-7072g0` from main bc0496c. Tier Small. First commit: #884's close-out (entry below), this contract saved, given-that unclaimed, expectation-station claimed.
+
+- **Done on the branch:** `renderStage2()` draws one line per row, `x \times P(X = x) =` in KaTeX and its slot (ids, tiles, marking unchanged); phones (520px and down) one line under another, wider screens two columns. Once Stage 2 is checked (right, or revealed), `showStage2Sum()` adds the line E(X) = \sum xP(x) = p1 + ... = total (exactEX(), Stage 3's value), the empty tile bank hides, and a Continue button (`data-maffs-lock-skip`) replaces the 0.8 s / 1.2 s auto-advance, so the sum can be read; the lock hint presses it.
+- **Decided for you (SR-31):** Continue rather than the timed move to Stage 3 (as written, the sum line would have shown for 0.8 s); two columns above 520px (one column pushed Check Calculation below the fold on 12 laptop items, 23 in Aa); the total in the scenario's form (a fraction in a fraction scenario, e.g. 4/3, where Stage 3 shows 4/3 ≈ 1.33).
+- **Fit (all 120 items, Check Calculation's bottom, page coordinates, before / after):** no item pushed below the fold at any size; above the fold at 375x667 66 / 68, Aa 375x667 0 / 13, Aa 390x844 99 / 116, laptop 120 / 120 (worst 641 / 680), Aa laptop 119 / 119. measure-phone-fit (Stage 1 only) unchanged in normal, Aa and laptop: no known-failures entry grows or can go.
+- **Verifier:** KaTeX from the pinned copy (`bc.offline`); `lines_fails` for every item; plants: the old chained line (all 120 items), no sum line after the reveal, the sum adding P(X = x). PASS, 13 plants caught. check-answer-lock `--game expectation-station` PASS, the same as main's page.
+
+## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/history/contracts/2026-11-22-given-that-set-labels.md`)
 
 Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier Small. First commit: #882's close-out (entry below), this contract saved with its STOP and Amendment 1, given-that claimed.
 
@@ -74,6 +83,7 @@ Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier
 - Done on the branch: `.venn-set-label` fill `var(--text)`; `--muted` #8a8fa0; the verifier's contrast sweep (CONTRAST_JS: fill or colour with opacity, over SVG fills and ancestor backgrounds; faded and disabled exempt), not yet wired into main(). Every diagram label passes (10,988 judged across 390x844 and 1366x768, normal and Aa).
 - **STOP 2 (22 Nov):** the start and results screens fail: Start Game (once a level is picked) and Play Again, `color:#fff` on `--accent` #f59e0b, 2.15:1, every size and mode. Amendment 2: `color:#0f1117` on the amber (8.79:1).
 - Done: both buttons; the `contrast` unit in main() with 3 plants (the set names' fill removed, caught on all 14 Venns; --muted back; Start Game white). Verifier PASS locally, 16 plants caught. Seen, not changed: `.submit-btn` (typed answers, game screen, outside the sweep) is also white on the amber.
+- **MERGED 22 Nov as bc0496c (#884)**, route merge-pr.py --watch. Main on bc0496c: check-site 45063676704, phone-fit-full 45063676918, pages 45063676484, all success. The PR's own runs on 4efdece: phone-fit-full 45062529835, check-site 45062529815, both success. Contract moved, game unclaimed. Closed out by EXPECTATION-STATION-LINES.
 
 ## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/history/contracts/2026-11-22-decimal-detective-fit.md`)
 
