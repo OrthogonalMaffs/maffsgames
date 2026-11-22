@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade judged against the condition, both drawings, with and without reduced motion) | | 3
+# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade, stored per item, judged against the condition, both drawings, with and without reduced motion; the first-try hint; every worked answer typeset) | | 3
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a
@@ -46,15 +46,22 @@ laptop Next above the fold. Reported, not failed: Next below the fold on a phone
 A self-test plants the audit's faults back into a copy of the page (r-001's Venn; F4's 30/90; r-002's 0.005
 rule; r-004's decimals only), and GIVEN-THAT-FIT-WHY's three (a Phase 1 working with a wrong count; a slip named for
 a value it does not give; the diagram box's old spacing at 320x568); each must FAIL naming its item.
-The fade (contract GIVEN-THAT-VENN-FADE, 22 Nov 2026; FADE_JS, fade_faults()): every item enters Phase 2 at 390x844
-and 1366x768 (so the narrow and the wide drawing of each Venn, table and tree), with and without reduced motion, and
-once the fade has finished: every element marked "greyed" has a computed opacity of at most 0.3, and a 0.6s opacity
-transition (none with reduced motion); every count outside the condition is faded and every count inside it is not,
-judged against SPEC's Phase 2 denominator (the condition's own group: a Venn's set, a table's column, a tree's
-branch), never against the page's greyOut string. The items that fade nothing are NO_FADE (reported, not failed; the
-ruling of 22 Nov 2026: 27 Bayes trees by design, 14 items for a later contract); one that starts fading, or a new
-item that fades nothing, FAILS. A table's Total column and grand total, and a tree's root, belong to no one group and are not
-judged (the Total column: a later contract). Plants: the Venn's fade rule removed; gcse_03's greyOut fading the condition's own column.
+The fade (contracts GIVEN-THAT-VENN-FADE and GIVEN-THAT-POLISH, 22 Nov 2026; FADE_JS, fade_faults()): every item stores
+its Phase 2 fade (phase2.greyOut; "none" for a Bayes tree, whose condition is an outcome on every branch, so nothing
+fades by design), and inferGreyOut is gone. Every item enters Phase 2 at 390x844 and 1366x768 (so the narrow and the
+wide drawing of each Venn, table and tree), with and without reduced motion, and once the fade has finished: every
+element marked "greyed" has a computed opacity of at most 0.3, and a 0.6s opacity transition (none with reduced
+motion); every count, totals included, is faded exactly when it is outside the condition, judged against SPEC's
+Phase 2 denominator (a Venn's set, a table's column or row, a tree's branch), never against the page's greyOut. The
+reduced sample space is the condition's group and its own total: the other groups, the totals across them (a column
+condition's Total column, a row condition's Total row), the grand total, a Venn's "Total" and a tree's root fade. Every
+table cell's count must be the one SPEC's quantities give for its row and column. A Bayes tree fades nothing.
+GIVEN-THAT-POLISH also: after a first wrong pick in Phase 2 the feedback is the slip's sentence (or "Not quite.") then
+"One more try, for 1 point."; a conditional slip's sentence first says what was computed, in the item's own labels
+("That's Poor among Year 9 only, P(Poor | Year 9). ..."), only where one group is pinned down; every worked answer
+(the Why card's working and the Worked Answer panel) shows the stored text exactly, read back from its KaTeX, with
+no a/b left as text. Plants: the Venn's fade rule removed; gcse_03's greyOut fading the condition's own column;
+core_01 stored "none"; inferGreyOut restored with core_09's stored greyOut removed.
 
     python scripts/verify-given-that.py [--no-selftest] [--against FILE]
 """
@@ -338,6 +345,32 @@ def structure(d, num):
         S[tot] = [num(d['total']), 'group', [], []]
     return S, tot
 
+def among(q, x, m):
+    """What a conditional slip computed, named from the item's own labels: a single x over a group m it belongs to is
+    P(x's other label | m). '' where a label is a bare Yes or No (it names no group without its header); a branch's
+    "(60%)" is left off."""
+    d = q['data']
+    ab = None
+    if d['type'] == 'table':
+        for r in d['rows']:
+            for c in d['cols']:
+                if x == 'cell[%s,%s]' % (r, c):
+                    ab = (c, r) if m == 'row[%s]' % r else (r, c) if m == 'col[%s]' % c else None
+    elif d['type'] == 'venn':
+        A, B = d['setA']['label'], d['setB']['label']
+        ab = {('AB', 'A'): (B, A), ('AB', 'B'): (A, B), ('onlyA', 'A'): ('not ' + B, A), ('onlyB', 'B'): ('not ' + A, B)}.get((x, m))
+    else:
+        for br in d['branches']:
+            for ch in br['children']:
+                if x == 'l[%s>%s]' % (br['label'], ch['label']):
+                    ab = (ch['label'], br['label']) if m == 'b[%s]' % br['label'] else \
+                         (br['label'], ch['label']) if m == 'L[%s]' % ch['label'] else None
+    if not ab or any(s in ('Yes', 'No') for s in ab):
+        return ''
+    a, b = (re.sub(r'\s*\([^()]*%\)$', '', s) for s in ab)
+    return "That's %s among %s only, P(%s | %s). " % (a, b, a, b)
+
+
 def families(q, ph, spec, num):
     """[(family, value, sentence)] for one phase: the slips a wrong value can be named as."""
     S, tot = structure(q['data'], num)
@@ -345,9 +378,9 @@ def families(q, ph, spec, num):
     N = sum((S[n][0] for n in ns), F(0)); Dn = sum((S[n][0] for n in ds), F(0)); T = S[tot][0]
     key = N / Dn
     out = []
-    def add(fam, a, b, line):
+    def add(fam, a, b, line, pre=''):
         if a / b != key and a / b != 1:
-            out.append((fam, a / b, (a, b), line))
+            out.append((fam, a / b, (a, b), line, pre))
     if ph == 'p1':
         add('comp', Dn - N, Dn, "That's the chance it doesn't happen.")
         if ds != [tot]:
@@ -364,7 +397,7 @@ def families(q, ph, spec, num):
         for x, (v, kind, parts, within) in S.items():
             if kind == 'one':
                 for m in within:
-                    add('cond', v, S[m][0], line)
+                    add('cond', v, S[m][0], line, among(q, x, m))
     else:
         if not (len(ns) == 1 and S[ns[0]][1] == 'one'):
             return out
@@ -372,7 +405,8 @@ def families(q, ph, spec, num):
         add('whole', N, T, 'Given that %s, only those %s count: divide by %s, not %s.' % (c, fmt(Dn), fmt(Dn), fmt(T)))
         for m in S[ns[0]][3]:
             if ds != [m]:
-                add('reversed', N, S[m][0], "That's the other way round: we know %s, so divide by %s." % (c, fmt(Dn)))
+                add('reversed', N, S[m][0], "That's the other way round: we know %s, so divide by %s." % (c, fmt(Dn)),
+                    among(q, ns[0], m))
         add('condition', Dn, T, "That's the chance that %s (%s out of %s); the question asks for the %s among those %s."
             % (c, fmt(Dn), fmt(T), fmt(N), fmt(Dn)))
     return out
@@ -392,8 +426,8 @@ def same(typed, places, v):
 def hits_of(fams, typed, places=None, written=None):
     """The families a wrong value fits; a tie between families, for a written fraction a/b, keeps those whose own
     two counts are a and b."""
-    hits = [(f, ab, line) for f, v, ab, line in fams if same(typed, places, v)]
-    if len({f for f, _, _ in hits}) > 1 and written:
+    hits = [(f, ab, line, pre) for f, v, ab, line, pre in fams if same(typed, places, v)]
+    if len({h[0] for h in hits}) > 1 and written:
         hits = [h for h in hits if h[1] == written]
     return hits
 
@@ -403,10 +437,14 @@ def classify(fams, typed, places=None, written=None):
 
 
 def named(fams, typed, places=None, written=None):
-    """(family, sentence) for a wrong value, or ('', ''): exactly one family must fit, with one sentence."""
+    """(family, sentence) for a wrong value, or ('', ''): exactly one family must fit, with one sentence. What was
+    computed comes first only where it is one group: one prefix, or one once a written fraction's counts are matched."""
     hits = hits_of(fams, typed, places, written)
-    if len({f for f, _, _ in hits}) == 1 and len({line for _, _, line in hits}) == 1:
-        return hits[0][0], hits[0][2]
+    if len({h[0] for h in hits}) == 1 and len({h[2] for h in hits}) == 1:
+        pres = {h[3] for h in hits}
+        if len(pres) > 1 and written:
+            pres = {h[3] for h in hits if h[1] == written}
+        return hits[0][0], (next(iter(pres)) if len(pres) == 1 else '') + hits[0][2]
     return '', ''
 
 
@@ -472,6 +510,15 @@ def check_bank(fails, bank):
             if q['id'] == 'core_12' and (d.get('total') != 20000 or 'alarm events' in d.get('title', '') or 'office-building days' not in d.get('title', '')):
                 fails.append('core_12: the tree\'s %d are office-building days; its title %r must say so, not "alarm events" (given-that-s1-002)'
                              % (d.get('total', 0), d.get('title')))
+            g = q['phase2'].get('greyOut')
+            if not g:
+                fails.append('%s p2: no stored greyOut (every item stores its Phase 2 fade; "none" for a Bayes tree)' % q['id'])
+            elif fade_group(q) is None and g != 'none':
+                fails.append('%s p2: a Bayes tree (SPEC\'s condition %s) must store greyOut "none", not %r'
+                             % (q['id'], sp_['p2'][1], g))
+            elif fade_group(q) is not None and g == 'none':
+                fails.append('%s p2: stored greyOut "none", but SPEC\'s condition %s is a group the diagram can fade'
+                             % (q['id'], sp_['p2'][1]))
             qs = quantities(d)
             for fault in explain_faults(q, sp_, qs):
                 fails.append('%s p1: %s' % (q['id'], fault))
@@ -527,7 +574,11 @@ def check_bank(fails, bank):
                     for o, v in zip(opts[1:], vals[1:]):
                         m = re.match(r'\\tfrac\{([\d.]+)\}\{([\d.]+)\}$', o.strip())
                         fam, mc[o] = named(fams, v, None, (F(m.group(1)), F(m.group(2))) if m else None) if v is not None else ('', '')
+                        if ph == 'p2':
+                            HINT_FAMILY[(q['id'], o)] = fam
                         TALLY[('GCSE options', ph, fam or '(none)')] = TALLY.get(('GCSE options', ph, fam or '(none)'), 0) + 1
+                        if ' only, P(' in mc[o]:
+                            COMPUTED.append('%s %s %s' % (q['id'], ph, o))
                         if not fam:
                             UNNAMED.append('%s %s %s' % (q['id'], ph, o))
                     MC_SLIPS[(q['id'], ph)] = mc
@@ -551,6 +602,8 @@ def check_bank(fails, bank):
                 expect = {}
                 for r in wrong_fracs:
                     fam, expect['%d/%d' % (r.numerator, r.denominator)] = named(fams, r, None, (F(r.numerator), F(r.denominator)))
+                    if ' only, P(' in expect['%d/%d' % (r.numerator, r.denominator)]:
+                        COMPUTED.append('%s %s %d/%d' % (q['id'], ph, r.numerator, r.denominator))
                     TALLY[('typed ratios', ph, fam or '(none)')] = TALLY.get(('typed ratios', ph, fam or '(none)'), 0) + 1
                 for o in others:
                     expect[str(o)] = classify(fams, F(str(o)), max(-o.as_tuple().exponent, 0))
@@ -568,9 +621,13 @@ def check_bank(fails, bank):
 MC_SLIPS = {}   # (id, phase) -> {wrong option: the sentence the Why card must show, or ''}; filled by check_bank
 TALLY = {}      # (where, phase, family) -> how many wrong values the card names so: the PR's per-family counts
 UNNAMED = []    # the GCSE options no slip sentence names (no family fits, or two still do)
+COMPUTED = []   # the wrong values whose sentence now names what was computed ("That's X among Y only, P(X | Y).")
 # The contract's own examples (GIVEN-THAT-FIT-WHY, SUCCESS CONDITION), checked word for word.
 EXAMPLE_WORK = {('gcse_01', 'p1'): '60 of the 100 students passed maths. P = 60/100.'}
-EXAMPLE_SLIP = {('gcse_01', 'p2', '\\tfrac{30}{100}'): 'divide by 40, not 100'}
+EXAMPLE_SLIP = {('gcse_01', 'p2', '\\tfrac{30}{100}'): 'divide by 40, not 100',
+                ('gcse_25', 'p1', '\\tfrac{50}{90}'): "That's Poor among Year 9 only, P(Poor | Year 9). No condition here: divide by everyone, 250."}
+EXAMPLE_HINT = {('gcse_01', '\\tfrac{30}{100}'): 'Given that the student took the revision class, only those 40 count: '
+                                                   'divide by 40, not 100. One more try, for 1 point.'}
 
 FIT_SIZES = [(320, 568), (375, 667), (390, 844), (1366, 768), (1280, 720)]
 # Parked for Jon's ruling (contract GIVEN-THAT-FIT-WHY, STOP IF: an item that cannot fit a required size; the standing
@@ -655,32 +712,18 @@ FIT_JS = r"""(args) => {
 }"""
 
 
-# Phase 2 items that fade nothing (ruling of 22 Nov 2026, Project Claude with Jon, on GIVEN-THAT-VENN-FADE's STOP):
-# reported, not failed; an entry that now fades fails as stale. Data and inferGreyOut are not to be changed here.
-NO_FADE_GROUPS = {
-    'table, the condition a column inferGreyOut does not find (later contract)':
-        ['core_01', 'core_09', 'core_15', 'core_17', 'l4_14', 'l4_16', 'l4_20'],
-    'table, the condition a row (greyOutTable greys columns only; later contract)':
-        ['alevel_11', 'alevel_14', 'alevel_16', 'alevel_24'],
-    'tree, the condition a branch inferGreyOut does not find (later contract)': ['core_20', 'l4_09', 'l4_17'],
-    'tree, the condition an outcome across every branch (Bayes): by design': [
-        'alevel_03', 'alevel_05', 'alevel_08', 'alevel_10', 'alevel_12', 'alevel_15', 'alevel_17', 'alevel_20',
-        'alevel_23', 'alevel_25', 'core_02', 'core_04', 'core_06', 'core_08', 'core_10', 'core_12', 'core_14',
-        'core_16', 'core_18', 'l4_01', 'l4_03', 'l4_05', 'l4_07', 'l4_11', 'l4_13', 'l4_15', 'l4_19'],
-}
-NO_FADE = {i: g for g, ids in NO_FADE_GROUPS.items() for i in ids}
 FADE_SIZES = [(390, 844), (1366, 768)]     # the narrow drawings, then the wide ones
-FADE_REPORT = []
 
 # Every item into Phase 2, its style flushed first so the fade runs as a student sees it; each fade's transition
-# read while running, then finished; then every greyed element and every count read as drawn (opacity through its
-# ancestors up to the diagram).
+# read while running, then finished; then every greyed element and every count (totals included) read as drawn
+# (opacity through its ancestors up to the diagram), with the row, column, region or branch it is drawn under.
 FADE_JS = r"""() => {
   const G = window.__gt, out = [], dv = document.getElementById('dataVis');
   const shown = el => el.getClientRects().length > 0;
   const eff = el => { let o = 1; for (let n = el; n && n !== dv; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity); return o; };
-  const key = el => { const g = el.closest('[data-region],[data-col],[data-branch]');
-    return g ? (g.getAttribute('data-region') || g.getAttribute('data-col') || g.getAttribute('data-branch')) : null; };
+  const at = (el, a) => { const g = el.closest('[' + a + ']'); return g ? g.getAttribute(a) : null; };
+  const key = el => ({ region: at(el, 'data-region'), row: el.getAttribute('data-row'), col: el.getAttribute('data-col'),
+                       branch: at(el, 'data-branch') });
   const where = el => { const s = el.closest('svg,table,.tree-list'); return s ? (s.getAttribute('class') || s.tagName) : '?'; };
   for (const lv of Object.keys(G.Q)) for (const q of G.Q[lv]) {
     G.set(lv, q); G.showQuestion();
@@ -688,16 +731,14 @@ FADE_JS = r"""() => {
     void dv.offsetHeight;
     G.toPhase2(q);
     const greyed = [...dv.querySelectorAll('.greyed')];
-    const running = new Set(document.getAnimations().filter(a => a.transitionProperty === 'opacity')
-      .map(a => a.effect.target));
     const anims = document.getAnimations().filter(a => a.transitionProperty === 'opacity')
       .map(a => ({ el: a.effect.target, ms: a.effect.getTiming().duration }));
     document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} });
-    const g = greyed.map(el => ({ tag: el.tagName.toLowerCase() + '.' + [...el.classList].join('.'), key: key(el),
+    const g = greyed.map(el => Object.assign(key(el), { tag: el.tagName.toLowerCase() + '.' + [...el.classList].join('.'),
       where: where(el), op: parseFloat(getComputedStyle(el).opacity), shown: shown(el),
       ms: (anims.find(a => a.el === el) || {}).ms || 0 }));
-    const counts = [...dv.querySelectorAll('.venn-label, td, .tree-node-text, .tree-count')].map(el => ({
-      text: el.textContent.trim(), key: key(el), where: where(el), op: eff(el) }));
+    const counts = [...dv.querySelectorAll('.venn-label, [data-region="total"], td, .tree-node-text, .tree-count')].map(el =>
+      Object.assign(key(el), { text: el.textContent.trim(), where: where(el), op: eff(el) }));
     out.push({ lv: lv, id: q.id, type: q.data.type, greyed: g, counts: counts });
   }
   return out;
@@ -705,63 +746,85 @@ FADE_JS = r"""() => {
 
 
 def fade_group(q):
-    """The condition's own group from SPEC's Phase 2 denominator: (kind, name), or None where no fade can show it."""
+    """The condition's own group from SPEC's Phase 2 denominator: (kind, name), or None for a Bayes tree (an outcome on
+    every branch: no set of branches is the condition)."""
     den = SPEC[q['id']]['p2'][1]
     if len(den) != 1:
         return None
     d = den[0]
     if q['data']['type'] == 'venn' and d in ('A', 'B'):
         return 'venn', d
-    m = re.fullmatch(r'(col|b)\[(.*)\]', d)
-    if m and (q['data']['type'], m.group(1)) in (('table', 'col'), ('tree', 'b')):
+    m = re.fullmatch(r'(col|row|b)\[(.*)\]', d)
+    if m and (q['data']['type'], m.group(1)) in (('table', 'col'), ('table', 'row'), ('tree', 'b')):
         return m.group(1), m.group(2)
     return None
 
 
-def inside(group, key):
-    """Is the count drawn under this key (data-region / data-col / data-branch) inside the condition?"""
+def inside(group, c):
+    """Is this count inside the condition's reduced sample space (its group, and the group's own total)?"""
     kind, name = group
     if kind == 'venn':
-        return key in ({'onlyA', 'intersection'} if name == 'A' else {'onlyB', 'intersection'})
-    return key == name
+        return c['region'] in ({'onlyA', 'intersection'} if name == 'A' else {'onlyB', 'intersection'})
+    if kind == 'col':
+        return c['col'] == name
+    if kind == 'row':
+        return c['row'] == name
+    return c['branch'] == name
+
+
+def cell_count(d, row, col):
+    """The count SPEC's quantities give for a table cell drawn under (row, col), "Total" for a total."""
+    S, tot = structure(d, num)
+    if row == 'Total' and col == 'Total':
+        return S[tot][0]
+    if row == 'Total':
+        return S['col[%s]' % col][0]
+    if col == 'Total':
+        return S['row[%s]' % row][0]
+    return S['cell[%s,%s]' % (row, col)][0]
 
 
 def fade_faults(rows, bank, w, h, rm):
-    """[fault] for every fade that is not the condition's, and the NO_FADE report."""
-    fails, report, at = [], [], ' at %dx%d%s' % (w, h, ' (reduced motion)' if rm else '')
+    """[fault] for every fade that is not the condition's."""
+    fails, at = [], ' at %dx%d%s' % (w, h, ' (reduced motion)' if rm else '')
     byid = {q['id']: q for lv in bank for q in bank[lv]}
     for r in rows:
         lab = '%s p2%s' % (r['id'], at)
+        q = byid[r['id']]
+        name = lambda c: c['region'] or ('%s/%s' % (c['row'], c['col']) if c['row'] or c['col'] else c['branch'])
         for el in r['greyed']:
             if el['op'] > 0.3:
                 fails.append('%s: %s "%s" (%s) is marked greyed but drawn at opacity %.2f (no rule fades it)'
-                             % (lab, el['tag'], el['key'], el['where'], el['op']))
+                             % (lab, el['tag'], name(el), el['where'], el['op']))
             if el['shown'] and not rm and abs(el['ms'] - 600) > 1:
-                fails.append('%s: %s "%s" fades in %dms, not the 0.6s the others use' % (lab, el['tag'], el['key'], el['ms']))
+                fails.append('%s: %s "%s" fades in %dms, not the 0.6s the others use' % (lab, el['tag'], name(el), el['ms']))
             if rm and el['ms']:
-                fails.append('%s: %s "%s" still fades over %dms with reduced motion on' % (lab, el['tag'], el['key'], el['ms']))
-        faded = [c for c in r['counts'] if c['op'] <= 0.3]
-        if r['id'] in NO_FADE:
-            if r['greyed'] or faded:
-                fails.append('%s: on the NO_FADE list (%s) but now fades: judge it and take it off'
-                             % (lab, NO_FADE[r['id']]))
-            continue
-        group = fade_group(byid[r['id']])
+                fails.append('%s: %s "%s" still fades over %dms with reduced motion on' % (lab, el['tag'], name(el), el['ms']))
+        if r['type'] == 'table':
+            for c in r['counts']:
+                try:
+                    want = fmt(cell_count(q['data'], c['row'], c['col']))
+                except KeyError:
+                    fails.append('%s: a cell drawn under row %r, column %r that SPEC\'s table does not have' % (lab, c['row'], c['col']))
+                    continue
+                if c['text'] != want:
+                    fails.append('%s: the cell under %s/%s (%s) shows %s, SPEC\'s table has %s'
+                                 % (lab, c['row'], c['col'], c['where'], c['text'], want))
+        group = fade_group(q)
         if group is None:
-            fails.append('%s: SPEC\'s condition %s has no group a fade can show' % (lab, SPEC[r['id']]['p2'][1]))
+            if r['greyed'] or any(c['op'] < 0.95 for c in r['counts']):
+                fails.append('%s: a Bayes tree (every branch counts) but something fades' % lab)
             continue
         if not r['greyed']:
-            fails.append('%s: nothing fades in Phase 2, and the item is not on the NO_FADE list' % lab)
+            fails.append('%s: nothing fades in Phase 2 (SPEC\'s condition %s)' % (lab, group[1]))
             continue
         for c in r['counts']:
-            if c['key'] in (None, 'root'):
-                continue                    # a table's Total column and grand total, a tree's root: everyone's
-            if inside(group, c['key']) and c['op'] < 0.95:
+            if inside(group, c) and c['op'] < 0.95:
                 fails.append('%s: the count %s (%s, %s) is inside the condition (%s) but faded to %.2f'
-                             % (lab, c['text'], c['key'], c['where'], group[1], c['op']))
-            if not inside(group, c['key']) and c['op'] > 0.3:
+                             % (lab, c['text'], name(c), c['where'], group[1], c['op']))
+            if not inside(group, c) and c['op'] > 0.3:
                 fails.append('%s: the count %s (%s, %s) is outside the condition (%s) but stays at %.2f'
-                             % (lab, c['text'], c['key'], c['where'], group[1], c['op']))
+                             % (lab, c['text'], name(c), c['where'], group[1], c['op']))
     return fails
 
 
@@ -808,13 +871,22 @@ HOOK = ('window.__gt={Q:QUESTIONS,set:function(lv,q){currentLevel=lv;sessionQues
 
 SWEEP_JS = r"""(free) => {
   window.setTimeout = () => 0;
-  const G = window.__gt, out = [], why = [];
+  const G = window.__gt, out = [], why = [], hint = [], worked = [];
   const fb = () => { const f = document.getElementById('feedback'); return {
       right: f.classList.contains('correct-fb'), wrong: f.classList.contains('wrong-fb'), text: f.textContent }; };
   const open = (lv, q, ph) => { G.set(lv, q); G.showQuestion(); if (ph === 'p2') G.toPhase2(q); };
   const vis = el => !!el && el.getClientRects().length > 0 && getComputedStyle(el).display !== 'none';
-  // The Why card as a student sees it: is a copy showing, its slip sentence, and its working with each KaTeX fraction
-  // read back from its TeX source (\tfrac{30}{40} -> 30/40), so it can be compared with the stored text.
+  // A worked answer as drawn: its text with each KaTeX run read back as its TeX source (work), and the words alone,
+  // the KaTeX taken out (plain), where no a/b may be left.
+  const read = el => {
+    const k = el.cloneNode(true), p = el.cloneNode(true);
+    k.querySelectorAll('.katex').forEach(x => { const a = x.querySelector('annotation');
+      x.replaceWith(document.createTextNode(a ? a.textContent : '?')); });
+    p.querySelectorAll('.katex').forEach(x => x.remove());
+    return { work: k.textContent, plain: p.textContent };
+  };
+  const panel = () => { const e = document.querySelector('#explanation p'); return e && vis(e) ? read(e) : null; };
+  // The Why card as a student sees it: is a copy showing, its slip sentence, and its working read back.
   const card = () => {
     const c = [...document.querySelectorAll('#whyRow > .maffs-ref')].find(vis);
     if (!c) return { shown: false, slip: '', work: '' };
@@ -826,7 +898,7 @@ SWEEP_JS = r"""(free) => {
         x.replaceWith(document.createTextNode(a ? a.textContent : '?')); });
       work = k.textContent;
     }
-    return { shown: true, slip: s ? s.textContent : '', work: work };
+    return Object.assign({ shown: true, slip: s ? s.textContent : '' }, w ? read(w) : { work: '', plain: '' });
   };
   const pick = o => [...document.querySelectorAll('#answerArea .mcq-btn')].find(b => b.dataset.latex === o);
   for (const lv of Object.keys(G.Q)) G.Q[lv].forEach((q) => {
@@ -844,6 +916,8 @@ SWEEP_JS = r"""(free) => {
           if (ph === 'p1' && opt !== pd.options[0]) why.push([q.id, ph, opt, card()]);
           if (ph === 'p2' && opt !== pd.options[0] && card().shown)
             out.push([q.id, ph, opt, 'the Why card shows after the first wrong try (Phase 2 has two)']);
+          if (ph === 'p2' && opt !== pd.options[0]) hint.push([q.id, opt, r.text, r.wrong]);
+          if (ph === 'p2' && opt === pd.options[0]) worked.push([q.id, ph, opt, panel()]);
         }
         if (ph === 'p2') for (const opt of pd.options.slice(1)) {
           // Phase 2 ends wrong on the second wrong try: the card names the last pick.
@@ -876,10 +950,11 @@ SWEEP_JS = r"""(free) => {
         const c = card();
         if (got !== 'wrong' && c.shown) out.push([q.id, ph, typed, 'the Why card shows after a ' + got + ' answer']);
         if (got === 'wrong' && typed in f.expect) why.push([q.id, ph, typed, c]);
+        if (got === 'right' && ph === 'p2') worked.push([q.id, ph, typed, panel()]);
       }
     }
   });
-  return { out: out, why: why };
+  return { out: out, why: why, hint: hint, worked: worked };
 }"""
 
 
@@ -892,6 +967,60 @@ def hook(html):
     return h[:m[0].start()] + '\n' + HOOK + h[m[0].start():]
 
 
+def tex_text(s):
+    r"""A worked answer's KaTeX read back as text: \dfrac{a}{b} -> a/b, \approx -> ≈, \text{w} -> w and so on."""
+    out, i = [], 0
+    def group(j):
+        depth, k = 0, j
+        while True:
+            depth += {'{': 1, '}': -1}.get(s[k], 0)
+            k += 1
+            if depth == 0:
+                return s[j + 1:k - 1], k
+    while i < len(s):
+        if s.startswith('\\dfrac', i) or s.startswith('\\tfrac', i):
+            a, i = group(i + 6)
+            b, i = group(i)
+            out.append(tex_text(a) + '/' + tex_text(b))
+        elif s.startswith('\\text', i):
+            a, i = group(i + 5)
+            out.append(a)
+        elif s.startswith('{,}', i):
+            out.append(','); i += 3
+        else:
+            m = re.match(r'\\(approx|neq|times|mid|cap|%)', s[i:])
+            if m:
+                out.append({'approx': '≈', 'neq': '≠', 'times': '×', 'mid': '|', 'cap': '∩', '%': '%'}[m.group(1)])
+                i += len(m.group(0))
+            else:
+                out.append(s[i]); i += 1
+    return ''.join(out)
+
+
+def work_faults(fails, lab, c, stored):
+    """A worked answer as drawn: the stored text exactly (spacing aside), and no a/b left in the words."""
+    if re.sub(r'\s+', '', tex_text(c['work'])) != re.sub(r'\s+', '', stored):
+        fails.append('%s: the worked answer reads %r, not the stored %r' % (lab, tex_text(c['work'])[:90], stored[:90]))
+    if re.search(r'\d\s*/\s*\d', c['plain']):
+        fails.append('%s: the worked answer shows an ASCII fraction: %r' % (lab, c['plain'][:90]))
+
+
+def hint_faults(fails, hints):
+    """After a first wrong pick in Phase 2: the slip's sentence as a hint (or "Not quite."), then the second try."""
+    for id_, opt, text, wrong in hints:
+        want = (MC_SLIPS.get((id_, 'p2'), {}).get(opt) or 'Not quite.') + ' One more try, for 1 point.'
+        if text.strip() != want:
+            fails.append('%s p2 in Chromium: first wrong pick %s: the feedback reads %r, not %r' % (id_, opt, text[:120], want))
+        TALLY[('first-try hints', 'p2', named_family(id_, opt))] = TALLY.get(('first-try hints', 'p2', named_family(id_, opt)), 0) + 1
+
+
+HINT_FAMILY = {}   # (id, wrong option) -> its Phase 2 family, for the hint tally
+
+
+def named_family(id_, opt):
+    return HINT_FAMILY.get((id_, opt)) or '(none: "Not quite.")'
+
+
 def why_faults(fails, seen, free, ex_text):
     """Every wrong answer's Why card: shown, its working the phase's stored explanation (Phase 2's unchanged), and its
     slip sentence exactly the one this verifier's own classification gives (or none)."""
@@ -900,10 +1029,8 @@ def why_faults(fails, seen, free, ex_text):
         if not c['shown']:
             fails.append('%s %s in Chromium: wrong answer %s: no Why card' % (id_, ph, wrong))
             continue
-        work = re.sub(r'\\tfrac\{([^{}]*(?:\{,\}[^{}]*)*)\}\{([^{}]*(?:\{,\}[^{}]*)*)\}', r'\1/\2', c['work']).replace('{,}', ',')
-        if work != ex_text[(id_, ph)]:
-            fails.append('%s %s in Chromium: wrong answer %s: the Why card shows %r, not the stored working %r'
-                         % (id_, ph, wrong, work[:90], ex_text[(id_, ph)][:90]))
+        work = tex_text(c['work'])
+        work_faults(fails, '%s %s in Chromium: wrong answer %s: the Why card' % (id_, ph, wrong), c, ex_text[(id_, ph)])
         if (id_, ph) in MC_SLIPS:
             want = MC_SLIPS[(id_, ph)].get(wrong)
         else:
@@ -914,7 +1041,7 @@ def why_faults(fails, seen, free, ex_text):
         if (id_, ph, wrong) in EXAMPLE_SLIP and EXAMPLE_SLIP[(id_, ph, wrong)] not in c['slip']:
             fails.append('%s %s in Chromium: wrong answer %s: the card does not name the contract\'s slip %r: %r'
                          % (id_, ph, wrong, EXAMPLE_SLIP[(id_, ph, wrong)], c['slip']))
-        if (id_, ph) in EXAMPLE_WORK and work != EXAMPLE_WORK[(id_, ph)]:
+        if (id_, ph) in EXAMPLE_WORK and re.sub(r'\s+', '', work) != re.sub(r'\s+', '', EXAMPLE_WORK[(id_, ph)]):
             fails.append('%s %s in Chromium: the card shows %r, not the contract\'s %r' % (id_, ph, work, EXAMPLE_WORK[(id_, ph)]))
         if c['slip'] != want:
             fails.append('%s %s in Chromium: wrong answer %s: the Why card names %r; by computation it is %r'
@@ -954,6 +1081,15 @@ def play(fails, html, free, ex_text):
                 fails.append('%s%s in Chromium: %s%s' % (lab, ' (%s)' % AUDIT[(id_, ph)] if (id_, ph) in AUDIT else '',
                                                           ('typed %s: ' % typed) if typed else '', what))
             why_faults(fails, got['why'], free, ex_text)
+            hint_faults(fails, got['hint'])
+            for (id_, opt), want in EXAMPLE_HINT.items():
+                if not any(h[0] == id_ and h[1] == opt and h[2].strip() == want for h in got['hint']):
+                    fails.append('%s p2 in Chromium: first wrong pick %s does not show the contract\'s %r' % (id_, opt, want))
+            for id_, ph, typed, c in got['worked']:
+                if c is None:
+                    fails.append('%s %s in Chromium: right answer %s: no Worked Answer shown' % (id_, ph, typed))
+                else:
+                    work_faults(fails, '%s %s in Chromium: right answer %s: the Worked Answer' % (id_, ph, typed), c, ex_text[(id_, ph)])
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -1100,9 +1236,12 @@ def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, 
     fails = []
     TALLY.clear()
     del UNNAMED[:]
+    del COMPUTED[:]
     bank = load_bank(html)
     if bank is None:
         return ['bank: QUESTIONS not found in the page'], 0
+    if 'inferGreyOut' in html:
+        fails.append('page: inferGreyOut is back: every fade must come from the item\'s stored phase2.greyOut')
     free = check_bank(fails, bank)
     ex_text = {(q['id'], ph): q[key].get('explanation', '') for lv in bank for q in bank[lv]
                for ph, key in (('p1', 'phase1'), ('p2', 'phase2'))}
@@ -1117,6 +1256,70 @@ def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, 
 
 FIT_REPORT = []
 
+
+# inferGreyOut as it was on main before GIVEN-THAT-POLISH (873befe), for the plant that restores it.
+OLD_INFER = (
+    '/* ---------- INFER GREY-OUT for non-GCSE questions ---------- */\n'
+    'function inferGreyOut(q){\n'
+    '  if(q.phase2.greyOut)return; // already set\n'
+    '  const d=q.data;\n'
+    '  const cond=q.phase2.condition.toLowerCase();\n'
+    "  if(d.type==='table'){\n"
+    '    // Try to match condition to a column name using word-boundary-aware matching\n'
+    '    const matchedCols=[];\n'
+    '    d.cols.forEach(c=>{\n'
+    '      const cl=c.toLowerCase();\n'
+    '      // Use word boundary regex to avoid "male" matching inside "female"\n'
+    "      const re=new RegExp('\\\\b'+cl.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')+'\\\\b');\n"
+    '      if(re.test(cond))matchedCols.push(c);\n'
+    '    });\n'
+    '    if(matchedCols.length===1){\n'
+    '      const others=d.cols.filter(c=>c!==matchedCols[0]);\n'
+    "      q.phase2.greyOut=others.map(c=>'col_'+c).join(',');\n"
+    '    } else if(matchedCols.length>1){\n'
+    '      // Multiple matches — try exact match (longest match wins)\n'
+    '      const sorted=[...matchedCols].sort((a,b)=>b.length-a.length);\n'
+    '      const best=sorted[0];\n'
+    '      const others=d.cols.filter(c=>c!==best);\n'
+    "      q.phase2.greyOut=others.map(c=>'col_'+c).join(',');\n"
+    '    }\n'
+    "  } else if(d.type==='venn'){\n"
+    '    // For Venn, condition typically references set A or set B\n'
+    '    const labelA=d.setA.label.toLowerCase();\n'
+    '    const labelB=d.setB.label.toLowerCase();\n'
+    '    if(cond.includes(labelA)&&!cond.includes(labelB)){\n'
+    "      q.phase2.greyOut='onlyB,neither';\n"
+    '    } else if(cond.includes(labelB)&&!cond.includes(labelA)){\n'
+    "      q.phase2.greyOut='onlyA,neither';\n"
+    "    } else if(cond.includes('a ')||cond.includes('a)')||cond==='event a occurs'||cond.includes(' a ')){\n"
+    "      q.phase2.greyOut='onlyB,neither';\n"
+    "    } else if(cond.includes('b ')||cond.includes('b)')||cond.includes(' b ')){\n"
+    "      q.phase2.greyOut='onlyA,neither';\n"
+    '    }\n'
+    "  } else if(d.type==='tree'){\n"
+    '    // For trees, check if the condition matches exactly ONE main branch\n'
+    '    const branches=d.branches.filter(b=>b.value>0);\n'
+    '    // Use word-boundary matching on the branch label (strip parenthetical percentages)\n'
+    '    const matchedBranches=branches.filter(b=>{\n'
+    "      const bl=b.label.toLowerCase().split('(')[0].trim();\n"
+    '      if(bl.length<2)return false; // skip very short labels\n'
+    "      const re=new RegExp('\\\\b'+bl.replace(/[.*+?^${}()|[\\]\\\\]/g,'\\\\$&')+'\\\\b');\n"
+    '      return re.test(cond);\n'
+    '    });\n'
+    '    if(matchedBranches.length===1){\n'
+    '      // Condition IS this branch — grey others\n'
+    '      const others=branches.filter(b=>b!==matchedBranches[0]);\n'
+    "      q.phase2.greyOut=others.map(b=>'branch_'+b.label).join(',');\n"
+    '    } else {\n'
+    '      // Condition might be a leaf outcome (e.g. "tests positive", "defective")\n'
+    '      // Find which leaf label matches, then we need to keep all branches that lead to that outcome\n'
+    "      // In this case we don't grey branches — all branches are relevant for Bayes' theorem\n"
+    '      // No grey-out needed (all branches contribute to the condition)\n'
+    '    }\n'
+    '  }\n'
+    '}\n'
+    '\n'
+)
 
 PLANTS = [
     ('alevel_18 p2', 'r-001: only-P 20 drawn beside a P total of 60',
@@ -1148,6 +1351,13 @@ PLANTS = [
     # GIVEN-THAT-VENN-FADE's two (contract step 3).
     ('gcse_06 p2', "the Venn's fade rule removed", '.venn-label.greyed,.venn-set-label.greyed{opacity:0.2}', ''),
     ('gcse_03 p2', "a greyOut fading the condition's own column (Bus)", 'greyOut:"col_Car,col_Cycle"', 'greyOut:"col_Bus,col_Cycle"'),
+    # GIVEN-THAT-POLISH's (contract step 6; the first above is its "a stored greyOut that fades inside the condition").
+    ('core_01 p2', 'a non-Bayes item stored "none"', 'phase2:{greyOut:"col_Yes",condition:"the casualty',
+     'phase2:{greyOut:"none",condition:"the casualty'),
+    ('~inferGreyOut is back', "inferGreyOut restored, core_09's stored greyOut removed",
+     [('phase2:{greyOut:"col_< 2 hours,col_2-4 hours",condition:"the teenager', 'phase2:{condition:"the teenager'),
+      ('/* ---------- RENDER ANSWER AREA ---------- */', OLD_INFER + '/* ---------- RENDER ANSWER AREA ---------- */'),
+      ('  // Grey-out animation\n', '  inferGreyOut(q);\n  // Grey-out animation\n')], None),
 ]
 # The stage each plant needs: the bank's own checks catch most; marking and slips need the play; the layout the fit.
 PLANT_STAGES = {'r-002/r-003: marked within 0.005, no precision': ('play',),
@@ -1172,21 +1382,21 @@ def main():
     plants = [] if args.no_selftest or args.against else ['plant: ' + p[1] for p in PLANTS]
     mine = shard.pick(checks + plants)
     html = open(args.against or GAME, encoding='utf-8').read()
-    fails, report, n, tally, unnamed = [], [], 0, {}, []
+    fails, report, n, tally, unnamed, computed = [], [], 0, {}, [], []
     for u in checks:
         if u not in mine:
             continue
         with shard.unit(u):
             if u == 'bank and play':
                 f, n = run(html, ('bank', 'play'))
-                tally, unnamed = dict(TALLY), list(UNNAMED)
+                tally, unnamed, computed = dict(TALLY), list(UNNAMED), list(COMPUTED)
             elif u == 'fade':
                 f, n = run(html, ('bank', 'fade'))
-                print('  fade: %d items into Phase 2 at %s, with and without reduced motion; judged against SPEC: %d'
-                      % (n, ', '.join('%dx%d' % s for s in FADE_SIZES), n - len(NO_FADE)))
-                print('  no fade in Phase 2 (%d; reported, not failed):' % len(NO_FADE))
-                for g, ids in NO_FADE_GROUPS.items():
-                    print('    %s (%d): %s' % (g, len(ids), ', '.join(ids)))
+                bk = load_bank(html) or {}
+                bayes = [q['id'] for lv in bk for q in bk[lv] if fade_group(q) is None]
+                print('  fade: %d items into Phase 2 at %s, with and without reduced motion, every one judged against '
+                      'SPEC: %d fade their condition\'s outside, %d Bayes trees store "none" (by design): %s'
+                      % (n, ', '.join('%dx%d' % s for s in FADE_SIZES), n - len(bayes), len(bayes), ', '.join(bayes)))
             else:
                 w, h = (int(x) for x in u.split()[1].split('x'))
                 f, n = run(html, ('bank', 'fit'), [(w, h)])
@@ -1200,6 +1410,7 @@ def main():
         for (where, ph, fam), k in sorted(tally.items()):
             print('    %-13s %s %-10s %d' % (where, ph, fam, k))
         print('  GCSE options with no slip sentence (%d): %s' % (len(unnamed), ', '.join(unnamed)))
+        print('  wrong values whose sentence names what was computed (%d): %s' % (len(computed), ', '.join(computed)))
     if report:
         print('  reported, not gated (%d): the tightest asking screen at each size, Next below the fold on a phone, '
               'and the parked items' % len(report))
@@ -1210,12 +1421,20 @@ def main():
         if 'plant: ' + what not in mine:
             continue
         with shard.unit('plant: ' + what):
-            if html.count(old) != 1:
-                print('  self-test %-48s *** CANNOT PLANT (%d) ***' % (what, html.count(old)))
+            pairs = old if isinstance(old, list) else [(old, new)]
+            planted = html
+            for o, n_ in pairs:
+                if planted.count(o) != 1:
+                    break
+                planted = planted.replace(o, n_)
+            else:
+                o = None
+            if o is not None:
+                print('  self-test %-48s *** CANNOT PLANT (%d) ***' % (what, planted.count(o)))
                 ok = False
                 continue
             stages = ('bank',) + PLANT_STAGES.get(what, ())
-            rep, _ = run(html.replace(old, new), stages, [(320, 568)], (False,))
+            rep, _ = run(planted, stages, [(320, 568)], (False,))
             hit = [f for f in rep if (tag[1:] in f if tag.startswith('~') else f.startswith(tag))]
             ok = ok and bool(hit)
             print('  self-test %-48s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))

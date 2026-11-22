@@ -16,6 +16,19 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-22 (home): GIVEN-THAT-POLISH (a first-try hint, full-size fractions, slip lines that say what was computed, KaTeX in every worked answer, every fade stored)
+
+Claude Code (home lane), worktree `~/mg-gtp`, branch `claude/given-that-polish`; contract `docs/handover/contracts/2026-11-22-given-that-polish.md` (verbatim). The first commit carries GIVEN-THAT-VENN-FADE's close-out (#879, 873befe).
+
+- STOP checks: no STOP. Every SPEC condition other than the 27 Bayes trees is a Venn set, a table column or row, or a tree branch. The 25 stored GCSE greyOuts agree with SPEC on main (as #879 proved).
+- Hint: a first wrong Phase 2 pick shows the slip's sentence, or "Not quite.", then "One more try, for 1 point." (71 named, 4 "Not quite."). Scoring, tries and analytics are unchanged.
+- Fractions: `big()` sets every stored \tfrac as \dfrac at display, in options and feedback. Stored strings and dataset.latex are unchanged. The picked and correct options are no longer dimmed once spent.
+- Worked answers: one renderer, `work()`, typesets P(...), a/b, = ≈ ≠ + in both phases' explanations (the Why card and the Worked Answer panel). The verifier reads each one back from its KaTeX: it must be the stored text, with no a/b left.
+- Slip lines: the conditional families (Phase 1 "cond", Phase 2 "reversed") now start "That's X among Y only, P(X | Y).", in the item's labels. This is only where one group is pinned down, and not where a label is a bare Yes/No (it names nothing without its header). 24 GCSE options and 355 typed wrong ratios.
+- Fade: phase2.greyOut is stored on all 90 items ("none" on the 27 Bayes trees); inferGreyOut is deleted. Tables carry data-row and data-col on every cell, so rows fade. Totals rule, from SPEC: the reduced sample space is the condition's group and its own total. For a column condition, the other columns, the Total column and the grand total fade, and the condition column's total stays. For a row condition, the same with rows. A Venn's "Total" and a tree's root fade too.
+- The open Why card's thresholds were re-measured for the taller card. Needs: 827 at 320 wide, 1183 for 601 to 899, 854 at 900, 797 from 1200. New thresholds: 860, 1220, 890, 830. It is collapsed at all five fit sizes, which fit. Reported (not gated) Next below the fold on phones rose from 592 to 916 entries, all in Aa.
+- Verifier: 13 plants, all caught. The 3 new: core_01 stored "none"; inferGreyOut restored with core_09's greyOut removed; the stored fade inside the condition (gcse_03's Bus, from #879).
+
 ## 2026-11-22 (home): GIVEN-THAT-VENN-FADE and DOCS-TRUTH (Given That's Phase 2 fade made real and proved; two stale doc lines)
 
 Claude Code (home lane), worktree `~/mg-gtv`, branch `claude/given-that-venn-fade`; contract `docs/handover/contracts/2026-11-22-given-that-venn-fade.md` (verbatim, with the ruling on the STOP below it). The first commit carries COMPLEX-CONVERTER-WHY's MERGED line (#874, 842aa2e).
