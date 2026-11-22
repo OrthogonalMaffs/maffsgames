@@ -27,7 +27,7 @@
   "Checks stay offline (bank_common.offline: with the network dead a page still loads, its KaTeX from scripts/fonts/; no script's route leaves KaTeX to the CDN; the old route planted and caught)": "72",
   "Child-look fragment (schools/assets/kids-look.js, MaffsKids: the #kids and #kids/<name> rule, the class page's bare #<name>, the \"no second Class\" greeting, the game and class links; nothing stored, sent or made global but MaffsKids; the class page's cards current with data/games.json; the class-name privacy rule; planted faults caught)": "64",
   "Circle Theorem Spotter (every calculation key re-solved, SymPy + arc wording vs figure; each tangent angle drawn on the side the theorem needs, in Chromium)": "35",
-  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium)": "1",
+  "Complex Converter (every key equal to its given number, the principal argument stated and keyed, no option a second form of the key; every option marked in Chromium; every wrong answer's Why card recomputed and its slip checked; the back link clear of every header)": "3",
   "Component Crusher (every key from what the student is shown, diagrams measured from the canvas, marking through MaffsAnswer in Chromium)": "6",
   "Constructions Lab (no marking to check: every task's figure, labels and stated results verified by constructing all ten with the game's own compass and ruler in Chromium)": "12",
   "Context size (CLAUDE.md, AGENTS.md and both handovers at most 20 KB, a warning past 18 KB; docs/todo.md at most 105 KB, a warning on any row over 1,200 characters; canon reported; contracts CTX, TODO-SLIM, GATE-RESUME and TODO-TRIM)": "63",
@@ -302,7 +302,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
