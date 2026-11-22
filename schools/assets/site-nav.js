@@ -52,7 +52,12 @@
     '/parents/simultaneous-equations/': 'the guide',
     '/parents/standard-form/': 'the guide',
     '/parents/statistics-data/': 'the guide',
-    '/parents/trigonometry/': 'the guide'
+    '/parents/trigonometry/': 'the guide',
+    // The "When will I use this?" topic pages link their games under "Practise it" (WHEN-WILL-I-USE-THIS, Jon 22 Nov 2026).
+    '/when-will-i-use-this/ratio/': 'the topic page',
+    '/when-will-i-use-this/percentages/': 'the topic page',
+    '/when-will-i-use-this/area-perimeter/': 'the topic page',
+    '/when-will-i-use-this/averages/': 'the topic page'
   };
   var KEY = 'maffs-nav:';
   var LOGO = { left: 16, top: 16, size: 40, clear: 16 };   // px: where the logo sits, and the space it keeps clear

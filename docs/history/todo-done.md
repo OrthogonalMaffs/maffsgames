@@ -4020,3 +4020,11 @@ Row WRONG-PAUSE-REASONS, its clause under **Answer shown, no reason:**, moved wo
 | DD-LINEUP-FEEDBACK | **Decimal Detective: after a wrong answer, Next ends below the fold on small phones** (found by ESSENTIALS-AUDIT-LEFTOVERS PR 2, #776, 15 Nov 2026): Line-Up's Next Case at 799 at 320×568 (fold 528) and 770 at 375×667 (fold 627); Round Up's 548 at 320×568. NEXT-IN-VIEW (19 Nov 2026, Jon's ruling): MaffsNext.wrong() now scrolls Next into reach, which is not fitting; measured in page coordinates the layout is unchanged, so this stays open. Part (1), the right order shown after a wrong Line-Up, is done (DD-LINEUP-ORDER, 18 Nov 2026); history in `docs/history/todo-done.md` under DD-LINEUP-FEEDBACK. | cloud lane |
 
 **Closed 22 Nov 2026 (DECIMAL-DETECTIVE-FIT).** Row DD-LINEUP-FEEDBACK, moved word for word above. The page's own phone layout now fits: after a wrong answer Next Case ends above the fold on every item of every type at 320x568, 375x667 and 390x844 in normal and Aa mode and on both laptop sizes, measured in page coordinates by `scripts/verify-decimal-detective.py`'s fit units, with the right order shown in full (no collapse). decimal-detective is off every list in `scripts/phone-fit-state.json`.
+
+## Part closed by WHEN-WILL-I-USE-THIS (22 Nov 2026)
+
+Row WHEN-WILL-I-USE-THIS as it stood, word for word:
+
+| WHEN-WILL-I-USE-THIS | WHEN-WILL-I-USE-THIS — a 'When will I use this?' section: for each area of maths, where it appears in real life and careers, by topic and by vocational route (Skills England's 15 routes), each scenario sourced and linked to the games that practise it; as many areas of maths as possible (Jon, 10 Nov 2026). Spec: Project Claude (draft 10 Nov), then contract. | **Project Claude** (spec) |
+
+Its owner cell, **Project Claude** (spec), is done. The spec was approved (Jon, 10 Nov 2026) and the pilot build is the contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md`; the row now reads "pilot in build". The rest of the row stays.

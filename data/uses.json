@@ -1,0 +1,284 @@
+{
+ "_comment": [
+  "THE source of the \"When will I use this?\" section (contract WHEN-WILL-I-USE-THIS, Jon, 10 and 22 Nov 2026).",
+  "scripts/build-uses.py writes every page under when-will-i-use-this/ from this file; scripts/check-uses.py (CI) fails a page that differs,",
+  "  and recomputes every worked step with \"=\". Never edit a generated page: edit this file, run build-uses.py, then check-uses.py.",
+  "topics: slug, title, answer (the one-line answer), keywords (matched exactly against data/games.json's game keywords for \"Practise it\";",
+  "  only live games, outside the roster's Unlisted and Withdrawn sections), parentGuide (a folder under parents/, or null).",
+  "routes: the 15 Skills England routes, slug and exact name. A route page is written only for a route with a scenario.",
+  "scenarios: id, topic, route (a route slug, or null), job, text, steps, sources [{title, url, type}], exampleFigures.",
+  "  The scenarios' text and steps are the approved wording (10 Nov 2026), verbatim: never reword them to fit the format.",
+  "  A step is a string, or {\"text\": ..., \"noCheck\": \"<one-line reason>\"} when check-uses.py cannot read one of its \"=\" signs.",
+  "  exampleFigures is true exactly when the wording marks a figure \"(example figure)\" or \"(example figures)\".",
+  "  Only source type \"public\" is valid in v1 (a contributor type needs Jon's ruling on consent and naming)."
+ ],
+ "topics": [
+  {
+   "slug": "ratio",
+   "title": "Ratio",
+   "answer": "Whenever things have to be mixed in the right amounts.",
+   "keywords": ["ratio", "sharing in a ratio"],
+   "parentGuide": "ratio-proportion"
+  },
+  {
+   "slug": "percentages",
+   "title": "Percentages",
+   "answer": "Every time a price, a strength or a limit is 'per hundred'.",
+   "keywords": ["percentage", "percentage of an amount"],
+   "parentGuide": null
+  },
+  {
+   "slug": "area-perimeter",
+   "title": "Area and perimeter",
+   "answer": "Whenever you cover, paint, plant or mark out a space.",
+   "keywords": ["area", "perimeter"],
+   "parentGuide": "area-perimeter"
+  },
+  {
+   "slug": "averages",
+   "title": "Averages and statistics",
+   "answer": "Whenever one reading isn't enough to trust.",
+   "keywords": ["average", "median", "mean from a frequency table"],
+   "parentGuide": "averages"
+  }
+ ],
+ "routes": [
+  {"slug": "agriculture", "name": "Agriculture, environmental and animal care"},
+  {"slug": "business", "name": "Business and administration"},
+  {"slug": "care", "name": "Care services"},
+  {"slug": "catering", "name": "Catering and hospitality"},
+  {"slug": "construction", "name": "Construction and the built environment"},
+  {"slug": "creative", "name": "Creative and design"},
+  {"slug": "digital", "name": "Digital"},
+  {"slug": "education", "name": "Education and childcare"},
+  {"slug": "engineering", "name": "Engineering and manufacturing"},
+  {"slug": "hair-and-beauty", "name": "Hair and beauty"},
+  {"slug": "health-and-science", "name": "Health and science"},
+  {"slug": "legal-and-finance", "name": "Legal, finance and accounting"},
+  {"slug": "protective-services", "name": "Protective services"},
+  {"slug": "sales-and-marketing", "name": "Sales, marketing and procurement"},
+  {"slug": "transport", "name": "Transport and logistics"}
+ ],
+ "scenarios": [
+  {
+   "id": "bricklayer",
+   "topic": "ratio",
+   "route": "construction",
+   "job": "Bricklayer",
+   "text": "Concrete for a shed base is often mixed 1 : 2 : 3: 1 part cement, 2 parts sand, 3 parts gravel, in buckets of the same size. You need 0.3 m³ of dry mix.",
+   "steps": [
+    "Total parts: 1 + 2 + 3 = 6.",
+    "One part: 0.3 ÷ 6 = 0.05 m³.",
+    "Cement 0.05 m³, sand 0.10 m³, gravel 0.15 m³."
+   ],
+   "sources": [
+    {"title": "Jewson, \"How to make concrete\"", "url": "https://www.jewson.co.uk/expert-advice/project-advice/how-to-make-concrete", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "hairdresser",
+   "topic": "ratio",
+   "route": "hair-and-beauty",
+   "job": "Hairdresser",
+   "text": "Colour is mixed with developer in the ratio the maker gives. Wella's Koleston Perfect is mixed 1 : 1, but its Special Blonde shades are mixed 1 : 2. You use 40 g of a Special Blonde shade.",
+   "steps": [
+    {"text": "Colour : developer = 1 : 2.", "noCheck": "A ratio, not a sum: there is nothing on the left to recompute."},
+    "Developer = 40 × 2 = 80 g."
+   ],
+   "sources": [
+    {"title": "Wella Professionals, Koleston Perfect usage booklet", "url": "https://www.wella.com/professional/m/_master/products/koleston_perfect/pdfs/kp_usagebooklet.pdf", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "hospital-nurse",
+   "topic": "ratio",
+   "route": "health-and-science",
+   "job": "Hospital nurse",
+   "text": "Liquid medicine comes at a strength, such as 250 mg in 5 ml. Nurses use: volume = what you want ÷ what you have × what it is in. The prescription is 125 mg. The bottle says 250 mg in 5 ml.",
+   "steps": [
+    "125 ÷ 250 = 0.5.",
+    "0.5 × 5 = 2.5 ml."
+   ],
+   "sources": [
+    {"title": "Gloucestershire Hospitals NHS Foundation Trust, Intravenous Drug and Fluid Administration Training: calculation practice formulae", "url": "https://www.gloshospitals.nhs.uk/media/documents/IV_Drug_Calculation_Test_practice_papers.pdf", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "plumber",
+   "topic": "percentages",
+   "route": "construction",
+   "job": "Plumber",
+   "text": "A VAT-registered plumber adds 20% VAT to the bill. To add 20%, multiply by 1.2. The job costs £350 before VAT.",
+   "steps": [
+    "£350 × 1.2 = £420.",
+    "The VAT is £70."
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"VAT rates\" (rate checked 10 Nov 2026)", "url": "https://www.gov.uk/vat-rates", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "electrician",
+   "topic": "percentages",
+   "route": "construction",
+   "job": "Electrician",
+   "text": "Voltage drops along a long cable. The wiring rules (BS 7671) allow at most 3% on a lighting circuit and 5% on others. The UK supply is 230 V.",
+   "steps": [
+    {"text": "Most allowed on lighting: 3% of 230 = 0.03 × 230 = 6.9 V.", "noCheck": "\"3% of 230\" uses \"of\", which the check does not read; 0.03 × 230 = 6.9 is still recomputed."},
+    "A lighting circuit drops 5.4 V. As a percentage: 5.4 ÷ 230 × 100 = 2.3%.",
+    "2.3% is under 3%, so it passes."
+   ],
+   "sources": [
+    {"title": "NICEIC, \"Calculating voltage drop\" (Professional Electrician), citing BS 7671 Appendix 4", "url": "https://professional-electrician.com/?p=22546", "type": "public"},
+    {"title": "Skills England, Installation and maintenance electrician (OCC0152), route Construction and the built environment", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0152", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "baker",
+   "topic": "percentages",
+   "route": "catering",
+   "job": "Baker",
+   "text": "Bakers write recipes in \"baker's percentages\": the flour is always 100%, and everything else is a percentage of the flour's weight. A dough is 70% water and 2% salt. You use 500 g of flour.",
+   "steps": [
+    {"text": "Water: 70% of 500 = 0.7 × 500 = 350 g.", "noCheck": "\"70% of 500\" uses \"of\", which the check does not read; 0.7 × 500 = 350 is still recomputed."},
+    {"text": "Salt: 2% of 500 = 0.02 × 500 = 10 g.", "noCheck": "\"2% of 500\" uses \"of\", which the check does not read; 0.02 × 500 = 10 is still recomputed."}
+   ],
+   "sources": [
+    {"title": "King Arthur Baking, \"Baker's percentage\"", "url": "https://www.kingarthurbaking.com/pro/bakers-percentage", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "jeweller",
+   "topic": "percentages",
+   "route": "creative",
+   "job": "Jeweller",
+   "text": "Gold is measured in carats out of 24. 9 carat gold is 9 parts gold in 24. The UK hallmark writes it as 375: 375 parts gold in every 1000.",
+   "steps": [
+    "9 ÷ 24 = 0.375, which is 37.5%.",
+    "A 9 carat ring weighs 4 g. Gold in it: 4 × 0.375 = 1.5 g."
+   ],
+   "sources": [
+    {"title": "Assay Office London, hallmarking guidance", "url": "https://www.assayofficelondon.co.uk/media/3227/hallmarking-guidance-leaflet-2022.pdf", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "painter-decorator",
+   "topic": "area-perimeter",
+   "route": "construction",
+   "job": "Painter and decorator",
+   "text": "A room is 4 m by 3.5 m, with walls 2.5 m high. There is a 2 m² door and a 3.5 m² window. Two coats; the tin says 1 litre covers 16 m² (example figure).",
+   "steps": [
+    "Perimeter: 4 + 3.5 + 4 + 3.5 = 15 m.",
+    "Wall area: 15 × 2.5 = 37.5 m².",
+    "Take away door and window: 37.5 − 5.5 = 32 m².",
+    "Two coats: 64 m². Paint: 64 ÷ 16 = 4 litres."
+   ],
+   "sources": [
+    {"title": "Dulux, \"How much paint do you need?\"", "url": "https://www.dulux.co.uk/en/expert-help/how-much-paint-do-you-need", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "groundsperson",
+   "topic": "area-perimeter",
+   "route": "agriculture",
+   "job": "Groundsperson (sports turf)",
+   "text": "Groundspeople mark out pitches. The FA's recommended adult pitch is 100 m long and 64 m wide.",
+   "steps": [
+    "Lines round the edge (perimeter): 2 × (100 + 64) = 328 m of white line.",
+    "Grass to cut (area): 100 × 64 = 6400 m²."
+   ],
+   "sources": [
+    {"title": "The FA, \"Guide to pitch and goalpost dimensions\"", "url": "https://www.thefa.com/-/media/cfa/hampshirefa/files/facilities/pitch-and-goalpost-safety.ashx", "type": "public"},
+    {"title": "Skills England, Sports turf operative standard (ST0210), which lists marking out playing surfaces", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0210", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "farmer",
+   "topic": "area-perimeter",
+   "route": "agriculture",
+   "job": "Farmer",
+   "text": "Fertiliser is spread at a rate in kg per hectare. 1 hectare = 10 000 m². A field is 250 m by 120 m; the plan is 150 kg per hectare (example figure).",
+   "steps": [
+    {"text": "Area: 250 × 120 = 30 000 m² = 3 ha.", "noCheck": "30 000 m² = 3 ha is a change of unit (1 hectare = 10 000 m²), not a sum; 250 × 120 = 30 000 is still recomputed."},
+    "Fertiliser: 3 × 150 = 450 kg."
+   ],
+   "sources": [
+    {"title": "AHDB, Nutrient Management Guide (RB209), which gives every rate in kg/ha", "url": "https://ahdb.org.uk/news/latest-edition-of-nutrient-management-guide-rb209-now-available", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "practice-nurse",
+   "topic": "averages",
+   "route": "health-and-science",
+   "job": "Practice nurse",
+   "text": "One blood pressure reading can mislead, so NICE says to take readings at home, twice a day for 4 to 7 days, ignore the first day, and use the mean of the rest. After day 1, the top (systolic) numbers are 138, 134, 136, 140, 132, 136 (example figures).",
+   "steps": [
+    "Add them: 816.",
+    "Mean: 816 ÷ 6 = 136.",
+    "The doctor compares that average, with the clinic reading, against NICE's limits."
+   ],
+   "sources": [
+    {"title": "NICE guideline NG136, Hypertension in adults", "url": "https://www.nice.org.uk/guidance/NG136/chapter/Recommendations", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "health-visitor",
+   "topic": "averages",
+   "route": "health-and-science",
+   "job": "Health visitor",
+   "text": "Babies' weights are plotted on growth charts with centile lines. A centile shows how many healthy children are expected to be below that line. A baby is on the 91st centile.",
+   "steps": [
+    "91 out of 100 healthy babies the same age are expected to weigh less.",
+    "100 − 91 = 9 out of 100 are expected to weigh more."
+   ],
+   "sources": [
+    {"title": "Royal College of Paediatrics and Child Health, UK-WHO growth charts", "url": "https://growth.rcpch.ac.uk/clinician/chart-information-health-staff/", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "ecologist",
+   "topic": "averages",
+   "route": "agriculture",
+   "job": "Ecologist",
+   "text": "You can't count every wild orchid in a meadow, so ecologists count them in a few 1 m² squares (quadrats) placed at random, and scale up. Ten quadrats count 3, 5, 2, 4, 6, 3, 4, 5, 2, 6 (example figures). The meadow is 1500 m².",
+   "steps": [
+    "Total: 40. Mean: 40 ÷ 10 = 4 orchids per m².",
+    "Estimate: 4 × 1500 = 6000 orchids."
+   ],
+   "sources": [
+    {"title": "Oak National Academy, \"Estimating population size using quadrats\"", "url": "https://thenational.academy/teachers/programmes/biology-secondary-ks4-higher-aqa/units/living-organisms-and-their-environments/lessons/estimating-population-size-using-quadrats-practical", "type": "public"},
+    {"title": "Skills England occupational map (Ecologist)", "url": "https://www.instituteforapprenticeships.org/media/3168/agriculture-environmental-animal-care-may-19.pdf", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "meteorologist",
+   "topic": "averages",
+   "route": null,
+   "job": "Meteorologist",
+   "text": "\"Warmer than average\" means compared with a 30-year average. The Met Office now uses 1991–2020.",
+   "steps": [
+    "UK mean temperature, 1961–1990: 8.3 °C. 1991–2020: 9.1 °C.",
+    "Change: 9.1 − 8.3 = 0.8 °C warmer.",
+    "How a mean works: five Julys of 19.2, 20.1, 18.7, 21.3 and 19.7 °C (example figures) total 99.0; mean 99.0 ÷ 5 = 19.8 °C."
+   ],
+   "sources": [
+    {"title": "Met Office, climate averages notes", "url": "https://www.metoffice.gov.uk/research/climate/maps-and-data/climate-averages", "type": "public"},
+    {"title": "Met Office, \"How have daily temperatures shifted in the UK's changing climate?\"", "url": "https://www.metoffice.gov.uk/blog/2023/how-have-daily-temperatures-shifted-in-the-uks-changing-climate", "type": "public"}
+   ],
+   "exampleFigures": true
+  }
+ ]
+}
