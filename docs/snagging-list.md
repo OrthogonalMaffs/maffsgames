@@ -48,6 +48,8 @@ Small, testable issues found during play-testing. Each entry should be small eno
 - **Related:** Google Search Console lists `/games/spot-the-error/` (and `?level=ks3`) as **Soft 404**, last crawled 19 Jul. Hold the indexing request until the content is fixed.
 - **Status:** Step 1 done, awaiting Jon's decision on Step 2
 
+## Fixed
+
 ### 1. Truth Will Set You Free (Level 4) — false "can be simplified" hint
 - **Game / URL:** `truth-will-set-you-free`, `?level=level4`
 - **Found:** 31 Aug 2026, by Jon
@@ -55,9 +57,7 @@ Small, testable issues found during play-testing. Each entry should be small eno
 - **Why it matters:** Platform principle is curriculum-serious, mathematically rigorous content. A false simplification claim shown as fact to students undermines that, and the cross-promo to Boolean Blitz is riding on an incorrect premise.
 - **Suspected cause (needs confirming):** Hint may fire unconditionally on every question in this game rather than checking whether the matched expression is actually reducible. If so, this is a template-level bug, not a one-off wrong string — check whether other already-minimal answers (e.g. any single-literal or two-literal AND/OR with no complements) trigger the same false hint.
 - **Suggested fix:** Suppress the "can be simplified" hint (and the Boolean Blitz link) when the correct expression is already in minimal SOP/POS form. Confirm scope before Code Claude touches it — this may be one conditional or a per-question flag depending on how the hint is currently wired.
-- **Status:** Open
-
-## Fixed
+- **Status:** Fixed (71fd49c8, 7 Oct 2026: the "simplifies to" line shows only when a question stores a simplified form, so an answer already in its simplest form, such as `A · B`, gets the plain Boolean Blitz link; e628fa18, the same day, added the identity condition: a form using XOR is "written" with the identity that defines it, not "simplified").
 
 ### 7. Graph Transformer — marking by route not value, click-counted moves, doubled brackets
 - **Game / URL:** `graph-transformer`, `?level=gcse` (all three defects reproduced there; (b) and (c) also affect `?level=alevel`)
