@@ -24,7 +24,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # is here because the escape rooms and the portal load their pictures from it.
 SITE = [
     "index.html", "CNAME", "robots.txt", "sitemap.xml",
-    "6-7/", "about/", "core-maths/", "escape-rooms/", "feedback/", "games/", "leaderboards/", "op/",
+    "6-7/", "about/", "class/", "core-maths/", "escape-rooms/", "feedback/", "games/", "leaderboards/", "op/",
     "parents/", "privacy/", "essentials/", "resit/", "schools/", "spec-map/", "the-6-ps/", "ugh-stats/", "printables/", "updates/", "year6/",
     "docs/art/",
 ]
