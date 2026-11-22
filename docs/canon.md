@@ -191,7 +191,7 @@ Use `mfg()` not `gtag('event',...)`. The wrapper sends to both GA4 and Sheets.
 
 | **Event** | **When** | **Parameters** |
 | --- | --- | --- |
-| `game_started` | First question presented | game_slug, level, mode (if applicable) |
+| `game_started` | First question presented | game_slug, level, mode (if applicable); aa (from 22 Nov 2026, AA-USAGE #880): true or false where the page has an Aa toggle, absent where it has none |
 | `mode_selected` | Mode chosen (multi-mode games only) | game_slug, mode |
 | `question_answered` | Every answer submission | game_slug, level, question_index (1-based), correct; question_id for a game moved onto it (below, from 3 Nov 2026) |
 | `game_completed` | Results screen reached | game_slug, level, score, questions_answered, questions_correct |
