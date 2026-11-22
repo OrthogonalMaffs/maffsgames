@@ -25,7 +25,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = [
     "index.html", "CNAME", "robots.txt", "sitemap.xml",
     "6-7/", "about/", "class/", "core-maths/", "escape-rooms/", "feedback/", "games/", "leaderboards/", "op/",
-    "parents/", "privacy/", "essentials/", "resit/", "schools/", "spec-map/", "the-6-ps/", "ugh-stats/", "printables/", "updates/", "year6/",
+    "parents/", "privacy/", "essentials/", "resit/", "schools/", "spec-map/", "the-6-ps/", "ugh-stats/", "printables/", "updates/", "when-will-i-use-this/", "year6/",
     "docs/art/",
 ]
 

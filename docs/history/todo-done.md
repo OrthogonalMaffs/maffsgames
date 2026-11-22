@@ -4014,3 +4014,11 @@ Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word f
 ## Part closed by GIVEN-THAT-FIT-WHY (22 Nov 2026)
 
 Row WRONG-PAUSE-REASONS, its clause under **Answer shown, no reason:**, moved word for word: given-that. A wrong answer in either phase now shows a "Why" reference card (canon 7.6.2, between the feedback and Next) that works the probability from the diagram's own counts (a new Phase 1 explanation for all 90 items; Phase 2's stored one, unchanged) and names the slip when the wrong value is one family's by computation; checked for every option and every wrong ratio by `scripts/verify-given-that.py`. The rest of the row stays.
+
+## Part closed by WHEN-WILL-I-USE-THIS (22 Nov 2026)
+
+Row WHEN-WILL-I-USE-THIS as it stood, word for word:
+
+| WHEN-WILL-I-USE-THIS | WHEN-WILL-I-USE-THIS — a 'When will I use this?' section: for each area of maths, where it appears in real life and careers, by topic and by vocational route (Skills England's 15 routes), each scenario sourced and linked to the games that practise it; as many areas of maths as possible (Jon, 10 Nov 2026). Spec: Project Claude (draft 10 Nov), then contract. | **Project Claude** (spec) |
+
+Its owner cell, **Project Claude** (spec), is done. The spec was approved (Jon, 10 Nov 2026) and the pilot build is the contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md`; the row now reads "pilot in build". The rest of the row stays.
