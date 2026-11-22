@@ -66,7 +66,14 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-21 (cloud): SIX-PS-BANKS-9 (`docs/handover/contracts/2026-11-21-six-ps-banks-9.md`)
+## 2026-11-22 (cloud): PHONE-FIT-CHANGED-GAMES (`docs/handover/contracts/2026-11-22-phone-fit-changed-games.md`)
+
+Claude Code (cloud), branch `claude/funny-keller-2thbao` from main 67ade5e. First commit closes out #873 (SIX-PS-BANKS-9, entry below).
+
+- **#871's branch (closed unmerged, duplicate of #872):** a deletion of `claude/ecstatic-thompson-f35dgo` failed in an earlier session. That session's command and its exact error reached neither this session nor any file (no unpushed note here), so neither is recorded. The branch stays on origin at a2a254f; no further attempts.
+- Next: measure-phone-fit `--only` list, ci-deps KNOWN_TOP and its self-test, `measured_pages()`, phone-fit-full on pull requests, merge-pr's phone-fit wait.
+
+## 2026-11-21 (cloud): SIX-PS-BANKS-9 (`docs/history/contracts/2026-11-21-six-ps-banks-9.md`)
 
 Claude Code (cloud), branch `claude/six-ps-banks-9` from main 90db64e. First commit closes out #869.
 
@@ -74,6 +81,7 @@ Claude Code (cloud), branch `claude/six-ps-banks-9` from main 90db64e. First com
 - **expand-factorise: PARKED, STOP IF hit (SR-31).** MaffsHCFactor's named slips per item, stages 1-4 (bank of 40 each): stage 1 one slip (40/40); stage 2 one (40/40); stage 3 one (36), none (4); stage 4 two (38), one (2). No item has the 3 a four-option choice needs. **Question for Jon / Project Claude:** which of these? (a) allow a 3-option choice for this topic (validate() and the page take exactly 4 today: a page change, also a STOP); (b) add named slips to hc-factor-gen.js in its own contract (it is DO NOT TOUCH here); (c) leave expand-factorise coming soon. It stays in coming_soon meanwhile: todo row SIX-PS-EXPAND-FACTORISE.
 - **Jon's ruling (22 Nov 2026, 06:45):** ship hcf-lcm on its own; expand-factorise stays coming soon (todo SIX-PS-EXPAND-FACTORISE) and will get its own bank-first generator with named slips, specced by Project Claude.
 - Review sheet for Jon: https://claude.ai/artifact/8fRwR8zvx5MY52HGUiTYki (private to Jon), built by `gen-six-ps.py --only hcf-lcm --sheet`.
+- **MERGED 22 Nov as 6310098 (#873)**, route merge-pr.py; main on the merge commit: check-site 44996163957 success, phone-fit-full 44996163909 success (its matrix skipped: no shared path), pages 44996163862 success. Contract moved to `docs/history/contracts/`. Closed out by PHONE-FIT-CHANGED-GAMES.
 
 ## 2026-11-21 (cloud): CI-DEPS-ANY-PAGE (`docs/history/contracts/2026-11-21-ci-deps-any-page.md`)
 
