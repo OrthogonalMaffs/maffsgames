@@ -1,6 +1,7 @@
 {
  "content": {
   "52-dle (every clue ladder recomputed and narrowing to one number, the page's ladders the generator's output, daily, run, scoring, broken clues and exact marking played in Chromium)": "64",
+  "Aa flag (game_started carries aa from the body class the Aa toggle switches: every toggle found by analytics.js's one selector, every switch one of its three known classes; in Chromium aa false, then true after the toggle, never from storage, none on a page with no toggle; planted faults)": "76",
   "Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail then elapsed_s last; B2's fresh and resumed starts and time to quit; planted faults caught)": "73",
   "Angle Ace (every diagram measured against its words and key; every option and reason marked in Chromium)": "5",
   "Answer boxes are text boxes (no <input type=\"number\"> in any game page or shared game script, in markup, in an HTML string a script builds, or set by .type / setAttribute; comments, CSS and prose are not inputs; planted faults caught: a box in markup, one in a script string, one after a URL on the same line, one set by .type, one by setAttribute, a stale exemption; controls pass)": "61",

@@ -80,6 +80,22 @@
   }
   window.mfgQuestionHash = questionHash;   // read by scripts/check-question-id.py, which compares it with the decoder's
 
+  // ── IS THE Aa FONT ON (AA-USAGE, Jon, 22 Nov 2026; privacy page, "The data we collect") ──
+  // game_started carries aa: true when the dyslexia-friendly font is on, false when the page has an Aa toggle and it
+  // is off, and no aa at all on a page with no toggle (so it never counts as "off"). Read from the page as the
+  // student sees it, the body class the toggle switches, never from storage. Games use three class names; a fourth
+  // fails scripts/check-aa-flag.py, which also proves AA_TOGGLE finds every toggle on the site and nothing else.
+  var AA_CLASSES = ['accessible', 'accessible-mode', 'dyslexia'];
+  var AA_TOGGLE = '#a11yToggle, #aaBtn, .a11y-toggle';
+  function aaState() {
+    var b = document.body;
+    if (!b || !document.querySelector(AA_TOGGLE)) return undefined;
+    for (var i = 0; i < AA_CLASSES.length; i++) {
+      if (b.classList.contains(AA_CLASSES[i])) return true;
+    }
+    return false;
+  }
+
   // ── MAIN FUNCTION ──
   window.mfg = function(eventName, params) {
     params = params || {};
@@ -131,6 +147,12 @@
       eventName = (params.level || '') !== (window._mfgLevel || '')
         ? 'level_selected'
         : 'game_restarted';
+    }
+
+    // Aa: on a real start only (a start renamed above is not one), before both sends, so GA4 and the Sheet agree.
+    if (eventName === 'game_started') {
+      var aa = aaState();
+      if (aa !== undefined) params = Object.assign({}, params, { aa: aa });
     }
 
     // Which question: before both sends, so GA4 and the Sheet get the same question_id and neither gets the text.
