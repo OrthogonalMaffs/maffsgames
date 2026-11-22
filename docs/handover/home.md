@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-22 (home): WWIUT-STAND-OUT ("When will I use this?" gets its own navy strip on the home page; the section leads with coloured course tiles and a sum on every job card)
+
+Claude Code (home lane), worktree `~/mg-wwiut`, branch `claude/wwiut-stand-out`; contract `docs/handover/contracts/2026-11-22-wwiut-stand-out.md` (verbatim). The first commit carries WHEN-WILL-I-USE-THIS's close-out (#883, 2710eed).
+
+- Portal: a navy strip (`#usesStrip`, `.par-strip uses-strip cmp`) above the parents strip, with a New flag dated 2026-11-22 and the button "See the jobs" (`data-mfg-item="open-wwiut"`, section `when-will-i-use-this`). The parents strip has its one button again. `applyParFlag()` became `applyStripFlags()`: every `.par-flag[data-badge-date]` expires on BADGE_DAYS; game cards are untouched.
+- `verify-new-and-updated.py` checks each strip flag on its last shown day and its first hidden day, read from the markup. A new plant (the expiry ignores the new flag) is caught: 4 of 4.
+- Data: 15 route colours, white at 4.92:1 or better, the closest pair delta E 16.4, the nearest to teal delta E 33.5. The 14 headlines are as the contract gives them, and all recompute.
+- Pages: the hub runs "Pick your course" tiles, then 14 job cards (each with its headline in KaTeX, linked to `<topic>/#<id>`), then "By maths topic", in a 1040 px container. Scenario cards get a route-colour top band, a route chip and the headline. Route headers are filled with their colour. The hub's foot line drops its self-link. The look is in `when-will-i-use-this/uses.css`, written by build-uses.py.
+- check-uses.py: headlines, colours, anchors, no hub self-link, and Chromium contrast on tiles, chips and headers. Self-test 50 of 50. A route header scrolled 9 px at 320 in Aa ("environmental"); fixed with overflow-wrap and less phone padding.
+- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+
 ## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
 
 Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-this`; contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md` (verbatim, with Jon's HUBS ruling below it). The first commit carries GIVEN-THAT-POLISH's close-out (#881, 7660e2f).

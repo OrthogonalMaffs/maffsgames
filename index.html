@@ -660,6 +660,11 @@
     padding:10px 18px;border-radius:9px;text-decoration:none;transition:opacity .15s ease;}
   .par-btn:hover{opacity:.9;}
   @media(max-width:768px){.par-strip{flex-direction:column;align-items:flex-start;gap:14px;padding:16px 18px;}}
+  /* When will I use this? (WWIUT-STAND-OUT, 22 Nov 2026): the parents strip's shape and spacing, on navy */
+  .uses-strip{background:var(--navy);border-color:var(--navy);}
+  .uses-strip h2{color:#fff;}
+  .uses-strip .par-lede{color:#cbd5e1;}
+  .uses-strip .par-fact{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.3);color:#fff;}
 
   /* ---------- Secondary sections compact on phones and when filtering ----------
      One mechanism for the fact card, the escape-room band, the parents strip and
@@ -915,6 +920,22 @@
   </div>
 </div>
 
+<!-- WHEN WILL I USE THIS? STRIP (WWIUT-STAND-OUT): the parents strip's pattern on navy; not .game-card, so
+     applyFilters() and #gameCount never see it. Its New flag expires with every strip flag (applyStripFlags). -->
+<div class="par-strip uses-strip cmp" id="usesStrip" data-mfg-section="when-will-i-use-this">
+  <div class="par-text">
+    <span class="par-flag" id="usesFlag" data-badge-date="2026-11-22" data-cmp-hide>New</span>
+    <h2>When will I use this?</h2>
+    <p class="par-lede" data-cmp-hide>Real jobs that use the maths you practise, with worked examples.</p>
+    <div class="par-facts" data-cmp-hide>
+      <span class="par-fact">14 real jobs</span>
+      <span class="par-fact">Worked examples</span>
+      <span class="par-fact">Sources you can check</span>
+    </div>
+  </div>
+  <a class="par-btn" href="when-will-i-use-this/" data-mfg-item="open-wwiut">See the jobs</a>
+</div>
+
 <!-- PARENT GUIDES STRIP — deliberately not .game-card / esc-*, so applyFilters() and #gameCount never see it -->
 <div class="par-strip cmp" id="parStrip" data-mfg-section="parent-guides">
   <div class="par-text">
@@ -928,7 +949,6 @@
     </div>
   </div>
   <a class="par-btn" href="parents/" data-mfg-item="open-guides">Open the Parent Guides</a>
-  <a class="par-btn" href="when-will-i-use-this/">When will I use this?</a>
 </div>
 
 <!-- UGH, STATS CARD: shown only while the Statistics topic is chosen (applyFilters). Deliberately not a .game-card,
@@ -3304,13 +3324,14 @@ function applyBadges() {
   if (btn) btn.style.display = anyLive ? '' : 'none';
 }
 
-// Parent Guides strip: only its "New" flag expires, on the same BADGE_DAYS
-// and mfgToday() as the game badges. The strip itself is permanent.
-function applyParFlag() {
-  var flag = document.getElementById('parFlag');
-  if (!flag) return;
-  var ageMs = mfgToday() - new Date(flag.dataset.badgeDate + 'T00:00:00');
-  if (ageMs / 86400000 >= BADGE_DAYS) flag.style.display = 'none';
+// Strip flags (the parent guides', When will I use this?'s): every "New" flag with data-badge-date that is not a
+// game card expires on the same BADGE_DAYS and mfgToday() as the game badges (WWIUT-STAND-OUT generalised it from
+// #parFlag alone, 22 Nov 2026). The strips themselves are permanent. Game cards are applyBadges()'s, untouched.
+function applyStripFlags() {
+  document.querySelectorAll('.par-flag[data-badge-date]').forEach(function(flag) {
+    var ageMs = mfgToday() - new Date(flag.dataset.badgeDate + 'T00:00:00');
+    if (ageMs / 86400000 >= BADGE_DAYS) flag.style.display = 'none';
+  });
 }
 
 function toggleFresh() {
@@ -3578,7 +3599,7 @@ function cmpInit() {
 }
 
 applyBadges();
-applyParFlag();
+applyStripFlags();
 filter('all');
 cmpInit();
 mfgPortalReady = true;   // everything above this line is setup, not a user action

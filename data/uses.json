@@ -5,8 +5,10 @@
   "  and recomputes every worked step with \"=\". Never edit a generated page: edit this file, run build-uses.py, then check-uses.py.",
   "topics: slug, title, answer (the one-line answer), keywords (matched exactly against data/games.json's game keywords for \"Practise it\";",
   "  only live games, outside the roster's Unlisted and Withdrawn sections), parentGuide (a folder under parents/, or null).",
-  "routes: the 15 Skills England routes, slug and exact name. A route page is written only for a route with a scenario.",
-  "scenarios: id, topic, route (a route slug, or null), job, text, steps, sources [{title, url, type}], exampleFigures.",
+  "routes: the 15 Skills England routes, slug, exact name and colour (white text on it at 4.5:1 or better; one per route, distinct,",
+  "  never the portal's teal: WWIUT-STAND-OUT). A route page is written only for a route with a scenario.",
+  "scenarios: id, topic, route (a route slug, or null), job, headline (the key sum shown on its card, recomputed by",
+  "  check-uses.py like a step), text, steps, sources [{title, url, type}], exampleFigures.",
   "  The scenarios' text and steps are the approved wording (10 Nov 2026), verbatim: never reword them to fit the format.",
   "  A step is a string, or {\"text\": ..., \"noCheck\": \"<one-line reason>\"} when check-uses.py cannot read one of its \"=\" signs.",
   "  exampleFigures is true exactly when the wording marks a figure \"(example figure)\" or \"(example figures)\".",
@@ -43,21 +45,21 @@
   }
  ],
  "routes": [
-  {"slug": "agriculture", "name": "Agriculture, environmental and animal care"},
-  {"slug": "business", "name": "Business and administration"},
-  {"slug": "care", "name": "Care services"},
-  {"slug": "catering", "name": "Catering and hospitality"},
-  {"slug": "construction", "name": "Construction and the built environment"},
-  {"slug": "creative", "name": "Creative and design"},
-  {"slug": "digital", "name": "Digital"},
-  {"slug": "education", "name": "Education and childcare"},
-  {"slug": "engineering", "name": "Engineering and manufacturing"},
-  {"slug": "hair-and-beauty", "name": "Hair and beauty"},
-  {"slug": "health-and-science", "name": "Health and science"},
-  {"slug": "legal-and-finance", "name": "Legal, finance and accounting"},
-  {"slug": "protective-services", "name": "Protective services"},
-  {"slug": "sales-and-marketing", "name": "Sales, marketing and procurement"},
-  {"slug": "transport", "name": "Transport and logistics"}
+  {"slug": "agriculture", "name": "Agriculture, environmental and animal care", "colour": "#4d7c0f"},
+  {"slug": "business", "name": "Business and administration", "colour": "#92400e"},
+  {"slug": "care", "name": "Care services", "colour": "#be185d"},
+  {"slug": "catering", "name": "Catering and hospitality", "colour": "#b91c1c"},
+  {"slug": "construction", "name": "Construction and the built environment", "colour": "#c2410c"},
+  {"slug": "creative", "name": "Creative and design", "colour": "#6d28d9"},
+  {"slug": "digital", "name": "Digital", "colour": "#4338ca"},
+  {"slug": "education", "name": "Education and childcare", "colour": "#a16207"},
+  {"slug": "engineering", "name": "Engineering and manufacturing", "colour": "#0369a1"},
+  {"slug": "hair-and-beauty", "name": "Hair and beauty", "colour": "#a21caf"},
+  {"slug": "health-and-science", "name": "Health and science", "colour": "#005eb8"},
+  {"slug": "legal-and-finance", "name": "Legal, finance and accounting", "colour": "#1e3a8a"},
+  {"slug": "protective-services", "name": "Protective services", "colour": "#7f1d1d"},
+  {"slug": "sales-and-marketing", "name": "Sales, marketing and procurement", "colour": "#15803d"},
+  {"slug": "transport", "name": "Transport and logistics", "colour": "#831843"}
  ],
  "scenarios": [
   {
@@ -65,6 +67,7 @@
    "topic": "ratio",
    "route": "construction",
    "job": "Bricklayer",
+   "headline": "0.3 ÷ 6 = 0.05 m³ per part",
    "text": "Concrete for a shed base is often mixed 1 : 2 : 3: 1 part cement, 2 parts sand, 3 parts gravel, in buckets of the same size. You need 0.3 m³ of dry mix.",
    "steps": [
     "Total parts: 1 + 2 + 3 = 6.",
@@ -81,6 +84,7 @@
    "topic": "ratio",
    "route": "hair-and-beauty",
    "job": "Hairdresser",
+   "headline": "40 × 2 = 80 g of developer",
    "text": "Colour is mixed with developer in the ratio the maker gives. Wella's Koleston Perfect is mixed 1 : 1, but its Special Blonde shades are mixed 1 : 2. You use 40 g of a Special Blonde shade.",
    "steps": [
     {"text": "Colour : developer = 1 : 2.", "noCheck": "A ratio, not a sum: there is nothing on the left to recompute."},
@@ -96,6 +100,7 @@
    "topic": "ratio",
    "route": "health-and-science",
    "job": "Hospital nurse",
+   "headline": "125 ÷ 250 × 5 = 2.5 ml",
    "text": "Liquid medicine comes at a strength, such as 250 mg in 5 ml. Nurses use: volume = what you want ÷ what you have × what it is in. The prescription is 125 mg. The bottle says 250 mg in 5 ml.",
    "steps": [
     "125 ÷ 250 = 0.5.",
@@ -111,6 +116,7 @@
    "topic": "percentages",
    "route": "construction",
    "job": "Plumber",
+   "headline": "£350 × 1.2 = £420",
    "text": "A VAT-registered plumber adds 20% VAT to the bill. To add 20%, multiply by 1.2. The job costs £350 before VAT.",
    "steps": [
     "£350 × 1.2 = £420.",
@@ -126,6 +132,7 @@
    "topic": "percentages",
    "route": "construction",
    "job": "Electrician",
+   "headline": "5.4 ÷ 230 × 100 = 2.3%",
    "text": "Voltage drops along a long cable. The wiring rules (BS 7671) allow at most 3% on a lighting circuit and 5% on others. The UK supply is 230 V.",
    "steps": [
     {"text": "Most allowed on lighting: 3% of 230 = 0.03 × 230 = 6.9 V.", "noCheck": "\"3% of 230\" uses \"of\", which the check does not read; 0.03 × 230 = 6.9 is still recomputed."},
@@ -143,6 +150,7 @@
    "topic": "percentages",
    "route": "catering",
    "job": "Baker",
+   "headline": "0.7 × 500 = 350 g of water",
    "text": "Bakers write recipes in \"baker's percentages\": the flour is always 100%, and everything else is a percentage of the flour's weight. A dough is 70% water and 2% salt. You use 500 g of flour.",
    "steps": [
     {"text": "Water: 70% of 500 = 0.7 × 500 = 350 g.", "noCheck": "\"70% of 500\" uses \"of\", which the check does not read; 0.7 × 500 = 350 is still recomputed."},
@@ -158,6 +166,7 @@
    "topic": "percentages",
    "route": "creative",
    "job": "Jeweller",
+   "headline": "4 × 0.375 = 1.5 g of gold",
    "text": "Gold is measured in carats out of 24. 9 carat gold is 9 parts gold in 24. The UK hallmark writes it as 375: 375 parts gold in every 1000.",
    "steps": [
     "9 ÷ 24 = 0.375, which is 37.5%.",
@@ -173,6 +182,7 @@
    "topic": "area-perimeter",
    "route": "construction",
    "job": "Painter and decorator",
+   "headline": "64 ÷ 16 = 4 litres",
    "text": "A room is 4 m by 3.5 m, with walls 2.5 m high. There is a 2 m² door and a 3.5 m² window. Two coats; the tin says 1 litre covers 16 m² (example figure).",
    "steps": [
     "Perimeter: 4 + 3.5 + 4 + 3.5 = 15 m.",
@@ -190,6 +200,7 @@
    "topic": "area-perimeter",
    "route": "agriculture",
    "job": "Groundsperson (sports turf)",
+   "headline": "2 × (100 + 64) = 328 m of line",
    "text": "Groundspeople mark out pitches. The FA's recommended adult pitch is 100 m long and 64 m wide.",
    "steps": [
     "Lines round the edge (perimeter): 2 × (100 + 64) = 328 m of white line.",
@@ -206,6 +217,7 @@
    "topic": "area-perimeter",
    "route": "agriculture",
    "job": "Farmer",
+   "headline": "3 × 150 = 450 kg",
    "text": "Fertiliser is spread at a rate in kg per hectare. 1 hectare = 10 000 m². A field is 250 m by 120 m; the plan is 150 kg per hectare (example figure).",
    "steps": [
     {"text": "Area: 250 × 120 = 30 000 m² = 3 ha.", "noCheck": "30 000 m² = 3 ha is a change of unit (1 hectare = 10 000 m²), not a sum; 250 × 120 = 30 000 is still recomputed."},
@@ -221,6 +233,7 @@
    "topic": "averages",
    "route": "health-and-science",
    "job": "Practice nurse",
+   "headline": "816 ÷ 6 = 136",
    "text": "One blood pressure reading can mislead, so NICE says to take readings at home, twice a day for 4 to 7 days, ignore the first day, and use the mean of the rest. After day 1, the top (systolic) numbers are 138, 134, 136, 140, 132, 136 (example figures).",
    "steps": [
     "Add them: 816.",
@@ -237,6 +250,7 @@
    "topic": "averages",
    "route": "health-and-science",
    "job": "Health visitor",
+   "headline": "100 − 91 = 9 in 100 weigh more",
    "text": "Babies' weights are plotted on growth charts with centile lines. A centile shows how many healthy children are expected to be below that line. A baby is on the 91st centile.",
    "steps": [
     "91 out of 100 healthy babies the same age are expected to weigh less.",
@@ -252,6 +266,7 @@
    "topic": "averages",
    "route": "agriculture",
    "job": "Ecologist",
+   "headline": "4 × 1500 = 6000 orchids",
    "text": "You can't count every wild orchid in a meadow, so ecologists count them in a few 1 m² squares (quadrats) placed at random, and scale up. Ten quadrats count 3, 5, 2, 4, 6, 3, 4, 5, 2, 6 (example figures). The meadow is 1500 m².",
    "steps": [
     "Total: 40. Mean: 40 ÷ 10 = 4 orchids per m².",
@@ -268,6 +283,7 @@
    "topic": "averages",
    "route": null,
    "job": "Meteorologist",
+   "headline": "9.1 − 8.3 = 0.8 °C warmer",
    "text": "\"Warmer than average\" means compared with a 30-year average. The Met Office now uses 1991–2020.",
    "steps": [
     "UK mean temperature, 1961–1990: 8.3 °C. 1991–2020: 9.1 °C.",
