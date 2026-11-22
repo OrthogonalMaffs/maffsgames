@@ -1,0 +1,27 @@
+DECIMAL-DETECTIVE-FIT. Cloud lane. Tier: Medium (one game's layout in three question types, and its verifier). From Project Claude; Jon, 22 Nov 2026, 17:46 ("next contract for cloud lane please").
+Recommended: Claude Code, Opus, high effort. Layout across Line-Up (drag), Round Up (options) and Place It (number line), at four phone sizes in two modes, proved for every item.
+
+TASK: Make every Decimal Detective question fit the phone rules, end its sideways scroll in Aa, and keep Next in view after a wrong answer, so the game leaves phone-fit's lists.
+
+ROOT CAUSE: scripts/phone-fit-state.json on main 7660e2f lists decimal-detective under known-failures normal 320x568, known-failures Aa 320x568 and 375x667, and sideways Aa 320x568, 375x667 and 390x844 (sideways scroll is gated in every mode: measure-phone-fit.py:12-27). docs/todo.md DD-LINEUP-FEEDBACK (cloud lane): after a wrong answer, Line-Up's Next Case ends at 799 at 320x568 (fold 528) and 770 at 375x667 (fold 627), and Round Up's at 548 at 320x568. MaffsNext.wrong scrolls it into reach (NEXT-IN-VIEW, 19 Nov 2026), but Jon's ruling keeps the row open: the layout itself doesn't fit. The page (games/decimal-detective/index.html, 1067 lines) has a 480 px media block (:153) and a 600 px-tall one (:115) only. It is a Year 6 game (roster #26) in the resit set's foundation skills (SR-33).
+
+CLASS CHECK: Local. The layout is this page's own (three question types, its own CSS); no shared layout module serves it. The shared parts it uses (MaffsNext, fold.css) are used, not changed.
+
+EXACT CHANGE:
+1. First commit: the standing close-out for AA-USAGE (#880, merged as 928c47a via merge-pr.py --watch; main runs check-site 45048513153, phone-fit-full 45048513077, Pages 45048512617; Jon redeployed the Apps Script 22 Nov 17:42, version 2026-11-22-a, URL unchanged, column U = aa confirmed), in ONE line in cloud.md (it is at 20,352 of 20,480 bytes; if the archive job hasn't trimmed it, archive per AGENTS.md first). Contract to docs/history/contracts/. In the same commit, save this contract verbatim as docs/handover/contracts/2026-11-22-decimal-detective-fit.md and claim the game.
+2. Layout, for every item of every type, in normal and Aa:
+   - Asking screen: every card, option and the number line with its marker end above the fold at 320x568, 375x667 and 390x844. Aa at 320x568: canon §7.6.1's exception, options must start above the fold.
+   - No sideways scroll, on any screen, at any size, in any mode. Find what overflows in Aa (likely OpenDyslexic's wider digits in the Line-Up cards or the number line labels) and fix it without shrinking digits below legibility.
+   - After a wrong answer: Next Case ends above the fold at 320x568, 375x667 and 390x844 wherever it can. Line-Up's right order (DD-LINEUP-ORDER, 18 Nov) stays shown. If it can't all fit at 320x568, collapse the right-order display per canon §7.6.2 rather than push Next down. Laptop (1366x768, 1280x720) stays passing.
+   - Drag, touch and click still work: Line-Up's drag and touch reorder, Place It's marker drag and line click.
+   - Approach is yours, measured. Say what you changed.
+3. Verifier (scripts/verify-decimal-detective.py, extended): in Chromium, every item of every type, normal and Aa, at the three phone sizes and both laptop sizes: the asking-screen rule, no sideways scroll, and Next after a wrong answer (laptop gated; phones too, except any recorded per the collapse). Plants: the old Aa overflow restored (sideways caught); Line-Up's old spacing restored (Next below the fold at 320x568, caught).
+4. scripts/phone-fit-state.json: take decimal-detective off every list it is on. This PR's own phone-fit run should measure decimal-detective only (#875 and #878's live proof: the first game to leave the state file): report its ID, what it measured and its time.
+5. docs/todo.md: DD-LINEUP-FEEDBACK finished: move it word for word to docs/history/todo-done.md (TODO-TRIM). /updates/: one dated line in plain words (e.g. Decimal Detective now fits small phones, with no sideways scrolling in the dyslexia-friendly mode).
+6. Merge on green via scripts/merge-pr.py, then the standing close-out (cloud.md one line), and unclaim the game.
+
+DO NOT TOUCH: Every item's numbers, keys, options and order; the marking rules (lineupMarks, Round Up's, Place It's tolerance); scoring and session length; the right-order display's content; MaffsLock, MaffsNext and analytics; the Aa toggle and its class; shared assets; Gate files; games/given-that/ and docs/handover/home.md; other games.
+
+SUCCESS CONDITION: decimal-detective is on none of phone-fit's lists, its own PR run measured it alone and passed, and the verifier holds every item to the fit rules (asking screen, no sideways scroll, Next after a wrong answer) at five sizes in both modes, with both plants caught. DD-LINEUP-FEEDBACK is in history. CI is green and the PR is merged.
+
+STOP IF: An item can't fit at a required size without shrinking digits below legibility or hiding a card: list the items, sizes and shortfalls, and stop for Jon's ruling. A fix would change how an answer is marked. Drag or touch can't be kept working with the new layout. The PR's phone-fit run measures more than decimal-detective: report the run ID and what it selected (a #878 failure), but it need not block the merge if it passes. Main goes red for a reason outside this change (one rerun per AGENTS.md, then stop and report).

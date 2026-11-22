@@ -42,8 +42,8 @@
   "Counting Players pack (core-maths/counting-players/: build.py --check, every Values key recomputed from the two CSVs and every Condition true; the CSVs carry no fbclid, no query key but level, game, type, mode, topic, and no source naming a single school or college; each committed PDF's text holds every value its section fills; five planted faults caught)": "3",
   "Curling Friction (every numerical key recomputed exactly from its own context, every option checked, every item marked in Chromium)": "74",
   "Dash before a number (no em dash or spaced en dash directly before a number, a variable or a minus sign in student-facing text; planted faults)": "30",
-  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 1 of 2": "62",
-  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium), part 2 of 2": "50",
+  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium, every item's phone fit), part 1 of 2": "62",
+  "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium, every item's phone fit), part 2 of 2": "50",
   "Differentiation Duel (every key and option differentiated again with SymPy, explanations checked, every option marked in Chromium)": "36",
   "Dimension Checker (every key and option checked by dimension algebra, worked steps recomputed, every item marked in Chromium)": "51",
   "Distinctly Average (independent recomputation)": "75",
@@ -299,7 +299,7 @@
   },
   "verify-decimal-detective.py": {
    "how": "kept from the pack (2 needed)",
-   "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium)",
+   "label": "Decimal Detective (Line-Up and Round Up keys recomputed, Line-Up and Place It start states, every answer marked in Chromium, every item's phone fit)",
    "parts": 2,
    "tier": "content"
   },
