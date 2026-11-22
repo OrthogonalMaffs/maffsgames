@@ -729,6 +729,15 @@ const WHY = (function () {
         if ((a < 0 && Math.abs(Re) < 1e-9) || (b < 0 && Math.abs(Im) < 1e-9)) return;
         if (near(P.re, a * Re) && near(P.im, b * Im)) hits.push('signs');
       });
+      // A part written as r or r/2 instead of r cos θ or r sin θ (CC-TRIG-SLIP, Jon 22 Nov 2026): only where no other
+      // family fits, so no option already named changes. Each part is right, or wrong and equal to ±r or ±r/2 with the
+      // right part's sign; at least one is wrong. A right part never counts, even when it is itself r or r/2.
+      if (!hits.length) {
+        const part = (p, right) => (near(p, right) ? 'right'
+          : Math.abs(right) > 1e-9 && (near(p, sgn(right) * r) || near(p, sgn(right) * r / 2)) ? 'r' : 'other');
+        const a = part(P.re, Re), b = part(P.im, Im);
+        if (a !== 'other' && b !== 'other' && (a === 'r' || b === 'r')) hits.push('r_part');
+      }
     } else {
       if (P.form !== q.target) return null;
       const polar = q.target === 'polar';
@@ -815,6 +824,7 @@ const WHY = (function () {
       case 'rad_as_deg': return '\\text{That angle is still in radians: polar form here is in degrees, so multiply by }\\dfrac{180°}{\\pi}\\text{.}';
       case 'r_theta_swap': return '\\text{r and θ are the wrong way round: r comes first, then the angle.}';
       case 'cos_sin': return '\\text{cos goes with Re and sin with Im.}';
+      case 'r_part': { const W = working(q); return '\\text{Re and Im aren’t r: }' + W[0] + '\\text{, }' + W[1] + '\\text{.}'; }
       case 'signs': return '\\text{Check the signs: at }\\theta = ' + G.thTex + '\\text{, cos θ is ' + cs(cz(c)) + ' and sin θ is ' + cs(cz(s)) + '.}';
     }
     return null;

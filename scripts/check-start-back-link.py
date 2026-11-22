@@ -15,9 +15,10 @@ at 390x844 in normal mode with nothing pressed, shows at least one visible <a> w
 visibility:hidden or opacity 0. It need not be above the fold. A failure lists the slugs and exits 1.
 
 Why its own script and not a second gate in measure-phone-fit.py (which the contract preferred): that script runs
-only in .github/workflows/phone-fit-full.yml (nightly, and after a push to main that changes a shared path), never on
-a pull request, and it loads the 109 roster games, not all 111 pages. A ci-line here runs in the Gate on every pull
-request that changes a game or a shared asset, and on every full run.
+only in .github/workflows/phone-fit-full.yml, which measures roster games only, not every page under games/: on a pull
+request or a push to main, every one if a shared path changed, else only the games changed (#875, 22 Nov 2026), and all
+of them nightly. When this check was written it never ran on a pull request at all. A ci-line here runs in the Gate on
+every pull request that changes a game or a shared asset, and on every full run.
 
 The pages are served by serve-stubbed.py behind check-site.py's network guard, with the pinned fonts, so nothing is
 sent anywhere.
