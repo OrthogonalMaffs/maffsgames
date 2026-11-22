@@ -87,7 +87,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .tw-table th.total-col,.tw-table td.total-col{background:rgba(245,158,11,0.08)}
 .tw-table th.total-row,.tw-table td.total-row{background:rgba(245,158,11,0.08)}
 .tw-table td.greyed{opacity:0.2}
-.tw-table th.greyed{opacity:0.2}
+.tw-table th.greyed{opacity:0.2;transition:opacity 0.6s ease-out}
 .tw-table td.highlighted{border:2px solid var(--accent);background:rgba(245,158,11,0.1)}
 
 /* Venn diagram */
@@ -97,9 +97,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .venn-circle-b{stroke:#ef4444}
 .venn-label{font-family:'JetBrains Mono',monospace;font-size:18px;fill:var(--text);text-anchor:middle;dominant-baseline:central;transition:opacity 0.6s ease-out}
 .venn-set-label{font-family:'Outfit',sans-serif;font-size:14px;font-weight:700;text-anchor:middle;dominant-baseline:central;transition:opacity 0.6s ease-out}
-.venn-region{transition:opacity 0.6s ease-out}
-.venn-region.greyed{opacity:0.2}
-.venn-region.highlighted .venn-label{fill:var(--accent)}
+/* greyOutVenn marks the counts and set names outside the condition (both drawings); they fade as the table's cells do */
+.venn-label.greyed,.venn-set-label.greyed{opacity:0.2}
 
 /* Frequency tree */
 .tree-svg{width:100%;max-width:600px;margin:0 auto;display:block}
@@ -184,7 +183,7 @@ body.accessible p,body.accessible .question-text,body.accessible .condition-bann
 
 /* Reduced motion */
 @media(prefers-reduced-motion:reduce){
-.tw-table td,.venn-region,.venn-label,.venn-set-label,.tree-node,.tree-branch,.tree-branch-label{transition:none !important}
+.tw-table td,.tw-table th,.venn-label,.venn-set-label,.tree-node,.tree-branch,.tree-branch-label{transition:none !important}
 .condition-banner{animation:none !important}
 }
 

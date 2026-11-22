@@ -16,6 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-22 (home): GIVEN-THAT-VENN-FADE and DOCS-TRUTH (Given That's Phase 2 fade made real and proved; two stale doc lines)
+
+Claude Code (home lane), worktree `~/mg-gtv`, branch `claude/given-that-venn-fade`; contract `docs/handover/contracts/2026-11-22-given-that-venn-fade.md` (verbatim, with the ruling on the STOP below it). The first commit carries COMPLEX-CONVERTER-WHY's MERGED line (#874, 842aa2e).
+
+- STOPPED at STOP IF before any change: 41 of the 90 items fade nothing in Phase 2. No item fades a region inside its condition. Ruling (Project Claude with Jon, 22 Nov): option (a). The 49 that fade are judged against SPEC; the 41 are the verifier's NO_FADE, reported, not failed. They are 7 column-condition tables inferGreyOut cannot read (core_01, core_09, core_15, core_17, l4_14, l4_16, l4_20), 4 row-condition tables (alevel_11, alevel_14, alevel_16, alevel_24), 3 branch-condition trees (core_20, l4_09, l4_17), and 27 Bayes trees, by design. The 14 and the table's never-fading Total column go to a later contract. There are 14 Venns (gcse 8, alevel 6), not 25; the ruling says 15 because the home lane's STOP report miscounted the A-Level Venns as 7. On main the fade unit fails on all 14 without reduced motion (with it, the inline opacity already faded them).
+- Fix (`games/given-that/index.html` CSS only): `.venn-label.greyed,.venn-set-label.greyed{opacity:0.2}`, with the 0.6s transition the labels already had; the dead `.venn-region` rules removed (nothing used them). The verifier also found the table headers snapping to 0.2 with no transition (only td had one): `th.greyed` now has the same 0.6s, and th joins the reduced-motion list.
+- `scripts/verify-given-that.py`, a `fade` unit: every item into Phase 2 at 390x844 and 1366x768 (both drawings), with and without reduced motion. Every greyed element is at most 0.3 opacity with a 0.6s transition (none with reduced motion), and every count is faded exactly when SPEC's Phase 2 denominator puts it outside the condition. A Total column, grand total and tree root are not judged. 2 new plants (the Venn rule removed: gcse_06; gcse_03's greyOut fading Bus, its own condition), 11 in all.
+- canon.md "How it is checked" now says what measure-phone-fit gates: the asking-screen rule in every mode, sideways scroll in every mode (bar the `sideways` list), Next below the fold on laptop (R2), reported on phones. Snag 1 is under Fixed: 71fd49c8 (7 Oct) made the "simplifies to" line depend on a stored simplified form; e628fa18 (same day) added the identity condition.
+
 ## 2026-11-22 (home): COMPLEX-CONVERTER-WHY (a Why card after a wrong answer in Form Roulette; the back link off the titles)
 
 Claude Code (home lane), worktree `~/mg-cc-why`, branch `claude/complex-converter-why`; contract `docs/handover/contracts/2026-11-22-complex-converter-why.md` (verbatim). The first commit carries CLASS-PAGE's close-out (#872, 10ab776).
