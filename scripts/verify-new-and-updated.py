@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; three plants caught) | --selftest
+# ci-line: New and updated (dated homepage cards, ordering, cap, deduplication, expiry, unchanged filter sets and phone compact controls; the strips' New flags expire on the same rule; four plants caught) | --selftest
 # ci-deps: index.html
 """NEW-AND-UPDATED, Jon, 3 Nov 2026. Browser observations checked against
 the level cards' metadata, read independently in Python. No production requests.
@@ -145,6 +145,34 @@ def check_page(page, cards, today):
     return fails
 
 
+# The strips' New flags (WWIUT-STAND-OUT, 22 Nov 2026): every .par-flag with data-badge-date expires on the game
+# badges' rule, read here from the markup, never from the page's script. Each flag is checked on the last day it shows
+# and the first day it is gone.
+FLAG = re.compile(r'<span class="par-flag" id="([A-Za-z]+)" data-badge-date="(\d{4}-\d{2}-\d{2})"')
+
+
+def strip_flags(src):
+    flags = {i: date.fromisoformat(d) for i, d in FLAG.findall(src)}
+    assert {'parFlag', 'usesFlag'} <= set(flags), 'strip flag parser is blind: %s' % flags
+    return flags
+
+
+def check_flags(browser, base, src, flags):
+    fails = []
+    days = sorted({d.fromordinal(d.toordinal() + n) for d in flags.values() for n in (55, 56)})
+    for today in days:
+        ctx, page, errors = open_page(browser, base, src, today)
+        fails.extend(errors)
+        for fid, stamp in flags.items():
+            want = (today - stamp).days < 56
+            shown = page.evaluate("i => getComputedStyle(document.getElementById(i)).display !== 'none'", fid)
+            if shown != want:
+                fails.append('strip flag #%s (%s) on %s: %s, expected %s' % (
+                    fid, stamp, today, 'shown' if shown else 'hidden', 'shown' if want else 'hidden'))
+        ctx.close()
+    return fails
+
+
 def check_phone(page):
     fails = []
     group = page.locator('#cmpNew')
@@ -190,6 +218,10 @@ def run(selftest):
                 fails.extend(found)
                 print('%s: %s (%d live games)' % (today, 'FAIL' if found else 'PASS', len(expected(cards, today))))
                 ctx.close()
+            flags = strip_flags(src)
+            found = check_flags(browser, base, src, flags)
+            fails.extend(found)
+            print('strip flags %s: %s' % (', '.join('#%s %s' % kv for kv in sorted(flags.items())), 'FAIL' if found else 'PASS'))
             for size in SIZES:
                 ctx, page, errors = open_page(browser, base, src, TODAY, size)
                 found = check_phone(page) + errors
@@ -213,6 +245,14 @@ def run(selftest):
                     if not caught:
                         fails.append('plant %s: %s' % (name, errors or 'not caught'))
                     ctx.close()
+                planted = pc.apply_plant(src, "document.querySelectorAll('.par-flag[data-badge-date]')",
+                                         "document.querySelectorAll('#parFlag[data-badge-date]')",
+                                         name='the expiry ignores the new flag')
+                found = check_flags(browser, base, planted, flags)
+                caught = any(f.startswith('strip flag #usesFlag') for f in found)
+                print('plant the expiry ignores the new flag: %s' % ('CAUGHT' if caught else 'MISSED/ERROR'))
+                if not caught:
+                    fails.append('plant the expiry ignores the new flag: not caught (%s)' % found[:2])
             browser.close()
     finally:
         server.terminate()

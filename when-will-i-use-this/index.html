@@ -18,7 +18,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body,{delimiters:[{left:'\\(',right:'\\)',display:false}],throwOnError:false});"></script>
 <link rel="stylesheet" href="/parents/guide.css">
+<link rel="stylesheet" href="/when-will-i-use-this/uses.css">
 <link rel="stylesheet" href="/schools/assets/opendyslexic.css">
 <script defer src="/parents/guide.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -32,12 +36,133 @@
   </span>
 </nav>
 
-<main class="container">
+<main class="container wide">
 
 <div class="hero">
   <span class="badge">Real jobs, real maths</span>
   <h1>When will I use this?</h1>
   <p class="subtitle">Real jobs that use the maths you practise. Each one has a worked example and a source you can check.</p>
+</div>
+
+<h2 class="section-title">Pick your course</h2>
+<div class="tile-grid">
+  <a href="route/agriculture/" class="route-tile" style="--c:#4d7c0f">
+    <h3>Agriculture, environmental and animal care</h3>
+    <p>Groundsperson (sports turf), Farmer, Ecologist</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+  <a href="route/catering/" class="route-tile" style="--c:#b91c1c">
+    <h3>Catering and hospitality</h3>
+    <p>Baker</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+  <a href="route/construction/" class="route-tile" style="--c:#c2410c">
+    <h3>Construction and the built environment</h3>
+    <p>Bricklayer, Plumber, Electrician, Painter and decorator</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+  <a href="route/creative/" class="route-tile" style="--c:#6d28d9">
+    <h3>Creative and design</h3>
+    <p>Jeweller</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+  <a href="route/hair-and-beauty/" class="route-tile" style="--c:#a21caf">
+    <h3>Hair and beauty</h3>
+    <p>Hairdresser</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+  <a href="route/health-and-science/" class="route-tile" style="--c:#005eb8">
+    <h3>Health and science</h3>
+    <p>Hospital nurse, Practice nurse, Health visitor</p>
+    <span class="tile-go">See the jobs &rarr;</span>
+  </a>
+</div>
+
+<h2 class="section-title">The jobs</h2>
+<div class="job-grid">
+  <a href="ratio/#bricklayer" class="job-card" style="--c:#c2410c">
+    <span class="job-route"><span class="dot"></span>Construction and the built environment</span>
+    <h3>Bricklayer</h3>
+    <p class="headline">\(0.3 \div 6 = 0.05\) m³ per part</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="ratio/#hairdresser" class="job-card" style="--c:#a21caf">
+    <span class="job-route"><span class="dot"></span>Hair and beauty</span>
+    <h3>Hairdresser</h3>
+    <p class="headline">\(40 \times 2 = 80\) g of developer</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="ratio/#hospital-nurse" class="job-card" style="--c:#005eb8">
+    <span class="job-route"><span class="dot"></span>Health and science</span>
+    <h3>Hospital nurse</h3>
+    <p class="headline">\(125 \div 250 \times 5 = 2.5\) ml</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="percentages/#plumber" class="job-card" style="--c:#c2410c">
+    <span class="job-route"><span class="dot"></span>Construction and the built environment</span>
+    <h3>Plumber</h3>
+    <p class="headline">\(\pounds 350 \times 1.2 = \pounds 420\)</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="percentages/#electrician" class="job-card" style="--c:#c2410c">
+    <span class="job-route"><span class="dot"></span>Construction and the built environment</span>
+    <h3>Electrician</h3>
+    <p class="headline">\(5.4 \div 230 \times 100 = 2.3\%\)</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="percentages/#baker" class="job-card" style="--c:#b91c1c">
+    <span class="job-route"><span class="dot"></span>Catering and hospitality</span>
+    <h3>Baker</h3>
+    <p class="headline">\(0.7 \times 500 = 350\) g of water</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="percentages/#jeweller" class="job-card" style="--c:#6d28d9">
+    <span class="job-route"><span class="dot"></span>Creative and design</span>
+    <h3>Jeweller</h3>
+    <p class="headline">\(4 \times 0.375 = 1.5\) g of gold</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="area-perimeter/#painter-decorator" class="job-card" style="--c:#c2410c">
+    <span class="job-route"><span class="dot"></span>Construction and the built environment</span>
+    <h3>Painter and decorator</h3>
+    <p class="headline">\(64 \div 16 = 4\) litres</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="area-perimeter/#groundsperson" class="job-card" style="--c:#4d7c0f">
+    <span class="job-route"><span class="dot"></span>Agriculture, environmental and animal care</span>
+    <h3>Groundsperson (sports turf)</h3>
+    <p class="headline">\(2 \times (100 + 64) = 328\) m of line</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="area-perimeter/#farmer" class="job-card" style="--c:#4d7c0f">
+    <span class="job-route"><span class="dot"></span>Agriculture, environmental and animal care</span>
+    <h3>Farmer</h3>
+    <p class="headline">\(3 \times 150 = 450\) kg</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="averages/#practice-nurse" class="job-card" style="--c:#005eb8">
+    <span class="job-route"><span class="dot"></span>Health and science</span>
+    <h3>Practice nurse</h3>
+    <p class="headline">\(816 \div 6 = 136\)</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="averages/#health-visitor" class="job-card" style="--c:#005eb8">
+    <span class="job-route"><span class="dot"></span>Health and science</span>
+    <h3>Health visitor</h3>
+    <p class="headline">\(100 - 91 = 9\) in 100 weigh more</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="averages/#ecologist" class="job-card" style="--c:#4d7c0f">
+    <span class="job-route"><span class="dot"></span>Agriculture, environmental and animal care</span>
+    <h3>Ecologist</h3>
+    <p class="headline">\(4 \times 1500 = 6000\) orchids</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
+  <a href="averages/#meteorologist" class="job-card" style="--c:#1a2744">
+    <h3>Meteorologist</h3>
+    <p class="headline">\(9.1 - 8.3 = 0.8\) °C warmer</p>
+    <span class="arrow">How it works &rarr;</span>
+  </a>
 </div>
 
 <h2 class="section-title">By maths topic</h2>
@@ -64,43 +189,8 @@
   </a>
 </div>
 
-<h2 class="section-title">By route</h2>
-<p class="practice-note">Jobs grouped by Skills England&rsquo;s routes.</p>
-<div class="topic-grid">
-  <a href="route/agriculture/" class="topic-card">
-    <h3>Agriculture, environmental and animal care</h3>
-    <p>Groundsperson (sports turf), Farmer, Ecologist</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-  <a href="route/catering/" class="topic-card">
-    <h3>Catering and hospitality</h3>
-    <p>Baker</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-  <a href="route/construction/" class="topic-card">
-    <h3>Construction and the built environment</h3>
-    <p>Bricklayer, Plumber, Electrician, Painter and decorator</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-  <a href="route/creative/" class="topic-card">
-    <h3>Creative and design</h3>
-    <p>Jeweller</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-  <a href="route/hair-and-beauty/" class="topic-card">
-    <h3>Hair and beauty</h3>
-    <p>Hairdresser</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-  <a href="route/health-and-science/" class="topic-card">
-    <h3>Health and science</h3>
-    <p>Hospital nurse, Practice nurse, Health visitor</p>
-    <span class="arrow">See the jobs &rarr;</span>
-  </a>
-</div>
-
 <div class="guide-foot">
-  <p><a href="/when-will-i-use-this/">When will I use this?</a> &middot; <a href="/">MaffsGames home</a></p>
+  <p><a href="/">MaffsGames home</a></p>
 </div>
 
 </main>

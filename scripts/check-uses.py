@@ -28,6 +28,10 @@ data/uses.json is the one source; scripts/build-uses.py writes every page from i
   (e) a scenario's route is not one of the 15 routes, or the routes are not Skills England's 15, by exact name;
   (f) in Chromium, any page scrolls sideways at 320x568 or 390x844, with the Aa toggle off or on, or shows KaTeX
       source it did not render, or throws.
+WWIUT-STAND-OUT (22 Nov 2026) adds: every scenario's headline sum recomputes as a step does and reads in full; every
+route colour gives white text 4.5:1 or better, is at least delta E 15 from every other and 25 from the portal's teal;
+every job card's anchor on the hub is a scenario on its topic page; the hub never links to itself; and in Chromium the
+text on every tile, chip and route header measures 4.5:1 or better against the colour behind it.
 Also: ids unique, every topic known, exampleFigures true exactly when the wording says "(example figure)" or
 "(example figures)", and every parent guide named is a page in parents/.
 
@@ -218,7 +222,86 @@ def arithmetic(data):
                 errors.append("%s: noCheck on a step the check reads in full (stale: remove it)" % where)
     report = ["arithmetic: %d steps with \"=\" checked: %d \"=\" signs recomputed, %d labels, %d steps could not be read "
               "in full%s" % (n_steps, n_eq, n_label, len(unread), ":" if unread else "")] + unread
+    # Each card's headline sum (WWIUT-STAND-OUT): read as a step is, and it must read in full: no noCheck for a headline.
+    n_head = 0
+    for sc in data.get("scenarios", []):
+        h = sc.get("headline")
+        where = "%s headline" % sc.get("id")
+        if not isinstance(h, str) or "=" not in h:
+            errors.append("%s: every scenario needs a headline sum with \"=\"" % where)
+            continue
+        eqs = equalities(h)
+        for kind, detail in eqs:
+            if kind == "fail":
+                errors.append("%s: %r does not recompute: %s" % (where, h, detail))
+            elif kind != "ok":
+                errors.append("%s: %r cannot be read in full (%s): a headline is a sum the check recomputes"
+                              % (where, h, detail or kind))
+        n_head += 1
+    report.append("headlines: %d sums recomputed" % n_head)
     return errors, report
+
+
+# ---------------------------------------------------------------- route colours (WWIUT-STAND-OUT)
+
+TEAL = "#0d9488"
+MIN_CONTRAST = 4.5
+MIN_APART = 15     # CIE76 delta E between any two route colours: distinct at a glance
+MIN_FROM_TEAL = 25
+
+
+def _lin(c):
+    c /= 255
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+def _rgb(h):
+    return [int(h[i:i + 2], 16) for i in (1, 3, 5)]
+
+
+def luminance(h):
+    r, g, b = [_lin(x) for x in _rgb(h)]
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b
+
+
+def contrast(a, b):
+    la, lb = sorted((luminance(a), luminance(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def _lab(h):
+    r, g, b = [_lin(x) for x in _rgb(h)]
+    x = (0.4124 * r + 0.3576 * g + 0.1805 * b) / 0.95047
+    y = 0.2126 * r + 0.7152 * g + 0.0722 * b
+    z = (0.0193 * r + 0.1192 * g + 0.9505 * b) / 1.08883
+    f = lambda t: t ** (1 / 3) if t > 0.008856 else 7.787 * t + 16 / 116   # noqa: E731
+    return 116 * f(y) - 16, 500 * (f(x) - f(y)), 200 * (f(y) - f(z))
+
+
+def delta_e(a, b):
+    return sum((p - q) ** 2 for p, q in zip(_lab(a), _lab(b))) ** 0.5
+
+
+def colour_errors(data):
+    errors, cols = [], {}
+    for r in data.get("routes", []):
+        c = r.get("colour")
+        if not isinstance(c, str) or not re.match(r"^#[0-9a-f]{6}$", c):
+            errors.append("route %s: colour %r is not a lower-case #rrggbb" % (r.get("slug"), c))
+            continue
+        cols[r["slug"]] = c
+        if contrast(c, "#ffffff") < MIN_CONTRAST:
+            errors.append("route %s: white on %s is %.2f:1, under %.1f:1" % (r["slug"], c, contrast(c, "#ffffff"), MIN_CONTRAST))
+        if delta_e(c, TEAL) < MIN_FROM_TEAL:
+            errors.append("route %s: %s is too close to the portal's teal %s (delta E %.1f, under %d)"
+                          % (r["slug"], c, TEAL, delta_e(c, TEAL), MIN_FROM_TEAL))
+    items = sorted(cols.items())
+    for i, (a, ca) in enumerate(items):
+        for b, cb in items[i + 1:]:
+            if delta_e(ca, cb) < MIN_APART:
+                errors.append("routes %s and %s: %s and %s are not distinct (delta E %.1f, under %d)"
+                              % (a, b, ca, cb, delta_e(ca, cb), MIN_APART))
+    return errors
 
 
 # ---------------------------------------------------------------- (a), (b), (d), (e) and the rest
@@ -268,10 +351,11 @@ def static_errors(root):
         g = t.get("parentGuide")
         if g is not None and not (root / "parents" / str(g) / "index.html").is_file():
             errors.append("topic %s: parent guide parents/%s/ is not a page" % (t.get("slug"), g))
-    # (c)
+    # (c), with the headlines
     e, r = arithmetic(data)
     errors += e
     report += r
+    errors += colour_errors(data)
     if errors:
         return errors, report
     # (d) live games
@@ -295,25 +379,38 @@ def static_errors(root):
             errors.append("%s differs from what build-uses.py writes (never edit it by hand: edit data/uses.json, then run "
                           "the script)" % path)
     # the build's own output is whole: a page cut short by the generator would match itself and pass (a)
+    hub_path = bu.SECTION + "/index.html"
     for path, text in out.items():
-        if not path.startswith(bu.SECTION + "/"):
+        if not (path.startswith(bu.SECTION + "/") and path.endswith(".html")):
             continue
         want = ["<h1>", "</main>", bu.cf.CANONICAL, "</body>\n</html>\n"]
-        if path == bu.SECTION + "/index.html":
+        if path == hub_path:
             want += ['href="%s/"' % t["slug"] for t in data["topics"]]
-            want += ['href="route/%s/"' % r for r in {s["route"] for s in data["scenarios"] if s["route"]}]
+            want += ['href="route/%s/" class="route-tile"' % r for r in {s["route"] for s in data["scenarios"] if s["route"]}]
+            want += ['href="%s/#%s" class="job-card"' % (s["topic"], s["id"]) for s in data["scenarios"]]
+            want += ["Pick your course", "The jobs", "By maths topic"]
+            if 'href="/%s/"' % bu.SECTION in text:
+                errors.append("%s: the hub links to itself" % path)
         elif "/route/" not in path:
-            want += ["<h2>Practise it</h2>", "<h2>Sources</h2>"]
+            want += ["<h2>Practise it</h2>", "<h2>Sources</h2>", 'href="/%s/"' % bu.SECTION]
         else:
-            want += ["<h2>Sources</h2>"]
+            want += ["<h2>Sources</h2>", "route-hero", 'href="/%s/"' % bu.SECTION]
         for w in want:
             if w not in text:
                 errors.append("%s: build-uses.py's page has no %r (the generator is broken)" % (path, w[:40]))
+    # every job card's anchor is a scenario on its topic page (read from the committed pages)
+    hub = root / hub_path
+    if hub.is_file():
+        for topic, anchor in re.findall(r'href="([a-z0-9-]+)/#([a-z0-9-]+)" class="job-card"', hub.read_text(encoding="utf-8")):
+            page = root / bu.SECTION / topic / "index.html"
+            if not page.is_file() or ('id="%s"' % anchor) not in page.read_text(encoding="utf-8"):
+                errors.append("%s: the job card %s/#%s points at no scenario on that topic page" % (hub_path, topic, anchor))
     for path in bu.stale(root, out) if out else []:
         errors.append("%s is not written by build-uses.py (stale: run the script, which deletes it)" % path)
-    report.append("pages: %d generated (%d topics, %d routes with scenarios), %d scenarios, %d sources"
-                  % (len(out) - 1, len(data["topics"]), len(out) - 2 - len(data["topics"]), len(data["scenarios"]),
-                     sum(len(s["sources"]) for s in data["scenarios"])))
+    html = [p for p in out if p.endswith(".html")]
+    report.append("pages: %d generated (%d topics, %d routes with scenarios) and the section's stylesheet, %d scenarios, "
+                  "%d sources" % (len(html), len(data["topics"]), len(html) - 1 - len(data["topics"]), len(data["scenarios"]),
+                                  sum(len(s["sources"]) for s in data["scenarios"])))
     report.append("practise it: " + "; ".join("%s: %s" % (t["slug"], ", ".join(s for s, _, _ in bu.practise(root, t, live)))
                                               for t in data["topics"]))
     return errors, report
@@ -332,7 +429,19 @@ MEASURE = """() => {
     }
   }
   const raw = /\\\\\\(|\\\\\\)/.test(document.body.innerText);
-  return {over, widest, raw, katex: document.querySelectorAll('.katex').length, aa: document.body.classList.contains('accessible')};
+  // Text on the route colours (tiles, chips, a route page's header): its colour against the first painted background
+  // behind it, measured as the browser draws it.
+  const rgb = s => (s.match(/[\\d.]+/g) || []).map(Number);
+  const lum = c => { const [r, g, b] = c.slice(0, 3).map(v => { v /= 255; return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+  const bg = el => { for (let e = el; e; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c.length === 3) return c; } return [255, 255, 255]; };
+  const low = [];
+  let coloured = 0;
+  for (const el of document.querySelectorAll('.route-tile h3, .route-tile p, .route-tile .tile-go, .route-chip, .route-hero h1, .route-hero .subtitle, .route-hero .badge')) {
+    coloured++;
+    const a = lum(rgb(getComputedStyle(el).color)), b = lum(bg(el)), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+    if (r < 4.5) low.push((el.className || el.tagName.toLowerCase()) + ' "' + el.textContent.trim().slice(0, 30) + '" ' + r.toFixed(2) + ':1');
+  }
+  return {over, widest, raw, low, coloured, katex: document.querySelectorAll('.katex').length, aa: document.body.classList.contains('accessible')};
 }"""
 
 
@@ -393,6 +502,8 @@ def browse(root, pages):
                             faults.append("%s: scrolls sideways by %d px (widest: %s)" % (where, m["over"], m["widest"]))
                         if mode == "aa" and not m["aa"]:
                             faults.append("%s: the Aa toggle did not switch the page to Aa" % where)
+                        for x in m["low"]:
+                            faults.append("%s: text on a route colour under 4.5:1: %s" % (where, x))
                         if m["raw"] or (maths and not m["katex"]):
                             faults.append("%s: shows KaTeX source it did not render" % where)
                         for e in errs:
@@ -405,7 +516,7 @@ def browse(root, pages):
 
 def generated_pages(root):
     out, _ = bu.build(root)
-    return [p for p in out if p.startswith(bu.SECTION + "/")]
+    return [p for p in out if p.startswith(bu.SECTION + "/") and p.endswith(".html")]
 
 
 # ---------------------------------------------------------------- self-test
@@ -509,7 +620,25 @@ def selftest():
             ("a parent guide that does not exist", lambda: data(lambda d: d["topics"][0].update(parentGuide="ratio"), rebuild=False),
              "parent guide parents/ratio/ is not a page"),
             ("an id used twice", lambda: data(lambda d: sc(d, "farmer").update(id="baker")), "scenario id baker is used twice"),
-            ("a generator that cuts the hub short", lambda: setattr(bu, "tail", lambda: ""), "index.html: build-uses.py's page has no '</main>'"),
+            ("a generator that cuts the hub short", lambda: setattr(bu, "tail", lambda *a, **k: ""), "index.html: build-uses.py's page has no '</main>'"),
+            # WWIUT-STAND-OUT
+            ("a wrong headline (2.5 ml as 25 ml)", lambda: data(lambda d: sc(d, "hospital-nurse").update(headline="125 ÷ 250 × 5 = 25 ml")),
+             "hospital-nurse headline: '125 ÷ 250 × 5 = 25 ml' does not recompute"),
+            ("a headline the check cannot read", lambda: data(lambda d: sc(d, "baker").update(headline="70% of 500 = 350 g of water")),
+             "baker headline: '70% of 500 = 350 g of water' cannot be read in full"),
+            ("a scenario with no headline", lambda: data(lambda d: sc(d, "farmer").pop("headline"), rebuild=False),
+             "farmer headline: every scenario needs a headline"),
+            ("a route colour failing 4.5:1", lambda: data(lambda d: d["routes"][4].update(colour="#f97316")),
+             "route construction: white on #f97316 is"),
+            ("a route colour the same as the teal", lambda: data(lambda d: d["routes"][1].update(colour="#0d9488")),
+             "route business: #0d9488 is too close to the portal's teal"),
+            ("two route colours alike", lambda: data(lambda d: d["routes"][3].update(colour="#c2410d")),
+             "routes catering and construction: #c2410d and #c2410c are not distinct"),
+            ("a broken job-card anchor", lambda: edit(bu.SECTION + "/index.html", 'href="ratio/#bricklayer" class="job-card"',
+                                                      'href="ratio/#bricklayers" class="job-card"'),
+             "the job card ratio/#bricklayers points at no scenario"),
+            ("the hub linking to itself again", lambda: setattr(bu, "tail", lambda *a, **k: real_tail(True)),
+             "index.html: the hub links to itself"),
         ]
         real_tail = bu.tail
         for name, plant, needle in static_plants:
@@ -541,7 +670,9 @@ def selftest():
         edit(avg, "</head>", "<style>body.accessible .hero h1{width:420px}</style>\n</head>")
         edit(con, "renderMathInElement(document.body,", "void(document.body,")
         clean = bu.SECTION + "/ratio/index.html"
-        found = browse(tmp, [hub, avg, con, clean])
+        agri = bu.SECTION + "/route/agriculture/index.html"
+        edit(agri, 'class="hero route-hero" style="--c:#4d7c0f"', 'class="hero route-hero" style="--c:#86efac"')
+        found = browse(tmp, [hub, avg, con, clean, agri])
         browser_plants = [
             ("a 360 px element on the hub, caught at 320 normal", hub + " at 320x568 normal: scrolls sideways"),
             ("the same, missed at 390 (it fits)", None),
@@ -549,6 +680,7 @@ def selftest():
             ("the Aa-only overflow is not reported in normal mode", None),
             ("KaTeX left unrendered", con + " at 320x568 normal: shows KaTeX source it did not render"),
             ("an untouched page passes", None),
+            ("a route header too light for white text", agri + " at 320x568 normal: text on a route colour under 4.5:1"),
         ]
         checks = [
             any(f.startswith(browser_plants[0][1]) for f in found),
@@ -557,6 +689,7 @@ def selftest():
             not any(f.startswith(avg + " at 390x844 normal: scrolls") for f in found),
             any(f.startswith(browser_plants[4][1]) for f in found),
             not any(f.startswith(clean) for f in found),
+            any(f.startswith(browser_plants[6][1]) for f in found),
         ]
         for (name, _), ok in zip(browser_plants, checks):
             if ok:
