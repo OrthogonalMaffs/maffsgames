@@ -5,6 +5,7 @@
     python scripts/measure-phone-fit.py --aa            # the same in Aa (OpenDyslexic) mode
     python scripts/measure-phone-fit.py --laptop        # 1366x768 and 1280x720, normal mode (ruling R2)
     python scripts/measure-phone-fit.py --only new-shapes
+    python scripts/measure-phone-fit.py --only new-shapes,split-it   # several games: a list, no spaces needed
     python scripts/measure-phone-fit.py --workers 6
     python scripts/measure-phone-fit.py --selftest      # the classification, planted cases (no browser)
 
@@ -927,9 +928,12 @@ async def run(args):
     from playwright.async_api import async_playwright
     slugs = roster_slugs()
     if args.only:
-        slugs = [s for s in slugs if s == args.only]
-        if not slugs:
-            sys.exit("no roster game named %r" % args.only)
+        # A comma-separated list (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026: the workflow measures the games a change touches).
+        wanted = [w.strip() for w in args.only.split(",") if w.strip()]
+        missing = sorted(set(wanted) - set(slugs))
+        if missing or not wanted:
+            sys.exit("no roster game named %s" % ", ".join(repr(m) for m in missing or [args.only]))
+        slugs = [s for s in slugs if s in wanted]
     proc, base = bc.start_stub_server()
     t0 = time.time()
     try:
@@ -1340,7 +1344,7 @@ def main():
     if "--selftest" in sys.argv[1:]:
         sys.exit(selftest())
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--only", help="one game slug")
+    ap.add_argument("--only", help="one game slug, or several separated by commas")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--out", default=DEFAULT_OUT)
     ap.add_argument("--katex-dir", help="serve KaTeX 0.16.9 from this local dist/ (sandbox only)")

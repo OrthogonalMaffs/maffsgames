@@ -5,6 +5,13 @@
 # laptop), nightly and after a push to main that changes a shared path. A failure not on scripts/phone-fit-state.json's
 # lists fails the run, and GitHub e-mails Jon a failed run on main, as it does scheduled-watch (no issue is opened).
 #
+# THE GAMES A CHANGE TOUCHES (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026). A pull request, and a push to main, that changes no
+# shared path but changes a game's own files (games/<slug>/...) measures those games only (--only <list>), in all three
+# modes; one that changes neither measures nothing. A one-game change used to be measured only by the next night's run,
+# after it had merged. A pull request's run measures its merge commit (base + PR) and shows on the PR; merge-pr.py waits
+# for it on the PR's head and refuses a red one, as it does the Gate. Every pull request gets a run (the "changed" job
+# always runs), so "no run yet" always means "not started yet", never "nothing to measure".
+#
 # WHICH PATHS ARE SHARED. A `paths:` filter here would be a second list, so every push to main starts the small "changed"
 # job, which asks scripts/ci-deps.py, the Plan job's own selection code: its is_shared() is the one definition (CI itself
 # or an unknown path, a file two or more games load, the checker and what it reads). Nothing is listed.
@@ -22,34 +29,40 @@ on:
     - cron: "23 2 * * *"          # 02:23 UTC nightly
   push:
     branches: [main]            # the "changed" job below decides; a `paths:` filter here would be a second list
+  pull_request: {}              # the same: every PR gets a run, so merge-pr.py can tell "not started" from "nothing to do"
   workflow_dispatch: {}
 
 permissions:
   contents: read
 
+# main's runs (nightly, push, manual) queue in one group, as before; each PR has its own, and a newer push to it cancels
+# the run on its older head (merge-pr.py judges the run on the head it merges, never an older one).
 concurrency:
-  group: phone-fit-full
-  cancel-in-progress: false
+  group: ${{ github.event_name == 'pull_request' && format('phone-fit-pr-{0}', github.event.pull_request.number) || 'phone-fit-full' }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changed:
-    name: Did this push change a shared path
-    if: github.event_name == 'push'
+    name: Did this change a shared path or a game
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     outputs:
       shared: ${{ steps.ask.outputs.shared }}
+      games: ${{ steps.ask.outputs.games }}
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0           # the push's first commit, for the diff
+          fetch-depth: 0           # the push's first commit, or the PR merge commit's base parent, for the diff
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
       - name: Ask the Plan job's selection code
         id: ask
         env:
-          BEFORE: ${{ github.event.before }}
+          # A push: from the commit before it. A pull request: the checkout is its merge commit, so HEAD^1 is the base it
+          # merges onto and the diff is exactly what the PR would land.
+          BEFORE: ${{ github.event_name == 'pull_request' && 'HEAD^1' || github.event.before }}
         run: |
           python -X utf8 - <<'PY'
           import importlib.util, os, subprocess
@@ -57,20 +70,27 @@ jobs:
           deps = importlib.util.module_from_spec(spec)
           spec.loader.exec_module(deps)
           diff = subprocess.run(["git", "diff", "--name-only", os.environ["BEFORE"], "HEAD"], capture_output=True, text=True)
+          paths = [p for p in diff.stdout.split("\n") if p]
           if diff.returncode:                  # a new branch or a rewritten history: nothing to compare, so measure
               why = ["no usable diff from %s" % os.environ["BEFORE"]]
           else:
-              why = [p for p in diff.stdout.split("\n") if p and deps.is_shared(p)]
-          print("shared paths in this push:", why or "none")
+              why = [p for p in paths if deps.is_shared(p)]
+          games = [] if why else deps.measured_pages(paths)
+          print("shared paths in this change:", why or "none")
+          print("measured games it changes:", ", ".join(games) or "none" if not why else "(every game: a shared path)")
           with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8", newline="") as fh:
               fh.write("shared=%s\n" % ("true" if why else "false"))
+              fh.write("games=%s\n" % ",".join(games))
           PY
 
   measure:
-    name: Every live game, ${{ matrix.mode }} mode
+    name: Phone fit, ${{ matrix.mode }} mode
     needs: changed
-    # always(): `changed` is skipped on the schedule and a manual run, which measure regardless.
-    if: always() && (github.event_name != 'push' || needs.changed.outputs.shared == 'true')
+    # always(): `changed` is skipped on the schedule and a manual run, which measure everything regardless. A push or a
+    # pull request measures everything for a shared path, else only the games it changes, else nothing.
+    if: >-
+      always() && ((github.event_name != 'push' && github.event_name != 'pull_request')
+      || needs.changed.outputs.shared == 'true' || needs.changed.outputs.games != '')
     runs-on: ubuntu-24.04
     timeout-minutes: 60
     strategy:
@@ -116,14 +136,18 @@ jobs:
         shell: bash
         env:
           MODE: ${{ matrix.mode }}
+          # Empty on the schedule, a manual run and a shared change: every live game. Otherwise the changed games.
+          ONLY: ${{ needs.changed.outputs.shared != 'true' && needs.changed.outputs.games || '' }}
         run: |
           mkdir -p phone-fit-reports
           flag=""; [ "$MODE" = aa ] && flag=--aa; [ "$MODE" = laptop ] && flag=--laptop
+          [ -n "$ONLY" ] && { flag="$flag --only $ONLY"; echo "measuring only the games this change touches: $ONLY"; }
+          [ -z "$ONLY" ] && echo "measuring every live game"
           t0=$(date +%s); rc=0
           python -X utf8 scripts/measure-phone-fit.py $flag --out "phone-fit-reports/$MODE.md" --json "phone-fit-reports/$MODE.json" \
             > "phone-fit-reports/$MODE.log" 2>&1 || rc=$?
           cat "phone-fit-reports/$MODE.log"
-          line="$MODE: exit $rc in $(($(date +%s) - t0)) s"
+          line="$MODE: exit $rc in $(($(date +%s) - t0)) s${ONLY:+ (only $ONLY)}"
           echo "$line"
           { echo "### $line"; sed -n 's/^GATE /- /p' "phone-fit-reports/$MODE.log"; } >> "$GITHUB_STEP_SUMMARY"
           if [ "$rc" -ne 0 ]; then
@@ -140,8 +164,10 @@ jobs:
   verdict:
     name: Every mode passed
     needs: [changed, measure]
-    # The same condition as measure: skipped when a push changed nothing shared, run whenever the modes ran.
-    if: always() && (github.event_name != 'push' || needs.changed.outputs.shared == 'true')
+    # The same condition as measure: skipped when a change touched nothing shared and no game, run whenever the modes ran.
+    if: >-
+      always() && ((github.event_name != 'push' && github.event_name != 'pull_request')
+      || needs.changed.outputs.shared == 'true' || needs.changed.outputs.games != '')
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:

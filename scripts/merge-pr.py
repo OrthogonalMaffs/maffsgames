@@ -13,6 +13,13 @@
 The guard, from the GitHub REST API through `gh api` (the credentials the lanes already use):
 
   (a) the PR is open, and its Gate ("Gate (every job passed)") is a completed success on the PR's head commit;
+  (a') the PR head's phone-fit run (PHONE-FIT-CHANGED-GAMES, 22 Nov 2026): .github/workflows/phone-fit-full.yml runs on
+      every pull request and measures the games the PR changes (all of them for a shared path, none when it changes
+      neither). The newest pull_request run of it on the head commit must be a completed success, judged as the Gate
+      is, by its own status and conclusion. Every push to a PR starts one, so no run on the head means not started yet:
+      waited for within --wait, then refused (a head pushed before that workflow change has none: merge main in, which
+      AGENTS.md asks for anyway once main has gained checks). A run that measured nothing is a success like any other.
+      --override never waives it.
   (b) main's check-site runs, counting only a push to main or a manual run on main (a pull request run or the
       Monday schedule is not "main's full run"): none is queued or in progress, and the newest completed one is
       a success, AND every job of that run has finished and none failed (a run can read "completed success" in the
@@ -77,6 +84,7 @@ import time
 
 GATE = "Gate (every job passed)"
 WORKFLOW = "check-site.yml"
+PHONE_FIT = "phone-fit-full.yml"     # (a'): its pull_request run on the PR's head
 MAIN_EVENTS = ("push", "workflow_dispatch")
 POLL_S = 30
 JOB_OK = ("success", "skipped", "neutral")
@@ -183,6 +191,24 @@ def check_gate(api, pr):
     if g["conclusion"] != "success":
         return False, "the Gate on head %s is %s" % (sha[:7], g["conclusion"])
     return True, "Gate green on head %s" % sha[:7]
+
+
+def check_phone_fit(api, pr):
+    """(a') -> (ok, why). The newest pull_request run of phone-fit-full.yml on the head commit, judged as the Gate is: by
+    its own status and conclusion. No run yet is "not finished" (every PR push starts one), never green."""
+    sha = pr["head"]["sha"]
+    d = api("GET", "%s/actions/workflows/%s/runs?event=pull_request&head_sha=%s&per_page=20" % (R, PHONE_FIT, sha))
+    runs = sorted((r for r in d.get("workflow_runs", []) if r.get("head_sha") == sha and r.get("event") == "pull_request"),
+                  key=lambda r: r["id"])
+    if not runs:
+        return False, ("no phone-fit run on head %s yet, not finished (every push to a PR starts one; a head pushed before "
+                       "PHONE-FIT-CHANGED-GAMES has none: merge main into the branch)" % sha[:7])
+    r = runs[-1]
+    if r["status"] != "completed":
+        return False, "phone-fit run %s on head %s is %s, not finished" % (r["id"], sha[:7], r["status"])
+    if r["conclusion"] != "success":
+        return False, "phone-fit run %s on head %s is %s" % (r["id"], sha[:7], r["conclusion"])
+    return True, "phone-fit run %s green on head %s" % (r["id"], sha[:7])
 
 
 def main_runs(api):
@@ -305,7 +331,7 @@ def git_local(ref):
 
 
 def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print, clean=disarm,
-          head=None, local=no_local, clock=time.time):
+          head=None, local=no_local, clock=time.time, phone_check=check_phone_fit):
     """Merge or raise Refused. Returns (merge_response, judged_run).
 
     MERGE-PR-ROBUST: `head` is the commit expected at the PR's head (--head, or `local(<the PR's head ref>)`, the
@@ -336,6 +362,7 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
                 sleep(POLL_S)
                 continue
             ok_a, why_a = check_gate(api, pr)
+            ok_p, why_p = phone_check(api, pr)          # (a'), never waived
             ok_b, why_b, run = main_check(api) if override is None else (True, "waived by --override", None)
         except Transient as e:
             what = "GitHub %s reading %s" % (e.status, e.what)
@@ -344,14 +371,16 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
             log("waiting: " + what)
             sleep(POLL_S)
             continue
-        if ok_a and ok_b:
+        if ok_a and ok_p and ok_b:
             break
         # a thing that is merely unfinished may be waited for; a red one never is
         unfinished = ("not finished" in why_a or "no %r" % GATE in why_a or "not finished" in why_b)
-        red = (not ok_a and not unfinished) or (not ok_b and "not finished" not in why_b)
+        red = ((not ok_a and not unfinished) or (not ok_b and "not finished" not in why_b)
+               or (not ok_p and "not finished" not in why_p))
+        said = "; ".join(w for ok, w in ((ok_a, why_a), (ok_p, why_p), (ok_b, why_b)) if not ok)
         if red or clock() >= deadline:
-            raise Refused("; ".join(w for ok, w in ((ok_a, why_a), (ok_b, why_b)) if not ok))
-        log("waiting: " + "; ".join(w for ok, w in ((ok_a, why_a), (ok_b, why_b)) if not ok))
+            raise Refused(said)
+        log("waiting: " + said)
         sleep(POLL_S)
     if override is not None:
         _, why, run = main_check(api)
@@ -495,6 +524,11 @@ NOISE = [_run(39561331795, "pull_request", "completed", "failure", "2026-10-21T0
          _run(39600000000, "schedule", "completed", "failure", "2026-10-21T07:25:00Z")] + GREEN
 
 
+def _pfrun(sha, status, concl, i=45000000001, event="pull_request"):
+    """A phone-fit-full.yml run on a PR head (PHONE-FIT-CHANGED-GAMES)."""
+    return _run(i, event, status, concl, "2026-11-22T10:00:00Z", "claude/x", sha)
+
+
 def _job(name, status="completed", concl="success"):
     return {"name": name, "status": status, "conclusion": concl}
 
@@ -521,8 +555,12 @@ JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
 
 class Fake:
     def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False,
-                 max_per_page=None, commits=None, commits_error=False, faults=None, pr_script=None, gates=None):
+                 max_per_page=None, commits=None, commits_error=False, faults=None, pr_script=None, gates=None,
+                 pf=None):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
+        # pf (PHONE-FIT-CHANGED-GAMES): successive lists of phone-fit-full.yml runs, one per read (the last repeats);
+        # None: one completed success pull_request run on whatever head is asked for.
+        self.pf = list(pf) if pf is not None else None
         # MERGE-PR-ROBUST: faults are [method, path substring, times (None: every time), gh's text]; each call that
         # matches raises classify()'s exception, as gh_raw would. pr_script: successive PR reads (the last repeats);
         # gates: the Gate's check-runs by head sha.
@@ -562,6 +600,12 @@ class Fake:
             if self.commits_error:
                 raise Refused("gh api GET %s failed: HTTP 502" % path)
             return self.commits
+        if method == "GET" and "/actions/workflows/%s/" % PHONE_FIT in path:
+            sha = path.split("head_sha=", 1)[1].split("&", 1)[0]
+            if self.pf is None:
+                return {"workflow_runs": [_pfrun(sha, "completed", "success")]}
+            runs = self.pf.pop(0) if len(self.pf) > 1 else self.pf[0]
+            return {"workflow_runs": [r for r in runs if r["head_sha"] == sha]}
         if method == "GET" and "/actions/workflows/" in path:
             runs = self.script.pop(0) if len(self.script) > 1 else (self.script[0] if self.script else self.runs)
             return {"workflow_runs": runs}
@@ -767,6 +811,66 @@ def cases(main_check=check_main, clean=disarm):
          and "(skip ci)" in put.get("commit_message", "") and "(CI Skip)" in put.get("commit_message", "")
          and "skip-checks true" in put.get("commit_message", "") and put.get("commit_title", "").endswith("(#473)"),
          err or repr(put.get("commit_message")))
+    out += phone_fit_cases(main_check)
+    return out
+
+
+def phone_fit_cases(main_check=check_main, phone_check=check_phone_fit):
+    """(a') PHONE-FIT-CHANGED-GAMES, 22 Nov 2026: the PR head's phone-fit run, waited for and judged as the Gate is."""
+    out = []
+
+    def case(name, ok, detail=""):
+        out.append((name, bool(ok), detail))
+
+    def go(fake, wait=0, **kw):
+        c, logs = Clock(), []
+        try:
+            guard(fake, 473, wait=wait, main_check=main_check, sleep=c.sleep, clock=c, log=logs.append,
+                  phone_check=phone_check, **kw)
+            return None, c, logs
+        except Refused as e:
+            return str(e), c, logs
+
+    ok, red, going, queued = (_pfrun(HEAD, "completed", "success"), _pfrun(HEAD, "completed", "failure"),
+                              _pfrun(HEAD, "in_progress", None), _pfrun(HEAD, "queued", None))
+    f = Fake(pf=[[red]])
+    err, c, _ = go(f, wait=3600)
+    case("(a') a red phone-fit run on the head refuses at once (never waited out), nothing merged",
+         err and "phone-fit" in err and "failure" in err and not f.merged() and c.t == 0, err or "MERGED")
+    f = Fake(pf=[[red]])
+    err, c, _ = go(f, override="Jon, 22 Nov 2026: merge it")
+    case("(a') a red phone-fit run refuses even with --override (no comment, no merge)",
+         err and "phone-fit" in err and not f.merged() and not f.comments(), err or "MERGED")
+    f = Fake(pf=[[]])
+    err, c, _ = go(f)
+    case("(a') no phone-fit run on the head yet (not started): refused with --wait 0, never green",
+         err and "no phone-fit run" in err and "not finished" in err and not f.merged(), err or "MERGED")
+    f = Fake(pf=[[], [queued], [going], [ok]])
+    err, c, logs = go(f, wait=3600)
+    case("(a') not started, then queued, then running, then green: waited for within --wait, then merges",
+         err is None and len(f.merged()) == 1 and c.slept == 3 and any("no phone-fit run" in l for l in logs), err or repr(logs))
+    f = Fake(pf=[[going]])
+    err, c, _ = go(f, wait=120)
+    case("(a') a phone-fit run that never finishes: refused when --wait runs out, naming it",
+         err and "in_progress" in err and "not finished" in err and not f.merged() and c.t >= 120, err or "MERGED")
+    f = Fake(pf=[[ok]])
+    err, c, logs = go(f, wait=3600)
+    case("(a') a run that measured nothing (no game or shared path changed) is a success: merges with no wait",
+         err is None and len(f.merged()) == 1 and c.t == 0 and not logs, err or repr(logs))
+    f = Fake(pf=[[_pfrun(HEAD, "completed", "success", i=45000000001), _pfrun(HEAD, "completed", "failure", i=45000000009)]])
+    err, c, _ = go(f)
+    case("(a') the newest run on the head wins: a red rerun after a green one refuses",
+         err and "45000000009" in err and not f.merged(), err or "MERGED")
+    f = Fake(pf=[[_pfrun(HEAD, "completed", "failure", i=45000000001), _pfrun(HEAD, "completed", "success", i=45000000009)]])
+    err, c, _ = go(f)
+    case("(a') ... and a green rerun after a red one merges", err is None and len(f.merged()) == 1, err or "")
+    f = Fake(pf=[[_pfrun("9" * 40, "completed", "success"), _pfrun(HEAD, "completed", "failure", i=45000000009)]])
+    err, c, _ = go(f)
+    case("(a') a green run on another commit never counts for this head", err and "failure" in err and not f.merged(), err or "MERGED")
+    f = Fake(pf=[[_pfrun(HEAD, "completed", "success", event="push")]])
+    err, c, _ = go(f)
+    case("(a') a push run on the head commit is not the PR's run: not green", err and "no phone-fit run" in err
+         and not f.merged(), err or "MERGED")
     return out
 
 
@@ -1135,6 +1239,12 @@ def selftest():
     print("  %s  removing the red-main check fails %d of %d main cases%s" % (
         "PASS" if not missed else "FAIL", len(sens) - len(missed), len(sens), "" if not missed else ": still passing " + str(missed)))
     bad += bool(missed)
+    # PHONE-FIT-CHANGED-GAMES: with the phone-fit check removed, the red and not-started cases must notice
+    mutant = {n for n, ok, _ in phone_fit_cases(phone_check=lambda api, pr: (True, "mutant: always green")) if not ok}
+    sens = {n for n, _, _ in phone_fit_cases() if n.startswith("(a') a red phone-fit") or n.startswith("(a') no phone-fit run")}
+    print("  %s  removing the phone-fit check fails %d of %d red and not-started cases" % (
+        "PASS" if sens and sens <= mutant else "FAIL", len(sens & mutant), len(sens)))
+    bad += not (sens and sens <= mutant)
     # ... and the jobs cases must catch the run-only judge (cases i, ii and iv)
     old = [n for n, ok, _ in cases(main_check=check_main_run_only) if not ok]
     allc = [n for n, _, _ in cases()]

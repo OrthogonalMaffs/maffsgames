@@ -4003,3 +4003,10 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 ## Part closed by COMPLEX-CONVERTER-WHY (22 Nov 2026)
 
 Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word for word: complex-converter (Roulette). A wrong answer in Form Roulette now shows a "Why" reference card (canon 7.6.2, above Next) that works the conversion with the item's own numbers and names the slip when the picked option is one slip by computation; checked for all 55 items and 165 distractors by `scripts/verify-complex-converter.py`. The rest of the row stays.
+
+## Closed by PHONE-FIT-CHANGED-GAMES (22 Nov 2026)
+
+29. **CI-DEPS-TOOLS** (PACK-GENERATOR, Amendment 2): `tools` is not in `scripts/ci-deps.py` KNOWN_TOP, so a `tools/` change selects every verifier. Moved from cloud.md's live pointers. Owner: Project Claude to triage; cloud lane (gate file).
+51. **CI-DEPS-UGH-STATS** (UGH-STATS-PAGES, 14 Nov 2026; Jon: log it, do not change): `scripts/ci-deps.py` KNOWN_TOP does not name `ugh-stats`, so a change under `ugh-stats/` is a path in no known area and selects every verifier in the Gate. Add the folder to KNOWN_TOP. Owner: cloud lane (a Gate file).
+
+**Closed 22 Nov 2026 (PHONE-FIT-CHANGED-GAMES).** Rows CI-DEPS-TOOLS and CI-DEPS-UGH-STATS, moved word for word above. `scripts/ci-deps.py` KNOWN_TOP gained class, printables, ugh-stats, core-maths, tools and firebase, and its self-test now fails on any tracked top-level folder in neither KNOWN_TOP nor ALL_PREFIXES.
