@@ -24,7 +24,7 @@ Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-th
 - `scripts/check-uses.py` (CI line, `--selftest && --check`): (a) to (f) as the contract lists, plus a guard that the build's own pages are whole. 27 steps with "=": 26 signs recomputed, 2 labels, and 5 steps marked noCheck ("% of" three times, a ratio, a unit change). Self-test: 41 of 41 caught. Chromium: 11 pages x 320/390 x normal/Aa, no sideways scroll.
 - Outside EXACT CHANGE, needed by site-wide checks: `check-publish-scope.py` SITE gains `when-will-i-use-this/`; site-nav.js HUBS gains the 4 topic pages (Jon's ruling, 18:05). Hub has no back link: "Back to games" scrolled 4 px at 320 in Aa. parents/index.html has that same 4 px scroll on main (reported, not fixed: DO NOT TOUCH).
 - Footer: defined once (check-footer.py `_LINKS`) but written into 159 pages on main (170 with these 11) by apply-footer.py, every game among them: not changed (DO NOT TOUCH any game).
-- `check-uses-links.py --live` (not CI): 17 of 18 answer 200; RCN's dosage page is 404 (reported, not replaced).
+- `check-uses-links.py --live` (not CI): on the first run 17 of 18 answered 200 and RCN's dosage page was 404; Project Claude's review moved it to RCN Learn (https://rcnlearn.rcn.org.uk/Search/Dosage-for-liquid-medicines), then re-run.
 - Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
 - Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
 
