@@ -30,7 +30,9 @@
   --l4:#ef4444;--further:#8b5cf6;
 }
 body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.5;}
-.back-link{position:fixed;top:16px;left:16px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;z-index:200;opacity:0.7;transition:opacity .2s;}
+/* The back link sits in the page's flow above every screen, as the other games' do; it used to be fixed at the top left,
+   over each mode's title (contract COMPLEX-CONVERTER-WHY, Jon 21 Nov 2026). */
+.back-link{display:inline-block;margin:8px 16px 4px;color:var(--muted);text-decoration:none;font-size:13px;font-weight:600;opacity:0.7;transition:opacity .2s;}
 .back-link:hover{opacity:1;color:var(--accent);}
 
 /* MENU */
@@ -135,6 +137,27 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .calc-opt .katex{font-size:.95em}
 .calc-result{margin-top:12px;text-align:center;font-size:20px;font-weight:700;color:var(--orange);min-height:28px}
 
+/* WHY: after a wrong answer in Form Roulette, a reference card between the marked options and Next (canon 7.6.1,
+   7.6.2; contract COMPLEX-CONVERTER-WHY), built as Circle Theorem Spotter's. Two copies (schools/assets/fold.css):
+   .maffs-ref-fits open, .maffs-ref-phone collapsed beside Next; nothing shows until a wrong answer (.shown). The open
+   copy shows only where every item's Next stays above the fold with it open. */
+.why-row .maffs-ref{--ref-bg:var(--panel);--ref-edge:var(--accent);--hint:var(--accent);text-align:left}
+.why-row:not(.shown) > .maffs-ref{display:none}
+.why-row.shown > .maffs-ref-fits{display:none}
+.why-row.shown > .maffs-ref-phone{display:block}
+/* Open where it fits. Measured 22 Nov 2026 (all 55 items, every distractor picked, real fonts; Aa measures the same, as this
+   page has no Aa toggle; widths 320 to 768 in 20px steps, then 769 to 1600; the fold is the viewport less the 40px fixed footer, as measure-phone-fit reads it):
+   with the card open, Next needs a viewport 1414px tall in the one-column layout (to 768 wide; id 42) and 853px from 769
+   wide (id 38 at 769, 790 from 1100). Each band takes its worst need plus 30px, so every canon phone and both laptops
+   (1280x720, 1366x768) get the collapsed card; collapsed, it sits beside Next and adds no height. */
+@media (max-width: 768px) and (min-height: 1450px), (min-width: 769px) and (min-height: 885px) {
+  .why-row.shown > .maffs-ref-fits{display:block}
+  .why-row.shown > .maffs-ref-phone{display:none}
+}
+.why-row .wl{margin:.3rem 0;line-height:1.7;overflow-wrap:break-word}
+.why-row .wl.why-slip{font-weight:600;color:var(--orange)}
+.why-row .wl .katex{font-size:1.05em}
+
 /* HEATMAP (sniper end) */
 .heatmap-wrap{margin:16px auto;max-width:400px;width:100%;}
 
@@ -178,6 +201,7 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
   ]
 }
 -->
+<link rel="stylesheet" href="/schools/assets/fold.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 <script src="/schools/assets/site-nav.js"></script>
 </head>
@@ -225,7 +249,18 @@ body.accessible p,body.accessible .question-text,body.accessible .statement-text
       <div class="given-display" id="rGiven"></div>
       <div class="target-label" id="rTarget">Convert to polar form</div>
       <div class="options-grid" id="rOptions"></div>
-      <div id="rNext"></div>
+      <!-- Why, between the marked options and Next (canon 7.6.1, 7.6.2): open where it fits, collapsed elsewhere. -->
+      <div class="maffs-ref-row why-row" id="rWhyRow">
+        <details class="maffs-ref maffs-ref-phone">
+          <summary><span class="maffs-ref-show">Why</span><span class="maffs-ref-title">Why</span></summary>
+          <div class="maffs-ref-body" aria-live="polite"></div>
+        </details>
+        <details class="maffs-ref maffs-ref-fits" open>
+          <summary><span class="maffs-ref-show">Why</span><span class="maffs-ref-title">Why</span></summary>
+          <div class="maffs-ref-body" aria-live="polite"></div>
+        </details>
+        <div id="rNext"></div>
+      </div>
       <div class="calc-btn-wrap" id="calcBtnWrap" style="display:none"><button class="calc-btn" id="calcBtn" onclick="toggleCalc()">&#x1f522; Calculator (&minus;25 pts)</button></div>
       <div class="calc-panel" id="calcPanel"><div class="calc-mode-badge" id="calcMode">DEG</div><div class="calc-grid" id="calcGrid"></div><div class="calc-result" id="calcResult"></div></div>
       <div class="context-line" id="rContext"></div>
@@ -515,6 +550,7 @@ function startRoulette() {
 const ARG_RANGE = { polar: ', giving θ with −180° < θ ≤ 180°', exponential: ', giving θ with −π < θ ≤ π' };
 function showRouletteQ() {
   if(window.MaffsNext) MaffsNext.clear(document.getElementById('rNext'));
+  clearWhy();
   if(rIndex >= rQuestions.length) { endRoulette(); return; }
   const q = rQuestions[rIndex];
   document.getElementById('rqNum').textContent = rIndex + 1;
@@ -603,6 +639,268 @@ function selectCalcOpt(div, opt, grid) {
   document.getElementById('calcResult').textContent = '= ' + opt.result;
 }
 
+// === WHY: the working after a wrong answer in Form Roulette (contract COMPLEX-CONVERTER-WHY, Jon 21 Nov 2026) ===
+// A reference card (canon 7.6.2) built from the item's own fields and its given and keyed TeX, so every number is the
+// item's. A slip is named only when the picked option is that slip by computation from the item's numbers; when no
+// one slip matches (or two do), the card shows the working alone. scripts/verify-complex-converter.py recomputes every
+// card and every named slip for all 55 items.
+const WHY = (function () {
+  // A TeX number: digits, \sqrt{}, \dfrac{}{}, \pi, a/b, unary minus, implied products (2\sqrt{3}, 5\pi). NaN if unread.
+  function num(tex) {
+    const s = String(tex).replace(/\\cdot/g, '').replace(/\s+/g, '').replace(/°/g, '');
+    let i = 0;
+    const peek = () => s[i];
+    function group() { if (s[i] !== '{') throw 0; i++; const v = expr(); if (s[i] !== '}') throw 0; i++; return v; }
+    function atom() {
+      if (s.startsWith('\\sqrt', i)) { i += 5; return Math.sqrt(group()); }
+      if (s.startsWith('\\dfrac', i) || s.startsWith('\\frac', i)) { i += s.startsWith('\\dfrac', i) ? 6 : 5; const a = group(); return a / group(); }
+      if (s.startsWith('\\pi', i)) { i += 3; return Math.PI; }
+      if (peek() === '{') return group();
+      if (peek() === '(') { i++; const v = expr(); if (s[i] !== ')') throw 0; i++; return v; }
+      const m = /^\d+(\.\d+)?/.exec(s.slice(i));
+      if (!m) throw 0;
+      i += m[0].length; return parseFloat(m[0]);
+    }
+    function factor() { if (peek() === '-') { i++; return -factor(); } if (peek() === '+') { i++; return factor(); } return atom(); }
+    function term() {
+      let v = factor();
+      for (;;) {
+        if (peek() === '/') { i++; v /= factor(); continue; }
+        if (i < s.length && /[\d\\{(]/.test(peek())) { v *= atom(); continue; }
+        return v;
+      }
+    }
+    function expr() { let v = term(); while (peek() === '+' || peek() === '-') { const o = s[i++]; const t = term(); v = o === '+' ? v + t : v - t; } return v; }
+    try { if (s === '') return NaN; const v = expr(); return i === s.length ? v : NaN; } catch (e) { return NaN; }
+  }
+  // A modulus as written before \angle or e^: nothing is 1, a lone minus is -1.
+  const coef = t => { t = t.trim(); return t === '' ? 1 : t === '-' ? -1 : num(t); };
+  // Split Cartesian TeX at its top-level + and - into a real and an imaginary part, each as TeX with its sign.
+  function cartParts(tex) {
+    const s = tex.replace(/\s+/g, '');
+    const terms = []; let d = 0, cur = '';
+    for (let k = 0; k < s.length; k++) {
+      const c = s[k];
+      d += (c === '{') - (c === '}');
+      if (d === 0 && (c === '+' || c === '-') && cur !== '' && !/[\^_]$/.test(cur)) { terms.push(cur); cur = c === '-' ? '-' : ''; continue; }
+      cur += c;
+    }
+    terms.push(cur);
+    let reTex = '0', imTex = '0';
+    terms.forEach(t => {
+      if (t.endsWith('j')) { const c = t.slice(0, -1); imTex = c === '' ? '1' : c === '-' ? '-1' : c; }
+      else reTex = t;
+    });
+    return { form: 'cartesian', reTex, imTex, re: num(reTex), im: num(imTex) };
+  }
+  // Any option, key or given number: its form and its parts as TeX and as numbers (an angle as written, with its unit).
+  function parse(tex) {
+    const t = String(tex).trim();
+    if (t.includes('\\angle')) {
+      const [rT, aT] = t.split('\\angle');
+      const thTex = aT.trim();
+      return { form: 'polar', rTex: rT.trim() || '1', r: coef(rT), thTex, th: num(thTex), deg: thTex.includes('°') };
+    }
+    const m = /^(.*?)e\^\{(.*)\}$/.exec(t);
+    if (m) {
+      const ex = m[2].replace(/\\cdot/g, '').replace(/\s+/g, '');
+      const neg = ex.startsWith('-');
+      const body = ex.replace(/^-?j/, '');
+      const thTex = (neg ? '-' : '') + (body || '0');
+      return { form: 'exponential', rTex: m[1].trim() || '1', r: coef(m[1]), thTex, th: num(thTex), deg: false };
+    }
+    return cartParts(t);
+  }
+  const near = (a, b, tol) => Number.isFinite(a) && Number.isFinite(b) && Math.abs(a - b) <= (tol || 0.002 * Math.max(1, Math.abs(b)));
+  const sgn = x => (x < 0 ? -1 : 1);
+
+  // ---- the slip: which single computation from the item's numbers gives the picked option ----
+  function slip(q, picked) {
+    const P = parse(picked), G = parse(q.givenLatex);
+    const Re = q.re, Im = q.im, r = q.r, deg = q.argDeg, rad = q.argRad;
+    const hits = [];
+    if (q.target === 'cartesian') {
+      if (P.form !== 'cartesian') return null;
+      // cos and sin swapped: the parts' sizes change places, whether or not the quadrant's signs were kept.
+      const kept = Math.abs(Re) > 1e-9 && Math.abs(Im) > 1e-9 && sgn(P.re) === sgn(Re) && sgn(P.im) === sgn(Im)
+        && near(Math.abs(P.re), Math.abs(Im)) && near(Math.abs(P.im), Math.abs(Re));
+      if (!near(Math.abs(Re), Math.abs(Im)) && ((near(P.re, Im) && near(P.im, Re)) || kept)) hits.push('cos_sin');
+      [[-1, 1], [1, -1], [-1, -1]].forEach(([a, b]) => {
+        if ((a < 0 && Math.abs(Re) < 1e-9) || (b < 0 && Math.abs(Im) < 1e-9)) return;
+        if (near(P.re, a * Re) && near(P.im, b * Im)) hits.push('signs');
+      });
+    } else {
+      if (P.form !== q.target) return null;
+      const polar = q.target === 'polar';
+      const T = polar ? deg : rad, tol = polar ? 0.02 : 0.002;
+      const ang = polar ? (P.deg ? P.th : NaN) : P.th;          // the picked angle in the target's unit
+      const u = x => (polar ? x : x * Math.PI / 180);            // degrees into the target's unit
+      const rOK = near(P.r, r), angOK = near(ang, T, tol);
+      if (q.source === 'cartesian' && Re !== 0 && Im !== 0) {
+        const ref = Math.atan(Math.abs(Im / Re)) * 180 / Math.PI, inv = 90 - ref;
+        const step = x => sgn(Im) * (Re > 0 ? x : 180 - x);    // the item's own quadrant step
+        if (rOK && near(ang, u(step(inv)), tol)) hits.push('upside');
+        if (rOK && Re < 0 && (near(ang, u(ref), tol) || near(ang, u(-ref), tol))) hits.push('quadrant_missing');
+        if (rOK && Re > 0 && near(ang, u(sgn(Im) * (180 - ref)), tol)) hits.push('quadrant_extra');
+      }
+      if (q.source === 'cartesian' && angOK && !rOK) {
+        if (near(P.r, Math.abs(Re)) || near(P.r, Math.abs(Im))) hits.push('mod_part');
+        if (near(P.r, Math.abs(Re) + Math.abs(Im))) hits.push('mod_sum');
+        if (near(P.r, Re * Re + Im * Im)) hits.push('mod_noroot');
+      }
+      if (rOK && Math.abs(deg) > 0.01 && Math.abs(Math.abs(deg) - 180) > 0.01 && near(ang, -T, tol)) hits.push('conjugate');
+      if (!polar && rOK && Math.abs(deg) > 3.5 && near(P.th, deg, 0.02)) hits.push('deg_in_exp');
+      if (polar && rOK && Math.abs(rad) > 0.01 && near(P.th, rad, 0.002)) hits.push('rad_as_deg');
+      if (q.source !== 'cartesian' && near(P.r, G.th) && near(P.th, r)) hits.push('r_theta_swap');
+    }
+    // The three modulus slips share one lesson; any other two families at once is a guess, so none is named.
+    const fams = [...new Set(hits.map(h => (h.startsWith('mod_') ? 'mod' : h)))];
+    if (fams.length !== 1) return null;
+    if (fams[0] === 'mod') { const m = [...new Set(hits)]; return m.length === 1 ? m[0] : 'mod_both'; }
+    return fams[0];
+  }
+
+  // ---- formatting in the key's own form ----
+  const decs = t => { const m = /\d+\.(\d+)/.exec(t || ''); return m ? m[1].length : 0; };
+  function fixed(x, p) { const v = (Math.abs(x) < 0.5 * Math.pow(10, -p) ? 0 : x).toFixed(p); return v === '-0' ? '0' : v; }
+  function gcd(a, b) { return b ? gcd(b, a % b) : Math.abs(a); }
+  function piTex(x) {                                         // x radians as n\pi/d, the bank's style (3\pi/4, -\pi/2)
+    for (const d of [1, 2, 3, 4, 6, 12]) {
+      const n = Math.round(x * d / Math.PI);
+      if (Math.abs(n * Math.PI / d - x) < 1e-6) {
+        if (n === 0) return '0';
+        const g = gcd(n, d), nn = n / g, dd = d / g;
+        const top = nn === 1 ? '\\pi' : nn === -1 ? '-\\pi' : nn + '\\pi';
+        return dd === 1 ? top : top + '/' + dd;
+      }
+    }
+    return null;
+  }
+  // An angle (given in degrees) in the key's unit and style: polar 53.13°, exponential 0.927 rad or 3\pi/4.
+  function angle(xDeg, key) {
+    if (key.form === 'polar') return fixed(xDeg, decs(key.thTex)) + '°';
+    const x = xDeg * Math.PI / 180;
+    if (key.thTex.includes('\\pi')) { const p = piTex(x); if (p) return p; }
+    return fixed(x, decs(key.thTex)) + '\\,\\mathrm{rad}';
+  }
+  const half = key => (key.form === 'polar' ? '180°' : '\\pi');
+  const full = key => (key.form === 'polar' ? '360°' : '2\\pi');
+  const sq = t => (/^\d+(\.\d+)?$/.test(t) ? t : '(' + t + ')') + '^2';
+  // = when the shown value is the computed one; \approx when the given number was itself rounded (5\cos(0.927) ≈ 3).
+  const rel = (got, shown) => (Math.abs(got - shown) < 1e-4 * Math.max(1, Math.abs(shown)) ? '=' : '\\approx');
+  function axis(re, im) {
+    if (Math.abs(re) < 1e-9 && Math.abs(im) < 1e-9) return '';
+    if (Math.abs(re) < 1e-9) return im > 0 ? 'positive imaginary axis' : 'negative imaginary axis';
+    if (Math.abs(im) < 1e-9) return re > 0 ? 'positive real axis' : 'negative real axis';
+    return '';
+  }
+
+  // ---- the slip's sentence: one line, with the item's own numbers where it names them ----
+  function slipLine(kind, q) {
+    const G = parse(q.givenLatex);
+    const above = q.im < 0 ? 'Im is negative, so θ is below the axis' : 'Im is positive, so θ is above the axis';
+    const cs = d => (d > 0 ? 'positive' : d < 0 ? 'negative' : '0');
+    const c = Math.cos(q.argDeg * Math.PI / 180), s = Math.sin(q.argDeg * Math.PI / 180);
+    const cz = x => (Math.abs(x) < 1e-9 ? 0 : x);
+    switch (kind) {
+      case 'upside': return '\\text{The fraction is upside down: }\\tan\\theta = \\dfrac{\\mathrm{Im}}{\\mathrm{Re}}\\text{, opposite over adjacent.}';
+      case 'mod_part': return '\\text{r uses both parts: }r = \\sqrt{\\mathrm{Re}^2 + \\mathrm{Im}^2}\\text{, not one of them.}';
+      case 'mod_sum': return '\\text{r is not Re + Im: square both parts, add, then take the square root.}';
+      case 'mod_noroot': return '\\text{That is }\\mathrm{Re}^2 + \\mathrm{Im}^2\\text{: r is its square root.}';
+      case 'mod_both': return '\\text{r uses both parts: square them, add, then take the square root.}';
+      case 'quadrant_missing': return '\\text{Re is negative here, so the angle needs the quadrant step.}';
+      case 'quadrant_extra': return '\\text{Re is positive here, so there is no quadrant step: the point is on the right.}';
+      case 'conjugate': return '\\text{That’s the angle’s sign flipped:' + above + '.}';
+      case 'deg_in_exp': return '\\text{In }e^{j\\theta}\\text{, θ is in radians: multiply the degrees by }\\dfrac{\\pi}{180°}\\text{.}';
+      case 'rad_as_deg': return '\\text{That angle is still in radians: polar form here is in degrees, so multiply by }\\dfrac{180°}{\\pi}\\text{.}';
+      case 'r_theta_swap': return '\\text{r and θ are the wrong way round: r comes first, then the angle.}';
+      case 'cos_sin': return '\\text{cos goes with Re and sin with Im.}';
+      case 'signs': return '\\text{Check the signs: at }\\theta = ' + G.thTex + '\\text{, cos θ is ' + cs(cz(c)) + ' and sin θ is ' + cs(cz(s)) + '.}';
+    }
+    return null;
+  }
+
+  // ---- the working: one TeX string per line (\text{} runs are words, the rest maths through K()) ----
+  function working(q) {
+    const G = parse(q.givenLatex), A = parse(q.correctLatex), L = [];
+    const ax = axis(q.re, q.im);
+    if (q.source === 'cartesian') {
+      L.push('r = \\sqrt{\\mathrm{Re}^2 + \\mathrm{Im}^2} = \\sqrt{' + sq(G.reTex) + ' + ' + sq(G.imTex) + '} = ' + A.rTex);
+      if (ax) {
+        L.push('\\text{' + (Math.abs(q.re) < 1e-9 ? 'Re' : 'Im') + ' is 0: the point is on the ' + ax + ', so }\\theta = ' + angle(q.argDeg, A));
+      } else {
+        const raw = Math.atan(G.im / G.re) * 180 / Math.PI;
+        const head = '\\arctan\\left(\\dfrac{\\mathrm{Im}}{\\mathrm{Re}}\\right) = \\arctan\\left(\\dfrac{' + G.imTex + '}{' + G.reTex + '}\\right) = ';
+        if (G.re > 0) L.push('\\theta = ' + head + angle(raw, A));
+        else {
+          L.push(head + angle(raw, A));
+          const add = G.im >= 0;
+          L.push('\\text{Re is negative, so the point is on the left: ' + (add ? 'add ' : 'take off ') + (A.form === 'polar' ? '180°' : 'π') + ': }\\theta = '
+            + angle(raw, A) + (add ? ' + ' : ' - ') + half(A) + ' = ' + angle(q.argDeg, A));
+        }
+      }
+    } else if (q.target === 'cartesian') {
+      const R = G.rTex === '1' ? '' : G.rTex, rad = G.deg ? G.th * Math.PI / 180 : G.th;
+      const arg = '(' + G.thTex + ')';
+      L.push('\\mathrm{Re} = r\\cos\\theta = ' + R + '\\cos' + arg + ' ' + rel(G.r * Math.cos(rad), A.re) + ' ' + A.reTex);
+      L.push('\\mathrm{Im} = r\\sin\\theta = ' + R + '\\sin' + arg + ' ' + rel(G.r * Math.sin(rad), A.im) + ' ' + A.imTex);
+      if (ax) L.push('\\text{The point is on the ' + ax + '.}');
+    } else {
+      // polar <-> exponential: r stays; only the angle's unit changes, then it is brought into range.
+      L.push('\\text{r stays the same: }r = ' + A.rTex);
+      if (G.form === 'exponential') {
+        const d = G.th * 180 / Math.PI, rounded = !G.thTex.includes('\\pi') && /\./.test(G.thTex);
+        const shownD = rounded ? fixed(d, 1) : fixed(d, decs(A.thTex));
+        L.push('\\theta = ' + (G.thTex.includes('/') ? '(' + G.thTex + ')' : G.thTex) + ' \\times \\dfrac{180°}{\\pi} ' + (rounded ? '\\approx ' : '= ') + shownD + '°');
+        if (rounded) L.push('\\text{(' + G.thTex + ' is itself rounded, so this is the answer’s }' + A.thTex + '\\text{ to 1 d.p.)}');
+        if (d > 180 + 1e-9) L.push('\\text{That is more than 180°, so take off 360°: }\\theta = ' + shownD + '° - 360° = ' + angle(q.argDeg, A));
+      } else {
+        L.push('\\theta = ' + G.thTex + ' \\times \\dfrac{\\pi}{180°} = ' + angle(G.th, A));
+        if (G.th > 180 + 1e-9) L.push('\\text{That is more than π, so take off 2π: }\\theta = ' + angle(G.th, A) + ' - ' + full(A) + ' = ' + angle(q.argDeg, A));
+      }
+    }
+    L.push('\\text{So the answer is }' + q.correctLatex);
+    return L;
+  }
+
+  // The card's content for item q after the option picked: {kind, lines}, the slip (if any) first.
+  function card(q, picked) {
+    const kind = slip(q, picked);
+    const head = kind ? slipLine(kind, q) : null;
+    return { kind, lines: (head ? [head] : []).concat(working(q)) };
+  }
+  return { num, parse, slip, card, working };
+})();
+
+// One line: \text{} runs as words (set as text, so i/j swapping never touches them), the maths between through K().
+function whyLine(tex, cls) {
+  const el = document.createElement('div'); el.className = 'wl' + (cls ? ' ' + cls : '');
+  tex.split(/(\\text\{[^{}]*\})/).forEach(part => {
+    if (!part.trim()) return;
+    const s = document.createElement('span');
+    if (part.startsWith('\\text{')) s.textContent = part.slice(6, -1); else s.innerHTML = K(part);
+    el.appendChild(s);
+  });
+  return el;
+}
+function showWhy(q, picked) {
+  const c = WHY.card(q, picked), row = document.getElementById('rWhyRow');
+  row.querySelectorAll('.maffs-ref-body').forEach(b => {
+    b.innerHTML = '';
+    c.lines.forEach((t, n) => b.appendChild(whyLine(t, n === 0 && c.kind ? 'why-slip' : '')));
+  });
+  row.dataset.slip = c.kind || '';
+  row.classList.add('shown');
+}
+function clearWhy() {
+  const row = document.getElementById('rWhyRow');
+  row.classList.remove('shown'); row.dataset.slip = '';
+  row.querySelector('.maffs-ref-phone').open = false; row.querySelector('.maffs-ref-fits').open = true;
+  row.querySelectorAll('.maffs-ref-body').forEach(b => { b.innerHTML = ''; });
+}
+// The copy the media query shows: Next keeps its top on screen as it comes into view.
+function shownWhy() { return [...document.querySelectorAll('#rWhyRow > .maffs-ref')].find(d => getComputedStyle(d).display !== 'none') || null; }
+
 function rouletteAnswer(btn, q, val) {
   if(!MaffsLock.lock(document.getElementById('rOptions'))) return;   // one answer per question (canon 7.6.0)
   clearInterval(rTimerId);
@@ -636,7 +934,7 @@ function rouletteAnswer(btn, q, val) {
   // A right answer moves on; a wrong one shows the right option and waits on Next (canon 7.6)
   const go = () => { rIndex++; showRouletteQ(); };
   if(val === q.correctLatex) MaffsLock.timer(go, 1200);
-  else MaffsNext.wrong({mount: document.getElementById('rNext'), onAdvance: go});
+  else { showWhy(q, val); MaffsNext.wrong({mount: document.getElementById('rNext'), onAdvance: go, keep: shownWhy}); }
 }
 
 

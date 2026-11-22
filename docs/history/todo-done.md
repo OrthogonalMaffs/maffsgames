@@ -3999,3 +3999,7 @@ Row WRONG-PAUSE-REASONS, standard-form-blitz's GCSE half: a wrong answer at GCSE
 | CI-DEPS-ANY-PAGE | **`scripts/ci-deps.py` offers only "names its pages" or "always runs"** (ALWAYS_BUDGET = 12, `scripts/ci-deps.py`:422). Site-wide page scanners such as `check-download-labels.py` (#856) must go always-run, and that budget is full (12/12). Add a third dependency type: runs when any page changes, skips docs-only changes. Do it before, or as the first part of, START-SIDEWAYS-GATE, not by raising the budget. | Project Claude (contract), cloud lane |
 
 **Closed 21 Nov 2026 (CI-DEPS-ANY-PAGE, merged as e291c9c).** Row CI-DEPS-ANY-PAGE, moved word for word above. `scripts/ci-deps.py` gained the `any-page` dependency type and selective page-less verifiers; the always-set went from 12 to 2. Jon (21 Nov 2026, 20:03): test-escape-credit.py stays always-run.
+
+## Part closed by COMPLEX-CONVERTER-WHY (22 Nov 2026)
+
+Row WRONG-PAUSE-REASONS, its clause under **Marks and Next only:**, moved word for word: complex-converter (Roulette). A wrong answer in Form Roulette now shows a "Why" reference card (canon 7.6.2, above Next) that works the conversion with the item's own numbers and names the slip when the picked option is one slip by computation; checked for all 55 items and 165 distractors by `scripts/verify-complex-converter.py`. The rest of the row stays.
