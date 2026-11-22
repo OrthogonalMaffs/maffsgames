@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa) | | 3
+# ci-shards: Given That (every table, Venn and tree consistent with its totals; all 180 keys recomputed; free entry marked by MaffsAnswer: the exact fraction, or a decimal to 3 s.f., in Chromium; every Phase 1 working's counts and fraction; every wrong answer's Why card and its named slip against an independent classification; every item fitted at 320x568, 375x667, 390x844, 1366x768 and 1280x720 in normal and Aa; every Phase 2 fade judged against the condition, both drawings, with and without reduced motion) | | 3
 """Given That: every diagram checked against its own totals, every key recomputed, every answer marked in Chromium.
 
 The game (90 questions, two phases each: gcse 25 multiple choice, alevel 25, core 20, level4 20 typed) shows a
@@ -46,6 +46,15 @@ laptop Next above the fold. Reported, not failed: Next below the fold on a phone
 A self-test plants the audit's faults back into a copy of the page (r-001's Venn; F4's 30/90; r-002's 0.005
 rule; r-004's decimals only), and GIVEN-THAT-FIT-WHY's three (a Phase 1 working with a wrong count; a slip named for
 a value it does not give; the diagram box's old spacing at 320x568); each must FAIL naming its item.
+The fade (contract GIVEN-THAT-VENN-FADE, 22 Nov 2026; FADE_JS, fade_faults()): every item enters Phase 2 at 390x844
+and 1366x768 (so the narrow and the wide drawing of each Venn, table and tree), with and without reduced motion, and
+once the fade has finished: every element marked "greyed" has a computed opacity of at most 0.3, and a 0.6s opacity
+transition (none with reduced motion); every count outside the condition is faded and every count inside it is not,
+judged against SPEC's Phase 2 denominator (the condition's own group: a Venn's set, a table's column, a tree's
+branch), never against the page's greyOut string. The items that fade nothing are NO_FADE (reported, not failed; the
+ruling of 22 Nov 2026: 27 Bayes trees by design, 14 items for a later contract); one that starts fading, or a new
+item that fades nothing, FAILS. A table's Total column and grand total, and a tree's root, belong to no one group and are not
+judged (the Total column: a later contract). Plants: the Venn's fade rule removed; gcse_03's greyOut fading the condition's own column.
 
     python scripts/verify-given-that.py [--no-selftest] [--against FILE]
 """
@@ -646,6 +655,153 @@ FIT_JS = r"""(args) => {
 }"""
 
 
+# Phase 2 items that fade nothing (ruling of 22 Nov 2026, Project Claude with Jon, on GIVEN-THAT-VENN-FADE's STOP):
+# reported, not failed; an entry that now fades fails as stale. Data and inferGreyOut are not to be changed here.
+NO_FADE_GROUPS = {
+    'table, the condition a column inferGreyOut does not find (later contract)':
+        ['core_01', 'core_09', 'core_15', 'core_17', 'l4_14', 'l4_16', 'l4_20'],
+    'table, the condition a row (greyOutTable greys columns only; later contract)':
+        ['alevel_11', 'alevel_14', 'alevel_16', 'alevel_24'],
+    'tree, the condition a branch inferGreyOut does not find (later contract)': ['core_20', 'l4_09', 'l4_17'],
+    'tree, the condition an outcome across every branch (Bayes): by design': [
+        'alevel_03', 'alevel_05', 'alevel_08', 'alevel_10', 'alevel_12', 'alevel_15', 'alevel_17', 'alevel_20',
+        'alevel_23', 'alevel_25', 'core_02', 'core_04', 'core_06', 'core_08', 'core_10', 'core_12', 'core_14',
+        'core_16', 'core_18', 'l4_01', 'l4_03', 'l4_05', 'l4_07', 'l4_11', 'l4_13', 'l4_15', 'l4_19'],
+}
+NO_FADE = {i: g for g, ids in NO_FADE_GROUPS.items() for i in ids}
+FADE_SIZES = [(390, 844), (1366, 768)]     # the narrow drawings, then the wide ones
+FADE_REPORT = []
+
+# Every item into Phase 2, its style flushed first so the fade runs as a student sees it; each fade's transition
+# read while running, then finished; then every greyed element and every count read as drawn (opacity through its
+# ancestors up to the diagram).
+FADE_JS = r"""() => {
+  const G = window.__gt, out = [], dv = document.getElementById('dataVis');
+  const shown = el => el.getClientRects().length > 0;
+  const eff = el => { let o = 1; for (let n = el; n && n !== dv; n = n.parentElement) o *= parseFloat(getComputedStyle(n).opacity); return o; };
+  const key = el => { const g = el.closest('[data-region],[data-col],[data-branch]');
+    return g ? (g.getAttribute('data-region') || g.getAttribute('data-col') || g.getAttribute('data-branch')) : null; };
+  const where = el => { const s = el.closest('svg,table,.tree-list'); return s ? (s.getAttribute('class') || s.tagName) : '?'; };
+  for (const lv of Object.keys(G.Q)) for (const q of G.Q[lv]) {
+    G.set(lv, q); G.showQuestion();
+    dv.querySelectorAll('*').forEach(el => getComputedStyle(el).opacity);
+    void dv.offsetHeight;
+    G.toPhase2(q);
+    const greyed = [...dv.querySelectorAll('.greyed')];
+    const running = new Set(document.getAnimations().filter(a => a.transitionProperty === 'opacity')
+      .map(a => a.effect.target));
+    const anims = document.getAnimations().filter(a => a.transitionProperty === 'opacity')
+      .map(a => ({ el: a.effect.target, ms: a.effect.getTiming().duration }));
+    document.getAnimations().forEach(a => { try { a.finish(); } catch (e) {} });
+    const g = greyed.map(el => ({ tag: el.tagName.toLowerCase() + '.' + [...el.classList].join('.'), key: key(el),
+      where: where(el), op: parseFloat(getComputedStyle(el).opacity), shown: shown(el),
+      ms: (anims.find(a => a.el === el) || {}).ms || 0 }));
+    const counts = [...dv.querySelectorAll('.venn-label, td, .tree-node-text, .tree-count')].map(el => ({
+      text: el.textContent.trim(), key: key(el), where: where(el), op: eff(el) }));
+    out.push({ lv: lv, id: q.id, type: q.data.type, greyed: g, counts: counts });
+  }
+  return out;
+}"""
+
+
+def fade_group(q):
+    """The condition's own group from SPEC's Phase 2 denominator: (kind, name), or None where no fade can show it."""
+    den = SPEC[q['id']]['p2'][1]
+    if len(den) != 1:
+        return None
+    d = den[0]
+    if q['data']['type'] == 'venn' and d in ('A', 'B'):
+        return 'venn', d
+    m = re.fullmatch(r'(col|b)\[(.*)\]', d)
+    if m and (q['data']['type'], m.group(1)) in (('table', 'col'), ('tree', 'b')):
+        return m.group(1), m.group(2)
+    return None
+
+
+def inside(group, key):
+    """Is the count drawn under this key (data-region / data-col / data-branch) inside the condition?"""
+    kind, name = group
+    if kind == 'venn':
+        return key in ({'onlyA', 'intersection'} if name == 'A' else {'onlyB', 'intersection'})
+    return key == name
+
+
+def fade_faults(rows, bank, w, h, rm):
+    """[fault] for every fade that is not the condition's, and the NO_FADE report."""
+    fails, report, at = [], [], ' at %dx%d%s' % (w, h, ' (reduced motion)' if rm else '')
+    byid = {q['id']: q for lv in bank for q in bank[lv]}
+    for r in rows:
+        lab = '%s p2%s' % (r['id'], at)
+        for el in r['greyed']:
+            if el['op'] > 0.3:
+                fails.append('%s: %s "%s" (%s) is marked greyed but drawn at opacity %.2f (no rule fades it)'
+                             % (lab, el['tag'], el['key'], el['where'], el['op']))
+            if el['shown'] and not rm and abs(el['ms'] - 600) > 1:
+                fails.append('%s: %s "%s" fades in %dms, not the 0.6s the others use' % (lab, el['tag'], el['key'], el['ms']))
+            if rm and el['ms']:
+                fails.append('%s: %s "%s" still fades over %dms with reduced motion on' % (lab, el['tag'], el['key'], el['ms']))
+        faded = [c for c in r['counts'] if c['op'] <= 0.3]
+        if r['id'] in NO_FADE:
+            if r['greyed'] or faded:
+                fails.append('%s: on the NO_FADE list (%s) but now fades: judge it and take it off'
+                             % (lab, NO_FADE[r['id']]))
+            continue
+        group = fade_group(byid[r['id']])
+        if group is None:
+            fails.append('%s: SPEC\'s condition %s has no group a fade can show' % (lab, SPEC[r['id']]['p2'][1]))
+            continue
+        if not r['greyed']:
+            fails.append('%s: nothing fades in Phase 2, and the item is not on the NO_FADE list' % lab)
+            continue
+        for c in r['counts']:
+            if c['key'] in (None, 'root'):
+                continue                    # a table's Total column and grand total, a tree's root: everyone's
+            if inside(group, c['key']) and c['op'] < 0.95:
+                fails.append('%s: the count %s (%s, %s) is inside the condition (%s) but faded to %.2f'
+                             % (lab, c['text'], c['key'], c['where'], group[1], c['op']))
+            if not inside(group, c['key']) and c['op'] > 0.3:
+                fails.append('%s: the count %s (%s, %s) is outside the condition (%s) but stays at %.2f'
+                             % (lab, c['text'], c['key'], c['where'], group[1], c['op']))
+    return fails
+
+
+def fade(fails, html, bank, sizes=None, motions=(False, True)):
+    """The fade sweep: every item into Phase 2 at each FADE_SIZES size, with and without reduced motion."""
+    from playwright.sync_api import sync_playwright
+    hooked = hook(html)
+    if hooked is None:
+        fails.append('page: cannot find the end of the game script to expose its functions to the sweep')
+        return
+    proc, base = bc.start_stub_server()
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for w, h in sizes or FADE_SIZES:
+                for rm in motions:
+                    ctx = browser.new_context(viewport={'width': w, 'height': h},
+                                              reduced_motion='reduce' if rm else 'no-preference')
+                    ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                    page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+                    bc.offline(ctx, base)
+                    ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+                        status=200, content_type='text/html; charset=utf-8', body=hooked))
+                    ctx.route(lambda url: bc.is_font_cdn(url), bc.serve_real_font)
+                    page = ctx.new_page()
+                    errors = []
+                    page.on('pageerror', lambda e: errors.append(str(e)))
+                    page.goto(base + '/games/%s/?cb=fade' % SLUG, wait_until='load', timeout=20000)
+                    page.wait_for_function('window.__gt && typeof katex !== "undefined"', timeout=15000)
+                    rows = page.evaluate(FADE_JS)
+                    fails.extend(fade_faults(rows, bank, w, h, rm))
+                    if errors:
+                        fails.append('page errors at %dx%d: %s' % (w, h, '; '.join(errors[:3])))
+                    ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+
+
 HOOK = ('window.__gt={Q:QUESTIONS,set:function(lv,q){currentLevel=lv;sessionQuestions=[q];currentQIndex=0;'
         'phase2Attempt=0;startScreen.classList.remove("active");gameScreen.classList.add("active");'
         'gameHeader.style.display=""},showQuestion:showQuestion,toPhase2:transitionToPhase2};\n')
@@ -939,8 +1095,8 @@ def load_bank(html):
 
 
 def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, True)):
-    """The checks, by stage: 'bank' (always), 'play' (every answer marked, every Why card read, at 390x844) and 'fit'
-    (the fit sweep). A self-test plant runs only the stage that must catch it."""
+    """The checks, by stage: 'bank' (always), 'play' (every answer marked, every Why card read, at 390x844), 'fade'
+    (every Phase 2 fade against SPEC) and 'fit' (the fit sweep). A self-test plant runs only the stage that must catch it."""
     fails = []
     TALLY.clear()
     del UNNAMED[:]
@@ -952,6 +1108,8 @@ def run(html, stages=('bank', 'play', 'fit'), fit_sizes=None, fit_modes=(False, 
                for ph, key in (('p1', 'phase1'), ('p2', 'phase2'))}
     if 'play' in stages:
         play(fails, html, free, ex_text)
+    if 'fade' in stages:
+        fade(fails, html, bank)
     global FIT_REPORT
     FIT_REPORT = fit(fails, html, free, bank, fit_sizes, fit_modes) if 'fit' in stages else []
     return fails, sum(len(v) for v in bank.values())
@@ -987,12 +1145,17 @@ PLANTS = [
     ('~at 320x568: the last answer control', "the diagram's padding restored (20px), options below the fold",
      '.data-container{padding:6px 6px 8px;margin-bottom:6px;border-radius:10px}\n.data-title{font-size:12.5px;line-height:1.3;margin-bottom:4px}',
      '.data-container{padding:20px;margin-bottom:20px;border-radius:10px}\n.data-title{font-size:14px;line-height:1.6;margin-bottom:16px}'),
+    # GIVEN-THAT-VENN-FADE's two (contract step 3).
+    ('gcse_06 p2', "the Venn's fade rule removed", '.venn-label.greyed,.venn-set-label.greyed{opacity:0.2}', ''),
+    ('gcse_03 p2', "a greyOut fading the condition's own column (Bus)", 'greyOut:"col_Car,col_Cycle"', 'greyOut:"col_Bus,col_Cycle"'),
 ]
 # The stage each plant needs: the bank's own checks catch most; marking and slips need the play; the layout the fit.
 PLANT_STAGES = {'r-002/r-003: marked within 0.005, no precision': ('play',),
                 'r-004: decimals only, the fraction unreadable': ('play',),
                 'a slip named for a value it does not give': ('play',),
-                "the diagram's padding restored (20px), options below the fold": ('fit',)}
+                "the diagram's padding restored (20px), options below the fold": ('fit',),
+                "the Venn's fade rule removed": ('fade',),
+                "a greyOut fading the condition's own column (Bus)": ('fade',)}
 
 
 def main():
@@ -1005,7 +1168,7 @@ def main():
     # Work units (ci_shards, canon 7.8.1): the bank and the play at 390x844, the fit sweep a size at a time (both
     # modes), and each plant. With no --shard, all of them.
     shard = bc.Shard(__file__, args)
-    checks = ['bank and play'] + ['fit %dx%d' % s for s in FIT_SIZES]
+    checks = ['bank and play', 'fade'] + ['fit %dx%d' % s for s in FIT_SIZES]
     plants = [] if args.no_selftest or args.against else ['plant: ' + p[1] for p in PLANTS]
     mine = shard.pick(checks + plants)
     html = open(args.against or GAME, encoding='utf-8').read()
@@ -1017,6 +1180,13 @@ def main():
             if u == 'bank and play':
                 f, n = run(html, ('bank', 'play'))
                 tally, unnamed = dict(TALLY), list(UNNAMED)
+            elif u == 'fade':
+                f, n = run(html, ('bank', 'fade'))
+                print('  fade: %d items into Phase 2 at %s, with and without reduced motion; judged against SPEC: %d'
+                      % (n, ', '.join('%dx%d' % s for s in FADE_SIZES), n - len(NO_FADE)))
+                print('  no fade in Phase 2 (%d; reported, not failed):' % len(NO_FADE))
+                for g, ids in NO_FADE_GROUPS.items():
+                    print('    %s (%d): %s' % (g, len(ids), ', '.join(ids)))
             else:
                 w, h = (int(x) for x in u.split()[1].split('x'))
                 f, n = run(html, ('bank', 'fit'), [(w, h)])
@@ -1024,7 +1194,7 @@ def main():
         fails += [x for x in f if x not in fails]       # the bank's own faults come back from every unit: once each
     print('%s: %d questions (%d phases): every diagram, key and option checked; every answer marked in Chromium; '
           'every wrong answer\'s Why card checked; fitted at %s in normal and Aa'
-          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks[1:] if u in mine) or 'no size in this part'))
+          % (SLUG, n, 2 * n, ', '.join(u.split()[1] for u in checks[2:] if u in mine) or 'no size in this part'))
     if tally:
         print('  slips named, by family (wrong values; GCSE options, then every wrong ratio a typed level can take):')
         for (where, ph, fam), k in sorted(tally.items()):

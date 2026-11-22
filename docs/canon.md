@@ -1326,11 +1326,14 @@ the obvious candidate; all three load the shared `schools/assets/opendyslexic.cs
 - **Feedback screen.** After a wrong answer, Next is above the fold at all three sizes in both modes, with
   Aa at 320 × 568 the recorded exception. This is the paragraph "When the asking screen may scroll" above,
   restated for Aa.
-- **How it is checked.** `scripts/measure-phone-fit.py` (and `--aa`) measures every roster game's first
-  question at its default level at the three sizes. The gate's asking-screen rule fails the run (exit 1); Next
-  below the fold and sideways scroll are reported, not gated, because a generic driver sees one question and a
-  game's own all-items measurement is the proof (Distinctly Average's: every item, every wrong option, three
-  sizes, both modes). CI runs it through `.github/workflows/phone-fit-full.yml` ("The full run", below).
+- **How it is checked.** `scripts/measure-phone-fit.py` (and `--aa`, and `--laptop` at 1366 × 768 and
+  1280 × 720) measures every roster game's first question at its default level. Three rules fail the run
+  (exit 1). The asking-screen rule fails it in every mode. Sideways scroll, on the asking screen or after a wrong
+  answer, fails it in every mode, except at the entries on the shrink-only `sideways` list in
+  `scripts/phone-fit-state.json`. Next below the fold after a wrong answer fails it on a laptop (ruling R2). On a
+  phone, Next below the fold is reported, not gated, because a generic driver sees one question and a game's own
+  all-items measurement is the proof (Distinctly Average's: every item, every wrong option, three sizes, both
+  modes). CI runs it through `.github/workflows/phone-fit-full.yml` ("The full run", below).
 - **Two lists that only shrink** (the `check-theme.py` and answer-lock pattern), in
   `scripts/phone-fit-state.json`, per mode. **`known-failures`**: each game already failing the gate, with
   the sizes at which it fails; reported, never failed. **`unmeasurable`**: the games the driver cannot
