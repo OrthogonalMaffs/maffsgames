@@ -1,0 +1,32 @@
+GIVEN-THAT-VENN-FADE and DOCS-TRUTH. Home lane. Tier: Small (one game's CSS and its verifier; three doc lines). From Project Claude; Jon, 22 Nov 2026, 13:57 ("could I have something for home lane please"); the bug was found by #877's lane.
+Recommended: Claude Code, Opus, medium effort. A one-line CSS cause, but the proof covers every item's fade, in both drawings, against the diagram's own meaning.
+
+TASK: (1) Make Given That's Phase 2 actually fade the Venn regions outside the condition, and prove the fade is right for every item in all three representations; (2) correct two stale statements in the docs.
+
+ROOT CAUSE: (1) games/given-that/: greyOutVenn (index.html:994-1021) adds the class "greyed" to the Venn's SVG text elements, class venn-label (the four region counts) and venn-set-label (the set names). The only CSS rule is .venn-region.greyed{opacity:0.2} (:101), and no element in vennSVG has the class venn-region. So on all 25 Venn items (gcse_06 to gcse_10, gcse_16, gcse_20, gcse_23, and the A-Level, Core and Level 4 Venns) the regions outside the condition never fade. Only with prefers-reduced-motion is it faded, by the inline opacity. The fade is the game's whole idea in Phase 2 (start screen, :357: "the data outside the condition fades away"). Found by #877's lane (c6d51b4); it predates #877. The table (td/th.greyed, :89-90) and tree (.tree-node/.tree-branch/.tree-branch-label.greyed :111, .tree-row.greyed :223) rules have matching classes, unproven. (2) canon.md:1330-1331 says "Next below the fold and sideways scroll are reported, not gated". scripts/measure-phone-fit.py:12-27 (Jon's rulings of 26 Oct 2026 and R2) gates sideways scroll in every mode, and on laptop gates Next below the fold. docs/snagging-list.md snag 1 (:51-58, Truth Will Set You Free's false "can be simplified" hint) is still "Open". games/truth-will-set-you-free/index.html:871-875 has shown "can be written ... where ..." only when an identity is stored, since 7 Oct 2026.
+
+CLASS CHECK: (1) Local to this game. The shape (a class added by script that no CSS rule matches) is checked for all three of this game's representations, wide and narrow drawings, by the verifier, not by eye. No shared asset is involved. (2) Stale prose in two named places.
+
+EXACT CHANGE:
+1. First commit: the standing close-out for this lane's last merged PR if not yet done (check docs/handover/home.md and docs/handover/contracts/), per AGENTS.md. In the same commit, save this contract verbatim as docs/handover/contracts/2026-11-22-given-that-venn-fade.md.
+2. The fix: CSS so that every Venn element greyOutVenn marks "greyed" fades to opacity 0.2 with the same 0.6 s transition the others use (e.g. .venn-label.greyed,.venn-set-label.greyed{opacity:0.2}), in both the wide and narrow drawings. Remove the dead .venn-region rules (:100-102) only if nothing else uses them.
+3. Verifier (scripts/verify-given-that.py, extended): in Chromium, for every item (all levels; table, Venn and tree; at 390x844 and 1366x768, so both drawings), after Phase 2 begins and the fade has finished:
+   - every element marked greyed has computed opacity at most 0.3;
+   - every count outside the condition is faded and every count inside it is not, judged against the verifier's own SPEC (the condition's group), not against the page's greyOut string;
+   - also with reduced motion on.
+   Plants: the new CSS rule removed (the Venns caught); one item's greyOut fading a region inside the condition (caught by the SPEC check). Report any item where the stored or inferred greyOut fades the wrong regions: that's a correctness bug, see STOP IF.
+4. Docs:
+   - canon.md:1330-1331: say what the gate does (measure-phone-fit.py:12-27). Sideways scroll fails in every mode, with the shrink-only "sideways" list. Next below the fold after a wrong answer fails on laptop (ruling R2) and is reported on phones. The asking-screen rule fails everywhere.
+   - docs/snagging-list.md snag 1: Status "Fixed (<the commit that added the identity condition, found with git log -S>, 7 Oct 2026)", moved under "Fixed" per the file's own layout.
+5. /updates/: one dated line in plain words, e.g. Given That's Venn diagrams now fade the part outside the condition in Phase 2, as the game says they do.
+6. Merge on green via scripts/merge-pr.py; this PR's own phone-fit run should measure given-that only (#875). Report its run ID and what it measured. Then the home handover entry; the close-out rides on the home lane's next contract.
+
+DO NOT TOUCH: Every item's data, keys, options, explanations, greyOut strings and inferGreyOut (if one is wrong, STOP IF); #877's layout, Why card and slip lines; the table and tree drawings beyond a missing fade rule the verifier proves; scripts/phone-fit-state.json; Gate files (workflows, scripts/ci-*, merge-pr.py, measure-phone-fit.py); docs/handover/cloud.md and its claim list; shared assets (site-nav.js included); other games.
+
+SUCCESS CONDITION: In Phase 2 of gcse_06 (and every Venn item), the counts outside the condition fade to 0.2 and the condition's own stay bright, with and without reduced motion. The verifier proves the fade matches the condition for all 90 items in all three representations and both drawings, with both plants caught. canon.md:1330-1331 matches the gate's code; snag 1 is under Fixed with its commit. CI is green, the PR's phone-fit run measured given-that only, and the PR is merged.
+
+STOP IF: Any item's greyOut (stored or inferred) fades a region inside the condition, or leaves one outside it bright. That's a correctness bug in what students are shown: report the ids and the regions, and don't change the data. The fix would need a change to a shared asset. This PR's phone-fit run measures more than given-that, or skips it: report the run ID, but this need not block the merge if it passes. Main goes red for a reason outside this change (one rerun per AGENTS.md, then stop and report).
+
+---
+
+**Ruling on the STOP (Project Claude, with Jon, 22 Nov 2026):** option (a). Judge the 49 items that fade against SPEC, and list the 41 that fade nothing in the verifier as "no fade" (reported, not failed), grouped as in the home lane's table, with the 27 Bayes trees marked "by design". Leave all greyOut data and inferGreyOut untouched. The 14 non-Bayes items and the never-fading total column go to a later contract. Correct the Venn count to 15 wherever this PR mentions it. Finish the rest of the contract as written, with #874's MERGED line in home.md in the first commit.
