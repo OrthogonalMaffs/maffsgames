@@ -25,6 +25,10 @@ Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The 
 - **Calculator:** required, docked to the question card.
 - **Name:** changed everywhere step 5 lists except `<title>`/og:title, which stay as before by Jon's ruling, because check-meta ties them to data/games.json, which this contract cannot touch.
 - **Verifier:** APPENDIX B and T5, plus a KaTeX check on all 54 items. PASS, with all 7 plants caught.
+- **First fix:**
+  - scroll.js loads with keypad.js;
+  - the KaTeX wait's setTimeout carries a `// lock-ok:` reason;
+  - verify-formula-unlocked.py, which grew in #893 and was over the per-line budget at 213s, is split into 3 ci-shards parts (base run plus 9 plants), as Project Claude authorised.
 - **Next:** merge on a green Gate with merge-pr.py.
 
 ## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)

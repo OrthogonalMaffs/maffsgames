@@ -82,6 +82,7 @@ body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.
   ]
 }
 -->
+<script src="../../schools/assets/scroll.js"></script>
 <script src="../../schools/assets/keypad.js"></script>
 <script src="../../schools/assets/calculator.js"></script>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
@@ -198,7 +199,7 @@ const T5=[
 ];
 
 function startGame(){
-  if(typeof katex==='undefined'&&(startGame.waits=(startGame.waits||0)+1)<100){setTimeout(startGame,50);return}   // KaTeX is deferred: wait for it (up to 5 s)
+  if(typeof katex==='undefined'&&(startGame.waits=(startGame.waits||0)+1)<100){setTimeout(startGame,50);return}   // lock-ok: KaTeX is deferred; wait for it (up to 5 s) before a session starts, no answer pending
   MaffsLock.newSession();
   let bank;
   if(level==='gcse')bank=[...T1,...T2,...T3,...T5];
