@@ -1141,6 +1141,8 @@ def shard_selftest(n, workflow=os.path.join(ROOT, ".github", "workflows", "check
     if os.path.exists(workflow):
         with open(workflow, encoding="utf-8") as fh:
             runs = re.findall(r"python scripts/check-site\.py\b([^\n|&]*)", fh.read())
+        # Tier 3's own lines (its shards and its KaTeX self-test, contract KATEX-ERRORS) are not tier 1's.
+        runs = [r for r in runs if "--tier 3" not in r and "--tier3-" not in r]
         shards = sorted(m.group(1) for m in (re.search(r"--shard (\d+/\d+)", r) for r in runs) if m)
         unsharded = [r.strip() for r in runs if "--shard" not in r]
         want = sorted("%d/%d" % (i, n) for i in range(1, n + 1))
@@ -2461,6 +2463,37 @@ def ascii_safe(text):
     return str(text).encode("ascii", "replace").decode("ascii")
 
 
+# KaTeX the game cannot parse (contract KATEX-ERRORS, 23 Nov 2026). Every game renders with throwOnError:false, so a
+# LaTeX mistake shows the student red raw source and throws nothing a console watch could see. Every tier 3 context
+# carries bank_common.KATEX_HOOK_INIT, which parses each string handed to katex.render/renderToString again with the
+# same options and throwOnError:true, recording each failure without changing what the page shows. A run whose game
+# handed KaTeX a string it cannot parse FAILS, naming the game, the string and KaTeX's message, whether or not the
+# run could otherwise be driven (a string rendered on load counts as much as one in question 7). Known failures, each
+# with its reason, are "tier3_katex_known" in scripts/checker-allowlist.json: reported, never failed. They are not
+# failed when they do not recur either: ten random questions a run cannot promise to meet the same string twice.
+
+
+def tier3_katex_known():
+    """{(slug, tex): reason}, from scripts/checker-allowlist.json."""
+    return {(e.get("slug", ""), e.get("tex", "")): e.get("reason", "")
+            for e in load_config().get("tier3_katex_known", [])}
+
+
+def katex_verdict(slug, errors, known):
+    """(new, known_hit): the KaTeX parse failures a run recorded, split into those no entry allows and those it does."""
+    new, hit = [], []
+    for e in errors or []:
+        (hit if (slug, e.get("tex", "")) in known else new).append(e)
+    return new, hit
+
+
+def katex_detail(errors):
+    e = errors[0]
+    more = " (and %d more)" % (len(errors) - 1) if len(errors) > 1 else ""
+    return ascii_safe("KaTeX cannot parse %s%r: %s%s" % ("display " if e.get("display") else "", e.get("tex", "")[:90],
+                                                         e.get("message", "")[:150], more))
+
+
 def tier3_exceptions():
     """slug -> reason, from scripts/checker-allowlist.json."""
     data = load_config()
@@ -2471,7 +2504,7 @@ def tier3_exceptions():
 
 
 async def play_one(context, base, label, rel, query, live, timeout_ms, n_questions,
-                   advance_ms):
+                   advance_ms, katex_known=None):
     """Drive one game through n_questions and report what happened."""
     slug = label.split(":", 1)[-1]
     blocked, escaped, console_errs, page_errs = [], [], [], []
@@ -2768,6 +2801,18 @@ async def play_one(context, base, label, rel, query, live, timeout_ms, n_questio
             else:
                 fail(ascii_safe("driver error: " + msg[:150]))
 
+    # KaTeX it could not parse, recorded by KATEX_HOOK_INIT (see tier3_katex_known): a FAIL whatever else happened.
+    try:
+        kx = await page.evaluate("() => window.__mfgKatexErrors || []")
+    except Exception:
+        kx = []
+    new_kx, known_kx = katex_verdict(slug, kx, katex_known or {})
+    res["katex_errors"], res["katex_known"] = new_kx, known_kx
+    if new_kx:
+        before = res["detail"] if res["status"] == "FAIL" else ""
+        res["status"] = "FAIL"
+        res["detail"] = katex_detail(new_kx) + ("; also " + before if before else "")
+
     if res["status"] == "PASS" and res["warns"]:
         res["status"] = "WARN"
         res["detail"] = res["warns"][0]
@@ -2789,6 +2834,7 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
     from playwright.async_api import async_playwright
 
     exceptions = tier3_exceptions()
+    katex_known = tier3_katex_known()
     games = [(lbl, rel, qs) for lbl, rel, qs in pages if lbl.startswith("game:")]
     jobs = [(lbl, rel, q) for lbl, rel, qs in games for q in qs]
 
@@ -2816,6 +2862,7 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
                 # context's init scripts on every navigation, so this covers
                 # every job the context later serves.
                 await ctx.add_init_script(TIER3_INIT)
+                await ctx.add_init_script(bc.KATEX_HOOK_INIT)
 
                 async def ws_handler(ws):
                     all_blocked.append(ws.url)
@@ -2832,7 +2879,7 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
                     ctx = await pool.get()
                     try:
                         r = await play_one(ctx, base, label, rel, q, live,
-                                           timeout_ms, n_questions, advance_ms)
+                                           timeout_ms, n_questions, advance_ms, katex_known)
                     finally:
                         pool.put_nowait(ctx)
                 slug = label.split(":", 1)[-1]
@@ -2845,6 +2892,8 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
                 if r["status"] in ("FAIL", "WARN"):
                     print("  %-5s %-34s %s"
                           % (r["status"], label, ascii_safe(r["detail"])))
+                for e in (r.get("katex_errors") or [])[1:]:
+                    print("        %-34s %s" % ("", katex_detail([e])))
                 if done % 40 == 0:
                     print("  ... %d/%d" % (done, len(jobs)))
 
@@ -2868,7 +2917,89 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
             print("  under \"tier3_exceptions\". Read each one, then either make it")
             print("  drivable or record why it cannot be. Marked * above.")
 
+    kx_runs = [r for r in results if r.get("katex_errors")]
+    kx_known = sorted({(r["label"].split(":", 1)[-1], e["tex"]) for r in results for e in r.get("katex_known", [])})
+    print("\n  KaTeX parse check (contract KATEX-ERRORS): %d run(s) handed KaTeX a string it cannot parse; "
+          "%d known failure(s) met (scripts/checker-allowlist.json \"tier3_katex_known\")" % (len(kx_runs), len(kx_known)))
+    for slug, tex in kx_known:
+        print("    known  %-30s %s -- %s" % (slug, ascii_safe(repr(tex))[:60], ascii_safe(katex_known.get((slug, tex), ""))[:60]))
+
     return results, all_blocked, all_escaped
+
+
+# The plant (contract KATEX-ERRORS): tier 3's own play_one, on a real KaTeX game, three ways. In one context the
+# game is untouched; in another an init script makes the page hand KaTeX "\\frac{1}{2" (an unclosed brace) once it
+# has loaded, as a game does with a bad bank string; in the third the same plant is met with that string on the known
+# list. The untouched game must not fail on KaTeX, the plant must FAIL naming the string and KaTeX's message, and the
+# known one must be reported, not failed. What the planted page shows is checked unchanged: the hook only parses.
+TIER3_KATEX_PLANT_GAME = "index-laws"
+TIER3_KATEX_PLANT_TEX = "\\frac{1}{2"
+TIER3_KATEX_PLANT = r"""
+window.addEventListener('load', () => {
+  try {
+    const h = katex.renderToString('\\frac{1}{2', {throwOnError: false});
+    window.__mfgPlantShown = /katex-error/.test(h);
+  } catch (e) { window.__mfgPlantShown = 'threw: ' + e; }
+});
+"""
+
+
+async def tier3_katex_selftest_async(timeout_ms=20000, advance_ms=6000):
+    from playwright.async_api import async_playwright
+    server, base = bc.start_stub_server()
+    slug = TIER3_KATEX_PLANT_GAME
+    label, rel = "game:" + slug, "games/%s/" % slug
+    failures = []
+    try:
+        async with async_playwright() as pw:
+            browser = await pw.chromium.launch()
+            for name, plant, known in (("untouched", False, {}), ("planted", True, {}),
+                                       ("planted, on the known list", True,
+                                        {(slug, TIER3_KATEX_PLANT_TEX): "the self-test's own entry"})):
+                ctx = await browser.new_context()
+                await ctx.add_init_script(TIER3_INIT)
+                await ctx.add_init_script(bc.KATEX_HOOK_INIT)
+                if plant:
+                    await ctx.add_init_script(TIER3_KATEX_PLANT)
+                r = await play_one(ctx, base, label, rel, "", False, timeout_ms, 2, advance_ms, known)
+                kx = r.get("katex_errors") or []
+                if not plant:
+                    ok = not kx and r["status"] != "FAIL"
+                elif known:
+                    ok = not kx and [e["tex"] for e in r.get("katex_known", [])] == [TIER3_KATEX_PLANT_TEX] \
+                        and r["status"] != "FAIL"
+                else:
+                    ok = (r["status"] == "FAIL" and [e["tex"] for e in kx] == [TIER3_KATEX_PLANT_TEX]
+                          and TIER3_KATEX_PLANT_TEX in r["detail"] and "parse error" in r["detail"])
+                print("  %-6s %-28s %s: %s" % ("caught" if ok and plant and not known else "OK" if ok else "FAILED",
+                                              name, r["status"], ascii_safe(r["detail"])[:120]))
+                if not ok:
+                    failures.append(name)
+                await ctx.close()
+            # The hook never changes what a page shows: the planted string still renders as KaTeX's red error span.
+            ctx = await browser.new_context()
+            await bc.offline_async(ctx, base)
+            await ctx.add_init_script(bc.KATEX_HOOK_INIT)
+            await ctx.add_init_script(TIER3_KATEX_PLANT)
+            page = await ctx.new_page()
+            await page.goto(base + "/" + rel, wait_until="load", timeout=timeout_ms)
+            await page.wait_for_timeout(300)
+            shown = await page.evaluate("() => window.__mfgPlantShown")
+            print("  %-6s %-28s renders as %s" % ("OK" if shown is True else "FAILED", "the page's own render",
+                                                 ".katex-error, unchanged" if shown is True else repr(shown)))
+            if shown is not True:
+                failures.append("the page's own render changed")
+            await browser.close()
+    finally:
+        server.terminate()
+    return failures
+
+
+def tier3_katex_selftest():
+    print("tier 3 KaTeX parse check, self-test (%s)" % TIER3_KATEX_PLANT_GAME)
+    failures = asyncio.run(tier3_katex_selftest_async())
+    print("%s" % ("FAILED: " + ", ".join(failures) if failures else "OK: the plant was caught, the rest passed"))
+    return 1 if failures else 0
 
 
 # ---------------------------------------------------------------------------
@@ -2979,7 +3110,10 @@ def main():
                          "measure in the runner's fallback font (for comparison only)")
     ap.add_argument("--shard", metavar="I/N",
                     help="tiers 1+2: load only shard I of N (each page in exactly one shard; tier 2 "
-                         "and the other site-wide parts in shard 1 only). CI runs 1/4 .. 4/4")
+                         "and the other site-wide parts in shard 1 only). CI runs 1/4 .. 4/4. "
+                         "Tier 3: play only shard I of N's games")
+    ap.add_argument("--tier3-katex-selftest", action="store_true",
+                    help="tier 3's KaTeX parse check on a planted game (contract KATEX-ERRORS); plays 2 questions")
     ap.add_argument("--shard-selftest", type=int, metavar="N",
                     help="prove that N shards load every page exactly once and that the workflow "
                          "runs all N; loads nothing")
@@ -2988,6 +3122,8 @@ def main():
     PHONE_FONTS = args.phone_fonts
     if args.shard_selftest:
         return shard_selftest(args.shard_selftest)
+    if args.tier3_katex_selftest:
+        return tier3_katex_selftest()
     try:
         shard = parse_shard(args.shard) if args.shard else None
     except ValueError as exc:
@@ -3024,7 +3160,10 @@ def main():
         fails += len(class_name_report())
 
     if args.tier == "3":
-        pages = build_page_list(args.only)
+        # Sharded like tier 1 (contract KATEX-ERRORS: tier 3 in CI, in four jobs): page k to shard (k mod n) + 1.
+        pages = shard_pages(build_page_list(args.only), shard)
+        if shard:
+            print("tier 3 shard %d/%d: %d games" % (shard[0], shard[1], sum(1 for l, _r, _q in pages if l.startswith("game:"))))
         t3_results, t3_blocked, t3_escaped = asyncio.run(
             tier3(pages, args.live, args.workers, args.timeout,
                   args.questions, args.advance_ms))

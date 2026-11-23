@@ -54,7 +54,8 @@ data/banks/<slug>.json, one per roster game (94):
     plus, for B7's KaTeX half (to-do §1.31): "katex_sites" (how many render
     sites), "katex_wrappers", "katex_renders" (every resolved string as it
     rendered through its site's own callee: path, source, callee, line,
-    rendered, katex, error), "katex_unresolved" and "katex_runtime_only"
+    rendered, katex, error, parse_errors: [{tex, display, message}] for each string KaTeX received
+    that it cannot parse with throwOnError:true, rule B12), "katex_unresolved" and "katex_runtime_only"
     (sites listed by check-banks --ci, never a failure); and
     "mathtext_hazards" (B7's MaffsText half).
 
@@ -133,6 +134,7 @@ def iife_candidates(tree):
 # in) are computed here first: the item's seed statements run, then its
 # expression, both at the page's global scope.
 SITE_RENDER_JS = r"""async (spec) => {
+  const kparse = (__KATEX_PARSE_JS__);
   const ELEMENT = /^(el|elem|element|node|target|container|div|span|box|parent|host|slot|cell|card|btn|button|b|t?el\w*)$/i;
   const ELEMENT_ARG = /\b(el|elem|div|span|node|box|slot|cell|card|btn|b|c|li|td|getElementById|querySelector|createElement)\b|\$\(/;
   const visual = (root) => {
@@ -212,21 +214,25 @@ SITE_RENDER_JS = r"""async (spec) => {
       // a page-computed string that read a field the question lacks
       if (it.js !== undefined && typeof src === 'string' && /undefined|\[object Object\]/.test(src)) continue;
       if (!fn) { results.push({key: it.key, source: src, error: 'callee not reachable in the page'}); continue; }
-      const outs = [], ins = [];
+      const outs = [], ins = [], perrs = [];
       const k = katex, rts = k.renderToString, r = k.render;
-      k.renderToString = function (s, o) { const h = rts.apply(this, arguments); outs.push(h); ins.push(String(s)); return h; };
-      k.render = function (s, el, o) { const x = r.apply(this, arguments); outs.push(el); ins.push(String(s)); return x; };
+      // B12 (contract KATEX-ERRORS): every string KaTeX receives is parsed again with the options it was given and
+      // throwOnError:true (bank_common.KATEX_PARSE_JS); what the callee renders is untouched.
+      const kp = (s, o) => { const m = kparse(rts, s, o); if (m !== null) perrs.push({tex: String(s), display: !!(o && o.displayMode), message: m}); };
+      k.renderToString = function (s, o) { kp(s, o); const h = rts.apply(this, arguments); outs.push(h); ins.push(String(s)); return h; };
+      k.render = function (s, el, o) { kp(s, o); const x = r.apply(this, arguments); outs.push(el); ins.push(String(s)); return x; };
       const vis = (o) => { if (typeof o === 'string') { const b = document.createElement('div'); b.innerHTML = o; return visual(b); } return visual(o); };
       let rec = null;
       for (const allEls of [false, true]) {
         const el = document.createElement('div');
         holder.appendChild(el);
-        outs.length = 0; ins.length = 0;
+        outs.length = 0; ins.length = 0; perrs.length = 0;
         try {
           const ret = fn(src, el, allEls);
           if (typeof src !== 'string') {
             // the strings KaTeX received are the sources, each as it rendered
-            rec = ins.map((s, i) => ({key: it.key, source: s, rendered: vis(outs[i]), how: how, katex: true}));
+            rec = ins.map((s, i) => ({key: it.key, source: s, rendered: vis(outs[i]), how: how, katex: true,
+                                      parse_errors: perrs.filter(p => p.tex === s)}));
             el.remove();
             break;
           }
@@ -242,7 +248,7 @@ SITE_RENDER_JS = r"""async (spec) => {
           } else {
             text = null;
           }
-          rec = {key: it.key, source: src, rendered: text, how: how, katex: outs.length > 0};
+          rec = {key: it.key, source: src, rendered: text, how: how, katex: outs.length > 0, parse_errors: perrs.slice()};
           el.remove();
           break;
         } catch (e) {
@@ -257,7 +263,7 @@ SITE_RENDER_JS = r"""async (spec) => {
   }
   holder.remove();
   return results;
-}"""
+}""".replace("__KATEX_PARSE_JS__", bc.KATEX_PARSE_JS)
 
 
 def _replica(wrapper, wrappers, depth=0):
@@ -353,7 +359,8 @@ async def render_sites(context, url, wrappers, resolved, timeout_ms):
                 renders.append({"path": it.get("path", "literal"), "source": rec.get("source"),
                                 "callee": s["callee"], "enclosing": s["enclosing"],
                                 "line": s["line"], "rendered": rec.get("rendered"),
-                                "katex": rec.get("katex", False), "error": rec.get("error")})
+                                "katex": rec.get("katex", False), "error": rec.get("error"),
+                                "parse_errors": rec.get("parse_errors") or []})
             if not ok:
                 errs = sorted({rec.get("error") for rec in out if rec.get("error")})
                 failures.append({"callee": s["callee"], "line": s["line"],

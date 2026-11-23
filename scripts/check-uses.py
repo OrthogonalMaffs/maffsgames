@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: When will I use this? (the pages are build-uses.py's output exactly; every source https and public; every worked step with = recomputed, or marked noCheck with a reason; Practise it names live games only; the 15 Skills England routes; in Chromium no page scrolls sideways at 320x568 or 390x844, normal or Aa, and its KaTeX renders with no .katex-error; every scenario has a question ending ?, an Inside tag and a formula or null; planted faults) | --selftest && --check
-# ci-deps: data/uses.json when-will-i-use-this/ scripts/build-uses.py data/games.json .claude/rules/game-roster.md sitemap.xml index.html parents/guide.css parents/guide.js schools/assets/opendyslexic.css
+# ci-deps: data/uses.json when-will-i-use-this/ scripts/build-uses.py data/games.json .claude/rules/game-roster.md sitemap.xml index.html parents/guide.css parents/guide.js schools/assets/opendyslexic.css scripts/katex_page_common.py
 """WHEN-WILL-I-USE-THIS (Jon, spec 10 Nov 2026, build 22 Nov 2026): the "When will I use this?" section, held to its data.
 
     python -X utf8 scripts/check-uses.py --check      # CI: the static rules, then the pages in Chromium
@@ -564,7 +564,6 @@ MEASURE = """() => {
       if (r.right > w) { w = r.right; widest = el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.className && typeof el.className === 'string' ? '.' + el.className.split(' ')[0] : ''); }
     }
   }
-  const raw = /\\\\\\(|\\\\\\)/.test(document.body.innerText);
   // Text on the route colours (tiles, chips, a route page's header): its colour against the first painted background
   // behind it, measured as the browser draws it.
   const rgb = s => (s.match(/[\\d.]+/g) || []).map(Number);
@@ -577,15 +576,15 @@ MEASURE = """() => {
     const a = lum(rgb(getComputedStyle(el).color)), b = lum(bg(el)), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
     if (r < 4.5) low.push((el.className || el.tagName.toLowerCase()) + ' "' + el.textContent.trim().slice(0, 30) + '" ' + r.toFixed(2) + ':1');
   }
-  // KaTeX renders with throwOnError:false, so a LaTeX mistake becomes .katex-error (its source, its message as title)
-  const kerr = [...document.querySelectorAll('.katex-error')].map(e => [e.textContent, e.getAttribute('title') || '']);
-  return {over, widest, raw, low, coloured, kerr, katex: document.querySelectorAll('.katex').length, aa: document.body.classList.contains('accessible')};
+  // The KaTeX half (unrendered source, .katex-error) is katex_page_common's, read after this (contract KATEX-ERRORS)
+  return {over, widest, low, coloured, aa: document.body.classList.contains('accessible')};
 }"""
 
 
 def browse(root, pages):
     """[faults] for each page (repo path) of the copy at root, at every size, normal and Aa."""
     import bank_common as bc
+    import katex_page_common as kp
     from playwright.sync_api import sync_playwright
     faults = []
 
@@ -609,7 +608,7 @@ def browse(root, pages):
         browser = pw.chromium.launch()
         try:
             for path in pages:
-                maths = "\\(" in (root / path).read_text(encoding="utf-8")
+                maths = kp.has_maths((root / path).read_text(encoding="utf-8"))
                 for w, h in SIZES:
                     for mode in ("normal", "aa"):
                         ctx = browser.new_context(viewport={"width": w, "height": h})
@@ -621,17 +620,13 @@ def browse(root, pages):
                         where = "%s at %dx%d %s" % (path, w, h, mode)
                         try:
                             page.goto(ORIGIN + "/" + path[:-len("index.html")] + "?cb=uses", wait_until="load")
-                            if maths:
-                                try:   # KaTeX renders on its script's load; left unrendered, MEASURE reports it
-                                    page.wait_for_function("() => document.querySelector('.katex') || "
-                                                           "!/\\\\\\(/.test(document.body.innerText)", timeout=5000)
-                                except Exception:
-                                    pass
+                            kp.wait_rendered(page, maths)   # KaTeX renders on its script's load; kp.faults reports it left
                             if mode == "aa":
                                 page.click("#a11yBtn")
                             page.evaluate("() => document.fonts.ready")
                             page.wait_for_timeout(250)
                             m = page.evaluate(MEASURE)
+                            k = kp.state(page)
                         except Exception as e:   # a page that cannot be measured is a fault, never a pass
                             faults.append("%s: could not be measured: %s" % (where, str(e).splitlines()[0]))
                             ctx.close()
@@ -642,10 +637,7 @@ def browse(root, pages):
                             faults.append("%s: the Aa toggle did not switch the page to Aa" % where)
                         for x in m["low"]:
                             faults.append("%s: text on a route colour or tag under 4.5:1: %s" % (where, x))
-                        if m["raw"] or (maths and not m["katex"]):
-                            faults.append("%s: shows KaTeX source it did not render" % where)
-                        for src, msg in m["kerr"]:
-                            faults.append("%s: KaTeX error on \"%s\": %s" % (where, src, msg))
+                        faults += kp.faults(where, k, maths)
                         for e in errs:
                             faults.append("%s: page error: %s" % (where, e))
                         ctx.close()
