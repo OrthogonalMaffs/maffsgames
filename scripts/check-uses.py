@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: When will I use this? (the pages are build-uses.py's output exactly; every source https and public; every worked step with = recomputed, or marked noCheck with a reason; Practise it names live games only; the 15 Skills England routes; in Chromium no page scrolls sideways at 320x568 or 390x844, normal or Aa, and its KaTeX renders; planted faults) | --selftest && --check
+# ci-line: When will I use this? (the pages are build-uses.py's output exactly; every source https and public; every worked step with = recomputed, or marked noCheck with a reason; Practise it names live games only; the 15 Skills England routes; in Chromium no page scrolls sideways at 320x568 or 390x844, normal or Aa, and its KaTeX renders with no .katex-error; every scenario has a question ending ?, an Inside tag and a formula or null; planted faults) | --selftest && --check
 # ci-deps: data/uses.json when-will-i-use-this/ scripts/build-uses.py data/games.json .claude/rules/game-roster.md sitemap.xml index.html parents/guide.css parents/guide.js schools/assets/opendyslexic.css
 """WHEN-WILL-I-USE-THIS (Jon, spec 10 Nov 2026, build 22 Nov 2026): the "When will I use this?" section, held to its data.
 
@@ -37,6 +37,10 @@ WWIUT-BATCH-1-2 (22 Nov 2026) adds: every scenario has a tier, "F", "H" or "L4" 
 COUNT_END) is the number of scenarios; and the reader in (c) also reads "1,000", "1/16", "½", √ of a number or a
 bracket, superscript powers, sin, cos and tan in degrees and their inverses (giving degrees), "°" after a number, and a
 right side that is an expression ("3² + 4² = 5²", exactly). The 14 scenarios before it read exactly as they did.
+WWIUT-CARD-FORMAT (23 Nov 2026) adds: every scenario has a non-empty "question" ending in "?", a non-empty "inside",
+"formula" a non-empty LaTeX string or null (the run reports how many are null), and "formulaNote", where given, a
+non-empty string; and in Chromium any .katex-error on any page fails, naming the page, the source and KaTeX's message
+(the pages render with throwOnError:false, so a LaTeX mistake would otherwise show as red source and pass).
 Also: ids unique, every topic known, exampleFigures true exactly when the wording says "(example figure)" or
 "(example figures)", and every parent guide named is a page in parents/.
 
@@ -440,6 +444,18 @@ def static_errors(root):
         if sc.get("tier") not in bu.TIERS:
             errors.append("scenario %s: tier %r is not one of %s (Foundation GCSE, Higher GCSE, Level 4)"
                           % (sid, sc.get("tier"), ", ".join(bu.TIERS)))
+        # the card's hook (WWIUT-CARD-FORMAT)
+        q = sc.get("question")
+        if not isinstance(q, str) or not q.strip():
+            errors.append("scenario %s has no question (the card's text in place of the worked sum)" % sid)
+        elif not q.rstrip().endswith("?"):
+            errors.append("scenario %s: question %r does not end in \"?\"" % (sid, q))
+        if not isinstance(sc.get("inside"), str) or not sc["inside"].strip():
+            errors.append("scenario %s has no \"inside\" (the card's \"Inside:\" topic tag)" % sid)
+        if "formula" not in sc or not (sc["formula"] is None or (isinstance(sc["formula"], str) and sc["formula"].strip())):
+            errors.append("scenario %s: formula must be a non-empty LaTeX string or null, not %r" % (sid, sc.get("formula", "missing")))
+        if "formulaNote" in sc and not (isinstance(sc["formulaNote"], str) and sc["formulaNote"].strip()):
+            errors.append("scenario %s: formulaNote, where given, must be non-empty text" % sid)
         # (b) the sources
         srcs = sc.get("sources") or []
         if not srcs:
@@ -460,6 +476,9 @@ def static_errors(root):
         g = t.get("parentGuide")
         if g is not None and not (root / "parents" / str(g) / "index.html").is_file():
             errors.append("topic %s: parent guide parents/%s/ is not a page" % (t.get("slug"), g))
+    nulls = [s.get("id") for s in data.get("scenarios", []) if s.get("formula", "") is None]
+    report.append("formulas: %d of %d scenarios have one; %d null%s" % (len(data.get("scenarios", [])) - len(nulls),
+                  len(data.get("scenarios", [])), len(nulls), " (%s)" % ", ".join(nulls) if nulls else ""))
     # (c), with the headlines
     e, r = arithmetic(data)
     errors += e
@@ -558,7 +577,9 @@ MEASURE = """() => {
     const a = lum(rgb(getComputedStyle(el).color)), b = lum(bg(el)), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
     if (r < 4.5) low.push((el.className || el.tagName.toLowerCase()) + ' "' + el.textContent.trim().slice(0, 30) + '" ' + r.toFixed(2) + ':1');
   }
-  return {over, widest, raw, low, coloured, katex: document.querySelectorAll('.katex').length, aa: document.body.classList.contains('accessible')};
+  // KaTeX renders with throwOnError:false, so a LaTeX mistake becomes .katex-error (its source, its message as title)
+  const kerr = [...document.querySelectorAll('.katex-error')].map(e => [e.textContent, e.getAttribute('title') || '']);
+  return {over, widest, raw, low, coloured, kerr, katex: document.querySelectorAll('.katex').length, aa: document.body.classList.contains('accessible')};
 }"""
 
 
@@ -623,6 +644,8 @@ def browse(root, pages):
                             faults.append("%s: text on a route colour or tag under 4.5:1: %s" % (where, x))
                         if m["raw"] or (maths and not m["katex"]):
                             faults.append("%s: shows KaTeX source it did not render" % where)
+                        for src, msg in m["kerr"]:
+                            faults.append("%s: KaTeX error on \"%s\": %s" % (where, src, msg))
                         for e in errs:
                             faults.append("%s: page error: %s" % (where, e))
                         ctx.close()
@@ -776,6 +799,11 @@ def selftest():
              "toolmaker step 1"),
             ("a wrong power in a headline", lambda: data(lambda d: sc(d, "vehicle-body-repairer").update(headline="8 ÷ 2³ = 2 hours at 94 dB")),
              "vehicle-body-repairer headline: '8 ÷ 2³ = 2 hours at 94 dB' does not recompute"),
+            # WWIUT-CARD-FORMAT
+            ("a scenario with no question", lambda: data(lambda d: sc(d, "farmer").pop("question"), rebuild=False),
+             "scenario farmer has no question"),
+            ("a question with no \"?\"", lambda: data(lambda d: sc(d, "baker").update(question="How much water for 500 g of flour")),
+             "scenario baker: question 'How much water for 500 g of flour' does not end in"),
         ]
         real_tail = bu.tail
         for name, plant, needle in static_plants:
@@ -802,6 +830,11 @@ def selftest():
             failures.append("baseline copy is not clean: %s" % errs[:3])
         # (f) in Chromium: one plant per shape, each on its own page
         reset()
+        # a formula with broken LaTeX, planted in the data and built first (the build rewrites every page). Brace-balanced
+        # ("\\dfrac{1}", a missing argument), so auto-render hands it to KaTeX, which shows it as a .katex-error.
+        # An unbalanced one ("\\dfrac{1}{") never reaches KaTeX: auto-render matches braces looking for the closing
+        # delimiter, so it stays as raw source, caught by the unrendered-source rule (planted on one topic page below).
+        data(lambda d: sc(d, "cnc-machinist").update(formula="\\dfrac{1}"))
         hub, avg, con = bu.SECTION + "/index.html", bu.SECTION + "/averages/index.html", bu.SECTION + "/route/construction/index.html"
         edit(hub, "</main>", '<div style="width:360px;height:4px;background:#000"></div>\n</main>')
         edit(avg, "</head>", "<style>body.accessible .hero h1{width:420px}</style>\n</head>")
@@ -811,7 +844,10 @@ def selftest():
         edit(agri, 'class="hero route-hero" style="--c:#4d7c0f"', 'class="hero route-hero" style="--c:#86efac"')
         pyth = bu.SECTION + "/pythagoras/index.html"
         edit(pyth, "</head>", "<style>.tier-tag{color:#cbd5e1}</style>\n</head>")
-        found = browse(tmp, [hub, avg, con, clean, agri, pyth])
+        dec = bu.SECTION + "/decimals-measurement/index.html"
+        ang = bu.SECTION + "/angles/index.html"
+        edit(ang, r"\(\displaystyle \dfrac{(n-2) \times 180}{n}\)", r"\(\displaystyle \dfrac{1}{\)")
+        found = browse(tmp, [hub, avg, con, clean, agri, pyth, dec, ang])
         browser_plants = [
             ("a 360 px element on the hub, caught at 320 normal", hub + " at 320x568 normal: scrolls sideways"),
             ("the same, missed at 390 (it fits)", None),
@@ -821,6 +857,10 @@ def selftest():
             ("an untouched page passes", None),
             ("a route header too light for white text", agri + " at 320x568 normal: text on a route colour or tag under 4.5:1"),
             ("a Higher tag too light to read", pyth + " at 320x568 normal: text on a route colour or tag under 4.5:1: tier-tag"),
+            ("a formula with broken LaTeX (\\dfrac{1}) shown as a .katex-error",
+             dec + " at 320x568 normal: KaTeX error on \"\\displaystyle \\dfrac{1}\""),
+            ("a formula with an unclosed brace (\\dfrac{1}{) left as raw source",
+             ang + " at 320x568 normal: shows KaTeX source it did not render"),
         ]
         checks = [
             any(f.startswith(browser_plants[0][1]) for f in found),
@@ -831,6 +871,8 @@ def selftest():
             not any(f.startswith(clean) for f in found),
             any(f.startswith(browser_plants[6][1]) for f in found),
             any(f.startswith(browser_plants[7][1]) for f in found),
+            any(f.startswith(browser_plants[8][1]) for f in found),
+            any(f.startswith(browser_plants[9][1]) for f in found),
         ]
         for (name, _), ok in zip(browser_plants, checks):
             if ok:
