@@ -66,6 +66,15 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-23 (cloud): WWIUT-BATCH-MERGE (`docs/handover/contracts/2026-11-23-wwiut-batch-merge.md`)
+
+Claude Code (cloud), the home lane's branch `claude/wwiut-batch-1-2` taken over at bc1fa32 (its three commits as Project Claude reviewed them), not rebased. Tier: takeover under Jon's one-off lane exception (shared files site-nav.js, index.html, data/games.json; one line in home.md).
+
+- **Done on the branch:** origin/main (ccbcc4b) merged in, clean; `scripts/build-uses.py` re-run after it: "0 of 35 files changed". Close-out commit: #889's (entry below), #887's 616 px record corrected, this contract saved. The takeover line added to the home lane's WWIUT-BATCH-1-2 entry.
+- **Decided for you:** the close-out commit comes after the main merge, not before it: #889's entry and contract file exist only on main, so step 2 could not be done on bc1fa32 as written. It is still the task's first own commit.
+- **Discoveries:** the corrected SITE-CONTRAST wording names fold.js timing as the cause; #889's entry found that timing for Some Thingies' arrays (601-604 px) and left main's 616 px on Sums in Disguise unreproduced, its cause not shown. The wording is the contract's, applied verbatim.
+- **Next:** Gate green, merge with merge-pr.py, report main's run. WWIUT-BATCH-1-2's contract move and this merge's record ride on the cloud lane's next task.
+
 ## 2026-11-23 (cloud): PRIMARY-FIT-SWEEP (`docs/history/contracts/2026-11-23-primary-fit-sweep.md`)
 
 Claude Code (cloud), branch `claude/pensive-gates-ktng9n` from main b5123bf. First commit: #887's close-out (entry below), this contract saved.

@@ -25,6 +25,7 @@ Claude Code (home lane), worktree `~/mg-batch`, branch `claude/wwiut-batch-1-2`;
 - build-uses.py: a Higher or Level 4 tag on cards (measured 4.5:1 in Chromium); KaTeX for the new signs; index.html's "N real jobs" written between uses-count markers and checked. A topic heading ("Transformations:") scrolled 46 px at 320 in Aa: headings now wrap long words.
 - index.html: #usesFlag and #parFlag lose data-cmp-hide, so both show on phones while current; expiry unchanged. 12 HUBS lines in site-nav.js under Jon's ruling (23 Nov), as #883's 4. 21 new data/games.json "pages" entries; 7 descriptions updated.
 - Next: Gate green, then wait for Project Claude's review and Jon's "merge".
+- Taken over and merged by the cloud lane (contract WWIUT-BATCH-MERGE, 23 Nov): see docs/handover/cloud.md.
 
 ## 2026-11-22 (home): WWIUT-STAND-OUT ("When will I use this?" gets its own navy strip on the home page; the section leads with coloured course tiles and a sum on every job card)
 
