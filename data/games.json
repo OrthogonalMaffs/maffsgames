@@ -2085,29 +2085,73 @@
     "grade 4"
    ]
   },
+  "when-will-i-use-this/angles/index.html": {
+   "title": "Angles: when will I use this? | MaffsGames",
+   "description": "Real jobs that use angles: why hexagon and octagon tiles fit together with no gaps, with a worked example and its sources. Free, no sign-up."
+  },
   "when-will-i-use-this/area-perimeter/index.html": {
    "title": "Area and perimeter: when will I use this? | MaffsGames",
    "description": "Real jobs that use area and perimeter: painting a room, marking out a pitch and spreading fertiliser, with worked examples. Free, no sign-up."
   },
   "when-will-i-use-this/averages/index.html": {
    "title": "Averages and statistics: when will I use this? | MaffsGames",
-   "description": "Real jobs that use averages: blood pressure readings, growth charts, counting wild orchids and the weather, with worked examples. Free, no sign-up."
+   "description": "Real jobs that use averages: blood pressure, growth charts, orchids, the weather and an athlete's jumps, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/decimals-measurement/index.html": {
+   "title": "Decimals and measurement: when will I use this? | MaffsGames",
+   "description": "Real jobs that use decimals: a CNC machinist checking a part is within tolerance, with a worked example and its sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/estimation/index.html": {
+   "title": "Estimation and rounding: when will I use this? | MaffsGames",
+   "description": "Real jobs that use estimation: checking a stock delivery before you sign for it, with a worked example and its source. Free, no sign-up."
+  },
+  "when-will-i-use-this/exponential-change/index.html": {
+   "title": "Exponential change: when will I use this? | MaffsGames",
+   "description": "Real jobs that use indices: why each 3 dB more noise halves the safe time, with a worked example and its sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/formulae/index.html": {
+   "title": "Formulae: when will I use this? | MaffsGames",
+   "description": "Real jobs that use formulae: choosing the right plug fuse from current = power ÷ voltage, with a worked example and its source. Free, no sign-up."
+  },
+  "when-will-i-use-this/gradients/index.html": {
+   "title": "Gradients: when will I use this? | MaffsGames",
+   "description": "Real jobs that use gradients: steep-hill road signs and wheelchair ramps, with worked examples and their sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/hypothesis-testing/index.html": {
+   "title": "Hypothesis testing: when will I use this? | MaffsGames",
+   "description": "Real jobs that use hypothesis testing: checking whether a machine making shafts has drifted, with a worked example. Free, no sign-up."
   },
   "when-will-i-use-this/index.html": {
    "title": "When Will I Use This? Maths in Real Jobs | MaffsGames",
-   "description": "Where the maths you practise is used at work: real jobs that use ratio, percentages, area and averages, with worked examples and sources. Free, no sign-up."
+   "description": "Where the maths you practise is used at work: real jobs from payroll to fire ladders, with worked examples and sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/negative-numbers/index.html": {
+   "title": "Negative numbers: when will I use this? | MaffsGames",
+   "description": "Real jobs that use negative numbers: a care worker's fluid balance chart, with a worked example and its source. Free, no sign-up."
   },
   "when-will-i-use-this/percentages/index.html": {
    "title": "Percentages: when will I use this? | MaffsGames",
-   "description": "Real jobs that use percentages: VAT on a bill, voltage drop, bread dough and gold, with worked examples and their sources. Free, no sign-up."
+   "description": "Real jobs that use percentages: VAT, income tax, mileage, voltage drop and gold, with worked examples and their sources. Free, no sign-up."
+  },
+  "when-will-i-use-this/pythagoras/index.html": {
+   "title": "Pythagoras: when will I use this? | MaffsGames",
+   "description": "Real jobs that use Pythagoras: a firefighter's ladder and a character moving in a computer game, with worked examples. Free, no sign-up."
   },
   "when-will-i-use-this/ratio/index.html": {
    "title": "Ratio: when will I use this? | MaffsGames",
-   "description": "Real jobs that use ratio: mixing concrete, hair colour and medicine doses, with worked examples and their sources. Free, no sign-up."
+   "description": "Real jobs that use ratio: concrete, hair colour, medicine doses, bike gears and nursery staffing, with worked examples. Free, no sign-up."
   },
   "when-will-i-use-this/route/agriculture/index.html": {
    "title": "Maths at work: agriculture and animal care | MaffsGames",
    "description": "The maths used in agriculture, environmental and animal care: pitch lines, fertiliser rates and counting orchids, worked out. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/business/index.html": {
+   "title": "Maths at work: business and administration | MaffsGames",
+   "description": "The maths used in business and administration: mileage claims and testing whether a machine has drifted, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/care/index.html": {
+   "title": "Maths at work: care services | MaffsGames",
+   "description": "The maths used in care services: adding up a fluid balance chart, with a worked example and its source. Free, no sign-up."
   },
   "when-will-i-use-this/route/catering/index.html": {
    "title": "Maths at work: catering and hospitality | MaffsGames",
@@ -2119,15 +2163,55 @@
   },
   "when-will-i-use-this/route/creative/index.html": {
    "title": "Maths at work: creative and design | MaffsGames",
-   "description": "The maths used in creative and design jobs: how much gold is in 9 carat jewellery, with a worked example and its source. Free, no sign-up."
+   "description": "The maths used in creative and design jobs: gold in 9 carat jewellery and the adverts in a TV hour, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/digital/index.html": {
+   "title": "Maths at work: digital | MaffsGames",
+   "description": "The maths used in digital jobs: download times and how fast a character moves in a computer game, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/education/index.html": {
+   "title": "Maths at work: education and childcare | MaffsGames",
+   "description": "The maths used in education and childcare: how many staff a nursery room needs by law, with a worked example. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/engineering/index.html": {
+   "title": "Maths at work: engineering and manufacturing | MaffsGames",
+   "description": "The maths used in engineering and manufacturing: tolerances, fuses, gear ratios, sine bars and noise limits, worked out. Free, no sign-up."
   },
   "when-will-i-use-this/route/hair-and-beauty/index.html": {
    "title": "Maths at work: hair and beauty | MaffsGames",
-   "description": "The maths used in hair and beauty: mixing hair colour with developer in the right ratio, with a worked example and its source. Free, no sign-up."
+   "description": "The maths used in hair and beauty: mixing hair colour with developer in the right ratio and strength, with worked examples. Free, no sign-up."
   },
   "when-will-i-use-this/route/health-and-science/index.html": {
    "title": "Maths at work: health and science | MaffsGames",
-   "description": "The maths used in health and science: medicine doses, blood pressure averages and growth chart centiles, with worked examples. Free, no sign-up."
+   "description": "The maths used in health and science: medicine doses, blood pressure, growth charts and an athlete's jumps, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/legal-and-finance/index.html": {
+   "title": "Maths at work: legal, finance and accounting | MaffsGames",
+   "description": "The maths used in legal, finance and accounting jobs: income tax on a month's pay and a VAT return, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/protective-services/index.html": {
+   "title": "Maths at work: protective services | MaffsGames",
+   "description": "The maths used in protective services: average speed cameras and a firefighter's ladder, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/sales-and-marketing/index.html": {
+   "title": "Maths at work: sales, marketing and procurement | MaffsGames",
+   "description": "The maths used in sales, marketing and procurement: checking a stock delivery with an estimate, with a worked example. Free, no sign-up."
+  },
+  "when-will-i-use-this/route/transport/index.html": {
+   "title": "Maths at work: transport and logistics | MaffsGames",
+   "description": "The maths used in transport and logistics: a lorry driver's journey time and the break the law requires, worked out. Free, no sign-up."
+  },
+  "when-will-i-use-this/speed-distance-time/index.html": {
+   "title": "Speed, distance and time: when will I use this? | MaffsGames",
+   "description": "Real jobs that use speed, distance and time: download times, lorry drivers' breaks and average speed cameras, with worked examples. Free, no sign-up."
+  },
+  "when-will-i-use-this/transformations/index.html": {
+   "title": "Transformations: when will I use this? | MaffsGames",
+   "description": "Real jobs that use transformations: hanging half drop wallpaper so the pattern lines up, with a worked example. Free, no sign-up."
+  },
+  "when-will-i-use-this/trigonometry/index.html": {
+   "title": "Trigonometry: when will I use this? | MaffsGames",
+   "description": "Real jobs that use trigonometry: setting a sine bar and placing bolt holes on a circle, with worked examples. Free, no sign-up."
   }
  }
 }

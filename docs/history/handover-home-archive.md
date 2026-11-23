@@ -1,5 +1,39 @@
 # Handover archive: home lane
 
+## Moved 2026-11-23 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
+## 2026-11-22 (home): COMPLEX-CONVERTER-WHY (a Why card after a wrong answer in Form Roulette; the back link off the titles)
+
+Claude Code (home lane), worktree `~/mg-cc-why`, branch `claude/complex-converter-why`; contract `docs/handover/contracts/2026-11-22-complex-converter-why.md` (verbatim). The first commit carries CLASS-PAGE's close-out (#872, 10ab776).
+
+- STOP check redone on main 67ade5e: all 55 items agree with their own re, im, r, argDeg and argRad (to the bank's rounding: q5/q6's given 0.927 and q18's 2.828 are rounded), every key's angle is principal, correct === correctLatex, no distractor equals its key. No STOP.
+- Why card (`games/complex-converter/index.html`, `WHY` and `showWhy`): canon 7.6.2's two copies in a `.maffs-ref-row` holding the Next mount; the page now links `fold.css`. Built at run time from the item's fields and its given and keyed TeX, through K() (j at Level 4, i at Further). The open copy shows only at `max-width:768px and min-height:1450px` or `min-width:769px and min-height:885px` (measured: worst need 1414 and 853, plus 30); every phone and both laptops get the collapsed copy beside Next, which adds no height.
+- Slips named by computation (165 distractors): sign flipped (conjugate) 12, cos/sin swapped 20, degrees in the exponent 4, radians left in polar 2, r one part 15, r both parts wrong (sum or no root) 2, quadrant step missing 12, quadrant step not needed 5, r and θ swapped 3, wrong signs 23, upside-down arctan 6; 61 unnamed (no one slip, or two at once). The three r slips share one lesson; two other families at once name nothing.
+- Back link: in the page's flow above every screen (it was `position:fixed` over each mode's title), not in each header: a hub label such as "← Back to OP for Secondary" cannot share a 320px header with the title and score. It costs 31px on every screen: laptop Next 498/680 (was 467); the phones were already a listed known failure (last option 857/528 on main, now 888/528).
+- `scripts/verify-complex-converter.py` extended (it already existed; the contract said new): every card recomputed and every slip re-derived in Python, q16 live in j and i, the back link against every header at 320x568, 390x844 and 1366x768; 3 new plants (arctan(Re / Im), a slip for an option it does not give, the fixed back link), 11 in all, all caught.
+- Found and fixed while building: the signs line read q.argRad (3 d.p.), so cos(-1.571) came out negative on the axis items; it reads argDeg now. check-site tier 2 flagged whyLine's while loop as a possible rejection-sampling loop; it is a split now.
+- MERGED 22 Nov as 842aa2e (#874) via merge-pr.py, exit 0, last line "main 842aa2e run 45002104858: GREEN". Main on the merge commit: check-site 45002104858 success, phone-fit-full 45002104942 success, pages build 45002104429 success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-complex-converter-why.md` by the cloud lane's CC-TRIG-SLIP (#876); this MERGED line closed out by GIVEN-THAT-VENN-FADE's first commit.
+
+## 2026-11-21 (home): CLASS-PAGE (one hidden /class/ page for every child-look game; MaffsKids shared)
+
+Claude Code (home lane), worktree `~/mg-class-page`, branch `claude/class-page`; contract `docs/handover/contracts/2026-11-21-class-page.md` (stored verbatim but for one teacher's first name, written "[a teacher's]"). The first commit carries SOME-THINGIES-TURN-LABELS' close-out (#870, 7d827fa).
+
+- The two games' fragment rules were identical (no STOP). `schools/assets/kids-look.js` (MaffsKids: `read(hash)`, `read(hash, 'bare')`, `greeting()`, `gameLink()`, `classLink()`) is now the one copy. Each game passes its own `location.hash` once and keeps `LOOK`, `CLASS_NAME` and `greeting()`, so both verifiers pass unchanged with every plant caught.
+- `/class/`: noindex, no menu, search or sitemap entry. Cards come from `"kids": true` in `data/games.json`, written in by `scripts/apply-class-page.py` (data/ is never published, so a fetch could not work). It loads analytics.js (the loader rule holds noindex pages to it); GA4's default page view leaves the fragment out.
+- site-nav: `/class/` in HUBS ("the class page"); a game opened from `/class/#<Name>` goes back to `/class/#<Name>`, the name read from its own hash through MaffsKids; only the hub's path is in sessionStorage. Both games show stage-exit's short form, "← the class page" (STAGE-EXIT-LABEL).
+- Checks: `scripts/test-kids-look.py` (Node vm, selective; 10 plants); check-site-nav's `class` unit and plant; check-site's site-wide class-name rule (Maple, plus `MAFFS_CLASS_NAMES`). For cloud: ci-deps' KNOWN_TOP lacks `class` (like printables, ugh-stats, core-maths), so a `class/` change counts as shared.
+- MERGED 21 Nov as 10ab776 (#872) via merge-pr.py (the Gate's 101 runs green). Main on the merge commit: check-site 44956845120 success, phone-fit-full 44956845115 success, pages build 44956845097 success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-21-class-page.md` (closed out by COMPLEX-CONVERTER-WHY's first commit).
+
+## 2026-11-21 (home): SOME-THINGIES-TURN-LABELS (Stage 3's turn: labels gone first, thingies eyes up)
+
+Claude Code (home lane), worktree `~/mg-stl`, branch `claude/some-thingies-turn-labels`; contract `docs/handover/contracts/2026-11-21-some-thingies-turn-labels.md` (the 20:09 reissue with amendment 1, which arrived after I'd started; I carried on). The first commit carries SOME-THINGIES-PERSONALITY's close-out (#868, 8bf4b4e; its entry below).
+
+- `turnArray()`: the labels fade (120 ms) and are cleared, then the array turns on `MaffsLock.timer`. The turned array is redrawn with empty labels. With reduced motion it is drawn at once.
+- Amendment 1: `.arr.turning .th{transform:rotate(-90deg)}`, centred on each thingy, with the array's 0.6 s ease, so every thingy stays eyes up. Measured mid-turn in Chromium: net 0° within 3°.
+- Next is there at once after marking; marking and the lock are untouched.
+- The verifier's new `turn` unit (laptop and phone at full motion, phone with reduced motion) and two plants (labels left visible, no counter-rotation), both caught; 15 plants in all.
+- MERGED 21 Nov as 7d827fa (#870) via merge-pr.py, exit 0, last line "main 7d827fa run 44946545379: GREEN". Main on the merge commit: check-site 44946545379 success, pages build 44946545012 success, phone-fit-full 44946545381 success with its matrix skipped (a game-only change selects no shared path), so some-thingies was measured locally on main 4ac9b3af: PASS in normal, aa and laptop modes. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-21-some-thingies-turn-labels.md` (closed out by CLASS-PAGE's first commit).
+
 ## Moved 2026-11-22 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
 ## 2026-11-21 (home): SOME-THINGIES-PERSONALITY (the thingies as characters; the game's own look)
