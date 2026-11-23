@@ -105,6 +105,13 @@
    "parentGuide": "trigonometry"
   },
   {
+   "slug": "probability",
+   "title": "Probability",
+   "answer": "Whenever you need to know how likely something really is.",
+   "keywords": ["probability", "conditional probability"],
+   "parentGuide": "probability"
+  },
+  {
    "slug": "exponential-change",
    "title": "Indices and exponential change",
    "answer": "Whenever something doubles or halves again and again.",
@@ -472,7 +479,7 @@
    "formula": "\\text{tax} = 0.2(\\text{pay} - \\text{allowance})",
    "question": "How much tax comes off a £2,500 month?",
    "inside": "Percentages, brackets",
-   "text": "Payroll works out the tax taken from each month's pay. In 2026 to 2027 the first £12,570 a year is tax-free and the next band is taxed at 20%. Someone earns £2,500 this month (example figure). National Insurance is worked out separately.",
+   "text": "Payroll works out the tax taken from each month's pay. In 2026 to 2027 the first £12,570 a year is tax-free and the next band is taxed at 20%. Someone earns £2,500 this month (example figure). National Insurance is worked out separately. Real payslips use HMRC's tax tables, so they can differ by a few pence.",
    "steps": [
     "Tax-free each month: 12570 ÷ 12 = £1,047.50.",
     "Taxed: 2500 − 1047.50 = £1,452.50.",
@@ -978,6 +985,152 @@
    ],
    "sources": [
     {"title": "Skills England, Quality practitioner (OCC0853, Level 4)", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0853", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "football-analyst",
+   "topic": "percentages",
+   "route": "health-and-science",
+   "job": "Football performance analyst",
+   "tier": "F",
+   "headline": "408 ÷ 480 × 100 = 85%",
+   "formula": "\\dfrac{\\text{completed}}{\\text{attempted}} \\times 100",
+   "question": "Is this midfielder's passing any good?",
+   "inside": "Percentages",
+   "text": "Analysts turn a match into numbers the coach can use. A midfielder tried 480 passes over five games and 408 reached a teammate (example figures).",
+   "steps": [
+    "Pass completion: 408 ÷ 480 × 100 = 85%."
+   ],
+   "sources": [
+    {"title": "Skills England, Sport performance analyst (OCC0828)", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0828", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "bricklayer-corner",
+   "topic": "pythagoras",
+   "route": "construction",
+   "job": "Bricklayer",
+   "tier": "F",
+   "headline": "3² + 4² = 5²",
+   "formula": "a^2 + b^2 = c^2",
+   "question": "Is this corner really square?",
+   "inside": "Pythagoras",
+   "text": "To check a corner is square, mark 3 m along one wall and 4 m along the other: the diagonal must be exactly 5 m.",
+   "steps": [
+    "3² + 4² = 9 + 16 = 25 = 5², so the corner is 90°.",
+    "A diagonal of 5.1 m means the corner is more than 90° and the walls aren't square."
+   ],
+   "sources": [
+    {"title": "Wonkee Donkee Tools, \"How to lay the first three courses\"", "url": "https://www.wonkeedonkeetools.co.uk/builders-profiles/how-to-lay-the-first-three-courses", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "crime-scene-investigator",
+   "topic": "trigonometry",
+   "route": "protective-services",
+   "job": "Crime scene investigator",
+   "tier": "F",
+   "headline": "sin⁻¹(2 ÷ 4) = 30°",
+   "formula": "\\sin\\theta = \\dfrac{\\text{width}}{\\text{length}}",
+   "question": "What angle did this blood drop hit at?",
+   "inside": "Trigonometry",
+   "text": "A blood drop that hits a surface at an angle leaves a stretched mark. The width ÷ the length is the sine of the angle it hit at. A mark 2 mm wide and 4 mm long (example figures):",
+   "steps": [
+    "sin θ = 2 ÷ 4 = 0.5, so θ = sin⁻¹(0.5) = 30°.",
+    "A mark 1 mm by 4 mm: sin⁻¹(0.25) = 14.5°, a shallower hit."
+   ],
+   "sources": [
+    {"title": "Plus Magazine (University of Cambridge), \"Solving crimes with maths: Bloodstain pattern analysis\"", "url": "https://plus.maths.org/solving-crimes-maths", "type": "public"},
+    {"title": "National Careers Service, \"Scenes of crime officer\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/scenes-of-crime-officer", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "mammographer",
+   "topic": "probability",
+   "route": "health-and-science",
+   "job": "Mammographer (breast screening radiographer)",
+   "tier": "F",
+   "headline": "10 ÷ 40 × 100 = 25% of call-backs are cancer",
+   "formula": "\\dfrac{\\text{cancer}}{\\text{called back}} \\times 100",
+   "question": "If you're called back, how likely is it to be cancer?",
+   "inside": "Probability",
+   "text": "NHS breast screening calls about 4 in every 100 people back for more tests. Of those 4, about 1 is diagnosed with breast cancer. Out of 1,000 people screened:",
+   "steps": [
+    "Called back: 1000 × 4 ÷ 100 = 40.",
+    "Diagnosed with breast cancer: 40 ÷ 4 = 10.",
+    "Chance a call-back is cancer: 10 ÷ 40 × 100 = 25%. So 3 in 4 people called back are fine."
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"Your guide to NHS breast screening\"", "url": "https://www.gov.uk/government/publications/breast-screening-helping-women-decide/nhs-breast-screening-helping-you-decide", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "football-recruitment-analyst",
+   "topic": "probability",
+   "route": "health-and-science",
+   "job": "Football recruitment analyst",
+   "tier": "H",
+   "headline": "1 − 0.0657 = 0.9343, the chance of at least one goal",
+   "formula": "1 - (1 - p_1)(1 - p_2)(1 - p_3)",
+   "formulaNote": "p is each shot's chance of scoring",
+   "question": "Why can't one attack be worth 1.67 goals?",
+   "inside": "Probability",
+   "text": "Expected goals (xG) gives every shot a probability of being scored, from 0 to 1. Different models give slightly different values. One attack had three shots worth 0.41, 0.47 and 0.79 (example figures).",
+   "steps": [
+    "xG for the attack: 0.41 + 0.47 + 0.79 = 1.67.",
+    "You can't score 1.67 goals from one attack. The chance of no goal is (1 − 0.41) × (1 − 0.47) × (1 − 0.79) = 0.0657, so the chance of at least one goal is 1 − 0.0657 = 0.9343."
+   ],
+   "sources": [
+    {"title": "The Analyst (Opta), \"What Is Expected Goals (xG)?\"", "url": "https://theanalyst.com/articles/what-is-expected-goals-xg", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "nuclear-medicine-technologist",
+   "topic": "exponential-change",
+   "route": "health-and-science",
+   "job": "Nuclear medicine technologist",
+   "tier": "H",
+   "headline": "(½)⁴ × 100 = 6.25% left after a day",
+   "formula": "\\left(\\tfrac{1}{2}\\right)^n",
+   "formulaNote": "n is the number of half-lives",
+   "question": "How much tracer is left after a day?",
+   "inside": "Powers",
+   "text": "The tracer used in many scans halves every 6 hours (its half-life). After 24 hours:",
+   "steps": [
+    "Half-lives: 24 ÷ 6 = 4.",
+    "Left: (½)⁴ = 1/16 = 0.0625, so 6.25%."
+   ],
+   "sources": [
+    {"title": "University Hospitals Sussex NHS, \"What is nuclear medicine?\" (patient information)", "url": "https://uhsussex.nhs.uk/?p=5862", "type": "public"},
+    {"title": "British Nuclear Medicine Society, \"What does a Nuclear Medicine Technologist do?\"", "url": "https://www.bnms.org.uk/page/WhatdoesaNuclearMedicineTechnologistdo", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "chef",
+   "topic": "exponential-change",
+   "route": "catering",
+   "job": "Chef",
+   "tier": "F",
+   "headline": "100 × 2⁶ = 6,400 bacteria",
+   "formula": "N = 100 \\times 2^n",
+   "formulaNote": "n is the number of 20-minute doublings",
+   "question": "Why is food left out for 2 hours thrown away?",
+   "inside": "Powers",
+   "text": "Hot food must be kept at 63°C or above. Below that, bacteria can double every 20 minutes in the right conditions, which is why food left out more than 2 hours is thrown away. Start with 100 bacteria, 2 hours at room temperature (example figure):",
+   "steps": [
+    "Doublings: 120 ÷ 20 = 6.",
+    "Bacteria: 100 × 2⁶ = 100 × 64 = 6,400."
+   ],
+   "sources": [
+    {"title": "Food Standards Agency, Safer Food Better Business, \"Hot holding\"", "url": "https://www.food.gov.uk/sites/default/files/media/document/sfbb-caterer-cooking-06-hot-holding_0.pdf", "type": "public"},
+    {"title": "London Borough of Bromley, \"High-risk foods\"", "url": "https://www.bromley.gov.uk/leaflet/261300/12/799/d", "type": "public"}
    ],
    "exampleFigures": true
   }
