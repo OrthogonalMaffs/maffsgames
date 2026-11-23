@@ -66,6 +66,7 @@
     '/when-will-i-use-this/decimals-measurement/': 'the topic page',
     '/when-will-i-use-this/pythagoras/': 'the topic page',
     '/when-will-i-use-this/trigonometry/': 'the topic page',
+    '/when-will-i-use-this/probability/': 'the topic page',
     '/when-will-i-use-this/exponential-change/': 'the topic page',
     '/when-will-i-use-this/gradients/': 'the topic page',
     '/when-will-i-use-this/transformations/': 'the topic page',
