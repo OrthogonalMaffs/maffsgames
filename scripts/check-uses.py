@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-line: When will I use this? (the pages are build-uses.py's output exactly; every source https and public; every worked step with = recomputed, or marked noCheck with a reason; Practise it names live games only; the 15 Skills England routes; in Chromium no page scrolls sideways at 320x568 or 390x844, normal or Aa, and its KaTeX renders; planted faults) | --selftest && --check
-# ci-deps: data/uses.json when-will-i-use-this/ scripts/build-uses.py data/games.json .claude/rules/game-roster.md sitemap.xml parents/guide.css parents/guide.js schools/assets/opendyslexic.css
+# ci-deps: data/uses.json when-will-i-use-this/ scripts/build-uses.py data/games.json .claude/rules/game-roster.md sitemap.xml index.html parents/guide.css parents/guide.js schools/assets/opendyslexic.css
 """WHEN-WILL-I-USE-THIS (Jon, spec 10 Nov 2026, build 22 Nov 2026): the "When will I use this?" section, held to its data.
 
     python -X utf8 scripts/check-uses.py --check      # CI: the static rules, then the pages in Chromium
@@ -32,12 +32,17 @@ WWIUT-STAND-OUT (22 Nov 2026) adds: every scenario's headline sum recomputes as 
 route colour gives white text 4.5:1 or better, is at least delta E 15 from every other and 25 from the portal's teal;
 every job card's anchor on the hub is a scenario on its topic page; the hub never links to itself; and in Chromium the
 text on every tile, chip and route header measures 4.5:1 or better against the colour behind it.
+WWIUT-BATCH-1-2 (22 Nov 2026) adds: every scenario has a tier, "F", "H" or "L4" (a Higher or Level 4 card's tag measures
+4.5:1 in Chromium too); the home page strip's "N real jobs" (index.html, between build-uses.py's COUNT_BEGIN and
+COUNT_END) is the number of scenarios; and the reader in (c) also reads "1,000", "1/16", "½", √ of a number or a
+bracket, superscript powers, sin, cos and tan in degrees and their inverses (giving degrees), "°" after a number, and a
+right side that is an expression ("3² + 4² = 5²", exactly). The 14 scenarios before it read exactly as they did.
 Also: ids unique, every topic known, exampleFigures true exactly when the wording says "(example figure)" or
 "(example figures)", and every parent guide named is a page in parents/.
 
 Not in CI: scripts/check-uses-links.py --live fetches every source URL (external sites are flaky).
 """
-import argparse, copy, importlib.util, json, mimetypes, os, pathlib, re, shutil, sys, tempfile
+import argparse, copy, importlib.util, json, math, mimetypes, os, pathlib, re, shutil, sys, tempfile
 from fractions import Fraction
 from urllib.parse import unquote, urlsplit
 
@@ -63,31 +68,86 @@ GAME_LINK = re.compile(r'href="/games/([a-z0-9-]+)/')
 
 # ---------------------------------------------------------------- (c) the arithmetic
 
-NUM = r"\d{1,3}(?: \d{3})+(?!\d)|\d+(?:\.\d+)?"
-TOKEN = re.compile(r"\s*(?:(£?)(" + NUM + r")(%?)|([+−×÷()-]))")
-RIGHT = re.compile(r"\s*([−-])?\s*£?(" + NUM + r")")
+# Numbers as written: "30 000" and "1,047.50" (thousands), "12.5", a fraction "1/16" (digits/digits, no spaces) and "½".
+# WWIUT-BATCH-1-2 (22 Nov 2026) extends the reader, in this one place: commas in thousands, "a/b", "½", √ (of a number
+# or a bracket), superscript powers (² ³ ⁴ ⁶ ...), sin, cos and tan (in degrees) and sin⁻¹, cos⁻¹, tan⁻¹ (giving degrees),
+# "°" after a number (a unit: no effect), and a right side that is an expression ("3² + 4² = 5²").
+NUM = r"\d{1,3}(?:,\d{3})+(?![\d,])(?:\.\d+)?|\d{1,3}(?: \d{3})+(?!\d)|\d+(?:\.\d+)?"
+SUP = "⁰¹²³⁴⁵⁶⁷⁸⁹"
+DIGITISH = "½" + SUP   # count as digits: a left side holding one is a claim, never a label
+TOKEN = re.compile(r"\s*(?:(£?)(\d+/\d+(?![\d./])|" + NUM + r"|½)(%?)|(√)|(sin|cos|tan)(⁻¹)?(?![a-z])|([" + SUP
+                   + r"]+)|(°)|([+−×÷()-]))")
+FUNCS = {"sin": math.sin, "cos": math.cos, "tan": math.tan}
+INVERSE = {"sin": math.asin, "cos": math.acos, "tan": math.atan}
 
 
-def tokens(s):
-    """[(kind, value)] for an arithmetic expression, or None if s is not one."""
+def _number(raw):
+    if raw == "½":
+        return Fraction(1, 2)
+    if "/" in raw:
+        a, b = raw.split("/")
+        return Fraction(int(a), int(b)) if int(b) else None
+    return Fraction(raw.replace(" ", "").replace(",", ""))
+
+
+def scan(s, right=False):
+    """([(kind, value, raw number or None)], whole) for s: the tokens read from its start, and whether they cover all of
+    it. On a right side (right=True) a % after a number is a unit and is not read, as before."""
     s, pos, out = s.strip(), 0, []
     while pos < len(s):
         m = TOKEN.match(s, pos)
         if not m:
-            return None
+            return out, False
         if m.group(2):
-            v = Fraction(m.group(2).replace(" ", ""))
-            out.append(("n", v / 100 if m.group(3) else v))
+            v = _number(m.group(2))
+            if v is None:
+                return out, False
+            out.append(("n", v / 100 if m.group(3) and not right else v, m.group(2)))
+        elif m.group(4):
+            out.append(("sqrt", None, None))
+        elif m.group(5):
+            out.append(("fn", m.group(5) + ("-1" if m.group(6) else ""), None))
+        elif m.group(7):
+            out.append(("pow", int("".join(str(SUP.index(c)) for c in m.group(7))), None))
+        elif m.group(8):
+            out.append(("deg", None, None))
         else:
-            out.append(("op", m.group(4).replace("-", "−")))
+            out.append(("op", m.group(9).replace("-", "−"), None))
         pos = m.end()
         while pos < len(s) and s[pos] == " ":
             pos += 1
-    return out if any(k == "n" for k, _ in out) else None
+    return out, True
+
+
+def tokens(s):
+    """[(kind, value)] for an arithmetic expression, or None if s is not one."""
+    toks, whole = scan(s)
+    return [(k, v) for k, v, _ in toks] if whole and any(k == "n" for k, _, _ in toks) else None
+
+
+def _sqrt(x):
+    """√x, exact when x is the square of a fraction."""
+    if x < 0:
+        raise ValueError("square root of a negative number")
+    if isinstance(x, Fraction):
+        a, b = math.isqrt(x.numerator), math.isqrt(x.denominator)
+        if a * a == x.numerator and b * b == x.denominator:
+            return Fraction(a, b)
+    return math.sqrt(x)
+
+
+def _apply(fn, x):
+    if fn.endswith("-1"):
+        if fn != "tan-1" and not -1 <= x <= 1:
+            raise ValueError("inverse sine or cosine outside -1 to 1")
+        return math.degrees(INVERSE[fn[:-2]](float(x)))
+    return FUNCS[fn](math.radians(float(x)))
 
 
 def evaluate(toks):
-    """The exact value of a token list, or None if it does not parse as + − × ÷ with brackets."""
+    """The value of a token list (a Fraction when exact, else a float), or None if it does not parse. Grammar:
+    expr = term (+ − term)*; term = unary (× ÷ unary)*; unary = − unary | power; power = primary superscript*;
+    primary = number °? | ( expr ) | √ primary | sin/cos/tan[⁻¹] primary."""
     pos = [0]
 
     def peek():
@@ -97,11 +157,8 @@ def evaluate(toks):
         pos[0] += 1
         return toks[pos[0] - 1]
 
-    def factor():
+    def primary():
         k, v = peek()
-        if k == "op" and v == "−":
-            take()
-            return -factor()
         if k == "op" and v == "(":
             take()
             x = expr()
@@ -109,15 +166,36 @@ def evaluate(toks):
                 raise ValueError("unclosed bracket")
             take()
             return x
+        if k == "sqrt":
+            take()
+            return _sqrt(primary())
+        if k == "fn":
+            take()
+            return _apply(v, primary())
         if k == "n":
-            return take()[1]
+            x = take()[1]
+            if peek()[0] == "deg":
+                take()
+            return x
         raise ValueError("expected a number")
 
+    def power():
+        x = primary()
+        while peek()[0] == "pow":
+            x = x ** take()[1]
+        return x
+
+    def unary():
+        if peek() == ("op", "−"):
+            take()
+            return -unary()
+        return power()
+
     def term():
-        x = factor()
+        x = unary()
         while peek()[0] == "op" and peek()[1] in "×÷":
             op = take()[1]
-            y = factor()
+            y = unary()
             x = x * y if op == "×" else x / y
         return x
 
@@ -131,7 +209,7 @@ def evaluate(toks):
 
     try:
         x = expr()
-    except (ValueError, ZeroDivisionError):
+    except (ValueError, ZeroDivisionError, OverflowError):
         return None
     return x if pos[0] == len(toks) else None
 
@@ -141,16 +219,46 @@ def value(s):
     return None if t is None else evaluate(t)
 
 
+def right_value(s):
+    """(value, tolerance) for the last part of a chain: the longest leading expression the reader can evaluate. A lone
+    number (with its sign, £, °, or a % it does not read) is judged at the precision written, within half a unit of its
+    last decimal place, as before; an expression ("5²") or a fraction ("1/18") must match exactly. None when it does not
+    start with a number."""
+    toks, _ = scan(s, right=True)
+    for n in range(len(toks), 0, -1):
+        part = toks[:n]
+        if not any(k == "n" for k, _, _ in part):
+            continue
+        x = evaluate([(k, v) for k, v, _ in part])
+        if x is None:
+            continue
+        core = [t for t in part if t[0] != "deg" and (t[0], t[1]) != ("op", "−")]
+        if len(core) == 1 and core[0][0] == "n" and "/" not in core[0][2] and core[0][2] != "½":
+            raw = core[0][2]
+            return x, Fraction(1, 2 * 10 ** (len(raw.split(".")[1]) if "." in raw else 0))
+        return x, Fraction(0)
+    return None
+
+
 def left_text(s):
+    """A claim's left side: the text after the last ": ", ". ", "; " or ", " in front of its "=", less any leading
+    words (never sin, cos or tan, which belong to the sum)."""
     s = s.rstrip()
-    cut = max(s.rfind(": "), s.rfind(". "), s.rfind("; "))
+    cut = max(s.rfind(": "), s.rfind(". "), s.rfind("; "), s.rfind(", "))
     if cut >= 0:
         s = s[cut + 2:]
-    return re.sub(r"^(?:[^\W\d_]+\s+)+", "", s.strip()).strip()
+    return re.sub(r"^(?:(?!(?:sin|cos|tan)(?![a-z]))(?:(?![" + DIGITISH + r"])[^\W\d_])+\s+)+", "", s.strip()).strip()
 
 
 def fmt(x):
     return ("%.6f" % float(x)).rstrip("0").rstrip(".")
+
+
+def _same(a, b, tol):
+    """a and b agree within tol; a float (from √ or trigonometry) gets a rounding allowance of one part in 10^9."""
+    if isinstance(a, float) or isinstance(b, float):
+        return abs(float(a) - float(b)) <= float(tol) + 1e-9 * max(1.0, abs(float(b)))
+    return abs(a - b) <= tol
 
 
 def equalities(text):
@@ -162,7 +270,7 @@ def equalities(text):
         L = value(lraw) if k >= 2 else None
         if L is None:
             lt = left_text(lraw)
-            if not re.search(r"\d", lt):
+            if not re.search(r"[\d" + DIGITISH + r"]", lt):
                 out.append(("label", lt))
                 continue
             L = value(lt)
@@ -173,14 +281,12 @@ def equalities(text):
         if R is not None:
             tol = Fraction(0)
         else:
-            m = RIGHT.match(rraw)
-            if not m:
+            got = right_value(rraw)
+            if got is None:
                 out.append(("unparsed", "right side %r does not start with a number" % rraw.strip()))
                 continue
-            R = Fraction(m.group(2).replace(" ", "")) * (-1 if m.group(1) else 1)
-            dec = len(m.group(2).split(".")[1]) if "." in m.group(2) else 0
-            tol = Fraction(1, 2 * 10 ** dec)
-        if abs(L - R) <= tol:
+            R, tol = got
+        if _same(L, R, tol):
             out.append(("ok", "%s = %s" % (fmt(L), fmt(R))))
         else:
             out.append(("fail", "the left side is %s, the right side %s (allowed: %s)" % (fmt(L), fmt(R), fmt(tol))))
@@ -331,6 +437,9 @@ def static_errors(root):
             errors.append("scenario %s: route %r is not one of the 15 routes" % (sid, sc.get("route")))
         if sc.get("topic") not in topics:
             errors.append("scenario %s: topic %r is not a topic" % (sid, sc.get("topic")))
+        if sc.get("tier") not in bu.TIERS:
+            errors.append("scenario %s: tier %r is not one of %s (Foundation GCSE, Higher GCSE, Level 4)"
+                          % (sid, sc.get("tier"), ", ".join(bu.TIERS)))
         # (b) the sources
         srcs = sc.get("sources") or []
         if not srcs:
@@ -368,6 +477,14 @@ def static_errors(root):
         for slug in GAME_LINK.findall(p.read_text(encoding="utf-8")):
             if slug not in live:
                 errors.append("%s: a Practise it link names %s, which is not a live game" % (p.relative_to(root).as_posix(), slug))
+    # the home page's strip count is the number of scenarios (WWIUT-BATCH-1-2): written by the build, never typed
+    portal = (root / bu.PORTAL).read_text(encoding="utf-8")
+    m = re.search(re.escape(bu.COUNT_BEGIN) + r"(.*?)" + re.escape(bu.COUNT_END), portal, re.S)
+    if not m:
+        errors.append("%s: the strip's job count has no %s ... %s block" % (bu.PORTAL, bu.COUNT_BEGIN, bu.COUNT_END))
+    elif m.group(1) != "%d real jobs" % len(data["scenarios"]):
+        errors.append("%s: the strip says %r, but data/uses.json has %d scenarios: run python -X utf8 scripts/build-uses.py"
+                      % (bu.PORTAL, m.group(1), len(data["scenarios"])))
     # (a) the pages are the build's output
     out, refusals = bu.build(root)
     errors += ["build-uses.py refuses: %s" % x for x in refusals]
@@ -407,7 +524,7 @@ def static_errors(root):
                 errors.append("%s: the job card %s/#%s points at no scenario on that topic page" % (hub_path, topic, anchor))
     for path in bu.stale(root, out) if out else []:
         errors.append("%s is not written by build-uses.py (stale: run the script, which deletes it)" % path)
-    html = [p for p in out if p.endswith(".html")]
+    html = [p for p in out if p.startswith(bu.SECTION + "/") and p.endswith(".html")]
     report.append("pages: %d generated (%d topics, %d routes with scenarios) and the section's stylesheet, %d scenarios, "
                   "%d sources" % (len(html), len(data["topics"]), len(html) - 1 - len(data["topics"]), len(data["scenarios"]),
                                   sum(len(s["sources"]) for s in data["scenarios"])))
@@ -436,7 +553,7 @@ MEASURE = """() => {
   const bg = el => { for (let e = el; e; e = e.parentElement) { const c = rgb(getComputedStyle(e).backgroundColor); if (c.length === 3) return c; } return [255, 255, 255]; };
   const low = [];
   let coloured = 0;
-  for (const el of document.querySelectorAll('.route-tile h3, .route-tile p, .route-tile .tile-go, .route-chip, .route-hero h1, .route-hero .subtitle, .route-hero .badge')) {
+  for (const el of document.querySelectorAll('.route-tile h3, .route-tile p, .route-tile .tile-go, .route-chip, .route-hero h1, .route-hero .subtitle, .route-hero .badge, .tier-tag')) {
     coloured++;
     const a = lum(rgb(getComputedStyle(el).color)), b = lum(bg(el)), r = (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
     if (r < 4.5) low.push((el.className || el.tagName.toLowerCase()) + ' "' + el.textContent.trim().slice(0, 30) + '" ' + r.toFixed(2) + ':1');
@@ -503,7 +620,7 @@ def browse(root, pages):
                         if mode == "aa" and not m["aa"]:
                             faults.append("%s: the Aa toggle did not switch the page to Aa" % where)
                         for x in m["low"]:
-                            faults.append("%s: text on a route colour under 4.5:1: %s" % (where, x))
+                            faults.append("%s: text on a route colour or tag under 4.5:1: %s" % (where, x))
                         if m["raw"] or (maths and not m["katex"]):
                             faults.append("%s: shows KaTeX source it did not render" % where)
                         for e in errs:
@@ -521,7 +638,7 @@ def generated_pages(root):
 
 # ---------------------------------------------------------------- self-test
 
-COPY = [bu.DATA, bu.GAMES, bu.ROSTER, bu.SITEMAP, "parents/guide.css", "parents/guide.js", "schools/assets/opendyslexic.css",
+COPY = [bu.DATA, bu.GAMES, bu.ROSTER, bu.SITEMAP, bu.PORTAL, "parents/guide.css", "parents/guide.js", "schools/assets/opendyslexic.css",
         "schools/assets/site-footer.css", "schools/assets/favicon.svg", "schools/assets/analytics.js"]
 
 
@@ -572,6 +689,7 @@ def selftest():
             return lambda d: sc(d, sid)["steps"].__setitem__(i, new)
 
         ratio = bu.SECTION + "/ratio/index.html"
+        n_jobs = len(json.loads(pristine[bu.DATA].decode("utf-8"))["scenarios"])
         static_plants = [
             # (a)
             ("a hand-edited page", lambda: edit(ratio, "Total parts: ", "Total parts so far: "), "ratio/index.html differs"),
@@ -639,6 +757,25 @@ def selftest():
              "the job card ratio/#bricklayers points at no scenario"),
             ("the hub linking to itself again", lambda: setattr(bu, "tail", lambda *a, **k: real_tail(True)),
              "index.html: the hub links to itself"),
+            # WWIUT-BATCH-1-2
+            ("a scenario with no tier", lambda: data(lambda d: sc(d, "farmer").pop("tier"), rebuild=False),
+             "scenario farmer: tier None is not one of"),
+            ("an unknown tier", lambda: data(lambda d: sc(d, "baker").update(tier="A"), rebuild=False),
+             "scenario baker: tier 'A' is not one of"),
+            ("the strip's count typed by hand", lambda: edit(bu.PORTAL, bu.COUNT_BEGIN + "%d real jobs" % n_jobs,
+                                                             bu.COUNT_BEGIN + "%d real jobs" % (n_jobs + 1)),
+             "index.html: the strip says '%d real jobs', but data/uses.json has %d" % (n_jobs + 1, n_jobs)),
+            ("a scenario taken out without a rebuild (the count goes stale)",
+             lambda: data(lambda d: d["scenarios"].pop(), rebuild=False),
+             "index.html: the strip says '%d real jobs', but data/uses.json has %d" % (n_jobs, n_jobs - 1)),
+            ("the strip's count markers removed", lambda: edit(bu.PORTAL, bu.COUNT_END, ""),
+             "index.html: the strip's job count has no"),
+            ("a wrong Pythagoras headline", lambda: data(lambda d: sc(d, "firefighter").update(headline="√(8² + 2²) = 8.52 m of ladder")),
+             "firefighter headline: '√(8² + 2²) = 8.52 m of ladder' does not recompute"),
+            ("a wrong sine-bar step", lambda: data(set_step("toolmaker", 0, "A 100 mm sine bar at 10°: 100 × sin 10° = 17.465 mm of blocks.")),
+             "toolmaker step 1"),
+            ("a wrong power in a headline", lambda: data(lambda d: sc(d, "vehicle-body-repairer").update(headline="8 ÷ 2³ = 2 hours at 94 dB")),
+             "vehicle-body-repairer headline: '8 ÷ 2³ = 2 hours at 94 dB' does not recompute"),
         ]
         real_tail = bu.tail
         for name, plant, needle in static_plants:
@@ -672,7 +809,9 @@ def selftest():
         clean = bu.SECTION + "/ratio/index.html"
         agri = bu.SECTION + "/route/agriculture/index.html"
         edit(agri, 'class="hero route-hero" style="--c:#4d7c0f"', 'class="hero route-hero" style="--c:#86efac"')
-        found = browse(tmp, [hub, avg, con, clean, agri])
+        pyth = bu.SECTION + "/pythagoras/index.html"
+        edit(pyth, "</head>", "<style>.tier-tag{color:#cbd5e1}</style>\n</head>")
+        found = browse(tmp, [hub, avg, con, clean, agri, pyth])
         browser_plants = [
             ("a 360 px element on the hub, caught at 320 normal", hub + " at 320x568 normal: scrolls sideways"),
             ("the same, missed at 390 (it fits)", None),
@@ -680,7 +819,8 @@ def selftest():
             ("the Aa-only overflow is not reported in normal mode", None),
             ("KaTeX left unrendered", con + " at 320x568 normal: shows KaTeX source it did not render"),
             ("an untouched page passes", None),
-            ("a route header too light for white text", agri + " at 320x568 normal: text on a route colour under 4.5:1"),
+            ("a route header too light for white text", agri + " at 320x568 normal: text on a route colour or tag under 4.5:1"),
+            ("a Higher tag too light to read", pyth + " at 320x568 normal: text on a route colour or tag under 4.5:1: tier-tag"),
         ]
         checks = [
             any(f.startswith(browser_plants[0][1]) for f in found),
@@ -690,6 +830,7 @@ def selftest():
             any(f.startswith(browser_plants[4][1]) for f in found),
             not any(f.startswith(clean) for f in found),
             any(f.startswith(browser_plants[6][1]) for f in found),
+            any(f.startswith(browser_plants[7][1]) for f in found),
         ]
         for (name, _), ok in zip(browser_plants, checks):
             if ok:
@@ -702,7 +843,27 @@ def selftest():
                 ("Area: 250 × 120 = 30 000 m² = 3 ha.", ["ok", "unparsed"]),
                 ("x: 5.4 ÷ 230 × 100 = 2.3%.", ["ok"]), ("x: 5.4 ÷ 230 × 100 = 2.4%.", ["fail"]),
                 ("mean 99.0 ÷ 5 = 19.8 °C.", ["ok"]), ("x: 50% + 10% = 0.6", ["ok"]), ("x: 8 ÷ 0 = 1", ["unparsed"]),
-                ("x: (2 + 3 = 5", ["unparsed"]), ("x: 2 − 3 = −1", ["ok"])]
+                ("x: (2 + 3 = 5", ["unparsed"]), ("x: 2 − 3 = −1", ["ok"]),
+                # WWIUT-BATCH-1-2: each new sign, a right value passing and a wrong one caught
+                ("x: √16 = 4", ["ok"]), ("x: √16 = 5", ["fail"]),
+                ("x: √(3² + 4²) = 5", ["ok"]), ("x: √(3² + 4²) = 6", ["fail"]),
+                ("x: √68 = 8.25", ["ok"]), ("x: √68 = 8.24", ["fail"]),
+                ("x: 2³ = 8", ["ok"]), ("x: 2³ = 9", ["fail"]),
+                ("x: 2⁴ = 16", ["ok"]), ("x: 2⁴ = 15", ["fail"]),
+                ("x: 2⁶ = 64", ["ok"]), ("x: 2⁶ = 62", ["fail"]),
+                ("Left: (½)² = 0.25", ["ok"]), ("Left: (½)² = 0.5", ["fail"]),
+                ("x: 100 × sin 30° = 50", ["ok"]), ("x: 100 × sin 30° = 5", ["fail"]),
+                ("x: 100 × cos 60° = 50", ["ok"]), ("x: 100 × cos 60° = 86.6", ["fail"]),
+                ("x: tan 45° = 1", ["ok"]), ("x: tan 45° = 1.5", ["fail"]),
+                ("x: sin⁻¹(0.5) = 30°", ["ok"]), ("x: sin⁻¹(0.5) = 60°", ["fail"]),
+                ("x: cos⁻¹(0.5) = 60°", ["ok"]), ("x: cos⁻¹(0.5) = 30°", ["fail"]),
+                ("x: tan⁻¹(1) = 45°", ["ok"]), ("x: tan⁻¹(1) = 40°", ["fail"]),
+                ("x: sin⁻¹(2) = 30°", ["unparsed"]),
+                ("Blocks: sin 10° × 100 = 17.365 mm", ["ok"]),
+                ("3² + 4² = 5²", ["ok"]), ("3² + 4² = 6²", ["fail"]),
+                ("x: 12570 ÷ 12 = £1,047.50.", ["ok"]), ("x: 12570 ÷ 12 = £1,074.50.", ["fail"]),
+                ("x: 1 ÷ 16 = 1/16", ["ok"]), ("x: 1 ÷ 16 = 1/18", ["fail"]),
+                ("Octagon: 135°, and 135 + 135 + 90 = 360°.", ["ok"])]
         for text, want in unit:
             got = [k for k, _ in equalities(text)]
             if got == want:

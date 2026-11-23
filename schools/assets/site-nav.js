@@ -57,7 +57,19 @@
     '/when-will-i-use-this/ratio/': 'the topic page',
     '/when-will-i-use-this/percentages/': 'the topic page',
     '/when-will-i-use-this/area-perimeter/': 'the topic page',
-    '/when-will-i-use-this/averages/': 'the topic page'
+    '/when-will-i-use-this/averages/': 'the topic page',
+    '/when-will-i-use-this/speed-distance-time/': 'the topic page',
+    '/when-will-i-use-this/formulae/': 'the topic page',
+    '/when-will-i-use-this/angles/': 'the topic page',
+    '/when-will-i-use-this/negative-numbers/': 'the topic page',
+    '/when-will-i-use-this/estimation/': 'the topic page',
+    '/when-will-i-use-this/decimals-measurement/': 'the topic page',
+    '/when-will-i-use-this/pythagoras/': 'the topic page',
+    '/when-will-i-use-this/trigonometry/': 'the topic page',
+    '/when-will-i-use-this/exponential-change/': 'the topic page',
+    '/when-will-i-use-this/gradients/': 'the topic page',
+    '/when-will-i-use-this/transformations/': 'the topic page',
+    '/when-will-i-use-this/hypothesis-testing/': 'the topic page'
   };
   var KEY = 'maffs-nav:';
   var LOGO = { left: 16, top: 16, size: 40, clear: 16 };   // px: where the logo sits, and the space it keeps clear

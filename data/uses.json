@@ -7,7 +7,8 @@
   "  only live games, outside the roster's Unlisted and Withdrawn sections), parentGuide (a folder under parents/, or null).",
   "routes: the 15 Skills England routes, slug, exact name and colour (white text on it at 4.5:1 or better; one per route, distinct,",
   "  never the portal's teal: WWIUT-STAND-OUT). A route page is written only for a route with a scenario.",
-  "scenarios: id, topic, route (a route slug, or null), job, headline (the key sum shown on its card, recomputed by",
+  "scenarios: id, topic, route (a route slug, or null), job, tier (\"F\" Foundation GCSE, \"H\" Higher GCSE or \"L4\" Level 4:",
+  "  a Higher or Level 4 card shows a small tag; WWIUT-BATCH-1-2), headline (the key sum shown on its card, recomputed by",
   "  check-uses.py like a step), text, steps, sources [{title, url, type}], exampleFigures.",
   "  The scenarios' text and steps are the approved wording (10 Nov 2026), verbatim: never reword them to fit the format.",
   "  A step is a string, or {\"text\": ..., \"noCheck\": \"<one-line reason>\"} when check-uses.py cannot read one of its \"=\" signs.",
@@ -42,6 +43,90 @@
    "answer": "Whenever one reading isn't enough to trust.",
    "keywords": ["average", "median", "mean from a frequency table"],
    "parentGuide": "averages"
+  },
+  {
+   "slug": "speed-distance-time",
+   "title": "Speed, distance and time",
+   "answer": "Whenever you need to know how long, how far or how fast.",
+   "keywords": ["speed distance time", "speed"],
+   "parentGuide": null
+  },
+  {
+   "slug": "formulae",
+   "title": "Formulae",
+   "answer": "Whenever a rule turns the numbers you know into the one you need.",
+   "keywords": ["formula", "formulae", "substituting into a formula"],
+   "parentGuide": "algebra-basics"
+  },
+  {
+   "slug": "angles",
+   "title": "Angles",
+   "answer": "Whenever things have to fit together with no gaps.",
+   "keywords": ["angles at a point", "angle fact"],
+   "parentGuide": "angles"
+  },
+  {
+   "slug": "negative-numbers",
+   "title": "Negative numbers",
+   "answer": "Whenever a total can drop below zero.",
+   "keywords": ["negative number", "directed number", "calculating across zero"],
+   "parentGuide": "negative-numbers"
+  },
+  {
+   "slug": "estimation",
+   "title": "Estimation and rounding",
+   "answer": "Whenever you need to know an answer looks right before you trust it.",
+   "keywords": ["estimation", "estimating calculations", "rounding"],
+   "parentGuide": null
+  },
+  {
+   "slug": "decimals-measurement",
+   "title": "Decimals and measurement",
+   "answer": "Whenever 'nearly right' isn't good enough.",
+   "keywords": ["decimal", "decimal place", "rounding decimals"],
+   "parentGuide": null
+  },
+  {
+   "slug": "pythagoras",
+   "title": "Pythagoras",
+   "answer": "Whenever you need a length you can't measure directly, or a corner that's exactly square.",
+   "keywords": ["pythagoras", "pythagoras' theorem", "pythagorean triple"],
+   "parentGuide": "pythagoras"
+  },
+  {
+   "slug": "trigonometry",
+   "title": "Trigonometry",
+   "answer": "Whenever an angle and a length have to agree.",
+   "keywords": ["trigonometry", "sine cosine tangent", "inverse trigonometry"],
+   "parentGuide": "trigonometry"
+  },
+  {
+   "slug": "exponential-change",
+   "title": "Indices and exponential change",
+   "answer": "Whenever something doubles or halves again and again.",
+   "keywords": ["exponential growth", "exponential decay", "half-life"],
+   "parentGuide": "indices-surds"
+  },
+  {
+   "slug": "gradients",
+   "title": "Gradients",
+   "answer": "Whenever something slopes and you need to say how steeply.",
+   "keywords": ["gradient", "rate of change"],
+   "parentGuide": null
+  },
+  {
+   "slug": "transformations",
+   "title": "Transformations",
+   "answer": "Whenever a pattern has to repeat and line up.",
+   "keywords": ["transformation", "translation"],
+   "parentGuide": null
+  },
+  {
+   "slug": "hypothesis-testing",
+   "title": "Hypothesis testing",
+   "answer": "Whenever you need to know if a change is real or just chance.",
+   "keywords": ["hypothesis testing", "two-tailed test", "z-score"],
+   "parentGuide": null
   }
  ],
  "routes": [
@@ -67,6 +152,7 @@
    "topic": "ratio",
    "route": "construction",
    "job": "Bricklayer",
+   "tier": "F",
    "headline": "0.3 ÷ 6 = 0.05 m³ per part",
    "text": "Concrete for a shed base is often mixed 1 : 2 : 3: 1 part cement, 2 parts sand, 3 parts gravel, in buckets of the same size. You need 0.3 m³ of dry mix.",
    "steps": [
@@ -84,6 +170,7 @@
    "topic": "ratio",
    "route": "hair-and-beauty",
    "job": "Hairdresser",
+   "tier": "F",
    "headline": "40 × 2 = 80 g of developer",
    "text": "Colour is mixed with developer in the ratio the maker gives. Wella's Koleston Perfect is mixed 1 : 1, but its Special Blonde shades are mixed 1 : 2. You use 40 g of a Special Blonde shade.",
    "steps": [
@@ -100,6 +187,7 @@
    "topic": "ratio",
    "route": "health-and-science",
    "job": "Hospital nurse",
+   "tier": "F",
    "headline": "125 ÷ 250 × 5 = 2.5 ml",
    "text": "Liquid medicine comes at a strength, such as 250 mg in 5 ml. Nurses use: volume = what you want ÷ what you have × what it is in. The prescription is 125 mg. The bottle says 250 mg in 5 ml.",
    "steps": [
@@ -116,6 +204,7 @@
    "topic": "percentages",
    "route": "construction",
    "job": "Plumber",
+   "tier": "F",
    "headline": "£350 × 1.2 = £420",
    "text": "A VAT-registered plumber adds 20% VAT to the bill. To add 20%, multiply by 1.2. The job costs £350 before VAT.",
    "steps": [
@@ -132,6 +221,7 @@
    "topic": "percentages",
    "route": "construction",
    "job": "Electrician",
+   "tier": "F",
    "headline": "5.4 ÷ 230 × 100 = 2.3%",
    "text": "Voltage drops along a long cable. The wiring rules (BS 7671) allow at most 3% on a lighting circuit and 5% on others. The UK supply is 230 V.",
    "steps": [
@@ -150,6 +240,7 @@
    "topic": "percentages",
    "route": "catering",
    "job": "Baker",
+   "tier": "F",
    "headline": "0.7 × 500 = 350 g of water",
    "text": "Bakers write recipes in \"baker's percentages\": the flour is always 100%, and everything else is a percentage of the flour's weight. A dough is 70% water and 2% salt. You use 500 g of flour.",
    "steps": [
@@ -166,6 +257,7 @@
    "topic": "percentages",
    "route": "creative",
    "job": "Jeweller",
+   "tier": "F",
    "headline": "4 × 0.375 = 1.5 g of gold",
    "text": "Gold is measured in carats out of 24. 9 carat gold is 9 parts gold in 24. The UK hallmark writes it as 375: 375 parts gold in every 1000.",
    "steps": [
@@ -182,6 +274,7 @@
    "topic": "area-perimeter",
    "route": "construction",
    "job": "Painter and decorator",
+   "tier": "F",
    "headline": "64 ÷ 16 = 4 litres",
    "text": "A room is 4 m by 3.5 m, with walls 2.5 m high. There is a 2 m² door and a 3.5 m² window. Two coats; the tin says 1 litre covers 16 m² (example figure).",
    "steps": [
@@ -200,6 +293,7 @@
    "topic": "area-perimeter",
    "route": "agriculture",
    "job": "Groundsperson (sports turf)",
+   "tier": "F",
    "headline": "2 × (100 + 64) = 328 m of line",
    "text": "Groundspeople mark out pitches. The FA's recommended adult pitch is 100 m long and 64 m wide.",
    "steps": [
@@ -217,6 +311,7 @@
    "topic": "area-perimeter",
    "route": "agriculture",
    "job": "Farmer",
+   "tier": "F",
    "headline": "3 × 150 = 450 kg",
    "text": "Fertiliser is spread at a rate in kg per hectare. 1 hectare = 10 000 m². A field is 250 m by 120 m; the plan is 150 kg per hectare (example figure).",
    "steps": [
@@ -233,6 +328,7 @@
    "topic": "averages",
    "route": "health-and-science",
    "job": "Practice nurse",
+   "tier": "F",
    "headline": "816 ÷ 6 = 136",
    "text": "One blood pressure reading can mislead, so NICE says to take readings at home, twice a day for 4 to 7 days, ignore the first day, and use the mean of the rest. After day 1, the top (systolic) numbers are 138, 134, 136, 140, 132, 136 (example figures).",
    "steps": [
@@ -250,6 +346,7 @@
    "topic": "averages",
    "route": "health-and-science",
    "job": "Health visitor",
+   "tier": "F",
    "headline": "100 − 91 = 9 in 100 weigh more",
    "text": "Babies' weights are plotted on growth charts with centile lines. A centile shows how many healthy children are expected to be below that line. A baby is on the 91st centile.",
    "steps": [
@@ -266,6 +363,7 @@
    "topic": "averages",
    "route": "agriculture",
    "job": "Ecologist",
+   "tier": "F",
    "headline": "4 × 1500 = 6000 orchids",
    "text": "You can't count every wild orchid in a meadow, so ecologists count them in a few 1 m² squares (quadrats) placed at random, and scale up. Ten quadrats count 3, 5, 2, 4, 6, 3, 4, 5, 2, 6 (example figures). The meadow is 1500 m².",
    "steps": [
@@ -283,6 +381,7 @@
    "topic": "averages",
    "route": null,
    "job": "Meteorologist",
+   "tier": "F",
    "headline": "9.1 − 8.3 = 0.8 °C warmer",
    "text": "\"Warmer than average\" means compared with a 30-year average. The Met Office now uses 1991–2020.",
    "steps": [
@@ -293,6 +392,459 @@
    "sources": [
     {"title": "Met Office, climate averages notes", "url": "https://www.metoffice.gov.uk/research/climate/maps-and-data/climate-averages", "type": "public"},
     {"title": "Met Office, \"How have daily temperatures shifted in the UK's changing climate?\"", "url": "https://www.metoffice.gov.uk/blog/2023/how-have-daily-temperatures-shifted-in-the-uks-changing-climate", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "sports-scientist",
+   "topic": "averages",
+   "route": "health-and-science",
+   "job": "Performance sports scientist",
+   "tier": "F",
+   "headline": "(42 − 40) ÷ 40 × 100 = 5% better",
+   "text": "Sports scientists analyse training data to see if an athlete is improving. One jump can be a fluke, so they use the mean of several. Five jumps before training: 38, 41, 39, 42, 40 cm (example figures). After six weeks the mean is 42 cm.",
+   "steps": [
+    "Total: 38 + 41 + 39 + 42 + 40 = 200. Mean: 200 ÷ 5 = 40 cm.",
+    "Improvement: (42 − 40) ÷ 40 × 100 = 5%."
+   ],
+   "sources": [
+    {"title": "National Careers Service, \"Performance sports scientist\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/sports-scientist", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "payroll-administrator",
+   "topic": "percentages",
+   "route": "legal-and-finance",
+   "job": "Payroll administrator",
+   "tier": "F",
+   "headline": "0.2 × 1452.50 = £290.50 tax",
+   "text": "Payroll works out the tax taken from each month's pay. In 2026 to 2027 the first £12,570 a year is tax-free and the next band is taxed at 20%. Someone earns £2,500 this month (example figure). National Insurance is worked out separately.",
+   "steps": [
+    "Tax-free each month: 12570 ÷ 12 = £1,047.50.",
+    "Taxed: 2500 − 1047.50 = £1,452.50.",
+    {"text": "Tax: 20% of 1452.50 = 0.2 × 1452.50 = £290.50.", "noCheck": "\"20% of 1452.50\" uses \"of\", which the check does not read; 0.2 × 1452.50 = 290.50 is still recomputed."}
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"Income Tax rates and Personal Allowances\" (tax year 6 April 2026 to 5 April 2027)", "url": "https://www.gov.uk/income-tax-rates", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "bookkeeper",
+   "topic": "percentages",
+   "route": "legal-and-finance",
+   "job": "Bookkeeper",
+   "tier": "F",
+   "headline": "9000 − 3000 = £6,000 to HMRC",
+   "text": "Every three months a business tells HMRC the VAT it charged customers and the VAT it paid suppliers, and pays the difference. Sales of £45,000 and purchases of £15,000 this quarter, before VAT, all at 20% (example figures).",
+   "steps": [
+    "VAT charged: 0.2 × 45000 = £9,000.",
+    "VAT paid: 0.2 × 15000 = £3,000.",
+    "To pay HMRC: 9000 − 3000 = £6,000."
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"How to fill in and submit your VAT Return (VAT Notice 700/12)\"", "url": "https://www.gov.uk/guidance/how-to-fill-in-and-submit-your-vat-return-vat-notice-70012", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "self-employed-plasterer",
+   "topic": "percentages",
+   "route": "construction",
+   "job": "Self-employed plasterer",
+   "tier": "F",
+   "headline": "0.2 × 19430 = £3,886 to set aside",
+   "text": "No boss takes tax off for you, so you set money aside yourself. Same 2026 to 2027 rules: £12,570 tax-free, then 20%. This year's profit is £32,000 (example figure). National Insurance comes on top.",
+   "steps": [
+    "Taxed: 32000 − 12570 = £19,430.",
+    "Income tax: 0.2 × 19430 = £3,886."
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"Income Tax rates and Personal Allowances\"", "url": "https://www.gov.uk/income-tax-rates", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "office-administrator",
+   "topic": "percentages",
+   "route": "business",
+   "job": "Office administrator",
+   "tier": "F",
+   "headline": "140 × 0.55 = £77",
+   "text": "Staff who use their own car for work are paid mileage. For 2026 to 2027 the approved rate is 55p a mile for the first 10,000 miles (it was 45p). A member of staff drove 140 business miles this month (example figure).",
+   "steps": [
+    "Mileage: 140 × 0.55 = £77."
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"Increasing mileage rates\" (2026 to 2027)", "url": "https://www.gov.uk/government/publications/increase-to-approved-mileage-allowance-payments-amaps-and-self-employed-simplified-mileage-rates/increasing-mileage-rates", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "cnc-machinist",
+   "topic": "decimals-measurement",
+   "route": "engineering",
+   "job": "CNC machinist",
+   "tier": "F",
+   "headline": "25.00 + 0.05 = 25.05 mm, the most it can be",
+   "text": "Drawings give a size and a tolerance: how far off it may be and still pass. A shaft must be 25.00 mm ± 0.05 mm. You measure 25.07 mm.",
+   "steps": [
+    "Smallest allowed: 25.00 − 0.05 = 24.95 mm.",
+    "Largest allowed: 25.00 + 0.05 = 25.05 mm.",
+    "25.07 is bigger than 25.05, so it fails."
+   ],
+   "sources": [
+    {"title": "National Careers Service, \"CNC machinist\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/cnc-machinist", "type": "public"},
+    {"title": "Skills England, Machining technician (OCC1305)", "url": "https://skillsengland.education.gov.uk/occupations/OCC1305", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "maintenance-electrician",
+   "topic": "formulae",
+   "route": "engineering",
+   "job": "Maintenance electrician",
+   "tier": "F",
+   "headline": "2000 ÷ 230 = 8.7 A",
+   "text": "A plug fuse must be big enough for the appliance's current. Current = power ÷ voltage, I = P ÷ V. UK mains is 230 V.",
+   "steps": [
+    "Toaster, 2000 W: I = 2000 ÷ 230 = 8.7 A, too much for a 3 A fuse, so 13 A.",
+    "Lamp, 60 W: I = 60 ÷ 230 = 0.26 A, so a 3 A fuse is fine."
+   ],
+   "sources": [
+    {"title": "Electrical Safety First, \"Plugs and fuses\"", "url": "https://electricalsafetyfirst.org.uk/guidance/safety-around-the-home/plugs-and-fuses", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "bike-mechanic",
+   "topic": "ratio",
+   "route": "engineering",
+   "job": "Bike mechanic",
+   "tier": "F",
+   "headline": "48 ÷ 16 = 3 wheel turns per pedal turn",
+   "text": "The gear ratio is the chainring's teeth ÷ the rear cog's teeth: how many times the back wheel turns for one turn of the pedals.",
+   "steps": [
+    "48-tooth chainring, 16-tooth cog: 48 ÷ 16 = 3 turns.",
+    "Change to a 32-tooth cog for hills: 48 ÷ 32 = 1.5 turns, easier to pedal, slower."
+   ],
+   "sources": [
+    {"title": "Sheldon Brown, \"Gain ratios\"", "url": "https://www.sheldonbrown.com/gain.html", "type": "public"},
+    {"title": "National Careers Service, \"Cycle mechanic\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/cycle-mechanic", "type": "public"},
+    {"title": "Skills England, Bicycle mechanic (OCC0622)", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0622", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "tiler",
+   "topic": "angles",
+   "route": "construction",
+   "job": "Wall and floor tiler",
+   "tier": "F",
+   "headline": "3 × 120 = 360°",
+   "text": "Tiles fit with no gaps only if the angles meeting at each corner add up to 360°.",
+   "steps": [
+    "A regular hexagon's angle: (6 − 2) × 180 ÷ 6 = 120°. Three meet: 3 × 120 = 360°, so they fit.",
+    "Octagon and square floors: (8 − 2) × 180 ÷ 8 = 135°, and 135 + 135 + 90 = 360°.",
+    "A regular pentagon's angle is 108°: 360 ÷ 108 = 3.33, not a whole number, so gaps."
+   ],
+   "sources": [
+    {"title": "Skills England, Wall and floor tiler (OCC0368)", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0368", "type": "public"},
+    {"title": "National Careers Service, \"Tiler\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/tiler", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "it-support-technician",
+   "topic": "speed-distance-time",
+   "route": "digital",
+   "job": "IT support technician",
+   "tier": "F",
+   "headline": "600 × 8 ÷ 80 = 60 seconds",
+   "text": "Broadband is sold in megabits per second (Mbit/s), but files are measured in megabytes (MB). 8 megabits = 1 megabyte. A 600 MB update on an 80 Mbit/s line (example figures):",
+   "steps": [
+    "In megabits: 600 × 8 = 4800.",
+    "Time: 4800 ÷ 80 = 60 seconds."
+   ],
+   "sources": [
+    {"title": "Local Government Association, glossary (8 megabits = 1 megabyte)", "url": "https://www.local.gov.uk/node/8262763", "type": "public"},
+    {"title": "National Careers Service, \"IT support technician\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/it-support-technician", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "hgv-driver",
+   "topic": "speed-distance-time",
+   "route": "transport",
+   "job": "HGV driver",
+   "tier": "F",
+   "headline": "270 ÷ 50 = 5.4 hours",
+   "text": "Lorry drivers must take a 45-minute break after 4½ hours of driving. A 270-mile run at an average of 50 mph (example figures):",
+   "steps": [
+    {"text": "Driving time: 270 ÷ 50 = 5.4 hours = 5 h 24 min (0.4 × 60 = 24).", "noCheck": "Hours and minutes (\"5 h 24 min\") are not read by the check; 270 ÷ 50 = 5.4 is still recomputed."},
+    {"text": "That's over 4½ hours, so a 45-minute break goes in: 5 h 24 min + 45 min = 6 h 09 min door to door.", "noCheck": "Hours and minutes (5 h 24 min + 45 min = 6 h 09 min) are not read by the check."}
+   ],
+   "sources": [
+    {"title": "GOV.UK / DVSA, \"Drivers' hours: HGV driver basics\"", "url": "https://assets.publishing.service.gov.uk/media/60e72a1c8fa8f50c79779237/Drivers_hours_HGV_driver_basics.pdf", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "care-worker",
+   "topic": "negative-numbers",
+   "route": "care",
+   "job": "Care worker",
+   "tier": "F",
+   "headline": "1350 − 1500 = −150 ml",
+   "text": "A fluid chart records what goes in (drinks) and what comes out. The balance is in − out; a negative balance means more out than in. Drinks: 250, 200, 300, 150, 250, 200 ml. Out: 1500 ml (example figures).",
+   "steps": [
+    "In: 250 + 200 + 300 + 150 + 250 + 200 = 1350 ml.",
+    "Balance: 1350 − 1500 = −150 ml: more out than in, so tell the nurse."
+   ],
+   "sources": [
+    {"title": "NHS (Mersey and West Lancashire), \"Fluid input and output (fluid balance): a guide for patients\"", "url": "https://sthk.merseywestlancs.nhs.uk/media/.leaflets/66c33a41ca20f6.93488011.pdf", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "shop-floor-assistant",
+   "topic": "estimation",
+   "route": "sales-and-marketing",
+   "job": "Shop floor assistant",
+   "tier": "F",
+   "headline": "19 × 24 = 456 tins",
+   "text": "Counting stock is where shop staff use maths most. A quick estimate catches a wrong delivery before you sign for it. 19 cases of 24 tins arrive (example figures).",
+   "steps": [
+    "Estimate: 20 × 24 = 480.",
+    "Exact: 19 × 24 = 456. Close to the estimate, so the count looks right."
+   ],
+   "sources": [
+    {"title": "Cambridge Mathematics, \"Intersections: Mathematics and the shop floor assistant\"", "url": "https://www.cambridgemaths.org/blogs/intersections-mathematics-and-the-shop-floor-assistant/", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "roads-policing-officer",
+   "topic": "speed-distance-time",
+   "route": "protective-services",
+   "job": "Roads policing officer",
+   "tier": "F",
+   "headline": "3 × 18 = 54 mph",
+   "text": "Average speed cameras time a car between two cameras a known distance apart. The cameras are 3 miles apart; a car takes 3 min 20 s; the limit is 50 mph (example figures).",
+   "steps": [
+    {"text": "Time: 3 min 20 s = 200 seconds = 200 ÷ 3600 = 1/18 of an hour.", "noCheck": "Minutes and seconds (\"3 min 20 s\") are not read by the check; 200 ÷ 3600 = 1/18 is still recomputed."},
+    "Speed: 3 × 18 = 54 mph: over the limit."
+   ],
+   "sources": [
+    {"title": "National Highways, \"Average speed enforcement cameras\"", "url": "https://nationalhighways.co.uk/road-safety/average-speed-enforcement-cameras", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "nursery-practitioner",
+   "topic": "ratio",
+   "route": "education",
+   "job": "Nursery practitioner",
+   "tier": "F",
+   "headline": "13 ÷ 5 = 2.6, so 3 adults",
+   "text": "By law there must be at least 1 adult for every 5 two-year-olds in a nursery in England. The two-year-olds' room has 13 children.",
+   "steps": [
+    "13 ÷ 5 = 2.6, and you can't have 0.6 of an adult, so round up: 3 staff."
+   ],
+   "sources": [
+    {"title": "GOV.UK Early Years blog, \"How staff-to-child ratios work\"", "url": "https://earlyyears.blog.gov.uk/2023/04/20/how-staff-to-child-ratios-work", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "tv-producer",
+   "topic": "percentages",
+   "route": "creative",
+   "job": "TV producer",
+   "tier": "F",
+   "headline": "60 − 8 = 52 minutes of programme",
+   "text": "On the main commercial channels, adverts between 6 pm and 11 pm may average no more than 8 minutes an hour. An hour slot at 8 minutes of adverts:",
+   "steps": [
+    "Programme time: 60 − 8 = 52 minutes.",
+    "Adverts as a share of the hour: 8 ÷ 60 × 100 = 13.3%."
+   ],
+   "sources": [
+    {"title": "Ofcom, \"Code on the Scheduling of Television Advertising\"", "url": "https://www.ofcom.org.uk/__data/assets/pdf_file/0014/32162/costa.pdf", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "firefighter",
+   "topic": "pythagoras",
+   "route": "protective-services",
+   "job": "Firefighter",
+   "tier": "F",
+   "headline": "√(8² + 2²) = 8.25 m of ladder",
+   "text": "Ladders go up at 1 out for every 4 up, which HSE says is 75°. A window 8 m up (example figure):",
+   "steps": [
+    "Foot of the ladder out from the wall: 8 ÷ 4 = 2 m.",
+    "Ladder length: √(8² + 2²) = √68 = 8.25 m.",
+    "Angle: tan⁻¹(4) = 75.96°: HSE rounds it to 75°."
+   ],
+   "sources": [
+    {"title": "HSE, \"Types of ladder and using them safely\"", "url": "https://www.hse.gov.uk/work-at-height/ladders/types-of-ladder.htm", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "games-developer",
+   "topic": "pythagoras",
+   "route": "digital",
+   "job": "Computer games developer",
+   "tier": "H",
+   "headline": "√(3² + 4²) = 5 pixels a frame",
+   "text": "A character moves by a vector each frame. Its speed is the vector's length. The character moves (3, 4) pixels a frame, at 60 frames a second (example figures):",
+   "steps": [
+    "Distance a frame: √(3² + 4²) = 5 pixels.",
+    "Speed: 5 × 60 = 300 pixels a second."
+   ],
+   "sources": [
+    {"title": "National Careers Service, \"Computer games developer\"", "url": "https://nationalcareers.service.gov.uk/job-profiles/computer-games-developer", "type": "public"},
+    {"title": "Prospects, \"Game developer\"", "url": "https://www.prospects.ac.uk/job-profiles/game-developer", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "toolmaker",
+   "topic": "trigonometry",
+   "route": "engineering",
+   "job": "Toolmaker",
+   "tier": "F",
+   "headline": "100 × sin 10° = 17.365 mm",
+   "text": "A sine bar sets a part at an exact angle. Its rollers are a fixed distance apart, and a stack of gauge blocks under one roller makes the angle: height = length × sin θ.",
+   "steps": [
+    "A 100 mm sine bar at 10°: 100 × sin 10° = 17.365 mm of blocks.",
+    "A 200 mm sine bar at 25°: 200 × sin 25° = 84.52 mm."
+   ],
+   "sources": [
+    {"title": "Hoffmann Group, \"Sine bar 100 mm\"", "url": "https://www.hoffmann-group.com/BG/en/Metrology/Gauges/Sine-bar-100-mm-HOLEX/p/483000", "type": "public"},
+    {"title": "Skills England, Machining technician (OCC1305)", "url": "https://skillsengland.education.gov.uk/occupations/OCC1305", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "cnc-programmer",
+   "topic": "trigonometry",
+   "route": "engineering",
+   "job": "CNC programmer",
+   "tier": "H",
+   "headline": "50 × cos 120° = −25 mm",
+   "text": "Bolt holes on a circle (a pitch circle) are programmed as coordinates: x = r cos θ, y = r sin θ. Three holes 120° apart on a circle of radius 50 mm (example figures):",
+   "steps": [
+    "At 0°: (50, 0).",
+    "At 120°: x = 50 × cos 120° = −25, y = 50 × sin 120° = 43.301."
+   ],
+   "sources": [
+    {"title": "Omni Calculator, \"Bolt circle calculator\"", "url": "https://www.omnicalculator.com/math/bolt-circle", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "hair-colourist",
+   "topic": "ratio",
+   "route": "hair-and-beauty",
+   "job": "Hair colourist",
+   "tier": "F",
+   "headline": "60 ÷ 3 = 20 ml of colour",
+   "text": "Developer strength is sold in \"volumes\": 10 vol is 3% hydrogen peroxide, so 20 vol is 6%. A common mix is 1 part colour to 2 parts developer. A 60 ml mix at 1 : 2 (example figure):",
+   "steps": [
+    "Strength: 20 ÷ 10 × 3 = 6%.",
+    "Colour: 60 ÷ 3 = 20 ml. Developer: 20 × 2 = 40 ml."
+   ],
+   "sources": [
+    {"title": "Sally Beauty UK, XP cream developer", "url": "https://www.sallybeauty.co.uk/hair/hair-colour-and-bleach/cream-peroxide-and-developers/xp-cream-developer-250ml/XPDEVELOPER250MLNEW.html", "type": "public"}
+   ],
+   "exampleFigures": true
+  },
+  {
+   "id": "vehicle-body-repairer",
+   "topic": "exponential-change",
+   "route": "engineering",
+   "job": "Vehicle body repairer",
+   "tier": "F",
+   "headline": "8 ÷ 2³ = 1 hour at 94 dB",
+   "text": "Noise is measured in decibels. Every 3 dB more is double the noise, so the safe time halves. At 85 dB the limit is about 8 hours a day.",
+   "steps": [
+    "88 dB: 8 ÷ 2 = 4 hours.",
+    "91 dB: 8 ÷ 2² = 2 hours.",
+    "94 dB: 8 ÷ 2³ = 1 hour."
+   ],
+   "sources": [
+    {"title": "HSE, motor vehicle repair, \"Noise\"", "url": "https://www.hse.gov.uk/MVR/topics/noise.htm", "type": "public"},
+    {"title": "RNID, \"How loud is too loud?\"", "url": "https://rnid.org.uk/information-and-support/protect-your-hearing/how-loud-is-too-loud/", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "highways-engineer",
+   "topic": "gradients",
+   "route": "construction",
+   "job": "Highways engineer",
+   "tier": "F",
+   "headline": "1000 × 0.10 = 100 m climb",
+   "text": "A steep-hill sign shows the gradient as a percentage: 10% is 1 in 10 (1 m up for every 10 m along).",
+   "steps": [
+    "Over 1 km at 10%: 1000 × 0.10 = 100 m of height.",
+    {"text": "20% is 1 ÷ 0.2 = 1 in 5, twice as steep.", "noCheck": "\"20% is 1 ÷ 0.2\" and \"1 in 5\" put a gradient in words, which the check does not read."}
+   ],
+   "sources": [
+    {"title": "GOV.UK, \"Know your traffic signs: Warning signs\"", "url": "https://www.gov.uk/government/publications/know-your-traffic-signs/warning-signs", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "architectural-technician",
+   "topic": "gradients",
+   "route": "construction",
+   "job": "Architectural technician",
+   "tier": "F",
+   "headline": "2000 ÷ 12 = 166.7 mm",
+   "text": "Building regulations set how steep a wheelchair ramp may be. The shorter the ramp, the steeper it is allowed: 1 : 12 for a 2 m ramp, 1 : 20 for 10 m.",
+   "steps": [
+    "2 m ramp: 2000 ÷ 12 = 166.7 mm, so the rise can be at most 166 mm (round down: it's a maximum).",
+    "10 m ramp: 10000 ÷ 20 = 500 mm."
+   ],
+   "sources": [
+    {"title": "GOV.UK, Approved Document M, Volume 2 (Table 1, limits for ramp gradients)", "url": "https://assets.publishing.service.gov.uk/media/60b0ea89d3bf7f43560e324a/Approved_Document_M_vol_2.pdf", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "painter-decorator-wallpaper",
+   "topic": "transformations",
+   "route": "construction",
+   "job": "Painter and decorator",
+   "tier": "F",
+   "headline": "64 ÷ 2 = 32 cm drop",
+   "text": "A \"half drop\" wallpaper's pattern is translated down by half its repeat on every other strip. A 64 cm pattern repeat (the manufacturer's example):",
+   "steps": [
+    "The next strip moves down 64 ÷ 2 = 32 cm."
+   ],
+   "sources": [
+    {"title": "TM Interiors with Arte Wallcoverings, \"How to hang half drop repeat wallpaper\"", "url": "https://tm-interiors.co.uk/wallpaper-guide/how-to-hang-half-drop-repeat-wallpaper-video", "type": "public"}
+   ],
+   "exampleFigures": false
+  },
+  {
+   "id": "quality-practitioner",
+   "topic": "hypothesis-testing",
+   "route": "business",
+   "job": "Quality practitioner",
+   "tier": "L4",
+   "headline": "0.02 ÷ 0.01 = 2.0, beyond 1.96",
+   "text": "A shaft should be 25.00 mm. Too big or too small is a fault, so the test is two-tailed. The machine's standard deviation is 0.04 mm; a sample of 16 has a mean of 25.02 mm (example figures). 5% significance, two-tailed: reject if |z| > 1.96.",
+   "steps": [
+    "z = (25.02 − 25.00) ÷ (0.04 ÷ √16) = 0.02 ÷ 0.01 = 2.0.",
+    "2.0 > 1.96, so reject: the machine has drifted. Reset it."
+   ],
+   "sources": [
+    {"title": "Skills England, Quality practitioner (OCC0853, Level 4)", "url": "https://occupational-maps.skillsengland.education.gov.uk/maps/occupation/OCC0853", "type": "public"}
    ],
    "exampleFigures": true
   }

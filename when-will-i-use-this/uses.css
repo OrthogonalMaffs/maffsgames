@@ -29,5 +29,11 @@ section.job .headline { margin-bottom: 1rem; }
 .route-chip:hover, .route-chip:focus-visible { text-decoration: underline; }
 .hero.route-hero { background: var(--c); border-radius: 14px; padding: 1.5rem 1.4rem; }
 .route-hero h1, .route-hero .subtitle { color: #fff; overflow-wrap: anywhere; }
+.hero h1 { overflow-wrap: anywhere; hyphens: auto; }   /* "Transformations:" in Aa is wider than a 320 px phone */
 @media (max-width: 560px) { .hero.route-hero { padding: 1.25rem 1rem; } }
 .route-hero .badge { background: rgba(255, 255, 255, 0.16); border-color: rgba(255, 255, 255, 0.45); color: #fff; }
+.tier-tag { display: inline-block; background: #fff; color: #1a2744; border: 1px solid #1a2744; font-size: 0.75rem;
+  font-weight: 700; line-height: 1.4; padding: 0.05rem 0.55rem; border-radius: 999px; vertical-align: 0.15rem;
+  white-space: nowrap; }
+.chip-row .route-chip + .tier-tag { margin-left: 0.4rem; }
+.job-card h3 .tier-tag { margin-left: 0.4rem; }
