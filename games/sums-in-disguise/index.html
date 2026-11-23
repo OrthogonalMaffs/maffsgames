@@ -1054,6 +1054,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     for (var k in Q.decoys) if (Object.prototype.hasOwnProperty.call(Q.decoys, k) && String(Q.decoys[k]) === val) return k;
     return null;
   }
+  // A verifier's choice of right-answer line (SID.ui.answer's second argument); null for every player: a random line.
+  var rightLine = null;
   function settle(right, val, btn, key) {
     if (peekTimer !== null) { MaffsLock.cancel(peekTimer); peekTimer = null; }
     $('peekRow').hidden = true;
@@ -1080,7 +1082,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     } else {
       disguiseOn(true);
       showSum(Q.big);
-      if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
+      if (right) { var i = rightLine !== null ? rightLine : Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
       else { sayKey = 'aha.' + ahaKey(Q, name); sayText = L.aha[ahaKey(Q, name)]; }
     }
     setSay(sayText, sayKey);
@@ -1242,15 +1244,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       tile: function (v) { return state === 'little' && click($('tiles'), '[data-val="' + v + '"]'); },
       pick: function (v) { return state === 'big' && click($('opts'), '[data-val="' + v + '"]'); },
       peek: function () { if (state === 'big') { MaffsLock.fresh($('peekRow'), 0); $('peekBtn').click(); } },
-      // Answer the item on screen, from whatever step it is at: right, or the big sum with its first decoy shown.
-      answer: function (right) {
+      // Answer the item on screen, from whatever step it is at: right, or the big sum with its first decoy shown. line (a
+      // verifier's, PRIMARY-FIT-SWEEP): the index in LINES.right of the line a right answer says, in place of a random one.
+      answer: function (right, line) {
         if (state === 'mask') this.unmask();
         if (state === 'little') this.tile(littleKey(Q));
         if (state === 'fill') fillTen(true);
         if (state === 'putback') putBack();
         if (state !== 'big') return;
         var key = S.flow === 'duck' ? Q.answer_sum[0] + '+' + Q.answer_sum[1] : String(Q.answer);
-        if (right) { this.pick(key); return; }
+        if (right) { rightLine = typeof line === 'number' && L.right[line] !== undefined ? line : null; this.pick(key); rightLine = null; return; }
         var bs = $('opts').querySelectorAll('.opt');
         for (var i = 0; i < bs.length; i++) if (bs[i].dataset.val !== key) { this.pick(bs[i].dataset.val); return; }
       },

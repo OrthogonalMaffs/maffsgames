@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -31,12 +31,19 @@ byte). This script never uses the page's numbers to check the page's numbers:
   Read aloud against a mocked speechSynthesis: no speaker without a local voice; only a local voice passed to speak();
             nothing spoken before a tap; the question read in words from the item; never the greeting.
   Play      every mode and stage in each look at 360 x 640 (the kid look from #kids/Maple): 10 different items of that
-            mode and stage, right and wrong; options and Next above the fold, no sideways scroll; one game_completed with
+            mode and stage, right and wrong, played to the end (the fold is Fit's, every item); one game_completed with
             the score, one board submission [slug, 'stage-N' or 'pro-stage-N', score, 10]; question_answered per item with
             its id; only game_started, question_answered and game_completed; no mfg() payload, localStorage or
             sessionStorage value containing "kids", "Maple" or "#". The largest picture (50 thingies), the largest array
             (10 x 5 and 5 x 10) and the longest sum (6 terms) on screen at 360 x 640 with every option above the fold and
             no sideways scroll.
+  Fit       every item above the fold (PRIMARY-FIT-SWEEP, scripts/fit_common.py): all 369 in each look at 360 x 640
+            with a local voice, so the speaker shows, the real fonts and the settled layout: each previewed as question 1
+            and as question 11 (winner stays on: the overtime line, End), Stage 3's arrays also as question 5 and 8 (the
+            scaffold's three shapes), walked step by step (the lots counted, right and wrong; the rows and each row, right
+            and wrong), every control measured at every step, then Next after every feedback variant: each LINES.right
+            line (ST.ui.answer's line argument; Stage 3's right answer is Sarge's line) and each decoy (ST.ui.pick). The
+            picture never wider than its card, no sideways scroll. Nothing sampled: the same items and variants every run.
 
 SOME-THINGIES-TWEAKS (Jon, 21 Nov 2026):
   Stage 3   every array cell a thingy (an svg with its body, two eyes, two pupils), never a dot; coloured by column (by
@@ -65,7 +72,7 @@ SOME-THINGIES-PERSONALITY (Jon, 21 Nov 2026):
             "+n" beyond; the score always the game's; the run-ending wrong answer makes it faint, with the faint line.
 
 Work units: "bank" (no browser), "scenes", "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
-"play kids 360x640", "winner 360x640", and "plant: <what>" (one per planted fault).
+"play kids 360x640", "winner 360x640", "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
     python scripts/verify-some-thingies.py --selftest   # the planted faults only
@@ -85,6 +92,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
 import plant_common as pc  # noqa: E402
+import fit_common as fc  # noqa: E402
 
 SLUG = 'some-thingies'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
@@ -550,29 +558,79 @@ def check_greeting(pw, base, html, out):
             br.close()
 
 
-FIT_JS = r"""(sel) => {
-  const f = document.querySelector('.site-footer');
-  const fixed = f && getComputedStyle(f).position === 'fixed';
-  const fold = window.innerHeight - (fixed ? f.getBoundingClientRect().height : 0);
-  const els = [...document.querySelectorAll(sel)].filter(e => e.getBoundingClientRect().height > 0);
-  const bottom = els.length ? Math.max(...els.map(e => e.getBoundingClientRect().bottom + window.scrollY)) : null;
-  const pic = document.getElementById('pic').getBoundingClientRect(), card = document.getElementById('qcard').getBoundingClientRect();
-  return { n: els.length, bottom: bottom, fold: fold, sw: document.documentElement.scrollWidth, vw: window.innerWidth,
-           picOut: pic.width > 0 && (pic.right > card.right + 0.5 || pic.left < card.left - 0.5) };
-}"""
+# ---------------------------------------------------------------- every item above the fold (PRIMARY-FIT-SWEEP)
+PIC = ('#pic', '#qcard')   # the picture must never be wider than its card
+NEXT = '#feedback .maffs-next, #nextBtn'
+# The sweep's stepper (scripts/fit_common.py sweep()): every item, previewed by itself as question 1 and as question 11
+# (winner stays on: the overtime line, End), Stage 3's arrays also as question 5 and 8 (the scaffold's three shapes),
+# walked step by step with the real buttons' handlers (the lots counted, the rows and each row, right and wrong), every
+# control measured at every step, then Next after every feedback variant: each LINES.right line (ST.ui.answer's line
+# argument; Stage 3's right answer is Sarge's one line) and each decoy (ST.ui.pick). The speaker shows throughout.
+FIT_STEPPER = r"""{
+  at(q) { return q.type === 'array' ? [1, 5, 8, 11] : [1, 11]; },
+  key(q) { return q.type === 'groups-to-sum' ? q.answer_sum.join('+') : String(q.answer); },
+  decoys(q) { return q.type === 'groups-to-sum' ? q.decoy_sums.map(d => d.join('+')) : q.decoys.map(String); },
+  variants(id) {
+    const q = ST.bank().find(x => x.id === id), lines = ST.lines()[ST.LOOK].right.length, vs = [];
+    for (const at of this.at(q)) {
+      if (q.type === 'array') vs.push('@' + at + ' right');
+      else for (let i = 0; i < lines; i++) vs.push('@' + at + ' right ' + i);
+      for (const d of this.decoys(q)) vs.push('@' + at + ' wrong ' + d);
+      if (q.type === 'sum-to-groups') vs.push('@' + at + ' miscount, right');
+      if (q.type === 'array' && at < 8) vs.push('@' + at + ' steps wrong, right');
+    }
+    return vs;
+  },
+  run(id, v, m) {
+    const ui = ST.ui, st = () => ui.state();
+    const at = +v.slice(1, v.indexOf(' ')), w = v.slice(v.indexOf(' ') + 1);
+    ui.preview(id, at);
+    const q = ui.question();
+    if (!q || q.id !== id || ui.qi() !== at) throw new Error('preview did not show ' + id + ' as question ' + at);
+    if (document.getElementById('speakBtn').hidden) throw new Error('the speaker is hidden');
+    if (st() === 'count') {
+      m('#speakBtn, #pic, #sum, #opts1 .opt', 'how many lots');
+      ui.count(String(w.startsWith('miscount') ? q.groups_decoys[0] : q.groups));
+    }
+    while (st() === 'rows' || st() === 'cols') {
+      const k = st(), n = k === 'rows' ? q.rows : q.cols;
+      m('#speakBtn, #pic, #opts1 .opt', k === 'rows' ? 'how many rows' : 'how many in each row');
+      ui.step(String(w.startsWith('steps wrong') ? n + 1 : n));
+    }
+    if (st() !== 'ask') throw new Error('no options: the state is ' + st());
+    m('#speakBtn, #pic, #sum, #opts .opt, #endBtn', 'the options');
+    const r = w.replace(/^(miscount|steps wrong), /, '');
+    if (r === 'right') ui.answer(true);
+    else if (r.startsWith('right ')) ui.answer(true, +r.slice(6));
+    else ui.pick(r.slice(6));
+    const right = r.startsWith('right') && !w.startsWith('miscount');
+    if (st() !== (right ? 'done' : 'wrong')) throw new Error('marking left the state ' + st());
+    if (r.startsWith('right ') && document.getElementById('say').dataset.say !== 'right.' + r.slice(6))
+      throw new Error('the right line is ' + document.getElementById('say').dataset.say + ', not right.' + r.slice(6));
+    m('#speakBtn, %s', 'Next');
+  }
+}""" % NEXT
 
 
-def fit(page, sel, what, out):
-    page.evaluate('window.scrollTo(0, 0)')
-    f = page.evaluate(FIT_JS, sel)
-    if not f['n']:
-        out.append('%s: nothing on screen for %s' % (what, sel))
-    elif f['bottom'] > f['fold'] + 0.5:
-        out.append('%s: %s ends at %.0f px, below the fold at %.0f px' % (what, sel, f['bottom'], f['fold']))
-    if f['sw'] > f['vw']:
-        out.append('%s: the page scrolls sideways (%d > %d)' % (what, f['sw'], f['vw']))
-    if f['picOut']:
-        out.append('%s: the picture is wider than the card' % what)
+def check_fit(pw, base, html, look, m, out, info):
+    """Every item of mode-stage m in one look at 360 x 640, the speaker showing: every control at every step and Next after
+    every feedback variant above the fold, the picture never wider than its card (fit_common.sweep)."""
+    frag = '#kids/Maple' if look == 'kids' else ''
+    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', frag, PHONE)
+    try:
+        if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
+            out.append('fit %s %s: the page is not in the %s look' % (look, m, look))
+        md, st = m.split('-')
+        ids = [q['id'] for q in page.evaluate('ST.bank()') if q['mode'] == md and str(q['stage']) == st]
+        got = fc.sweep(page, ids, FIT_STEPPER, out, 'fit %s %dx%d' % (look, PHONE[0], PHONE[1]), pic=PIC)
+        if not ids or got['items'] != len(ids):
+            out.append('fit %s %s: %d of %d items measured' % (look, m, got['items'], len(ids)))
+        for k in ('items', 'variants', 'measures'):
+            info.setdefault('fit', {}).setdefault(k, 0)
+            info['fit'][k] += got[k]
+    finally:
+        out.extend('page error (fit %s %s): %s' % (look, m, e) for e in errs if 'production host' not in e)
+        br.close()
 
 
 def bad_in_storage(page):
@@ -597,12 +655,8 @@ def play(page, look, m, out):
         if s in ('count', 'rows', 'cols', 'ask'):
             q = page.evaluate('ST.ui.question()')
             seen.append(q['id'])
-            if k < 2:
-                fit(page, '#opts .opt' if s == 'ask' else '#opts1 .opt', '%s %s (the options)' % (tag, q['id']), out)
             ok = k % 3 != 1
             page.evaluate('(r) => ST.ui.answer(r)', ok)
-            if k < 2:
-                fit(page, '#feedback .maffs-next, #nextBtn', '%s %s (Next)' % (tag, q['id']), out)
             right += 1 if ok else 0
             k += 1
             continue
@@ -837,7 +891,7 @@ def check_scenes(pw, base, html, out, info):
                     if q['type'] == 'sum-to-groups':
                         page.evaluate("ST.ui.count(String(ST.ui.question().groups))")
                     page.evaluate('ST.ui.answer(false)')
-                    fit(page, '#feedback .maffs-next, #nextBtn', '%s %s (Next, the conga line)' % (tag, i), out)
+                    fc.fit(page, '#feedback .maffs-next, #nextBtn', '%s %s (Next, the conga line)' % (tag, i), out, pic=PIC)
                     cg = page.evaluate(CONGA_JS)
                     off = page.evaluate("document.getElementById('pic').dataset.conga === 'off'")
                     if cg is None and not (off and size == (320, 568)):
@@ -861,7 +915,7 @@ def check_scenes(pw, base, html, out, info):
                         if sg != {'mini': phone, 'wide': not phone}:
                             out.append('%s %s: Sarge %s, expected %s' % (tag, q['id'], sg, 'in the top row' if phone else 'beside the array'))
                         page.evaluate('(r) => ST.ui.answer(r)', at == 1)
-                        fit(page, '#feedback .maffs-next, #nextBtn', '%s %s as question %d (Next, with Sarge)' % (tag, q['id'], at), out)
+                        fc.fit(page, '#feedback .maffs-next, #nextBtn', '%s %s as question %d (Next, with Sarge)' % (tag, q['id'], at), out, pic=PIC)
                         if at == 1 and page.evaluate("document.getElementById('say').textContent") != page.evaluate('ST.lines()')[look]['sarge']:
                             out.append('%s %s: Sarge does not say his line on a right answer' % (tag, q['id']))
                     if len(out) > 60:
@@ -949,7 +1003,7 @@ def check_largest(page, look, out):
             if q['type'] == 'array' and at == 1:
                 page.evaluate("ST.ui.step(String(ST.ui.question().rows))")
                 page.evaluate("ST.ui.step(String(ST.ui.question().cols))")
-            fit(page, '#opts1 .opt, #opts .opt', '%s %s as question %d at %dx%d (largest)' % (look, i, at, PHONE[0], PHONE[1]), out)
+            fc.fit(page, '#opts1 .opt, #opts .opt', '%s %s as question %d at %dx%d (largest)' % (look, i, at, PHONE[0], PHONE[1]), out, pic=PIC)
             if q['type'] == 'array':
                 a = page.evaluate(SCREEN_JS)['arr']
                 if a['size'] < 18:
@@ -1037,6 +1091,13 @@ def check(html, out, units, shard=None):
                             check_scenes(pw, base, html, out, info)
                         except Exception as e:  # noqa: BLE001
                             out.append('scenes threw: %s' % str(e).splitlines()[0][:220])
+                        continue
+                    if uid.startswith('fit '):
+                        _, look, m = uid.split(' ')
+                        try:
+                            check_fit(pw, base, html, look, m, out, info)
+                        except Exception as e:  # noqa: BLE001
+                            out.append('%s threw: %s' % (uid, str(e).splitlines()[0][:220]))
                         continue
                     if uid == 'greeting':
                         try:
@@ -1133,6 +1194,15 @@ PLANTS = [
     ('a thingy not counter-rotated',
      edit(".arr.turning .th{transform:rotate(-90deg)}", ""),
      TURN, r'a thingy is not upright mid-turn'),
+    # PRIMARY-FIT-SWEEP: the fold, on one item and one feedback variant only (a sample would miss it most runs).
+    ('Next below the fold after one right-answer line only (right.4, m1-3x2)',
+     edit("    if (Q.type === 'array') turnArray();\n",
+          "    if (Q.id === 'm1-3x2' && sayKey === 'right.4') fb.querySelector('.fb-next').style.paddingTop = '300px';\n    if (Q.type === 'array') turnArray();\n"),
+     'fit grown main-1', r'^fit grown 360x640 m1-3x2 \[@1 right 4\] \(Next\): .* below the fold'),
+    ('Next below the fold after one decoy of one item at question 11 only (p4-1x3, 4)',
+     edit("    if (Q.type === 'array') turnArray();\n",
+          "    if (Q.id === 'p4-1x3' && qi === 11 && btn.dataset.val === '4') fb.querySelector('.fb-next').style.paddingTop = '300px';\n    if (Q.type === 'array') turnArray();\n"),
+     'fit kids pro-4', r'^fit kids 360x640 p4-1x3 \[@11 wrong 4\] \(Next\): .* below the fold'),
 ]
 
 
@@ -1165,6 +1235,7 @@ def main():
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
     units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES, TURN]
+    units += ['fit %s %s' % (look, m) for look in ('grown', 'kids') for m in MODES]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -1188,6 +1259,9 @@ def main():
         print('%s: the start screen crowd (Start above the fold at every phone-fit size), the conga line (one group per line on a phone, Next above the fold) and Sarge (Next above the fold), every thingy in its own colour\'s accessory, nothing moving under reduced motion' % SLUG)
     if 'winner' in info:
         print('%s: winner stays on (at least 10, then to the first wrong or End; no End before 11; the supply never repeats at once) and the Stage 3 scaffold (3, 2, then 1 steps; steps never score)' % SLUG)
+    if 'fit' in info:
+        print('%s: every item above the fold at %dx%d, speaker showing: %d item views, %d feedback variants, %d controls measured (the looks and stages in this shard)'
+              % (SLUG, PHONE[0], PHONE[1], info['fit']['items'], info['fit']['variants'], info['fit']['measures']))
     if 'played' in info:
         print('%s: %d runs played at %dx%d (every mode and stage, the looks in this shard), the largest pictures and sum fitting' % (SLUG, info['played'], PHONE[0], PHONE[1]))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
