@@ -35,6 +35,9 @@ Golf's cream line on its cream summary card, Complex Converter's line inside its
 """
 import argparse, asyncio, hashlib, json, pathlib, re, shutil, socket, subprocess, sys, tempfile, time
 import urllib.request
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import contrast_common as cc  # noqa: E402  the one copy of the contrast measurement (SITE-CONTRAST)
 from html.parser import HTMLParser
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
@@ -219,30 +222,14 @@ LINE = """(sel) => {
   return {vis: vis, inside: sel ? !!p.closest(sel) : true, href: a && a.getAttribute('href')};
 }"""
 
-# The line's contrast against the first opaque background behind it (translucent layers composited), and how its
+# The line's contrast against the background behind it (contrast_common's measure, translucent layers composited), and how its
 # parent lays it out. Computed styles do not depend on the screen being shown, so the page is measured as loaded.
 STYLE = r"""(() => {
+  const MC = """ + cc.CONTRAST_JS + r""";
   const p = document.getElementById('teacherInvite');
   if (!p) return null;
   const a = p.querySelector('a') || p, q = p.parentElement, pc = getComputedStyle(q);
-  const rgb = s => { const v = (s.match(/rgba?\(([^)]+)\)/) || [0, ''])[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
-    return v.length < 3 ? null : {r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1}; };
-  const layers = [];
-  for (let e = p; e; e = e.parentElement) {
-    const b = rgb(getComputedStyle(e).backgroundColor);
-    if (b && b.a > 0) { layers.push(b); if (b.a >= 0.99) break; }
-  }
-  let bg = {r: 255, g: 255, b: 255};
-  for (let i = layers.length - 1; i >= 0; i--) {
-    const L = layers[i];
-    bg = {r: L.r * L.a + bg.r * (1 - L.a), g: L.g * L.a + bg.g * (1 - L.a), b: L.b * L.a + bg.b * (1 - L.a)};
-  }
-  const c = rgb(getComputedStyle(a).color);
-  const fg = {r: c.r * c.a + bg.r * (1 - c.a), g: c.g * c.a + bg.g * (1 - c.a), b: c.b * c.a + bg.b * (1 - c.a)};
-  const lum = x => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
-    return 0.2126 * f(x.r) + 0.7152 * f(x.g) + 0.0722 * f(x.b); };
-  const l1 = lum(fg), l2 = lum(bg);
-  return {ratio: (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05),
+  return {ratio: MC.measure(a, {opacity: false}).ratio,
           row: (/flex/.test(pc.display) && pc.flexDirection.startsWith('row')) || /grid/.test(pc.display),
           parent: (q.id ? '#' + q.id : '') + (q.className ? '.' + String(q.className).split(' ')[0] : q.id ? '' : q.tagName.toLowerCase())};
 })()"""

@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070b14;--surface:#0e1424;--border:#1a2440;--primary:#6366f1;--accent:#06b6d4;--wrong:#f43f5e;--correct:#22c55e;--text:#e4e8f0;--muted:#687890;--shade:rgba(99,102,241,.25);--curve:#6366f1}
+:root{--bg:#070b14;--surface:#0e1424;--border:#1a2440;--primary:#6063f1;--accent:#06b6d4;--wrong:#f43f5e;--correct:#22c55e;--text:#e4e8f0;--muted:#718198;--shade:rgba(99,102,241,.25);--curve:#6366f1}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}a.back-link:hover{color:var(--text)}
@@ -70,7 +70,7 @@ a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoratio
 .results .stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
 .play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
 .play-again:hover{transform:scale(1.05)}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
@@ -182,7 +182,7 @@ function drawBell(mu,sigma,regions,hideTicks){
     const sx=xToSvg(t);
     ticksSvg+=`<line x1="${sx}" y1="${H-PAD}" x2="${sx}" y2="${H-PAD+5}" stroke="#3a4560" stroke-width="1"/>`;
     const label=t===mu?'μ':(t<mu?'μ−'+(Math.round((mu-t)/sigma))+'σ':'μ+'+(Math.round((t-mu)/sigma))+'σ');
-    ticksSvg+=`<text x="${sx}" y="${H-PAD+16}" text-anchor="middle" fill="#687890" font-size="9" font-family="JetBrains Mono">${label}</text>`;
+    ticksSvg+=`<text x="${sx}" y="${H-PAD+16}" text-anchor="middle" fill="#718198" font-size="9" font-family="JetBrains Mono">${label}</text>`;
   });
 
   svg.innerHTML=`
@@ -212,7 +212,7 @@ function boundaryAnswer(q){
 // A question about two distributions (noCurve) has no single curve to draw:
 // drawing one of them would be half the picture, so it draws none and names both.
 function drawNoCurve(note){
-  document.getElementById('bellSvg').innerHTML='<text x="250" y="105" text-anchor="middle" fill="#687890" font-size="13" font-family="JetBrains Mono">Two distributions: compare them below</text>';
+  document.getElementById('bellSvg').innerHTML='<text x="250" y="105" text-anchor="middle" fill="#718198" font-size="13" font-family="JetBrains Mono">Two distributions: compare them below</text>';
   document.getElementById('bellInfo').innerHTML=note.split(' · ').map(s=>'<span>'+s+'</span>').join('');
 }
 

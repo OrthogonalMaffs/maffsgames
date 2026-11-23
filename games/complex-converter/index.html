@@ -25,7 +25,7 @@
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
   --bg:#0f172a;--panel:#1e293b;--border:#334155;
-  --text:#e2e8f0;--muted:#94a3b8;--accent:#0d9488;
+  --text:#e2e8f0;--muted:#a4b1c3;--accent:#0ea295;
   --correct:#22c55e;--wrong:#ef4444;--orange:#f97316;
   --l4:#ef4444;--further:#8b5cf6;
 }
@@ -39,7 +39,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 #menuScreen{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:32px;text-align:center;}
 .menu-title{font-size:32px;font-weight:700;margin-bottom:8px;}
 .menu-sub{color:var(--muted);font-size:15px;margin-bottom:12px;}
-.level-pill{display:inline-block;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:700;color:#fff;margin-bottom:32px;}
+.level-pill{display:inline-block;padding:4px 14px;border-radius:16px;font-size:12px;font-weight:700;color:var(--bg);margin-bottom:32px;}
 .level-pill.l4{background:var(--l4);}
 .level-pill.further{background:var(--further);}
 .mode-cards{display:flex;gap:20px;flex-wrap:wrap;justify-content:center;max-width:1100px;}
@@ -96,7 +96,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .sniper-prompt{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:24px;text-align:center;}
 .sniper-prompt .katex{font-size:1.8em;}
 .sniper-feedback{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center;min-height:60px;}
-.sniper-btn{background:var(--accent);color:#fff;border:none;border-radius:8px;padding:12px 28px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;}
+.sniper-btn{background:var(--accent);color:var(--bg);border:none;border-radius:8px;padding:12px 28px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;margin-top:12px;}
 .sniper-btn:hover{opacity:.9;}
 
 /* ARGAND SVG */
@@ -117,7 +117,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .bd-row:last-child{border:none;}
 .end-btns{display:flex;gap:12px;margin-top:24px;}
 .end-btn{padding:12px 32px;border-radius:8px;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer;border:none;}
-.end-btn.primary{background:var(--accent);color:#fff;}
+.end-btn.primary{background:var(--accent);color:var(--bg);}
 .end-btn.secondary{background:var(--panel);color:var(--text);border:1px solid var(--border);}
 
 /* CALCULATOR HINT */
@@ -474,8 +474,8 @@ function drawArgand(svgEl, re, im, size, opts={}) {
   for(let v = -range; v <= range; v += gridStep) {
     if(v === 0) continue;
     const label = Number.isInteger(v) ? v : v.toFixed(1);
-    svg += `<text x="${toX(v)}" y="${cy+14}" fill="#64748b" font-size="9" text-anchor="middle" font-family="Outfit">${label}</text>`;
-    svg += `<text x="${cx-10}" y="${toY(v)+3}" fill="#64748b" font-size="9" text-anchor="end" font-family="Outfit">${label}</text>`;
+    svg += `<text x="${toX(v)}" y="${cy+14}" fill="#8492a6" font-size="9" text-anchor="middle" font-family="Outfit">${label}</text>`;
+    svg += `<text x="${cx-10}" y="${toY(v)+3}" fill="#8492a6" font-size="9" text-anchor="end" font-family="Outfit">${label}</text>`;
   }
 
   if(!opts.hidePoint) {

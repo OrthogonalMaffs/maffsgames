@@ -22,12 +22,12 @@
 <style>
 :root{
 --bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
---text:#e8eaf0;--muted:#7a7f90;
---teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--text:#e8eaf0;--muted:#818696;
+--teal:#0d968a;--teal-dim:rgba(13,148,136,0.25);
 --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
 --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
 --amber:#f59e0b;--purple:#8b5cf6;
---ks3:#22c55e;--gcse:#3b82f6;
+--ks3:#22c55e;--gcse:#5794f7;
 }
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,sans-serif;color:var(--text);min-height:100vh;font-size:15px;line-height:1.6}
@@ -84,7 +84,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .session-btn.active{border-color:var(--teal);background:rgba(13,148,136,0.1);color:var(--teal)}
 .session-btn .btn-sub{font-size:12px;font-weight:400;color:var(--muted);margin-top:2px;display:block}
 
-.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;transition:opacity 0.15s;width:100%}
+.start-go{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:var(--bg);cursor:pointer;transition:opacity 0.15s;width:100%}
 .start-go:hover{opacity:0.9}
 .start-go:disabled{opacity:0.4;cursor:default}
 
@@ -126,7 +126,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .stat-val{font-size:24px;font-weight:700}
 .stat-label{font-size:12px;color:var(--muted);margin-top:2px}
 .pb-banner{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);color:var(--amber);border-radius:10px;padding:12px;font-weight:600;margin-bottom:16px;font-size:14px}
-.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:#fff;cursor:pointer;width:100%;transition:opacity 0.15s}
+.play-again{font-family:'Outfit',sans-serif;font-size:16px;font-weight:600;padding:14px 40px;border:none;border-radius:10px;background:var(--teal);color:var(--bg);cursor:pointer;width:100%;transition:opacity 0.15s}
 .play-again:hover{opacity:0.9}
 
 /* Accessibility toggle */
@@ -155,13 +155,13 @@ body.dyslexia .start-title,body.dyslexia .results-pct{color:var(--teal)}
 .modal-overlay.visible{display:flex}
 .modal{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;max-width:480px;width:90%;max-height:80vh;overflow-y:auto}
 .modal h3{font-size:18px;font-weight:700;margin-bottom:16px}
-.modal-close{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:10px 24px;border:none;border-radius:8px;background:var(--teal);color:#fff;cursor:pointer;margin-top:16px;width:100%}
+.modal-close{font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;padding:10px 24px;border:none;border-radius:8px;background:var(--teal);color:var(--bg);cursor:pointer;margin-top:16px;width:100%}
 
 /* === Accessibility === */
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 .correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
 .incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
 </style>

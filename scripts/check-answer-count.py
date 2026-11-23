@@ -28,6 +28,9 @@ screen's mount (canon 7.5.4, `[data-maffs-start-note]`) from 1,000 and the homep
 import argparse, asyncio, datetime as dt, importlib.util, json, os, pathlib, re, shutil, socket, subprocess, sys, tempfile, time
 import urllib.request
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import contrast_common as cc  # noqa: E402  the one copy of the contrast measurement (SITE-CONTRAST)
+
 BASE = pathlib.Path(__file__).resolve().parent.parent
 HERE = os.path.dirname(os.path.abspath(__file__))
 LOADER = "schools/assets/answer-count.js"
@@ -125,32 +128,17 @@ def _serve(root):
 
 
 # The line's state on the page as loaded: its text, whether it can be seen, whether it is inside the viewport, the
-# page's sideways overflow, its contrast against the first opaque background behind it, and its parent's layout.
+# page's sideways overflow, its contrast against the background behind it (contrast_common's measure), and its parent's layout.
 PROBE = r"""(sel) => {
+  const MC = """ + cc.CONTRAST_JS + r""";
   const p = document.querySelector(sel);
   if (!p) return null;
   const r = p.getBoundingClientRect();
-  const rgb = s => { const v = (s.match(/rgba?\(([^)]+)\)/) || [0, ''])[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
-    return v.length < 3 ? null : {r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1}; };
-  const layers = [];
-  for (let e = p; e; e = e.parentElement) {
-    const b = rgb(getComputedStyle(e).backgroundColor);
-    if (b && b.a > 0) { layers.push(b); if (b.a >= 0.99) break; }
-  }
-  let bg = {r: 255, g: 255, b: 255};
-  for (let i = layers.length - 1; i >= 0; i--) {
-    const L = layers[i];
-    bg = {r: L.r * L.a + bg.r * (1 - L.a), g: L.g * L.a + bg.g * (1 - L.a), b: L.b * L.a + bg.b * (1 - L.a)};
-  }
-  const c = rgb(getComputedStyle(p).color);
-  const fg = {r: c.r * c.a + bg.r * (1 - c.a), g: c.g * c.a + bg.g * (1 - c.a), b: c.b * c.a + bg.b * (1 - c.a)};
-  const lum = x => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
-    return 0.2126 * f(x.r) + 0.7152 * f(x.g) + 0.0722 * f(x.b); };
-  const l1 = lum(fg), l2 = lum(bg), q = p.parentElement, pc = getComputedStyle(q);
+  const q = p.parentElement, pc = getComputedStyle(q);
   return {text: p.textContent, count: p.getAttribute('data-maffs-count'), shown: p.checkVisibility() && r.width > 0 && r.height > 0,
           inside: r.left >= -0.5 && r.right <= document.documentElement.clientWidth + 0.5,
           sw: document.scrollingElement.scrollWidth, vw: document.documentElement.clientWidth,
-          ratio: (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05),
+          ratio: MC.measure(p, {opacity: false}).ratio,
           row: (/flex/.test(pc.display) && pc.flexDirection.startsWith('row')) || /grid/.test(pc.display),
           parent: (q.id ? '#' + q.id : '') + (q.className ? '.' + String(q.className).split(' ')[0] : q.id ? '' : q.tagName.toLowerCase())};
 }"""
@@ -226,20 +214,8 @@ async def _check_one(browser, base, rel, slug, sel, want):
 
 HEAD_PROBE = r"""() => {
   const m = document.querySelector('[data-maffs-answer-total]');
-  const rgb = s => { const v = (s.match(/rgba?\(([^)]+)\)/) || [0, ''])[1].split(/[ ,\/]+/).filter(Boolean).map(Number);
-    return v.length < 3 ? null : {r: v[0], g: v[1], b: v[2], a: v.length > 3 ? v[3] : 1}; };
-  const lum = x => { const f = v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
-    return 0.2126 * f(x.r) + 0.7152 * f(x.g) + 0.0722 * f(x.b); };
-  const ratio = el => {
-    const layers = [];
-    for (let e = el; e; e = e.parentElement) { const b = rgb(getComputedStyle(e).backgroundColor); if (b && b.a > 0) { layers.push(b); if (b.a >= 0.99) break; } }
-    let bg = {r: 255, g: 255, b: 255};
-    for (let i = layers.length - 1; i >= 0; i--) { const L = layers[i]; bg = {r: L.r * L.a + bg.r * (1 - L.a), g: L.g * L.a + bg.g * (1 - L.a), b: L.b * L.a + bg.b * (1 - L.a)}; }
-    const c = rgb(getComputedStyle(el).color);
-    const fg = {r: c.r * c.a + bg.r * (1 - c.a), g: c.g * c.a + bg.g * (1 - c.a), b: c.b * c.a + bg.b * (1 - c.a)};
-    const l1 = lum(fg), l2 = lum(bg);
-    return (Math.max(l1, l2) + 0.05) / (Math.min(l1, l2) + 0.05);
-  };
+  const MC = """ + cc.CONTRAST_JS + r""";
+  const ratio = el => MC.measure(el, {opacity: false}).ratio;
   const num = m && m.querySelector('.ac-num'), lab = m && m.querySelector('.ac-label');
   const upd = document.querySelector('[data-maffs-answer-updated]');
   const hdr = document.querySelector('.header');
