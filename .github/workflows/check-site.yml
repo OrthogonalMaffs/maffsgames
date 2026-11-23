@@ -423,11 +423,12 @@ jobs:
               Tier 1 (page load) shard 4/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 4/4
 
           # Tier 3 plays every game, 10 questions a run, at every level query in the roster (contract KATEX-ERRORS,
-          # 23 Nov 2026: until then it was opt-in and ran in no CI job). Every context carries bank_common's
+          # 23 Nov 2026: until then it was opt-in, outside every CI job). Every context carries bank_common's
           # KATEX_HOOK_INIT, so a game that hands KaTeX a string it cannot parse with throwOnError:true FAILS, named
           # with the string and KaTeX's message (known failures: checker-allowlist.json "tier3_katex_known"); its
           # other FAILs (a frozen tab, a click nothing marks, a mid-play throw) fail it too, as tier 3 always has.
-          # UNSUPPORTED never fails. Sharded as tier 1 is (page k to shard (k mod 4) + 1); shard 1 also runs the
+          # UNSUPPORTED never fails. Math.random is seeded (tier 1's PHONE_SEED), so every run plays the same questions
+          # (canon 7.8.4: a gate is repeatable). Sharded as tier 1 is (page k to shard (k mod 4) + 1); shard 1 also runs the
           # KaTeX hook's self-test (a planted game must fail, an untouched one and a known entry must not).
           - name: Tier 3 (play-through) shard 1/4
             timeout: 12

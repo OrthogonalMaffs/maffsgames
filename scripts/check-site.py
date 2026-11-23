@@ -2469,8 +2469,12 @@ def ascii_safe(text):
 # same options and throwOnError:true, recording each failure without changing what the page shows. A run whose game
 # handed KaTeX a string it cannot parse FAILS, naming the game, the string and KaTeX's message, whether or not the
 # run could otherwise be driven (a string rendered on load counts as much as one in question 7). Known failures, each
-# with its reason, are "tier3_katex_known" in scripts/checker-allowlist.json: reported, never failed. They are not
-# failed when they do not recur either: ten random questions a run cannot promise to meet the same string twice.
+# with its reason, are "tier3_katex_known" in scripts/checker-allowlist.json: reported, never failed. One that does not
+# recur is listed by the run (as met or not), never failed: a game change can move a string off the ten questions.
+#
+# A gate is repeatable (canon 7.8.4): tier 3 fixes Math.random in every context with PHONE_SEED, tier 1's phone-pass
+# seed (mulberry32 from the page's path), so each run plays the same questions in the same order. --tier3-random
+# leaves Math.random alone, for a local sweep of fresh draws (never in CI).
 
 
 def tier3_katex_known():
@@ -2830,7 +2834,7 @@ class _Done(Exception):
     """Internal: stop driving this game, keep the status already set."""
 
 
-async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
+async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms, seeded=True):
     from playwright.async_api import async_playwright
 
     exceptions = tier3_exceptions()
@@ -2845,9 +2849,9 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
         server, base = bc.start_stub_server()
 
     print("\n" + "=" * 78)
-    print("TIER 3 - play-through (%s) - %d run(s) across %d games, %d question(s) each"
+    print("TIER 3 - play-through (%s) - %d run(s) across %d games, %d question(s) each, Math.random %s"
           % ("LIVE " + LIVE_ORIGIN if live else "local stub server",
-             len(jobs), len(games), n_questions))
+             len(jobs), len(games), n_questions, "seeded (PHONE_SEED)" if seeded else "unseeded (--tier3-random)"))
     print("=" * 78)
 
     results, all_blocked, all_escaped = [], [], []
@@ -2861,6 +2865,8 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms):
                 # Once per context, before any page exists. Playwright replays a
                 # context's init scripts on every navigation, so this covers
                 # every job the context later serves.
+                if seeded:
+                    await ctx.add_init_script(PHONE_SEED)
                 await ctx.add_init_script(TIER3_INIT)
                 await ctx.add_init_script(bc.KATEX_HOOK_INIT)
 
@@ -2957,6 +2963,7 @@ async def tier3_katex_selftest_async(timeout_ms=20000, advance_ms=6000):
                                        ("planted, on the known list", True,
                                         {(slug, TIER3_KATEX_PLANT_TEX): "the self-test's own entry"})):
                 ctx = await browser.new_context()
+                await ctx.add_init_script(PHONE_SEED)
                 await ctx.add_init_script(TIER3_INIT)
                 await ctx.add_init_script(bc.KATEX_HOOK_INIT)
                 if plant:
@@ -3112,6 +3119,8 @@ def main():
                     help="tiers 1+2: load only shard I of N (each page in exactly one shard; tier 2 "
                          "and the other site-wide parts in shard 1 only). CI runs 1/4 .. 4/4. "
                          "Tier 3: play only shard I of N's games")
+    ap.add_argument("--tier3-random", action="store_true",
+                    help="tier 3: leave Math.random unseeded (fresh draws each run; a local sweep, never the gate)")
     ap.add_argument("--tier3-katex-selftest", action="store_true",
                     help="tier 3's KaTeX parse check on a planted game (contract KATEX-ERRORS); plays 2 questions")
     ap.add_argument("--shard-selftest", type=int, metavar="N",
@@ -3166,7 +3175,7 @@ def main():
             print("tier 3 shard %d/%d: %d games" % (shard[0], shard[1], sum(1 for l, _r, _q in pages if l.startswith("game:"))))
         t3_results, t3_blocked, t3_escaped = asyncio.run(
             tier3(pages, args.live, args.workers, args.timeout,
-                  args.questions, args.advance_ms))
+                  args.questions, args.advance_ms, not args.tier3_random))
         blocked += t3_blocked
         escaped += t3_escaped
         f = [r for r in t3_results if r["status"] == "FAIL"]
