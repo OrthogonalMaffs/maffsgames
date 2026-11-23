@@ -66,7 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-22 (cloud): SITE-CONTRAST (`docs/handover/contracts/2026-11-22-site-contrast.md`)
+## 2026-11-23 (cloud): PRIMARY-FIT-SWEEP (`docs/handover/contracts/2026-11-23-primary-fit-sweep.md`)
+
+Claude Code (cloud), branch `claude/pensive-gates-ktng9n` from main b5123bf. First commit: #887's close-out (entry below), this contract saved.
+
+- **Next:** `scripts/fit_common.py` (one FIT_JS and fit(), the every-item sweep, a planted self-test); both verifiers onto it; fix what the sweep finds in each game's own CSS.
+
+## 2026-11-22 (cloud): SITE-CONTRAST (`docs/history/contracts/2026-11-22-site-contrast.md`)
 
 Claude Code (cloud), branch `claude/determined-gauss-3l7zyi` from main f176132. Tier Shared: stops at Gate green for Project Claude's review and Jon's "merge". First commit: #886's close-out (entry below), this contract saved.
 
@@ -74,6 +80,7 @@ Claude Code (cloud), branch `claude/determined-gauss-3l7zyi` from main f176132. 
 - **Measured, not the lead:** 86 of 114 games failed on main (the contract's lead said about 45), 363 colour-on-background pairs; the copied Aa toggle (white on #0d9488, 3.74:1) alone in 77.
 - **Decided for you:** the two older checks measure colours alone ({opacity: false}), so their findings equal main's; a literal is changed in its own rule (no game gains a hex outside :root); the Aa toggle's teal darkened, not its text; KaTeX's drawn maths is measured (its aria-hidden is for screen readers); text painted over by an opaque box is not measured; one new token in 6 games for a colour that is text on both a light and a dark surface; three default `.level-btn.active` fills no level shows left with dark text.
 - **PR #887: Gate green** on 7429495 (main merged in for #885's /updates/ line): check-site 45085447273, phone-fit-full 45085447375 (contrast-normal 11m16s, contrast-aa 11m10s, every game), both success. **Next:** Project Claude's review and Jon's "merge". Reported, not done: four game verifiers keep their own contrast copies; the footer's links are unmeasurable (its scroll-cue gradients); Log Laws' Aa timer for Jon.
+- **MERGED 23 Nov as 661f822 (#887)**, route: cloud (as PRIMARY-FIT-SWEEP's contract records it). Main on 661f822: check-site 45126347307 attempt 1 red (Sums in Disguise Stage 5, kids look: Next at 616 px against a 600 px fold, found by the verifier's sampled fold check; a real overflow, NOT a flake), attempt 2 success (other items drawn); phone-fit-full 45126347538 success; pages build 45126346676 success. Contract moved. Closed out by PRIMARY-FIT-SWEEP, which fixes the sampled check and the overflow.
 
 ## 2026-11-22 (cloud): EXPECTATION-STATION-LINES (`docs/history/contracts/2026-11-22-expectation-station-lines.md`)
 
