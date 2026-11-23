@@ -1,21 +1,21 @@
 {
- "as_of": "2026-11-22T22:46:10Z",
+ "as_of": "2026-11-23T16:28:19Z",
  "countries": [
   {
    "country": "United Kingdom",
-   "sessions": 1644
-  },
-  {
-   "country": "United States",
-   "sessions": 189
-  },
-  {
-   "country": "Spain",
-   "sessions": 121
+   "sessions": 1682
   },
   {
    "country": "Singapore",
-   "sessions": 84
+   "sessions": 208
+  },
+  {
+   "country": "United States",
+   "sessions": 177
+  },
+  {
+   "country": "Spain",
+   "sessions": 119
   },
   {
    "country": "Ireland",
@@ -26,16 +26,16 @@
    "sessions": 31
   },
   {
+   "country": "China",
+   "sessions": 23
+  },
+  {
    "country": "Australia",
    "sessions": 22
   },
   {
-   "country": "China",
-   "sessions": 21
-  },
-  {
    "country": "New Zealand",
-   "sessions": 21
+   "sessions": 22
   },
   {
    "country": "Slovakia",
@@ -44,6 +44,10 @@
   {
    "country": "Netherlands",
    "sessions": 15
+  },
+  {
+   "country": "Canada",
+   "sessions": 14
   },
   {
    "country": "Hong Kong",
@@ -55,14 +59,10 @@
   },
   {
    "country": "Other countries",
-   "sessions": 165
+   "sessions": 154
   }
  ],
  "daily": [
-  {
-   "date": "2026-10-23",
-   "starts": 195
-  },
   {
    "date": "2026-10-24",
    "starts": 16
@@ -178,6 +178,10 @@
   {
    "date": "2026-11-21",
    "starts": 67
+  },
+  {
+   "date": "2026-11-22",
+   "starts": 65
   }
  ],
  "hours": {
@@ -217,35 +221,35 @@
    "<10",
    0,
    "<10",
-   "<10",
-   17,
-   13,
-   "<10",
-   12,
-   29,
-   12,
-   19,
-   31,
-   "<10",
-   21,
-   15,
-   27,
    11,
-   10
+   19,
+   14,
+   "<10",
+   11,
+   28,
+   22,
+   17,
+   35,
+   "<10",
+   26,
+   26,
+   23,
+   11,
+   "<10"
   ]
  },
  "levels": [
   {
    "level": "gcse",
-   "starts": 244
+   "starts": 268
   },
   {
    "level": "year6",
-   "starts": 237
+   "starts": 226
   },
   {
    "level": "ks3",
-   "starts": 123
+   "starts": 127
   },
   {
    "level": "all",
@@ -253,22 +257,18 @@
   },
   {
    "level": "core",
-   "starts": 25
+   "starts": 29
   },
   {
    "level": "alevel",
-   "starts": 21
+   "starts": 23
   },
   {
    "level": "level3",
-   "starts": 11
+   "starts": 13
   },
   {
    "level": "further",
-   "starts": "<10"
-  },
-  {
-   "level": "higher",
    "starts": "<10"
   },
   {
