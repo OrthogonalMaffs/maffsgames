@@ -1108,6 +1108,407 @@
    "slip": []
   },
   {
+   "id": "change-subject-a722ea15",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[29]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(w\\) the subject of \\(A = lw\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(w = A - l\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(w = Al\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(w = \\frac{A}{l}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(w = \\frac{l}{A}\\)"
+    }
+   ],
+   "worked": [
+    "\\(A = lw\\)",
+    "\\(\\frac{A}{l} = w\\)",
+    "\\(w = \\frac{A}{l}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-b0ab245f",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[30]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(d\\) the subject of \\(v = \\frac{d}{t}\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(d = \\frac{v}{t}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(d = vt\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(d = \\frac{t}{v}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(d = v + t\\)"
+    }
+   ],
+   "worked": [
+    "\\(v = \\frac{d}{t}\\)",
+    "\\(vt = d\\)",
+    "\\(d = vt\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-126dc58f",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[31]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(s\\) the subject of \\(P = 4s\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(s = \\frac{P}{4}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(s = P - 4\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(s = \\frac{4}{P}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(s = 4P\\)"
+    }
+   ],
+   "worked": [
+    "\\(P = 4s\\)",
+    "\\(\\frac{P}{4} = s\\)",
+    "\\(s = \\frac{P}{4}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-42666e2d",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[33]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(l\\) the subject of \\(P = 2l + 2w\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(l = P - 2w\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(l = \\frac{P}{2} - 2w\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(l = \\frac{P + 2w}{2}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(l = \\frac{P - 2w}{2}\\)"
+    }
+   ],
+   "worked": [
+    "\\(P = 2l + 2w\\)",
+    "\\(P - 2w = 2l\\)",
+    "\\(l = \\frac{P - 2w}{2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-78e09543",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[34]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(y = 3x - 5\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "c"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{y}{3} + 5\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = 3y + 5\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = \\frac{y + 5}{3}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = \\frac{y - 5}{3}\\)"
+    }
+   ],
+   "worked": [
+    "\\(y = 3x - 5\\)",
+    "\\(y + 5 = 3x\\)",
+    "\\(x = \\frac{y + 5}{3}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-d42ed436",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[35]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(h\\) the subject of \\(E = mgh\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(h = E - mg\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(h = \\frac{mg}{E}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(h = Emg\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(h = \\frac{E}{mg}\\)"
+    }
+   ],
+   "worked": [
+    "\\(E = mgh\\)",
+    "\\(\\frac{E}{mg} = h\\)",
+    "\\(h = \\frac{E}{mg}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-6d237ba1",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[36]"
+   },
+   "band": 4,
+   "calc": false,
+   "stem": "Make \\(h\\) the subject of \\(V = \\frac{1}{3}\\pi r^2 h\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "d"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(h = \\frac{3V}{\\pi r}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(h = \\frac{V}{3\\pi r^2}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(h = 3V\\pi r^2\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(h = \\frac{3V}{\\pi r^2}\\)"
+    }
+   ],
+   "worked": [
+    "\\(V = \\frac{1}{3}\\pi r^2 h\\)",
+    "\\(3V = \\pi r^2 h\\)",
+    "\\(h = \\frac{3V}{\\pi r^2}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-edd64c98",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[37]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(c\\) the subject of \\(E = mc^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "a"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(c = \\sqrt{\\frac{E}{m}}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(c = \\sqrt{Em}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(c = \\frac{E}{m}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(c = \\frac{\\sqrt{E}}{m}\\)"
+    }
+   ],
+   "worked": [
+    "\\(E = mc^2\\)",
+    "\\(\\frac{E}{m} = c^2\\)",
+    "\\(c = \\sqrt{\\frac{E}{m}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-c41ffe89",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[38]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(r\\) the subject of \\(A = 4\\pi r^2\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(r = \\sqrt{4\\pi A}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(r = \\sqrt{\\frac{A}{4\\pi}}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(r = \\frac{A}{4\\pi}\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(r = \\frac{\\sqrt{A}}{4\\pi}\\)"
+    }
+   ],
+   "worked": [
+    "\\(A = 4\\pi r^2\\)",
+    "\\(\\frac{A}{4\\pi} = r^2\\)",
+    "\\(r = \\sqrt{\\frac{A}{4\\pi}}\\)"
+   ],
+   "slip": []
+  },
+  {
+   "id": "change-subject-244df432",
+   "topic": "change-subject",
+   "source": {
+    "game": "formula-unlocked",
+    "ref": "Q_GCSE[39]"
+   },
+   "band": 5,
+   "calc": false,
+   "stem": "Make \\(x\\) the subject of \\(\\frac{x}{a} + \\frac{x}{b} = 1\\).",
+   "diagram": null,
+   "format": "choice",
+   "answer": {
+    "val": "b"
+   },
+   "options": [
+    {
+     "val": "a",
+     "label": "\\(x = \\frac{a + b}{ab}\\)"
+    },
+    {
+     "val": "b",
+     "label": "\\(x = \\frac{ab}{a + b}\\)"
+    },
+    {
+     "val": "c",
+     "label": "\\(x = a + b\\)"
+    },
+    {
+     "val": "d",
+     "label": "\\(x = ab\\)"
+    }
+   ],
+   "worked": [
+    "\\(\\frac{x}{a} + \\frac{x}{b} = 1\\)",
+    "\\(bx + ax = ab\\)",
+    "\\(x(a + b) = ab\\)",
+    "\\(x = \\frac{ab}{a + b}\\)"
+   ],
+   "slip": []
+  },
+  {
    "id": "change-subject-df30f7fe",
    "topic": "change-subject",
    "source": {

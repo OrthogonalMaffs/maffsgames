@@ -2,7 +2,7 @@
 # ci-line: Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium) |
 """Formula Unlocked: every rearrangement checked with SymPy; every option clicked in Chromium.
 
-The game (49 questions: Q_GCSE 29, Q_ALEVEL 6, Q_LEVEL4 14) shows a formula and asks to make one variable the
+The game (106 questions: Q_GCSE 40, Q_ALEVEL 26, Q_LEVEL4 40) shows a formula and asks to make one variable the
 subject, from four options. Its bank was keyed by hand with no verifier; the resit audit of 4 Oct 2026 found
 Q_ALEVEL[0] (s = ut + at^2/2, make u the subject) offering u = s/t - at/2, equal to the key (2s - at^2)/(2t),
 and marking it wrong (formula-unlocked-r-001), with a third option string-identical to the key (dropped, so three
@@ -18,9 +18,12 @@ the quantities are physical lengths, masses and rates; an option read() cannot r
   - the four options are distinct strings and distinct in value (SR-4);
   - every line of the worked solution holds when the key is put in for the target;
   - in Chromium (390x844), every option of every question shown through nextQ() and clicked through
-    handleAnswer(): the key marked right, the others wrong, four options on screen.
+    handleAnswer(): the key marked right, the others wrong, four options on screen;
+  - in Chromium, startGame() run 1000 times at each level: no session holds the same question twice
+    (FORMULA-UNLOCKED-BANK, 23 Nov 2026: the A-Level draw took Q_ALEVEL twice and repeated a question in 99.8%
+    of sessions), and none is shorter than its level's draw (SESSION_MIN).
 A self-test plants the audit's faults back into a copy of the page (r-001's value-equal option; f0-001's
-g(T/(2 pi))); each must FAIL naming its item.
+g(T/(2 pi))), and the old A-Level draw; each must FAIL naming its item.
 
     python scripts/verify-formula-unlocked.py [--no-selftest] [--against FILE]
 """
@@ -37,10 +40,10 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'formula-unlocked'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-BANKS = {'Q_GCSE': 29, 'Q_ALEVEL': 6, 'Q_LEVEL4': 14}
+BANKS = {'Q_GCSE': 40, 'Q_ALEVEL': 26, 'Q_LEVEL4': 40}
 AUDIT = {('Q_ALEVEL', 0): 'formula-unlocked-r-001', ('Q_GCSE', 22): 'audit F3, B11', ('Q_GCSE', 23): 'audit F4',
          ('Q_LEVEL4', 10): 'formula-unlocked-f0-001, B11'}
-GREEK = {'pi': 'PI', 'rho': 'rho', 'sigma': 'sigma', 'epsilon': 'epsilon'}
+GREEK = {'pi': 'PI', 'rho': 'rho', 'sigma': 'sigma', 'epsilon': 'epsilon', 'tau': 'tau', 'lambda': 'lambda_', 'alpha': 'alpha', 'delta': 'delta', 'mu': 'mu', 'omega': 'omega', 'eta': 'eta', 'beta': 'beta'}
 SYMS = {}
 
 
@@ -95,6 +98,8 @@ def tokens(s):
             j = i + 3
             while s[j].isspace():
                 j += 1
+            if s.startswith('\\left', j):
+                j += 5
             if s[j] == '{':
                 a, k = group(s, j)
             elif s[j] == '(':
@@ -297,7 +302,43 @@ SWEEP_JS = r"""() => {
 }"""
 
 
-def play(fails, html):
+# The fewest questions a session may hold at each level: what the level's draw takes. GCSE 5+6+5+4 and A-Level
+# 6+7+7 are 20 (MAX_Q); Level 4's draw, unchanged by FORMULA-UNLOCKED-BANK, takes 4+5+5+4 = 18.
+SESSION_MIN = {'gcse': 20, 'alevel': 20, 'level4': 18}
+SESSIONS = 1000
+
+SESSION_JS = r"""([n, levels]) => {
+  window.setTimeout = () => 0; window.setInterval = () => 0;
+  const out = {};
+  for (const lv of levels) {
+    let repeats = 0, minLen = Infinity, example = '';
+    for (let k = 0; k < n; k++) {
+      level = lv; startGame();
+      const seen = new Set();
+      for (const q of pool) {
+        const id = q.formula + ' | make ' + q.target + ' the subject';
+        if (seen.has(id)) { repeats++; if (!example) example = id; break; }
+        seen.add(id);
+      }
+      minLen = Math.min(minLen, pool.length);
+    }
+    out[lv] = [repeats, minLen, example];
+  }
+  return out;
+}"""
+
+
+def sessions(fails, page):
+    got = page.evaluate(SESSION_JS, [SESSIONS, list(SESSION_MIN)])
+    for lv, want in SESSION_MIN.items():
+        repeats, shortest, example = got[lv]
+        if repeats:
+            fails.append('session: %s: %d of %d sessions hold a question twice (e.g. %s)' % (lv, repeats, SESSIONS, example))
+        if shortest < want:
+            fails.append('session: %s: a session has %d questions, fewer than %d' % (lv, shortest, want))
+
+
+def play(fails, html, with_sessions=True):
     from playwright.sync_api import sync_playwright
     proc, base = bc.start_stub_server()
     try:
@@ -320,6 +361,8 @@ def play(fails, html):
                 fails.append('start: the Stage 2 label must be true of its one-step items: "Up to two steps" (formula-unlocked-s1-005)')
             for name, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d]%s in Chromium: option %s %s' % (name, i, ' (%s)' % AUDIT[(name, i)] if (name, i) in AUDIT else '', pick, what))
+            if with_sessions:
+                sessions(fails, page)
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -335,11 +378,11 @@ def load(html):
     return {name: bc.literal_to_json(init) for name, init, _ in bc.top_level_declarations(tree) if name in BANKS}
 
 
-def run(html):
+def run(html, with_sessions=True):
     fails = []
     banks = load(html)
     check_bank(fails, banks)
-    play(fails, html)
+    play(fails, html, with_sessions)
     return fails, sum(len(v or []) for v in banks.values())
 
 
@@ -358,6 +401,9 @@ PLANTS = [
     ('start:', 's1-005: Stage 2 called Two steps again',
      '<span class="stage-pill sp2">Stage 2: Up to two steps</span>', '<span class="stage-pill sp2">Stage 2: Two steps</span>'),
     ('Q_GCSE[20]', 's1-004: "not 2π²"', "Leaving it as 2π is the error.'", "not 2π².'"),
+    ('session:', 'the old A-Level draw (Q_ALEVEL taken twice)',
+     "pool=[...s2.slice(0,6),...s3.slice(0,7),...s4.slice(0,7)];",
+     "pool=[...s2.slice(0,5),...s3.slice(0,5),...s4.slice(0,5),...shuffle([...Q_ALEVEL]).slice(0,5)];"),
     ('Q_GCSE[12]', 's1-003: "The last distractor"', "misconception:'Writing x = y/m − c is a common error", "misconception:'The last distractor is a common error"),
 ]
 
@@ -378,7 +424,7 @@ def main():
                 print('  self-test %-42s *** CANNOT PLANT (%d) ***' % (what, html.count(old)))
                 ok = False
                 continue
-            rep, _ = run(html.replace(old, new))
+            rep, _ = run(html.replace(old, new), with_sessions=tag == 'session:')   # the session check runs for its own plant
             hit = [f for f in rep if f.startswith(tag)]
             ok = ok and bool(hit)
             print('  self-test %-42s %s' % (what, ('caught: ' + hit[0][:100]) if hit else '*** MISSED ***'))
