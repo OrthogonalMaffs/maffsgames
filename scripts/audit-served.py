@@ -74,6 +74,7 @@ import subprocess
 import sys
 import threading
 import time
+from urllib.parse import urlsplit
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -218,10 +219,23 @@ RECORD_INIT = r"""
     push({ t: 'q', kind: kind, k: s.answered, opts: opts, prompt: prompt(anchors).slice(0, 600) });
   }
 
+  // Tier 3 taps as soon as a new question is on screen, inside MaffsLock's fresh window (answer-lock.js: every
+  // input on a container is ignored for FRESH_MS, 300 ms, after fresh()), so the tap is dropped and the game reads
+  // as one tier 3 cannot drive. A student's tap comes later. Wait the window out before each tap, as
+  // check-answer-lock.py does (MaffsLock.isFresh); the page's clock (performance.now) runs during the wait.
+  function waitFresh() {
+    const ml = window.MaffsLock;
+    if (!ml || typeof ml.isFresh !== 'function') return;
+    const t0 = performance.now();
+    while (ml.isFresh() && performance.now() - t0 < 1500) { /* the window is at most FRESH_MS */ }
+  }
+
   const origClick = window.__mfgClickOpt;
-  window.__mfgClickOpt = function (i) { record('opt'); return origClick(i); };
+  window.__mfgClickOpt = function (i) { waitFresh(); record('opt'); return origClick(i); };
   const origType = window.__mfgTypeAnswer;
-  window.__mfgTypeAnswer = function (v) { record('typed'); return origType(v); };
+  window.__mfgTypeAnswer = function (v) { waitFresh(); record('typed'); return origType(v); };
+  const origSubmit = window.__mfgClickSubmit;
+  window.__mfgClickSubmit = function () { waitFresh(); return origSubmit(); };
 })();
 """
 
@@ -271,6 +285,43 @@ def start_server(overrides=None):
 
 # --------------------------------------------------------------------------- playing
 
+class _OfflineContext:
+    """The context play_one is handed: the real one, except that each page's routes are wrapped so nothing off this
+    machine is fetched. play_one's own route handler (the network guard) still sees every other request. KaTeX and
+    Google Fonts are answered from the pinned copies in scripts/fonts/ (bank_common.real_font_response, the bytes the
+    CDNs serve); any other off-machine URL (the Firebase SDK from www.gstatic.com) is aborted with the guard's own
+    net::ERR_FAILED, which tier 3 reads as guard noise. Why: this audit must not depend on what a container's network
+    allows (a cloud session's proxy refuses cdn.jsdelivr.net and www.gstatic.com), and nothing it measures needs them."""
+
+    def __init__(self, ctx, base):
+        self._ctx, self._base = ctx, base
+
+    def __getattr__(self, name):
+        return getattr(self._ctx, name)
+
+    async def new_page(self):
+        page = await self._ctx.new_page()
+        real_route = page.route
+        base = self._base
+
+        async def route(pattern, handler, **kw):
+            async def wrapped(r):
+                url = r.request.url
+                if url.startswith(base) or urlsplit(url).scheme in ("data", "blob", "about"):
+                    return await handler(r)
+                if cs.block_reason(url):
+                    return await handler(r)          # the guard records and aborts it, as in tier 3
+                got = bc.real_font_response(url)
+                try:
+                    await (r.fulfill(**got) if got else r.abort())
+                except Exception:
+                    pass
+            return await real_route(pattern, wrapped, **kw)
+
+        page.route = route
+        return page
+
+
 async def play_session(browser, base, slug, level, n):
     """One session (seed n) in a fresh context: (play_one's result, the recorder's records)."""
     records = []
@@ -286,7 +337,7 @@ async def play_session(browser, base, slug, level, n):
         async def ws_handler(ws):
             await ws.close()
         await ctx.route_web_socket(lambda url: cs.block_reason(url) is not None, ws_handler)
-        res = await cs.play_one(ctx, base, "game:" + slug, "games/%s/index.html" % slug, "?level=" + level,
+        res = await cs.play_one(_OfflineContext(ctx, base), base, "game:" + slug, "games/%s/index.html" % slug, "?level=" + level,
                                 False, TIMEOUT_MS, MAX_QUESTIONS, ADVANCE_MS, {})
     finally:
         await ctx.close()
@@ -409,6 +460,53 @@ async def run_levels(jobs, workers, overrides=None, log=print):
     return sorted(rows, key=lambda r: order[(r["slug"], r["level"])])
 
 
+# --------------------------------------------------------------------------- the time estimate
+
+async def estimate_levels(jobs, workers, log=print):
+    """One session (seed 1) per level: its status, questions and seconds (contract STOP IF: a full run over 90
+    minutes at --workers 4 is reported, with the slowest games first, before it is started)."""
+    from playwright.async_api import async_playwright
+    srv, base = start_server()
+    rows = []
+    try:
+        async with async_playwright() as pw:
+            browser = await pw.chromium.launch()
+            sem = asyncio.Semaphore(workers)
+
+            async def one(slug, level):
+                async with sem:
+                    t0 = time.time()
+                    try:
+                        res, records = await play_session(browser, base, slug, level, 1)
+                        status, detail, n = res["status"], res["detail"], len(servings(records))
+                    except Exception as exc:
+                        status, detail, n = "ERROR", str(exc)[:200], 0
+                    row = {"slug": slug, "level": level, "status": status, "detail": detail, "questions": n,
+                           "seconds": round(time.time() - t0, 1)}
+                    rows.append(row)
+                    log("  %-30s %-8s %-11s %3d q %5.0fs  %s" % (slug, level, status, n, row["seconds"],
+                                                                 cs.ascii_safe(detail)[:70]))
+            await asyncio.gather(*(one(s, lv) for s, lv in jobs))
+            await browser.close()
+    finally:
+        srv.shutdown()
+    return rows
+
+
+def project(rows, workers=4):
+    """(best, worst) wall seconds of a full run: a drivable level plays SATURATION_RUN + 1 sessions at best and
+    MAX_SESSIONS at worst, an undrivable one plays one; levels are dealt longest first to `workers` lanes."""
+    def wall(costs):
+        lanes = [0.0] * workers
+        for c in sorted(costs, reverse=True):
+            lanes[lanes.index(min(lanes))] += c
+        return max(lanes) if lanes else 0.0
+    drivable = lambda r: r["status"] in ("PASS", "WARN") and r["questions"] > 0
+    best = [r["seconds"] * (SATURATION_RUN + 1) if drivable(r) else r["seconds"] for r in rows]
+    worst = [r["seconds"] * MAX_SESSIONS if drivable(r) else r["seconds"] for r in rows]
+    return wall(best), wall(worst)
+
+
 # --------------------------------------------------------------------------- self-tests
 
 SELFTESTS = [
@@ -427,9 +525,11 @@ def page_at(commit, slug):
                           capture_output=True, check=True).stdout
 
 
-def selftest(workers):
+def selftest(workers, which="abc"):
     results = []
     for tag, slug, commit, level, want, ok in SELFTESTS:
+        if tag not in which:
+            continue
         body = page_at(commit, slug)
         overrides = {"/games/%s/index.html" % slug: body, "/games/%s/" % slug: body}
         print("self-test %s: %s at %s, level %s (want: %s)" % (tag, slug, commit, level, want))
@@ -441,6 +541,18 @@ def selftest(workers):
                         "saturated": row["saturated"], "in_session_repeats": len(row["in_session_repeats"]),
                         "started_as": row["started_as"], "questions_per_session": row["questions_per_session"]})
         print("  -> %s\n" % ("PASS" if passed else "FAIL"))
+    if results:
+        data = {}
+        if os.path.exists(OUT_JSON):
+            with open(OUT_JSON, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        kept = {t["test"]: t for t in data.get("selftests", [])}
+        kept.update({t["test"]: t for t in results})
+        data["selftests"] = [kept[k] for k in sorted(kept)]
+        os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
+        with open(OUT_JSON, "w", encoding="utf-8", newline="") as fh:
+            json.dump(data, fh, indent=1, ensure_ascii=False)
+            fh.write("\n")
     bad = [r for r in results if not r["passed"]]
     print("self-tests: %d of %d pass" % (len(results) - len(bad), len(results)))
     return results
@@ -450,6 +562,9 @@ def selftest(workers):
 
 def write_outputs(rows, tests, seconds, workers):
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
+    if not tests and os.path.exists(OUT_JSON):
+        with open(OUT_JSON, "r", encoding="utf-8") as fh:
+            tests = json.load(fh).get("selftests", [])
     data = {"contract": "B4-SERVED-AUDIT", "generated_by": "scripts/audit-served.py", "date": "2026-11-23",
             "commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True,
                                      text=True).stdout.strip(),
@@ -465,11 +580,14 @@ def main():
     ap = argparse.ArgumentParser(description="Measure how many different questions each game's level serves.")
     ap.add_argument("--only", help="substring filter on slug")
     ap.add_argument("--workers", type=int, default=4)
-    ap.add_argument("--selftest", action="store_true", help="the three self-tests (contract step 3) only")
+    ap.add_argument("--selftest", nargs="?", const="abc", metavar="TESTS",
+                    help="the self-tests (contract step 3) only; optionally which, e.g. --selftest c")
+    ap.add_argument("--estimate", metavar="FILE",
+                    help="play one session per level and write the time estimate to FILE (no audit output)")
     ap.add_argument("--no-write", action="store_true", help="print only; write no JSON")
     args = ap.parse_args()
 
-    tests = selftest(args.workers) if args.selftest else []
+    tests = selftest(args.workers, args.selftest) if args.selftest else []
     if args.selftest:
         return 0 if all(t["passed"] for t in tests) else 1
 
@@ -479,6 +597,16 @@ def main():
     print("audit-served: %d level(s) across %d game(s), %d worker(s)" % (len(jobs), len({s for s, _ in jobs}),
                                                                         args.workers))
     t0 = time.time()
+    if args.estimate:
+        rows = asyncio.run(estimate_levels(jobs, args.workers))
+        best, worst = project(rows, 4)
+        with open(args.estimate, "w", encoding="utf-8", newline="") as fh:
+            json.dump({"seconds": round(time.time() - t0), "workers": args.workers,
+                       "projected_seconds_at_4_workers": {"best": round(best), "worst": round(worst)},
+                       "levels": sorted(rows, key=lambda r: -r["seconds"])}, fh, indent=1, ensure_ascii=False)
+        print("\nestimate pass: %.0fs; a full run at --workers 4 projects to %.0f to %.0f minutes; wrote %s"
+              % (time.time() - t0, best / 60, worst / 60, args.estimate))
+        return 0
     rows = asyncio.run(run_levels(jobs, args.workers))
     secs = time.time() - t0
     counts = {}
