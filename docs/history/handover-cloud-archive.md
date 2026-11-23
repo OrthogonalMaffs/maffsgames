@@ -6,6 +6,28 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-23 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-22 (cloud): EXPECTATION-STATION-LINES (`docs/history/contracts/2026-11-22-expectation-station-lines.md`)
+
+Claude Code (cloud), branch `claude/magical-einstein-7072g0` from main bc0496c. Tier Small. First commit: #884's close-out (entry below), this contract saved, given-that unclaimed, expectation-station claimed.
+
+- **Done on the branch:** `renderStage2()` draws one line per row, `x \times P(X = x) =` in KaTeX and its slot (ids, tiles, marking unchanged); phones (520px and down) one line under another, wider screens two columns. Once Stage 2 is checked (right, or revealed), `showStage2Sum()` adds the line E(X) = \sum xP(x) = p1 + ... = total (exactEX(), Stage 3's value), the empty tile bank hides, and a Continue button (`data-maffs-lock-skip`) replaces the 0.8 s / 1.2 s auto-advance, so the sum can be read; the lock hint presses it.
+- **Decided for you (SR-31):** Continue rather than the timed move to Stage 3 (as written, the sum line would have shown for 0.8 s); two columns above 520px (one column pushed Check Calculation below the fold on 12 laptop items, 23 in Aa); the total in the scenario's form (a fraction in a fraction scenario, e.g. 4/3, where Stage 3 shows 4/3 ≈ 1.33).
+- **Fit (all 120 items, Check Calculation's bottom, page coordinates, before / after):** no item pushed below the fold at any size; above the fold at 375x667 66 / 68, Aa 375x667 0 / 13, Aa 390x844 99 / 116, laptop 120 / 120 (worst 641 / 680), Aa laptop 119 / 119. measure-phone-fit (Stage 1 only) unchanged in normal, Aa and laptop: no known-failures entry grows or can go.
+- **Verifier:** KaTeX from the pinned copy (`bc.offline`); `lines_fails` for every item; plants: the old chained line (all 120 items), no sum line after the reveal, the sum adding P(X = x). PASS, 13 plants caught. check-answer-lock `--game expectation-station` PASS, the same as main's page.
+- **MERGED 22 Nov as 3af3b62 (#886)**, route merge-pr.py --watch. Main on 3af3b62: check-site 45068923835, phone-fit-full 45068923807, pages 45068923283, all success. The PR's own runs on 2b3c3ed: check-site 45067739391, phone-fit-full 45067739315, both success. Contract moved, game unclaimed. Closed out by SITE-CONTRAST.
+
+## 2026-11-22 (cloud): GIVEN-THAT-SET-LABELS (`docs/history/contracts/2026-11-22-given-that-set-labels.md`)
+
+Claude Code (cloud), branch `claude/serene-dirac-3qx1qv` from main 371f1ce. Tier Small. First commit: #882's close-out (entry below), this contract saved with its STOP and Amendment 1, given-that claimed.
+
+- STOP before any edit (measured, every item): besides the set names (black, 1.25:1), `--muted` #7a7f90 is 4.22:1 on #1a1d27 (Venn Total, tree branch labels, tree list root and connectors). Amendment 1: `--muted` to #8a8fa0 (5.22:1); the check also covers the start and results screens.
+- Done on the branch: `.venn-set-label` fill `var(--text)`; `--muted` #8a8fa0; the verifier's contrast sweep (CONTRAST_JS: fill or colour with opacity, over SVG fills and ancestor backgrounds; faded and disabled exempt), not yet wired into main(). Every diagram label passes (10,988 judged across 390x844 and 1366x768, normal and Aa).
+- **STOP 2 (22 Nov):** the start and results screens fail: Start Game (once a level is picked) and Play Again, `color:#fff` on `--accent` #f59e0b, 2.15:1, every size and mode. Amendment 2: `color:#0f1117` on the amber (8.79:1).
+- Done: both buttons; the `contrast` unit in main() with 3 plants (the set names' fill removed, caught on all 14 Venns; --muted back; Start Game white). Verifier PASS locally, 16 plants caught. Seen, not changed: `.submit-btn` (typed answers, game screen, outside the sweep) is also white on the amber.
+- **MERGED 22 Nov as bc0496c (#884)**, route merge-pr.py --watch. Main on bc0496c: check-site 45063676704, phone-fit-full 45063676918, pages 45063676484, all success. The PR's own runs on 4efdece: phone-fit-full 45062529835, check-site 45062529815, both success. Contract moved, game unclaimed. Closed out by EXPECTATION-STATION-LINES.
+
+## Moved 2026-11-23 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/history/contracts/2026-11-22-decimal-detective-fit.md`)
 
 Claude Code (cloud), branch `claude/trusting-dijkstra-s3mpss` from main 7660e2f. Tier Medium. First commit: #880's close-out (entry below), this contract saved, decimal-detective claimed.
