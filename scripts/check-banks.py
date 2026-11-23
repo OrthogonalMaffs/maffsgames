@@ -778,6 +778,14 @@ B12_FIXTURES = [
      "variable": "QUESTIONS",
      "questions": [{"shown": "x = 1 \\tag{1}", "inline": "y = 2 \\tag{2}", "correct": "1"}],
      "throws": {"x = 1 \\tag{1}": False, "y = 2 \\tag{2}": True}},
+    {"why": "sequence-solver's guard: a \\\\( \\\\) option goes to MaffsText, never the wrapper, so it is not a throw "
+            "(MaffsText.hasMaths decided by the site evaluator)",
+     "script": _RK_INLINE + "function showQ(q){[q.correct,...q.d].forEach(v=>{const b=document.createElement("
+                            "'button');if(MaffsText.hasMaths(v)){b.innerHTML=MaffsText.html(v)}"
+                            "else if(v.includes('\\\\')||v.includes('^')){rk(b,v)}else{b.textContent=v}})}\n",
+     "variable": "QUESTIONS",
+     "questions": [{"correct": "\\(2n + 1\\)", "d": ["n^2", "\\(3n\\)"]}],
+     "throws": {"\\(2n + 1\\)": False, "\\(3n\\)": False, "n^2": False}},
 ]
 
 # The lint alone, on render records shaped as extract-banks.py writes them (no browser).

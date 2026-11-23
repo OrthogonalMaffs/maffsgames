@@ -3153,6 +3153,17 @@ class _SiteEval:
                     raise _Unresolved("Math on a non-number")
                 out.append((_MATH_FNS[name](*xs), None))
             return out
+        if name == "MaffsText.hasMaths" and len(n.arguments) == 1:
+            # The shared guard between MaffsText.html and a game's own KaTeX wrapper (schools/assets/mathtext.js:
+            # a string, and its DELIM finds a \( ... \) pair; _MATHTEXT_SEGMENT is the same pattern). Decided here,
+            # a string authored with \( \) is not counted as reaching the wrapper on the other branch (contract
+            # KATEX-ERRORS: sequence-solver's options, :369). A value only the page can compute stays undecided.
+            out = []
+            for v, p in self.ev(n.arguments[0], d, dpath):
+                if isinstance(v, _JS):
+                    raise _Unresolved("MaffsText.hasMaths of a page-computed value")
+                out.append((isinstance(v, str) and bool(_MATHTEXT_SEGMENT.search(v)), p))
+            return out
         if c.type == "Identifier" and c.name in ("parseFloat", "Number", "parseInt") \
                 and len(n.arguments) >= 1:
             out = []
