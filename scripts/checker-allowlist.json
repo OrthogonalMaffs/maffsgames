@@ -108,6 +108,13 @@
       "reason": "Cannot start without a named grid: with storage available the student types three initials before Start is enabled, and answers are typed on a keypad (no pick-one group, no <input> to fill). Driven and verified instead by scripts/verify-six-sevens.py (in CI), which creates a grid, plays a full 20-question session through the keyboard against the shipped page, checks every cell, the wrong-answer screen and the returns, and simulates 1,200 sessions against window.SSB. Read 30 Sep 2026."
     }
   ],
+  "_tier3_katex_known_comment": [
+    "Tier 3's KaTeX parse check (contract KATEX-ERRORS, 23 Nov 2026; check-site.py, tier3_katex_known): a string a",
+    "game handed KaTeX that KaTeX cannot parse with throwOnError:true FAILS tier 3. An entry here ({slug, tex, reason})",
+    "is a known failure whose intended maths is not certain, waiting for Project Claude: reported, never failed. Empty",
+    "on 23 Nov 2026: the first full run (352 runs, every roster game) found none."
+  ],
+  "tier3_katex_known": [],
   "_b11_form_questions_comment": [
     "check-banks.py B11 (options equal in value) skips these. Each is a question whose ask names",
     "the form it tests (\"Write in standard form\", \"Simplify\", \"Rationalise\" ...), so an option",

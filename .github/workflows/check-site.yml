@@ -422,6 +422,36 @@ jobs:
             checks: |
               Tier 1 (page load) shard 4/4|python scripts/check-site.py --shard-selftest 4 && python scripts/check-site.py --workers 4 --shard 4/4
 
+          # Tier 3 plays every game, 10 questions a run, at every level query in the roster (contract KATEX-ERRORS,
+          # 23 Nov 2026: until then it was opt-in, outside every CI job). Every context carries bank_common's
+          # KATEX_HOOK_INIT, so a game that hands KaTeX a string it cannot parse with throwOnError:true FAILS, named
+          # with the string and KaTeX's message (known failures: checker-allowlist.json "tier3_katex_known"); its
+          # other FAILs (a frozen tab, a click nothing marks, a mid-play throw) fail it too, as tier 3 always has.
+          # UNSUPPORTED never fails. Math.random is seeded (tier 1's PHONE_SEED), so every run plays the same questions
+          # (canon 7.8.4: a gate is repeatable). Sharded as tier 1 is (page k to shard (k mod 4) + 1); shard 1 also runs the
+          # KaTeX hook's self-test (a planted game must fail, an untouched one and a known entry must not).
+          - name: Tier 3 (play-through) shard 1/4
+            timeout: 12
+            job_timeout: 22
+            checks: |
+              Tier 3 KaTeX parse check (self-test)|python scripts/check-site.py --tier3-katex-selftest
+              Tier 3 (play-through) shard 1/4|python scripts/check-site.py --tier 3 --workers 4 --shard 1/4
+          - name: Tier 3 (play-through) shard 2/4
+            timeout: 12
+            job_timeout: 22
+            checks: |
+              Tier 3 (play-through) shard 2/4|python scripts/check-site.py --tier 3 --workers 4 --shard 2/4
+          - name: Tier 3 (play-through) shard 3/4
+            timeout: 12
+            job_timeout: 22
+            checks: |
+              Tier 3 (play-through) shard 3/4|python scripts/check-site.py --tier 3 --workers 4 --shard 3/4
+          - name: Tier 3 (play-through) shard 4/4
+            timeout: 12
+            job_timeout: 22
+            checks: |
+              Tier 3 (play-through) shard 4/4|python scripts/check-site.py --tier 3 --workers 4 --shard 4/4
+
           # The site-wide checks, each over the whole site, one after another (until 7 Oct 2026 they ran after
           # tier 1, in the same job).
           # The link check is stdlib-only and takes about a second.
@@ -471,6 +501,10 @@ jobs:
           # §7.1.1): no page under games/ that loads KaTeX, nor a local stylesheet it links, has a rule whose selector
           # ends in a descendant `span` or `*` with display:block (it stacks KaTeX's own spans; use `>`). Self-test:
           # the amendment's four planted rules, the scope, the two old game rules restored, a linked stylesheet.
+          # KaTeX on load (Chromium, about 20s with its self-test; contract KATEX-ERRORS, 23 Nov 2026): every page outside
+          # games/ and when-will-i-use-this/ that loads KaTeX (found, not listed), loaded once at 390x844 with KaTeX from
+          # scripts/fonts/: no .katex-error, no maths left as raw source (scripts/katex_page_common.py, the rule
+          # check-uses.py uses). Self-test: \dfrac{1} and \dfrac{1}{ planted on a parent guide, each caught.
           - name: Site-wide checks
             timeout: 10
             job_timeout: 20
@@ -498,6 +532,7 @@ jobs:
               Quoted figures (no figure the quoted-statistics audit found CONTRADICTED is still on its page)|python scripts/check-quoted-figures.py && python scripts/check-quoted-figures.py --selftest
               Top scores, static (no date or number in the browser's locale under games/; no own *_scores list; panels on renderTop)|python scripts/check-top-scores.py && python scripts/check-top-scores.py --selftest
               KaTeX CSS (canon 7.1.1: no rule on a KaTeX page ends in a descendant span or * with display:block)|python scripts/check-katex-css.py && python scripts/check-katex-css.py --selftest
+              KaTeX on load (no .katex-error or unrendered maths on any page outside games/ that loads KaTeX: the parent guides, the portal, the-6-ps)|python scripts/check-katex-pages.py && python scripts/check-katex-pages.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
@@ -520,6 +555,9 @@ jobs:
           # answer mode composes: 1, 2 and 4 answer boxes on touch phones at 320/375/390 (keys reach the active
           # box only, DEL and C act on it alone, nothing editable is focused, the length limit holds, the active
           # box is marked and its tag lies over no other box), ordinary inputs with a mouse; six planted faults (~40s).
+          # B12 (contract KATEX-ERRORS, 23 Nov 2026): every string the extraction hands a KaTeX render site is parsed
+          # again with the site's options and throwOnError:true; a throw is a finding. The self-tests line runs
+          # check-banks.py's fixtures (B7, B11, B12) offline and in a real page (KaTeX from scripts/fonts/).
           # Split in two on 7 Oct 2026 (4m38s as one job): the bank extraction and its lint stay together, since
           # the lint reads what the extraction wrote.
           - name: Tier 4 layer A (bank extraction and lint)
@@ -528,6 +566,7 @@ jobs:
             checks: |
               Tier 4 layer A (bank extraction)|python scripts/extract-banks.py --workers 4
               Tier 4 layer A (lint against the ledger)|python scripts/check-banks.py --ci
+              Tier 4 layer A (self-tests: B7, B11, B12 fixtures, offline and in a real page)|python scripts/check-banks.py --selftest && python scripts/check-banks.py --selftest-live
               B11 value comparison (bank_common: the audits' value-equal shapes, contract F0)|python scripts/test-bank-common.py
 
           - name: Shared asset tests (Next control, section clicks, answer, calculator, keypad)

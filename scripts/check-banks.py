@@ -30,6 +30,12 @@ back). Eleven rules, each with an ID:
       √50), compared with bank_common.parse_value()/equal(). Identified by
       content (bank_common.content_id), not by bank index or line. Deliberate
       form questions are listed in checker-allowlist.json, b11_form_questions.
+  B12 KaTeX cannot parse it (contract KATEX-ERRORS, 23 Nov 2026): every string
+      B7's KaTeX half hands a render site, as KaTeX received it, parsed again
+      in the page with the options the site passed (its displayMode among
+      them) and throwOnError:true (bank_common.KATEX_PARSE_JS). The games keep
+      throwOnError:false, so on screen such a string is red raw source (a
+      .katex-error span); here a throw is a finding carrying KaTeX's message.
 
 Not a bank rule, and not in the ledger: the money boxes (MONEY-INPUT, Jon, 9 Nov
 2026; canon §7.1.3). Every page that marks with MaffsAnswer.money( also calls
@@ -56,6 +62,8 @@ tracked. The ids, by rule:
                    field (QUESTIONS.d[]), "literal" (source), "page" (the page's own DOM)
                    or "<VARIABLE>(state)" (computed in the state a question sets)
   B7 (MaffsText)   <slug>::B7::mathtext[<kind>]::<sha12 of the string>#<ordinal>
+  B12              <slug>::B12::katex[<path>]::<sha12 of the string>#1 -- B7's KaTeX scheme;
+                   the string is the one the site was handed (its bank value)
   B8               <slug>::B8::<enclosing name>::<dup keys>::<sha12 of the object>
   B9               <slug>::B9::<target as written>::<sha12 of the right-hand side>
   B11              <content_id>::B11::<the pair>
@@ -77,8 +85,8 @@ USAGE
     python scripts/check-banks.py --write-ledger         # (re)write the ledger
     python scripts/check-banks.py --ci                   # CI mode (see below)
     python scripts/check-banks.py --only matrix-crunch
-    python scripts/check-banks.py --selftest             # B7 + B11 value-equality + content_id fixtures + money-box plant
-    python scripts/check-banks.py --selftest-live        # B7 rendered in a real page + MaffsText throw check
+    python scripts/check-banks.py --selftest             # B7 + B11 value-equality + content_id fixtures + money-box plant + B12 lint
+    python scripts/check-banks.py --selftest-live        # B7 rendered in a real page + MaffsText throw check + B12 parse
 
 CI MODE
 -------
@@ -116,6 +124,7 @@ RULE_NAMES = {
     "B9": "hand-written index patch after the bank literal",
     "B10": "correct_override present",
     "B11": "options equal in value",
+    "B12": "KaTeX cannot parse it",
 }
 
 DRAFT_MARKERS = ["wait", "let me", "recalculate", "actually let", "hmm", "oops",
@@ -632,6 +641,7 @@ def lint_game(slug, findings, b11_allowed=None, b11_allowed_seen=None):
                      b11_allowed_seen if b11_allowed_seen is not None else set())
     lint_level_rules(slug, bank, findings, qids)
     lint_katex_render(slug, bank.get("katex_renders") or [], findings)
+    lint_katex_parse(slug, bank.get("katex_renders") or [], findings)
     lint_mathtext(slug, bank.get("mathtext_hazards") or [], findings)
     if tree is not None:
         lint_session_length(slug, bank, src, findings)
@@ -742,6 +752,110 @@ B7_WORD_TEST_FIXTURES = [
 ]
 
 
+# B12 (contract KATEX-ERRORS): game-shaped scripts whose strings KaTeX either
+# parses or throws on. `throws` maps every string that reaches the site to
+# True (KaTeX cannot parse it, a B12 finding) or False. Rendered in a real page
+# by --selftest-live through extract-banks.py's own render_sites, then linted.
+_RK_INLINE = "function rk(el,tex){katex.render(tex,el,{throwOnError:false,displayMode:false})}\n"
+B12_FIXTURES = [
+    {"why": "an unbalanced brace and an unknown command caught through a wrapper; a valid string passes",
+     "script": _RK_INLINE + "function showQ(q){[q.correct,...q.d].forEach(v=>{const b=document."
+                            "createElement('button');rk(b,v)})}\n",
+     "variable": "QUESTIONS",
+     "questions": [{"correct": "x^2 + 1", "d": ["\\frac{1}{2", "\\notacommand{x}"]}],
+     "throws": {"x^2 + 1": False, "\\frac{1}{2": True, "\\notacommand{x}": True}},
+    {"why": "MaffsText strings: segments that parse pass; a segment with an unclosed brace is caught",
+     "script": "function show(q){document.body.innerHTML=MaffsText.html(q.prompt)}\n",
+     "variable": "QUESTIONS",
+     "questions": [{"prompt": "Find \\(x^2 + 1\\) when \\(x = 3\\).", "correct": "10"},
+                   {"prompt": "Simplify \\(\\frac{6}{8\\) fully.", "correct": "3/4"}],
+     "throws": {"Find \\(x^2 + 1\\) when \\(x = 3\\).": False,
+                "Simplify \\(\\frac{6}{8\\) fully.": True}},
+    {"why": "the site's displayMode is honoured: \\tag parses in a display site and throws in an inline one",
+     "script": "function D(l){return katex.renderToString(l,{throwOnError:false,displayMode:true})}\n"
+               "function I(l){return katex.renderToString(l,{throwOnError:false,displayMode:false})}\n"
+               "function show(q){return D(q.shown)+I(q.inline)}\n",
+     "variable": "QUESTIONS",
+     "questions": [{"shown": "x = 1 \\tag{1}", "inline": "y = 2 \\tag{2}", "correct": "1"}],
+     "throws": {"x = 1 \\tag{1}": False, "y = 2 \\tag{2}": True}},
+    {"why": "sequence-solver's guard: a \\\\( \\\\) option goes to MaffsText, never the wrapper, so it is not a throw "
+            "(MaffsText.hasMaths decided by the site evaluator)",
+     "script": _RK_INLINE + "function showQ(q){[q.correct,...q.d].forEach(v=>{const b=document.createElement("
+                            "'button');if(MaffsText.hasMaths(v)){b.innerHTML=MaffsText.html(v)}"
+                            "else if(v.includes('\\\\')||v.includes('^')){rk(b,v)}else{b.textContent=v}})}\n",
+     "variable": "QUESTIONS",
+     "questions": [{"correct": "\\(2n + 1\\)", "d": ["n^2", "\\(3n\\)"]}],
+     "throws": {"\\(2n + 1\\)": False, "\\(3n\\)": False, "n^2": False}},
+]
+
+# The lint alone, on render records shaped as extract-banks.py writes them (no browser).
+B12_LINT_FIXTURES = [
+    ("a string with a recorded parse error is a finding, its message in the detail",
+     [{"path": "QUESTIONS.correct", "source": "\\frac{1}{2", "callee": "rk", "line": 7,
+       "parse_errors": [{"tex": "\\frac{1}{2", "display": False,
+                         "message": "KaTeX parse error: Expected '}', got 'EOF' at end of input: \\frac{1}{2"}]}],
+     ["demo::B12::katex[QUESTIONS.correct]::%s#1"], "Expected '}'"),
+    ("the same string at two sites is one finding naming both",
+     [{"path": "Q.d[]", "source": "\\bad", "callee": "rk", "line": 3,
+       "parse_errors": [{"tex": "\\bad", "display": False, "message": "Undefined control sequence: \\bad"}]},
+      {"path": "Q.d[]", "source": "\\bad", "callee": "K", "line": 9,
+       "parse_errors": [{"tex": "\\bad", "display": True, "message": "Undefined control sequence: \\bad"}]}],
+     ["demo::B12::katex[Q.d[]]::%s#1"], "K:9, rk:3"),
+    ("a string KaTeX parsed (no parse_errors) is not a finding",
+     [{"path": "Q.q", "source": "x^2", "callee": "K", "line": 1, "parse_errors": []},
+      {"path": "Q.q", "source": "x^3", "callee": "K", "line": 1}],
+     [], None),
+]
+
+
+def b12_lint_fixture_results():
+    """[(passed, message)] for B12_LINT_FIXTURES."""
+    out = []
+    for why, renders, ids, needle in B12_LINT_FIXTURES:
+        f = Findings()
+        lint_katex_parse("demo", renders, f)
+        want = sorted(i % sha12(renders[0]["source"]) if "%s" in i else i for i in ids)
+        got = sorted(e["id"] for e in f.by_rule["B12"])
+        ok = got == want and (needle is None or all(needle in e["detail"] for e in f.by_rule["B12"]))
+        out.append((ok, "%s (got %s)" % (why, got)))
+    return out
+
+
+async def _b12_fixtures_live(context, base):
+    """Render every B12 fixture through extract-banks.py's render_sites in a real
+    page and lint what it records: each string that must throw is a B12 finding
+    with KaTeX's message, each that must not is none."""
+    eb = _extract_banks_module()
+    ok, n = True, 0
+    for i, fx in enumerate(B12_FIXTURES):
+        url = base + "/__b12_fixture_%d.html" % i
+        html = ("<!doctype html><html><head><meta charset='utf-8'>"
+                "<script src='https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js'></script>"
+                "<script src='/schools/assets/mathtext.js'></script></head><body><script>\n"
+                + fx["script"] + "</script></body></html>")
+
+        async def serve(route, request=None, html=html):
+            await route.fulfill(status=200, content_type="text/html", body=html)
+        await context.route(url, serve)
+        wrappers, resolved, reached = b7_fixture_resolve(fx)
+        renders, failures = await eb.render_sites(context, url, wrappers, resolved, 20000)
+        f = Findings()
+        lint_katex_parse("fx", renders, f)
+        hit = {e["id"]: e["detail"] for e in f.by_rule["B12"]}
+        good = reached == set(fx["throws"]) and not failures
+        print("%-4s B12 (live): reaches exactly %s%s -- %s" % ("OK" if good else "FAIL", sorted(fx["throws"]),
+              "" if good else ", got %s %s" % (sorted(reached), failures), fx["why"][:60]))
+        ok, n = ok and good, n + 1
+        paths = {r["source"]: r["path"] for r in renders}
+        for src, want in fx["throws"].items():
+            eid = "fx::B12::katex[%s]::%s#1" % (paths.get(src), sha12(src))
+            got = eid in hit
+            print("%-4s B12 (live): %s %r%s" % ("OK" if got == want else "FAIL", "caught" if want else "passes", src,
+                                               (" -- " + hit[eid][:110]) if got else ""))
+            ok, n = ok and got == want, n + 1
+    return ok, n
+
+
 def _fixture_bank(fx):
     return {"generator": False, "levels": {"default": {"groups": [
         {"variable": fx["variable"], "path": [], "questions": fx["questions"], "in_pool": True}]}}}
@@ -806,6 +920,9 @@ def run_selftest():
             total_b7[0] += 1
     for why, got in content_id_fixtures():
         print("%-4s content_id: %s" % ("OK" if got else "FAIL", why))
+        ok = ok and got
+    for got, msg in b12_lint_fixture_results():
+        print("%-4s B12 lint: %s" % ("OK" if got else "FAIL", msg))
         ok = ok and got
     ledger_results = ledger_write_fixtures()
     for why, got in ledger_results:
@@ -993,8 +1110,13 @@ async def _run_selftest_live_async():
         async with async_playwright() as pw:
             browser = await pw.chromium.launch()
             context = await browser.new_context()
+            # Nothing from the network: KaTeX from the pinned copy (bank_common.offline_async); the fixture pages'
+            # own routes, registered later, win over it.
+            await bc.offline_async(context, base)
             b7_ok, b7_n = await _b7_fixtures_live(context, base)
             ok = ok and b7_ok
+            b12_ok, b12_n = await _b12_fixtures_live(context, base)
+            ok, b7_n = ok and b12_ok, b7_n + b12_n
             page = await context.new_page()
             # component-crusher loads KaTeX and nothing about this check is
             # game-specific -- any page that loads the same CDN katex.min.js
@@ -1052,6 +1174,30 @@ def lint_katex_render(slug, renders, findings):
                      % (path, ", ".join(sorted(h["sites"])), source[:120],
                         (r["rendered"] or "")[:120], ", ".join(sorted(h["lost"]))[:80]),
                      r["line"])
+
+
+def lint_katex_parse(slug, renders, findings):
+    """B12 (contract KATEX-ERRORS, 23 Nov 2026): a string a render site hands
+    KaTeX that KaTeX cannot parse. extract-banks.py's SITE_RENDER_JS parses
+    every string KaTeX receives again, with the options the site passed and
+    throwOnError:true (bank_common.KATEX_PARSE_JS), and records each throw in
+    the render's parse_errors. One finding per distinct (bank path, string),
+    however many sites or states hand it over, with B7's id shape; the detail
+    names the site(s), the string KaTeX received and KaTeX's message."""
+    hits = {}
+    for r in renders:
+        if not r.get("source") or not r.get("parse_errors"):
+            continue
+        h = hits.setdefault((r["path"], r["source"]), {"r": r, "sites": set(), "errs": {}})
+        h["sites"].add("%s:%d" % (r["callee"], r["line"]))
+        for pe in r["parse_errors"]:
+            h["errs"].setdefault((pe.get("tex", ""), bool(pe.get("display"))), pe.get("message", ""))
+    for (path, source), h in sorted(hits.items()):
+        errs = "; ".join("%s%r: %s" % ("display " if d else "", tex[:80], msg[:160])
+                         for (tex, d), msg in sorted(h["errs"].items()))
+        findings.add("B12", "%s::B12::katex[%s]::%s#1" % (slug, path, sha12(source)),
+                     "%s at %s: KaTeX cannot parse %s" % (path, ", ".join(sorted(h["sites"])), errs),
+                     h["r"]["line"])
 
 
 def lint_mathtext(slug, mathtext_hazards, findings):
@@ -1237,9 +1383,9 @@ def main():
     ap.add_argument("--ci", action="store_true",
                     help="fail only on a NEW violation, or a ledger entry that no longer reproduces")
     ap.add_argument("--selftest", action="store_true",
-                    help="run the B7 KaTeX-prose/mathtext-balance fixture tests and exit (no bank data, no browser)")
+                    help="run the B7 KaTeX-prose/mathtext-balance and B12 lint fixture tests and exit (no bank data, no browser)")
     ap.add_argument("--selftest-live", action="store_true",
-                    help="run the B7 MaffsText throw-check fixture tests and exit (spins up a browser)")
+                    help="run the B7 MaffsText throw-check and B12 parse fixture tests and exit (spins up a browser)")
     args = ap.parse_args()
 
     if args.selftest:

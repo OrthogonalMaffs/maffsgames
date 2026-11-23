@@ -996,13 +996,73 @@ def mathtext_segments(s):
 # own throwOnError:false, which exists so a bad segment degrades to KaTeX's
 # red error styling in production rather than breaking the page; this check
 # is what catches the authoring mistake before it ships.
+#
+# KATEX_PARSE_JS is that throw check for every KaTeX site, not only MaffsText's (contract KATEX-ERRORS, 23 Nov 2026):
+# one JS function, used by MATHTEXT_THROW_JS below, by extract-banks.py's SITE_RENDER_JS (rule B12, check-banks.py)
+# and by KATEX_HOOK_INIT (check-site.py's tier 3 and the shared page check). Given KaTeX's own renderToString, a string
+# and the options the page passed, it parses the string again with the same options and throwOnError:true and returns
+# KaTeX's message when that throws a ParseError, else null. A ParseError is exactly what the pages' throwOnError:false
+# turns into a red .katex-error span; any other error (a non-string input) throws in production too, so it is not
+# this check's to report. What the page shows is never changed: the extra parse's output is thrown away.
+KATEX_PARSE_JS = r"""function (rts, s, opts) {
+  var o = {}, k;
+  if (opts && typeof opts === 'object') for (k in opts) o[k] = opts[k];
+  o.throwOnError = true;
+  try { rts.call(window.katex, s, o); return null; }
+  catch (e) { return e && e.name === 'ParseError' ? String(e.message || e) : null; }
+}"""
+
 MATHTEXT_THROW_JS = """(strings) => {
     if (typeof katex === 'undefined') return null;
-    return strings.map(s => {
-        try { katex.renderToString(s, {throwOnError: true}); return null; }
-        catch (e) { return String(e && e.message || e); }
+    const parse = (%s);
+    const rts = katex.__mfgRawRenderToString || katex.renderToString;
+    return strings.map(s => parse(rts, s, {}));
+}""" % KATEX_PARSE_JS
+
+# Tier 3's KaTeX trap (contract KATEX-ERRORS; the production version of scripts/audit-katex/kx_hook.js's trap). An
+# init script, so it runs before any page script: it traps the global `katex` the CDN script sets and wraps
+# render/renderToString so each input is also parsed by KATEX_PARSE_JS. Every failure is recorded once, as
+# {tex, display, message}, in window.__mfgKatexErrors; the page's own call runs and returns exactly as before. The
+# unwrapped renderToString stays on the object as __mfgRawRenderToString, so a check that parses strings itself
+# (MATHTEXT_THROW_JS) does not record them twice.
+KATEX_HOOK_INIT = r"""
+(() => {
+  if (window.__mfgKatexHooked) return;
+  window.__mfgKatexHooked = true;
+  window.__mfgKatexErrors = [];
+  const parse = (%s);
+  const seen = Object.create(null);
+  const note = (rts, s, opts) => {
+    try {
+      const msg = parse(rts, s, opts);
+      if (msg === null) return;
+      const display = !!(opts && opts.displayMode);
+      const key = String(s) + '\u0001' + display;
+      if (seen[key]) return;
+      seen[key] = 1;
+      window.__mfgKatexErrors.push({tex: String(s), display: display, message: msg});
+    } catch (e) { /* the check never breaks the page */ }
+  };
+  const wrap = (k) => {
+    if (!k || typeof k !== 'object' && typeof k !== 'function' || k.__mfgKatexWrapped) return k;
+    const rts = k.renderToString, r = k.render;
+    if (typeof rts !== 'function' || typeof r !== 'function') return k;
+    k.renderToString = function (s, opts) { note(rts, s, opts); return rts.apply(this, arguments); };
+    k.render = function (s, el, opts) { note(rts, s, opts); return r.apply(this, arguments); };
+    k.__mfgRawRenderToString = rts;
+    k.__mfgKatexWrapped = true;
+    return k;
+  };
+  let real = wrap(window.katex);
+  try {
+    Object.defineProperty(window, 'katex', {
+      configurable: true, enumerable: true,
+      get: function () { return real; },
+      set: function (v) { real = wrap(v); }
     });
-}"""
+  } catch (e) { /* a page that defined katex itself keeps it */ }
+})();
+""" % KATEX_PARSE_JS
 
 
 _K_CALL_RE = re.compile(
@@ -3092,6 +3152,17 @@ class _SiteEval:
                 if not all(isinstance(x, (int, float)) and not isinstance(x, bool) for x in xs):
                     raise _Unresolved("Math on a non-number")
                 out.append((_MATH_FNS[name](*xs), None))
+            return out
+        if name == "MaffsText.hasMaths" and len(n.arguments) == 1:
+            # The shared guard between MaffsText.html and a game's own KaTeX wrapper (schools/assets/mathtext.js:
+            # a string, and its DELIM finds a \( ... \) pair; _MATHTEXT_SEGMENT is the same pattern). Decided here,
+            # a string authored with \( \) is not counted as reaching the wrapper on the other branch (contract
+            # KATEX-ERRORS: sequence-solver's options, :369). A value only the page can compute stays undecided.
+            out = []
+            for v, p in self.ev(n.arguments[0], d, dpath):
+                if isinstance(v, _JS):
+                    raise _Unresolved("MaffsText.hasMaths of a page-computed value")
+                out.append((isinstance(v, str) and bool(_MATHTEXT_SEGMENT.search(v)), p))
             return out
         if c.type == "Identifier" and c.name in ("parseFloat", "Number", "parseInt") \
                 and len(n.arguments) >= 1:
