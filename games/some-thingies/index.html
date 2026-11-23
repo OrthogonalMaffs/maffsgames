@@ -1160,6 +1160,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var b = e.currentTarget, val = b.dataset.val, key = keyOf(Q);
     settle(val === key && countRight, val === key, b, key);
   }
+  // A verifier's choice of right-answer line (ST.ui.answer's second argument); null for every player: a random line.
+  var rightLine = null;
   function settle(right, pickedRight, btn, key) {
     hush();
     state = right ? 'done' : 'wrong';
@@ -1182,7 +1184,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var sayKey, sayText;
     // Stage 3: Sarge says his line on a right answer (it is the one line).
     if (right && Q.type === 'array') { sayKey = 'sarge'; sayText = L.sarge; }
-    else if (right) { var i = Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
+    else if (right) { var i = rightLine !== null ? rightLine : Math.floor(Math.random() * L.right.length); sayKey = 'right.' + i; sayText = L.right[i]; }
     else { sayKey = 'wrong.' + wrongKey(Q); sayText = L.wrong[wrongKey(Q)]; }
     setSay(sayText, sayKey);
     lastLine = sayText;
@@ -1370,14 +1372,15 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       step: function (v) { return (state === 'rows' || state === 'cols') && click($('opts1'), '[data-val="' + v + '"]'); },
       pick: function (v) { return state === 'ask' && click($('opts'), '[data-val="' + v + '"]'); },
       end: function () { var b = $('endBtn'); if (!b.hidden) b.click(); return !b.hidden; },
-      // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy.
-      answer: function (right) {
+      // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy. line
+      // (a verifier's, PRIMARY-FIT-SWEEP): the index in LINES.right of the line a right answer says, in place of a random one.
+      answer: function (right, line) {
         if (state === 'count') this.count(String(Q.groups));
         if (state === 'rows') this.step(String(Q.rows));
         if (state === 'cols') this.step(String(Q.cols));
         if (state !== 'ask') return;
         var key = keyOf(Q);
-        if (right) { this.pick(key); return; }
+        if (right) { rightLine = typeof line === 'number' && L.right[line] !== undefined ? line : null; this.pick(key); rightLine = null; return; }
         var bs = $('opts').querySelectorAll('.opt');
         for (var i = 0; i < bs.length; i++) if (bs[i].dataset.val !== key) { this.pick(bs[i].dataset.val); return; }
       },

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every stage played in both looks at 360x640 with every control above the fold, one board submission on stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every item of every stage above the fold at 360x640 in both looks, speaker showing: every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every stage played in both looks at 360x640, one board submission on stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/sums-in-disguise/ docs/handover/contracts/ docs/history/contracts/
 r"""Independent verification for Sums in Disguise (games/sums-in-disguise/), contract SUMS-IN-DISGUISE, 18 Nov 2026.
 SR-30: checked from its first PR.
@@ -60,19 +60,25 @@ numbers to check the page's numbers:
             by the button and by the outline: t + 1 sticks held, the tag 10t + 10 only now, rest cubes, no outline, the
             reveal line, no options until put-back; the working "p + bridge = 10(t + 1)" and "10(t + 1) + rest = n" (one
             line when rest = 0); the read-aloud "a and how many make 10?", "Fill the ten.", the working in words; the hand
-            on the tiles and on the fill button; the worst items (a = 1, b = 9) above the fold at 360 px with the speaker.
+            on the tiles and on the fill button; every Stage 5 item above the fold at 360 px with the speaker (Fit, below).
   Read aloud against a mocked speechSynthesis: no speaker without speechSynthesis, with no voice or with only a voice
             that is not local; a speaker once a local voice arrives (voiceschanged); only that voice passed to speak();
             nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
             item; never the greeting; cancel() on Next and on leaving the play screen; nothing in an mfg() payload or
-            storage; the speaker, Stage 5's tiles, options and Next above the fold at 360 x 640.
-  Play      every stage in each look at 360 x 640 (the kid look from #kids/Maple): 10 different items of the stage, the
-            unmask button, tiles, options and Next above the fold, no sideways scroll; one game_completed with the score,
+            storage. (The fold with the speaker showing is Fit's.)
+  Play      every stage in each look at 360 x 640 (the kid look from #kids/Maple): 10 different items of the stage, played
+            to the end (the fold is Fit's, every item, not these 10); one game_completed with the score,
             one board submission [slug, 'stage-N', score, 10]; Stage 3's "Done without peeking"; the end line; no mfg()
             payload, localStorage or sessionStorage value containing "kids", "Maple" or "#".
+  Fit       every item above the fold (PRIMARY-FIT-SWEEP, scripts/fit_common.py): all 226 in each look at 360 x 640
+            with a local voice, so the speaker shows, the real fonts and the settled layout: each previewed by itself and
+            walked step by step, every control measured at every step (take off, the tiles, fill the ten, put back, the
+            options, Stage 3's peek), then Next after every feedback variant: each LINES.right line (SID.ui.answer's line
+            argument), each decoy (SID.ui.pick), Stage 3 peeked and not, and the steps after a wrong tile; a 67 that shows
+            is left showing. No sideways scroll. Nothing sampled: the same items and variants every run.
 
 Work units: "bank" (no browser), "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640", "play kids 360x640",
-and "plant: <what>" (one per planted fault).
+"fit <look> stage-N" (one per look and stage) and "plant: <what>" (one per planted fault).
 
     python scripts/verify-sums-in-disguise.py              # every unit, then the self-test
     python scripts/verify-sums-in-disguise.py --selftest   # the planted faults only
@@ -91,6 +97,7 @@ ROOT = os.path.dirname(HERE)
 sys.path.insert(0, HERE)
 import bank_common as bc  # noqa: E402
 import plant_common as pc  # noqa: E402
+import fit_common as fc  # noqa: E402
 
 SLUG = 'sums-in-disguise'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
@@ -872,25 +879,79 @@ def check_greeting(pw, base, html, out):
             br.close()
 
 
-FIT_JS = r"""(sel) => {
-  const f = document.querySelector('.site-footer');
-  const fixed = f && getComputedStyle(f).position === 'fixed';
-  const fold = window.innerHeight - (fixed ? f.getBoundingClientRect().height : 0);
-  const els = [...document.querySelectorAll(sel)].filter(e => e.getBoundingClientRect().height > 0);
-  const bottom = els.length ? Math.max(...els.map(e => e.getBoundingClientRect().bottom + window.scrollY)) : null;
-  return { n: els.length, bottom: bottom, fold: fold, sw: document.documentElement.scrollWidth, vw: window.innerWidth };
-}"""
+# ---------------------------------------------------------------- every item above the fold (PRIMARY-FIT-SWEEP)
+# The sweep's stepper (scripts/fit_common.py sweep()): every item, previewed by itself, walked step by step with the real
+# buttons' handlers, every control measured at every step, then Next after every feedback variant: each LINES.right line
+# (SID.ui.answer's line argument), each decoy (SID.ui.pick), Stage 3 with and without the peek, and the steps after a
+# wrong tile. The speaker shows throughout (fit_common's local voice); a 67 pop that shows is left showing.
+SPEAK = '#speakBtn'
+NEXT = '#feedback .maffs-next, #nextBtn'
+FIT_STEPPER = r"""{
+  key(q) { return q.stage === 4 ? q.answer_sum[0] + '+' + q.answer_sum[1] : String(q.answer); },
+  decoys(q) { return q.stage === 4 ? q.decoys.map(d => d.sum[0] + '+' + d.sum[1]) : Object.values(q.decoys).map(String); },
+  variants(id) {
+    const q = SID.bank().find(x => x.id === id), lines = SID.lines()[SID.LOOK].right.length, vs = [];
+    const pre = q.stage === 3 ? ['', 'peek '] : [''];
+    for (const p of pre) {
+      if (q.stage === 4) vs.push(p + 'right');
+      else for (let i = 0; i < lines; i++) vs.push(p + 'right ' + i);
+      for (const d of this.decoys(q)) vs.push(p + 'wrong ' + d);
+    }
+    if (q.stage === 1 || q.stage === 2 || q.stage === 5) vs.push('wrong tile, then right 0');
+    return vs;
+  },
+  run(id, v, m) {
+    const ui = SID.ui, st = () => ui.state();
+    const speak = () => { if (document.getElementById('speakBtn').hidden) throw new Error('the speaker is hidden'); };
+    ui.preview(id);
+    const q = ui.question();
+    if (!q || q.id !== id) throw new Error('preview did not show ' + id);
+    speak();
+    if (st() === 'mask') {
+      m('%(s)s, #unmaskBtn, #blocks, #disguise, #tag', 'the blocks and take off');
+      ui.unmask();
+      if (st() !== 'little') throw new Error('take off left the state ' + st());
+      m('%(s)s, #tiles .tile, #blocks, #disguise, #tag, #tenFrame', 'the tiles');
+      const k = ui.littleKey();
+      ui.tile(v.startsWith('wrong tile') ? (k + 1) %% 11 : k);
+      if (st() === 'fill') { m('%(s)s, #fillBtn, #blocks, #tenFrame, #tag', 'fill the ten'); ui.fill(); }
+      if (st() !== 'putback') throw new Error('the tiles left the state ' + st());
+      m('%(s)s, #putBtn, #blocks', 'put it back');
+      ui.putBack();
+    }
+    if (st() !== 'big') throw new Error('no options: the state is ' + st());
+    m('%(s)s, #opts .opt, #peekBtn', 'the options');
+    if (v.startsWith('peek ')) { ui.peek(); m('%(s)s, #opts .opt', 'the options, peeking'); }
+    const w = v.replace(/^peek /, '').replace(/^wrong tile, then /, '');
+    if (w === 'right') ui.answer(true);
+    else if (w.startsWith('right ')) ui.answer(true, +w.slice(6));
+    else ui.pick(w.slice(6));
+    if (st() !== (w.startsWith('right') ? 'done' : 'wrong')) throw new Error('marking left the state ' + st());
+    if (w.startsWith('right ') && document.getElementById('say').dataset.say !== 'right.' + w.slice(6))
+      throw new Error('the right line is ' + document.getElementById('say').dataset.say + ', not right.' + w.slice(6));
+    m('%(s)s, %(n)s', 'Next');
+  }
+}""" % {'s': SPEAK, 'n': NEXT}
 
 
-def fit(page, sel, what, out):
-    page.evaluate('window.scrollTo(0, 0)')
-    f = page.evaluate(FIT_JS, sel)
-    if not f['n']:
-        out.append('%s: nothing on screen for %s' % (what, sel))
-    elif f['bottom'] > f['fold'] + 0.5:
-        out.append('%s: %s ends at %.0f px, below the fold at %.0f px' % (what, sel, f['bottom'], f['fold']))
-    if f['sw'] > f['vw']:
-        out.append('%s: the page scrolls sideways (%d > %d)' % (what, f['sw'], f['vw']))
+def check_fit(pw, base, html, look, st, out, info):
+    """Every stage-st item in one look at 360 x 640, the speaker showing: every control at every step and Next after every
+    feedback variant above the fold (fit_common.sweep)."""
+    frag = '#kids/Maple' if look == 'kids' else ''
+    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.SID && !!SID.ui', frag, PHONE)
+    try:
+        if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
+            out.append('fit %s stage %d: the page is not in the %s look' % (look, st, look))
+        ids = [q['id'] for q in page.evaluate('SID.bank()') if q['stage'] == st]
+        got = fc.sweep(page, ids, FIT_STEPPER, out, 'fit %s %dx%d' % (look, PHONE[0], PHONE[1]))
+        if got['items'] != COUNTS[st]:
+            out.append('fit %s stage %d: %d items measured, expected %d' % (look, st, got['items'], COUNTS[st]))
+        for k in ('items', 'variants', 'measures'):
+            info.setdefault('fit', {}).setdefault(k, 0)
+            info['fit'][k] += got[k]
+    finally:
+        out.extend('page error (fit %s stage %d): %s' % (look, st, e) for e in errs if 'production host' not in e)
+        br.close()
 
 
 def play(page, look, m, out):
@@ -909,8 +970,6 @@ def play(page, look, m, out):
             q = page.evaluate('SID.ui.question()')
             seen.append(q['id'])
             hand(page, look, len(seen), 'unmaskBtn', tag, out)
-            if k < 2:
-                fit(page, '#unmaskBtn, #blocks', '%s %s (the blocks and take off)' % (tag, q['id']), out)
             page.evaluate("document.getElementById('unmaskBtn').click()")
             page.wait_for_function("SID.ui.state() === 'little'", timeout=5000)
             continue
@@ -918,24 +977,18 @@ def play(page, look, m, out):
             q = page.evaluate('SID.ui.question()')
             if st == 5:
                 hand(page, look, len(seen), 'tiles', tag, out)
-            if k < 2:
-                fit(page, '#tiles .tile, #blocks, #disguise, #tag', '%s %s (the tiles)' % (tag, q['id']), out)
             key = page.evaluate('SID.ui.littleKey()')
             page.evaluate('(v) => SID.ui.tile(v)', key if k % 2 == 0 else (key + 1) % 11)
             continue
         if s == 'fill':
             q = page.evaluate('SID.ui.question()')
             hand(page, look, len(seen), 'fillBtn', tag, out)
-            if k < 2:
-                fit(page, '#fillBtn, #blocks, #tenFrame', '%s %s (fill the ten)' % (tag, q['id']), out)
             page.evaluate("document.getElementById('%s').click()" % ('fillBtn' if k % 2 == 0 else 'tenFrame'))
             page.wait_for_function("SID.ui.state() === 'putback'", timeout=5000)
             continue
         if s == 'putback':
             q = page.evaluate('SID.ui.question()')
             hand(page, look, len(seen), 'putBtn', tag, out)
-            if k < 2:
-                fit(page, '#putBtn, #blocks', '%s %s (put it back)' % (tag, q['id']), out)
             page.evaluate("document.getElementById('putBtn').click()")
             page.wait_for_function("SID.ui.state() === 'big'", timeout=5000)
             continue
@@ -949,15 +1002,11 @@ def play(page, look, m, out):
                 hand(page, look, len(seen), 'opts', tag, out)
             elif page.evaluate("!document.getElementById('hand').hidden"):
                 out.append('%s: the hand is still showing after the disguise came off' % tag)
-            if k < 2:
-                fit(page, '#opts .opt', '%s %s (the options)' % (tag, q['id']), out)
             ok = k % 3 != 1
             peeked = st == 3 and k % 4 == 0
             if peeked:
                 page.evaluate('SID.ui.peek()')
             page.evaluate('(r) => SID.ui.answer(r)', ok)
-            if k < 2:
-                fit(page, '#feedback .maffs-next, #nextBtn', '%s %s (Next)' % (tag, q['id']), out)
             right += 1 if ok else 0
             unpeeked += 1 if ok and not peeked else 0
             k += 1
@@ -1067,21 +1116,7 @@ def check_speech(pw, base, html, out, info):
                 continue
             if spoken():
                 out.append('read aloud (%s): spoke %r before any tap' % (look, spoken()[0]['text']))
-            # It fits at 360 px with the speaker showing: Stage 5's worst items (a = 1, the tallest outline column of empty
-            # slots; b = 9, the most cubes beside it), the outline, the cubes, the tiles and the tag, then its options and Next.
-            q5s = [x for x in bank if x['stage'] == 5]
-            for q5 in [min(q5s, key=lambda x: x['little'][0]), max(q5s, key=lambda x: x['little'][1])]:
-                page.evaluate('(id) => { SID.ui.preview(id); SID.ui.unmask(); }', q5['id'])
-                fit(page, '#speakBtn, #tiles .tile, #tenFrame, #blocks, #tag', 'read aloud (%s) %s (the speaker, outline, cubes, tiles and tag)' % (look, q5['id']), out)
-            page.evaluate('(v) => SID.ui.tile(v)', 10 - q5['little'][0])
-            fit(page, '#speakBtn, #blocks, #fillBtn', 'read aloud (%s) %s (the speaker and fill the ten)' % (look, q5['id']), out)
-            page.evaluate('SID.ui.fill()')
-            fit(page, '#speakBtn, #blocks, #putBtn', 'read aloud (%s) %s (the speaker and put-back)' % (look, q5['id']), out)
-            page.evaluate('SID.ui.putBack()')
-            fit(page, '#speakBtn, #opts .opt', 'read aloud (%s) %s (the speaker and options)' % (look, q5['id']), out)
-            page.evaluate('SID.ui.answer(false)')
-            fit(page, '#feedback .maffs-next', 'read aloud (%s) %s (Next)' % (look, q5['id']), out)
-            page.evaluate('SID.ui.next()')
+            # Above the fold with the speaker showing: every item, every step, in check_fit() (fit_common's sweep).
             page.evaluate("() => { window.__spoken = []; }")
             tap = lambda: page.evaluate("document.getElementById('speakBtn').click()")
             for st in (1, 2, 3, 4, 5):
@@ -1180,6 +1215,13 @@ def check(html, out, units, shard=None):
                             check_speech(pw, base, html, out, info)
                         except Exception as e:  # noqa: BLE001
                             out.append('read aloud threw: %s' % str(e).splitlines()[0][:220])
+                        continue
+                    if uid.startswith('fit '):
+                        _, look, m = uid.split(' ')
+                        try:
+                            check_fit(pw, base, html, look, int(m[-1]), out, info)
+                        except Exception as e:  # noqa: BLE001
+                            out.append('%s threw: %s' % (uid, str(e).splitlines()[0][:220]))
                         continue
                     if uid == 'greeting':
                         try:
@@ -1335,6 +1377,15 @@ PLANTS = [
      edit("        return rest ? [r1, hlTens(nx, typ).concat([[' + ' + rest, false]",
           "        return rest ? [r1, hlTens(nx, typ).concat([[' + ' + (rest + 1), false]"),
      'marking grown', r's5_\d+: the working is'),
+    # PRIMARY-FIT-SWEEP: the fold, on one item and one feedback variant only (a sample would miss it most runs).
+    ('Next below the fold after one decoy of one item (s5_005, 617)',
+     edit("    if (right) {\n      MaffsLock.fresh(fb);",
+          "    if (Q.id === 's5_005' && val === '617') fb.insertAdjacentHTML('afterbegin', '<div style=\"height:160px\"></div>');\n    if (right) {\n      MaffsLock.fresh(fb);"),
+     'fit kids stage-5', r'^fit kids 360x640 s5_005 \[wrong 617\] \(Next\): .* below the fold'),
+    ('Next below the fold after one right-answer line only (right.3, s1_001)',
+     edit("    if (right) {\n      MaffsLock.fresh(fb);",
+          "    if (Q.id === 's1_001' && sayKey === 'right.3') fb.insertAdjacentHTML('afterbegin', '<div style=\"height:160px\"></div>');\n    if (right) {\n      MaffsLock.fresh(fb);"),
+     'fit grown stage-1', r'^fit grown 360x640 s1_001 \[right 3\] \(Next\): .* below the fold'),
 ]
 
 
@@ -1367,6 +1418,7 @@ def main():
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
     units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE]
+    units += ['fit %s %s' % (look, m) for look in ('grown', 'kids') for m in MODES]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -1386,6 +1438,9 @@ def main():
         print('%s: %d fragments read for the look and the greeting' % (SLUG, info['greeting']))
     if 'speech' in info:
         print('%s: read aloud against a mocked speechSynthesis: hidden without a local voice, local voices only, nothing before a tap, words from the item, cancel on Next and on leaving, nothing sent or stored' % SLUG)
+    if 'fit' in info:
+        print('%s: every item above the fold at %dx%d, speaker showing: %d item views, %d feedback variants, %d controls measured (the looks and stages in this shard)'
+              % (SLUG, PHONE[0], PHONE[1], info['fit']['items'], info['fit']['variants'], info['fit']['measures']))
     if 'played' in info:
         print('%s: %d runs played at %dx%d (every stage, the looks in this shard)' % (SLUG, info['played'], PHONE[0], PHONE[1]))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)

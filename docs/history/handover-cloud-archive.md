@@ -4,6 +4,37 @@ History only, never loaded by default (contract CTX, 8 Oct 2026). `docs/handover
 and the last three entries; older entries move here, newest first, unchanged.
 
 
+## Moved 2026-11-23 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
+## 2026-11-22 (cloud): DECIMAL-DETECTIVE-FIT (`docs/history/contracts/2026-11-22-decimal-detective-fit.md`)
+
+Claude Code (cloud), branch `claude/trusting-dijkstra-s3mpss` from main 7660e2f. Tier Medium. First commit: #880's close-out (entry below), this contract saved, decimal-detective claimed.
+
+- **Baseline (local, measure-phone-fit without its sandbox-only footer pre-check):** exactly the state file: normal 320 last option 657/528; Aa 320 start 676, 375 635/627; Aa sideways 448-456px at all three phones (`.header-right`, which did not wrap). All-items sweep: Line-Up Next 821 at 320 normal, 980 at 320 Aa; laptop Aa Line-Up Next 754 (fold 680).
+- **Layout (page CSS only):** phones (480px and down): one header row in play (title and divider hidden; it wraps rather than overflows in Aa), tighter screen, prompt, zone, card, feedback and Check spacing; once Next Case shows, Line-Up's prompt card (its title, which the header pill repeats, and its instruction) and arrow hide. Every width: a marked card's and the feedback's ✓/✗ sits as a badge on the corner (inline, it widened each card after Check, so the row re-wrapped, and the feedback's took its own line). The results title 24px on phones ("Investigation" in Aa at 28px was 307px in a 280px box: the results screen and reveal scrolled sideways). No collapse needed: the right order is shown in full. Digits unchanged in size (cards 1rem as before at 480px).
+- **Verifier:** fit units `fit normal`, `fit aa` (five sizes each, 122 screens a size). Sideways is judged against the device size: on the mobile profile Chromium widens innerWidth to the content (448 on a 320 phone), so scrollWidth against innerWidth never fails; the old-header plant was missed until this was fixed. Plants `aa-header` and `lineup-spacing` (normal 320x568 Line-Up 3, Next 537/528) caught, each stopping at its first finding.
+- **Measured (verifier fit units, every item, page coordinates):** controls end by 361 (normal 320), 420 (Aa phones), 515 (Aa laptop); Next by 364 normal phones, 469 Aa 320 (fold 528), 459 Aa 375, 599 normal laptop, 655 Aa laptop (fold 680). measure-phone-fit `--only decimal-detective` PASS in normal, Aa and laptop with the game off every list.
+- **Seen, not changed:** a wrong Line-Up with an equal pair reads "... 0.770 0.77 and 0.770 are equal" (no full stop between the order and the note: the display's content is DO NOT TOUCH); the global ✗ replaces Place It's marker dot after a wrong answer; site-nav's logo overlaps "Back to Games" at 1280 in Aa (shared).
+- **MERGED 22 Nov as 29c1749 (#882)**, route merge-pr.py --watch. Main on 29c1749: check-site 45054990712, phone-fit-full 45054990723, pages 45054990303, all success. The PR's own phone-fit run 45053722874 measured decimal-detective only (normal, Aa, laptop, 1m39s): #878's first live proof, done. Still owed: #875's docs-only and /class/ PRs. Contract moved, game unclaimed. Closed out by GIVEN-THAT-SET-LABELS.
+
+## 2026-11-22 (cloud): AA-USAGE (`docs/history/contracts/2026-11-22-aa-usage.md`)
+
+Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` restarted from main ec7ea02. Tier Shared. First commit: #878's close-out (entry below), this contract saved.
+
+- Done on the branch: aaState() in mfg (AA_CLASSES, AA_TOGGLE `#a11yToggle, #aaBtn, .a11y-toggle`); check-aa-flag.py (pass, 3 plants caught); the mirror's `aa` column (test-apps-script-report.py updated); privacy; /updates/.
+- Contract corrected: 4 of its 5 "no toggle" games have one (#aaBtn, #a11yBtn); complex-converter alone has none. Seen: spot-the-error and word-problem-decoder show two Aa buttons. Privacy date set to 22 Nov: change it if the merge is later.
+- **MERGED 22 Nov as 928c47a (#880)**, route merge-pr.py --watch. Main on 928c47a: check-site 45048513153, phone-fit-full 45048513077, pages 45048512617, all success. Jon redeployed the Apps Script 22 Nov 17:42 (2026-11-22-a, URL unchanged, column U = aa confirmed). Contract moved. Closed out by DECIMAL-DETECTIVE-FIT.
+
+## 2026-11-22 (cloud): PHONE-FIT-STATE-SELECTIVE (`docs/history/contracts/2026-11-22-phone-fit-state-selective.md`)
+
+Claude Code (cloud), branch `claude/dazzling-keller-lyb5b6` from main f343ac7. Tier Shared: stops at Gate green for Project Claude's review and Jon's "merge". First commit: #877's close-out (entry below), given-that unclaimed (`scripts/answer-lock-state.json` back to `[]`), its contract moved, this contract saved. #875's owed live proof stays owed: a docs-only PR and a /class/ PR (#877 was neither).
+
+- **Done on the branch:** ci-deps.py `state_games(base, head)` (the slugs whose entries differ in known-failures, sideways or unmeasurable, any mode; None for anything else); `is_shared(path, state)` and `measured_pages(paths, state=)` decide the state file through it; `state_report()` logs it; the workflow's "changed" step passes the file at BEFORE and HEAD (`git show`). Selftest PASS, 34 new checks; mutation (off-roster rule dropped) caught.
+- **Simulation (the step's Python from the yml, on c6d51b4):** BEFORE c6d51b4^ (#877's own diff): given-that only, not shared; main's old code on the same diff: shared, every game. The contract's range 2107eef..c6d51b4 adds three bot commits (ci-timings, ci-pack, answer-counts: shared on their own), so it is shared there; the state file alone still gives given-that.
+- **Decided for you:** `scroll-exempt` is a fourth key, per-slug but every mode, with its own note: any change to it is shared (the conservative reading of "anything else"). A state-file slug off the phone-fit roster makes the change shared and is named in the log (`--only` cannot measure it; the full run reports it stale). No current slug is off the roster (114 games). A missing side (file added or deleted) is shared.
+- Next: PR, Gate green (its own phone-fit run is a full measure: Gate files), then wait for Project Claude's review and Jon's "merge".
+- **MERGED 22 Nov as d8af6c8 (#878)**, route merge-pr.py --watch (after main's #879 was merged in; Gate re-run green on 61e8d5c). Main on d8af6c8: check-site 45036401634 success, phone-fit-full 45036401639 success (every game: the workflow changed), pages 45036400816 success. Contract moved. Still owed: a PR taking a game off the state file measures that game only; #875's docs-only and /class/ PRs. Closed out by AA-USAGE.
+
 ## Moved 2026-11-22 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
 ## 2026-11-22 (cloud): GIVEN-THAT-FIT-WHY (`docs/history/contracts/2026-11-22-given-that-fit-why.md`)
