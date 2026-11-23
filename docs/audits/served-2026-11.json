@@ -1,0 +1,47 @@
+{
+ "selftests": [
+  {
+   "test": "c",
+   "slug": "formula-unlocked",
+   "commit": "28be68a",
+   "level": "alevel",
+   "want": "distinct 40 or more, no in-session repeat",
+   "passed": true,
+   "verdict": "40+",
+   "distinct": 52,
+   "distinct_options_only": 52,
+   "sessions": 24,
+   "saturated": true,
+   "in_session_repeats": 0,
+   "started_as": [
+    "alevel"
+   ],
+   "questions_per_session": [
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20,
+    20
+   ]
+  }
+ ]
+}
