@@ -16,6 +16,17 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
+
+Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The contract is at `docs/handover/contracts/2026-11-23-half-the-size.md` (verbatim). The first commit closed out FORMULA-UNLOCKED-BANK.
+
+- **Banks:** APPENDIX A, verbatim: 54 items in five tiers. GCSE serves 46, A-Level and Level 4 serve 54.
+- **KaTeX:** steps and notes go through MaffsText, and fraction options show as \dfrac. The start screen renders once KaTeX has loaded, and startGame waits for it.
+- **Calculator:** required, docked to the question card.
+- **Name:** changed everywhere step 5 lists except `<title>`/og:title, which stay as before by Jon's ruling, because check-meta ties them to data/games.json, which this contract cannot touch.
+- **Verifier:** APPENDIX B and T5, plus a KaTeX check on all 54 items. PASS, with all 7 plants caught.
+- **Next:** merge on a green Gate with merge-pr.py.
+
 ## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)
 
 Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/history/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.

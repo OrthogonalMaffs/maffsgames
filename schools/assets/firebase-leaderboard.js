@@ -84,7 +84,7 @@
     'circle-theorem-spotter':'Circle Theorem Spotter','probability-paradox':'Probability Paradox',
     'angle-ace':'Angle Ace','coordinate-geometry-dash':'Coordinate Geometry Dash',
     'graph-transformer':'Graph Transformer','formula-unlocked':'Formula Unlocked',
-    'bearing-blitz':'Bearing Blitz','scale-factor-scaling':'Scale Factor Scaling',
+    'bearing-blitz':'Bearing Blitz','scale-factor-scaling':'But It\'s Only Half the Size!',
     'unit-converter':'Unit Converter','formula-forge':'Formula Forge',
     'correlation-or-coincidence':'Correlation or Coincidence','chart-interrogator':'Chart Interrogator',
     'component-crusher':'Component Crusher','expectation-station':'Expectation Station',

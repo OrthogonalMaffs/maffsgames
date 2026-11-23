@@ -902,7 +902,7 @@ in three sub-classes:
 | Sub-class | Games | Shape |
 | --- | --- | --- |
 | A — loads KaTeX, never calls it | `unit-converter`, `coordinate-geometry-dash`, `normal-navigator`, `probability-paradox` | CDN tags present, zero `katex.render` calls; `coordinate-geometry-dash` even styles `.katex` selectors that can never match |
-| B — no KaTeX at all | `suvat` ✅fixed, `scale-factor-scaling`, `estimation-golf`*, `estimation-engine`*, `52dle`, `prime-or-composite`, `fraction-equivalence`, `trig-worms`, `trig-wars` | notation authored as Unicode throughout |
+| B — no KaTeX at all | `suvat` ✅fixed, `scale-factor-scaling` ✅fixed, `estimation-golf`*, `estimation-engine`*, `52dle`, `prime-or-composite`, `fraction-equivalence`, `trig-worms`, `trig-wars` | notation authored as Unicode throughout |
 | C — KaTeX for options, raw for explanations | `differentiation-duel`, `integration-duel`, `index-laws`, `proof-builder` | options are correct LaTeX; the `exp`/working string is assigned via `.textContent`, so it can never render |
 
 \* pending the 7.1.1 re-check above.
