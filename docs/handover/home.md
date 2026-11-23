@@ -16,16 +16,34 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
+
+Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The contract is at `docs/handover/contracts/2026-11-23-half-the-size.md` (verbatim). The first commit closed out FORMULA-UNLOCKED-BANK.
+
+- **Banks:** APPENDIX A, verbatim: 54 items in five tiers. GCSE serves 46, A-Level and Level 4 serve 54.
+- **KaTeX:** steps and notes go through MaffsText, and fraction options show as \dfrac. The start screen renders once KaTeX has loaded, and startGame waits for it.
+- **Calculator:** required, docked to the question card.
+- **Name:** changed everywhere step 5 lists except `<title>`/og:title, which stay as before by Jon's ruling, because check-meta ties them to data/games.json, which this contract cannot touch.
+- **Verifier:** APPENDIX B and T5, plus a KaTeX check on all 54 items. PASS, with all 7 plants caught.
+- **First fix:**
+  - scroll.js loads with keypad.js;
+  - the KaTeX wait's setTimeout carries a `// lock-ok:` reason;
+  - verify-formula-unlocked.py, which grew in #893 and was over the per-line budget at 213s, is split into 3 ci-shards parts (base run plus 9 plants), as Project Claude authorised.
+- **Next:** merge on a green Gate with merge-pr.py.
+
 ## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)
 
-Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/handover/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.
+Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/history/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.
 
 - **Banks:** the 57 appendix questions, verbatim. Q_GCSE is now 40, Q_ALEVEL 26 and Q_LEVEL4 40, with the contract's stage counts.
 - **A-Level draw:** now 6+7+7 from the stage lists, which hold each question once.
 - **verify-formula-unlocked.py:** BANKS, GREEK and the \ln\left( fix. A new session check runs startGame() 1000 times at each level: no repeats, and no session shorter than its draw. It passes at all three levels: 106 questions, and all 9 self-test plants caught, including the old A-Level line.
 - **Decided for Jon:** Level 4's session minimum is 18, not 20, because its draw (unchanged by contract) takes 4+5+5+4. Also, the session check runs only for its own plant during the self-test.
 - **First fix:** the Gate's 6 P's bank line failed, because change-subject.json is generated from this game. I regenerated it (schools/assets/six-ps/, allowed by Jon on 23 Nov). The time budget was not the failure.
-- **Next:** merge on a green Gate with merge-pr.py.
+- **Merged** on 23 Nov as 28be68a (#893) via merge-pr.py, which ended "main 28be68a run 45236117062: GREEN".
+- **PR head 6d1fc0eb:** check-site 45233939506 and phone-fit-full 45233939165, both success.
+- **Main on the merge commit:** check-site 45236117062, phone-fit-full 45236117010 and pages 45236116620, all success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-formula-unlocked-bank.md`, closed out by HALF-THE-SIZE's first commit.
 
 ## 2026-11-23 (home): WWIUT-RESTORE-7 ("When will I use this?" gets back the 7 jobs #888 left out, and a Probability page: 47 jobs in 17 topics)
 

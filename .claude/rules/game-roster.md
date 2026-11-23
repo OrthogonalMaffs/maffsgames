@@ -74,7 +74,7 @@ session, generated"; a game with a fixed bank gives its bank size. A count that 
 | 50 | Graph Transformer | `graph-transformer` | GCSE, A-Level | Algebra, Geometry | Apply translations, reflections, stretches to match target curve Look signed off by Jon, pre-2 Nov, grandfathered. | untagged |
 | 51 | Formula Unlocked | `formula-unlocked` | GCSE, A-Level, L4 | Algebra | Make the subject — four stages with hint system Look signed off by Jon, pre-2 Nov, grandfathered. | scientific |
 | 52 | Bearing Blitz | `bearing-blitz` | GCSE | Geometry | Submarine game — set bearing by eye, fire at targets Look signed off by Jon, pre-2 Nov, grandfathered. | untagged |
-| 53 | Scale Factor Scaling | `scale-factor-scaling` | GCSE, A-Level, L4 | Geometry, Number | Length/area/volume scaling: k, k squared, k cubed Look signed off by Jon, pre-2 Nov, grandfathered. | untagged |
+| 53 | But It's Only Half the Size! | `scale-factor-scaling` | GCSE, A-Level, L4 | Geometry, Number | Length/area/volume scaling: k, k squared, k cubed Look signed off by Jon, pre-2 Nov, grandfathered. | required |
 | 54 | Unit Converter | `unit-converter` | GCSE, A-Level, L4 | Number | Length, area, volume unit conversions Look signed off by Jon, pre-2 Nov, grandfathered. | required |
 | 55 | Formula Forge | `formula-forge` | GCSE, A-Level, L4 | Algebra | Rearrange formulae — four progressive stages Look signed off by Jon, pre-2 Nov, grandfathered. | scientific |
 | 56 | Correlation or Coincidence | `correlation-or-coincidence` | GCSE, A-Level, Core | Statistics | Correlation and causation: one causes the other, something else causes both, or coincidence (42 items, rebuilt 4 Oct 2026) Look signed off by Jon, pre-2 Nov, grandfathered. | not allowed |
