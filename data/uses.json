@@ -8,8 +8,12 @@
   "routes: the 15 Skills England routes, slug, exact name and colour (white text on it at 4.5:1 or better; one per route, distinct,",
   "  never the portal's teal: WWIUT-STAND-OUT). A route page is written only for a route with a scenario.",
   "scenarios: id, topic, route (a route slug, or null), job, tier (\"F\" Foundation GCSE, \"H\" Higher GCSE or \"L4\" Level 4:",
-  "  a Higher or Level 4 card shows a small tag; WWIUT-BATCH-1-2), headline (the key sum shown on its card, recomputed by",
-  "  check-uses.py like a step), text, steps, sources [{title, url, type}], exampleFigures.",
+  "  a Higher or Level 4 card shows a small tag; WWIUT-BATCH-1-2), headline (the key sum, shown after the steps on the job's",
+  "  own section as \"The answer:\", recomputed by check-uses.py like a step), formula, formulaNote, question, inside,",
+  "  text, steps, sources [{title, url, type}], exampleFigures.",
+  "  formula (WWIUT-CARD-FORMAT): the school-shaped equation the job uses, in LaTeX, or null; set large, first, on its hub",
+  "  card and its job section. formulaNote (optional): a short line naming its letters, small under it. question: the job's",
+  "  question, ending \"?\", shown on the card in place of the worked sum. inside: the topic tag the card shows as \"Inside: ...\".",
   "  The scenarios' text and steps are the approved wording (10 Nov 2026), verbatim: never reword them to fit the format.",
   "  A step is a string, or {\"text\": ..., \"noCheck\": \"<one-line reason>\"} when check-uses.py cannot read one of its \"=\" signs.",
   "  exampleFigures is true exactly when the wording marks a figure \"(example figure)\" or \"(example figures)\".",
@@ -154,6 +158,9 @@
    "job": "Bricklayer",
    "tier": "F",
    "headline": "0.3 ÷ 6 = 0.05 m³ per part",
+   "formula": "1 : 2 : 3",
+   "question": "How much cement goes in 0.3 m³ of concrete?",
+   "inside": "Ratio",
    "text": "Concrete for a shed base is often mixed 1 : 2 : 3: 1 part cement, 2 parts sand, 3 parts gravel, in buckets of the same size. You need 0.3 m³ of dry mix.",
    "steps": [
     "Total parts: 1 + 2 + 3 = 6.",
@@ -172,6 +179,9 @@
    "job": "Hairdresser",
    "tier": "F",
    "headline": "40 × 2 = 80 g of developer",
+   "formula": "1 : 2",
+   "question": "How much developer for 40 g of colour?",
+   "inside": "Ratio",
    "text": "Colour is mixed with developer in the ratio the maker gives. Wella's Koleston Perfect is mixed 1 : 1, but its Special Blonde shades are mixed 1 : 2. You use 40 g of a Special Blonde shade.",
    "steps": [
     {"text": "Colour : developer = 1 : 2.", "noCheck": "A ratio, not a sum: there is nothing on the left to recompute."},
@@ -189,6 +199,9 @@
    "job": "Hospital nurse",
    "tier": "F",
    "headline": "125 ÷ 250 × 5 = 2.5 ml",
+   "formula": "\\text{dose} = \\dfrac{\\text{want}}{\\text{have}} \\times \\text{volume}",
+   "question": "How many ml is a 125 mg dose?",
+   "inside": "Proportion",
    "text": "Liquid medicine comes at a strength, such as 250 mg in 5 ml. Nurses use: volume = what you want ÷ what you have × what it is in. The prescription is 125 mg. The bottle says 250 mg in 5 ml.",
    "steps": [
     "125 ÷ 250 = 0.5.",
@@ -206,6 +219,9 @@
    "job": "Plumber",
    "tier": "F",
    "headline": "£350 × 1.2 = £420",
+   "formula": "\\text{total} = \\text{price} \\times 1.2",
+   "question": "What goes on the bill once VAT is added?",
+   "inside": "Percentage multipliers",
    "text": "A VAT-registered plumber adds 20% VAT to the bill. To add 20%, multiply by 1.2. The job costs £350 before VAT.",
    "steps": [
     "£350 × 1.2 = £420.",
@@ -223,6 +239,9 @@
    "job": "Electrician",
    "tier": "F",
    "headline": "5.4 ÷ 230 × 100 = 2.3%",
+   "formula": "\\dfrac{\\text{drop}}{230} \\times 100",
+   "question": "Will this lighting circuit pass inspection?",
+   "inside": "Percentages",
    "text": "Voltage drops along a long cable. The wiring rules (BS 7671) allow at most 3% on a lighting circuit and 5% on others. The UK supply is 230 V.",
    "steps": [
     {"text": "Most allowed on lighting: 3% of 230 = 0.03 × 230 = 6.9 V.", "noCheck": "\"3% of 230\" uses \"of\", which the check does not read; 0.03 × 230 = 6.9 is still recomputed."},
@@ -242,6 +261,9 @@
    "job": "Baker",
    "tier": "F",
    "headline": "0.7 × 500 = 350 g of water",
+   "formula": "\\text{water} = 70\\% \\times \\text{flour}",
+   "question": "How much water for 500 g of flour?",
+   "inside": "Percentages",
    "text": "Bakers write recipes in \"baker's percentages\": the flour is always 100%, and everything else is a percentage of the flour's weight. A dough is 70% water and 2% salt. You use 500 g of flour.",
    "steps": [
     {"text": "Water: 70% of 500 = 0.7 × 500 = 350 g.", "noCheck": "\"70% of 500\" uses \"of\", which the check does not read; 0.7 × 500 = 350 is still recomputed."},
@@ -259,6 +281,9 @@
    "job": "Jeweller",
    "tier": "F",
    "headline": "4 × 0.375 = 1.5 g of gold",
+   "formula": "\\dfrac{9}{24} = 0.375",
+   "question": "How much real gold is in a 9 carat ring?",
+   "inside": "Fractions to decimals",
    "text": "Gold is measured in carats out of 24. 9 carat gold is 9 parts gold in 24. The UK hallmark writes it as 375: 375 parts gold in every 1000.",
    "steps": [
     "9 ÷ 24 = 0.375, which is 37.5%.",
@@ -276,6 +301,10 @@
    "job": "Painter and decorator",
    "tier": "F",
    "headline": "64 ÷ 16 = 4 litres",
+   "formula": "A = P \\times h",
+   "formulaNote": "P is the perimeter, h the height",
+   "question": "How many litres to paint this room?",
+   "inside": "Area and perimeter",
    "text": "A room is 4 m by 3.5 m, with walls 2.5 m high. There is a 2 m² door and a 3.5 m² window. Two coats; the tin says 1 litre covers 16 m² (example figure).",
    "steps": [
     "Perimeter: 4 + 3.5 + 4 + 3.5 = 15 m.",
@@ -295,6 +324,9 @@
    "job": "Groundsperson (sports turf)",
    "tier": "F",
    "headline": "2 × (100 + 64) = 328 m of line",
+   "formula": "P = 2(l + w)",
+   "question": "How much white line does a full-size pitch need?",
+   "inside": "Perimeter",
    "text": "Groundspeople mark out pitches. The FA's recommended adult pitch is 100 m long and 64 m wide.",
    "steps": [
     "Lines round the edge (perimeter): 2 × (100 + 64) = 328 m of white line.",
@@ -313,6 +345,9 @@
    "job": "Farmer",
    "tier": "F",
    "headline": "3 × 150 = 450 kg",
+   "formula": "A = l \\times w",
+   "question": "How much fertiliser does this field need?",
+   "inside": "Area and units",
    "text": "Fertiliser is spread at a rate in kg per hectare. 1 hectare = 10 000 m². A field is 250 m by 120 m; the plan is 150 kg per hectare (example figure).",
    "steps": [
     {"text": "Area: 250 × 120 = 30 000 m² = 3 ha.", "noCheck": "30 000 m² = 3 ha is a change of unit (1 hectare = 10 000 m²), not a sum; 250 × 120 = 30 000 is still recomputed."},
@@ -330,6 +365,9 @@
    "job": "Practice nurse",
    "tier": "F",
    "headline": "816 ÷ 6 = 136",
+   "formula": "\\bar{x} = \\dfrac{\\sum x}{n}",
+   "question": "Why isn't one blood pressure reading enough?",
+   "inside": "Averages",
    "text": "One blood pressure reading can mislead, so NICE says to take readings at home, twice a day for 4 to 7 days, ignore the first day, and use the mean of the rest. After day 1, the top (systolic) numbers are 138, 134, 136, 140, 132, 136 (example figures).",
    "steps": [
     "Add them: 816.",
@@ -348,6 +386,9 @@
    "job": "Health visitor",
    "tier": "F",
    "headline": "100 − 91 = 9 in 100 weigh more",
+   "formula": null,
+   "question": "What does \"the 91st centile\" mean for this baby?",
+   "inside": "Percentages",
    "text": "Babies' weights are plotted on growth charts with centile lines. A centile shows how many healthy children are expected to be below that line. A baby is on the 91st centile.",
    "steps": [
     "91 out of 100 healthy babies the same age are expected to weigh less.",
@@ -365,6 +406,9 @@
    "job": "Ecologist",
    "tier": "F",
    "headline": "4 × 1500 = 6000 orchids",
+   "formula": "N = \\bar{x} \\times \\text{area}",
+   "question": "How many orchids are in this meadow, without counting them?",
+   "inside": "Mean, scaling up",
    "text": "You can't count every wild orchid in a meadow, so ecologists count them in a few 1 m² squares (quadrats) placed at random, and scale up. Ten quadrats count 3, 5, 2, 4, 6, 3, 4, 5, 2, 6 (example figures). The meadow is 1500 m².",
    "steps": [
     "Total: 40. Mean: 40 ÷ 10 = 4 orchids per m².",
@@ -383,6 +427,9 @@
    "job": "Meteorologist",
    "tier": "F",
    "headline": "9.1 − 8.3 = 0.8 °C warmer",
+   "formula": "\\bar{x} = \\dfrac{\\sum x}{n}",
+   "question": "How much warmer is a \"normal\" UK year now?",
+   "inside": "Averages",
    "text": "\"Warmer than average\" means compared with a 30-year average. The Met Office now uses 1991–2020.",
    "steps": [
     "UK mean temperature, 1961–1990: 8.3 °C. 1991–2020: 9.1 °C.",
@@ -402,6 +449,9 @@
    "job": "Performance sports scientist",
    "tier": "F",
    "headline": "(42 − 40) ÷ 40 × 100 = 5% better",
+   "formula": "\\dfrac{\\text{new} - \\text{old}}{\\text{old}} \\times 100",
+   "question": "Has six weeks' training actually worked?",
+   "inside": "Percentage change",
    "text": "Sports scientists analyse training data to see if an athlete is improving. One jump can be a fluke, so they use the mean of several. Five jumps before training: 38, 41, 39, 42, 40 cm (example figures). After six weeks the mean is 42 cm.",
    "steps": [
     "Total: 38 + 41 + 39 + 42 + 40 = 200. Mean: 200 ÷ 5 = 40 cm.",
@@ -419,6 +469,9 @@
    "job": "Payroll administrator",
    "tier": "F",
    "headline": "0.2 × 1452.50 = £290.50 tax",
+   "formula": "\\text{tax} = 0.2(\\text{pay} - \\text{allowance})",
+   "question": "How much tax comes off a £2,500 month?",
+   "inside": "Percentages, brackets",
    "text": "Payroll works out the tax taken from each month's pay. In 2026 to 2027 the first £12,570 a year is tax-free and the next band is taxed at 20%. Someone earns £2,500 this month (example figure). National Insurance is worked out separately.",
    "steps": [
     "Tax-free each month: 12570 ÷ 12 = £1,047.50.",
@@ -437,6 +490,10 @@
    "job": "Bookkeeper",
    "tier": "F",
    "headline": "9000 − 3000 = £6,000 to HMRC",
+   "formula": "\\text{VAT due} = 0.2S - 0.2P",
+   "formulaNote": "S is sales, P is purchases, before VAT",
+   "question": "How much does this business owe HMRC?",
+   "inside": "Percentages",
    "text": "Every three months a business tells HMRC the VAT it charged customers and the VAT it paid suppliers, and pays the difference. Sales of £45,000 and purchases of £15,000 this quarter, before VAT, all at 20% (example figures).",
    "steps": [
     "VAT charged: 0.2 × 45000 = £9,000.",
@@ -455,6 +512,10 @@
    "job": "Self-employed plasterer",
    "tier": "F",
    "headline": "0.2 × 19430 = £3,886 to set aside",
+   "formula": "0.2(P - 12\\,570)",
+   "formulaNote": "P is the year's profit",
+   "question": "How much should you put aside for tax?",
+   "inside": "Percentages, brackets",
    "text": "No boss takes tax off for you, so you set money aside yourself. Same 2026 to 2027 rules: £12,570 tax-free, then 20%. This year's profit is £32,000 (example figure). National Insurance comes on top.",
    "steps": [
     "Taxed: 32000 − 12570 = £19,430.",
@@ -472,6 +533,10 @@
    "job": "Office administrator",
    "tier": "F",
    "headline": "140 × 0.55 = £77",
+   "formula": "\\text{pay} = 0.55m",
+   "formulaNote": "m is the business miles",
+   "question": "What do we pay back for 140 miles?",
+   "inside": "Substitution",
    "text": "Staff who use their own car for work are paid mileage. For 2026 to 2027 the approved rate is 55p a mile for the first 10,000 miles (it was 45p). A member of staff drove 140 business miles this month (example figure).",
    "steps": [
     "Mileage: 140 × 0.55 = £77."
@@ -488,6 +553,9 @@
    "job": "CNC machinist",
    "tier": "F",
    "headline": "25.00 + 0.05 = 25.05 mm, the most it can be",
+   "formula": "25.00 \\pm 0.05",
+   "question": "Does a 25.07 mm shaft pass?",
+   "inside": "Decimals, bounds",
    "text": "Drawings give a size and a tolerance: how far off it may be and still pass. A shaft must be 25.00 mm ± 0.05 mm. You measure 25.07 mm.",
    "steps": [
     "Smallest allowed: 25.00 − 0.05 = 24.95 mm.",
@@ -507,6 +575,9 @@
    "job": "Maintenance electrician",
    "tier": "F",
    "headline": "2000 ÷ 230 = 8.7 A",
+   "formula": "I = \\dfrac{P}{V}",
+   "question": "3 A or 13 A fuse for a toaster?",
+   "inside": "Formulae",
    "text": "A plug fuse must be big enough for the appliance's current. Current = power ÷ voltage, I = P ÷ V. UK mains is 230 V.",
    "steps": [
     "Toaster, 2000 W: I = 2000 ÷ 230 = 8.7 A, too much for a 3 A fuse, so 13 A.",
@@ -524,6 +595,9 @@
    "job": "Bike mechanic",
    "tier": "F",
    "headline": "48 ÷ 16 = 3 wheel turns per pedal turn",
+   "formula": "\\text{gear ratio} = \\dfrac{\\text{chainring}}{\\text{cog}}",
+   "question": "Which gear gets you up the hill?",
+   "inside": "Ratio",
    "text": "The gear ratio is the chainring's teeth ÷ the rear cog's teeth: how many times the back wheel turns for one turn of the pedals.",
    "steps": [
     "48-tooth chainring, 16-tooth cog: 48 ÷ 16 = 3 turns.",
@@ -543,6 +617,10 @@
    "job": "Wall and floor tiler",
    "tier": "F",
    "headline": "3 × 120 = 360°",
+   "formula": "\\dfrac{(n-2) \\times 180}{n}",
+   "formulaNote": "n is the number of sides",
+   "question": "Why do hexagon tiles fit, but pentagons don't?",
+   "inside": "Angles in polygons",
    "text": "Tiles fit with no gaps only if the angles meeting at each corner add up to 360°.",
    "steps": [
     "A regular hexagon's angle: (6 − 2) × 180 ÷ 6 = 120°. Three meet: 3 × 120 = 360°, so they fit.",
@@ -562,6 +640,9 @@
    "job": "IT support technician",
    "tier": "F",
    "headline": "600 × 8 ÷ 80 = 60 seconds",
+   "formula": "t = \\dfrac{\\text{size} \\times 8}{\\text{speed}}",
+   "question": "How long will a 600 MB update take?",
+   "inside": "Speed and units",
    "text": "Broadband is sold in megabits per second (Mbit/s), but files are measured in megabytes (MB). 8 megabits = 1 megabyte. A 600 MB update on an 80 Mbit/s line (example figures):",
    "steps": [
     "In megabits: 600 × 8 = 4800.",
@@ -580,6 +661,9 @@
    "job": "HGV driver",
    "tier": "F",
    "headline": "270 ÷ 50 = 5.4 hours",
+   "formula": "t = \\dfrac{d}{s}",
+   "question": "Does this run need a legal break?",
+   "inside": "Speed, distance, time",
    "text": "Lorry drivers must take a 45-minute break after 4½ hours of driving. A 270-mile run at an average of 50 mph (example figures):",
    "steps": [
     {"text": "Driving time: 270 ÷ 50 = 5.4 hours = 5 h 24 min (0.4 × 60 = 24).", "noCheck": "Hours and minutes (\"5 h 24 min\") are not read by the check; 270 ÷ 50 = 5.4 is still recomputed."},
@@ -597,6 +681,9 @@
    "job": "Care worker",
    "tier": "F",
    "headline": "1350 − 1500 = −150 ml",
+   "formula": "\\text{balance} = \\text{in} - \\text{out}",
+   "question": "Is this patient taking in enough fluid?",
+   "inside": "Negative numbers",
    "text": "A fluid chart records what goes in (drinks) and what comes out. The balance is in − out; a negative balance means more out than in. Drinks: 250, 200, 300, 150, 250, 200 ml. Out: 1500 ml (example figures).",
    "steps": [
     "In: 250 + 200 + 300 + 150 + 250 + 200 = 1350 ml.",
@@ -614,6 +701,9 @@
    "job": "Shop floor assistant",
    "tier": "F",
    "headline": "19 × 24 = 456 tins",
+   "formula": "19 \\times 24 \\approx 20 \\times 24",
+   "question": "Has the right delivery arrived?",
+   "inside": "Estimation",
    "text": "Counting stock is where shop staff use maths most. A quick estimate catches a wrong delivery before you sign for it. 19 cases of 24 tins arrive (example figures).",
    "steps": [
     "Estimate: 20 × 24 = 480.",
@@ -631,6 +721,9 @@
    "job": "Roads policing officer",
    "tier": "F",
    "headline": "3 × 18 = 54 mph",
+   "formula": "s = \\dfrac{d}{t}",
+   "question": "Was this car speeding between the cameras?",
+   "inside": "Speed, distance, time",
    "text": "Average speed cameras time a car between two cameras a known distance apart. The cameras are 3 miles apart; a car takes 3 min 20 s; the limit is 50 mph (example figures).",
    "steps": [
     {"text": "Time: 3 min 20 s = 200 seconds = 200 ÷ 3600 = 1/18 of an hour.", "noCheck": "Minutes and seconds (\"3 min 20 s\") are not read by the check; 200 ÷ 3600 = 1/18 is still recomputed."},
@@ -648,6 +741,9 @@
    "job": "Nursery practitioner",
    "tier": "F",
    "headline": "13 ÷ 5 = 2.6, so 3 adults",
+   "formula": "1 : 5",
+   "question": "How many staff does this room legally need?",
+   "inside": "Ratio, rounding up",
    "text": "By law there must be at least 1 adult for every 5 two-year-olds in a nursery in England. The two-year-olds' room has 13 children.",
    "steps": [
     "13 ÷ 5 = 2.6, and you can't have 0.6 of an adult, so round up: 3 staff."
@@ -664,6 +760,9 @@
    "job": "TV producer",
    "tier": "F",
    "headline": "60 − 8 = 52 minutes of programme",
+   "formula": "\\dfrac{8}{60} \\times 100",
+   "question": "How much of a prime-time hour is your programme?",
+   "inside": "Percentages",
    "text": "On the main commercial channels, adverts between 6 pm and 11 pm may average no more than 8 minutes an hour. An hour slot at 8 minutes of adverts:",
    "steps": [
     "Programme time: 60 − 8 = 52 minutes.",
@@ -681,6 +780,9 @@
    "job": "Firefighter",
    "tier": "F",
    "headline": "√(8² + 2²) = 8.25 m of ladder",
+   "formula": "a^2 + b^2 = c^2",
+   "question": "How long a ladder reaches a window 8 m up?",
+   "inside": "Pythagoras",
    "text": "Ladders go up at 1 out for every 4 up, which HSE says is 75°. A window 8 m up (example figure):",
    "steps": [
     "Foot of the ladder out from the wall: 8 ÷ 4 = 2 m.",
@@ -699,6 +801,9 @@
    "job": "Computer games developer",
    "tier": "H",
    "headline": "√(3² + 4²) = 5 pixels a frame",
+   "formula": "\\lvert \\mathbf{v} \\rvert = \\sqrt{x^2 + y^2}",
+   "question": "How fast is your character really moving?",
+   "inside": "Pythagoras, vectors",
    "text": "A character moves by a vector each frame. Its speed is the vector's length. The character moves (3, 4) pixels a frame, at 60 frames a second (example figures):",
    "steps": [
     "Distance a frame: √(3² + 4²) = 5 pixels.",
@@ -717,6 +822,10 @@
    "job": "Toolmaker",
    "tier": "F",
    "headline": "100 × sin 10° = 17.365 mm",
+   "formula": "h = L \\sin\\theta",
+   "formulaNote": "L is the sine bar's length",
+   "question": "How do you tilt a part to exactly 10°?",
+   "inside": "Trigonometry",
    "text": "A sine bar sets a part at an exact angle. Its rollers are a fixed distance apart, and a stack of gauge blocks under one roller makes the angle: height = length × sin θ.",
    "steps": [
     "A 100 mm sine bar at 10°: 100 × sin 10° = 17.365 mm of blocks.",
@@ -735,6 +844,10 @@
    "job": "CNC programmer",
    "tier": "H",
    "headline": "50 × cos 120° = −25 mm",
+   "formula": "(x, y) = (r\\cos\\theta,\\ r\\sin\\theta)",
+   "formulaNote": "r is the circle's radius",
+   "question": "Where exactly do the bolt holes go?",
+   "inside": "Trigonometry",
    "text": "Bolt holes on a circle (a pitch circle) are programmed as coordinates: x = r cos θ, y = r sin θ. Three holes 120° apart on a circle of radius 50 mm (example figures):",
    "steps": [
     "At 0°: (50, 0).",
@@ -752,6 +865,9 @@
    "job": "Hair colourist",
    "tier": "F",
    "headline": "60 ÷ 3 = 20 ml of colour",
+   "formula": "1 : 2",
+   "question": "How much colour goes in a 60 ml mix?",
+   "inside": "Ratio",
    "text": "Developer strength is sold in \"volumes\": 10 vol is 3% hydrogen peroxide, so 20 vol is 6%. A common mix is 1 part colour to 2 parts developer. A 60 ml mix at 1 : 2 (example figure):",
    "steps": [
     "Strength: 20 ÷ 10 × 3 = 6%.",
@@ -769,6 +885,10 @@
    "job": "Vehicle body repairer",
    "tier": "F",
    "headline": "8 ÷ 2³ = 1 hour at 94 dB",
+   "formula": "t = \\dfrac{8}{2^n}",
+   "formulaNote": "n is the number of 3 dB steps above 85 dB",
+   "question": "How long is safe in a 94 dB workshop?",
+   "inside": "Powers",
    "text": "Noise is measured in decibels. Every 3 dB more is double the noise, so the safe time halves. At 85 dB the limit is about 8 hours a day.",
    "steps": [
     "88 dB: 8 ÷ 2 = 4 hours.",
@@ -788,6 +908,9 @@
    "job": "Highways engineer",
    "tier": "F",
    "headline": "1000 × 0.10 = 100 m climb",
+   "formula": "\\text{gradient} = \\dfrac{\\text{rise}}{\\text{run}}",
+   "question": "How far does a 10% hill climb in a kilometre?",
+   "inside": "Gradient",
    "text": "A steep-hill sign shows the gradient as a percentage: 10% is 1 in 10 (1 m up for every 10 m along).",
    "steps": [
     "Over 1 km at 10%: 1000 × 0.10 = 100 m of height.",
@@ -805,6 +928,9 @@
    "job": "Architectural technician",
    "tier": "F",
    "headline": "2000 ÷ 12 = 166.7 mm",
+   "formula": "\\text{rise} \\le \\dfrac{\\text{length}}{12}",
+   "question": "How high can a 2 m wheelchair ramp rise?",
+   "inside": "Gradient, inequalities",
    "text": "Building regulations set how steep a wheelchair ramp may be. The shorter the ramp, the steeper it is allowed: 1 : 12 for a 2 m ramp, 1 : 20 for 10 m.",
    "steps": [
     "2 m ramp: 2000 ÷ 12 = 166.7 mm, so the rise can be at most 166 mm (round down: it's a maximum).",
@@ -822,6 +948,10 @@
    "job": "Painter and decorator",
    "tier": "F",
    "headline": "64 ÷ 2 = 32 cm drop",
+   "formula": "\\begin{pmatrix} 0 \\\\ -32 \\end{pmatrix}",
+   "formulaNote": "In cm: down 32 against the strip beside it",
+   "question": "How far down does each strip of half-drop wallpaper move?",
+   "inside": "Translations",
    "text": "A \"half drop\" wallpaper's pattern is translated down by half its repeat on every other strip. A 64 cm pattern repeat (the manufacturer's example):",
    "steps": [
     "The next strip moves down 64 ÷ 2 = 32 cm."
@@ -838,6 +968,9 @@
    "job": "Quality practitioner",
    "tier": "L4",
    "headline": "0.02 ÷ 0.01 = 2.0, beyond 1.96",
+   "formula": "z = \\dfrac{\\bar{x} - \\mu}{\\sigma / \\sqrt{n}}",
+   "question": "Has the machine drifted, or is it just chance?",
+   "inside": "Hypothesis testing",
    "text": "A shaft should be 25.00 mm. Too big or too small is a fault, so the test is two-tailed. The machine's standard deviation is 0.04 mm; a sample of 16 has a mean of 25.02 mm (example figures). 5% significance, two-tailed: reject if |z| > 1.96.",
    "steps": [
     "z = (25.02 − 25.00) ÷ (0.04 ÷ √16) = 0.02 ÷ 0.01 = 2.0.",
