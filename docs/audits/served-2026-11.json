@@ -43,5 +43,1904 @@
     20
    ]
   }
- ]
+ ],
+ "estimate": {
+  "note": "one session per roster level at seed 1 (scripts/audit-served.py --estimate); a full run projected at --workers 4 over the contract limit of 90 minutes, so the full run waits for Jon",
+  "seconds": 4468,
+  "workers": 4,
+  "projected_seconds_at_4_workers": {
+   "best": 35768,
+   "worst": 157735
+  },
+  "levels": [
+   {
+    "slug": "estimation-golf",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 1328.1
+   },
+   {
+    "slug": "estimation-golf",
+    "level": "year6",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 1327.4
+   },
+   {
+    "slug": "estimation-golf",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 1327.0
+   },
+   {
+    "slug": "estimation-golf",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 1326.8
+   },
+   {
+    "slug": "estimation-golf",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 1326.7
+   },
+   {
+    "slug": "tax-theft",
+    "level": "core",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 649.2
+   },
+   {
+    "slug": "prime-or-composite",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 66 question(s)",
+    "questions": 66,
+    "seconds": 425.6
+   },
+   {
+    "slug": "prime-or-composite",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 66 question(s)",
+    "questions": 66,
+    "seconds": 425.5
+   },
+   {
+    "slug": "expectation-station",
+    "level": "alevel",
+    "status": "WARN",
+    "detail": "question 18 showed the same option twice (v:6/1) -- options: 5, 5.1, 5.5, 6, 6. Real defect in a pick-one group; expected in a tile bank.",
+    "questions": 45,
+    "seconds": 404.6
+   },
+   {
+    "slug": "expectation-station",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 38,
+    "seconds": 334.8
+   },
+   {
+    "slug": "expectation-station",
+    "level": "core",
+    "status": "WARN",
+    "detail": "question 4 showed the same option twice (v:3/10) -- options: 0, 0.3, 0.3, 0.35, 0.45, 0.55. Real defect in a pick-one group; expected in a tile bank.",
+    "questions": 38,
+    "seconds": 323.5
+   },
+   {
+    "slug": "some-thingies",
+    "level": "year6",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 86,
+    "seconds": 238.3
+   },
+   {
+    "slug": "quadratic-factoriser",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 8 question(s)",
+    "questions": 8,
+    "seconds": 149.4
+   },
+   {
+    "slug": "given-that",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 20,
+    "seconds": 132.3
+   },
+   {
+    "slug": "given-that",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 20,
+    "seconds": 132.2
+   },
+   {
+    "slug": "given-that",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 20,
+    "seconds": 131.8
+   },
+   {
+    "slug": "prisoners-dilemma",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 131.7
+   },
+   {
+    "slug": "prisoners-dilemma",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 131.5
+   },
+   {
+    "slug": "prisoners-dilemma",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 131.5
+   },
+   {
+    "slug": "prisoners-dilemma",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 131.1
+   },
+   {
+    "slug": "boolean-blitz",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 42 question(s)",
+    "questions": 42,
+    "seconds": 106.0
+   },
+   {
+    "slug": "fraction-equivalence",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 95.8
+   },
+   {
+    "slug": "fraction-equivalence",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 95.7
+   },
+   {
+    "slug": "fraction-equivalence",
+    "level": "year6",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 94.2
+   },
+   {
+    "slug": "modular-battle",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 32 question(s)",
+    "questions": 32,
+    "seconds": 91.1
+   },
+   {
+    "slug": "screening-room",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 16 question(s)",
+    "questions": 16,
+    "seconds": 81.1
+   },
+   {
+    "slug": "screening-room",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 16 question(s)",
+    "questions": 16,
+    "seconds": 81.0
+   },
+   {
+    "slug": "screening-room",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 16 question(s)",
+    "questions": 16,
+    "seconds": 81.0
+   },
+   {
+    "slug": "screening-room",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 16 question(s)",
+    "questions": 16,
+    "seconds": 80.8
+   },
+   {
+    "slug": "angle-ace",
+    "level": "year6",
+    "status": "PASS",
+    "detail": "game ended after 25 question(s)",
+    "questions": 20,
+    "seconds": 69.8
+   },
+   {
+    "slug": "angle-ace",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 21 question(s)",
+    "questions": 20,
+    "seconds": 68.8
+   },
+   {
+    "slug": "matrix-crunch",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 65.6
+   },
+   {
+    "slug": "curling-friction",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 64.5
+   },
+   {
+    "slug": "matrix-crunch",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 64.4
+   },
+   {
+    "slug": "word-problem-decoder",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 64.3
+   },
+   {
+    "slug": "complex-converter",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 64.2
+   },
+   {
+    "slug": "percentage-flip",
+    "level": "year6",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 64.1
+   },
+   {
+    "slug": "percentage-flip",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 64.1
+   },
+   {
+    "slug": "complex-converter",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 64.1
+   },
+   {
+    "slug": "percentage-flip",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 64.0
+   },
+   {
+    "slug": "formula-unlocked",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.6
+   },
+   {
+    "slug": "moments-master",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.6
+   },
+   {
+    "slug": "force-resolver",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.5
+   },
+   {
+    "slug": "trig-identity-duel",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.4
+   },
+   {
+    "slug": "circle-theorem-spotter",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.4
+   },
+   {
+    "slug": "scale-factor-scaling",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.3
+   },
+   {
+    "slug": "correlation-or-coincidence",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 63.3
+   },
+   {
+    "slug": "correlation-or-coincidence",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 63.3
+   },
+   {
+    "slug": "correlation-or-coincidence",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 63.3
+   },
+   {
+    "slug": "curling-friction",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 63.2
+   },
+   {
+    "slug": "word-problem-decoder",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 62.0
+   },
+   {
+    "slug": "sequence-solver",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.9
+   },
+   {
+    "slug": "normal-navigator",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.8
+   },
+   {
+    "slug": "normal-navigator",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.8
+   },
+   {
+    "slug": "normal-navigator",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.8
+   },
+   {
+    "slug": "formula-unlocked",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.5
+   },
+   {
+    "slug": "unit-converter",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.4
+   },
+   {
+    "slug": "force-resolver",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.4
+   },
+   {
+    "slug": "moments-master",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.4
+   },
+   {
+    "slug": "partial-fractions-duel",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.4
+   },
+   {
+    "slug": "partial-fractions-duel",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.4
+   },
+   {
+    "slug": "binomial-blaster",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.3
+   },
+   {
+    "slug": "binomial-blaster",
+    "level": "alevel2",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.3
+   },
+   {
+    "slug": "scale-factor-scaling",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.2
+   },
+   {
+    "slug": "scale-factor-scaling",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 61.2
+   },
+   {
+    "slug": "simultaneous-solver",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 60.9
+   },
+   {
+    "slug": "sequence-solver",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.5
+   },
+   {
+    "slug": "coordinate-geometry-dash",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.4
+   },
+   {
+    "slug": "dimension-checker",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.4
+   },
+   {
+    "slug": "sequence-solver",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.3
+   },
+   {
+    "slug": "unit-converter",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.2
+   },
+   {
+    "slug": "surd-simplifier",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.1
+   },
+   {
+    "slug": "standard-form-blitz",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.1
+   },
+   {
+    "slug": "surd-simplifier",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.0
+   },
+   {
+    "slug": "proportion-blaster",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.0
+   },
+   {
+    "slug": "unit-converter",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 59.0
+   },
+   {
+    "slug": "proportion-blaster",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 58.9
+   },
+   {
+    "slug": "trig-identity-duel",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 58.9
+   },
+   {
+    "slug": "standard-form-blitz",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 58.9
+   },
+   {
+    "slug": "formula-unlocked",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 18 question(s)",
+    "questions": 18,
+    "seconds": 56.8
+   },
+   {
+    "slug": "coordinate-geometry-dash",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 20 question(s)",
+    "questions": 20,
+    "seconds": 54.1
+   },
+   {
+    "slug": "fermi-lab",
+    "level": "core",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 53.6
+   },
+   {
+    "slug": "fermi-lab",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 53.5
+   },
+   {
+    "slug": "fermi-lab",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 53.5
+   },
+   {
+    "slug": "fermi-lab",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 53.5
+   },
+   {
+    "slug": "fermi-lab",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "played 100 question(s)",
+    "questions": 100,
+    "seconds": 53.4
+   },
+   {
+    "slug": "component-crusher",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 4 question(s), then question 5 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 5,
+    "seconds": 50.4
+   },
+   {
+    "slug": "given-that",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "question 28 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 20,
+    "seconds": 50.0
+   },
+   {
+    "slug": "proof-builder",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 48.3
+   },
+   {
+    "slug": "proof-builder",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 46.0
+   },
+   {
+    "slug": "differentiation-duel",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 14 question(s)",
+    "questions": 14,
+    "seconds": 45.5
+   },
+   {
+    "slug": "differentiation-duel",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 14 question(s)",
+    "questions": 14,
+    "seconds": 45.5
+   },
+   {
+    "slug": "integration-duel",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 14 question(s)",
+    "questions": 14,
+    "seconds": 45.5
+   },
+   {
+    "slug": "integration-duel",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 14 question(s)",
+    "questions": 14,
+    "seconds": 45.5
+   },
+   {
+    "slug": "eigenvector-engine",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.3
+   },
+   {
+    "slug": "eigenvalue-extractor",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.3
+   },
+   {
+    "slug": "characteristic-quest",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.2
+   },
+   {
+    "slug": "characteristic-quest",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.2
+   },
+   {
+    "slug": "eigenvector-engine",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.2
+   },
+   {
+    "slug": "eigenvalue-extractor",
+    "level": "further",
+    "status": "PASS",
+    "detail": "game ended after 15 question(s)",
+    "questions": 15,
+    "seconds": 44.1
+   },
+   {
+    "slug": "spot-the-muppet",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 36 question(s)",
+    "questions": 20,
+    "seconds": 43.6
+   },
+   {
+    "slug": "trig-worms",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 43.2
+   },
+   {
+    "slug": "trig-worms",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 43.1
+   },
+   {
+    "slug": "probability-paradox",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 41.3
+   },
+   {
+    "slug": "probability-paradox",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 40.6
+   },
+   {
+    "slug": "equation-builder",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 2 question(s), then question 3 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 39.8
+   },
+   {
+    "slug": "log-laws",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 12 question(s)",
+    "questions": 12,
+    "seconds": 39.5
+   },
+   {
+    "slug": "log-laws",
+    "level": "level3",
+    "status": "PASS",
+    "detail": "game ended after 12 question(s)",
+    "questions": 12,
+    "seconds": 39.4
+   },
+   {
+    "slug": "log-laws",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 12 question(s)",
+    "questions": 12,
+    "seconds": 39.4
+   },
+   {
+    "slug": "spot-the-muppet",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 31 question(s)",
+    "questions": 18,
+    "seconds": 38.8
+   },
+   {
+    "slug": "index-laws",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 12 question(s)",
+    "questions": 12,
+    "seconds": 38.7
+   },
+   {
+    "slug": "index-laws",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 12 question(s)",
+    "questions": 12,
+    "seconds": 38.7
+   },
+   {
+    "slug": "terrible-advice",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 36 question(s)",
+    "questions": 20,
+    "seconds": 36.6
+   },
+   {
+    "slug": "terrible-advice",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 31 question(s)",
+    "questions": 18,
+    "seconds": 32.4
+   },
+   {
+    "slug": "distinctly-average",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 31.8
+   },
+   {
+    "slug": "split-it",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 1,
+    "seconds": 30.0
+   },
+   {
+    "slug": "split-it",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 1,
+    "seconds": 29.9
+   },
+   {
+    "slug": "free-daily-pizza",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 29.3
+   },
+   {
+    "slug": "free-daily-pizza",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 29.3
+   },
+   {
+    "slug": "component-crusher",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 2,
+    "seconds": 28.3
+   },
+   {
+    "slug": "like-terms-collector",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 1,
+    "seconds": 27.1
+   },
+   {
+    "slug": "simultaneous-solver",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 1,
+    "seconds": 27.1
+   },
+   {
+    "slug": "estimation-engine",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 1,
+    "seconds": 27.1
+   },
+   {
+    "slug": "factor-race",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 19 question(s), then question 20 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 11,
+    "seconds": 26.9
+   },
+   {
+    "slug": "spot-the-muppet",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 22 question(s)",
+    "questions": 12,
+    "seconds": 26.7
+   },
+   {
+    "slug": "component-crusher",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 2,
+    "seconds": 26.4
+   },
+   {
+    "slug": "distinctly-average",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 26.1
+   },
+   {
+    "slug": "terrible-advice",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 22 question(s)",
+    "questions": 12,
+    "seconds": 22.8
+   },
+   {
+    "slug": "expected-damage",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 17.7
+   },
+   {
+    "slug": "expected-damage",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 17.6
+   },
+   {
+    "slug": "expected-damage",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 10 question(s)",
+    "questions": 10,
+    "seconds": 17.6
+   },
+   {
+    "slug": "maths-court",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "drove 2 question(s), then question 3 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 4,
+    "seconds": 15.1
+   },
+   {
+    "slug": "52dle",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 2,
+    "seconds": 14.8
+   },
+   {
+    "slug": "graph-sketcher",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 1,
+    "seconds": 14.8
+   },
+   {
+    "slug": "graph-sketcher",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 1,
+    "seconds": 14.8
+   },
+   {
+    "slug": "52dle",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 2,
+    "seconds": 14.7
+   },
+   {
+    "slug": "graph-sketcher",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs",
+    "questions": 1,
+    "seconds": 14.7
+   },
+   {
+    "slug": "maths-court",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 14.4
+   },
+   {
+    "slug": "maths-court",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 14.3
+   },
+   {
+    "slug": "equatle",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 4,
+    "seconds": 13.7
+   },
+   {
+    "slug": "equatle",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs",
+    "questions": 4,
+    "seconds": 13.6
+   },
+   {
+    "slug": "gradient-hunter",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "question 2 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas",
+    "questions": 2,
+    "seconds": 11.7
+   },
+   {
+    "slug": "its-a-sine",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.8
+   },
+   {
+    "slug": "its-a-sine",
+    "level": "level3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.8
+   },
+   {
+    "slug": "its-a-sine",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.8
+   },
+   {
+    "slug": "factor-theorem",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.8
+   },
+   {
+    "slug": "chart-interrogator",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "chart-interrogator",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "chart-interrogator",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "whose-side-are-you-on",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "test-the-claim",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "test-the-claim",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "glorious-gantt",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "glorious-gantt",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "y-so-steep",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "i-dropped-my-ice-cream",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "i-dropped-my-ice-cream",
+    "level": "level3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.7
+   },
+   {
+    "slug": "chart-interrogator",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 0,
+    "seconds": 10.6
+   },
+   {
+    "slug": "higher-power",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 2 question(s)",
+    "questions": 2,
+    "seconds": 10.2
+   },
+   {
+    "slug": "gradient-hunter",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas",
+    "questions": 1,
+    "seconds": 8.9
+   },
+   {
+    "slug": "gradient-hunter",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas",
+    "questions": 1,
+    "seconds": 8.9
+   },
+   {
+    "slug": "formula-forge",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.5
+   },
+   {
+    "slug": "factor-race",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.4
+   },
+   {
+    "slug": "formula-forge",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.4
+   },
+   {
+    "slug": "formula-forge",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.4
+   },
+   {
+    "slug": "better-value",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.4
+   },
+   {
+    "slug": "better-value",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.4
+   },
+   {
+    "slug": "i-found-a-mark",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 8.2
+   },
+   {
+    "slug": "truth-buster",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 1,
+    "seconds": 8.1
+   },
+   {
+    "slug": "truth-buster",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 1,
+    "seconds": 8.1
+   },
+   {
+    "slug": "truth-buster",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows",
+    "questions": 1,
+    "seconds": 8.1
+   },
+   {
+    "slug": "suvat",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 8.0
+   },
+   {
+    "slug": "prime-factorisation",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "prime-factorisation",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "constructions-lab",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 1,
+    "seconds": 7.9
+   },
+   {
+    "slug": "equation-builder",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "equation-builder",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "formula-plug-in",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "new-shapes",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "seven-bridges",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 1,
+    "seconds": 7.9
+   },
+   {
+    "slug": "graph-transformer",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "graph-transformer",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 3,
+    "seconds": 7.9
+   },
+   {
+    "slug": "linear-equation-solver",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 7.9
+   },
+   {
+    "slug": "suvat",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 2,
+    "seconds": 7.9
+   },
+   {
+    "slug": "prime-factorisation",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 3,
+    "seconds": 7.8
+   },
+   {
+    "slug": "constructions-lab",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "probability-pioneer",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "seven-bridges",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "seven-bridges",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "trig-wars",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "trig-wars",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas",
+    "questions": 1,
+    "seconds": 7.8
+   },
+   {
+    "slug": "wrong-on-the-internet",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.8
+   },
+   {
+    "slug": "wrong-on-the-internet",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.8
+   },
+   {
+    "slug": "wrong-on-the-internet",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.8
+   },
+   {
+    "slug": "stat-attack",
+    "level": "gcse",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.8
+   },
+   {
+    "slug": "stat-attack",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.7
+   },
+   {
+    "slug": "stat-attack",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.7
+   },
+   {
+    "slug": "growth-and-decay",
+    "level": "core",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.5
+   },
+   {
+    "slug": "growth-and-decay",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.5
+   },
+   {
+    "slug": "growth-and-decay",
+    "level": "level4",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 4.5
+   },
+   {
+    "slug": "spot-the-error",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (0 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 3.8
+   },
+   {
+    "slug": "spot-the-error",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (0 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 3.8
+   },
+   {
+    "slug": "spot-the-error",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (0 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 3.8
+   },
+   {
+    "slug": "higher-power",
+    "level": "ks3",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 3.8
+   },
+   {
+    "slug": "higher-power",
+    "level": "alevel",
+    "status": "PASS",
+    "detail": "game ended after 1 question(s)",
+    "questions": 1,
+    "seconds": 3.7
+   },
+   {
+    "slug": "just-pythag-it-bruv",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.5
+   },
+   {
+    "slug": "how-many-parts",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.5
+   },
+   {
+    "slug": "how-many-parts",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.5
+   },
+   {
+    "slug": "take-a-walk",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (2 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.5
+   },
+   {
+    "slug": "take-a-walk",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (2 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.5
+   },
+   {
+    "slug": "negative-number-line",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (0 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "decimal-detective",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (0 clickable candidates); page has draggable",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "four-quadrant-explorer",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has canvas",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "shape-shifter",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (2 clickable candidates); page has canvas",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "bearing-blitz",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has canvas",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "core-maths-paper1",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "core-maths-paper2a",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "core-maths-paper2b",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "core-maths-paper2c",
+    "level": "core",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "cast-away",
+    "level": "level3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (2 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "cast-away",
+    "level": "alevel",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (2 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "six-sevens-bruv",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "six-sevens-bruv",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "squared-squirrel",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "squared-squirrel",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "who-ate-all-the-pies",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "hc-factor",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "its-on-sale",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "as-you-can-see",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "as-you-can-see",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "possibly-maybe",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "possibly-maybe",
+    "level": "gcse",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "sums-in-disguise",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (3 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "maffscards",
+    "level": "ks3",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.4
+   },
+   {
+    "slug": "think-of-a-number",
+    "level": "year6",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (1 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.3
+   },
+   {
+    "slug": "truth-will-set-you-free",
+    "level": "level4",
+    "status": "UNSUPPORTED",
+    "detail": "no option group found after starting (8 clickable candidates); page has no input it knows",
+    "questions": 0,
+    "seconds": 2.3
+   }
+  ]
+ }
 }
