@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#060a10;--surface:#0c1018;--border:#182030;--primary:#10b981;--accent:#f59e0b;--target:#f43f5e;--current:#3b82f6;--grid:#141e2e;--axis:#2a3a50;--text:#e2e8f0;--muted:#607088;--success:#22c55e}
+:root{--bg:#060a10;--surface:#0c1018;--border:#182030;--primary:#10b981;--accent:#f59e0b;--target:#f43f5e;--reset:#9d0922;--current:#3b82f6;--grid:#141e2e;--axis:#2a3a50;--text:#e2e8f0;--muted:#6d7e98;--success:#22c55e}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:.8rem}
 a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
@@ -35,8 +35,8 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 .level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0}
 .level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .2s}
 .level-btn:hover{border-color:var(--primary)}
-.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
-.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:var(--bg)}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:var(--bg);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
 .start-btn:hover{transform:scale(1.03)}
 .menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.6;margin:.8rem auto;max-width:520px}
 
@@ -69,10 +69,10 @@ canvas{display:block;width:100%;height:auto}
 .controls{display:flex;gap:.4rem;justify-content:center;margin-bottom:.5rem}
 .ctrl-btn{padding:.4rem 1rem;border-radius:8px;border:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .12s}
 .ctrl-undo{background:var(--border);color:var(--text)}.ctrl-undo:hover{background:#2a3a50}
-.ctrl-reset{background:var(--target);color:#fff;opacity:.7}.ctrl-reset:hover{opacity:1}
+.ctrl-reset{background:var(--reset);color:#fff;opacity:.7}.ctrl-reset:hover{opacity:1}
 .ctrl-skip{background:transparent;color:var(--muted);border:1px solid var(--border)}.ctrl-skip:hover{color:var(--text)}
 
-.ctrl-steps{background:#8b5cf6;color:#fff}
+.ctrl-steps{background:#8b5cf6;color:var(--bg)}
 .ctrl-steps:hover{filter:brightness(1.12)}
 .ctrl-steps.active{box-shadow:0 0 0 2px rgba(139,92,246,.45)}
 .step-caption{display:none;margin-bottom:.5rem;padding:.6rem .85rem;background:rgba(139,92,246,.09);border:1px solid rgba(139,92,246,.32);border-left:3px solid #8b5cf6;border-radius:8px;font-size:.8rem;line-height:1.55;color:var(--text)}
@@ -108,7 +108,7 @@ canvas{display:block;width:100%;height:auto}
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 .correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
 .incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
 </style>

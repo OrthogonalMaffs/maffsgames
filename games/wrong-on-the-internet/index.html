@@ -22,8 +22,8 @@
 <style>
 :root{
 --bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
---text:#e8eaf0;--muted:#7a7f90;
---teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--text:#e8eaf0;--muted:#818696;
+--teal:#0fa89a;--teal-dim:rgba(13,148,136,0.25);
 --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
 --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
 --amber:#f59e0b;--blue:#3b82f6;
@@ -59,7 +59,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .session-btn.active{border-color:var(--teal);background:var(--teal-dim);color:var(--teal)}
 
 .start-label{font-size:13px;font-weight:600;color:var(--muted);text-align:center;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.04em}
-.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
+.start-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:var(--bg);font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:24px;transition:opacity 0.15s}
 .start-btn:hover{opacity:0.9}
 .pb-start{text-align:center;color:var(--muted);font-size:13px;margin-top:12px}
 .pb-start span{color:var(--teal);font-weight:600}
@@ -72,8 +72,8 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .numblr-card{background:var(--surface);border-radius:16px;overflow:hidden;margin:20px 0;animation:slideIn 0.2s ease-out}
 @keyframes slideIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 .numblr-header{background:var(--teal);padding:10px 16px;display:flex;align-items:center;gap:10px}
-.numblr-logo{font-size:20px;font-weight:800;color:#fff;font-family:'JetBrains Mono',monospace}
-.numblr-label{font-size:12px;color:rgba(255,255,255,0.7);font-weight:500}
+.numblr-logo{font-size:20px;font-weight:800;color:var(--bg);font-family:'JetBrains Mono',monospace}
+.numblr-label{font-size:12px;color:var(--bg);font-weight:500}
 .numblr-body{padding-bottom:44px;padding:20px}
 .numblr-username{color:var(--teal);font-weight:600;font-size:14px;margin-bottom:8px}
 .numblr-text{font-size:15px;line-height:1.7;color:var(--text);margin-bottom:16px}
@@ -139,7 +139,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 .result-card .score{font-size:32px;font-weight:800;color:var(--teal)}
 .result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
 .pb-badge{background:var(--teal-dim);color:var(--teal);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
-.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--teal);color:var(--bg);font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
 .play-again-btn:hover{opacity:0.9}
 
 @media(prefers-reduced-motion:reduce){
@@ -157,7 +157,7 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 .correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
 .incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
 </style>

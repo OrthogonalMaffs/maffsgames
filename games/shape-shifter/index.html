@@ -21,9 +21,9 @@
 <style>
 :root{
 --bg:#0f1117;--surface:#1a1d27;--surface-alt:#1e2235;--border:#2a2f45;
---text:#e8eaf0;--muted:#7a7f90;
---accent:#6366f1;--accent-dim:rgba(99,102,241,0.25);
---teal:#0d9488;--teal-dim:rgba(13,148,136,0.25);
+--text:#e8eaf0;--muted:#818696;
+--accent:#9193f5;--accent-dim:rgba(99,102,241,0.25);
+--teal:#0d968a;--teal-dim:rgba(13,148,136,0.25);
 --navy:#1a2744;
 --green:#22c55e;--green-dim:rgba(34,197,94,0.12);
 --red:#ef4444;--red-dim:rgba(239,68,68,0.12);
@@ -74,7 +74,7 @@ canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:cro
 .btn-row{display:flex;gap:12px;justify-content:center;margin-bottom:16px}
 .game-btn{padding:12px 24px;border-radius:10px;border:none;font-family:'Outfit',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.15s}
 .game-btn:hover{opacity:0.9}
-.game-btn.primary{background:var(--accent);color:#fff}
+.game-btn.primary{background:var(--accent);color:var(--bg)}
 .game-btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
 .game-btn:disabled{opacity:0.4;cursor:default}
 .btn-row .maffs-next{margin-top:0}   /* Next sits where the old button sat, so the feedback and Next stay as near the fold as before */
@@ -93,7 +93,7 @@ canvas{display:block;width:100%;border-radius:12px;background:#0a0c12;cursor:cro
 .result-card .score{font-size:32px;font-weight:800;color:var(--accent)}
 .result-card .sub{font-size:13px;color:var(--muted);margin-top:4px}
 .pb-badge{background:var(--accent-dim);color:var(--accent);font-size:13px;font-weight:600;padding:6px 14px;border-radius:8px;display:inline-block;margin-bottom:16px}
-.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:#fff;font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
+.play-again-btn{display:block;width:100%;padding:16px;border-radius:12px;border:none;background:var(--accent);color:var(--bg);font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;cursor:pointer;margin-top:8px;transition:opacity 0.15s}
 .play-again-btn:hover{opacity:0.9}
 
 /* Rotation MCQ labels */

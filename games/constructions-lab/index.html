@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#f8fafc;--surface:#ffffff;--border:#e2e8f0;--primary:#1a2744;--accent:#0d9488;--wrong:#ef4444;--correct:#22c55e;--text:#1e293b;--muted:#64748b;--compass:#3b82f6;--ruler:#f97316;--arc:rgba(59,130,246,.3)}
+:root{--bg:#f8fafc;--surface:#ffffff;--border:#e2e8f0;--primary:#1a2744;--accent:#0a776d;--wrong:#d21212;--correct:#22c55e;--text:#1e293b;--muted:#64748b;--compass:#0b61ee;--ruler:#f97316;--arc:rgba(59,130,246,.3)}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
@@ -37,8 +37,8 @@ a.back-link{display:inline-block;margin:.5rem 0;color:var(--muted);text-decorati
 .task-card:hover{border-color:var(--accent);transform:translateX(3px)}
 .task-card h3{font-size:.88rem;font-weight:600;color:var(--primary)}
 .task-card .difficulty{font-size:.65rem;padding:2px 8px;border-radius:8px;font-weight:600}
-.diff-easy{background:rgba(34,197,94,.1);color:#16a34a}
-.diff-med{background:rgba(245,158,11,.1);color:#d97706}
+.diff-easy{background:rgba(34,197,94,.1);color:#11803a}
+.diff-med{background:rgba(245,158,11,.1);color:#a85c05}
 .diff-hard{background:rgba(239,68,68,.1);color:#dc2626}
 .section-title{font-size:.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin:1rem 0 .3rem;padding-left:.3rem}
 
@@ -90,7 +90,7 @@ canvas{display:block;width:100%;height:auto;cursor:crosshair}
 body.accessible{font-family:'OpenDyslexic',sans-serif !important;letter-spacing:0.12em;word-spacing:0.16em}
 body.accessible p,body.accessible .question-text,body.accessible .statement-text,body.accessible .card-desc,body.accessible .reveal-text{line-height:2.0;max-width:65ch}
 .a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background 0.15s}
-.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}
+.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}
 .correct::after,[data-feedback="correct"]::after{content:' ✓';font-size:0.85em;opacity:0.8}
 .incorrect::after,.wrong::after,[data-feedback="incorrect"]::after{content:' ✗';font-size:0.85em;opacity:0.8}
 </style>

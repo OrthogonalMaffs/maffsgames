@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#070910;--surface:#0d1118;--border:#182030;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#607590;--hint:#8b5cf6;--stage1:#22c55e;--stage2:#3b82f6;--stage3:#f97316;--stage4:#f43f5e}
+:root{--bg:#070910;--surface:#0d1118;--border:#182030;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e4eaf2;--muted:#6c829d;--hint:#9063f6;--stage1:#22c55e;--stage2:#4a8bf7;--stage3:#f97316;--stage4:#f54c69}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}a.back-link:hover{color:var(--text)}
@@ -36,8 +36,8 @@ a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decorati
 .level-row{display:flex;gap:.5rem;justify-content:center;margin:.8rem 0;flex-wrap:wrap}
 .level-btn{padding:.4rem 1rem;border-radius:8px;border:2px solid var(--border);background:var(--surface);color:var(--text);font-family:'Outfit',sans-serif;font-size:.82rem;font-weight:600;cursor:pointer;transition:all .2s}
 .level-btn:hover{border-color:var(--primary)}
-.level-btn.active{border-color:var(--primary);background:var(--primary);color:#fff}
-.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
+.level-btn.active{border-color:var(--primary);background:var(--primary);color:var(--bg)}
+.start-btn{display:block;margin:1.2rem auto;padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:var(--bg);font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
 .menu-info{text-align:center;color:var(--muted);font-size:.82rem;line-height:1.7;margin:.8rem auto;max-width:560px}
 
 .stage-legend{display:flex;gap:.6rem;justify-content:center;margin:.6rem 0;flex-wrap:wrap;font-size:.72rem}
@@ -104,7 +104,7 @@ a.back-link{display:inline-block;margin:.6rem 0;color:var(--muted);text-decorati
 .results .final-score{font-family:'JetBrains Mono',monospace;font-size:2.8rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:.8rem 0}
 .results .stats{color:var(--muted);margin-bottom:1.2rem;line-height:1.8;font-size:.85rem}
 .play-again{padding:.7rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.95rem;font-weight:600;cursor:pointer}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 .timer-display,.hud-timer,.timer,.time-display{display:none !important}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>

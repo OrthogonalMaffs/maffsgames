@@ -55,7 +55,7 @@
   --border: #2e3348;
   --text: #e2e4ed;
   --muted: #8b90a5;
-  --accent: #ef4444;
+  --accent: #f26262;
   --accent-dim: rgba(239,68,68,0.15);
   --correct: #22c55e;
   --correct-dim: rgba(34,197,94,0.15);
@@ -106,7 +106,7 @@ body {
 .start-screen h2 { font-size: 2.2rem; color: var(--accent); font-family: 'JetBrains Mono', monospace; margin-bottom: 0.5rem; }
 .start-screen p { color: var(--muted); font-size: 1rem; max-width: 560px; margin-bottom: 1.5rem; }
 .start-btn {
-  background: var(--accent); color: white; border: none;
+  background: var(--accent); color: var(--ink); border: none;
   padding: 1rem 2.5rem; font-size: 1.1rem; font-weight: 600;
   border-radius: 8px; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
 }
@@ -170,7 +170,7 @@ body {
   border: none; padding: 0.8rem 2rem; font-size: 1rem; font-weight: 600;
   border-radius: 8px; cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
 }
-.btn-primary { background: var(--accent); color: white; }
+.btn-primary { background: var(--accent); color: var(--ink); }
 .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,68,68,0.3); }
 .btn-primary:disabled { opacity: 0.4; pointer-events: none; }
 .btn-secondary { background: var(--card); color: var(--text); border: 1px solid var(--border); }

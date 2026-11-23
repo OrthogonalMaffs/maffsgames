@@ -1,0 +1,9 @@
+{
+  "note": "scripts/check-contrast.py's list (contract SITE-CONTRAST, 22 Nov 2026). known-failures, per mode: each game whose failing text is not a colour value (text on a picture or gradient, a canvas), or whose fix a STOP IF parked for Jon, with its reason. A failure not listed fails; a listed game that passes fails as stale, so the list only shrinks.",
+  "known-failures": {
+    "normal": {},
+    "aa": {
+      "log-laws": "Aa mode only: the timer (#timerDisplay, var(--muted) #637289) sits on the dark Aa page (body.accessible #12141f, 3.75:1) while --muted is also text on the light cards (#fff7ed, #ffffff); no one value passes both, and a second split token is past SITE-CONTRAST's one new token per game (STOP IF): left for Jon to rule (22 Nov 2026)"
+    }
+  }
+}

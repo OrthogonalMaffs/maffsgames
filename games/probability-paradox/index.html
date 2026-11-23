@@ -23,7 +23,7 @@
 <link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080c14;--surface:#0f1520;--border:#1a2438;--primary:#3b82f6;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e8ecf4;--muted:#6b7a94;--sim:#06b6d4;--sim2:#f97316}
+:root{--bg:#080c14;--surface:#0f1520;--border:#1a2438;--primary:#498bf7;--accent:#f59e0b;--wrong:#f43f5e;--correct:#22c55e;--text:#e8ecf4;--muted:#73819a;--sim:#06b6d4;--sim2:#f97316}
 body{padding-bottom:44px;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:760px;width:100%;padding:1rem}
 a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoration:none;font-size:.85rem}a.back-link:hover{color:var(--text)}
@@ -74,7 +74,7 @@ a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoratio
 .solution .step{margin-bottom:.5rem;padding-left:.8rem;border-left:2px solid var(--border)}
 .solution .step .katex{font-size:1.05em!important}
 .solution .misconception{margin-top:.8rem;padding:.6rem .8rem;background:rgba(245,158,11,.08);border-radius:8px;border-left:3px solid var(--accent);font-size:.82rem;color:var(--accent)}
-.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
+.solution .next-btn{display:inline-block;margin-top:.8rem;padding:.5rem 1.5rem;border:none;border-radius:8px;background:var(--primary);color:var(--bg);font-family:'Outfit',sans-serif;font-size:.88rem;font-weight:600;cursor:pointer}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* Venn diagram */
@@ -84,9 +84,9 @@ a.back-link{display:inline-block;margin:1rem 0;color:var(--muted);text-decoratio
 .results h2{font-size:1.6rem;margin-bottom:.5rem}
 .results .final-score{font-family:'JetBrains Mono',monospace;font-size:3rem;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:1rem 0}
 .results .stats{color:var(--muted);margin-bottom:1.5rem;line-height:1.8}
-.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:#fff;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
+.play-again{padding:.8rem 2rem;border-radius:10px;border:none;background:var(--primary);color:var(--bg);font-family:'Outfit',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:transform .15s}
 .play-again:hover{transform:scale(1.05)}
-body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0d9488}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
+body.accessible{font-family:'OpenDyslexic',sans-serif!important;letter-spacing:.12em;word-spacing:.16em}body.accessible p,body.accessible .question-text,body.accessible .step-text,body.accessible .option-label,body.accessible .card-text{line-height:2;max-width:65ch}body.accessible{background-color:#12141f!important}body.accessible.light-theme{background-color:#fdf6e3!important;color:#2d2d2d!important}body.accessible .question-text,body.accessible .problem-text{font-size:1.1em}.a11y-toggle{background:#1a2744;color:#fff;border:1px solid #2a3a5c;border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;transition:background .15s}.a11y-toggle.active,.a11y-toggle:hover{background:#0c8378}.correct::after{content:' \2713';font-size:.85em;opacity:.8}.incorrect::after{content:' \2717';font-size:.85em;opacity:.8}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
