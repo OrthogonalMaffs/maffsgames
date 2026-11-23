@@ -16,6 +16,20 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-23 (home): WWIUT-RESTORE-7 ("When will I use this?" gets back the 7 jobs #888 left out, and a Probability page: 47 jobs in 17 topics)
+
+Claude Code (home lane), worktree `~/mg-r7`, branch `claude/wwiut-restore-7`. The contract is at `docs/history/contracts/2026-11-23-wwiut-restore-7.md` (verbatim). It was closed out by FORMULA-UNLOCKED-BANK's first commit.
+
+- **Data:** the 7 scenarios verbatim, Probability after trigonometry, and the payroll sentence; a script asserted no other change. Also the Probability page entry, its one HUBS line, and a line on /updates/.
+- **check-uses.py:** self-test 98 of 98, 47 headlines, 33 pages, 62 sources, OK. Every figure is the contract's.
+- **Live link check:** 55 of 60 answered 200, so the STOP IF fired. Five failed: Wonkee Donkee 522, Plus 403, The Analyst 403, uhsussex ?p=5862 404, FSA hot-holding PDF 404. BNMS redirects to its home page. Reported in #891 and held.
+- **Merged:** 23 Nov as 38895242 (#891), on Jon's "merge" after the held report, via merge-pr.py. Its last line read "main 3889524 run 45223623100: GREEN".
+- **Gate:** the first Gate failed because check-site's PR-budget job ran past its 5-minute limit and was cancelled. An empty commit re-ran it, and it passed: check-site 45220394899 and phone-fit-full 45220395448, both success.
+- **Main on the merge commit:** check-site 45223623100, phone-fit-full 45223623121 and pages 45223622181, all success.
+- **Cleaned up** by end-task.
+- Ruling (Project Claude, 23 Nov): keep all five sources and all seven jobs. Each page was fetched by Project Claude on 23 Nov and answers with the content the job cites: the 403s and the 522 are the sites refusing automated clients; the two 404s (uhsussex ?p=5862, the FSA hot-holding PDF) answer for a browser fetch. The BNMS redirect is noted; that job keeps its other source. No change to data/uses.json.
+- #888: the end-task refusal is expected. 3058b98 is the cloud lane's WWIUT-BATCH-MERGE commit (it took #888 over by contract); #888 merged as a5b3742 and was closed out in the cloud entry. Nothing to do on that branch.
+
 ## 2026-11-23 (home): WWIUT-BATCH-1-2 ("When will I use this?" grows to 40 jobs in 16 topics, with a tier on every job and the home strip's count written by the build)
 
 Claude Code (home lane), worktree `~/mg-batch`, branch `claude/wwiut-batch-1-2`; contract `docs/handover/contracts/2026-11-22-wwiut-batch-1-2.md` (verbatim). The first commit carries WWIUT-STAND-OUT's close-out (#885, 66a29e7).
