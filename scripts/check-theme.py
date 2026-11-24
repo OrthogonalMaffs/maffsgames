@@ -88,6 +88,7 @@ MIGRATED = [
     "fraction-equivalence",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "52dle",  # rebuilt to the theme, 20 Nov 2026 (contract 52DLE-REBUILD)
     "scale-factor-scaling",  # migrated 24 Nov 2026, contract HALF-THE-SIZE-LOOK
+    "think-of-a-number",  # migrated 24 Nov 2026, contract THINK-FIT
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf",
@@ -95,7 +96,7 @@ NOT_YET = [
     "constructions-lab", "word-problem-decoder", "equation-builder", "spot-the-error",
     "gradient-hunter", "truth-buster", "spot-the-muppet", "terrible-advice",
     "wrong-on-the-internet", "maths-court", "expected-damage", "negative-number-line",
-    "think-of-a-number", "formula-plug-in", "decimal-detective", "four-quadrant-explorer",
+    "formula-plug-in", "decimal-detective", "four-quadrant-explorer",
     "like-terms-collector", "probability-pioneer", "shape-shifter", "new-shapes", "higher-power",
     "prisoners-dilemma", "seven-bridges",
     "index-laws", "quadratic-factoriser", "trig-wars", "trig-worms", "modular-battle",
