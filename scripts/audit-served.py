@@ -748,7 +748,9 @@ def write_md(data):
     counts = {v: sum(1 for r in rows if r["verdict"] == v) for v in VERDICT_ORDER}
     disagree = [r for r in rows if r["verdict"] == "UNDER 40" and isinstance(r["b4"], int) and r["b4"] >= 40]
     reps = [(r, x) for r in rows for x in r.get("in_session_repeats", [])]
-    one_set = [r for r in rows if r.get("first_session_option_sets") == 1]
+    notes = data.get("notes", [])
+    noted = {(n["slug"], n["level"]) for n in notes}
+    one_set = [r for r in rows if r.get("first_session_option_sets") == 1 and (r["slug"], r["level"]) not in noted]
     done = [b for b in blocks if b["status"] == "done"]
     capped = [r for r in rows if r.get("stop") == "session cap"]
     t3 = [r for r in rows if r["verdict"] == "UNMEASURED" and r.get("stop") != "session cap"]
@@ -838,6 +840,13 @@ def write_md(data):
             "distractors 5.1, 5.5) and Core es_core_022 (products 0, 0.45, 0.3, 0.3; distractors 0.35, 0.55). "
             "scripts/checker-allowlist.json's `tier3_exceptions` records the same shape for Stage 1 (es_gcse_001, "
             "two cells of 0.25). Known and allowed, not a finding."]
+    out += ["", "## Notes (Project Claude's rulings)", ""]
+    if notes:
+        out += ["| Game | Level | Ruling | Reason | Date |", "|---|---|---|---|---|"]
+        out += ["| `%s` | %s | %s | %s | %s |" % (n["slug"], n["level"], _cell(n["ruling"]), _cell(n["reason"]), n["date"])
+                for n in notes]
+    else:
+        out.append("None.")
     if oos:
         out += ["", "## Out of scope", "", "| Game | Level | B4 count | Why out of scope | Tier 3, one session |",
                 "|---|---|---|---|---|"]

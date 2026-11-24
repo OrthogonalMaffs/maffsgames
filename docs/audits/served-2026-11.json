@@ -18459,5 +18459,63 @@
    "measured": "2026-11-24 12:18",
    "commit": "270aa43f"
   }
+ ],
+ "notes": [
+  {
+   "slug": "correlation-or-coincidence",
+   "level": "alevel",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "correlation-or-coincidence",
+   "level": "core",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "correlation-or-coincidence",
+   "level": "gcse",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "fraction-equivalence",
+   "level": "gcse",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "fraction-equivalence",
+   "level": "ks3",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "fraction-equivalence",
+   "level": "year6",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "prime-or-composite",
+   "level": "gcse",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  },
+  {
+   "slug": "prime-or-composite",
+   "level": "ks3",
+   "ruling": "question game: verdict stands",
+   "reason": "a fixed answer set around a changing prompt; the distinct counts (42, 40 to 44, 66) show the prompt was captured",
+   "date": "2026-11-24"
+  }
  ]
 }
