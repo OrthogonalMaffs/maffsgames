@@ -16,9 +16,26 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-24 (home): THREE-GAMES-LIST (MaffsCards, Sums in Disguise and Some Thingies are listed)
+
+Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-games-list`. The contract is at `docs/handover/contracts/2026-11-24-three-games-list.md` (verbatim, with Amendment 1). The first commit closed out TIER3-LOCK-FIX.
+
+- **Approval (verbatim):**
+  - Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."
+  - Jon, 24 Nov 2026, ~21:35, answering Project Claude: "No Essentials cards" (portal KS3 section only; the two primary games stay on /class/ as now).
+- **Portal:** three cards at the end of the KS3 section, New badges dated 2026-11-24. MaffsCards is `ks3`; the other two are `year6 ks3` and link `?level=year6`.
+- **Also listed on:** the sitemap, the leaderboard hub (4, 5 and 8 boards), /updates/, and for MaffsCards the spec map (GCSE N4). MaffsCards' noindex is gone.
+- **Roster:** #113, #114 and #115 are in KS3 Games (38), look signed off by Jon, 2026-11-24. Unlisted is 9.
+- **Amendment 1 (Jon, in session):** check-spec-mapping.py failed the two primary games, which the contract keeps off the spec map. Jon chose "EXCEPTIONS entry (Recommended)"; both are in that script's EXCEPTIONS.
+- **Coverage check:** it needed LEVEL_OVERRIDES entries for the two primary games' stage boards, as the contract allowed.
+- **Todo:** MAFFSCARDS-LIST moved whole; the other two rows keep Jon's LINES rewrites and Miss O'Brien's questions.
+- **Screenshots:** the three cards at 1366 x 768 and 375 x 667, sent to Jon in session.
+
+Record: agent Claude Code; wall 0:40; review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-24 (home): TIER3-LOCK-FIX (tier 3 plays the games the 300 ms answer lock made it skip)
 
-Claude Code (home lane), worktree `~/mg-tier3-lock-fix`, branch `claude/tier3-lock-fix`. The contract is at `docs/handover/contracts/2026-11-24-tier3-lock-fix.md` (verbatim). The first commit closed out TIER3-COVERAGE-REPORT.
+Claude Code (home lane), worktree `~/mg-tier3-lock-fix`, branch `claude/tier3-lock-fix`. The contract is at `docs/history/contracts/2026-11-24-tier3-lock-fix.md` (verbatim). The first commit closed out TIER3-COVERAGE-REPORT.
 
 - **Fix:** tier3()'s contexts add `bc.NO_LOCK_FRESH_INIT`. quadratic-factoriser left tier3_exceptions.
 - **Local, four shards as CI runs them, main 855fce7 then the branch:**
@@ -30,6 +47,10 @@ Claude Code (home lane), worktree `~/mg-tier3-lock-fix`, branch `claude/tier3-lo
 - **Self-test:** new `--tier3-lock-selftest`: tier3() plays a planted lock page fully; with the init script emptied it is UNSUPPORTED after 1 question. CI does not run it until cloud adds it to the workflow.
 - **Decided for you:** the planted page shows its next question 460 ms after a mark, not at once as the contract says. Shown at once, it is tapped 500 ms later, outside the window, and the plant is not caught (tested).
 - **For Project Claude:** the tier3_exceptions entries for spot-the-muppet and expectation-station are now stale; not touched.
+- **Merged** on 24 Nov as 590efd7 (#904) via merge-pr.py, which ended "main 590efd7 run 45489207767: GREEN".
+- **PR head 87ccba6:** check-site 45486151268 and phone-fit-full 45486151312, both success.
+- **Main on 590efd7:** check-site 45489207767 success, phone-fit-full 45489207373 success, pages build 45489206130 success. CI's tier 3 counts match the local ones on all four shards (486 to 557 s a shard).
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by THREE-GAMES-LIST's first commit.
 
 Record: agent Claude Code; wall 1:05; review cycles 0; amendments 0; usage n/a.
 
@@ -123,17 +144,4 @@ Claude Code (home lane), worktree `~/mg-wwiut`, branch `claude/wwiut-stand-out`;
 - Pages: the hub runs "Pick your course" tiles, then 14 job cards (each with its headline in KaTeX, linked to `<topic>/#<id>`), then "By maths topic", in a 1040 px container. Scenario cards get a route-colour top band, a route chip and the headline. Route headers are filled with their colour. The hub's foot line drops its self-link. The look is in `when-will-i-use-this/uses.css`, written by build-uses.py.
 - check-uses.py: headlines, colours, anchors, no hub self-link, and Chromium contrast on tiles, chips and headers. Self-test 50 of 50. A route header scrolled 9 px at 320 in Aa ("environmental"); fixed with overflow-wrap and less phone padding.
 - MERGED 22 Nov as 66a29e7 (#885) via merge-pr.py, exit 0, last line "main 66a29e7 run 45075943570: GREEN", on Jon's "merge", after a merge of main for #886's conflict on updates/index.html (both lines kept; head 662f42a, Gate check-site 45074183522 and phone-fit-full 45074183455, both success). Main on the merge commit: check-site 45075943570 success, phone-fit-full 45075943580 success, pages build 45075943027 success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-wwiut-stand-out.md` (closed out by WWIUT-BATCH-1-2's first commit).
-
-## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
-
-Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-this`; contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md` (verbatim, with Jon's HUBS ruling below it). The first commit carries GIVEN-THAT-POLISH's close-out (#881, 7660e2f).
-
-- One source: `data/uses.json` (4 topics, the 15 Skills England routes, 14 scenarios verbatim, 18 sources). `scripts/build-uses.py` writes 11 committed pages (hub, 4 topics, 6 routes with scenarios) and sitemap.xml's block. Heads come from games.json "pages" via check-meta's render(); the footer is check-footer's CANONICAL. Maths is set in KaTeX at display only.
-- `scripts/check-uses.py` (CI line, `--selftest && --check`): (a) to (f) as the contract lists, plus a guard that the build's own pages are whole. 27 steps with "=": 26 signs recomputed, 2 labels, and 5 steps marked noCheck ("% of" three times, a ratio, a unit change). Self-test: 41 of 41 caught. Chromium: 11 pages x 320/390 x normal/Aa, no sideways scroll.
-- Outside EXACT CHANGE, needed by site-wide checks: `check-publish-scope.py` SITE gains `when-will-i-use-this/`; site-nav.js HUBS gains the 4 topic pages (Jon's ruling, 18:05). Hub has no back link: "Back to games" scrolled 4 px at 320 in Aa. parents/index.html has that same 4 px scroll on main (reported, not fixed: DO NOT TOUCH).
-- Footer: defined once (check-footer.py `_LINKS`) but written into 159 pages on main (170 with these 11) by apply-footer.py, every game among them: not changed (DO NOT TOUCH any game).
-- `check-uses-links.py --live` (not CI): on the first run 17 of 18 answered 200 and RCN's dosage page was 404; Project Claude's review moved it to RCN Learn, also 404 (the course is withdrawn); ruling (Project Claude with Jon): the source is now Gloucestershire Hospitals NHS FT's IV drug calculation practice formulae (PDF).
-- Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
-- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
-- MERGED 22 Nov as 2710eed (#883) via merge-pr.py, exit 0, last line "main 2710eed run 45061326436: GREEN", after Project Claude's review (the RCN source replaced, by ruling, with Gloucestershire Hospitals NHS FT's calculation formulae; 18 of 18 links 200) and a merge of main for #882's conflict. Main on the merge commit: check-site 45061326436 success, phone-fit-full 45061326451 success (every game), pages build 45061325860 success. The PR's last Gate: check-site 45059668766 and phone-fit-full 45059668793 (head d0c21e3), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-when-will-i-use-this.md` (closed out by WWIUT-STAND-OUT's first commit).
 
