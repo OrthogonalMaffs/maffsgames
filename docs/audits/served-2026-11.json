@@ -1,18 +1,18 @@
 {
  "selftests": [
   {
-   "test": "c",
+   "test": "a",
    "slug": "formula-unlocked",
-   "commit": "28be68a",
+   "commit": "38895242",
    "level": "alevel",
-   "want": "distinct 40 or more, no in-session repeat",
+   "want": "UNDER 40, distinct 25 or fewer, at least one in-session repeat",
    "passed": true,
-   "verdict": "40+",
-   "distinct": 52,
-   "distinct_options_only": 52,
-   "sessions": 24,
+   "verdict": "UNDER 40",
+   "distinct": 25,
+   "distinct_options_only": 25,
+   "sessions": 11,
    "saturated": true,
-   "in_session_repeats": 0,
+   "in_session_repeats": 36,
    "started_as": [
     "alevel"
    ],
@@ -27,7 +27,27 @@
     20,
     20,
     20,
-    20,
+    20
+   ],
+   "measured": "2026-11-24 10:00"
+  },
+  {
+   "test": "b",
+   "slug": "scale-factor-scaling",
+   "commit": "65ae674",
+   "level": "gcse",
+   "want": "UNDER 40, distinct exactly 38",
+   "passed": true,
+   "verdict": "UNDER 40",
+   "distinct": 38,
+   "distinct_options_only": 33,
+   "sessions": 13,
+   "saturated": true,
+   "in_session_repeats": 0,
+   "started_as": [
+    "gcse"
+   ],
+   "questions_per_session": [
     20,
     20,
     20,
@@ -41,7 +61,31 @@
     20,
     20,
     20
-   ]
+   ],
+   "measured": "2026-11-24 10:00"
+  },
+  {
+   "test": "c",
+   "slug": "formula-unlocked",
+   "commit": "28be68a",
+   "level": "alevel",
+   "want": "distinct 40 or more, no in-session repeat",
+   "passed": true,
+   "verdict": "40+",
+   "distinct": 42,
+   "distinct_options_only": 42,
+   "sessions": 3,
+   "saturated": false,
+   "in_session_repeats": 0,
+   "started_as": [
+    "alevel"
+   ],
+   "questions_per_session": [
+    20,
+    20,
+    20
+   ],
+   "measured": "2026-11-24 10:00"
   }
  ],
  "estimate": {
