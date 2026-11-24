@@ -16,9 +16,26 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-24 (home): TIER3-LOCK-FIX (tier 3 plays the games the 300 ms answer lock made it skip)
+
+Claude Code (home lane), worktree `~/mg-tier3-lock-fix`, branch `claude/tier3-lock-fix`. The contract is at `docs/handover/contracts/2026-11-24-tier3-lock-fix.md` (verbatim). The first commit closed out TIER3-COVERAGE-REPORT.
+
+- **Fix:** tier3()'s contexts add `bc.NO_LOCK_FRESH_INIT`. quadratic-factoriser left tier3_exceptions.
+- **Local, four shards as CI runs them, main 855fce7 then the branch:**
+  - runs passing 49 to 188 of 355, questions 556 to 1799, 0 FAIL both times, KaTeX check clean;
+  - games passing every run 10 to 52: the report's 39, plus estimation-golf, screening-room and spot-the-muppet;
+  - expectation-station is no longer UNSUPPORTED but WARNs once (a repeated tile, which the driver expects there);
+  - 64 games still have an UNSUPPORTED run.
+- **Wall time:** shards took 8:06 to 9:19 locally (3:22 to 6:35 before). The CI step timeout is 12 minutes: cloud to watch.
+- **Self-test:** new `--tier3-lock-selftest`: tier3() plays a planted lock page fully; with the init script emptied it is UNSUPPORTED after 1 question. CI does not run it until cloud adds it to the workflow.
+- **Decided for you:** the planted page shows its next question 460 ms after a mark, not at once as the contract says. Shown at once, it is tapped 500 ms later, outside the window, and the plant is not caught (tested).
+- **For Project Claude:** the tier3_exceptions entries for spot-the-muppet and expectation-station are now stale; not touched.
+
+Record: agent Claude Code; wall 1:05; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-24 (home): TIER3-COVERAGE-REPORT (which games CI's tier 3 really plays, and whether the 300 ms answer lock is why it skips the rest)
 
-Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/handover/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
+Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/history/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
 
 - **Report:** `docs/audits/tier3-coverage-2026-11.md`, with one row per game, every run's reason in full, and the result when waited out.
 - **Stock tier 3, local = CI exactly** (main 77b6a78, run 45255198196, all four shards' numbers and the same 106 UNSUPPORTED games):
@@ -34,6 +51,10 @@ Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-repor
 - **Cloud lane's report confirmed:** formula-unlocked and scale-factor-scaling are UNSUPPORTED on every run stock and PASS on every run (10 questions) waited out.
 - **Also found:** quadratic-factoriser's tier3_exceptions entry is stale (it PASSES).
 - **Decided for you:** tier 3 was run through a throwaway wrapper that calls check-site.py's own `tier3()` with CI's arguments, rather than the bare command, because CI's output truncates reasons to 90 characters and never lists the games it played. Its numbers match the bare command's (CI's) on all four shards.
+- **Merged** on 24 Nov as fa3f7be (#895) via merge-pr.py, which ended "main fa3f7be run 45356433810: GREEN".
+- **PR head de3cfbe:** check-site 45354282188 and phone-fit-full 45354282154, both success.
+- **Main on fa3f7be:** check-site 45356433810 success, phone-fit-full 45356433623 success, pages build 45356433627 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-24-tier3-coverage-report.md`, closed out by TIER3-LOCK-FIX's first commit.
 
 ## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
 

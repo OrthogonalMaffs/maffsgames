@@ -1,5 +1,7 @@
 # Tier 3 coverage, November 2026 (TIER3-COVERAGE-REPORT)
 
+Fixed by TIER3-LOCK-FIX (24 Nov 2026): tier 3 runs with FRESH_MS 0; 52 games now play fully (10 before; the figures below are as they stood before the fix).
+
 Home lane, 24 Nov 2026, on origin/main 00ab3245, whose game pages are the same as 77b6a78. Contract: `docs/handover/contracts/2026-11-24-tier3-coverage-report.md`. This is a report only. No checker, allowlist, shared asset or game was changed.
 
 ## Summary

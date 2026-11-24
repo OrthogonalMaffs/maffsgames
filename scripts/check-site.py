@@ -2869,6 +2869,9 @@ async def tier3(pages, live, workers, timeout_ms, n_questions, advance_ms, seede
                     await ctx.add_init_script(PHONE_SEED)
                 await ctx.add_init_script(TIER3_INIT)
                 await ctx.add_init_script(bc.KATEX_HOOK_INIT)
+                # Contract TIER3-LOCK-FIX (24 Nov 2026; docs/audits/tier3-coverage-2026-11.md): MaffsLock's 300 ms fresh
+                # window dropped the driver's tap on question 2 in 43 games. The lock is tested in check-answer-lock.py.
+                await ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
 
                 async def ws_handler(ws):
                     all_blocked.append(ws.url)
@@ -3009,6 +3012,124 @@ def tier3_katex_selftest():
     return 1 if failures else 0
 
 
+# Tier 3 and the answer lock (contract TIER3-LOCK-FIX, 24 Nov 2026). One planted four-option page that loads the
+# site's own answer-lock.js, marks a tap at once and shows its next question TIER3_LOCK_PLANT_GAP_MS later, calling
+# MaffsLock.fresh() as every migrated game does. tier3() itself plays it, twice. As tier 3 runs, it must play every
+# question. Planted, with bank_common.NO_LOCK_FRESH_INIT swapped for a script that does nothing (the same as tier3()
+# without its add_init_script line), the tap on question 2 lands inside the 300 ms window, nothing marks it, and the
+# run must come back UNSUPPORTED after one question: the self-test fails if the page was played, so it cannot pass on
+# a page that never needed the line. Nothing is written to the repository: a server in this process stands in for the
+# stub server for these two runs, serving the page and schools/assets/answer-lock.js and nothing else.
+#
+# The gap is not 0. The driver polls every 250 ms, once for the mark and once for the next question, so a question
+# shown the instant the last was marked is tapped 500 ms or more after its fresh(), outside the window; real games
+# are caught because their next question appears between two polls. At 460 ms the tap comes 40 ms or more after
+# fresh(), with 260 ms of the window left, and the planted run passes only if all three later taps miss it.
+TIER3_LOCK_PLANT_SLUG = "tier3-lock-plant"
+TIER3_LOCK_PLANT_QUESTIONS = 4
+TIER3_LOCK_PLANT_GAP_MS = 460
+TIER3_LOCK_PLANT_PAGE = """<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>tier 3 lock self-test</title><link rel="icon" href="data:,"></head>
+<body>
+<div id="opts"></div>
+<script src="/schools/assets/answer-lock.js"></script>
+<script>
+(function () {
+  var q = 0, box = document.getElementById('opts');
+  function show() {
+    box.textContent = '';
+    for (var i = 0; i < 4; i++) {
+      var b = document.createElement('button');
+      b.dataset.val = String(q * 4 + i);
+      b.textContent = 'Option ' + (q * 4 + i);
+      b.addEventListener('click', answer);
+      box.appendChild(b);
+    }
+    MaffsLock.fresh(box);
+  }
+  function answer() {
+    if (!MaffsLock.lock(box)) return;
+    mfg('question_answered', {question_index: q});
+    q++;
+    setTimeout(show, %d);
+  }
+  mfg('game_started', {});
+  show();
+})();
+</script>
+</body></html>
+""" % TIER3_LOCK_PLANT_GAP_MS
+
+
+class _LockPlantServer:
+    """The planted page's server: what tier3() uses of bc.start_stub_server()'s process is terminate()."""
+
+    def __init__(self):
+        import http.server
+        import threading
+        page = TIER3_LOCK_PLANT_PAGE.encode("utf-8")
+        with open(os.path.join(ROOT, "schools", "assets", "answer-lock.js"), "rb") as fh:
+            lock_js = fh.read()
+        served = {"/games/%s/" % TIER3_LOCK_PLANT_SLUG: (page, "text/html; charset=utf-8"),
+                  "/schools/assets/answer-lock.js": (lock_js, "application/javascript; charset=utf-8")}
+
+        class Handler(http.server.BaseHTTPRequestHandler):
+            def do_GET(self):
+                hit = served.get(self.path.split("?", 1)[0])
+                if not hit:
+                    self.send_error(404)
+                    return
+                self.send_response(200)
+                self.send_header("Content-Type", hit[1])
+                self.send_header("Content-Length", str(len(hit[0])))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(hit[0])
+
+            def log_message(self, *args):
+                pass
+
+        self.httpd = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+        self.base = "http://127.0.0.1:%d" % self.httpd.server_address[1]
+        threading.Thread(target=self.httpd.serve_forever, daemon=True).start()
+
+    def terminate(self):
+        self.httpd.shutdown()
+        self.httpd.server_close()
+
+
+def tier3_lock_selftest():
+    n = TIER3_LOCK_PLANT_QUESTIONS
+    print("tier 3 and the answer lock, self-test (a planted page, %d questions, the next one %d ms after each mark)"
+          % (n, TIER3_LOCK_PLANT_GAP_MS))
+    pages = [("game:" + TIER3_LOCK_PLANT_SLUG, "games/%s/" % TIER3_LOCK_PLANT_SLUG, [""])]
+    real_start, real_init = bc.start_stub_server, bc.NO_LOCK_FRESH_INIT
+    lines, failures = [], []
+    try:
+        for name, plant in (("as tier 3 runs", False), ("tier 3 without NO_LOCK_FRESH_INIT", True)):
+            server = _LockPlantServer()
+            bc.start_stub_server = lambda *a, _s=server, **k: (_s, _s.base)
+            bc.NO_LOCK_FRESH_INIT = "void 0;" if plant else real_init
+            results, _blocked, _escaped = asyncio.run(tier3(pages, False, 1, 20000, n, 2000))
+            r = results[0] if len(results) == 1 else {"status": "NO RESULT", "detail": "%d results" % len(results), "played": 0}
+            if plant:
+                ok = (r["status"] == "UNSUPPORTED" and r["played"] == 1
+                      and "question 2 was never marked" in r["detail"])
+            else:
+                ok = r["status"] == "PASS" and r["played"] == n
+            lines.append("  %-6s %-34s %s, %d of %d question(s) played: %s"
+                         % ("caught" if ok and plant else "OK" if ok else "FAILED", name, r["status"], r["played"], n,
+                            ascii_safe(r["detail"])[:110]))
+            if not ok:
+                failures.append(name + (" (the planted page was played, or was skipped for another reason)" if plant
+                                        else " (the planted page was not played through)"))
+    finally:
+        bc.start_stub_server, bc.NO_LOCK_FRESH_INIT = real_start, real_init
+    print("\n" + "\n".join(lines))
+    print("%s" % ("FAILED: " + "; ".join(failures) if failures else "OK: tier 3 played the planted page, and the plant was caught"))
+    return 1 if failures else 0
+
+
 # ---------------------------------------------------------------------------
 
 def site_nav_report():
@@ -3123,6 +3244,9 @@ def main():
                     help="tier 3: leave Math.random unseeded (fresh draws each run; a local sweep, never the gate)")
     ap.add_argument("--tier3-katex-selftest", action="store_true",
                     help="tier 3's KaTeX parse check on a planted game (contract KATEX-ERRORS); plays 2 questions")
+    ap.add_argument("--tier3-lock-selftest", action="store_true",
+                    help="tier 3 on a planted page that uses the answer lock (contract TIER3-LOCK-FIX): it must play "
+                         "every question, and must not without NO_LOCK_FRESH_INIT")
     ap.add_argument("--shard-selftest", type=int, metavar="N",
                     help="prove that N shards load every page exactly once and that the workflow "
                          "runs all N; loads nothing")
@@ -3133,6 +3257,8 @@ def main():
         return shard_selftest(args.shard_selftest)
     if args.tier3_katex_selftest:
         return tier3_katex_selftest()
+    if args.tier3_lock_selftest:
+        return tier3_lock_selftest()
     try:
         shard = parse_shard(args.shard) if args.shard else None
     except ValueError as exc:
