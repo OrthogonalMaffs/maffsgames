@@ -2,8 +2,9 @@
 # ci-line: Scale Factor Scaling (every key recomputed from the quantities its question states; every option marked in Chromium) |
 """Scale Factor Scaling: every key recomputed from what its question states, and nothing it does not state.
 
-The game (46 multiple-choice items in four tiers: area, volume, reverse and context; gcse serves T1-T3, alevel
-all four, level4 T2-T4) was keyed by hand with no verifier. The tranche 1 audit of 6 Oct 2026 found the paint
+The game (now "But It's Only Half the Size!", slug unchanged; 54 multiple-choice items in five tiers: area,
+volume, reverse, context and more; gcse serves T1-T3 and T5, alevel and level4 all five; contract HALF-THE-SIZE,
+23 Nov 2026) was keyed by hand with no verifier. The tranche 1 audit of 6 Oct 2026 found the paint
 item (T4[4]) asking "how many litres for the larger shape?" with no original area or amount of paint, keyed
 "4 litres per 10 m²" against its own rate of 10 m² per litre (scale-factor-scaling-t1-001, HIGH; contract
 LISTED-HIGH, 9 Oct 2026: state the original quantity, chosen so the key holds).
@@ -15,7 +16,10 @@ ratios reduced by their gcd, and a unit). Then: the key equals the target in val
 does; the four options are distinct strings and no two are equal in value (SR-4; B11-CLEAR, 12 Oct 2026: none
 expected, so EQUAL_PAIRS is empty and any equal pair fails). In Chromium (390x844) every item is shown
 through nextQ() and every option clicked through handleAnswer(): the key marked right, the others wrong.
-A self-test plants the audit's paint item back into a copy of the page; it must FAIL naming T4[4].
+KaTeX (HALF-THE-SIZE): every item's worked solution (showExplain), served KaTeX from scripts/fonts/katex/, shows no
+raw \\( or \\), no .katex-error, and a .katex in every step or note authored with \\( \\); every fraction option a/b
+shows a .katex. A self-test plants the audit's faults back into a copy of the page, and a step's broken TeX; each
+must FAIL naming its item.
 
     python scripts/verify-scale-factor-scaling.py [--no-selftest] [--against FILE]
 """
@@ -32,7 +36,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'scale-factor-scaling'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-COUNTS = {'T1': 15, 'T2': 13, 'T3': 10, 'T4': 8}
+COUNTS = {'T1': 15, 'T2': 13, 'T3': 10, 'T4': 8, 'T5': 8}
 VULGAR = {'½': F(1, 2), '⅓': F(1, 3), '¼': F(1, 4), '⅛': F(1, 8)}
 
 
@@ -72,59 +76,68 @@ def R(*p):
 # (s1-001), corresponding sides (s1-002), similar solids (s1-003). The old wording fails the words check.
 TARGETS = {
     'T1': [
-        ('Length scale factor = 2. Area', N(2 ** 2)),
-        ('Length scale factor = 3. Area', N(3 ** 2)),
-        ('Length scale factor = 4. Area', N(4 ** 2)),
-        ('Length scale factor = 5. Area', N(5 ** 2)),
-        ('Length scale factor = 10. Area', N(10 ** 2)),
-        ('Lengths double. Original area = 12 cm²', N(12 * 2 ** 2, 'cm²')),
-        ('Lengths triple. Original area = 5 m²', N(5 * 3 ** 2, 'm²')),
-        ('Length scale factor = 4. Original area = 10 cm²', N(10 * 4 ** 2, 'cm²')),
-        ('Lengths in ratio 2:5. Area ratio', R(4, 25)),
-        ('Corresponding sides 3 cm and 9 cm. Area ratio', R(1, 9)),
-        ('Length scale factor = 1/2. Area', N(F(1, 2) ** 2)),
-        ('Length scale factor = 1/3. Area', N(F(1, 3) ** 2)),
-        ('Lengths halved. Original area = 100 cm²', N(100 * F(1, 2) ** 2, 'cm²')),
-        ('Scale factor = 1.5. Area', N(F(3, 2) ** 2)),
-        ('Length scale factor = 0.5. Original area = 64 m²', N(64 * F(1, 2) ** 2, 'm²')),
+        ('length scale factor 2. By what factor does the area', N(2 ** 2)),
+        ('length scale factor 3. By what factor has its area', N(3 ** 2)),
+        ('length scale factor 4. By what factor does the area', N(4 ** 2)),
+        ('length scale factor 5. What is the area scale factor', N(5 ** 2)),
+        ('length scale factor 10 to cover the whole classroom wall. What is the area scale factor', N(10 ** 2)),
+        ('A 12 cm² stamp showing a famous goat is enlarged so every length doubles', N(12 * 2 ** 2, 'cm²')),
+        ('A 5 m² trampoline is rebuilt for an elephant, with every length 3 times as long', N(5 * 3 ** 2, 'm²')),
+        ('A 10 cm² biscuit is enlarged with length scale factor 4', N(10 * 4 ** 2, 'cm²')),
+        ('are similar, with lengths in the ratio 2 : 5. What is the ratio of their areas', R(2 ** 2, 5 ** 2)),
+        ('Two similar triangular sandwiches have corresponding sides of 3 cm and 9 cm', R(1, (9 // 3) ** 2)),
+        ('comes out with every length halved. By what factor has the area', N(F(1, 2) ** 2)),
+        ('one third as long in every direction. What is the area scale factor', N(F(1, 3) ** 2)),
+        ('A 100 cm² beach towel goes on the wrong wash and every length halves', N(100 * F(1, 2) ** 2, 'cm²')),
+        ('length scale factor 1.5. By what factor has their area', N(F(3, 2) ** 2)),
+        ('A 64 m² bouncy castle slowly deflates until every length is 0.5 times', N(64 * F(1, 2) ** 2, 'm²')),
     ],
     'T2': [
-        ('Length scale factor = 2. Volume', N(2 ** 3)),
-        ('Length scale factor = 3. Volume', N(3 ** 3)),
-        ('Length scale factor = 4. Volume', N(4 ** 3)),
-        ('Length scale factor = 5. Volume', N(5 ** 3)),
-        ('Length scale factor = 10. Volume', N(10 ** 3)),
-        ('Lengths double. Original volume = 20 cm³', N(20 * 2 ** 3, 'cm³')),
-        ('Lengths triple. Original volume = 10 m³', N(10 * 3 ** 3, 'm³')),
-        ('Lengths in ratio 1:4. Volume ratio', R(1, 64)),
-        ('Length scale factor = 1/2. Volume', N(F(1, 2) ** 3)),
-        ('Length scale factor = 1/3. Volume', N(F(1, 3) ** 3)),
-        ('Lengths halved. Volume = 1000 cm³', N(1000 * F(1, 2) ** 3, 'cm³')),
-        ('Scale factor = 1.5. Volume', N(F(3, 2) ** 3)),
-        ('1:20 scale. Real car volume = 4 m³', N(4 * F(1, 20) ** 3, 'm³')),
+        ('twice as long in every direction as the normal one. How many times as much jelly', N(2 ** 3)),
+        ('3 times as long in every direction. By what factor does the volume', N(3 ** 3)),
+        ('length scale factor 4 to scare off the neighbours. What is the volume scale factor', N(4 ** 3)),
+        ('length scale factor 5 for a very large bath. What is the volume scale factor', N(5 ** 3)),
+        ('length scale factor 10 for a horse with a sweet tooth. What is the volume scale factor', N(10 ** 3)),
+        ('A 20 cm³ meatball is made with every length doubled', N(20 * 2 ** 3, 'cm³')),
+        ('A 10 m³ hot tub is rebuilt 3 times as long in every direction', N(10 * 3 ** 3, 'm³')),
+        ('are similar, with lengths in the ratio 1 : 4. What is the ratio of their volumes', R(1 ** 3, 4 ** 3)),
+        ('comes out with every length halved. "But it\'s only half the size!" By what factor has its volume', N(F(1, 2) ** 3)),
+        ('making every length one third as long. What is the volume scale factor', N(F(1, 3) ** 3)),
+        ('A 1000 cm³ sandcastle bucket is copied for a toddler, with every length halved', N(1000 * F(1, 2) ** 3, 'cm³')),
+        ('length scale factor 1.5. By what factor has its volume', N(F(3, 2) ** 3)),
+        ("built to a scale of 1 : 20. The real car's volume is 4 m³", N(4 * F(1, 20) ** 3, 'm³')),
     ],
     'T3': [
-        ('Area scale factor = 9. Linear', N(3)),
-        ('Area scale factor = 25. Linear', N(5)),
-        ('Area scale factor = 4. Linear', N(2)),
-        ('Volume scale factor = 8. Linear', N(2)),
-        ('Volume scale factor = 27. Linear', N(3)),
-        ('Volume scale factor = 125. Linear', N(5)),
-        ('Area ratio = 16:49. Length ratio', R(4, 7)),
-        ('Volume ratio = 8:27. Length ratio', R(2, 3)),
-        ('Similar solids. Volume ratio = 8:27. Area ratio', R(4, 9)),
-        ('Similar solids. Area ratio = 9:25. Volume ratio', R(27, 125)),
+        ('is the same shape as yours, with 9 times the area. What is the length scale factor', N(3)),  # 3 ** 2 = 9
+        ('is the same shape as the original photo, with 25 times the area. What is the length scale factor', N(5)),  # 5 ** 2 = 25
+        ('is similar to a sadder, smaller pancake, with 4 times the area. What is the length scale factor', N(2)),  # 2 ** 2 = 4
+        ('is similar to a small one and holds 8 times as much. What is the length scale factor', N(2)),  # 2 ** 3 = 8
+        ("is similar to the kids' size and holds 27 times as much. What is the length scale factor", N(3)),  # 3 ** 3 = 27
+        ('keeping its shape, until it holds 125 times its original volume. What is the length scale factor', N(5)),  # 5 ** 3 = 125
+        ('Two similar paddling pools have floor areas in the ratio 16 : 49. What is the ratio of their lengths', R(4, 7)),  # 4 ** 2 : 7 ** 2 = 16 : 49
+        ('Two similar pies hold gravy in the ratio 8 : 27. What is the ratio of their lengths', R(2, 3)),  # 2 ** 3 : 3 ** 3 = 8 : 27
+        ('Two similar pies hold gravy in the ratio 8 : 27. What is the ratio of the areas', R(2 ** 2, 3 ** 2)),  # lengths 2 : 3 from 8 : 27
+        ('Two similar snowmen have surface areas in the ratio 9 : 25', R(3 ** 3, 5 ** 3)),  # lengths 3 : 5 from 9 : 25
     ],
     'T4': [
-        ('A cube has side 5 cm, enlarged by SF 3. New volume', N(5 ** 3 * 3 ** 3, 'cm³')),
-        ('Radius triples. New surface area factor', N(3 ** 2)),
-        ('Heights 10 cm and 30 cm. Volume ratio', R(1, 27)),
-        ('scale 1:50000. A lake is 4 cm² on the map. Real area', N(F(4 * 50000 ** 2, 100 ** 2), 'm²')),
-        # 1 litre covers 10 m²: a 10 m² surface needs 1 litre; doubled, its area is 4 x 10 m², so 4 litres.
-        ('covers 10 m² per litre. A shape with surface area 10 m²', N(F(10 * 2 ** 2, 10), 'litres')),
-        ('1:100 scale weighs 50g. Same material', N(F(50 * 100 ** 3, 1000), 'kg')),
-        ('Diameters 6 cm and 18 cm. Volume of small = 24 cm³', N(24 * (18 // 6) ** 3, 'cm³')),
-        ('enlarged by SF 2.5. Original area = 60 cm²', N(60 * F(5, 2) ** 2, 'cm²')),
+        ('A 5 cm cube of cheese is enlarged with scale factor 3', N(5 ** 3 * 3 ** 3, 'cm³')),
+        ('enlarged so its radius triples. By what factor does its surface area', N(3 ** 2)),
+        ('Two similar bottles of very fizzy pop are 10 cm and 30 cm tall', R(1, (30 // 10) ** 3)),
+        ('with scale 1 : 50 000, a crocodile-filled lake covers 4 cm²', N(F(4 * 50000 ** 2, 100 ** 2), 'm²')),
+        ('Paint covers 10 m² per litre. A shed with surface area 10 m²', N(F(10 * 2 ** 2, 10), 'litres')),  # 1 litre covers 10 m²; doubled, the area is 4 x 10 m²
+        ('A 1 : 100 model of the school weighs 50 g. The real school is made of the same stuff', N(F(50 * 100 ** 3, 1000), 'kg')),
+        ('Two similar ice-cream cones have diameters of 6 cm and 18 cm. The small one holds 24 cm³', N(24 * (18 // 6) ** 3, 'cm³')),
+        ("enlarged with scale factor 2.5. The original's area is 60 cm²", N(60 * F(5, 2) ** 2, 'cm²')),
+    ],
+    'T5': [
+        ("length scale factor 2 for a giant's breakfast. The normal slice has 15 cm² of butter", N(15 * 2 ** 2, 'cm²')),
+        ('with every length 6 times as long. What is the area scale factor', N(6 ** 2)),
+        ('A 2 cm³ chocolate button is enlarged so every length is 3 times as long', N(2 * 3 ** 3, 'cm³')),
+        ('with every length 0.8 times what it was. By what factor has its area', N(F(4, 5) ** 2)),
+        ("is similar to your teacher's and 4 times as tall. The teacher's holds 300 ml", N(F(300 * 4 ** 3, 1000), 'litres')),
+        ('Two similar garden ponds have lengths in the ratio 3 : 7. What is the ratio of their surface areas', R(3 ** 2, 7 ** 2)),
+        ('Two similar sandcastles have volumes in the ratio 1 : 64. What is the ratio of their heights', R(1, 4)),  # 1 ** 3 : 4 ** 3 = 1 : 64
+        ('gets a similar bed with 4 times the floor area. How many times as long', N(2)),  # 2 ** 2 = 4
     ],
 }
 
@@ -166,7 +179,7 @@ def check_bank(fails, bank):
 
 SWEEP_JS = r"""() => {
   window.setTimeout = () => 0;
-  const out = [], tiers = {T1, T2, T3, T4};
+  const out = [], tiers = {T1, T2, T3, T4, T5};
   for (const [t, items] of Object.entries(tiers)) items.forEach((q, i) => {
     for (const pick of [q.c, ...q.d]) {
       pool = [q]; qIdx = 0; total = 0; score = 0; correctN = 0;
@@ -180,6 +193,28 @@ SWEEP_JS = r"""() => {
       const right = btn.classList.contains('correct');
       if (right !== (pick === q.c)) out.push([t, i, pick, right ? 'marked right' : 'marked wrong']);
     }
+  });
+  return out;
+}"""
+
+
+# HALF-THE-SIZE (23 Nov 2026): the worked solution and the fraction options render through KaTeX.
+KATEX_JS = r"""() => {
+  window.setTimeout = () => 0;
+  const out = [], tiers = {T1, T2, T3, T4, T5};
+  const bare = el => { const c = el.cloneNode(true); c.querySelectorAll('.katex-mathml').forEach(m => m.remove()); return c.textContent; };
+  for (const [t, items] of Object.entries(tiers)) items.forEach((q, i) => {
+    pool = [q]; qIdx = 0; total = 0; score = 0; correctN = 0;
+    nextQ();
+    for (const b of document.querySelectorAll('#options .opt-btn'))
+      if (/^\d+\/\d+$/.test(b.dataset.val) && !b.querySelector('.katex')) out.push([t, i, 'the fraction option ' + b.dataset.val + ' is not KaTeX']);
+    showExplain(q);
+    const sol = document.getElementById('solution');
+    const text = bare(sol);
+    if (text.includes('\\(') || text.includes('\\)')) out.push([t, i, 'raw \\( \\) in the worked solution: ' + text.slice(0, 90)]);
+    if (sol.querySelector('.katex-error')) out.push([t, i, 'a .katex-error in the worked solution: ' + sol.querySelector('.katex-error').textContent.slice(0, 90)]);
+    const parts = [...sol.querySelectorAll('.step, .misconception')], src = [...(q.s || []), ...(q.mc ? [q.mc] : [])];
+    parts.forEach((el, k) => { if ((src[k] || '').includes('\\(') && !el.querySelector('.katex')) out.push([t, i, 'no KaTeX in ' + JSON.stringify(src[k])]); });
   });
   return out;
 }"""
@@ -208,18 +243,20 @@ def play(fails, html):
             ctx = browser.new_context(viewport={'width': 390, 'height': 844})
             ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
             page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
-            ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+            bc.offline(ctx, base)   # KaTeX's CDN files answered from scripts/fonts/katex/; everything else off the stub server aborted
             ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
                 status=200, content_type='text/html; charset=utf-8', body=html))
             page = ctx.new_page()
             errors = []
             page.on('pageerror', lambda e: errors.append(str(e)))
             page.goto(base + '/games/%s/?level=alevel&cb=verify' % SLUG, wait_until='load', timeout=20000)
-            page.wait_for_function('typeof T4 !== "undefined"', timeout=15000)
+            page.wait_for_function('typeof T5 !== "undefined" && typeof katex !== "undefined"', timeout=15000)
             page.evaluate("() => show('game')")
-            bank = page.evaluate('() => ({T1, T2, T3, T4})')
+            bank = page.evaluate('() => ({T1, T2, T3, T4, T5})')
             for t, i, pick, what in page.evaluate(SWEEP_JS):
                 fails.append('%s[%d] in Chromium: option %s %s' % (t, i, pick, what))
+            for t, i, what in page.evaluate(KATEX_JS):
+                fails.append('%s[%d] KaTeX: %s' % (t, i, what))
             browser.close()
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
@@ -235,13 +272,15 @@ PLANTS = [
      '<div class="hud-item"><div class="hud-label">Time</div><div class="hud-val" id="timer">0</div></div><div class="hud-item"><div class="hud-label">Correct</div>'),
     ('notation:', 's1-004: a fraction glyph back', "c:'1/4',d:['1/2','1/8','1/16']", "c:'\u00bc',d:['1/2','1/8','1/16']"),
     ('T4[4]', 't1-001: the paint item with no original quantity',
-     "{sec:'Context',p:'Paint covers 10 m² per litre. A shape with surface area 10 m² is enlarged so its dimensions double. How many litres for the larger shape?',c:'4 litres',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 2² = 4','New surface area = 10 × 4 = 40 m²','40 ÷ 10 = 4 litres'],mc:'Paint covers area, so it scales by k², not k.'}", "{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']}"),
+     "{sec:'Context',p:'Paint covers 10 m² per litre. A shed with surface area 10 m² is rebuilt with every length doubled, for a very large lawnmower. How many litres does the new shed need?',c:'4 litres',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by \\\\(k^2 = 2^2 = 4\\\\)','New surface area \\\\(= 10 \\\\times 4 = 40\\\\) m²','\\\\(40 \\\\div 10 = 4\\\\) litres'],mc:'Paint covers area, so it scales by \\\\(k^2\\\\), not \\\\(k\\\\).'}", "{sec:'Context',p:'Paint covers 10 m² per litre. If dimensions double, how many litres for the larger shape?',c:'4 litres per 10 m²',d:['2 litres','8 litres','1 litre'],s:['Surface area scales by k² = 4','4× more paint needed']}"),
     ('T1[8]', 'SR-4: two wrong options equal in value (4:10 = 2:5)',
      "c:'4:25',d:['2:5','8:125','4:5']", "c:'4:25',d:['2:5','8:125','4:10']"),
     ('T1[7]', 's1-001: "Scale factor" with no "length" (40 cm² is then right)',
-     "p:'Length scale factor = 4. Original area", "p:'Scale factor = 4. Original area"),
+     "biscuit is enlarged with length scale factor 4", "biscuit is enlarged with scale factor 4"),
     ('T3[8]', 's1-003: a ratio item that does not say similar',
-     "p:'Similar solids. Volume ratio = 8:27. Area ratio", "p:'Volume ratio = 8:27. Area ratio"),
+     "Two similar pies hold gravy in the ratio 8 : 27. What is the ratio of the areas", "Two pies hold gravy in the ratio 8 : 27. What is the ratio of the areas"),
+    ('T1[1]', 'HALF-THE-SIZE: a step\'s TeX broken (KaTeX error)',
+     "s:['\\\\(k^2 = 3^2 = 9\\\\)']", "s:['\\\\(k^2 = 3^2 = \\\\dfrac{9}\\\\)']"),
 ]
 
 

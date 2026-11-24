@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium) |
+# ci-shards: Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium) | | 3
 """Formula Unlocked: every rearrangement checked with SymPy; every option clicked in Chromium.
 
 The game (106 questions: Q_GCSE 40, Q_ALEVEL 26, Q_LEVEL4 40) shows a formula and asks to make one variable the
@@ -25,7 +25,11 @@ the quantities are physical lengths, masses and rates; an option read() cannot r
 A self-test plants the audit's faults back into a copy of the page (r-001's value-equal option; f0-001's
 g(T/(2 pi))), and the old A-Level draw; each must FAIL naming its item.
 
-    python scripts/verify-formula-unlocked.py [--no-selftest] [--against FILE]
+    python scripts/verify-formula-unlocked.py [--no-selftest] [--against FILE] [--shard I/K] [--list-units]
+
+Work units (contract SHARD; FORMULA-UNLOCKED-BANK's budget follow-up, 23 Nov 2026): the base run on the real page
+(every question and the session check) and each self-test plant. CI runs its slice --shard i/k of them, so every
+question and the session check still run once across the parts.
 """
 import argparse
 import os
@@ -412,14 +416,26 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--no-selftest', action='store_true')
     ap.add_argument('--against', help='check this file as the game page')
+    bc.shard_args(ap)
     args = ap.parse_args()
     sys.stdout.reconfigure(encoding='utf-8')
-    html = open(args.against or GAME, encoding='utf-8').read()
-    fails, n = run(html)
-    print('%s: %d questions, every option read into SymPy and clicked in Chromium' % (SLUG, n))
-    ok = True
+    # The units: the base run on the real page, then each plant (dropped by --no-selftest or --against, as before).
+    units = ['base run']
     if not args.no_selftest and not args.against:
-        for tag, what, old, new in PLANTS:
+        units += ['plant: ' + what for _, what, _, _ in PLANTS]
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(units)
+    html = open(args.against or GAME, encoding='utf-8').read()
+    fails = []
+    if 'base run' in mine:
+        with shard.unit('base run'):
+            fails, n = run(html)
+            print('%s: %d questions, every option read into SymPy and clicked in Chromium; the session check at every level' % (SLUG, n))
+    ok = True
+    for tag, what, old, new in PLANTS:
+        if 'plant: ' + what not in mine:
+            continue
+        with shard.unit('plant: ' + what):
             if html.count(old) != 1:
                 print('  self-test %-42s *** CANNOT PLANT (%d) ***' % (what, html.count(old)))
                 ok = False

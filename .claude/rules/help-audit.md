@@ -41,7 +41,7 @@ These have dedicated how-to sections, worked examples, tutorials, or reference t
 | Probability Pioneer | `probability-pioneer` | Real-world motivation paragraph + 3 stage-preview cards |
 | Proof Builder | `proof-builder` | 3 mode cards with description + mode tags |
 | Quadratic Factoriser | `quadratic-factoriser` | KaTeX worked example + "watch out for negatives" |
-| Scale Factor Scaling | `scale-factor-scaling` | Menu-info with concrete examples (double -> x4 area, x8 volume) |
+| But It's Only Half the Size! | `scale-factor-scaling` | Menu-info with concrete examples (double -> x4 area, x8 volume) |
 | Shape Shifter | `shape-shifter` | 4 selectable mode cards (Translation, Reflection, Rotation, Random Mix) with instructions |
 | Spot the Muppet | `spot-the-muppet` | Start screen subtitle explaining the game mechanic |
 | SUVAT Selector | `suvat` | All 5 variable definitions + in-game 5-equation reference panel |

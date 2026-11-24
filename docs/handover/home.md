@@ -16,16 +16,56 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-24 (home): TIER3-COVERAGE-REPORT (which games CI's tier 3 really plays, and whether the 300 ms answer lock is why it skips the rest)
+
+Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/handover/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
+
+- **Report:** `docs/audits/tier3-coverage-2026-11.md`, with one row per game, every run's reason in full, and the result when waited out.
+- **Stock tier 3, local = CI exactly** (main 77b6a78, run 45255198196, all four shards' numbers and the same 106 UNSUPPORTED games):
+  - 116 games, 352 runs;
+  - 10 games PLAYED in every run, 4 more at some levels;
+  - 49 runs PASS, 303 UNSUPPORTED, 0 FAIL, 556 questions;
+  - 9 UNSUPPORTED games are recorded in tier3_exceptions and 97 are not.
+- **Waited out** (each tap waits until `MaffsLock.isFresh()` is false, as check-answer-lock.py does; throwaway wrapper, never committed): of the 97 unrecorded games,
+  - 39 now play fully, 4 at some levels;
+  - 54 are still UNSUPPORTED: 25 never offer an option group, 29 are still unmarked after a waited tap;
+  - runs passing site-wide 49 to 167, questions 556 to 1597.
+- **Control:** FRESH_MS set to 0 and no wait gives the same 39 + 4, so the 300 ms window is the cause for those 43.
+- **Cloud lane's report confirmed:** formula-unlocked and scale-factor-scaling are UNSUPPORTED on every run stock and PASS on every run (10 questions) waited out.
+- **Also found:** quadratic-factoriser's tier3_exceptions entry is stale (it PASSES).
+- **Decided for you:** tier 3 was run through a throwaway wrapper that calls check-site.py's own `tier3()` with CI's arguments, rather than the bare command, because CI's output truncates reasons to 90 characters and never lists the games it played. Its numbers match the bare command's (CI's) on all four shards.
+
+## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
+
+Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The contract is at `docs/handover/contracts/2026-11-23-half-the-size.md` (verbatim). The first commit closed out FORMULA-UNLOCKED-BANK.
+
+- **Banks:** APPENDIX A, verbatim: 54 items in five tiers. GCSE serves 46, A-Level and Level 4 serve 54.
+- **KaTeX:** steps and notes go through MaffsText, and fraction options show as \dfrac. The start screen renders once KaTeX has loaded, and startGame waits for it.
+- **Calculator:** required, docked to the question card.
+- **Name:** changed everywhere step 5 lists except `<title>`/og:title, which stay as before by Jon's ruling, because check-meta ties them to data/games.json, which this contract cannot touch.
+- **Verifier:** APPENDIX B and T5, plus a KaTeX check on all 54 items. PASS, with all 7 plants caught.
+- **First fix:**
+  - scroll.js loads with keypad.js;
+  - the KaTeX wait's setTimeout carries a `// lock-ok:` reason;
+  - verify-formula-unlocked.py, which grew in #893 and was over the per-line budget at 213s, is split into 3 ci-shards parts (base run plus 9 plants), as Project Claude authorised.
+- **Merged** on 23 Nov as 77b6a78 (#894) via merge-pr.py, which ended "main 77b6a78 run 45255198196: GREEN".
+- **PR head d4393cfe:** check-site 45252185356 and phone-fit-full 45252185350, both success.
+- **Main on 77b6a78:** check-site 45255198196 success, phone-fit-full 45255197837 success, pages build 45255197006 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-half-the-size.md`, closed out by TIER3-COVERAGE-REPORT's first commit.
+
 ## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)
 
-Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/handover/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.
+Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/history/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.
 
 - **Banks:** the 57 appendix questions, verbatim. Q_GCSE is now 40, Q_ALEVEL 26 and Q_LEVEL4 40, with the contract's stage counts.
 - **A-Level draw:** now 6+7+7 from the stage lists, which hold each question once.
 - **verify-formula-unlocked.py:** BANKS, GREEK and the \ln\left( fix. A new session check runs startGame() 1000 times at each level: no repeats, and no session shorter than its draw. It passes at all three levels: 106 questions, and all 9 self-test plants caught, including the old A-Level line.
 - **Decided for Jon:** Level 4's session minimum is 18, not 20, because its draw (unchanged by contract) takes 4+5+5+4. Also, the session check runs only for its own plant during the self-test.
 - **First fix:** the Gate's 6 P's bank line failed, because change-subject.json is generated from this game. I regenerated it (schools/assets/six-ps/, allowed by Jon on 23 Nov). The time budget was not the failure.
-- **Next:** merge on a green Gate with merge-pr.py.
+- **Merged** on 23 Nov as 28be68a (#893) via merge-pr.py, which ended "main 28be68a run 45236117062: GREEN".
+- **PR head 6d1fc0eb:** check-site 45233939506 and phone-fit-full 45233939165, both success.
+- **Main on the merge commit:** check-site 45236117062, phone-fit-full 45236117010 and pages 45236116620, all success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-formula-unlocked-bank.md`, closed out by HALF-THE-SIZE's first commit.
 
 ## 2026-11-23 (home): WWIUT-RESTORE-7 ("When will I use this?" gets back the 7 jobs #888 left out, and a Probability page: 47 jobs in 17 topics)
 
@@ -75,28 +115,4 @@ Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-th
 - Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
 - Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
 - MERGED 22 Nov as 2710eed (#883) via merge-pr.py, exit 0, last line "main 2710eed run 45061326436: GREEN", after Project Claude's review (the RCN source replaced, by ruling, with Gloucestershire Hospitals NHS FT's calculation formulae; 18 of 18 links 200) and a merge of main for #882's conflict. Main on the merge commit: check-site 45061326436 success, phone-fit-full 45061326451 success (every game), pages build 45061325860 success. The PR's last Gate: check-site 45059668766 and phone-fit-full 45059668793 (head d0c21e3), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-when-will-i-use-this.md` (closed out by WWIUT-STAND-OUT's first commit).
-
-## 2026-11-22 (home): GIVEN-THAT-POLISH (a first-try hint, full-size fractions, slip lines that say what was computed, KaTeX in every worked answer, every fade stored)
-
-Claude Code (home lane), worktree `~/mg-gtp`, branch `claude/given-that-polish`; contract `docs/handover/contracts/2026-11-22-given-that-polish.md` (verbatim). The first commit carries GIVEN-THAT-VENN-FADE's close-out (#879, 873befe).
-
-- STOP checks: no STOP. Every SPEC condition other than the 27 Bayes trees is a Venn set, a table column or row, or a tree branch. The 25 stored GCSE greyOuts agree with SPEC on main (as #879 proved).
-- Hint: a first wrong Phase 2 pick shows the slip's sentence, or "Not quite.", then "One more try, for 1 point." (71 named, 4 "Not quite."). Scoring, tries and analytics are unchanged.
-- Fractions: `big()` sets every stored \tfrac as \dfrac at display, in options and feedback. Stored strings and dataset.latex are unchanged. The picked and correct options are no longer dimmed once spent.
-- Worked answers: one renderer, `work()`, typesets P(...), a/b, = ≈ ≠ + in both phases' explanations (the Why card and the Worked Answer panel). The verifier reads each one back from its KaTeX: it must be the stored text, with no a/b left.
-- Slip lines: the conditional families (Phase 1 "cond", Phase 2 "reversed") now start "That's X among Y only, P(X | Y).", in the item's labels. This is only where one group is pinned down, and not where a label is a bare Yes/No (it names nothing without its header). 24 GCSE options and 355 typed wrong ratios.
-- Fade: phase2.greyOut is stored on all 90 items ("none" on the 27 Bayes trees); inferGreyOut is deleted. Tables carry data-row and data-col on every cell, so rows fade. Totals rule, from SPEC: the reduced sample space is the condition's group and its own total. For a column condition, the other columns, the Total column and the grand total fade, and the condition column's total stays. For a row condition, the same with rows. A Venn's "Total" and a tree's root fade too.
-- The open Why card's thresholds were re-measured for the taller card. Needs: 827 at 320 wide, 1183 for 601 to 899, 854 at 900, 797 from 1200. New thresholds: 860, 1220, 890, 830. It is collapsed at all five fit sizes, which fit. Reported (not gated) Next below the fold on phones rose from 592 to 916 entries, all in Aa.
-- Verifier: 13 plants, all caught. The 3 new: core_01 stored "none"; inferGreyOut restored with core_09's greyOut removed; the stored fade inside the condition (gcse_03's Bus, from #879).
-- MERGED 22 Nov as 7660e2f (#881) via merge-pr.py, exit 0, last line "main 7660e2f run 45050898255: GREEN". Main on the merge commit: check-site 45050898255 success, phone-fit-full 45050898282 success, pages build 45050898271 success. The PR's own phone-fit runs measured given-that only: 45047801409 (head f312901) and 45049760979 (head 294beba), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-given-that-polish.md` (closed out by WHEN-WILL-I-USE-THIS's first commit).
-
-## 2026-11-22 (home): GIVEN-THAT-VENN-FADE and DOCS-TRUTH (Given That's Phase 2 fade made real and proved; two stale doc lines)
-
-Claude Code (home lane), worktree `~/mg-gtv`, branch `claude/given-that-venn-fade`; contract `docs/handover/contracts/2026-11-22-given-that-venn-fade.md` (verbatim, with the ruling on the STOP below it). The first commit carries COMPLEX-CONVERTER-WHY's MERGED line (#874, 842aa2e).
-
-- STOPPED at STOP IF before any change: 41 of the 90 items fade nothing in Phase 2. No item fades a region inside its condition. Ruling (Project Claude with Jon, 22 Nov): option (a). The 49 that fade are judged against SPEC; the 41 are the verifier's NO_FADE, reported, not failed. They are 7 column-condition tables inferGreyOut cannot read (core_01, core_09, core_15, core_17, l4_14, l4_16, l4_20), 4 row-condition tables (alevel_11, alevel_14, alevel_16, alevel_24), 3 branch-condition trees (core_20, l4_09, l4_17), and 27 Bayes trees, by design. The 14 and the table's never-fading Total column go to a later contract. There are 14 Venns (gcse 8, alevel 6), not 25; the ruling says 15 because the home lane's STOP report miscounted the A-Level Venns as 7. On main the fade unit fails on all 14 without reduced motion (with it, the inline opacity already faded them).
-- Fix (`games/given-that/index.html` CSS only): `.venn-label.greyed,.venn-set-label.greyed{opacity:0.2}`, with the 0.6s transition the labels already had; the dead `.venn-region` rules removed (nothing used them). The verifier also found the table headers snapping to 0.2 with no transition (only td had one): `th.greyed` now has the same 0.6s, and th joins the reduced-motion list.
-- `scripts/verify-given-that.py`, a `fade` unit: every item into Phase 2 at 390x844 and 1366x768 (both drawings), with and without reduced motion. Every greyed element is at most 0.3 opacity with a 0.6s transition (none with reduced motion), and every count is faded exactly when SPEC's Phase 2 denominator puts it outside the condition. A Total column, grand total and tree root are not judged. 2 new plants (the Venn rule removed: gcse_06; gcse_03's greyOut fading Bus, its own condition), 11 in all.
-- canon.md "How it is checked" now says what measure-phone-fit gates: the asking-screen rule in every mode, sideways scroll in every mode (bar the `sideways` list), Next below the fold on laptop (R2), reported on phones. Snag 1 is under Fixed: 71fd49c8 (7 Oct) made the "simplifies to" line depend on a stored simplified form; e628fa18 (same day) added the identity condition.
-- MERGED 22 Nov as 873befe (#879) via merge-pr.py, exit 0, last line "main 873befe run 45034467271: GREEN". Main on the merge commit: check-site 45034467271 success, phone-fit-full 45034467272 success, pages build 45034467062 success. The PR's own phone-fit run 45032986865 (head 0cdb088) measured given-that only (normal, aa, laptop), success, 14:28:19 to 14:29:49 UTC. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-given-that-venn-fade.md` (closed out by GIVEN-THAT-POLISH's first commit).
 
