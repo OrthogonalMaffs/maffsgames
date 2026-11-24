@@ -1942,5 +1942,1552 @@
     "seconds": 2.3
    }
   ]
- }
+ },
+ "blocks": [
+  {
+   "block": 1,
+   "levels": [
+    [
+     "prime-or-composite",
+     "ks3"
+    ],
+    [
+     "prime-or-composite",
+     "gcse"
+    ],
+    [
+     "fraction-equivalence",
+     "ks3"
+    ],
+    [
+     "fraction-equivalence",
+     "gcse"
+    ],
+    [
+     "fraction-equivalence",
+     "year6"
+    ],
+    [
+     "correlation-or-coincidence",
+     "gcse"
+    ],
+    [
+     "correlation-or-coincidence",
+     "alevel"
+    ],
+    [
+     "correlation-or-coincidence",
+     "core"
+    ],
+    [
+     "formula-unlocked",
+     "level4"
+    ],
+    [
+     "word-problem-decoder",
+     "gcse"
+    ],
+    [
+     "formula-unlocked",
+     "gcse"
+    ],
+    [
+     "scale-factor-scaling",
+     "alevel"
+    ],
+    [
+     "word-problem-decoder",
+     "ks3"
+    ],
+    [
+     "normal-navigator",
+     "alevel"
+    ],
+    [
+     "spot-the-muppet",
+     "core"
+    ],
+    [
+     "equation-builder",
+     "ks3"
+    ],
+    [
+     "simultaneous-solver",
+     "gcse"
+    ],
+    [
+     "factor-race",
+     "year6"
+    ],
+    [
+     "chart-interrogator",
+     "gcse"
+    ],
+    [
+     "chart-interrogator",
+     "alevel"
+    ],
+    [
+     "chart-interrogator",
+     "level4"
+    ],
+    [
+     "test-the-claim",
+     "alevel"
+    ],
+    [
+     "test-the-claim",
+     "level4"
+    ],
+    [
+     "glorious-gantt",
+     "core"
+    ],
+    [
+     "glorious-gantt",
+     "level4"
+    ],
+    [
+     "chart-interrogator",
+     "core"
+    ],
+    [
+     "factor-race",
+     "ks3"
+    ],
+    [
+     "truth-buster",
+     "ks3"
+    ],
+    [
+     "truth-buster",
+     "gcse"
+    ],
+    [
+     "truth-buster",
+     "alevel"
+    ],
+    [
+     "suvat",
+     "alevel"
+    ],
+    [
+     "constructions-lab",
+     "ks3"
+    ],
+    [
+     "equation-builder",
+     "gcse"
+    ],
+    [
+     "equation-builder",
+     "level4"
+    ],
+    [
+     "suvat",
+     "level4"
+    ],
+    [
+     "constructions-lab",
+     "gcse"
+    ],
+    [
+     "spot-the-error",
+     "ks3"
+    ],
+    [
+     "spot-the-error",
+     "gcse"
+    ],
+    [
+     "spot-the-error",
+     "level4"
+    ]
+   ],
+   "projected_minutes": 89.2,
+   "level_minutes": {
+    "prime-or-composite/ks3": 70.9,
+    "prime-or-composite/gcse": 70.9,
+    "fraction-equivalence/ks3": 22.4,
+    "fraction-equivalence/gcse": 22.3,
+    "fraction-equivalence/year6": 22.0,
+    "correlation-or-coincidence/gcse": 16.9,
+    "correlation-or-coincidence/alevel": 16.9,
+    "correlation-or-coincidence/core": 16.9,
+    "formula-unlocked/level4": 13.3,
+    "word-problem-decoder/gcse": 12.9,
+    "formula-unlocked/gcse": 12.7,
+    "scale-factor-scaling/alevel": 12.7,
+    "word-problem-decoder/ks3": 12.4,
+    "normal-navigator/alevel": 12.4,
+    "spot-the-muppet/core": 7.1,
+    "equation-builder/ks3": 0.7,
+    "simultaneous-solver/gcse": 0.5,
+    "factor-race/year6": 0.4,
+    "chart-interrogator/gcse": 0.2,
+    "chart-interrogator/alevel": 0.2,
+    "chart-interrogator/level4": 0.2,
+    "test-the-claim/alevel": 0.2,
+    "test-the-claim/level4": 0.2,
+    "glorious-gantt/core": 0.2,
+    "glorious-gantt/level4": 0.2,
+    "chart-interrogator/core": 0.2,
+    "factor-race/ks3": 0.1,
+    "truth-buster/ks3": 0.1,
+    "truth-buster/gcse": 0.1,
+    "truth-buster/alevel": 0.1,
+    "suvat/alevel": 0.1,
+    "constructions-lab/ks3": 0.1,
+    "equation-builder/gcse": 0.1,
+    "equation-builder/level4": 0.1,
+    "suvat/level4": 0.1,
+    "constructions-lab/gcse": 0.1,
+    "spot-the-error/ks3": 0.1,
+    "spot-the-error/gcse": 0.1,
+    "spot-the-error/level4": 0.1
+   },
+   "status": "pending",
+   "moved_in": [],
+   "moved_out": []
+  },
+  {
+   "block": 2,
+   "levels": [
+    [
+     "normal-navigator",
+     "level4"
+    ],
+    [
+     "normal-navigator",
+     "core"
+    ],
+    [
+     "formula-unlocked",
+     "alevel"
+    ],
+    [
+     "unit-converter",
+     "alevel"
+    ],
+    [
+     "partial-fractions-duel",
+     "level4"
+    ],
+    [
+     "scale-factor-scaling",
+     "gcse"
+    ],
+    [
+     "scale-factor-scaling",
+     "level4"
+    ],
+    [
+     "simultaneous-solver",
+     "alevel"
+    ],
+    [
+     "coordinate-geometry-dash",
+     "alevel"
+    ],
+    [
+     "unit-converter",
+     "gcse"
+    ],
+    [
+     "unit-converter",
+     "level4"
+    ],
+    [
+     "probability-paradox",
+     "core"
+    ],
+    [
+     "probability-paradox",
+     "gcse"
+    ],
+    [
+     "coordinate-geometry-dash",
+     "gcse"
+    ],
+    [
+     "differentiation-duel",
+     "alevel"
+    ],
+    [
+     "differentiation-duel",
+     "level4"
+    ],
+    [
+     "log-laws",
+     "alevel"
+    ],
+    [
+     "log-laws",
+     "level3"
+    ],
+    [
+     "log-laws",
+     "level4"
+    ],
+    [
+     "eigenvalue-extractor",
+     "level4"
+    ],
+    [
+     "eigenvector-engine",
+     "further"
+    ],
+    [
+     "characteristic-quest",
+     "further"
+    ],
+    [
+     "characteristic-quest",
+     "level4"
+    ],
+    [
+     "eigenvector-engine",
+     "level4"
+    ],
+    [
+     "eigenvalue-extractor",
+     "further"
+    ],
+    [
+     "spot-the-muppet",
+     "ks3"
+    ],
+    [
+     "spot-the-muppet",
+     "gcse"
+    ]
+   ],
+   "projected_minutes": 77.6,
+   "level_minutes": {
+    "normal-navigator/level4": 12.4,
+    "normal-navigator/core": 12.4,
+    "formula-unlocked/alevel": 12.3,
+    "unit-converter/alevel": 12.3,
+    "partial-fractions-duel/level4": 12.3,
+    "scale-factor-scaling/gcse": 12.2,
+    "scale-factor-scaling/level4": 12.2,
+    "simultaneous-solver/alevel": 12.2,
+    "coordinate-geometry-dash/alevel": 11.9,
+    "unit-converter/gcse": 11.8,
+    "unit-converter/level4": 11.8,
+    "probability-paradox/core": 11.0,
+    "probability-paradox/gcse": 10.8,
+    "coordinate-geometry-dash/gcse": 10.8,
+    "differentiation-duel/alevel": 10.6,
+    "differentiation-duel/level4": 10.6,
+    "log-laws/alevel": 10.5,
+    "log-laws/level3": 10.5,
+    "log-laws/level4": 10.5,
+    "eigenvalue-extractor/level4": 10.3,
+    "eigenvector-engine/further": 10.3,
+    "characteristic-quest/further": 10.3,
+    "characteristic-quest/level4": 10.3,
+    "eigenvector-engine/level4": 10.3,
+    "eigenvalue-extractor/further": 10.3,
+    "spot-the-muppet/ks3": 9.1,
+    "spot-the-muppet/gcse": 8.7
+   },
+   "status": "pending",
+   "moved_in": [],
+   "moved_out": []
+  }
+ ],
+ "out_of_scope": [
+  {
+   "slug": "sequence-solver",
+   "level": "ks3",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "sequence-solver",
+   "level": "gcse",
+   "b4": 45,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "sequence-solver",
+   "level": "alevel",
+   "b4": 59,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "estimation-golf",
+   "level": "year6",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "estimation-golf",
+   "level": "ks3",
+   "b4": 9,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "estimation-golf",
+   "level": "gcse",
+   "b4": 9,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "estimation-golf",
+   "level": "alevel",
+   "b4": 9,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "estimation-golf",
+   "level": "level4",
+   "b4": 9,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "prime-factorisation",
+   "level": "year6",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "prime-factorisation",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "prime-factorisation",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "percentage-flip",
+   "level": "year6",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "percentage-flip",
+   "level": "ks3",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "percentage-flip",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "equatle",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "equatle",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "52dle",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "52dle",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "split-it",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "split-it",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "gradient-hunter",
+   "level": "gcse",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas"
+  },
+  {
+   "slug": "gradient-hunter",
+   "level": "core",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 1 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas"
+  },
+  {
+   "slug": "gradient-hunter",
+   "level": "alevel",
+   "b4": 10,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 2 was marked, then nothing this driver can answer appeared within 6000ms; page has canvas"
+  },
+  {
+   "slug": "terrible-advice",
+   "level": "ks3",
+   "b4": 18,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 31 question(s)"
+  },
+  {
+   "slug": "terrible-advice",
+   "level": "gcse",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 36 question(s)"
+  },
+  {
+   "slug": "terrible-advice",
+   "level": "core",
+   "b4": 12,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 22 question(s)"
+  },
+  {
+   "slug": "wrong-on-the-internet",
+   "level": "ks3",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "wrong-on-the-internet",
+   "level": "gcse",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "wrong-on-the-internet",
+   "level": "core",
+   "b4": 10,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "maths-court",
+   "level": "ks3",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "maths-court",
+   "level": "gcse",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "maths-court",
+   "level": "core",
+   "b4": 10,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 2 question(s), then question 3 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "expected-damage",
+   "level": "ks3",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "expected-damage",
+   "level": "gcse",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "expected-damage",
+   "level": "core",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "negative-number-line",
+   "level": "year6",
+   "b4": 30,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (0 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "think-of-a-number",
+   "level": "year6",
+   "b4": 50,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "formula-plug-in",
+   "level": "year6",
+   "b4": 50,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "decimal-detective",
+   "level": "year6",
+   "b4": 45,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (0 clickable candidates); page has draggable"
+  },
+  {
+   "slug": "four-quadrant-explorer",
+   "level": "year6",
+   "b4": 45,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has canvas"
+  },
+  {
+   "slug": "like-terms-collector",
+   "level": "year6",
+   "b4": 40,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "probability-pioneer",
+   "level": "year6",
+   "b4": 45,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "shape-shifter",
+   "level": "year6",
+   "b4": 119,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (2 clickable candidates); page has canvas"
+  },
+  {
+   "slug": "new-shapes",
+   "level": "year6",
+   "b4": 240,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "higher-power",
+   "level": "ks3",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "higher-power",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 2 question(s)"
+  },
+  {
+   "slug": "higher-power",
+   "level": "alevel",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "prisoners-dilemma",
+   "level": "ks3",
+   "b4": 9,
+   "reason": "not a question game: 20 rounds of a choice with no right answer (index.html:31, :314)",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "prisoners-dilemma",
+   "level": "gcse",
+   "b4": 9,
+   "reason": "not a question game: 20 rounds of a choice with no right answer (index.html:31, :314)",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "prisoners-dilemma",
+   "level": "alevel",
+   "b4": 9,
+   "reason": "not a question game: 20 rounds of a choice with no right answer (index.html:31, :314)",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "prisoners-dilemma",
+   "level": "core",
+   "b4": 9,
+   "reason": "not a question game: 20 rounds of a choice with no right answer (index.html:31, :314)",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "seven-bridges",
+   "level": "ks3",
+   "b4": 25,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "seven-bridges",
+   "level": "gcse",
+   "b4": 25,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "seven-bridges",
+   "level": "alevel",
+   "b4": 25,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "distinctly-average",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "distinctly-average",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "just-pythag-it-bruv",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "index-laws",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 12 question(s)"
+  },
+  {
+   "slug": "index-laws",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 12 question(s)"
+  },
+  {
+   "slug": "quadratic-factoriser",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: game ended after 8 question(s)"
+  },
+  {
+   "slug": "trig-wars",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas"
+  },
+  {
+   "slug": "trig-wars",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas"
+  },
+  {
+   "slug": "trig-worms",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "trig-worms",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "modular-battle",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: game ended after 32 question(s)"
+  },
+  {
+   "slug": "surd-simplifier",
+   "level": "gcse",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "surd-simplifier",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "proportion-blaster",
+   "level": "gcse",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "proportion-blaster",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "trig-identity-duel",
+   "level": "gcse",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "trig-identity-duel",
+   "level": "alevel",
+   "b4": 49,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "standard-form-blitz",
+   "level": "gcse",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "standard-form-blitz",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "circle-theorem-spotter",
+   "level": "gcse",
+   "b4": 55,
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "angle-ace",
+   "level": "year6",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 25 question(s)"
+  },
+  {
+   "slug": "angle-ace",
+   "level": "gcse",
+   "b4": 45,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 21 question(s)"
+  },
+  {
+   "slug": "graph-transformer",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas"
+  },
+  {
+   "slug": "graph-transformer",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas"
+  },
+  {
+   "slug": "bearing-blitz",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has canvas"
+  },
+  {
+   "slug": "formula-forge",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "formula-forge",
+   "level": "alevel",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "formula-forge",
+   "level": "level4",
+   "b4": 16,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "component-crusher",
+   "level": "gcse",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "component-crusher",
+   "level": "alevel",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 4 question(s), then question 5 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "component-crusher",
+   "level": "level4",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "expectation-station",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "expectation-station",
+   "level": "core",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "WARN: question 4 showed the same option twice (v:3/10) -- options: 0, 0.3, 0.3, 0.35, 0.45, 0.55. Real defect in a pick-one group; expected in a tile bank."
+  },
+  {
+   "slug": "expectation-station",
+   "level": "alevel",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "WARN: question 18 showed the same option twice (v:6/1) -- options: 5, 5.1, 5.5, 6, 6. Real defect in a pick-one group; expected in a tile bank."
+  },
+  {
+   "slug": "better-value",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "better-value",
+   "level": "core",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 1 question(s), then question 2 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "given-that",
+   "level": "gcse",
+   "b4": 25,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 28 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows"
+  },
+  {
+   "slug": "given-that",
+   "level": "alevel",
+   "b4": 25,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows"
+  },
+  {
+   "slug": "given-that",
+   "level": "core",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows"
+  },
+  {
+   "slug": "given-that",
+   "level": "level4",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: question 20 was marked, then nothing this driver can answer appeared within 6000ms; page has no input it knows"
+  },
+  {
+   "slug": "screening-room",
+   "level": "gcse",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 16 question(s)"
+  },
+  {
+   "slug": "screening-room",
+   "level": "alevel",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 16 question(s)"
+  },
+  {
+   "slug": "screening-room",
+   "level": "core",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 16 question(s)"
+  },
+  {
+   "slug": "screening-room",
+   "level": "level4",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 16 question(s)"
+  },
+  {
+   "slug": "estimation-engine",
+   "level": "gcse",
+   "b4": 45,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has inputs"
+  },
+  {
+   "slug": "linear-equation-solver",
+   "level": "gcse",
+   "b4": 141,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "whose-side-are-you-on",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "its-a-sine",
+   "level": "gcse",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "its-a-sine",
+   "level": "level3",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "its-a-sine",
+   "level": "level4",
+   "b4": 40,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "core-maths-paper1",
+   "level": "core",
+   "b4": 36,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "core-maths-paper2a",
+   "level": "core",
+   "b4": 36,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "core-maths-paper2b",
+   "level": "core",
+   "b4": 36,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "core-maths-paper2c",
+   "level": "core",
+   "b4": 36,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "tax-theft",
+   "level": "core",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "stat-attack",
+   "level": "gcse",
+   "b4": 12,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "stat-attack",
+   "level": "core",
+   "b4": 12,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "stat-attack",
+   "level": "level4",
+   "b4": 12,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "growth-and-decay",
+   "level": "core",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "growth-and-decay",
+   "level": "alevel",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "growth-and-decay",
+   "level": "level4",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 1 question(s)"
+  },
+  {
+   "slug": "integration-duel",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 14 question(s)"
+  },
+  {
+   "slug": "integration-duel",
+   "level": "level4",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 14 question(s)"
+  },
+  {
+   "slug": "curling-friction",
+   "level": "alevel",
+   "b4": 56,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "curling-friction",
+   "level": "level4",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "force-resolver",
+   "level": "alevel",
+   "b4": 52,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "force-resolver",
+   "level": "level4",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "moments-master",
+   "level": "alevel",
+   "b4": 49,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "moments-master",
+   "level": "level4",
+   "b4": 20,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "binomial-blaster",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "binomial-blaster",
+   "level": "alevel2",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "partial-fractions-duel",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "proof-builder",
+   "level": "alevel",
+   "b4": 33,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 15 question(s)"
+  },
+  {
+   "slug": "proof-builder",
+   "level": "further",
+   "b4": 10,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 15 question(s)"
+  },
+  {
+   "slug": "fermi-lab",
+   "level": "ks3",
+   "b4": 12,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "fermi-lab",
+   "level": "gcse",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "fermi-lab",
+   "level": "alevel",
+   "b4": 13,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "fermi-lab",
+   "level": "level4",
+   "b4": 10,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "fermi-lab",
+   "level": "core",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  },
+  {
+   "slug": "dimension-checker",
+   "level": "level4",
+   "b4": 28,
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "factor-theorem",
+   "level": "alevel",
+   "b4": 50,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "boolean-blitz",
+   "level": "level4",
+   "b4": 14,
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: game ended after 42 question(s)"
+  },
+  {
+   "slug": "truth-will-set-you-free",
+   "level": "level4",
+   "b4": 32,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (8 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "cast-away",
+   "level": "level3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (2 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "cast-away",
+   "level": "alevel",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (2 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "complex-converter",
+   "level": "further",
+   "b4": 55,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "complex-converter",
+   "level": "level4",
+   "b4": 55,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "matrix-crunch",
+   "level": "further",
+   "b4": 35,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "matrix-crunch",
+   "level": "level4",
+   "b4": 18,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "PASS: game ended after 20 question(s)"
+  },
+  {
+   "slug": "six-sevens-bruv",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "six-sevens-bruv",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "free-daily-pizza",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "free-daily-pizza",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "PASS: game ended after 10 question(s)"
+  },
+  {
+   "slug": "how-many-parts",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "how-many-parts",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "take-a-walk",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (2 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "take-a-walk",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (2 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "squared-squirrel",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "squared-squirrel",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "i-found-a-mark",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "who-ate-all-the-pies",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "graph-sketcher",
+   "level": "core",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "graph-sketcher",
+   "level": "alevel",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "graph-sketcher",
+   "level": "level4",
+   "b4": 15,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has canvas, inputs"
+  },
+  {
+   "slug": "hc-factor",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "y-so-steep",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "its-on-sale",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "as-you-can-see",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "as-you-can-see",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "possibly-maybe",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "possibly-maybe",
+   "level": "gcse",
+   "b4": "generator",
+   "reason": "generator (B4 has no count)",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "i-dropped-my-ice-cream",
+   "level": "gcse",
+   "b4": 48,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "i-dropped-my-ice-cream",
+   "level": "level3",
+   "b4": 48,
+   "reason": "B4 count scoped to the level",
+   "tier3_estimate": "UNSUPPORTED: drove 0 question(s), then question 1 was never marked by a click, a submit or a typed answer; page has no input it knows"
+  },
+  {
+   "slug": "sums-in-disguise",
+   "level": "year6",
+   "b4": 226,
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (3 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "maffscards",
+   "level": "ks3",
+   "b4": "generator",
+   "reason": "single-level game",
+   "tier3_estimate": "UNSUPPORTED: no option group found after starting (1 clickable candidates); page has no input it knows"
+  },
+  {
+   "slug": "some-thingies",
+   "level": "year6",
+   "b4": 369,
+   "reason": "single-level game",
+   "tier3_estimate": "PASS: played 100 question(s)"
+  }
+ ],
+ "scope": "c less prisoners-dilemma (Amendments 1 and 2)"
 }

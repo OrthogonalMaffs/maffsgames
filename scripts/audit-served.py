@@ -3,8 +3,21 @@
 """How many different questions does each game's level actually serve? (contract B4-SERVED-AUDIT, 23 Nov 2026)
 
     python -X utf8 scripts/audit-served.py --selftest            # the three self-tests; run these first
-    python -X utf8 scripts/audit-served.py --workers 4           # every roster game and level
-    python -X utf8 scripts/audit-served.py --only scale-factor   # substring filter on slug
+    python -X utf8 scripts/audit-served.py --list-blocks         # fix (once) and print the block split
+    python -X utf8 scripts/audit-served.py --block 1             # run one block (Amendment 2: at most 90 minutes)
+    python -X utf8 scripts/audit-served.py --only scale-factor   # substring filter on slug, all roster levels
+
+SAVED AS IT GOES (Amendment 2): each level's row is merged into docs/audits/served-2026-11.json, keyed by
+(slug, level), the moment the level finishes (a temporary file, then os.replace), and the markdown is regenerated
+from the whole JSON, so a stopped run keeps every level it finished. Rows for other levels, the stored estimate,
+the block split and the self-tests are kept.
+
+BLOCKS (Amendment 2): the in-scope levels (scope C less prisoners-dilemma) are split once, from the stored
+one-session estimate, into blocks of at most BLOCK_MINUTES (90) at --workers 4, and the split is written to the
+JSON ("blocks") before block 1 runs. A level's projected cost is its one-session time times
+min(MAX_SESSIONS, 2 * ceil(40 / questions in that session) + SATURATION_RUN) sessions (one session for a level tier
+3 cannot drive or whose session hit the cap). Each block runs with a BLOCK_HOURS (2) backstop; a level cut off is
+UNFINISHED and is moved into the next block, and the split records the move.
 
 Run scripts/extract-banks.py first: the B4 column is read from data/banks/<slug>.json (gitignored), as
 check-banks.py reads it. Without it the column says "not extracted".
@@ -49,12 +62,16 @@ carrying text that differs between sessions for the same question would make one
 The audit therefore also gives the count by option set alone, and lists every level where the prompt alone takes
 a level from under 40 to 40 or more.
 
-THE STOP RULE: a level stops when SATURATION_RUN (8) sessions in a row add no new question (saturated), or at
-MAX_SESSIONS (40). A level whose first session tier 3 cannot drive (UNSUPPORTED) is played once and reported
-UNMEASURED with tier 3's reason.
+THE STOP RULE (Amendment 2), checked after each session: 40 or more distinct ends the level, 40+ (its verdict can
+no longer change); otherwise SATURATION_RUN (8) sessions in a row adding no new question ends it (saturated), and
+MAX_SESSIONS (40) ends it. A session still running at MAX_QUESTIONS (100) ends the level as UNMEASURED ("session
+over 100 questions: driver plays this game's shape badly"). A level whose first session tier 3 cannot drive
+(UNSUPPORTED) is played once and reported UNMEASURED with tier 3's reason. In-session repeats are recorded for
+every session played, so a 40+ level was checked for them only in the sessions it took to reach 40: not a full
+repeat check.
 
 VERDICT: UNDER 40 (saturated, distinct < 40), 40+ (distinct >= 40), UNSATURATED (40 sessions, distinct < 40),
-UNMEASURED (tier 3 cannot play it). A question served twice in one session is listed with game, level, seed and
+UNFINISHED (the block's backstop came first), UNMEASURED (tier 3 cannot play it, or the session cap). A question served twice in one session is listed with game, level, seed and
 question (and whether the two were consecutive, which may be a game's deliberate retry).
 
 --selftest plays three page copies at fixed commits, served in place of the live page (contract step 3):
@@ -357,6 +374,12 @@ def b4_count(slug, level):
 
 
 SESSION_CAP_REASON = "session over 100 questions: driver plays this game's shape badly"
+TARGET = 40
+BLOCK_MINUTES = 90
+BLOCK_HOURS = 2
+NOT_QUESTION_GAMES = {
+    "prisoners-dilemma": "not a question game: 20 rounds of a choice with no right answer (index.html:31, :314)",
+}
 DEADLINE = [None]  # time.time() after which no new session starts (--hours); None for no limit
 
 
@@ -364,6 +387,8 @@ def scope(slug, level, n_levels):
     """Amendment 1 (option C): a level is in scope when its game serves more than one level and its B4 count is
     not scoped to that level (scoped_to_level false), whether the game keeps named arrays or one array filtered
     by a field. Returns (in_scope, reason)."""
+    if slug in NOT_QUESTION_GAMES:
+        return False, NOT_QUESTION_GAMES[slug]
     if n_levels < 2:
         return False, "single-level game"
     path = os.path.join(bc.BANKS_DIR, slug + ".json")
@@ -387,6 +412,7 @@ async def measure_level(browser, base, slug, level, log=print):
     per_session, statuses, repeats, started = [], [], [], []
     never_ended, stale, stop = 0, 0, ""
     unsupported_detail = ""
+    first_option_sets = None
     n = 0
     for n in range(1, MAX_SESSIONS + 1):
         if DEADLINE[0] is not None and time.time() > DEADLINE[0]:
@@ -416,6 +442,8 @@ async def measure_level(browser, base, slug, level, log=print):
             stop = "session cap"
             break
         per_session.append(len(sv))
+        if first_option_sets is None:
+            first_option_sets = sorted({oid for _, oid in sv})
         added = 0
         pos = {}
         for i, (ident, oid) in enumerate(sv):
@@ -429,6 +457,9 @@ async def measure_level(browser, base, slug, level, log=print):
                 added += 1
             seen_opts.add(oid)
         stale = 0 if added else stale + 1
+        if len(seen) >= TARGET:
+            stop = "reached 40"
+            break
         if stale >= SATURATION_RUN:
             stop = "saturated"
             break
@@ -456,6 +487,8 @@ async def measure_level(browser, base, slug, level, log=print):
         "statuses": {s: statuses.count(s) for s in sorted(set(statuses))},
         "tier3_reason": unsupported_detail, "started_as": lv_modes,
         "in_session_repeats": repeats,
+        "first_session_option_sets": len(first_option_sets) if first_option_sets is not None else None,
+        "first_session_typed_only": first_option_sets == [json.dumps([])] if first_option_sets else False,
         "questions": [json.loads(k) for k in (samples if distinct < 60 else samples[:12])],
         "seconds": round(time.time() - t0, 1),
     }
@@ -465,7 +498,40 @@ async def measure_level(browser, base, slug, level, log=print):
     return row
 
 
-async def run_levels(jobs, workers, overrides=None, log=print):
+def _load_json():
+    if os.path.exists(OUT_JSON):
+        with open(OUT_JSON, "r", encoding="utf-8") as fh:
+            return json.load(fh)
+    return {}
+
+
+def _save_json(data):
+    os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
+    tmp = OUT_JSON + ".tmp"
+    with open(tmp, "w", encoding="utf-8", newline="") as fh:
+        json.dump(data, fh, indent=1, ensure_ascii=False)
+        fh.write("\n")
+    os.replace(tmp, OUT_JSON)
+
+
+def save_row(row):
+    """Amendment 2 step 4: merge one finished level into the JSON by (slug, level), then regenerate the md."""
+    data = _load_json()
+    data.setdefault("contract", "B4-SERVED-AUDIT")
+    data["generated_by"] = "scripts/audit-served.py"
+    data["rule"] = {"target": TARGET, "saturation_run": SATURATION_RUN, "max_sessions": MAX_SESSIONS,
+                    "max_questions": MAX_QUESTIONS}
+    key = (row["slug"], row["level"])
+    levels = [r for r in data.get("levels", []) if (r["slug"], r["level"]) != key]
+    row = dict(row, measured=time.strftime("%Y-%m-%d %H:%M"), commit=subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True, text=True).stdout.strip())
+    levels.append(row)
+    data["levels"] = levels
+    _save_json(data)
+    write_md(data)
+
+
+async def run_levels(jobs, workers, overrides=None, log=print, save=False):
     from playwright.async_api import async_playwright
     srv, base = start_server(overrides)
     rows = []
@@ -477,15 +543,19 @@ async def run_levels(jobs, workers, overrides=None, log=print):
             async def one(slug, level):
                 async with sem:
                     try:
-                        rows.append(await measure_level(browser, base, slug, level, log))
+                        row = await measure_level(browser, base, slug, level, log)
                     except Exception as exc:  # a driver crash is a row, never a lost level
-                        rows.append({"slug": slug, "level": level, "b4": b4_count(slug, level),
-                                     "verdict": "UNMEASURED", "tier3_reason": "audit error: %s" % str(exc)[:200],
-                                     "distinct": 0, "distinct_options_only": 0, "sessions": 0,
-                                     "questions_per_session": [], "saturated": False, "stop": "error",
-                                     "never_ended_sessions": 0, "statuses": {}, "started_as": [],
-                                     "in_session_repeats": [], "questions": [], "seconds": 0})
+                        row = {"slug": slug, "level": level, "b4": b4_count(slug, level),
+                               "verdict": "UNMEASURED", "tier3_reason": "audit error: %s" % str(exc)[:200],
+                               "distinct": 0, "distinct_options_only": 0, "sessions": 0,
+                               "questions_per_session": [], "saturated": False, "stop": "error",
+                               "never_ended_sessions": 0, "statuses": {}, "started_as": [],
+                               "in_session_repeats": [], "first_session_option_sets": None,
+                               "first_session_typed_only": False, "questions": [], "seconds": 0}
                         log("  %-30s %-8s audit error: %s" % (slug, level, str(exc)[:120]))
+                    rows.append(row)
+                    if save:
+                        save_row(row)
             await asyncio.gather(*(one(s, lv) for s, lv in jobs))
             await browser.close()
     finally:
@@ -581,42 +651,85 @@ def selftest(workers, which="abc"):
             with open(OUT_JSON, "r", encoding="utf-8") as fh:
                 data = json.load(fh)
         kept = {t["test"]: t for t in data.get("selftests", [])}
-        kept.update({t["test"]: t for t in results})
+        kept.update({t["test"]: dict(t, measured=time.strftime("%Y-%m-%d %H:%M")) for t in results})
         data["selftests"] = [kept[k] for k in sorted(kept)]
-        os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
-        with open(OUT_JSON, "w", encoding="utf-8", newline="") as fh:
-            json.dump(data, fh, indent=1, ensure_ascii=False)
-            fh.write("\n")
+        _save_json(data)
+        if data.get("levels") or data.get("blocks"):
+            write_md(data)
     bad = [r for r in results if not r["passed"]]
     print("self-tests: %d of %d pass" % (len(results) - len(bad), len(results)))
     return results
 
 
+# --------------------------------------------------------------------------- scope and blocks
+
+def scoped_jobs():
+    """(in-scope jobs in roster order, out-of-scope rows), Amendment 1's scope C less prisoners-dilemma."""
+    levels, order = bc.roster_levels()
+    est = {(r["slug"], r["level"]): r for r in _load_json().get("estimate", {}).get("levels", [])}
+    jobs, out = [], []
+    for s in order:
+        for lv in levels.get(s, []):
+            ok, why = scope(s, lv, len(levels.get(s, [])))
+            if ok:
+                jobs.append((s, lv))
+            else:
+                e = est.get((s, lv), {})
+                out.append({"slug": s, "level": lv, "b4": b4_count(s, lv), "reason": why,
+                            "tier3_estimate": ("%s: %s" % (e["status"], e["detail"])) if e else "not run"})
+    return jobs, out
+
+
+def projected_cost(e):
+    """Seconds one level is projected to take under Amendment 2's stop rule, from its one-session estimate."""
+    if not e:
+        return 60.0 * SATURATION_RUN  # no estimate: a guess, flagged in the split
+    q = e.get("questions") or 0
+    capped = e["detail"].startswith("played %d question" % MAX_QUESTIONS)  # the session cap ends it at once
+    if e["status"] not in ("PASS", "WARN") or q == 0 or capped:
+        return float(e["seconds"])
+    sessions = min(MAX_SESSIONS, 2 * -(-TARGET // q) + SATURATION_RUN)
+    return float(e["seconds"]) * sessions
+
+
+def lanes_wall(costs, workers=4):
+    lanes = [0.0] * workers
+    for c in sorted(costs, reverse=True):
+        lanes[lanes.index(min(lanes))] += c
+    return max(lanes) if costs else 0.0
+
+
+def make_split(jobs, workers=4):
+    est = {(r["slug"], r["level"]): r for r in _load_json().get("estimate", {}).get("levels", [])}
+    cost = {j: projected_cost(est.get(j)) for j in jobs}
+    blocks = []
+    for j in sorted(jobs, key=lambda j: -cost[j]):  # first fit, longest first
+        for b in blocks:
+            if lanes_wall([cost[x] for x in b] + [cost[j]], workers) <= BLOCK_MINUTES * 60:
+                b.append(j)
+                break
+        else:
+            blocks.append([j])
+    return [{"block": i + 1, "levels": [list(j) for j in b],
+             "projected_minutes": round(lanes_wall([cost[x] for x in b], workers) / 60, 1),
+             "level_minutes": {"%s/%s" % j: round(cost[j] / 60, 1) for j in b},
+             "status": "pending", "moved_in": [], "moved_out": []} for i, b in enumerate(blocks)]
+
+
+def fixed_split():
+    """The split, written to the JSON the first time it is asked for and never recomputed (Amendment 2 step 5)."""
+    data = _load_json()
+    if not data.get("blocks"):
+        jobs, out = scoped_jobs()
+        data["blocks"] = make_split(jobs)
+        data["out_of_scope"] = out
+        data["scope"] = "c less prisoners-dilemma (Amendments 1 and 2)"
+        _save_json(data)
+        write_md(data)
+    return data["blocks"]
+
+
 # --------------------------------------------------------------------------- report
-
-def write_outputs(rows, tests, seconds, workers, out_of_scope=None, scope_name="all"):
-    os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
-    old = {}
-    if os.path.exists(OUT_JSON):
-        with open(OUT_JSON, "r", encoding="utf-8") as fh:
-            old = json.load(fh)
-    if not tests:
-        tests = old.get("selftests", [])
-    data = {"contract": "B4-SERVED-AUDIT", "generated_by": "scripts/audit-served.py",
-            "date": time.strftime("%Y-%m-%d"), "scope": scope_name,
-            "commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True,
-                                     text=True).stdout.strip(),
-            "rule": {"saturation_run": SATURATION_RUN, "max_sessions": MAX_SESSIONS, "max_questions": MAX_QUESTIONS},
-            "seconds": round(seconds), "workers": workers, "selftests": tests, "levels": rows,
-            "out_of_scope": out_of_scope or []}
-    if "estimate" in old:
-        data["estimate"] = old["estimate"]
-    with open(OUT_JSON, "w", encoding="utf-8", newline="") as fh:
-        json.dump(data, fh, indent=1, ensure_ascii=False)
-        fh.write("\n")
-    print("wrote %s" % os.path.relpath(OUT_JSON, ROOT))
-    write_md(data)
-
 
 VERDICT_ORDER = {"UNDER 40": 0, "UNSATURATED": 1, "UNFINISHED": 2, "UNMEASURED": 3, "40+": 4}
 
@@ -626,66 +739,90 @@ def _cell(text):
 
 
 def write_md(data):
-    """Contract step 4: the rule, the self-tests, the summary, the table, the in-session repeats."""
-    rows = sorted(data["levels"], key=lambda r: (VERDICT_ORDER.get(r["verdict"], 9), r["slug"], r["level"]))
-    counts = {v: sum(1 for r in rows if r["verdict"] == v) for v in VERDICT_ORDER}
-    games = {r["slug"] for r in rows}
-    disagree = [r for r in rows if r["verdict"] == "UNDER 40" and isinstance(r["b4"], int) and r["b4"] >= 40]
+    """Amendment 2 step 8: the summary so far, the rule, the self-tests, the split, every level measured, the
+    in-session repeats, the known and allowed repeat, the out-of-scope levels. Regenerated from the whole JSON."""
+    rows = sorted(data.get("levels", []), key=lambda r: (VERDICT_ORDER.get(r["verdict"], 9), r["slug"], r["level"]))
+    blocks = data.get("blocks", [])
     oos = data.get("out_of_scope", [])
+    in_scope = {tuple(j) for b in blocks for j in b["levels"]}
+    counts = {v: sum(1 for r in rows if r["verdict"] == v) for v in VERDICT_ORDER}
+    disagree = [r for r in rows if r["verdict"] == "UNDER 40" and isinstance(r["b4"], int) and r["b4"] >= 40]
+    reps = [(r, x) for r in rows for x in r.get("in_session_repeats", [])]
+    one_set = [r for r in rows if r.get("first_session_option_sets") == 1]
+    done = [b for b in blocks if b["status"] == "done"]
     capped = [r for r in rows if r.get("stop") == "session cap"]
     t3 = [r for r in rows if r["verdict"] == "UNMEASURED" and r.get("stop") != "session cap"]
+    measured = [r for r in rows if r["verdict"] != "UNFINISHED"]
     out = ["# Served-question audit, November 2026 (B4-SERVED-AUDIT)", "",
-           "Generated by `scripts/audit-served.py` at %s (%d worker(s), %d s). Report only: no game and no check "
-           "changed." % (data.get("commit", "?"), data.get("workers", 0), data.get("seconds", 0)), "",
-           "## Summary", "",
-           "%d level(s) across %d game(s): %s." % (len(rows), len(games), ", ".join(
-               "%s %d" % (v, counts[v]) for v in VERDICT_ORDER)), "",
-           "Levels where B4 counts 40 or more but the level serves under 40: %d." % len(disagree), ""]
-    out += ["- `%s` %s: B4 %s, served %d" % (r["slug"], r["level"], r["b4"], r["distinct"]) for r in disagree]
-    if data.get("scope") == "c":
-        reasons = {}
-        for o in oos:
-            reasons.setdefault(o["reason"], []).append(o)
-        out += ["", "## Scope (amendment 1, option C, Jon 24 Nov 2026)", "",
-                "In scope: every level of a game that serves more than one level whose B4 count is not scoped to "
-                "that level (`scoped_to_level` false in the extraction), whether the game keeps named arrays or "
-                "one array filtered by a field: %d level(s) in %d game(s). Of those, %d were UNMEASURED by tier 3 "
-                "(it cannot play them) and %d hit the session cap. %d level(s) were out of scope:"
-                % (len(rows), len(games), len(t3), len(capped), len(oos)), ""]
-        out += ["- %s: %d level(s)" % (k, len(v)) for k, v in sorted(reasons.items())]
-        out += ["", "The out-of-scope levels are listed at the end with tier 3's one-session result from the "
-                "estimate pass."]
-    out += ["", "## The rule", "",
+           "Generated by `scripts/audit-served.py`. Report only: no game and no check changed.", "",
+           "## Summary so far", "",
+           "- Blocks done: %d of %d." % (len(done), len(blocks)),
+           "- Levels measured so far: %d of %d in scope, in %d game(s)%s." % (
+               len(measured), len(in_scope), len({r["slug"] for r in measured}),
+               "; every in-scope level is covered" if blocks and len(done) == len(blocks)
+               and {(r["slug"], r["level"]) for r in measured} >= in_scope else ""),
+           "- Verdicts so far: %s." % ", ".join("%s %d" % (v, counts[v]) for v in VERDICT_ORDER),
+           "- Of the UNMEASURED: %d by tier 3 (it cannot play the level), %d by the session cap." % (
+               len(t3), len(capped)),
+           "- Levels where B4 counts 40 or more but the level serves under 40: %d." % len(disagree)]
+    out += ["  - `%s` %s: B4 %s, served %d" % (r["slug"], r["level"], r["b4"], r["distinct"]) for r in disagree]
+    out += ["- In-session repeats so far: %d in %d level(s) (listed below)." % (
+        len(reps), len({(r["slug"], r["level"]) for r, _ in reps})),
+        "- Possibly not a question game (first session showed one option set; played as normal, for Project "
+        "Claude to rule on): %d level(s)." % len(one_set)]
+    out += ["  - `%s` %s%s" % (r["slug"], r["level"], " (typed answers: no options on screen)"
+                               if r.get("first_session_typed_only") else "") for r in one_set]
+    reasons = {}
+    for o in oos:
+        reasons.setdefault(o["reason"], []).append(o)
+    out += ["", "## Scope", "",
+            "In scope (Amendment 1, option C, less prisoners-dilemma by Amendment 2): every level of a game that "
+            "serves more than one level whose B4 count is not scoped to that level (`scoped_to_level` false in the "
+            "extraction), whether the game keeps named arrays or one array filtered by a field: %d level(s). "
+            "Out of scope: %d level(s):" % (len(in_scope), len(oos)), ""]
+    out += ["- %s: %d level(s)" % (k, len(v)) for k, v in sorted(reasons.items())]
+    out += ["", "Every out-of-scope level is listed at the end with tier 3's one-session result from the "
+            "estimate pass.", "",
+            "## The rule", "",
             "A served question's identity is its option set (the sorted option identities as tier 3 reads them: "
             "dataset.val, else the KaTeX annotation, else the stripped text) joined with the visible prompt text "
             "(the nearest ancestor of the options with text of its own, leaving out buttons, links, header, footer "
             "and score, timer, streak, lives and progress readouts). Each session is a fresh page with Math.random "
-            "replaced by PHONE_SEED's mulberry32 seeded with the session number. A level stops when %d sessions in a "
-            "row add no new question (saturated), or at %d sessions; a session stops when the game ends or after %d "
-            "questions. A session still running at %d questions ends the level as UNMEASURED (\"%s\"): "
-            "multi-shot or endless games the driver plays badly." % (SATURATION_RUN, MAX_SESSIONS, MAX_QUESTIONS,
-                                                                    MAX_QUESTIONS, SESSION_CAP_REASON), "",
+            "replaced by PHONE_SEED's mulberry32 seeded with the session number.", "",
+            "Stop rule, checked after each session: %d or more distinct ends the level as 40+; otherwise %d "
+            "sessions in a row adding no new question ends it (saturated), and %d sessions ends it. A session "
+            "still running at %d questions ends the level as UNMEASURED (\"%s\")." % (
+                TARGET, SATURATION_RUN, MAX_SESSIONS, MAX_QUESTIONS, SESSION_CAP_REASON), "",
+            "**In-session repeats are recorded for every session played, so a 40+ level was checked for them only "
+            "in the sessions it took to reach 40. This is not a full repeat check.**", "",
             "Verdicts: UNDER 40 (saturated, distinct < 40), 40+ (distinct >= 40), UNSATURATED (40 sessions, "
-            "distinct < 40), UNFINISHED (the run's time limit came first), UNMEASURED (tier 3 cannot play it, "
-            "or the session cap; the reason given).", "",
-            "## Self-tests", "", "| Test | Game at commit, level | Want | Measured | Result |", "|---|---|---|---|---|"]
+            "distinct < 40), UNFINISHED (the block's %d-hour backstop came first; moved to a later block), "
+            "UNMEASURED (tier 3 cannot play it, or the session cap; the reason given)." % BLOCK_HOURS, "",
+            "## Self-tests", "", "| Test | Game at commit, level | Want | Measured | Result |",
+            "|---|---|---|---|---|"]
     for t in data.get("selftests", []):
         out.append("| %s | `%s` at %s, %s | %s | %s, distinct %d (options only %d), %d sessions, %d in-session "
                    "repeat(s) | %s |" % (t["test"], t["slug"], t["commit"], t["level"], _cell(t["want"]), t["verdict"],
                                          t["distinct"], t["distinct_options_only"], t["sessions"],
                                          t["in_session_repeats"], "PASS" if t["passed"] else "FAIL"))
-    out += ["", "## Every level", "",
-            "| Game | Level | B4 count | Distinct served | Sessions | Saturated | Verdict | Note |",
+    out += ["", "## Block split (fixed before block 1)", "",
+            "Each level's projected cost is its one-session estimate times min(%d, 2 x ceil(40 / questions in "
+            "that session) + %d) sessions; one session for a level tier 3 cannot drive or whose session hit the "
+            "cap. Blocks are filled longest first to at most %d minutes at 4 workers." % (
+                MAX_SESSIONS, SATURATION_RUN, BLOCK_MINUTES), "",
+            "| Block | Projected minutes | Levels | Status | Moves |", "|---|---|---|---|---|"]
+    for b in blocks:
+        moves = "; ".join(["in: " + ", ".join(m) for m in [b.get("moved_in", [])] if m]
+                          + ["out: " + ", ".join(m) for m in [b.get("moved_out", [])] if m])
+        out.append("| %d | %s | %s | %s | %s |" % (b["block"], b["projected_minutes"], ", ".join(
+            "`%s` %s" % tuple(j) for j in b["levels"]), b["status"], moves))
+    out += ["", "## Every level measured", "",
+            "| Game | Level | B4 count | Distinct served | Sessions | Ended by | Verdict | Note |",
             "|---|---|---|---|---|---|---|---|"]
     for r in rows:
-        note = r.get("tier3_reason") or ""
-        if r.get("never_ended_sessions"):
-            note = ("%d session(s) never ended within %d questions. " % (r["never_ended_sessions"], MAX_QUESTIONS)
-                    + note)
         out.append("| `%s` | %s | %s | %s | %s | %s | %s | %s |" % (
             r["slug"], r["level"], r["b4"], r["distinct"] if r["verdict"] != "UNMEASURED" else "-", r["sessions"],
-            "yes" if r["saturated"] else "no", r["verdict"], _cell(note)))
-    reps = [(r, x) for r in rows for x in r.get("in_session_repeats", [])]
+            r.get("stop", ""), r["verdict"], _cell(r.get("tier3_reason") or "")[:140]))
     out += ["", "## In-session repeats", "", "%d repeat(s) in %d level(s)." % (
         len(reps), len({(r["slug"], r["level"]) for r, _ in reps})), ""]
     if reps:
@@ -694,13 +831,13 @@ def write_md(data):
                                                        x["first"], x["again"]) for r, x in reps]
     out += ["", "## Known and allowed: expectation-station's repeated tiles", "",
             "Tier 3 WARNs that expectation-station shows one value twice (A-Level: 5, 5.1, 5.5, 6, 6; Core: 0, 0.3, "
-            "0.3, 0.35, 0.45, 0.55). These are tile banks, not pick-one groups: Stage 2's bank is every correct "
+            "0.3, 0.35, 0.45, 0.55). These are tile banks, not pick-one groups. Stage 2's bank is every correct "
             "product x times P(X = x) plus distractors, and `generateProductDistractors` never offers a key already "
             "used (index.html:1506-1519), so a value appears twice only when two cells of the products table are "
             "equal and both correct. Both WARNs are such items: A-Level es_alevel_027 (products 5, 6, 6; "
-            "distractors 5.1, 5.5) and Core es_core_022 (products 0, 0.45, 0.3, 0.3; distractors 0.35, 0.55). That is the shape "
-            "scripts/checker-allowlist.json's `tier3_exceptions` records for Stage 1 (es_gcse_001, two cells of "
-            "0.25), here in Stage 2's table. Not a finding."]
+            "distractors 5.1, 5.5) and Core es_core_022 (products 0, 0.45, 0.3, 0.3; distractors 0.35, 0.55). "
+            "scripts/checker-allowlist.json's `tier3_exceptions` records the same shape for Stage 1 (es_gcse_001, "
+            "two cells of 0.25). Known and allowed, not a finding."]
     if oos:
         out += ["", "## Out of scope", "", "| Game | Level | B4 count | Why out of scope | Tier 3, one session |",
                 "|---|---|---|---|---|"]
@@ -708,49 +845,80 @@ def write_md(data):
                                                  _cell(o["tier3_estimate"])[:110]) for o in oos]
     with open(OUT_MD, "w", encoding="utf-8", newline="") as fh:
         fh.write("\n".join(out) + "\n")
-    print("wrote %s" % os.path.relpath(OUT_MD, ROOT))
+
+
+def finish_block(n, rows):
+    """Mark block n done; move every UNFINISHED level into block n + 1 (made if needed) and record the move."""
+    data = _load_json()
+    blocks = data["blocks"]
+    b = blocks[n - 1]
+    cut = [[r["slug"], r["level"]] for r in rows if r["verdict"] == "UNFINISHED"]
+    b["status"] = "done"
+    b["ran"] = time.strftime("%Y-%m-%d %H:%M")
+    if cut:
+        b["moved_out"] = ["%s/%s" % tuple(j) for j in cut]
+        if len(blocks) == n:
+            blocks.append({"block": n + 1, "levels": [], "projected_minutes": None, "level_minutes": {},
+                           "status": "pending", "moved_in": [], "moved_out": []})
+        nxt = blocks[n]
+        nxt["levels"] += [j for j in cut if j not in nxt["levels"]]
+        nxt["moved_in"] += ["%s/%s (from block %d)" % (j[0], j[1], n) for j in cut]
+    _save_json(data)
+    write_md(data)
+    return cut
 
 
 def main():
     ap = argparse.ArgumentParser(description="Measure how many different questions each game's level serves.")
-    ap.add_argument("--only", help="substring filter on slug")
+    ap.add_argument("--only", help="substring filter on slug, over every roster level (rows still saved)")
     ap.add_argument("--workers", type=int, default=4)
     ap.add_argument("--selftest", nargs="?", const="abc", metavar="TESTS",
-                    help="the self-tests (contract step 3) only; optionally which, e.g. --selftest c")
+                    help="the self-tests only; optionally which, e.g. --selftest c")
     ap.add_argument("--estimate", metavar="FILE",
                     help="play one session per level and write the time estimate to FILE (no audit output)")
-    ap.add_argument("--no-write", action="store_true", help="print only; write no JSON")
-    ap.add_argument("--scope", choices=["all", "c"], default="all",
-                    help="c: amendment 1's scope (multi-level games, B4 count not scoped to the level)")
-    ap.add_argument("--hours", type=float, help="start no new session after this many hours (UNFINISHED rows)")
+    ap.add_argument("--list-blocks", action="store_true", help="fix the split (first time only) and print it")
+    ap.add_argument("--block", type=int, help="run block N of the fixed split")
+    ap.add_argument("--hours", type=float, help="start no new session after this many hours (UNFINISHED rows); "
+                                                "--block defaults to %d" % BLOCK_HOURS)
     args = ap.parse_args()
 
-    tests = selftest(args.workers, args.selftest) if args.selftest else []
     if args.selftest:
-        return 0 if all(t["passed"] for t in tests) else 1
+        tests = selftest(args.workers, args.selftest)
+        return 0 if tests and all(t["passed"] for t in tests) else 1
+
+    if args.list_blocks or args.block:
+        blocks = fixed_split()
+        for b in blocks:
+            print("block %d: %s min projected, %d level(s), %s: %s" % (
+                b["block"], b["projected_minutes"], len(b["levels"]), b["status"],
+                ", ".join("%s/%s" % tuple(j) for j in b["levels"])))
+        if not args.block:
+            return 0
+        if not 1 <= args.block <= len(blocks):
+            print("no block %d (the split has %d)" % (args.block, len(blocks)))
+            return 2
+        jobs = [tuple(j) for j in blocks[args.block - 1]["levels"]]
+        est = {(r["slug"], r["level"]): r for r in _load_json().get("estimate", {}).get("levels", [])}
+        jobs.sort(key=lambda j: -projected_cost(est.get(j)))
+        DEADLINE[0] = time.time() + (args.hours or BLOCK_HOURS) * 3600
+        print("block %d: %d level(s), %d worker(s), backstop %.1f h" % (
+            args.block, len(jobs), args.workers, args.hours or BLOCK_HOURS))
+        t0 = time.time()
+        rows = asyncio.run(run_levels(jobs, args.workers, save=True))
+        cut = finish_block(args.block, rows)
+        counts = {}
+        for r in rows:
+            counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
+        print("\nblock %d done in %.0fs: %s%s" % (args.block, time.time() - t0, ", ".join(
+            "%s %d" % kv for kv in sorted(counts.items())), ("; moved to block %d: %s" % (
+                args.block + 1, ", ".join("%s/%s" % tuple(j) for j in cut))) if cut else ""))
+        return 0
 
     levels, order = bc.roster_levels()
-    jobs = [(s, lv) for s in order for lv in levels.get(s, [])
-            if not args.only or args.only in s]
-    out_of_scope = []
-    if args.scope == "c":
-        est = {}
-        if os.path.exists(OUT_JSON):
-            with open(OUT_JSON, "r", encoding="utf-8") as fh:
-                est = {(r["slug"], r["level"]): r for r in json.load(fh).get("estimate", {}).get("levels", [])}
-        kept = []
-        for s, lv in jobs:
-            ok, why = scope(s, lv, len(levels.get(s, [])))
-            if ok:
-                kept.append((s, lv))
-            else:
-                e = est.get((s, lv), {})
-                out_of_scope.append({"slug": s, "level": lv, "b4": b4_count(s, lv), "reason": why,
-                                     "tier3_estimate": ("%s: %s" % (e["status"], e["detail"])) if e else "not run"})
-        # longest first by the estimate's one-session time, so the long levels do not start last
-        jobs = sorted(kept, key=lambda j: -est.get(j, {}).get("seconds", 0))
-    if args.hours:
-        DEADLINE[0] = time.time() + args.hours * 3600
+    jobs = [(s, lv) for s in order for lv in levels.get(s, []) if not args.only or args.only in s]
+    if not args.estimate and not args.only:
+        print("give --block N, --list-blocks, --only <slug>, --estimate FILE or --selftest")
+        return 2
     print("audit-served: %d level(s) across %d game(s), %d worker(s)" % (len(jobs), len({s for s, _ in jobs}),
                                                                         args.workers))
     t0 = time.time()
@@ -764,14 +932,10 @@ def main():
         print("\nestimate pass: %.0fs; a full run at --workers 4 projects to %.0f to %.0f minutes; wrote %s"
               % (time.time() - t0, best / 60, worst / 60, args.estimate))
         return 0
-    rows = asyncio.run(run_levels(jobs, args.workers))
-    secs = time.time() - t0
-    counts = {}
-    for r in rows:
-        counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
-    print("\n%s  (%.0fs)" % (", ".join("%s %d" % kv for kv in sorted(counts.items())), secs))
-    if not args.no_write:
-        write_outputs(rows, tests, secs, args.workers, out_of_scope, args.scope)
+    if args.hours:
+        DEADLINE[0] = time.time() + args.hours * 3600
+    rows = asyncio.run(run_levels(jobs, args.workers, save=True))
+    print("\n%d level(s) saved (%.0fs)" % (len(rows), time.time() - t0))
     return 0
 
 
