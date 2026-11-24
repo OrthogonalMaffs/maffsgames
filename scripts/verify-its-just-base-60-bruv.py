@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; fault-injection self-test) | | 1
+# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; fault-injection self-test) | | 1
 # ci-deps: games/its-just-base-60-bruv/ tools/its-just-base-60-bruv/
 r"""Independent verification for It's Just Base 60, Bruv (games/its-just-base-60-bruv/), contract BASE-60 (Amendment 1),
 24 Nov 2026. SR-30: checked from its first PR.
@@ -27,12 +27,16 @@ arithmetic on whole minutes and exact fractions:
            one game_completed and one leaderboard submission on the stage's board; no event but game_started,
            question_answered (with the item's id) and game_completed.
   Why 60?  the panel (details#why) is closed on load at 1280 x 720 and 375 x 667 (Jon, 24 Nov 2026; GAME-TITLE-IN-PLAY).
+  Art      the start picture (contract BASE-60-LOOK, 24 Nov 2026): the img.start-art has src assets/start.webp, width 1600,
+           height 873 and a non-empty alt; the file is a WebP 1600 x 873 (read from its own header); at 375 x 667 it is
+           loaded and showing on the start screen, and not showing once a stage has started.
   Fit      at 375 x 667, 390 x 844, 1280 x 720 and 1366 x 768, for every item and each of its three wrong options: the
            line, the answer, the working and Next all end above the fold (the viewport less the 40 px footer, in page
            coordinates), the prompt and the two marked options are on screen above it, the line shown is that option's,
            and the page does not scroll sideways.
 
-Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "fit <W>x<H>" (four) and "plant: <what>" (one per planted fault).
+Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "art 375x667", "fit <W>x<H>" (four) and
+"plant: <what>" (one per planted fault).
 
     python scripts/verify-its-just-base-60-bruv.py              # every unit, then the self-test
     python scripts/verify-its-just-base-60-bruv.py --selftest   # the planted faults only
@@ -65,6 +69,8 @@ PER = 10
 FOOTER = 40
 SIZES = [(375, 667), (390, 844), (1280, 720), (1366, 768)]
 EVENTS = {'game_started', 'question_answered', 'game_completed'}
+ART = os.path.join(ROOT, 'games', SLUG, 'assets', 'start.webp')
+ART_TAG = {'src': 'assets/start.webp', 'width': '1600', 'height': '873'}
 
 
 # ---------------------------------------------------------------- the page's bank and lines, read from its source
@@ -353,6 +359,44 @@ def check_bank(html, out, info):
     return items
 
 
+# ---------------------------------------------------------------- the start picture
+def webp_size(path):
+    """(width, height) from a WebP file's own header (VP8, VP8L or VP8X), or None if it is not one."""
+    with open(path, 'rb') as f:
+        b = f.read(40)
+    if len(b) < 30 or b[:4] != b'RIFF' or b[8:12] != b'WEBP':
+        return None
+    kind = b[12:16]
+    if kind == b'VP8 ' and b[23:26] == b'\x9d\x01\x2a':
+        return int.from_bytes(b[26:28], 'little') & 0x3fff, int.from_bytes(b[28:30], 'little') & 0x3fff
+    if kind == b'VP8L' and b[20] == 0x2f:
+        v = int.from_bytes(b[21:25], 'little')
+        return (v & 0x3fff) + 1, ((v >> 14) & 0x3fff) + 1
+    if kind == b'VP8X':
+        return int.from_bytes(b[24:27], 'little') + 1, int.from_bytes(b[27:30], 'little') + 1
+    return None
+
+
+def check_art_static(html, out):
+    tags = re.findall(r'<img\b[^>]*\bclass="start-art"[^>]*>', html)
+    if len(tags) != 1:
+        out.append('art: %d img.start-art tags in the page, not 1' % len(tags))
+        return
+    attrs = dict(re.findall(r'\b([a-z-]+)="([^"]*)"', tags[0]))
+    for k, v in ART_TAG.items():
+        if attrs.get(k) != v:
+            out.append('art: the start picture\'s %s is %r, not %r' % (k, attrs.get(k), v))
+    if not attrs.get('alt', '').strip():
+        out.append('art: the start picture has no alt text')
+    size = webp_size(ART) if os.path.exists(ART) else None
+    if size != (1600, 873):
+        out.append('art: assets/start.webp is %s, not a 1600 x 873 WebP' % (size,))
+
+
+ART_SHOWN_JS = """() => { const i = document.querySelector('img.start-art');
+  return !!i && i.getClientRects().length > 0 && i.getBoundingClientRect().height > 0 && getComputedStyle(i).visibility !== 'hidden'; }"""
+
+
 # ---------------------------------------------------------------- the page
 def open_page(pw, base, html, size):
     br = pw.chromium.launch()
@@ -554,6 +598,18 @@ def check(html, out, units, shard=None, sample=None):
                             if page.evaluate("() => { const d = document.querySelector('details#why'); return !d || d.open; }"):
                                 out.append('start: the "Why 60?" panel is missing or open on load at %dx%d (it starts closed)' % size)
                             info['why'] = info.get('why', 0) + 1
+                        elif uid.startswith('art'):
+                            check_art_static(html, out)
+                            page.wait_for_function("() => { const i = document.querySelector('img.start-art'); return !i || i.complete; }", timeout=15000)
+                            if not page.evaluate("() => { const i = document.querySelector('img.start-art'); return !!i && i.naturalWidth === 1600; }"):
+                                out.append('art: the start picture did not load at %dx%d' % size)
+                            if not page.evaluate(ART_SHOWN_JS):
+                                out.append('art: the start picture is not showing on the start screen at %dx%d' % size)
+                            for m in MODES:
+                                page.evaluate('(m) => B60.ui.start(m)', m)
+                                if page.evaluate(ART_SHOWN_JS):
+                                    out.append('art: the start picture is shown during play (%s) at %dx%d' % ((m,) + size))
+                            info['art'] = 1
                         elif uid.startswith('play'):
                             for m in MODES:
                                 play(page, m, lines, out)
@@ -570,10 +626,14 @@ def check(html, out, units, shard=None, sample=None):
 
 
 PLANT_SAMPLE = 8
+# The start picture's line in the page, as BASE-60-LOOK placed it (moved by a plant).
+ART_LINE = ('    <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="An old clock shop crammed with clocks'
+            ' of every kind: grandfather clocks with brass pendulums, cuckoo clocks, a giant clock face on the back wall, pocket'
+            ' watches in a glass counter, an hourglass, and a sundial by the window">\n')
 
 
 # Each plant: (what, [(old, new)], the unit it needs, the pattern its finding must match). The six the contract names, and
-# the panel opened on load (GAME-TITLE-IN-PLAY, 24 Nov 2026).
+# the panel opened on load (GAME-TITLE-IN-PLAY, 24 Nov 2026), and the two the start picture needs (BASE-60-LOOK, 24 Nov 2026).
 PLANTS = [
     ('a wrong answer', [('"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 15 min"',
                          '"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 5 min"')],
@@ -591,6 +651,11 @@ PLANTS = [
      'bank', r's2a-115pm: took_10 is not allowed on a 12-to-24 item'),
     ('the "Why 60?" panel opened on load', [('<details class="maffs-ref why" id="why">', '<details class="maffs-ref why" id="why" open>')],
      'why 1280x720', r'the "Why 60\?" panel is missing or open on load at 1280x720'),
+    ('the start picture without its alt', [(' height="873" alt="An old clock shop', ' height="873" data-alt="An old clock shop')],
+     'art 375x667', r'art: the start picture has no alt text'),
+    ('the start picture shown on the play screen', [(ART_LINE, ''),
+                                                    ('  <div id="game" class="screen">\n', '  <div id="game" class="screen">\n%s' % ART_LINE)],
+     'art 375x667', r'art: the start picture is shown during play'),
     ('the working pushed below the fold', [('.worked{font-size:.94rem;line-height:1.5}', '.worked{font-size:.94rem;line-height:1.5;padding-top:420px}')],
      'fit 375x667', r'the working ends at \d+ px, below the fold at 627 px'),
 ]
@@ -626,7 +691,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'play 375x667', 'why 1280x720', 'why 375x667'] + ['fit %dx%d' % s for s in SIZES]
+    units = ['bank', 'play 375x667', 'why 1280x720', 'why 375x667', 'art 375x667'] + ['fit %dx%d' % s for s in SIZES]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -642,6 +707,8 @@ def main():
         print('%s: %d items, the contract\'s hash and counts; every answer, decoy and working line recomputed from the item\'s own fields; ERR_TYPES, LINES and equal-value options checked' % (SLUG, info['bank']))
     if 'why' in info:
         print('%s: the "Why 60?" panel closed on load (%d size(s))' % (SLUG, info['why']))
+    if 'art' in info:
+        print('%s: the start picture (img.start-art, assets/start.webp 1600 x 873, alt present) on the start screen, not in play' % SLUG)
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):
