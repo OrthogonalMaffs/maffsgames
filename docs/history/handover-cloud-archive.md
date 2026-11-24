@@ -6,6 +6,19 @@ and the last three entries; older entries move here, newest first, unchanged.
 
 ## Moved 2026-11-24 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
 
+## 2026-11-24 (cloud, second session): THINK-FIT (`docs/handover/contracts/2026-11-24-think-fit.md`)
+
+Claude Code (cloud, second session), branch `claude/wonderful-fermat-r7mj2c` from main 65d35a1. Tier Small: merges on green with merge-pr.py. First commit 70eb312: #899's close-out and this contract.
+
+- **CALC-DOCK-COLUMN close-out** (its entry was archived to docs/history/handover-cloud-archive.md before this close-out reached main; the archived body is left unchanged, so the record is here): **DONE: merged and live.** #899 squash-merged as 41f4676 by merge-pr.py (route: merge-pr.py, `--watch --wait 3600`), Gate green on 7732d23. merge-pr.py's last line: `main 41f4676 run 45405889221: GREEN`. Main's runs on 41f4676: check-site 45405889221 success, phone-fit-full 45405889289 success, pages 45405887336 success. Closed out in THINK-FIT's first commit. Record: agent Claude Code; wall 1:57 (contract about 11:43 to merge 13:40, including the stop for Amendment 1); review cycles 0; amendments 1; usage n/a.
+
+- **Done on the branch:** Think of a Number on theme.css, light, in MIGRATED. A wrong answer hides the pad; the working and Next take its place. A right answer shows "Correct! The number was N." in the answer display and the pad's Enter key reads Next and advances. Spacing tightened (game screen only). verify-think-of-a-number.py now checks every item at 375x667, 390x844, 1280x720 and 1366x768 (asking, wrong, right, Enter advances), plant caught. Worst figures, the tallest item at 375x667: asking 563 / 627, wrong 607 / 627. Phone fit: normal 375x667, Aa 390x844 (known-failures and sideways) and laptop 1280x720 option taken off phone-fit-state.json as stale; normal 320x568, Aa 320x568 and 375x667 (640 / 627) still fail and stay listed. Negative Number Line's label: `\2192` with two spaces, renders "SMALLEST → LARGEST" (own commit). /updates/ line in.
+- **Amendment 1 (Jon approved, 24 Nov 2026):** the page's old `.incorrect::after` rule, which drew a second ' ✗' under Next on a wrong answer, removed (in #900, before merge). Chromium, wrong answer at 375x667 and 1280x720: exactly one cross (the feedback icon), nothing below Next. verify-think-of-a-number.py PASS. The logo overlap is queued separately.
+- **Decided for you:** (1) The pad's Enter key carries data-maffs-lock-skip: the lock's guard swallows clicks on the controls it locked, so re-enabling the key (the old code) could never let it act as Next. A second press within MaffsLock.FRESH_MS of answering is ignored (a timestamp, not an answered flag), for the pad and the keyboard Enter alike, so a double tap cannot skip the feedback. (2) Line spacing counted as spacing: the puzzle lines 1.8 to 1.5 and the working 2 to 1.5 (WCAG 1.4.12's 1.5); the cross and "Not quite" share a row. No font size changed; keys 46px. (3) verify-think-of-a-number.py reads a right answer from the answer display, where it now is. (4) Two inline colours on the results screen (#0d9488, #7a7f90) became tokens, the step-4 rule, and nothing else there changed. (5) The header's side padding kept at 24px: the site logo (site-nav.js) already overlaps "← Back to Games" on this page on main, a separate finding.
+- **For the home lane:** phone fit and check-contrast still record "could not get an answer marked" for this game, so neither measures its feedback screens (the contract's shared gap).
+
+## Moved 2026-11-24 by check-context-size.py --fix from docs/handover/cloud.md (history, unchanged)
+
 ## 2026-11-24 (cloud, second session): CALC-DOCK-COLUMN (`docs/handover/contracts/2026-11-24-calc-dock-column.md`)
 
 Claude Code (cloud, second session), branch `claude/wonderful-fermat-r7mj2c` from main 48a6e45 (after 08644c2). Tier Medium. First commit a0018c5: #897's close-out and this contract. No PR opened.
