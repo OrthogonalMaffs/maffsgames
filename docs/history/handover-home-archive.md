@@ -2,6 +2,21 @@
 
 ## Moved 2026-11-24 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-22 (home): WHEN-WILL-I-USE-THIS (the "When will I use this?" section: 14 real jobs across ratio, percentages, area and averages, from one data file)
+
+Claude Code (home lane), worktree `~/mg-uses`, branch `claude/when-will-i-use-this`; contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md` (verbatim, with Jon's HUBS ruling below it). The first commit carries GIVEN-THAT-POLISH's close-out (#881, 7660e2f).
+
+- One source: `data/uses.json` (4 topics, the 15 Skills England routes, 14 scenarios verbatim, 18 sources). `scripts/build-uses.py` writes 11 committed pages (hub, 4 topics, 6 routes with scenarios) and sitemap.xml's block. Heads come from games.json "pages" via check-meta's render(); the footer is check-footer's CANONICAL. Maths is set in KaTeX at display only.
+- `scripts/check-uses.py` (CI line, `--selftest && --check`): (a) to (f) as the contract lists, plus a guard that the build's own pages are whole. 27 steps with "=": 26 signs recomputed, 2 labels, and 5 steps marked noCheck ("% of" three times, a ratio, a unit change). Self-test: 41 of 41 caught. Chromium: 11 pages x 320/390 x normal/Aa, no sideways scroll.
+- Outside EXACT CHANGE, needed by site-wide checks: `check-publish-scope.py` SITE gains `when-will-i-use-this/`; site-nav.js HUBS gains the 4 topic pages (Jon's ruling, 18:05). Hub has no back link: "Back to games" scrolled 4 px at 320 in Aa. parents/index.html has that same 4 px scroll on main (reported, not fixed: DO NOT TOUCH).
+- Footer: defined once (check-footer.py `_LINKS`) but written into 159 pages on main (170 with these 11) by apply-footer.py, every game among them: not changed (DO NOT TOUCH any game).
+- `check-uses-links.py --live` (not CI): on the first run 17 of 18 answered 200 and RCN's dosage page was 404; Project Claude's review moved it to RCN Learn, also 404 (the course is withdrawn); ruling (Project Claude with Jon): the source is now Gloucestershire Hospitals NHS FT's IV drug calculation practice formulae (PDF).
+- Readings for review: ratio's parent guide is `parents/ratio-proportion/` (no `parents/ratio/`); percentages has none; "(sports turf)" sits in the groundsperson's job name; the Met Office source line is split into its two URLs; "(example figure/s)" stays in the wording, so the page marks which figures are examples, and the flag adds a note.
+- Next: Gate green, then wait for Project Claude's review and Jon's look and "merge".
+- MERGED 22 Nov as 2710eed (#883) via merge-pr.py, exit 0, last line "main 2710eed run 45061326436: GREEN", after Project Claude's review (the RCN source replaced, by ruling, with Gloucestershire Hospitals NHS FT's calculation formulae; 18 of 18 links 200) and a merge of main for #882's conflict. Main on the merge commit: check-site 45061326436 success, phone-fit-full 45061326451 success (every game), pages build 45061325860 success. The PR's last Gate: check-site 45059668766 and phone-fit-full 45059668793 (head d0c21e3), both success. Cleaned up by end-task. Contract moved to `docs/history/contracts/2026-11-22-when-will-i-use-this.md` (closed out by WWIUT-STAND-OUT's first commit).
+
+## Moved 2026-11-24 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-22 (home): GIVEN-THAT-POLISH (a first-try hint, full-size fractions, slip lines that say what was computed, KaTeX in every worked answer, every fade stored)
 
 Claude Code (home lane), worktree `~/mg-gtp`, branch `claude/given-that-polish`; contract `docs/handover/contracts/2026-11-22-given-that-polish.md` (verbatim). The first commit carries GIVEN-THAT-VENN-FADE's close-out (#879, 873befe).
