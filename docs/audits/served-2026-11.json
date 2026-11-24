@@ -2192,7 +2192,9 @@
    },
    "status": "done",
    "moved_in": [],
-   "moved_out": [],
+   "moved_out": [
+    "scale-factor-scaling/alevel (measured before #894 rebuilt the game; remeasured in block 2)"
+   ],
    "ran": "2026-11-24 10:23"
   },
   {
@@ -2305,6 +2307,10 @@
     [
      "spot-the-muppet",
      "gcse"
+    ],
+    [
+     "scale-factor-scaling",
+     "alevel"
     ]
    ],
    "projected_minutes": 77.6,
@@ -2338,7 +2344,9 @@
     "spot-the-muppet/gcse": 8.7
    },
    "status": "pending",
-   "moved_in": [],
+   "moved_in": [
+    "scale-factor-scaling/alevel (from block 1: measured before #894 rebuilt the game)"
+   ],
    "moved_out": []
   }
  ],
