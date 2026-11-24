@@ -29,3 +29,14 @@ SUCCESS CONDITION: at 1366 × 768 and 1440 × 900 every calculator game docks it
 
 STOP IF: the cap needs a change to theme.css, calculator.css or any game's own CSS to work; a game's column cannot be found by the rule in step 2 (report which, and what holds its card); a game cannot be started by drive_to_start (report it; if more than three, stop before wiring the check); a game has a recorded reason not to dock (a comment, canon or roster note): report it and leave it; phone-fit-full changes on any game; adding the check needs a change to the job's timeout or to any scripts/ci-* file; a check still fails after your second fix (standing rule); merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you"; never to override a STOP IF).
 ```
+
+## Amendment 1 (Project Claude; Jon approved, 24 Nov 2026), verbatim
+
+```text
+Follow-up to CALC-DOCK-COLUMN, from Project Claude; Jon approved, 24 Nov 2026.
+
+1. better-value: option 1 is approved. You may change spacing only (padding, margins, gaps) in games/better-value/index.html's own CSS, so that Next fits above the fold at 1280 × 720 on the feedback screen with the column capped. No change to font sizes, text, content, the scenario's markup or shared assets. Then re-measure better-value in all three phone-fit modes (normal, Aa, laptop): every row must pass, and normal and Aa must be no worse than main. If spacing alone cannot fit it, stop and report the figures; do not add it to known-failures.
+2. cast-away: Next moving up (462 to 431) is an improvement, not a change the STOP IF meant; carry on and record the new figure wherever phone fit records it.
+3. Record in your cloud.md entry, under its own line "Rule breach": the --force-with-lease push attempt broke AGENTS.md:40 ("Never use … force push"); the permission system refused it and nothing ran. Never attempt a force push; if a push is refused, stop and report.
+4. Then carry on with the contract from where you stopped: open the PR, merge on green with merge-pr.py, record it.
+```
