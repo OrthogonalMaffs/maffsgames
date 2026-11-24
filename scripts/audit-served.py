@@ -356,6 +356,31 @@ def b4_count(slug, level):
     return info["count"] if info else "no level"
 
 
+SESSION_CAP_REASON = "session over 100 questions: driver plays this game's shape badly"
+DEADLINE = [None]  # time.time() after which no new session starts (--hours); None for no limit
+
+
+def scope(slug, level, n_levels):
+    """Amendment 1 (option C): a level is in scope when its game serves more than one level and its B4 count is
+    not scoped to that level (scoped_to_level false), whether the game keeps named arrays or one array filtered
+    by a field. Returns (in_scope, reason)."""
+    if n_levels < 2:
+        return False, "single-level game"
+    path = os.path.join(bc.BANKS_DIR, slug + ".json")
+    if not os.path.exists(path):
+        return False, "no extraction (B4 has no count)"
+    with open(path, "r", encoding="utf-8") as fh:
+        bank = json.load(fh)
+    if bank.get("generator"):
+        return False, "generator (B4 has no count)"
+    info = bank.get("levels", {}).get(level)
+    if not info:
+        return False, "level not in the extraction (B4 has no count)"
+    if info.get("scoped_to_level"):
+        return False, "B4 count scoped to the level"
+    return True, ""
+
+
 async def measure_level(browser, base, slug, level, log=print):
     t0 = time.time()
     seen, seen_opts = {}, set()
@@ -364,6 +389,9 @@ async def measure_level(browser, base, slug, level, log=print):
     unsupported_detail = ""
     n = 0
     for n in range(1, MAX_SESSIONS + 1):
+        if DEADLINE[0] is not None and time.time() > DEADLINE[0]:
+            stop = "time limit"
+            break
         res, records = await play_session(browser, base, slug, level, n)
         statuses.append(res["status"])
         started.extend((r["level"], r["mode"]) for r in records if r.get("t") == "start")
@@ -383,6 +411,10 @@ async def measure_level(browser, base, slug, level, log=print):
             break
         if res["played"] >= MAX_QUESTIONS and "game ended" not in res.get("detail", ""):
             never_ended += 1
+            per_session.append(len(sv))
+            unsupported_detail = SESSION_CAP_REASON
+            stop = "session cap"
+            break
         per_session.append(len(sv))
         added = 0
         pos = {}
@@ -404,12 +436,14 @@ async def measure_level(browser, base, slug, level, log=print):
         stop = "max sessions"
 
     distinct = len(seen)
-    if stop in ("unsupported", "fail"):
+    if stop in ("unsupported", "fail", "session cap"):
         verdict = "UNMEASURED"
     elif distinct >= 40:
         verdict = "40+"
     elif stop == "saturated":
         verdict = "UNDER 40"
+    elif stop == "time limit":
+        verdict = "UNFINISHED"
     else:
         verdict = "UNSATURATED"
     lv_modes = sorted({"%s/%s" % (a, b) if b is not None else a for a, b in started})
@@ -560,16 +594,23 @@ def selftest(workers, which="abc"):
 
 # --------------------------------------------------------------------------- report
 
-def write_outputs(rows, tests, seconds, workers):
+def write_outputs(rows, tests, seconds, workers, out_of_scope=None, scope_name="all"):
     os.makedirs(os.path.dirname(OUT_JSON), exist_ok=True)
-    if not tests and os.path.exists(OUT_JSON):
+    old = {}
+    if os.path.exists(OUT_JSON):
         with open(OUT_JSON, "r", encoding="utf-8") as fh:
-            tests = json.load(fh).get("selftests", [])
-    data = {"contract": "B4-SERVED-AUDIT", "generated_by": "scripts/audit-served.py", "date": "2026-11-23",
+            old = json.load(fh)
+    if not tests:
+        tests = old.get("selftests", [])
+    data = {"contract": "B4-SERVED-AUDIT", "generated_by": "scripts/audit-served.py",
+            "date": time.strftime("%Y-%m-%d"), "scope": scope_name,
             "commit": subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=ROOT, capture_output=True,
                                      text=True).stdout.strip(),
             "rule": {"saturation_run": SATURATION_RUN, "max_sessions": MAX_SESSIONS, "max_questions": MAX_QUESTIONS},
-            "seconds": round(seconds), "workers": workers, "selftests": tests, "levels": rows}
+            "seconds": round(seconds), "workers": workers, "selftests": tests, "levels": rows,
+            "out_of_scope": out_of_scope or []}
+    if "estimate" in old:
+        data["estimate"] = old["estimate"]
     with open(OUT_JSON, "w", encoding="utf-8", newline="") as fh:
         json.dump(data, fh, indent=1, ensure_ascii=False)
         fh.write("\n")
@@ -577,7 +618,7 @@ def write_outputs(rows, tests, seconds, workers):
     write_md(data)
 
 
-VERDICT_ORDER = {"UNDER 40": 0, "UNSATURATED": 1, "UNMEASURED": 2, "40+": 3}
+VERDICT_ORDER = {"UNDER 40": 0, "UNSATURATED": 1, "UNFINISHED": 2, "UNMEASURED": 3, "40+": 4}
 
 
 def _cell(text):
@@ -590,6 +631,9 @@ def write_md(data):
     counts = {v: sum(1 for r in rows if r["verdict"] == v) for v in VERDICT_ORDER}
     games = {r["slug"] for r in rows}
     disagree = [r for r in rows if r["verdict"] == "UNDER 40" and isinstance(r["b4"], int) and r["b4"] >= 40]
+    oos = data.get("out_of_scope", [])
+    capped = [r for r in rows if r.get("stop") == "session cap"]
+    t3 = [r for r in rows if r["verdict"] == "UNMEASURED" and r.get("stop") != "session cap"]
     out = ["# Served-question audit, November 2026 (B4-SERVED-AUDIT)", "",
            "Generated by `scripts/audit-served.py` at %s (%d worker(s), %d s). Report only: no game and no check "
            "changed." % (data.get("commit", "?"), data.get("workers", 0), data.get("seconds", 0)), "",
@@ -598,6 +642,19 @@ def write_md(data):
                "%s %d" % (v, counts[v]) for v in VERDICT_ORDER)), "",
            "Levels where B4 counts 40 or more but the level serves under 40: %d." % len(disagree), ""]
     out += ["- `%s` %s: B4 %s, served %d" % (r["slug"], r["level"], r["b4"], r["distinct"]) for r in disagree]
+    if data.get("scope") == "c":
+        reasons = {}
+        for o in oos:
+            reasons.setdefault(o["reason"], []).append(o)
+        out += ["", "## Scope (amendment 1, option C, Jon 24 Nov 2026)", "",
+                "In scope: every level of a game that serves more than one level whose B4 count is not scoped to "
+                "that level (`scoped_to_level` false in the extraction), whether the game keeps named arrays or "
+                "one array filtered by a field: %d level(s) in %d game(s). Of those, %d were UNMEASURED by tier 3 "
+                "(it cannot play them) and %d hit the session cap. %d level(s) were out of scope:"
+                % (len(rows), len(games), len(t3), len(capped), len(oos)), ""]
+        out += ["- %s: %d level(s)" % (k, len(v)) for k, v in sorted(reasons.items())]
+        out += ["", "The out-of-scope levels are listed at the end with tier 3's one-session result from the "
+                "estimate pass."]
     out += ["", "## The rule", "",
             "A served question's identity is its option set (the sorted option identities as tier 3 reads them: "
             "dataset.val, else the KaTeX annotation, else the stripped text) joined with the visible prompt text "
@@ -605,9 +662,12 @@ def write_md(data):
             "and score, timer, streak, lives and progress readouts). Each session is a fresh page with Math.random "
             "replaced by PHONE_SEED's mulberry32 seeded with the session number. A level stops when %d sessions in a "
             "row add no new question (saturated), or at %d sessions; a session stops when the game ends or after %d "
-            "questions." % (SATURATION_RUN, MAX_SESSIONS, MAX_QUESTIONS), "",
+            "questions. A session still running at %d questions ends the level as UNMEASURED (\"%s\"): "
+            "multi-shot or endless games the driver plays badly." % (SATURATION_RUN, MAX_SESSIONS, MAX_QUESTIONS,
+                                                                    MAX_QUESTIONS, SESSION_CAP_REASON), "",
             "Verdicts: UNDER 40 (saturated, distinct < 40), 40+ (distinct >= 40), UNSATURATED (40 sessions, "
-            "distinct < 40), UNMEASURED (tier 3 cannot play it; tier 3's reason given).", "",
+            "distinct < 40), UNFINISHED (the run's time limit came first), UNMEASURED (tier 3 cannot play it, "
+            "or the session cap; the reason given).", "",
             "## Self-tests", "", "| Test | Game at commit, level | Want | Measured | Result |", "|---|---|---|---|---|"]
     for t in data.get("selftests", []):
         out.append("| %s | `%s` at %s, %s | %s | %s, distinct %d (options only %d), %d sessions, %d in-session "
@@ -632,6 +692,20 @@ def write_md(data):
         out += ["| Game | Level | Seed | Question | First served | Again |", "|---|---|---|---|---|---|"]
         out += ["| `%s` | %s | %s | %s | %s | %s |" % (r["slug"], r["level"], x["seed"], _cell(x["question"])[:120],
                                                        x["first"], x["again"]) for r, x in reps]
+    out += ["", "## Known and allowed: expectation-station's repeated tiles", "",
+            "Tier 3 WARNs that expectation-station shows one value twice (A-Level: 5, 5.1, 5.5, 6, 6; Core: 0, 0.3, "
+            "0.3, 0.35, 0.45, 0.55). These are tile banks, not pick-one groups: Stage 2's bank is every correct "
+            "product x times P(X = x) plus distractors, and `generateProductDistractors` never offers a key already "
+            "used (index.html:1506-1519), so a value appears twice only when two cells of the products table are "
+            "equal and both correct. Both WARNs are such items: A-Level es_alevel_027 (products 5, 6, 6; "
+            "distractors 5.1, 5.5) and Core es_core_022 (products 0, 0.45, 0.3, 0.3; distractors 0.35, 0.55). That is the shape "
+            "scripts/checker-allowlist.json's `tier3_exceptions` records for Stage 1 (es_gcse_001, two cells of "
+            "0.25), here in Stage 2's table. Not a finding."]
+    if oos:
+        out += ["", "## Out of scope", "", "| Game | Level | B4 count | Why out of scope | Tier 3, one session |",
+                "|---|---|---|---|---|"]
+        out += ["| `%s` | %s | %s | %s | %s |" % (o["slug"], o["level"], o["b4"], o["reason"],
+                                                 _cell(o["tier3_estimate"])[:110]) for o in oos]
     with open(OUT_MD, "w", encoding="utf-8", newline="") as fh:
         fh.write("\n".join(out) + "\n")
     print("wrote %s" % os.path.relpath(OUT_MD, ROOT))
@@ -646,6 +720,9 @@ def main():
     ap.add_argument("--estimate", metavar="FILE",
                     help="play one session per level and write the time estimate to FILE (no audit output)")
     ap.add_argument("--no-write", action="store_true", help="print only; write no JSON")
+    ap.add_argument("--scope", choices=["all", "c"], default="all",
+                    help="c: amendment 1's scope (multi-level games, B4 count not scoped to the level)")
+    ap.add_argument("--hours", type=float, help="start no new session after this many hours (UNFINISHED rows)")
     args = ap.parse_args()
 
     tests = selftest(args.workers, args.selftest) if args.selftest else []
@@ -655,6 +732,25 @@ def main():
     levels, order = bc.roster_levels()
     jobs = [(s, lv) for s in order for lv in levels.get(s, [])
             if not args.only or args.only in s]
+    out_of_scope = []
+    if args.scope == "c":
+        est = {}
+        if os.path.exists(OUT_JSON):
+            with open(OUT_JSON, "r", encoding="utf-8") as fh:
+                est = {(r["slug"], r["level"]): r for r in json.load(fh).get("estimate", {}).get("levels", [])}
+        kept = []
+        for s, lv in jobs:
+            ok, why = scope(s, lv, len(levels.get(s, [])))
+            if ok:
+                kept.append((s, lv))
+            else:
+                e = est.get((s, lv), {})
+                out_of_scope.append({"slug": s, "level": lv, "b4": b4_count(s, lv), "reason": why,
+                                     "tier3_estimate": ("%s: %s" % (e["status"], e["detail"])) if e else "not run"})
+        # longest first by the estimate's one-session time, so the long levels do not start last
+        jobs = sorted(kept, key=lambda j: -est.get(j, {}).get("seconds", 0))
+    if args.hours:
+        DEADLINE[0] = time.time() + args.hours * 3600
     print("audit-served: %d level(s) across %d game(s), %d worker(s)" % (len(jobs), len({s for s, _ in jobs}),
                                                                         args.workers))
     t0 = time.time()
@@ -675,7 +771,7 @@ def main():
         counts[r["verdict"]] = counts.get(r["verdict"], 0) + 1
     print("\n%s  (%.0fs)" % (", ".join("%s %d" % kv for kv in sorted(counts.items())), secs))
     if not args.no_write:
-        write_outputs(rows, tests, secs, args.workers)
+        write_outputs(rows, tests, secs, args.workers, out_of_scope, args.scope)
     return 0
 
 
