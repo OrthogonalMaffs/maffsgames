@@ -68,3 +68,15 @@ DO NOT TOUCH: every game page (games/, the-6-ps/, escape-rooms/); check-banks.py
 SUCCESS CONDITION: the Amendment 1 run is stopped; audit-served.py saves every level as it finishes and merges by (slug, level); the block split is fixed and shown in the markdown; self-tests a, b and c pass with the numbers in step 7; block 1 is merged on a green Gate with its results; cloud.md records the override, the split and block 1's numbers.
 
 STOP IF: a self-test fails (report what it measured; do not tune the rule until it passes without saying so); the split needs more than 6 blocks (report the split and stop before block 1); importing tier 3's driver needs a change to check-site.py or bank_common.py; a game's sessions never end (report it; it is a finding, carry on with the rest); a check still fails after your second fix (standing rule); merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you"). A STOP IF that fires is a stop: "Decided for you" is for the standing stop rules only, never for overriding a STOP IF.
+
+Block 2 instruction (24 Nov 2026), verbatim:
+
+B4 block 2. From Project Claude; Jon approved, 24 Nov 2026.
+
+Run block 2 as Amendment 2, step 10 says: branch from origin/main; the first commit closes out block 1 in docs/handover/cloud.md (#896 merged as 566d8ac via merge-pr.py; main's runs on 566d8ac: check-site 45380840441, phone-fit-full 45380840481, pages 45380839267, all success; end-task's first refusal and the detached checkout at c295d69, as you reported); run --block 2; commit the JSON and markdown; merge on green with merge-pr.py; record the numbers in cloud.md; run end-task.
+
+Two rulings on block 1, to record in the audit and in cloud.md:
+1. "Possibly not a question game": correlation-or-coincidence, fraction-equivalence and prime-or-composite are question games (a fixed answer set around a changing prompt; the counts show the prompt was captured). Their verdicts stand. Move them out of that list into the audit's notes with this reason.
+2. scale-factor-scaling alevel was measured at 34e5875, before #894 (77b6a78) rebuilt the game, so it is stale. Measure it again in this block, on main. Do it without a script change: add it to block 2 through the split's own record in the JSON (as a level moved in, with the reason "measured before #894 rebuilt the game"), or, if --block 2 cannot take it without a script change, run scripts/audit-served.py --only scale-factor-scaling after block 2 (its gcse and level4 rows are simply measured again and replace themselves). Its old row is replaced, not kept.
+
+After block 2 the summary must cover all 66 in-scope levels and say so. Stop and report, rather than work round it, if anything needs a change to scripts/audit-served.py.
