@@ -66,6 +66,17 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-24 (cloud, second session): HALF-THE-SIZE-LOOK
+
+Claude Code (cloud, second session), branch `claude/wonderful-fermat-r7mj2c` from main 0be2edf. Tier Small: merges on green with merge-pr.py. Contract `docs/handover/contracts/2026-11-24-half-the-size-look.md`. The first cloud session (B4-SERVED-AUDIT) shares this file: its lines are untouched here.
+
+- **Done on the branch:** `games/scale-factor-scaling/` on theme.css, `data-theme="light"`, own Google Fonts and the 7 base tokens gone; accent pair kept and darkened for the light palette (orange #c2410c, cyan #0e7490, white on orange); every hex outside `:root` a token; moved to MIGRATED. New `scripts/check-asset-styles.py` (7 shared script/stylesheet pairs; theme.css's imports read from theme.css), in the Site-wide checks list; on main it flags this page only (calculator.js and keypad.js without calculator.css), on the branch it passes; self-test 5 cases. /updates/ line in. Screenshots: `docs/screenshots/half-the-size-look-2026-11/`.
+- **Local results:** check-theme OK; check-calculator PASS; verify-scale-factor-scaling PASS; check-contrast PASS (normal and Aa). Phone fit normal PASS, unchanged from main. Aa: the same reported (non-gating) "Next below fold" row main has, 12 px further down (375x667: 542 vs 530 of 528).
+- **Decided for you:** phone fit measured locally only to compare with main (CI's PR run is the gate): this container's real-fonts run fails the footer pre-check at 810 px on index.html and two other pages on main as well, so the game row was read with that pre-check stubbed in a scratch copy, never in the repo.
+- **PR #897.** First Gate (def2baa) red on one check: Text writes, the self-test's `open(..., 'w')` in check-asset-styles.py without `newline=''`; fixed (first fix), main (#896, B4 block 1) merged in, both entries kept.
+- **Next:** PR, Gate green, merge-pr.py; record merge commit, its last line and main's run IDs here in the next task's close-out.
+- Record: agent Claude Code; wall pending; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-23 (cloud): B4-SERVED-AUDIT (`docs/handover/contracts/2026-11-23-b4-served-audit.md`)
 
 Claude Code (cloud), branch `claude/beautiful-bardeen-gb5zga` from main 9d779ec (after 65ae674). Tier Medium: merges on green with merge-pr.py. First commit: #892's close-out (entry below), this contract saved.
