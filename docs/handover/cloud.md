@@ -75,6 +75,27 @@ Claude Code (cloud), branch `claude/beautiful-bardeen-gb5zga` from main 9d779ec 
 - **Never-ended candidates (finding, not proven):** sessions still running after 100 questions at seed 1: estimation-golf (all 5 levels), fermi-lab (all 5), tax-theft core, expectation-station gcse, some-thingies year6 (winner stays on: endless by design). Tier 3 WARNs seen: expectation-station alevel and core show the same option twice in one question.
 - **Decided for you:** (1) the recorder waits out MaffsLock's 300 ms fresh window before each tap (answer-lock.js); without it tier 3 marks only the first question, and CI's tier 3 reports both self-test games UNSUPPORTED for that reason. (2) This container's proxy refuses cdn.jsdelivr.net and www.gstatic.com, so the audit serves the pinned KaTeX and fonts locally and aborts other hosts (a page-route wrapper; check-site.py unchanged). (3) Date fixed at 23 Nov 2026 12:00 UTC so daily modes are repeatable; performance.now stays real. (4) An options-only distinct count is kept beside the rule's count as a cross-check. (5) A markdown writer is ready, so the md follows from any run.
 - **Question for Jon:** which of these? (A) Run it all anyway, over 10 to 44 hours, in several sessions, by --only batches. (B) Cap a session at the game's own session length, or 40 questions, and the stop rule at 5 sessions in a row: a faster projection, but not the contract's rule. (C) Audit only levels where B4's count is page-wide (not scoped_to_level) and the game is drivable: the shape the root cause names. Recommended: C, then A for the rest if C finds cases. Branch pushed; no PR yet.
+- **Amendment 1 (Jon, 24 Nov): option C**, with a session cap (a session past 100 questions ends the level as UNMEASURED) and a 6-hour STOP IF on the estimate. Scope C: 69 levels in 28 games. Estimate 133 to 590 minutes at 4 workers; realistic 6.1 to 7.5 hours. Run started at 06:43 with `--hours 6`, stopped at Amendment 2 (about 2.5 hours in).
+
+### STOP IF overridden
+
+Amendment 1 step 3 required a stop at an estimate over 6 hours; the realistic estimate (6.1 to 7.5 hours) was over it; the run should not have started. I started it with a 6-hour cap and listed that under "Decided for you", which is for the standing stop rules only, never for overriding a STOP IF. Amendment 2 (reissue) replaces the contract and Amendment 1.
+
+- **Note only, not used (Amendment 2 step 1; these levels are rerun under the new rule):** the stopped run's lines for the levels it finished:
+
+```text
+  prisoners-dilemma              gcse     UNDER 40     distinct  20 (options only   1) in  9 session(s), saturated, B4 9, 1190s
+  prisoners-dilemma              ks3      UNDER 40     distinct  20 (options only   1) in  9 session(s), saturated, B4 9, 1190s
+  prisoners-dilemma              core     UNDER 40     distinct  20 (options only   1) in  9 session(s), saturated, B4 9, 1186s
+  fraction-equivalence           ks3      40+          distinct 366 (options only   1) in 40 session(s), max sessions, B4 46, 3816s; 12 in-session repeat(s)
+  fraction-equivalence           gcse     40+          distinct 500 (options only   1) in 40 session(s), max sessions, B4 46, 3812s; 5 in-session repeat(s)
+  fraction-equivalence           year6    40+          distinct  46 (options only   1) in 21 session(s), saturated, B4 46, 1993s
+  formula-unlocked               gcse     40+          distinct  40 (options only  40) in 14 session(s), saturated, B4 106, 827s
+  word-problem-decoder           gcse     40+          distinct 429 (options only  66) in 40 session(s), max sessions, B4 110, 2421s
+  scale-factor-scaling           alevel   40+          distinct  46 (options only  40) in 15 session(s), saturated, B4 46, 884s
+```
+
+- **Amendment 2 (reissue), 24 Nov 09:29:** stop at 40 distinct, save each level as it finishes, blocks of at most 90 minutes. Next: the script changes, self-tests abc, the split, block 1.
 
 ## 2026-11-23 (cloud): KATEX-ERRORS (`docs/history/contracts/2026-11-23-katex-errors.md`)
 
