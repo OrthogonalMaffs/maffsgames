@@ -250,7 +250,7 @@ function showMenu(){show('menu')}
 <script>
 // The scientific calculator (sin, cos, tan and their inverses for resolving): a scratch pad under the options,
 // not given an {answer}, since every answer here is a choice (contract SCI-CALC; Jon's tagging ruling, 10 Oct 2026).
-if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{keys:'scientific'});
+if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.querySelector('#game .q-card'),keys:'scientific'});
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'force-resolver');</script>

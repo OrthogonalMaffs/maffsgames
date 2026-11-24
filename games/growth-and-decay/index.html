@@ -943,7 +943,7 @@ function showMenu(){$('resultsScreen').classList.remove('active');$('gameScreen'
 window.addEventListener('DOMContentLoaded',()=>{parseURL();});
 // The scientific calculator (powers, ln, e^x): answers stay typed in each sub-question's own box, which is
 // rebuilt per sub-question, so the calculator is not given it as {answer} (contract SCI-CALC).
-const calc=window.MaffsCalc?MaffsCalc.mount($('calc'),{keys:'scientific'}):null;
+const calc=window.MaffsCalc?MaffsCalc.mount($('calc'),{dock:$('qPanel'),keys:'scientific'}):null;
 
 
 (function renderMethodRef(){

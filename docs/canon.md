@@ -603,6 +603,7 @@ styled in `theme.css` (`.maffs-calc*`, tokens only; a game's `--accent` colours 
   about 1269px with a 17px desktop scrollbar; 1280px docks either way. Docked, it stays in view through the
   tap step and the feedback; only its toggle goes with the answer box. The constants are
   `MaffsCalc.DOCK`; the dock is in `theme.css` (`.maffs-calc.docked`, `.maffs-calc-host`).
+- **The column makes room (Jon, 24 Nov 2026).** If the room right of the card is short of 262px, MaffsCalc narrows the game column (the dock element's nearest centred ancestor with a max-width) just enough for the panel to dock, but never below a 640px column (`MaffsCalc.DOCK.colMin`); below that the panel stays in the flow. The cap is set at layout and on resize, never on opening or closing, so the column still never moves when the calculator opens. Every calculator game passes a `dock` element, and `scripts/check-calc-dock.py` checks in CI that each one docks at 1366 × 768 and 1440 × 900.
 - **Feedback in view.** A game that carries it shows its feedback without scrolling at 1280×720,
   1366×768 and 1920×1080 with the calculator docked (layout, never a scroll), and on phones; below the
   breakpoint, if the feedback is ever not fully in view after Check, the page glides to it (smoothly,
