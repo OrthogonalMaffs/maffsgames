@@ -264,7 +264,7 @@
     else if ((why = titleShowing())) { /* the page names itself */ }
     else {
       var left = LOGO.left + LOGO.size + LOGO.clear, free = freeWidth(left);
-      label.setAttribute('data-free-width', String(free));
+      label.setAttribute('data-room-px', String(free));
       if (free < NAME.min) why = 'no room (' + free + ' px free)';
       else {
         var body = getComputedStyle(document.body);

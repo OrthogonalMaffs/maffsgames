@@ -305,7 +305,7 @@ LABEL_JS = r"""async () => {
   const hr = h ? h.getBoundingClientRect() : null;
   const out = { logo: on(L), blocked: L ? L.getAttribute('data-blocked-by') : 'no logo', label: on(N), labels: document.querySelectorAll('.maffs-site-name').length,
                 why: N ? N.getAttribute('data-hidden-by') : (window.MaffsNav ? MaffsNav.nameHiddenBy : 'no site-nav.js'),
-                free: N && N.getAttribute('data-free-width') !== null ? Number(N.getAttribute('data-free-width')) : null,
+                free: N && N.getAttribute('data-room-px') !== null ? Number(N.getAttribute('data-room-px')) : null,
                 text: N ? N.textContent : null, name: window.MaffsNav ? MaffsNav.gameName : null,
                 h1: !!h && h.getClientRects().length > 0 && hr.width > 0 && hr.height > 0 && getComputedStyle(h).visibility !== 'hidden',
                 touches: [], lines: 0, contrast: null, link: !!N && (N.tagName === 'A' || !!N.closest('a')), hidden: N ? N.getAttribute('aria-hidden') : null };
