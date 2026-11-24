@@ -80,10 +80,6 @@
       "reason": "Stage 1 fills a probability table from a tile bank and is marked by 'Check Table' (checkStage1) only once every blank is filled -- several placements per question. Also the reason its repeated tiles are legitimate: es_gcse_001 ships ['0.25','0.25','0.50','0.10'] because two cells of its table are both 0.25. Read 2026-09-23."
     },
     {
-      "slug": "quadratic-factoriser",
-      "reason": "Answer is built, not picked: the student taps each bracket number to open the shared numeric grid, selects a value for it, then presses 'Check Factorisation' -- a click on a grid button is not itself a submitted answer, so question_answered never fires from a single click. Confirmed against the rebuilt game (docs/next-contract-quadratic-factoriser.md, Phase 1, 27 Sep 2026) with a scripted stub-server playthrough driving startEditing/selectNum/checkAnswer directly: every offered session length (8, 16, 24, 174) plays cleanly to game_completed with 100% of clicks marked, so the UNSUPPORTED classification is the driver's generic click-one-option assumption not matching this game's two-step picker, not a defect in the game."
-    },
-    {
       "slug": "seven-bridges",
       "reason": "Builds its options as SVG nodes. The driver now dispatches a MouseEvent rather than calling .click() (which SVGElement lacks in Chromium), but the game is a graph-traversal puzzle rather than a question with options, so there is still nothing for a pick-one driver to answer. Read 2026-09-23."
     },
