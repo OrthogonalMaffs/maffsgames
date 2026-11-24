@@ -308,7 +308,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -380,7 +380,7 @@
    "tier": "content"
   },
   "verify-its-just-base-60-bruv.py": {
-   "how": "chosen from 12 timed unit(s)",
+   "how": "kept from the pack (1 needed)",
    "label": "It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; fault-injection self-test)",
    "parts": 1,
    "tier": "content"
