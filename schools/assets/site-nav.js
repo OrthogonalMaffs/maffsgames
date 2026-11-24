@@ -16,6 +16,17 @@
       measured gap between the viewport's left edge and everything the page paints fits it (no width guess), and only
       on a fine pointer (never phones or tablets). Re-measured on load, on resize and after each click, key or touch. A page that shows
       a logo of its own opts out with <html data-site-logo="off">; scripts/check-site-nav.py lists each with its reason.
+   3. The game's name during play (contract GAME-TITLE-IN-PLAY, Jon 24 Nov 2026). Most games write their title inside
+      the start screen, so it goes when Start is pressed. On a game page this file's tag carries
+      data-game-name="<the roster's name>" (scripts/apply-site-nav.py writes it from .claude/rules/game-roster.md;
+      scripts/check-site-nav.py holds it equal). The name is shown as plain text beside the logo, top aligned with it,
+      only while the logo shows and only while the page's own title is not showing: hidden when the page's first <h1>
+      is rendered, or when any rendered text on the page equals the name. Its width is the measured free margin (from
+      its left edge to the nearest thing the page paints, by the logo's own measure, less the logo's clear space); it
+      wraps to at most three lines and does not show where the name needs more, or the free width is under 120 px.
+      Re-measured exactly when the logo is. window.MaffsNav.gameName is the name (null without one), and
+      MaffsNav.nameHiddenBy why the label is hidden ('' while it shows). Not a link, aria-hidden (the page's <title>
+      names the game), and it takes no clicks.
 
    No dependencies. Any failure leaves the page as written. */
 (function () {
@@ -74,10 +85,15 @@
   };
   var KEY = 'maffs-nav:';
   var LOGO = { left: 16, top: 16, size: 40, clear: 16 };   // px: where the logo sits, and the space it keeps clear
+  var NAME = { size: 15, weight: 600, line: 1.25, lines: 3, min: 120 };   // the game's name beside the logo (point 3)
 
   function norm(path) { return path.replace(/index\.html$/, ''); }
 
-  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS }, hubPath = null;
+  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS, gameName: null, nameHiddenBy: 'no name' }, hubPath = null;
+  try {
+    var named = document.currentScript && document.currentScript.getAttribute('data-game-name');
+    if (named && /\S/.test(named)) { nav.gameName = named; nav.nameHiddenBy = 'no logo on this page'; }
+  } catch (e) { nav.gameName = null; }
 
   // The way back to the class page carries the class name from this page's own fragment, never from storage.
   function classFragment(hub) {
@@ -121,7 +137,7 @@
   }
 
   // ---- the logo ----
-  var logo = null, src = null;
+  var logo = null, src = null, label = null;
   try {
     var me = document.currentScript && document.currentScript.src;
     if (me) src = me.replace(/site-nav\.js(\?.*)?$/, 'favicon.svg');
@@ -160,7 +176,7 @@
     var all = document.body.getElementsByTagName('*');
     for (var i = 0; i < all.length; i++) {
       var el = all[i];
-      if (el === logo || (logo && logo.contains(el))) continue;
+      if (el === logo || (logo && logo.contains(el)) || el === label) continue;
       var cs = getComputedStyle(el);
       if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') continue;
       if (painted(el, cs)) {
@@ -171,7 +187,7 @@
     var walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
     var range = document.createRange(), t;
     while ((t = walk.nextNode())) {
-      if (!/\S/.test(t.nodeValue) || (logo && logo.contains(t))) continue;
+      if (!/\S/.test(t.nodeValue) || (logo && logo.contains(t)) || (label && label.contains(t))) continue;
       var p = t.parentElement, cp = p && getComputedStyle(p);
       if (!cp || cp.visibility === 'hidden' || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) continue;
       range.selectNodeContents(t);
@@ -181,6 +197,94 @@
     return null;
   }
 
+  // ---- the game's name beside the logo (point 3) ----
+  function fold(s) { return String(s).replace(/[\u2018\u2019]/g, "'").replace(/\s+/g, ' ').trim().toLowerCase(); }
+
+  function rendered(el) {
+    if (!el || !el.getClientRects().length) return false;          // no box: display:none on it or an ancestor
+    var r = el.getBoundingClientRect();
+    return r.width > 0 && r.height > 0 && getComputedStyle(el).visibility !== 'hidden';
+  }
+
+  // Is the page's own title showing? Its first <h1> rendered, or any rendered text equal to the name: a text node's
+  // parent, or one of the three elements above it (a title written across a span or two).
+  function titleShowing() {
+    if (rendered(document.querySelector('h1'))) return 'the page\'s h1 shows';
+    var want = fold(nav.gameName), walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false), t;
+    while ((t = walk.nextNode())) {
+      if (!/\S/.test(t.nodeValue) || (label && label.contains(t))) continue;
+      var e = t.parentElement;
+      if (!e || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE|TITLE)$/.test(e.tagName)) continue;
+      for (var up = 0; e && e !== document.body && up < 4; up++, e = e.parentElement) {
+        var text = e.textContent;
+        if (text.length > nav.gameName.length + 24) break;
+        if (fold(text) === want && rendered(e)) return 'the name is on the page';
+      }
+    }
+    return '';
+  }
+
+  // The free margin right of the label's left edge: the smallest left edge of anything the page paints, by conflict()'s
+  // own measure (a fixed box only where it is on screen, within the label's tallest band; anything in the flow at any
+  // height), less the label's left edge and the logo's clear space.
+  function freeWidth(left) {
+    var bandBottom = LOGO.top + NAME.lines * NAME.size * NAME.line + LOGO.clear, nearest = window.innerWidth;
+    function see(r, fixed) {
+      if (r.width <= 0 || r.height <= 0 || r.right <= 0) return;
+      if (fixed && !(r.top < bandBottom && r.bottom > 0)) return;
+      if (r.left < nearest) nearest = r.left;
+    }
+    var all = document.body.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el === label || el === logo || (logo && logo.contains(el))) continue;
+      var cs = getComputedStyle(el);
+      if (cs.display === 'none' || cs.visibility === 'hidden' || cs.opacity === '0') continue;
+      if (painted(el, cs)) see(el.getBoundingClientRect(), fixedish(el));
+    }
+    var walk = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT, null, false);
+    var range = document.createRange(), t;
+    while ((t = walk.nextNode())) {
+      if (!/\S/.test(t.nodeValue) || (logo && logo.contains(t)) || (label && label.contains(t))) continue;
+      var p = t.parentElement, cp = p && getComputedStyle(p);
+      if (!cp || cp.visibility === 'hidden' || /^(SCRIPT|STYLE|NOSCRIPT|TEMPLATE)$/.test(p.tagName)) continue;
+      range.selectNodeContents(t);
+      var rs = range.getClientRects(), fx = fixedish(p);
+      for (var j = 0; j < rs.length; j++) see(rs[j], fx);
+    }
+    return Math.floor(nearest - left - LOGO.clear);
+  }
+
+  // Show the name, or hide it and say why. Called only from place(), after the logo is judged.
+  function placeName(logoShown) {
+    if (!label) return;
+    var why = '';
+    label.style.display = 'none';
+    if (!logoShown) why = 'the logo is hidden';
+    else if ((why = titleShowing())) { /* the page names itself */ }
+    else {
+      var left = LOGO.left + LOGO.size + LOGO.clear, free = freeWidth(left);
+      label.setAttribute('data-room-px', String(free));
+      if (free < NAME.min) why = 'no room (' + free + ' px free)';
+      else {
+        var body = getComputedStyle(document.body);
+        label.style.fontFamily = body.fontFamily;
+        label.style.color = body.color;
+        label.style.maxWidth = free + 'px';
+        label.style.visibility = 'hidden';
+        label.style.display = 'block';
+        var lines = Math.round(label.getBoundingClientRect().height / (NAME.size * NAME.line));
+        if (lines > NAME.lines || label.scrollWidth > label.clientWidth + 1) {
+          label.style.display = 'none';
+          why = 'no room (' + free + ' px free: the name needs more than ' + NAME.lines + ' lines)';
+        }
+        label.style.visibility = '';
+      }
+    }
+    nav.nameHiddenBy = why;
+    label.setAttribute('data-hidden-by', why);
+  }
+
   function place() {
     if (!logo) return;
     var fine = window.matchMedia && matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -188,12 +292,13 @@
     logo.style.display = block ? 'none' : 'block';
     logo.setAttribute('data-blocked-by', block ? (block.nodeType ? (block.tagName.toLowerCase() + (block.id ? '#' + block.id : '')
       + (block.className && typeof block.className === 'string' ? '.' + block.className.trim().split(/\s+/).join('.') : '')) : block) : '');
+    try { placeName(!block); } catch (e) { if (label) { label.style.display = 'none'; nav.nameHiddenBy = 'error'; } }
   }
 
   var pending = 0;
   function later(ms) {
     if (pending) return;
-    pending = setTimeout(function () { pending = 0; try { place(); } catch (e) { if (logo) logo.style.display = 'none'; } }, ms);  // lock-ok: layout only, marks nothing
+    pending = setTimeout(function () { pending = 0; try { place(); } catch (e) { if (logo) logo.style.display = 'none'; if (label) label.style.display = 'none'; } }, ms);  // lock-ok: layout only, marks nothing
   }
 
   function addLogo() {
@@ -211,6 +316,17 @@
     img.style.cssText = 'width:100%;height:100%;display:block';
     logo.appendChild(img);
     document.body.appendChild(logo);
+    if (nav.gameName) {
+      // The name: plain text in the body's own font and colour, no background, never a link and never in the way of a click.
+      label = document.createElement('div');
+      label.className = 'maffs-site-name';
+      label.setAttribute('aria-hidden', 'true');
+      label.textContent = nav.gameName;
+      label.style.cssText = 'position:fixed;left:' + (LOGO.left + LOGO.size + LOGO.clear) + 'px;top:' + LOGO.top + 'px;width:max-content;'
+        + 'z-index:1001;display:none;margin:0;padding:0;background:none;pointer-events:none;overflow-wrap:normal;text-align:left;'
+        + 'font-size:' + NAME.size + 'px;font-weight:' + NAME.weight + ';line-height:' + NAME.line + ';letter-spacing:normal';
+      document.body.appendChild(label);
+    }
     place();
     window.addEventListener('resize', function () { later(150); });
     window.addEventListener('load', function () { later(0); });
@@ -227,7 +343,7 @@
 
   function ready() {
     try { relink(); } catch (e) { /* leave the links as written */ }
-    try { addLogo(); } catch (e) { if (logo) logo.style.display = 'none'; }
+    try { addLogo(); } catch (e) { if (logo) logo.style.display = 'none'; if (label) label.style.display = 'none'; }
   }
   nav.place = function () { place(); return logo ? logo.getAttribute('data-blocked-by') : 'no logo'; };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready);

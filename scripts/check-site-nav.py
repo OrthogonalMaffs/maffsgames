@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 # ci-line: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the class page's name carried there and back; the margin logo only where it fits; planted faults caught) | --selftest && --check
-# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg class/index.html schools/assets/kids-look.js scripts/apply-class-page.py games/sums-in-disguise/index.html games/some-thingies/index.html games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html
+# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg class/index.html schools/assets/kids-look.js scripts/apply-class-page.py games/sums-in-disguise/index.html games/some-thingies/index.html games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html games/scale-factor-scaling/index.html games/dimension-checker/index.html games/suvat/index.html .claude/rules/game-roster.md scripts/apply-site-nav.py scripts/check-start-mount.py
 """Site navigation (contract SITE-NAV, Jon 21 Nov 2026; canon §7.5.8): schools/assets/site-nav.js.
 
     python scripts/check-site-nav.py --static     # the static rule (check-site.py runs this in its site-wide part)
     python scripts/check-site-nav.py --check      # the rule, then the pages played in Chromium
     python scripts/check-site-nav.py --selftest   # planted faults caught (static and Chromium)
     python scripts/check-site-nav.py --survey     # the logo on every back-link page at 1920x1080: shown or what blocks it
+    python scripts/check-site-nav.py --survey-names [--out FILE]   # every roster game at 1280x720, 1366x768 and 1920x1080,
+                                                  # start screen and first question: the logo and the name label
 
 THE STATIC RULE (static_faults(); in check-site.py's site-wide part, so it runs on every pull request with no new
 always-run line, ALWAYS_BUDGET being full):
-  1. every page with an a.back-link loads site-nav.js exactly once (scripts/apply-site-nav.py writes the tag);
+  1. every page with an a.back-link, and every games/<slug>/index.html whose slug has a numbered roster row, loads
+     site-nav.js exactly once (scripts/apply-site-nav.py writes the tag);
+  1a. the game's name (contract GAME-TITLE-IN-PLAY, Jon 24 Nov 2026): on every roster game page the tag carries
+     data-game-name, and its decoded value equals the roster's Game column for that slug exactly (roster_names(), the one
+     reader of the roster here; apply-site-nav.py imports it); a page outside games/ never carries the attribute; a
+     roster Game cell with markup in it is a fault;
   2. HUBS in site-nav.js holds every page outside games/ that links to a game page (a new hub is labelled there);
   3. a page carrying <html data-site-logo="off"> is on LOGO_OPT_OUT below with its reason, and a page that shows its
      own logo (class logo, numblr-logo or header-logo) and loads site-nav.js carries it.
@@ -28,6 +35,13 @@ IN CHROMIUM (--check), served by serve-stubbed.py with the network cut:
   - the logo: shown at 1920x1080 on Angle Ace, links to "/", is named "MaffsGames home", and nothing painted comes
     within its clear space at any scroll position (hit-tested with elementsFromPoint, not site-nav.js's own measure);
     hidden at 390x844 and on a 768x1024 tablet; hidden on Chart Interrogator (its header bar runs the full width); absent on 52-dle;
+  - the game's name during play (GAME-TITLE-IN-PLAY): at 1280x720 But It's Only Half the Size! shows no label on its start
+    screen (its <h1> shows) and, after Start, the label reading the roster's name; Free Daily Pizza, whose title stays
+    during play, shows none at any point; none at 390x844, on a 768x1024 tablet, on Chart Interrogator or on 52-dle.
+    Wherever the label shows, an independent hit test (elementsFromPoint over its box, at scroll positions down the
+    page) finds nothing the page paints under it, and its colour against the body's background is at least 4.5:1 (a
+    light and a dark game). Plants: a label shown while the <h1> is rendered; a label overlapping the game column; a
+    data-game-name that differs from the roster; a roster game page without site-nav.js;
   - every distinct label in HUBS on a small phone (SITE-NAV-GUIDE-LABEL, Jon 21 Nov 2026): at 360x640, opened with that
     hub as referrer, Angle Ace's a.back-link and Free Daily Pizza's stage-exit row link each sit on one line (no text
     of the link starts below its first line). A 60-character plant label is caught.
@@ -48,6 +62,42 @@ BACK_LINK = re.compile(r'<a\b[^>]*\bclass="[^"]*\bback-link\b')
 OWN_LOGO = re.compile(r'\bclass="[^"]*\b(?:logo|numblr-logo|header-logo)\b')
 OPT_OUT_ATTR = re.compile(r'<html\b[^>]*\bdata-site-logo="off"')
 SKIP_DIRS = {'docs', 'tools', 'node_modules', 'scripts', 'claude'}
+ROSTER = os.path.join(ROOT, '.claude', 'rules', 'game-roster.md')
+NAME_ATTR = re.compile(r'\bdata-game-name="([^"]*)"')
+ROSTER_ROW = re.compile(r'^\|\s*\d+\s*\|\s*([^|]*?)\s*\|\s*`([a-z0-9-]+)`\s*\|', re.M)
+
+
+def roster_names(text=None):
+    """{slug: the roster's Game column} for every numbered row of .claude/rules/game-roster.md (a withdrawn game's row is
+    numbered "—" and is not one). The one reader of the roster for the name label; apply-site-nav.py imports it."""
+    if text is None:
+        with open(ROSTER, encoding='utf-8') as f:
+            text = f.read()
+    out = {}
+    for name, slug in ROSTER_ROW.findall(text):
+        if slug in out and out[slug] != name:
+            raise ValueError('the roster names %s twice: %r and %r' % (slug, out[slug], name))
+        out[slug] = name
+    return out
+
+
+def game_slug(rel):
+    """The slug of games/<slug>/index.html, else None."""
+    m = re.fullmatch(r'games/([^/]+)/index\.html', rel)
+    return m.group(1) if m else None
+
+
+def tag_for(rel, names):
+    """The site-nav.js tag a page carries: with the roster's name on a roster game page, plain everywhere else."""
+    slug = game_slug(rel)
+    if slug in names:
+        return '<script src="/schools/assets/site-nav.js" data-game-name="%s"></script>' % htmllib.escape(names[slug], quote=True)
+    return TAG
+
+
+def nav_pages(texts, names):
+    """Every page that must load site-nav.js: one with an a.back-link, or a roster game's page."""
+    return [r for r, t in sorted(texts.items()) if BACK_LINK.search(t) or game_slug(r) in names]
 
 # Pages that keep the margin logo off, each with its reason (contract SITE-NAV names them). Shrink or grow only with a
 # reason; a page carrying the attribute and missing here fails, and so does an entry for a page without it.
@@ -66,6 +116,9 @@ STAGE_GAME = 'games/free-daily-pizza/index.html'   # stage-exit, with a HUD; Ess
 STAGE_HUB = 'essentials/index.html'
 FULL_WIDTH = 'games/chart-interrogator/index.html'   # its header bar runs the full width: no margin
 OWN_LOGO_GAME = 'games/52dle/index.html'
+TITLE_GOES = 'games/scale-factor-scaling/index.html'   # But It's Only Half the Size!: its <h1> is in the start screen (light)
+TITLE_GOES_DARK = 'games/dimension-checker/index.html'  # the same on a dark page (the check holds its background to dark)
+NO_BACK_LINK_GAME = 'games/suvat/index.html'           # a roster game with no a.back-link: it loads site-nav.js by its roster row
 PHONE = (360, 640)                             # the small phone every hub label must fit on one line at
 CLASS_PAGE = '/class/'                         # the class page (contract CLASS-PAGE): the documented example is #Maple
 # The child-look games the class page lists, named here so scripts/ci-deps.py selects this check for each; held equal to
@@ -140,17 +193,38 @@ def links_to_game(rel, text):
     return False
 
 
-def static_faults(texts=None, js=None, opt_out=None):
+def static_faults(texts=None, js=None, opt_out=None, names=None):
     texts = texts or {r: read(r) for r in pages()}
     opt_out = LOGO_OPT_OUT if opt_out is None else opt_out
     hub = hubs(js)
     out = []
     if not hub:
         out.append('site-nav.js: no HUBS map found')
-    for r in back_link_pages(texts):
+    try:
+        names = roster_names() if names is None else names
+    except (OSError, ValueError) as e:
+        names = {}
+        out.append('the roster cannot be read for the games\' names: %s' % e)
+    for slug, name in sorted(names.items()):
+        if not name or re.search(r'[<>`*\[\]]|&[a-z#0-9]+;', name):
+            out.append('roster: the Game cell for %s holds markup or is empty (%r): the name label needs plain text' % (slug, name))
+        if 'games/%s/index.html' % slug not in texts:
+            out.append('roster: %s has a row but no games/%s/index.html' % (slug, slug))
+    for r in nav_pages(texts, names):
         n = len(LOADS.findall(texts[r]))
         if n != 1:
-            out.append('%s: has an a.back-link and loads site-nav.js %d time(s) (once: python scripts/apply-site-nav.py)' % (r, n))
+            out.append('%s: %s and loads site-nav.js %d time(s) (once: python scripts/apply-site-nav.py)'
+                       % (r, 'is a roster game\'s page' if game_slug(r) in names else 'has an a.back-link', n))
+    for r, t in sorted(texts.items()):
+        tags = LOADS.findall(t)
+        got = [htmllib.unescape(m.group(1)) for tag in tags for m in [NAME_ATTR.search(tag)] if m]
+        slug = game_slug(r)
+        if slug in names:
+            if len(tags) == 1 and got != [names[slug]]:
+                out.append('%s: its site-nav.js tag carries data-game-name %s, not the roster\'s name %r (python scripts/apply-site-nav.py)'
+                           % (r, repr(got[0]) if got else 'nothing', names[slug]))
+        elif got:
+            out.append('%s: carries data-game-name %r but is not a roster game\'s page (the label is for games only)' % (r, got[0]))
     for r, t in sorted(texts.items()):
         if r.startswith('games/') or not links_to_game(r, t):
             continue
@@ -175,8 +249,8 @@ def static_faults(texts=None, js=None, opt_out=None):
 def static_report():
     """For check-site.py: print the static rule's result, return the faults."""
     f = static_faults()
-    print('  site nav (contract SITE-NAV): %d page(s) with an a.back-link, %d hub(s); %s'
-          % (len(back_link_pages()), len(hubs()), 'PASS' if not f else '%d fault(s)' % len(f)))
+    print('  site nav (contract SITE-NAV): %d page(s) with an a.back-link, %d hub(s), %d roster game page(s) named; %s'
+          % (len(back_link_pages()), len(hubs()), len(roster_names()), 'PASS' if not f else '%d fault(s)' % len(f)))
     for x in f:
         print('    FAIL  ' + x)
     return f
@@ -216,6 +290,139 @@ TOUCH_JS = r"""async () => {
   scrollTo(0, 0);
   return {shown: true, touches: out, href: L.getAttribute('href'), name: L.getAttribute('aria-label')};
 }"""
+
+
+# The name label (GAME-TITLE-IN-PLAY), judged independently of site-nav.js's own measure. Re-measure first (as a click
+# would), then: is the logo shown, is the label shown and what does it read, is the page's first <h1> rendered; and where
+# the label shows, what the page paints under its box (elementsFromPoint on a grid over it, at scroll positions down the
+# page: the label takes no pointer events, so it is never in the list itself), its line count, and its colour's contrast
+# against the body's background (the html's where the body has none).
+LABEL_JS = r"""async () => {
+  if (window.MaffsNav && MaffsNav.place) MaffsNav.place();
+  const L = document.querySelector('.maffs-site-logo'), N = document.querySelector('.maffs-site-name');
+  const on = (el) => !!el && getComputedStyle(el).display !== 'none';
+  const h = document.querySelector('h1');
+  const hr = h ? h.getBoundingClientRect() : null;
+  const out = { logo: on(L), blocked: L ? L.getAttribute('data-blocked-by') : 'no logo', label: on(N), labels: document.querySelectorAll('.maffs-site-name').length,
+                why: N ? N.getAttribute('data-hidden-by') : (window.MaffsNav ? MaffsNav.nameHiddenBy : 'no site-nav.js'),
+                free: N && N.getAttribute('data-room-px') !== null ? Number(N.getAttribute('data-room-px')) : null,
+                text: N ? N.textContent : null, name: window.MaffsNav ? MaffsNav.gameName : null,
+                h1: !!h && h.getClientRects().length > 0 && hr.width > 0 && hr.height > 0 && getComputedStyle(h).visibility !== 'hidden',
+                touches: [], lines: 0, contrast: null, link: !!N && (N.tagName === 'A' || !!N.closest('a')), hidden: N ? N.getAttribute('aria-hidden') : null };
+  if (!out.label) return out;
+  const r = N.getBoundingClientRect(), pad = 8;
+  out.lines = Math.round(r.height / (parseFloat(getComputedStyle(N).fontSize) * 1.25));
+  out.box = [Math.round(r.left), Math.round(r.top), Math.round(r.right), Math.round(r.bottom)];
+  const paints = (el) => {
+    const cs = getComputedStyle(el);
+    if (/^(IMG|SVG|CANVAS|VIDEO|INPUT|BUTTON|SELECT|TEXTAREA|IFRAME)$/i.test(el.tagName)) return true;
+    if (cs.backgroundColor && !/rgba\([^)]*,\s*0\)$|transparent/.test(cs.backgroundColor)) return true;
+    if (cs.backgroundImage !== 'none' || cs.boxShadow !== 'none') return true;
+    if (['Top','Right','Bottom','Left'].some(s => parseFloat(cs['border'+s+'Width']) > 0 && cs['border'+s+'Style'] !== 'none')) return true;
+    return [...el.childNodes].some(n => n.nodeType === 3 && /\S/.test(n.nodeValue));
+  };
+  const H = Math.max(document.documentElement.scrollHeight, innerHeight);
+  scan: for (let y = 0; y <= H; y += Math.max(100, innerHeight / 3)) {
+    scrollTo(0, y);
+    await new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+    for (let x = r.left - pad; x <= r.right + pad; x += 6) for (let yy = r.top - pad; yy <= r.bottom + pad; yy += 6) {
+      if (x < 0 || yy < 0) continue;
+      for (const el of document.elementsFromPoint(x, yy)) {
+        if (el === L || (L && L.contains(el)) || el === N || el === document.body || el === document.documentElement) continue;
+        if (paints(el)) { out.touches.push(el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + ' at scroll ' + Math.round(y)); break scan; }
+      }
+    }
+  }
+  scrollTo(0, 0);
+  const rgb = (c) => (c.match(/[\d.]+/g) || []).map(Number);
+  const lum = (c) => { const [R, G, B] = c.slice(0, 3).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * R + 0.7152 * G + 0.0722 * B; };
+  let bg = rgb(getComputedStyle(document.body).backgroundColor);
+  if (bg.length > 3 && bg[3] === 0) bg = rgb(getComputedStyle(document.documentElement).backgroundColor);
+  if (!bg.length || (bg.length > 3 && bg[3] === 0)) bg = [255, 255, 255];
+  const a = lum(rgb(getComputedStyle(N).color)), b = lum(bg);
+  out.contrast = Math.round((Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05) * 100) / 100;
+  out.bgImage = getComputedStyle(document.body).backgroundImage !== 'none';
+  out.bgLum = Math.round(b * 1000) / 1000;
+  return out;
+}"""
+
+_cs = None
+
+
+def _check_site():
+    """check-site.py, for tier 3's page-side driver (TIER3_INIT: the game's own Start control found by behaviour)."""
+    global _cs
+    if _cs is None:
+        spec = importlib.util.spec_from_file_location('check_site', os.path.join(HERE, 'check-site.py'))
+        _cs = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_cs)
+    return _cs
+
+
+_mods = {}
+
+
+def _module(name):
+    if name not in _mods:
+        spec = importlib.util.spec_from_file_location(name.replace('-', '_'), os.path.join(HERE, name + '.py'))
+        _mods[name] = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(_mods[name])
+    return _mods[name]
+
+
+def to_first_question(page, slug=None):
+    """Press through the game's own start screen to its first question, on a page opened with tier 3's init script. In
+    turn, until the game is playing: the controls check-start-mount.py records for a game the shared driver cannot start
+    (START_STEPS); the shared driver, as measure-phone-fit.py uses it (the first level or option, then Start); the game's
+    own declared start (its maffs-lock-hint, canon 7.6.0). True once the game has reported game_started, or its recorded
+    steps were pressed, or its declared 'ready' holds."""
+    def started():
+        return page.evaluate('window.__mfgStats ? window.__mfgStats().started : 0') > 0
+    steps = _module('check-start-mount').START_STEPS.get(slug) if slug else None
+    if steps:
+        try:
+            for step in steps:
+                if isinstance(step, tuple):
+                    page.fill(step[0], step[1], timeout=3000)
+                else:
+                    page.locator(step).first.click(timeout=3000)
+                page.wait_for_timeout(400)
+            page.wait_for_timeout(400)
+            return True
+        except Exception:
+            pass
+    picked = False
+    for _ in range(5):
+        if started():
+            break
+        if not picked and page.evaluate('window.__mfgProbe().n') >= 2:
+            page.evaluate('window.__mfgClickOpt(0)')
+            picked = True
+        elif page.evaluate('window.__mfgHasStart()'):
+            page.evaluate('window.__mfgClickStart()')
+        elif page.evaluate('window.__mfgProbe().n') >= 2:
+            page.evaluate('window.__mfgClickOpt(0)')
+        else:
+            break
+        page.wait_for_timeout(600)
+    if not started():
+        try:
+            page.evaluate("typeof window.startGame === 'function' && window.startGame()")
+        except Exception:
+            pass
+        page.wait_for_timeout(600)
+    if not started() and slug:
+        try:
+            with open(os.path.join(ROOT, 'games', slug, 'index.html'), encoding='utf-8') as f:
+                hint, bad = _module('check-answer-lock').read_hint(f.read())
+            if not bad and hint.get('start'):
+                page.evaluate(hint['start'])
+                page.wait_for_timeout(900)
+                if hint.get('ready') and page.evaluate(hint['ready']):
+                    return True
+        except Exception:
+            pass
+    return started()
 
 
 def as_written(text):
@@ -397,11 +604,178 @@ def browser_faults(swap=None, only=None, js_swap=None):
                             faults.append('logo: on %s it touches %s, links to %s, is named %r' % (where, res['touches'] or 'nothing',
                                                                                                  res['href'], res['name']))
                     ctx.close()
+            if want('name'):
+                names = roster_names()
+                cs = _check_site()
+
+                def game(rel, vp, touch=False):
+                    ctx = context(viewport={'width': vp[0], 'height': vp[1]}, has_touch=touch, is_mobile=touch)
+                    ctx.add_init_script(cs.TIER3_INIT)
+                    page = ctx.new_page()
+                    page.goto(base + url_path(rel), wait_until='load')
+                    page.wait_for_timeout(700)
+                    return ctx, page
+
+                def judge(where, res, expect, name=None):
+                    if res['labels'] > 1:
+                        faults.append('name: %s has %d labels' % (where, res['labels']))
+                    if res['label'] and res['h1']:
+                        faults.append('name: %s shows the label while the page\'s own <h1> is rendered' % where)
+                    if res['label'] and not res['logo']:
+                        faults.append('name: %s shows the label without the logo' % where)
+                    if expect == 'hidden' and res['label']:
+                        faults.append('name: %s shows the label %r, where it must be hidden' % (where, res['text']))
+                    if expect == 'shown':
+                        if not res['label']:
+                            faults.append('name: %s shows no label (%s; logo %s), where the title is gone and the margin fits it'
+                                          % (where, res['why'], 'shown' if res['logo'] else 'blocked by %s' % res['blocked']))
+                        elif res['text'] != name or res['name'] != name:
+                            faults.append('name: %s reads %r (MaffsNav.gameName %r), not the roster\'s %r' % (where, res['text'], res['name'], name))
+                    if res['label']:
+                        if res['touches']:
+                            faults.append('name: on %s the label\'s box (%s) overlaps %s' % (where, res.get('box'), ', '.join(res['touches'])))
+                        if res['lines'] > 3:
+                            faults.append('name: on %s the label runs to %d lines' % (where, res['lines']))
+                        if res['contrast'] is None or res['contrast'] < 4.5:
+                            faults.append('name: on %s the label\'s contrast against the body background is %s:1 (4.5:1 at least)' % (where, res['contrast']))
+                        if res['link'] or res['hidden'] != 'true':
+                            faults.append('name: on %s the label is a link or is not aria-hidden' % where)
+
+                for rel in (TITLE_GOES, TITLE_GOES_DARK):
+                    slug = game_slug(rel)
+                    ctx, page = game(rel, (1280, 720))
+                    judge('%s at 1280x720, start screen' % rel, page.evaluate(LABEL_JS), 'hidden')
+                    if not to_first_question(page, slug):
+                        faults.append('name: %s could not be started, so its label during play is unchecked' % rel)
+                    else:
+                        page.wait_for_timeout(700)
+                        res = page.evaluate(LABEL_JS)
+                        judge('%s at 1280x720, in play' % rel, res, 'shown', names.get(slug))
+                        dark = res.get('bgLum') is not None and res['bgLum'] < 0.2
+                        if res['label'] and dark != (rel == TITLE_GOES_DARK):
+                            faults.append('name: %s is no longer a %s page (background luminance %s): pick another game for this check'
+                                          % (rel, 'dark' if rel == TITLE_GOES_DARK else 'light', res['bgLum']))
+                    ctx.close()
+                ctx, page = game(STAGE_GAME, (1280, 720))
+                judge('%s at 1280x720, start screen' % STAGE_GAME, page.evaluate(LABEL_JS), 'hidden')
+                if not to_first_question(page, game_slug(STAGE_GAME)):
+                    faults.append('name: %s could not be started' % STAGE_GAME)
+                page.wait_for_timeout(700)
+                res = page.evaluate(LABEL_JS)
+                if not res['h1']:
+                    faults.append('name: %s no longer keeps its own title during play: pick another game for this check' % STAGE_GAME)
+                judge('%s at 1280x720, in play (its own title stays)' % STAGE_GAME, res, 'hidden')
+                ctx.close()
+                for rel, vp, touch in ((TITLE_GOES, (390, 844), True), (TITLE_GOES, (768, 1024), True), (FULL_WIDTH, (1920, 1080), False),
+                                       (OWN_LOGO_GAME, (1920, 1080), False)):
+                    ctx, page = game(rel, vp, touch)
+                    where = '%s at %dx%d%s' % (rel, vp[0], vp[1], ' (touch)' if touch else '')
+                    judge(where + ', start screen', page.evaluate(LABEL_JS), 'hidden')
+                    if to_first_question(page, game_slug(rel)):
+                        page.wait_for_timeout(700)
+                        judge(where + ', in play', page.evaluate(LABEL_JS), 'hidden')
+                    elif rel == TITLE_GOES:
+                        faults.append('name: %s could not be started' % where)
+                    ctx.close()
             browser.close()
     finally:
         proc.terminate()
         proc.wait()
     return faults
+
+
+def survey_names(out_path=None, only=None):
+    """Every roster game page, at 1280x720, 1366x768 and 1920x1080, on its start screen and on its first question after
+    Start: the logo (shown, or what blocks it) and the name label (shown; hidden because the title shows; hidden for no
+    room, with the free width). A markdown table and the totals; a report, never a gate."""
+    from playwright.sync_api import sync_playwright
+    sys.path.insert(0, HERE)
+    import bank_common as bc
+    cs = _check_site()
+    names = roster_names()
+    sizes = [(1280, 720), (1366, 768), (1920, 1080)]
+    proc, base = bc.start_stub_server()
+    rows = []          # (slug, size, phase, result or None, note)
+
+    def cell(res):
+        if res is None:
+            return 'not reached'
+        logo = 'logo' if res['logo'] else ('no logo: %s' % (res['blocked'] or '?')[:40])
+        if res['label']:
+            lab = 'NAME shown (%d line%s, %s px free)%s' % (res['lines'], '' if res['lines'] == 1 else 's', res['free'],
+                                                             ' OVERLAPS ' + res['touches'][0] if res['touches'] else '')
+        elif res['h1'] or 'name is on the page' in (res['why'] or ''):
+            lab = 'title shows'
+        else:
+            lab = 'hidden: %s' % (res['why'] or '?')
+        return '%s; %s' % (logo, lab)
+
+    try:
+        with sync_playwright() as pw:
+            browser = pw.chromium.launch()
+            for slug in sorted(names):
+                if only and slug not in only:
+                    continue
+                rel = 'games/%s/index.html' % slug
+                ctx = browser.new_context(viewport={'width': sizes[0][0], 'height': sizes[0][1]})
+                bc.offline(ctx, base)
+                ctx.add_init_script(cs.TIER3_INIT)
+                page = ctx.new_page()
+                try:
+                    page.goto(base + url_path(rel), wait_until='load', timeout=20000)
+                    page.wait_for_timeout(600)
+                    for phase in ('start', 'play'):
+                        reached = True
+                        if phase == 'play':
+                            page.set_viewport_size({'width': sizes[0][0], 'height': sizes[0][1]})
+                            reached = to_first_question(page, slug)
+                            page.wait_for_timeout(600)
+                        for w, h in sizes:
+                            if not reached:
+                                rows.append((slug, (w, h), phase, None))
+                                continue
+                            page.set_viewport_size({'width': w, 'height': h})
+                            page.wait_for_timeout(250)
+                            rows.append((slug, (w, h), phase, page.evaluate(LABEL_JS)))
+                except Exception as e:
+                    rows.append((slug, sizes[0], 'error', None))
+                    print('  %s: %s' % (slug, str(e).splitlines()[0][:100]))
+                ctx.close()
+            browser.close()
+    finally:
+        proc.terminate()
+        proc.wait()
+    by = {}
+    for slug, size, phase, res in rows:
+        by.setdefault(slug, {})[(size, phase)] = res
+    lines = ['| Game | ' + ' | '.join('%dx%d %s' % (w, h, ph) for ph in ('start', 'play') for w, h in sizes) + ' |',
+             '|---|' + '---|' * (2 * len(sizes))]
+    for slug in sorted(by):
+        lines.append('| %s | ' % slug + ' | '.join(cell(by[slug].get(((w, h), ph))) for ph in ('start', 'play') for w, h in sizes) + ' |')
+    totals = ['', 'Totals (%d roster game pages):' % len(by), '']
+    for w, h in sizes:
+        play = [by[s].get(((w, h), 'play')) for s in sorted(by)]
+        got = [r for r in play if r is not None]
+        logo = sum(1 for r in got if r['logo'])
+        loses = [r for r in got if not (r['h1'] or 'name is on the page' in (r['why'] or ''))]
+        shown = sum(1 for r in loses if r['label'])
+        optout = sum(1 for r in loses if not r['label'] and (r['blocked'] == 'no logo' or 'no logo on this page' in (r['why'] or '')))
+        nologo = sum(1 for r in loses if not r['label'] and not r['logo']) - optout
+        noroom = sum(1 for r in loses if not r['label'] and r['logo'])
+        overlaps = sum(1 for r in got if r['label'] and r['touches'])
+        totals.append('- %dx%d, in play: reached %d of %d; logo shown on %d; title still showing on %d; title gone on %d, of which the '
+                      'name shows on %d, hidden for no room on %d, hidden because the logo is blocked on %d, hidden because the page '
+                      'opts out of the logo on %d; label overlapping anything: %d.'
+                      % (w, h, len(got), len(play), logo, len(got) - len(loses), len(loses), shown, noroom, nologo, optout, overlaps))
+    text = '\n'.join(lines + totals) + '\n'
+    if out_path:
+        with open(out_path, 'w', encoding='utf-8', newline='\n') as f:
+            f.write(text)
+        print('\n'.join(totals))
+        print('wrote %s' % out_path)
+    else:
+        print(text)
+    return 0
 
 
 def survey():
@@ -481,6 +855,32 @@ def selftest():
     hit = [f for f in got if f.startswith('phone:') and long_label in f and 'wraps' in f]
     print('  self-test a 60-character hub label             %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
     fails += [] if hit else ['a 60-character hub label passed']
+    # The game's name (GAME-TITLE-IN-PLAY). Static: a name that differs from the roster; a roster game's page without the tag.
+    names = roster_names()
+    slug = game_slug(TITLE_GOES)
+    planted = dict(texts)
+    planted[TITLE_GOES] = planted[TITLE_GOES].replace(tag_for(TITLE_GOES, names), tag_for(TITLE_GOES, {slug: names[slug] + ' 2'}), 1)
+    hit = [f for f in static_faults(planted, js) if f.startswith(TITLE_GOES) and 'not the roster\'s name' in f] if planted[TITLE_GOES] != texts[TITLE_GOES] else []
+    print('  self-test a data-game-name unlike the roster   %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED ***'))
+    fails += [] if hit else ['a data-game-name that differs from the roster passed']
+    planted = dict(texts)
+    planted[NO_BACK_LINK_GAME] = LOADS.sub('', planted[NO_BACK_LINK_GAME], 1)
+    hit = [f for f in static_faults(planted, js) if f.startswith(NO_BACK_LINK_GAME) and 'roster game' in f and 'loads site-nav.js 0' in f]
+    if BACK_LINK.search(texts[NO_BACK_LINK_GAME]):
+        hit = []                                   # stale: the plant needs a roster game with no a.back-link
+    print('  self-test a roster game page without site-nav.js %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED ***'))
+    fails += [] if hit else ['a roster game page without site-nav.js passed']
+    # In Chromium: a label shown whatever the page's own title does; a label placed over the game column.
+    always = js.replace("  function titleShowing() {\n", "  function titleShowing() {\n    return '';\n", 1)
+    got = browser_faults(only={'name'}, js_swap={'/schools/assets/site-nav.js': always}) if always != js else []
+    hit = [f for f in got if f.startswith('name:') and 'while the page\'s own <h1> is rendered' in f]
+    print('  self-test a label shown while the h1 shows     %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['a label shown while the <h1> is rendered passed']
+    over = js.replace("        label.style.maxWidth = free + 'px';\n", "        label.style.maxWidth = free + 'px';\n        label.style.left = '50%'; label.style.top = '25%';\n", 1)
+    got = browser_faults(only={'name'}, js_swap={'/schools/assets/site-nav.js': over}) if over != js else []
+    hit = [f for f in got if f.startswith('name:') and 'overlaps' in f]
+    print('  self-test a label over the game column         %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['a label overlapping the game column passed']
     for f in fails:
         print('FAIL  self-test: ' + f)
     print('self-test: %s' % ('FAILED' if fails else 'PASS'))
@@ -493,6 +893,9 @@ def main():
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--survey', action='store_true')
+    ap.add_argument('--survey-names', action='store_true')
+    ap.add_argument('--out', help='with --survey-names: write the table here')
+    ap.add_argument('--only', help='with --survey-names: these slugs only (comma separated)')
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -502,6 +905,8 @@ def main():
         return selftest()
     if args.survey:
         return survey()
+    if args.survey_names:
+        return survey_names(args.out, set(args.only.split(',')) if args.only else None)
     f = static_report()
     if args.check and not f:
         b = browser_faults()
