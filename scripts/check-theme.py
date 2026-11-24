@@ -87,6 +87,7 @@ MIGRATED = [
     "percentage-flip",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "fraction-equivalence",  # migrated 4 Nov 2026 (contract LOOK-REFRESH-1)
     "52dle",  # rebuilt to the theme, 20 Nov 2026 (contract 52DLE-REBUILD)
+    "scale-factor-scaling",  # migrated 24 Nov 2026, contract HALF-THE-SIZE-LOOK
 ]
 NOT_YET = [
     "sequence-solver", "estimation-golf",
@@ -101,7 +102,7 @@ NOT_YET = [
     "surd-simplifier", "proportion-blaster", "trig-identity-duel", "standard-form-blitz",
     "circle-theorem-spotter", "probability-paradox", "angle-ace",
     "coordinate-geometry-dash", "graph-transformer", "formula-unlocked", "bearing-blitz",
-    "scale-factor-scaling", "unit-converter", "formula-forge",
+    "unit-converter", "formula-forge",
     "chart-interrogator", "component-crusher", "expectation-station", "better-value",
     "given-that", "screening-room", "linear-equation-solver",
     "core-maths-paper1", "core-maths-paper2a", "core-maths-paper2b", "core-maths-paper2c",
