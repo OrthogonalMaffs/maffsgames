@@ -1,0 +1,23 @@
+TIER3-COVERAGE-REPORT. Home lane. Tier: Small: merge on green with merge-pr.py (no hold; a report and nothing else). Send: now (home lane idle since #894; Jon at work, so nobody can answer: stop and report rather than ask). Branch from origin/main (00ab3245 or later).
+From Project Claude; Jon, 24 Nov 2026, 06:39 ("anything home lane can do whilst I'm at work today").
+Recommended: Claude Code, Opus, medium effort.
+
+TASK: Find out which games CI's tier 3 actually plays and which it skips as UNSUPPORTED, and whether the shared answer lock (schools/assets/answer-lock.js, 300 ms) is why; write it up. Report only: no checker or game changes.
+
+ROOT CAUSE: Shown: tier 3 records a game whose click is never marked as UNSUPPORTED, not FAIL (scripts/check-site.py:2730-2751), and UNSUPPORTED never fails the run. Shown: 113 game pages load answer-lock.js, which ignores all input for FRESH_MS = 300 ms after fresh() is called when a question renders (answer-lock.js:33-38, :74). Shown: the lock offers MaffsLock.isFresh() so a driver can wait the window out, and scripts/check-answer-lock.py waits on it (answer-lock.js:39-44); tier 3 has no reference to MaffsLock. Reported by the cloud lane (B4-SERVED-AUDIT, 24 Nov), not yet checked: CI's tier 3 reports formula-unlocked and scale-factor-scaling as unplayable because its first tap lands inside that window, and its own audit had to wait out 300 ms before each tap for any question after the first to be marked. Inferred, not shown: tier 3 plays far fewer games than the Gate's green suggests.
+
+CLASS CHECK: If the lock is the cause, the bug is in shared infrastructure (tier 3's driver, used for every game), and the fix belongs there, not in any game. This contract only measures; the fix is a separate contract once Jon and Project Claude have the numbers.
+
+EXACT CHANGE:
+1. First commit: the standing close-out for HALF-THE-SIZE (#894): record its merge commit 77b6a78, route merge-pr.py and main's run IDs (phone-fit-full 45255197837 and the other two from your own record) in docs/handover/home.md; git mv docs/handover/contracts/2026-11-23-half-the-size.md docs/history/contracts/. In the same commit save this contract verbatim as docs/handover/contracts/2026-11-24-tier3-coverage-report.md.
+2. Run tier 3 locally exactly as CI does (python scripts/check-site.py --tier 3 --workers 4, all four shards, or unsharded: the same games and arguments as .github/workflows/check-site.yml:438-453). Record for every page it visits: PLAYED (questions driven), UNSUPPORTED (its reason, verbatim), FAIL, and whether the game is listed in scripts/checker-allowlist.json's tier3_exceptions.
+3. For every UNSUPPORTED game that is not in tier3_exceptions: rerun it waiting before each tap until MaffsLock.isFresh() is false (as scripts/check-answer-lock.py does), or 350 ms on a page without MaffsLock. Do this in a separate local script under /tmp or a throwaway copy, never committed, and never by editing check-site.py. Record whether it now plays.
+4. Write docs/audits/tier3-coverage-2026-11.md: a summary (pages visited; PLAYED; UNSUPPORTED recorded in tier3_exceptions; UNSUPPORTED unrecorded; of those, how many play once the lock is waited out; FAIL), then the table, one row per game, unrecorded UNSUPPORTED first. Say plainly whether the cloud lane's report is confirmed for formula-unlocked and scale-factor-scaling.
+5. No /updates/ line.
+6. Merge with merge-pr.py when the Gate is green; record the merge commit, main's run IDs and the summary's numbers in docs/handover/home.md; run end-task.
+
+DO NOT TOUCH: scripts/check-site.py, bank_common.py and every other checker; scripts/checker-allowlist.json; schools/assets/ (answer-lock.js included); every game page; .github/workflows/, scripts/ci-*, merge-pr.py; canon, AGENTS.md, the roster, docs/todo.md, docs/handover/cloud.md; the cloud lane's branch claude/beautiful-bardeen-gb5zga (it is mid-task on B4-SERVED-AUDIT).
+
+SUCCESS CONDITION: docs/audits/tier3-coverage-2026-11.md lists every page tier 3 visits with its result and reason; every unrecorded UNSUPPORTED game has been retried with the wait and its result recorded; the summary says how many games the Gate's tier 3 really plays and whether the lock explains the gap; Gate green; merged; home.md records it.
+
+STOP IF: the local tier 3 run's results differ from CI's in a way you cannot explain (report both); a full local run would take more than 3 hours at --workers 4 (report the estimate); a game hangs the run (report it and carry on with the rest); a check still fails after your second fix (standing rule); merge-pr.py can't reach GitHub; anything in docs/history/contracts/2026-10-27-standing-stop-rules.md applies (report under "Decided for you").
