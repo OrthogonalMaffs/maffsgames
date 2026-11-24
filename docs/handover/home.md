@@ -16,6 +16,25 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-24 (home): TIER3-COVERAGE-REPORT (which games CI's tier 3 really plays, and whether the 300 ms answer lock is why it skips the rest)
+
+Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/handover/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
+
+- **Report:** `docs/audits/tier3-coverage-2026-11.md`, with one row per game, every run's reason in full, and the result when waited out.
+- **Stock tier 3, local = CI exactly** (main 77b6a78, run 45255198196, all four shards' numbers and the same 106 UNSUPPORTED games):
+  - 116 games, 352 runs;
+  - 10 games PLAYED in every run, 4 more at some levels;
+  - 49 runs PASS, 303 UNSUPPORTED, 0 FAIL, 556 questions;
+  - 9 UNSUPPORTED games are recorded in tier3_exceptions and 97 are not.
+- **Waited out** (each tap waits until `MaffsLock.isFresh()` is false, as check-answer-lock.py does; throwaway wrapper, never committed): of the 97 unrecorded games,
+  - 39 now play fully, 4 at some levels;
+  - 54 are still UNSUPPORTED: 25 never offer an option group, 29 are still unmarked after a waited tap;
+  - runs passing site-wide 49 to 167, questions 556 to 1597.
+- **Control:** FRESH_MS set to 0 and no wait gives the same 39 + 4, so the 300 ms window is the cause for those 43.
+- **Cloud lane's report confirmed:** formula-unlocked and scale-factor-scaling are UNSUPPORTED on every run stock and PASS on every run (10 questions) waited out.
+- **Also found:** quadratic-factoriser's tier3_exceptions entry is stale (it PASSES).
+- **Decided for you:** tier 3 was run through a throwaway wrapper that calls check-site.py's own `tier3()` with CI's arguments, rather than the bare command, because CI's output truncates reasons to 90 characters and never lists the games it played. Its numbers match the bare command's (CI's) on all four shards.
+
 ## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
 
 Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The contract is at `docs/handover/contracts/2026-11-23-half-the-size.md` (verbatim). The first commit closed out FORMULA-UNLOCKED-BANK.
@@ -29,7 +48,10 @@ Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The 
   - scroll.js loads with keypad.js;
   - the KaTeX wait's setTimeout carries a `// lock-ok:` reason;
   - verify-formula-unlocked.py, which grew in #893 and was over the per-line budget at 213s, is split into 3 ci-shards parts (base run plus 9 plants), as Project Claude authorised.
-- **Next:** merge on a green Gate with merge-pr.py.
+- **Merged** on 23 Nov as 77b6a78 (#894) via merge-pr.py, which ended "main 77b6a78 run 45255198196: GREEN".
+- **PR head d4393cfe:** check-site 45252185356 and phone-fit-full 45252185350, both success.
+- **Main on 77b6a78:** check-site 45255198196 success, phone-fit-full 45255197837 success, pages build 45255197006 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-half-the-size.md`, closed out by TIER3-COVERAGE-REPORT's first commit.
 
 ## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)
 
