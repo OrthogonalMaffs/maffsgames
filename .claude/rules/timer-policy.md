@@ -27,7 +27,7 @@ section. Both show a timer now, and Trig Identity Duel's feeds the score: those 
 ## No Timer
 Interactive/exploratory/reasoning games.
 
-Games: **CAST Away** (added 10 Nov 2026, contract CAST-AWAY-BUILD: no clock shown, logged or scored; a point for each
+Games: **It's Just Base 60, Bruv** (added 24 Nov 2026, contract BASE-60: no clock shown, logged or scored), **CAST Away** (added 10 Nov 2026, contract CAST-AWAY-BUILD: no clock shown, logged or scored; a point for each
 question right first time; its "Watch one first" walkthroughs are unscored and untimed), **52-dle** (added 20 Nov 2026, contract 52DLE-TIDY: since its rebuild, #850, no clock shown, logged or scored;
 a number is worth less for each clue after the first and each wrong guess), **Unit Converter** (moved from Hidden Count-Up 9 Oct 2026: since #196 it shows, logs and scores no clock;
 score on correct answers only, Jon 8 Oct), **Estimation Engine** (countdown removed in its SR-12 rebuild, 5 Oct 2026, Jon's contract: no timer;

@@ -26,12 +26,13 @@ arithmetic on whole minutes and exact fractions:
            chosen option's err key, "The answer is <answer>", every working line and Next; the score is the right answers;
            one game_completed and one leaderboard submission on the stage's board; no event but game_started,
            question_answered (with the item's id) and game_completed.
+  Why 60?  the panel (details#why) is closed on load at 1280 x 720 and 375 x 667 (Jon, 24 Nov 2026; GAME-TITLE-IN-PLAY).
   Fit      at 375 x 667, 390 x 844, 1280 x 720 and 1366 x 768, for every item and each of its three wrong options: the
            line, the answer, the working and Next all end above the fold (the viewport less the 40 px footer, in page
            coordinates), the prompt and the two marked options are on screen above it, the line shown is that option's,
            and the page does not scroll sideways.
 
-Work units: "bank" (no browser), "play 375x667", "fit <W>x<H>" (four) and "plant: <what>" (one per planted fault).
+Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "fit <W>x<H>" (four) and "plant: <what>" (one per planted fault).
 
     python scripts/verify-its-just-base-60-bruv.py              # every unit, then the self-test
     python scripts/verify-its-just-base-60-bruv.py --selftest   # the planted faults only
@@ -549,7 +550,11 @@ def check(html, out, units, shard=None, sample=None):
                     size = tuple(int(x) for x in uid.split(' ')[1].split('x'))
                     br, page, errs = open_page(pw, base, html, size)
                     try:
-                        if uid.startswith('play'):
+                        if uid.startswith('why'):
+                            if page.evaluate("() => { const d = document.querySelector('details#why'); return !d || d.open; }"):
+                                out.append('start: the "Why 60?" panel is missing or open on load at %dx%d (it starts closed)' % size)
+                            info['why'] = info.get('why', 0) + 1
+                        elif uid.startswith('play'):
                             for m in MODES:
                                 play(page, m, lines, out)
                             info['played'] = len(MODES)
@@ -567,7 +572,8 @@ def check(html, out, units, shard=None, sample=None):
 PLANT_SAMPLE = 8
 
 
-# Each plant: (what, [(old, new)], the unit it needs, the pattern its finding must match). The six the contract names.
+# Each plant: (what, [(old, new)], the unit it needs, the pattern its finding must match). The six the contract names, and
+# the panel opened on load (GAME-TITLE-IN-PLAY, 24 Nov 2026).
 PLANTS = [
     ('a wrong answer', [('"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 15 min"',
                          '"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 5 min"')],
@@ -583,6 +589,8 @@ PLANTS = [
      [('"id":"s2a-115pm","stage":2,"type":"12-to-24","h":1,"m":15,"half":"pm","prompt":"Your train leaves at 1:15 pm. What is that on the 24-hour clock?","answer":"13:15","decoys":[{"val":"01:15","err":"forgot_pm"},{"val":"11:15","err":"added_10"}',
        '"id":"s2a-115pm","stage":2,"type":"12-to-24","h":1,"m":15,"half":"pm","prompt":"Your train leaves at 1:15 pm. What is that on the 24-hour clock?","answer":"13:15","decoys":[{"val":"01:15","err":"forgot_pm"},{"val":"11:15","err":"took_10"}')],
      'bank', r's2a-115pm: took_10 is not allowed on a 12-to-24 item'),
+    ('the "Why 60?" panel opened on load', [('<details class="maffs-ref why" id="why">', '<details class="maffs-ref why" id="why" open>')],
+     'why 1280x720', r'the "Why 60\?" panel is missing or open on load at 1280x720'),
     ('the working pushed below the fold', [('.worked{font-size:.94rem;line-height:1.5}', '.worked{font-size:.94rem;line-height:1.5;padding-top:420px}')],
      'fit 375x667', r'the working ends at \d+ px, below the fold at 627 px'),
 ]
@@ -618,7 +626,7 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'play 375x667'] + ['fit %dx%d' % s for s in SIZES]
+    units = ['bank', 'play 375x667', 'why 1280x720', 'why 375x667'] + ['fit %dx%d' % s for s in SIZES]
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -632,6 +640,8 @@ def main():
     info = check(html, out, run, shard) if run else {}
     if 'bank' in info:
         print('%s: %d items, the contract\'s hash and counts; every answer, decoy and working line recomputed from the item\'s own fields; ERR_TYPES, LINES and equal-value options checked' % (SLUG, info['bank']))
+    if 'why' in info:
+        print('%s: the "Why 60?" panel closed on load (%d size(s))' % (SLUG, info['why']))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):
