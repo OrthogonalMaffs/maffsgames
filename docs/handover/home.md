@@ -18,7 +18,7 @@
 
 ## 2026-11-24 (home): TIER3-COVERAGE-REPORT (which games CI's tier 3 really plays, and whether the 300 ms answer lock is why it skips the rest)
 
-Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/handover/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
+Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/history/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
 
 - **Report:** `docs/audits/tier3-coverage-2026-11.md`, with one row per game, every run's reason in full, and the result when waited out.
 - **Stock tier 3, local = CI exactly** (main 77b6a78, run 45255198196, all four shards' numbers and the same 106 UNSUPPORTED games):
@@ -34,6 +34,10 @@ Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-repor
 - **Cloud lane's report confirmed:** formula-unlocked and scale-factor-scaling are UNSUPPORTED on every run stock and PASS on every run (10 questions) waited out.
 - **Also found:** quadratic-factoriser's tier3_exceptions entry is stale (it PASSES).
 - **Decided for you:** tier 3 was run through a throwaway wrapper that calls check-site.py's own `tier3()` with CI's arguments, rather than the bare command, because CI's output truncates reasons to 90 characters and never lists the games it played. Its numbers match the bare command's (CI's) on all four shards.
+- **Merged** on 24 Nov as fa3f7be (#895) via merge-pr.py, which ended "main fa3f7be run 45356433810: GREEN".
+- **PR head de3cfbe:** check-site 45354282188 and phone-fit-full 45354282154, both success.
+- **Main on fa3f7be:** check-site 45356433810 success, phone-fit-full 45356433623 success, pages build 45356433627 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-24-tier3-coverage-report.md`, closed out by TIER3-LOCK-FIX's first commit.
 
 ## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
 
