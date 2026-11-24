@@ -1,10 +1,14 @@
 #!/usr/bin/env python3
-"""Link schools/assets/site-nav.js once on every page that has an a.back-link (contract SITE-NAV, 21 Nov 2026).
+"""Link schools/assets/site-nav.js once on every page that has an a.back-link, and on every roster game's page, where the tag
+also carries the game's name from the roster (contract SITE-NAV, 21 Nov 2026; GAME-TITLE-IN-PLAY, 24 Nov 2026).
 
     python scripts/apply-site-nav.py            # write
     python scripts/apply-site-nav.py --dry-run  # report what would change
 
-Idempotent: a page that already links it is left alone, so a second run changes nothing. The tag goes just before
+Idempotent: a second run changes nothing. A page that already links it keeps its tag where it is; on a roster game's page
+(games/<slug>/index.html with a numbered roster row) the tag is rewritten to carry data-game-name="<the roster's Game
+column>", HTML-escaped, and rewritten again whenever the roster's name changes; anywhere else a tag that carries the
+attribute loses it. A new tag goes just before
 stage-exit.js where a page loads that (so MaffsNav is set first; stage-exit.js also reads it lazily), else just before
 </head>. Which pages, and the tag itself, come from scripts/check-site-nav.py, which holds every page to them in CI.
 Nothing else in a page is touched: not its header, its back link's markup or its layout.
@@ -23,15 +27,18 @@ _spec.loader.exec_module(csn)
 STAGE_EXIT = re.compile(r'<script\b[^>]*\bsrc="[^"]*schools/assets/stage-exit\.js"')
 
 
-def fix(text):
-    """The page's text with the tag added once, or unchanged if it already has it."""
-    if csn.LOADS.search(text):
-        return text
+def fix(text, tag=None):
+    """The page's text with `tag` (default: the plain tag) as its one site-nav.js tag: added if it has none, rewritten
+    in place if its tag differs, unchanged otherwise."""
+    tag = tag or csn.TAG
+    found = csn.LOADS.search(text)
+    if found:
+        return text if found.group(0) == tag else text[:found.start()] + tag + text[found.end():]
     m = STAGE_EXIT.search(text)
     at = m.start() if m else text.lower().find('</head>')
     if at < 0:
         raise ValueError('no </head> and no stage-exit.js to put the tag before')
-    return text[:at] + csn.TAG + '\n' + text[at:]
+    return text[:at] + tag + '\n' + text[at:]
 
 
 def main():
@@ -39,19 +46,22 @@ def main():
     ap.add_argument('--dry-run', action='store_true')
     args = ap.parse_args()
     changed = 0
-    for rel in csn.back_link_pages():
+    names = csn.roster_names()
+    texts = {r: csn.read(r) for r in csn.pages()}
+    todo = csn.nav_pages(texts, names)
+    for rel in todo:
         path = os.path.join(csn.ROOT, rel)
         with open(path, encoding='utf-8', newline='') as f:
             text = f.read()
-        new = fix(text)
+        new = fix(text, csn.tag_for(rel, names))
         if new != text:
             changed += 1
-            print(('would link ' if args.dry_run else 'linked ') + rel)
+            had = bool(csn.LOADS.search(text))
+            print(('would ' if args.dry_run else '') + ('name ' if had else 'link ') + rel)
             if not args.dry_run:
                 with open(path, 'w', encoding='utf-8', newline='') as f:
                     f.write(new)
-    print('%d page(s) %s; %d already link site-nav.js' % (changed, 'to change' if args.dry_run else 'changed',
-                                                          len(csn.back_link_pages()) - changed))
+    print('%d page(s) %s; %d already as they should be' % (changed, 'to change' if args.dry_run else 'changed', len(todo) - changed))
     return 0
 
 

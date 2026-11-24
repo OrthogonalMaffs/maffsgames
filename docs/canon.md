@@ -1689,10 +1689,28 @@ fixed top left, named "MaffsGames home". It shows only while nothing the page pa
 only on a fine pointer, so never on phones or tablets; re-measured on load, on resize and after each click, key or touch (never on a timer or every DOM change: a page's own ticking clock would re-measure it every second). A page that shows
 a logo of its own carries `<html data-site-logo="off">`, each listed with its reason in `scripts/check-site-nav.py`.
 
-**Checked:** `check-site.py`'s site-wide part holds every page with an `a.back-link` to loading `site-nav.js` once, every
-page outside `games/` that links to a game to being in `HUBS`, and the opt-outs to their reasons; `check-site-nav.py`
-plays the rule in Chromium (from a hub, reloaded, on a level switch, direct, from another game, stage-exit's links, the
-logo by an independent hit test at 1920x1080, 390x844 and a 768x1024 tablet), with planted faults caught.
+**The game's name during play** (contract GAME-TITLE-IN-PLAY, Jon 24 Nov 2026). Most games write their title inside the
+start screen, so it went when Start was pressed. On a computer the name now stays: `site-nav.js` shows it as plain text
+beside the margin logo, top aligned with it, only while the logo shows (so never on a phone or tablet, and never on a
+page that opts out of the logo) and only while the page's own title is not showing: hidden when the page's first `<h1>`
+is rendered, or when any rendered text on the page equals the name. Its width is the measured free margin (from its left
+edge to the nearest thing the page paints, by the logo's own measure, less the logo's clear space; no width guess, no
+breakpoint); it wraps to at most three lines, and does not show where the name needs more or the free width is under
+120 px. It takes the body's own font and colour (15 px, weight 600), is not a link, is `aria-hidden` (the page's
+`<title>` names the game) and is re-measured exactly when the logo is. **The roster is the name's source:** the tag on
+every roster game's page carries `data-game-name`, the roster's Game column for that slug, written by
+`scripts/apply-site-nav.py` and held equal in CI; nothing is fetched at run time (`data/` and `.claude/` are not
+published). **Every roster game page loads `site-nav.js`**, with or without an `a.back-link`. No game's markup changes
+beyond that tag. `window.MaffsNav.gameName` is the name; `MaffsNav.nameHiddenBy` says why the label is hidden.
+
+**Checked:** `check-site.py`'s site-wide part holds every page with an `a.back-link`, and every roster game's page, to
+loading `site-nav.js` once; every roster game page's `data-game-name` to the roster's name exactly (and no page outside
+`games/` to carrying one); every page outside `games/` that links to a game to being in `HUBS`; and the opt-outs to
+their reasons. `check-site-nav.py` plays the rule in Chromium (from a hub, reloaded, on a level switch, direct, from
+another game, stage-exit's links, the logo by an independent hit test at 1920x1080, 390x844 and a 768x1024 tablet; the
+name label on a light and a dark game at 1280x720, absent while the page's title shows, present after Start, never over
+anything the page paints by an independent hit test, at 4.5:1 or better against the body's background, and absent on a
+phone, a tablet and wherever the logo is hidden or off), with planted faults caught.
 
 ## 7.7 What the site publishes — SITE and INTERNAL
 
