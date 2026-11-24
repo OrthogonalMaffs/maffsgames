@@ -23,10 +23,15 @@ Checks, independent of the game's code:
     "My answer was R.", "Undo: ..." for each line and "The number was K.": the result itself, the key plus and minus one,
     the result with every step run forwards again (the student who does not undo), and the steps undone in the order
     they were told (the student who does not reverse them), whichever of those differ from the key.
+  Fold (canon 7.6.1, contract THINK-FIT, 24 Nov 2026), every item at 375x667, 390x844, 1280x720 and 1366x768: the
+    asking screen's last pad row above the fold; after a wrong answer the pad hidden and the working and Next above it;
+    after a right answer "Correct! The number was K." in the answer display and the pad's Enter key, labelled Next,
+    above it, and a tap on that key moves to the next question. (A right answer is read from the answer display.)
 No analytics or leaderboard request leaves the stub server (every other request is aborted).
 
 A self-test plants faults in a copy of the page and each must FAIL: a wrong key (9 for the first item), a wrong answer
-marked right (within 1 of the key), a wrong undo figure (14 − 6 = 9) and a wrong step display (I add 7 for I add 6).
+marked right (within 1 of the key), a wrong undo figure (14 − 6 = 9), a wrong step display (I add 7 for I add 6) and the
+pad left visible on a wrong answer.
 
     python scripts/verify-think-of-a-number.py [--no-selftest] [--against FILE]
 """
@@ -129,8 +134,59 @@ MARK_JS = r"""(args) => {
   document.querySelector('#numpad [data-val="enter"]').click();
   MaffsLock.clearTimers();
   return {puzzle: puzzle, title: document.getElementById('feedbackTitle').textContent,
-          body: document.getElementById('feedbackBody').innerText, correct: correctCount};
+          body: document.getElementById('feedbackBody').innerText, correct: correctCount,
+          display: document.getElementById('inputDisplay').innerText};
 }"""
+
+# The phone rule (canon 7.6.1; contract THINK-FIT, 24 Nov 2026), on every item: the asking screen's last pad row, the
+# feedback after a wrong answer (the pad hidden, the working and Next under the answer) and after a right answer (one
+# line in the answer display, the pad's Enter key relabelled Next) all above the fold; a tap on that Enter key moves on.
+# The fold is the window less the fixed site footer, as measure-phone-fit.py reads it.
+FOLD_SIZES = [(375, 667), (390, 844), (1280, 720), (1366, 768)]
+FOLD_JS = r"""(bank) => {
+  const out = [], vis = e => !!e && e.offsetParent !== null;
+  const foot = document.querySelector('.site-footer');
+  const fold = innerHeight - (foot && getComputedStyle(foot).position === 'fixed' ? foot.getBoundingClientRect().height : 0);
+  const B = e => Math.round(e.getBoundingClientRect().bottom);
+  const enter = () => document.querySelector('#numpad [data-val="enter"]');
+  const type = v => { for (const ch of String(v)) document.querySelector('#numpad [data-val="' + ch + '"]').click(); enter().click(); };
+  showScreen('gameScreen');
+  for (const name of ['oneStep', 'twoStep', 'threeStep']) for (const q of bank[name]) {
+    const at = name + ' ' + q.id;
+    currentQuestions = [q, q]; currentIndex = 0; showQuestion(); scrollTo(0, 0);
+    if (B(enter()) > fold) out.push(at + ': asking, the last pad row ends at ' + B(enter()) + ' / ' + fold);
+    type(q.answer + 1);
+    const last = document.getElementById('nextBtn');
+    if (vis(document.getElementById('numpad'))) out.push(at + ': the pad is shown on a wrong answer');
+    if (!vis(last) || B(last) > fold) out.push(at + ': wrong, Next ends at ' + B(last) + ' / ' + fold);
+    currentIndex = 0; showQuestion(); scrollTo(0, 0);
+    type(q.answer);
+    const line = document.querySelector('#inputDisplay .display-line');
+    if (!line || line.textContent !== 'Correct! The number was ' + q.answer + '.') out.push(at + ': right, the answer line reads ' + (line && line.textContent));
+    if (!vis(enter()) || enter().textContent !== 'Next' || B(enter()) > fold || (line && B(line) > fold))
+      out.push(at + ': right, the Enter key (' + enter().textContent + ') ends at ' + B(enter()) + ' / ' + fold);
+    enter().click();
+    if (currentIndex !== 1) out.push(at + ': right, the pad\'s Enter key did not move to the next question');
+  }
+  MaffsLock.clearTimers();
+  return out; }"""
+
+
+def fold_all(fails, browser, base, html, bank):
+    import re as _re
+    page_url = _re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
+    for w, h in FOLD_SIZES:
+        ctx = browser.new_context(viewport={'width': w, 'height': h}, reduced_motion='reduce')
+        ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+        ctx.route(lambda url: not url.startswith(base), lambda route: route.abort())
+        ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
+            status=200, content_type='text/html; charset=utf-8', body=html))
+        page = ctx.new_page()
+        page.goto(base + '/games/%s/?cb=fold' % SLUG, wait_until='load', timeout=20000)
+        page.wait_for_function('typeof QUESTIONS !== "undefined"', timeout=15000)
+        for f in page.evaluate(FOLD_JS, bank):
+            fails.append('fold %dx%d %s' % (w, h, f))
+        ctx.close()
 SESSION_JS = r"""() => { const out = {};
   for (const n of [10, 20, 30]) { out[n] = [];
     for (let k = 0; k < %d; k++) out[n].push(buildQuestionSet(n).map(q => q.id)); }
@@ -152,7 +208,7 @@ def mark_all(fails, page, bank):
                 if puz != exp:
                     fails.append('%s: puzzle reads %r, expected %r' % (where, puz, exp))
                 if right:
-                    if not (got['title'] == 'Correct!' and got['correct'] == 1 and 'The number was %d.' % key in got['body']):
+                    if not (got['correct'] == 1 and got['display'].strip() == 'Correct! The number was %d.' % key):
                         fails.append('%s: the key was not marked right (%r)' % (where, got))
                 else:
                     body = [l.strip() for l in got['body'].split('\n') if l.strip()]
@@ -193,6 +249,7 @@ def play(fails, html):
                     if len(d) != int(n) or len(set(d)) != len(d) or split != SPLITS[int(n)] or not set(d) <= set(kind):
                         fails.append('a %s-question session is %r (split %r, expected %r)' % (n, d, split, SPLITS[int(n)]))
             mark_all(fails, page, bank)
+            fold_all(fails, browser, base, html, bank)
             if errors:
                 fails.append('page errors: %s' % '; '.join(errors[:3]))
             browser.close()
@@ -211,6 +268,8 @@ PLANTS = [
      [("undoSteps:['14 \\u2212 6 = 8']", "undoSteps:['14 \\u2212 6 = 9']")]),
     ('a wrong step display (I add 7 for I add 6)', 'step reads',
      [("display:'I add 6'},{operation:'multiply',value:3", "display:'I add 7'},{operation:'multiply',value:3")]),
+    ('the pad left visible on a wrong answer', 'the pad is shown on a wrong answer',
+     [("    pad.style.display = 'none';\n", "")]),
 ]
 
 
