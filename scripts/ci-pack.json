@@ -86,7 +86,7 @@
   "Formula Forge (every rearrangement checked in SymPy: the key solves its formula, no wrong option does or equals it, every worked line holds; every option pressed in Chromium)": "42",
   "Formula Plug-In (every formula, substitution and step of the working recomputed; every item answered right and wrong in Chromium)": "35",
   "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium), part 1 of 2": "14",
-  "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium), part 2 of 2": "79",
+  "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium), part 2 of 2": "80",
   "Four Quadrant Explorer (every plot target, point reading and fourth corner recomputed; every grid cell tapped on the real canvas in Chromium)": "63",
   "Fraction Snap (every pair's key and cross-multiplication recomputed, the generator drawn 20000 times, every pair marked both ways in Chromium)": "4",
   "Fraction input (a typed fraction is the shared stacked MaffsFractionInput, never a page's own boxes; shrink-only warn list; planted faults)": "68",
@@ -331,7 +331,7 @@
    "tier": "content"
   },
   "verify-formula-unlocked.py": {
-   "how": "chosen from 10 timed unit(s)",
+   "how": "kept from the pack (2 needed)",
    "label": "Formula Unlocked (every rearrangement checked in SymPy: the key satisfies its formula, no wrong option equals it or another; every option marked in Chromium)",
    "parts": 2,
    "tier": "content"
