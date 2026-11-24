@@ -1,0 +1,11 @@
+# Findings register for its-just-base-60-bruv (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract BASE-60, 24 Nov 2026; SR-30: checked from its first PR by scripts/verify-its-just-base-60-bruv.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: its-just-base-60-bruv
+audited:
+  tranche: none (not yet audited)
+  head: 2c17d21c
+  date: 2026-11-24
+  served: {}
+findings: []

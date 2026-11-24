@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract BASE-60, 24 Nov 2026): merged for Jon to play; not on the portal, Essentials, the sitemap or the
+     leaderboard hub until he lists it (todo BASE60-LIST). -->
+<meta name="description" content="Hours and minutes, the 12- and 24-hour clocks, durations and decimal hours. Every wrong answer names the mistake. For KS3 and GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/its-just-base-60-bruv/">
+<meta property="og:title" content="Time Conversions Game – KS3/GCSE Maths | MaffsGames">
+<meta property="og:description" content="Hours and minutes, the 12- and 24-hour clocks, durations and decimal hours. Every wrong answer names the mistake. For KS3 and GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/its-just-base-60-bruv/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Time Conversions Game – KS3/GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster levels are KS3 and GCSE (the palette rule).
+   This game's own tokens. The accent is a deep clock-face blue, 8.6:1 on white and 7.9:1 on --surface-alt, so white
+   text on it and it on the light surfaces both clear 4.5:1. */
+:root{--accent:#1e40af;--accent-dim:#dbeafe;--on-accent:#ffffff;--right-bg:#dcfce7;--wrong-bg:#fee2e2}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.45rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 .35rem}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.calc-row{text-align:center;margin:.2rem 0 .5rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+/* "Why 60?": the shared reference card (.maffs-ref, fold.css; canon §7.6.2), closed on phones, open from 1024 px. */
+.why{max-width:620px;margin:.6rem auto 0}
+.why .maffs-ref-body{font-size:.93rem;line-height:1.55;color:var(--text)}
+.why .maffs-ref-body p+ul,.why .maffs-ref-body ul+p{margin-top:.5rem}
+.why .maffs-ref-body ul{padding-left:1.2rem}
+.why .maffs-ref-body li+li{margin-top:.35rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.7rem .8rem;display:flex;flex-direction:column;gap:.5rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;text-align:center}
+.ask{font-size:1.05rem;line-height:1.4;text-align:center}
+/* The four options: one to a row, or two to a row where every option fits on one line (fold.js decides, .maffs-two-up). */
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opt{min-height:48px;padding:.4rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.05rem;font-weight:700;cursor:pointer}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default;opacity:1}
+/* The mark's room is always there (hidden until marked), so marking an option never changes its width or its row. */
+.opt::after{content:"\2713";visibility:hidden;margin-left:.4em}
+.opt.is-right{border-color:var(--correct);background:var(--right-bg);color:var(--correct)}
+.opt.is-right::after{visibility:visible}
+.opt.is-wrong{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong)}
+.opt.is-wrong::after{content:"\2717";visibility:visible}
+.opt.is-spare{color:var(--muted)}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.35rem}
+.fb-head{font-weight:700;font-size:1.02rem;text-align:center}
+.fb.right .fb-head{color:var(--correct)}
+.fb-err{font-size:1rem;font-weight:700;color:var(--wrong);line-height:1.4}
+.fb-ans{font-size:.98rem;line-height:1.4}
+.fb-ans b{font-family:var(--font-num)}
+.worked{font-size:.94rem;line-height:1.5}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.8rem}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.5rem .55rem;gap:.4rem}
+  .ask{font-size:1rem}
+}
+@media (max-height:620px){.hud-label{display:none}.stage-label{display:none}}
+/* The phone rule (canon §7.6.1: hide what cannot be used): on a short screen (600 px tall or less) the two options that are
+   neither the one chosen nor the answer go while the feedback shows, so the line, the answer, the working and Next fit;
+   they are back with the next question. A fixed rule, so the same phone always gets the same layout. */
+@media (max-height:600px){.qcard.fb-open .opt.is-spare{display:none}}
+@media (min-width:1024px){
+  .container{max-width:clamp(720px,60vw,900px)}
+  .ask{font-size:clamp(1.05rem,2.6vh,1.4rem)}
+}
+body.accessible p,body.accessible .fb-err,body.accessible .fb-ans,body.accessible .worked,body.accessible li{line-height:1.7}
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+  body.accessible .opt{font-size:.92rem}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<script src="/schools/assets/site-nav.js"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 presses the right option; with i >= 1 it presses the first wrong one, which is marked wrong and waits on Next.
+{
+  "start": "B60.ui.start('stage-1')",
+  "ready": "!!window.B60 && B60.ui.state() === 'asking'",
+  "answer": [
+    "B60.ui.answer(i === 0);"
+  ]
+}
+-->
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>It's Just Base 60, Bruv</h1><div class="sub">Time counts in 60s, not 100s. Hours, minutes, clocks and what the calculator really means.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <details class="maffs-ref why" id="why">
+      <summary><span class="maffs-ref-show">Why 60?</span><span class="maffs-ref-title">Why 60?</span></summary>
+      <div class="maffs-ref-body">
+        <p>An hour is 60 minutes, not 100. Blame the Babylonians, who got it from the Sumerians, about 4,000 years ago. Nobody knows for certain why they counted in 60s. The best guesses:</p>
+        <ul>
+          <li>60 shares nicely. It has 12 factors: 1, 2, 3, 4, 5, 6, 10, 12, 15, 20, 30 and 60. 100 has only 9. 60 is the smallest number that 1, 2, 3, 4, 5 and 6 all go into, so halves, thirds, quarters, fifths and sixths of an hour are all whole minutes.</li>
+          <li>Count it on your hands. Your thumb can count the 12 finger segments on one hand; the five fingers of the other hand keep track of the dozens. <span data-maths="\(12 \times 5 = 60\).">12 × 5 = 60.</span></li>
+          <li>The circle. A full turn is 360 degrees, which is <span data-maths="\(6 \times 60\),">6 × 60,</span> and close to the number of days in a year. 360 has 24 factors.</li>
+        </ul>
+        <p>Your calculator counts in tens. Your clock doesn't. It's just base 60, bruv.</p>
+      </div>
+    </details>
+    <div class="panel">
+      <div class="mode-h">Pick a stage</div>
+      <div class="calc-row"><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1" data-mode="stage-1"><span class="n">1</span><span><span class="t">Sixty, Not a Hundred</span><span class="d">Minutes into hours and minutes, and back again.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2" data-mode="stage-2"><span class="n">2</span><span><span class="t">Twelve or Twenty-Four</span><span class="d">The 12-hour clock and the 24-hour clock.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3" data-mode="stage-3"><span class="n">3</span><span><span class="t">How Long, Bruv?</span><span class="d">How long it takes, and what time it ends.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4" data-mode="stage-4"><span class="n">4</span><span><span class="t">The Calculator Lies</span><span class="d">Hours as a decimal, and hours and minutes.</span></span></button>
+      </div>
+      <p class="note">10 questions a run, from 48 in each stage. A point for each one right.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/10</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="stage-label" id="stageLabel"></div>
+      <div class="ask" id="ask"></div>
+      <div class="opts maffs-options" id="opts"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 10</div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'its-just-base-60-bruv', PER = 10, RIGHT_MS = 1000;
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
+  // One level of content; the roster lists KS3 and GCSE (Take a Walk's pattern): the stages are boards, not levels, each
+  // its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: 'its-just-base-60-bruv', levels: ['ks3', 'gcse'], fallback: 'ks3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
+  var STAGES = { 1: 'Sixty, Not a Hundred', 2: 'Twelve or Twenty-Four', 3: 'How Long, Bruv?', 4: 'The Calculator Lies' };
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* =====================================================================================================
+     THE BANK: the output of tools/its-just-base-60-bruv/bank.py (contract BASE-60, Amendment 1, 24 Nov 2026), one item a
+     line, exactly as the generator writes it. Never edited by hand: change the generator and embed its output again.
+     scripts/verify-its-just-base-60-bruv.py holds these lines to the contract's SHA-256 and recomputes every answer and
+     every decoy from the item's own fields.
+     ===================================================================================================== */
+  var BANK = [
+{"id":"s1a-135","stage":1,"type":"min-to-hm","T":135,"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 15 min","decoys":[{"val":"1 h 35 min","err":"base100"},{"val":"2 h 25 min","err":"decimal_read"},{"val":"3 h 15 min","err":"rounded_hour"}],"working":["\\(135 \\div 60 = 2\\) remainder \\(15\\)","\\(135\\) min \\(= 2\\) h \\(15\\) min"]},
+{"id":"s1a-150","stage":1,"type":"min-to-hm","T":150,"prompt":"A gaming session lasted 150 minutes. How long is that in hours and minutes?","answer":"2 h 30 min","decoys":[{"val":"1 h 50 min","err":"base100"},{"val":"2 h 50 min","err":"decimal_read"},{"val":"3 h 30 min","err":"rounded_hour"}],"working":["\\(150 \\div 60 = 2\\) remainder \\(30\\)","\\(150\\) min \\(= 2\\) h \\(30\\) min"]},
+{"id":"s1a-165","stage":1,"type":"min-to-hm","T":165,"prompt":"The coach journey takes 165 minutes. How long is that in hours and minutes?","answer":"2 h 45 min","decoys":[{"val":"1 h 65 min","err":"base100"},{"val":"2 h 75 min","err":"decimal_read"},{"val":"3 h 45 min","err":"rounded_hour"}],"working":["\\(165 \\div 60 = 2\\) remainder \\(45\\)","\\(165\\) min \\(= 2\\) h \\(45\\) min"]},
+{"id":"s1a-195","stage":1,"type":"min-to-hm","T":195,"prompt":"A film lasts 195 minutes. How long is that in hours and minutes?","answer":"3 h 15 min","decoys":[{"val":"1 h 95 min","err":"base100"},{"val":"3 h 25 min","err":"decimal_read"},{"val":"4 h 15 min","err":"rounded_hour"}],"working":["\\(195 \\div 60 = 3\\) remainder \\(15\\)","\\(195\\) min \\(= 3\\) h \\(15\\) min"]},
+{"id":"s1a-210","stage":1,"type":"min-to-hm","T":210,"prompt":"A gaming session lasted 210 minutes. How long is that in hours and minutes?","answer":"3 h 30 min","decoys":[{"val":"2 h 10 min","err":"base100"},{"val":"3 h 50 min","err":"decimal_read"},{"val":"4 h 30 min","err":"rounded_hour"}],"working":["\\(210 \\div 60 = 3\\) remainder \\(30\\)","\\(210\\) min \\(= 3\\) h \\(30\\) min"]},
+{"id":"s1a-225","stage":1,"type":"min-to-hm","T":225,"prompt":"The coach journey takes 225 minutes. How long is that in hours and minutes?","answer":"3 h 45 min","decoys":[{"val":"2 h 25 min","err":"base100"},{"val":"3 h 75 min","err":"decimal_read"},{"val":"4 h 45 min","err":"rounded_hour"}],"working":["\\(225 \\div 60 = 3\\) remainder \\(45\\)","\\(225\\) min \\(= 3\\) h \\(45\\) min"]},
+{"id":"s1a-255","stage":1,"type":"min-to-hm","T":255,"prompt":"A coach trip to the coast takes 255 minutes. How long is that in hours and minutes?","answer":"4 h 15 min","decoys":[{"val":"2 h 55 min","err":"base100"},{"val":"4 h 25 min","err":"decimal_read"},{"val":"5 h 15 min","err":"rounded_hour"}],"working":["\\(255 \\div 60 = 4\\) remainder \\(15\\)","\\(255\\) min \\(= 4\\) h \\(15\\) min"]},
+{"id":"s1a-270","stage":1,"type":"min-to-hm","T":270,"prompt":"A flight to New York takes 270 minutes. How long is that in hours and minutes?","answer":"4 h 30 min","decoys":[{"val":"2 h 70 min","err":"base100"},{"val":"4 h 50 min","err":"decimal_read"},{"val":"5 h 30 min","err":"rounded_hour"}],"working":["\\(270 \\div 60 = 4\\) remainder \\(30\\)","\\(270\\) min \\(= 4\\) h \\(30\\) min"]},
+{"id":"s1a-285","stage":1,"type":"min-to-hm","T":285,"prompt":"A shift at the warehouse is 285 minutes. How long is that in hours and minutes?","answer":"4 h 45 min","decoys":[{"val":"2 h 85 min","err":"base100"},{"val":"4 h 75 min","err":"decimal_read"},{"val":"5 h 45 min","err":"rounded_hour"}],"working":["\\(285 \\div 60 = 4\\) remainder \\(45\\)","\\(285\\) min \\(= 4\\) h \\(45\\) min"]},
+{"id":"s1a-315","stage":1,"type":"min-to-hm","T":315,"prompt":"A charity walk took 315 minutes. How long is that in hours and minutes?","answer":"5 h 15 min","decoys":[{"val":"3 h 15 min","err":"base100"},{"val":"5 h 25 min","err":"decimal_read"},{"val":"6 h 15 min","err":"rounded_hour"}],"working":["\\(315 \\div 60 = 5\\) remainder \\(15\\)","\\(315\\) min \\(= 5\\) h \\(15\\) min"]},
+{"id":"s1a-330","stage":1,"type":"min-to-hm","T":330,"prompt":"A coach trip to the coast takes 330 minutes. How long is that in hours and minutes?","answer":"5 h 30 min","decoys":[{"val":"3 h 30 min","err":"base100"},{"val":"5 h 50 min","err":"decimal_read"},{"val":"6 h 30 min","err":"rounded_hour"}],"working":["\\(330 \\div 60 = 5\\) remainder \\(30\\)","\\(330\\) min \\(= 5\\) h \\(30\\) min"]},
+{"id":"s1a-345","stage":1,"type":"min-to-hm","T":345,"prompt":"A flight to New York takes 345 minutes. How long is that in hours and minutes?","answer":"5 h 45 min","decoys":[{"val":"3 h 45 min","err":"base100"},{"val":"5 h 75 min","err":"decimal_read"},{"val":"6 h 45 min","err":"rounded_hour"}],"working":["\\(345 \\div 60 = 5\\) remainder \\(45\\)","\\(345\\) min \\(= 5\\) h \\(45\\) min"]},
+{"id":"s1a-375","stage":1,"type":"min-to-hm","T":375,"prompt":"A shift at the warehouse is 375 minutes. How long is that in hours and minutes?","answer":"6 h 15 min","decoys":[{"val":"3 h 75 min","err":"base100"},{"val":"6 h 25 min","err":"decimal_read"},{"val":"7 h 15 min","err":"rounded_hour"}],"working":["\\(375 \\div 60 = 6\\) remainder \\(15\\)","\\(375\\) min \\(= 6\\) h \\(15\\) min"]},
+{"id":"s1a-390","stage":1,"type":"min-to-hm","T":390,"prompt":"A charity walk took 390 minutes. How long is that in hours and minutes?","answer":"6 h 30 min","decoys":[{"val":"3 h 90 min","err":"base100"},{"val":"6 h 50 min","err":"decimal_read"},{"val":"7 h 30 min","err":"rounded_hour"}],"working":["\\(390 \\div 60 = 6\\) remainder \\(30\\)","\\(390\\) min \\(= 6\\) h \\(30\\) min"]},
+{"id":"s1a-405","stage":1,"type":"min-to-hm","T":405,"prompt":"A coach trip to the coast takes 405 minutes. How long is that in hours and minutes?","answer":"6 h 45 min","decoys":[{"val":"4 h 5 min","err":"base100"},{"val":"6 h 75 min","err":"decimal_read"},{"val":"7 h 45 min","err":"rounded_hour"}],"working":["\\(405 \\div 60 = 6\\) remainder \\(45\\)","\\(405\\) min \\(= 6\\) h \\(45\\) min"]},
+{"id":"s1a-435","stage":1,"type":"min-to-hm","T":435,"prompt":"A flight to New York takes 435 minutes. How long is that in hours and minutes?","answer":"7 h 15 min","decoys":[{"val":"4 h 35 min","err":"base100"},{"val":"7 h 25 min","err":"decimal_read"},{"val":"8 h 15 min","err":"rounded_hour"}],"working":["\\(435 \\div 60 = 7\\) remainder \\(15\\)","\\(435\\) min \\(= 7\\) h \\(15\\) min"]},
+{"id":"s1a-450","stage":1,"type":"min-to-hm","T":450,"prompt":"A shift at the warehouse is 450 minutes. How long is that in hours and minutes?","answer":"7 h 30 min","decoys":[{"val":"4 h 50 min","err":"base100"},{"val":"7 h 50 min","err":"decimal_read"},{"val":"8 h 30 min","err":"rounded_hour"}],"working":["\\(450 \\div 60 = 7\\) remainder \\(30\\)","\\(450\\) min \\(= 7\\) h \\(30\\) min"]},
+{"id":"s1a-465","stage":1,"type":"min-to-hm","T":465,"prompt":"A charity walk took 465 minutes. How long is that in hours and minutes?","answer":"7 h 45 min","decoys":[{"val":"4 h 65 min","err":"base100"},{"val":"7 h 75 min","err":"decimal_read"},{"val":"8 h 45 min","err":"rounded_hour"}],"working":["\\(465 \\div 60 = 7\\) remainder \\(45\\)","\\(465\\) min \\(= 7\\) h \\(45\\) min"]},
+{"id":"s1a-495","stage":1,"type":"min-to-hm","T":495,"prompt":"A coach trip to the coast takes 495 minutes. How long is that in hours and minutes?","answer":"8 h 15 min","decoys":[{"val":"4 h 95 min","err":"base100"},{"val":"8 h 25 min","err":"decimal_read"},{"val":"9 h 15 min","err":"rounded_hour"}],"working":["\\(495 \\div 60 = 8\\) remainder \\(15\\)","\\(495\\) min \\(= 8\\) h \\(15\\) min"]},
+{"id":"s1a-510","stage":1,"type":"min-to-hm","T":510,"prompt":"A flight to New York takes 510 minutes. How long is that in hours and minutes?","answer":"8 h 30 min","decoys":[{"val":"5 h 10 min","err":"base100"},{"val":"8 h 50 min","err":"decimal_read"},{"val":"9 h 30 min","err":"rounded_hour"}],"working":["\\(510 \\div 60 = 8\\) remainder \\(30\\)","\\(510\\) min \\(= 8\\) h \\(30\\) min"]},
+{"id":"s1a-525","stage":1,"type":"min-to-hm","T":525,"prompt":"A shift at the warehouse is 525 minutes. How long is that in hours and minutes?","answer":"8 h 45 min","decoys":[{"val":"5 h 25 min","err":"base100"},{"val":"8 h 75 min","err":"decimal_read"},{"val":"9 h 45 min","err":"rounded_hour"}],"working":["\\(525 \\div 60 = 8\\) remainder \\(45\\)","\\(525\\) min \\(= 8\\) h \\(45\\) min"]},
+{"id":"s1a-555","stage":1,"type":"min-to-hm","T":555,"prompt":"A charity walk took 555 minutes. How long is that in hours and minutes?","answer":"9 h 15 min","decoys":[{"val":"5 h 55 min","err":"base100"},{"val":"9 h 25 min","err":"decimal_read"},{"val":"10 h 15 min","err":"rounded_hour"}],"working":["\\(555 \\div 60 = 9\\) remainder \\(15\\)","\\(555\\) min \\(= 9\\) h \\(15\\) min"]},
+{"id":"s1a-570","stage":1,"type":"min-to-hm","T":570,"prompt":"A coach trip to the coast takes 570 minutes. How long is that in hours and minutes?","answer":"9 h 30 min","decoys":[{"val":"5 h 70 min","err":"base100"},{"val":"9 h 50 min","err":"decimal_read"},{"val":"10 h 30 min","err":"rounded_hour"}],"working":["\\(570 \\div 60 = 9\\) remainder \\(30\\)","\\(570\\) min \\(= 9\\) h \\(30\\) min"]},
+{"id":"s1a-585","stage":1,"type":"min-to-hm","T":585,"prompt":"A flight to New York takes 585 minutes. How long is that in hours and minutes?","answer":"9 h 45 min","decoys":[{"val":"5 h 85 min","err":"base100"},{"val":"9 h 75 min","err":"decimal_read"},{"val":"10 h 45 min","err":"rounded_hour"}],"working":["\\(585 \\div 60 = 9\\) remainder \\(45\\)","\\(585\\) min \\(= 9\\) h \\(45\\) min"]},
+{"id":"s1b-1h15","stage":1,"type":"hm-to-min","h":1,"m":15,"prompt":"A driving lesson is 1 h 15 min. How many minutes is that?","answer":"75","decoys":[{"val":"115","err":"base100"},{"val":"69","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 15 = 75\\)","1 h 15 min \\(= 75\\) min"]},
+{"id":"s1b-1h30","stage":1,"type":"hm-to-min","h":1,"m":30,"prompt":"A football match, with half time, takes 1 h 30 min. How many minutes is that?","answer":"90","decoys":[{"val":"130","err":"base100"},{"val":"78","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 30 = 90\\)","1 h 30 min \\(= 90\\) min"]},
+{"id":"s1b-1h45","stage":1,"type":"hm-to-min","h":1,"m":45,"prompt":"A cake bakes for 1 h 45 min. How many minutes is that?","answer":"105","decoys":[{"val":"145","err":"base100"},{"val":"87","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 45 = 105\\)","1 h 45 min \\(= 105\\) min"]},
+{"id":"s1b-1h10","stage":1,"type":"hm-to-min","h":1,"m":10,"prompt":"A phone takes 1 h 10 min to charge. How many minutes is that?","answer":"70","decoys":[{"val":"110","err":"base100"},{"val":"66","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 10 = 70\\)","1 h 10 min \\(= 70\\) min"]},
+{"id":"s1b-1h20","stage":1,"type":"hm-to-min","h":1,"m":20,"prompt":"A driving lesson is 1 h 20 min. How many minutes is that?","answer":"80","decoys":[{"val":"120","err":"base100"},{"val":"72","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 20 = 80\\)","1 h 20 min \\(= 80\\) min"]},
+{"id":"s1b-1h40","stage":1,"type":"hm-to-min","h":1,"m":40,"prompt":"A football match, with half time, takes 1 h 40 min. How many minutes is that?","answer":"100","decoys":[{"val":"140","err":"base100"},{"val":"84","err":"decimal_times60"},{"val":"60","err":"dropped_minutes"}],"working":["\\(1 \\times 60 + 40 = 100\\)","1 h 40 min \\(= 100\\) min"]},
+{"id":"s1b-2h15","stage":1,"type":"hm-to-min","h":2,"m":15,"prompt":"A revision session lasts 2 h 15 min. How many minutes is that?","answer":"135","decoys":[{"val":"215","err":"base100"},{"val":"129","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 15 = 135\\)","2 h 15 min \\(= 135\\) min"]},
+{"id":"s1b-2h30","stage":1,"type":"hm-to-min","h":2,"m":30,"prompt":"A gaming session lasted 2 h 30 min. How many minutes is that?","answer":"150","decoys":[{"val":"230","err":"base100"},{"val":"138","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 30 = 150\\)","2 h 30 min \\(= 150\\) min"]},
+{"id":"s1b-2h45","stage":1,"type":"hm-to-min","h":2,"m":45,"prompt":"A coach journey takes 2 h 45 min. How many minutes is that?","answer":"165","decoys":[{"val":"245","err":"base100"},{"val":"147","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 45 = 165\\)","2 h 45 min \\(= 165\\) min"]},
+{"id":"s1b-2h10","stage":1,"type":"hm-to-min","h":2,"m":10,"prompt":"A film lasts 2 h 10 min. How many minutes is that?","answer":"130","decoys":[{"val":"210","err":"base100"},{"val":"126","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 10 = 130\\)","2 h 10 min \\(= 130\\) min"]},
+{"id":"s1b-2h20","stage":1,"type":"hm-to-min","h":2,"m":20,"prompt":"A revision session lasts 2 h 20 min. How many minutes is that?","answer":"140","decoys":[{"val":"220","err":"base100"},{"val":"132","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 20 = 140\\)","2 h 20 min \\(= 140\\) min"]},
+{"id":"s1b-2h40","stage":1,"type":"hm-to-min","h":2,"m":40,"prompt":"A gaming session lasted 2 h 40 min. How many minutes is that?","answer":"160","decoys":[{"val":"240","err":"base100"},{"val":"144","err":"decimal_times60"},{"val":"120","err":"dropped_minutes"}],"working":["\\(2 \\times 60 + 40 = 160\\)","2 h 40 min \\(= 160\\) min"]},
+{"id":"s1b-3h15","stage":1,"type":"hm-to-min","h":3,"m":15,"prompt":"A gig lasts 3 h 15 min, support act included. How many minutes is that?","answer":"195","decoys":[{"val":"315","err":"base100"},{"val":"189","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 15 = 195\\)","3 h 15 min \\(= 195\\) min"]},
+{"id":"s1b-3h30","stage":1,"type":"hm-to-min","h":3,"m":30,"prompt":"A train journey takes 3 h 30 min. How many minutes is that?","answer":"210","decoys":[{"val":"330","err":"base100"},{"val":"198","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 30 = 210\\)","3 h 30 min \\(= 210\\) min"]},
+{"id":"s1b-3h45","stage":1,"type":"hm-to-min","h":3,"m":45,"prompt":"A theme park trip lasted 3 h 45 min. How many minutes is that?","answer":"225","decoys":[{"val":"345","err":"base100"},{"val":"207","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 45 = 225\\)","3 h 45 min \\(= 225\\) min"]},
+{"id":"s1b-3h10","stage":1,"type":"hm-to-min","h":3,"m":10,"prompt":"A football tournament ran for 3 h 10 min. How many minutes is that?","answer":"190","decoys":[{"val":"310","err":"base100"},{"val":"186","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 10 = 190\\)","3 h 10 min \\(= 190\\) min"]},
+{"id":"s1b-3h20","stage":1,"type":"hm-to-min","h":3,"m":20,"prompt":"A gig lasts 3 h 20 min, support act included. How many minutes is that?","answer":"200","decoys":[{"val":"320","err":"base100"},{"val":"192","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 20 = 200\\)","3 h 20 min \\(= 200\\) min"]},
+{"id":"s1b-3h40","stage":1,"type":"hm-to-min","h":3,"m":40,"prompt":"A train journey takes 3 h 40 min. How many minutes is that?","answer":"220","decoys":[{"val":"340","err":"base100"},{"val":"204","err":"decimal_times60"},{"val":"180","err":"dropped_minutes"}],"working":["\\(3 \\times 60 + 40 = 220\\)","3 h 40 min \\(= 220\\) min"]},
+{"id":"s1b-4h15","stage":1,"type":"hm-to-min","h":4,"m":15,"prompt":"A coach trip to the coast takes 4 h 15 min. How many minutes is that?","answer":"255","decoys":[{"val":"415","err":"base100"},{"val":"249","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 15 = 255\\)","4 h 15 min \\(= 255\\) min"]},
+{"id":"s1b-4h30","stage":1,"type":"hm-to-min","h":4,"m":30,"prompt":"A flight takes 4 h 30 min. How many minutes is that?","answer":"270","decoys":[{"val":"430","err":"base100"},{"val":"258","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 30 = 270\\)","4 h 30 min \\(= 270\\) min"]},
+{"id":"s1b-4h45","stage":1,"type":"hm-to-min","h":4,"m":45,"prompt":"A shift at the cafe is 4 h 45 min. How many minutes is that?","answer":"285","decoys":[{"val":"445","err":"base100"},{"val":"267","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 45 = 285\\)","4 h 45 min \\(= 285\\) min"]},
+{"id":"s1b-4h10","stage":1,"type":"hm-to-min","h":4,"m":10,"prompt":"A hike took 4 h 10 min. How many minutes is that?","answer":"250","decoys":[{"val":"410","err":"base100"},{"val":"246","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 10 = 250\\)","4 h 10 min \\(= 250\\) min"]},
+{"id":"s1b-4h20","stage":1,"type":"hm-to-min","h":4,"m":20,"prompt":"A coach trip to the coast takes 4 h 20 min. How many minutes is that?","answer":"260","decoys":[{"val":"420","err":"base100"},{"val":"252","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 20 = 260\\)","4 h 20 min \\(= 260\\) min"]},
+{"id":"s1b-4h40","stage":1,"type":"hm-to-min","h":4,"m":40,"prompt":"A flight takes 4 h 40 min. How many minutes is that?","answer":"280","decoys":[{"val":"440","err":"base100"},{"val":"264","err":"decimal_times60"},{"val":"240","err":"dropped_minutes"}],"working":["\\(4 \\times 60 + 40 = 280\\)","4 h 40 min \\(= 280\\) min"]},
+{"id":"s2a-115pm","stage":2,"type":"12-to-24","h":1,"m":15,"half":"pm","prompt":"Your train leaves at 1:15 pm. What is that on the 24-hour clock?","answer":"13:15","decoys":[{"val":"01:15","err":"forgot_pm"},{"val":"11:15","err":"added_10"},{"val":"12:15","err":"counted_short"}],"working":["pm, so add 12: \\(1 + 12 = 13\\)","1:15 pm \\(\\to\\) 13:15"]},
+{"id":"s2a-240pm","stage":2,"type":"12-to-24","h":2,"m":40,"half":"pm","prompt":"The gym class starts at 2:40 pm. What is that on the 24-hour clock?","answer":"14:40","decoys":[{"val":"02:40","err":"forgot_pm"},{"val":"12:40","err":"added_10"},{"val":"13:40","err":"counted_short"}],"working":["pm, so add 12: \\(2 + 12 = 14\\)","2:40 pm \\(\\to\\) 14:40"]},
+{"id":"s2a-305pm","stage":2,"type":"12-to-24","h":3,"m":5,"half":"pm","prompt":"Your shift starts at 3:05 pm. What is that on the 24-hour clock?","answer":"15:05","decoys":[{"val":"03:05","err":"forgot_pm"},{"val":"13:05","err":"added_10"},{"val":"14:05","err":"counted_short"}],"working":["pm, so add 12: \\(3 + 12 = 15\\)","3:05 pm \\(\\to\\) 15:05"]},
+{"id":"s2a-450pm","stage":2,"type":"12-to-24","h":4,"m":50,"half":"pm","prompt":"Your parcel is due at 4:50 pm. What is that on the 24-hour clock?","answer":"16:50","decoys":[{"val":"04:50","err":"forgot_pm"},{"val":"14:50","err":"added_10"},{"val":"15:50","err":"counted_short"}],"working":["pm, so add 12: \\(4 + 12 = 16\\)","4:50 pm \\(\\to\\) 16:50"]},
+{"id":"s2a-525pm","stage":2,"type":"12-to-24","h":5,"m":25,"half":"pm","prompt":"Your train leaves at 5:25 pm. What is that on the 24-hour clock?","answer":"17:25","decoys":[{"val":"05:25","err":"forgot_pm"},{"val":"15:25","err":"added_10"},{"val":"16:25","err":"counted_short"}],"working":["pm, so add 12: \\(5 + 12 = 17\\)","5:25 pm \\(\\to\\) 17:25"]},
+{"id":"s2a-635pm","stage":2,"type":"12-to-24","h":6,"m":35,"half":"pm","prompt":"Doors open for the gig at 6:35 pm. What is that on the 24-hour clock?","answer":"18:35","decoys":[{"val":"06:35","err":"forgot_pm"},{"val":"16:35","err":"added_10"},{"val":"17:35","err":"counted_short"}],"working":["pm, so add 12: \\(6 + 12 = 18\\)","6:35 pm \\(\\to\\) 18:35"]},
+{"id":"s2a-710pm","stage":2,"type":"12-to-24","h":7,"m":10,"half":"pm","prompt":"Your shift starts at 7:10 pm. What is that on the 24-hour clock?","answer":"19:10","decoys":[{"val":"07:10","err":"forgot_pm"},{"val":"17:10","err":"added_10"},{"val":"18:10","err":"counted_short"}],"working":["pm, so add 12: \\(7 + 12 = 19\\)","7:10 pm \\(\\to\\) 19:10"]},
+{"id":"s2a-845pm","stage":2,"type":"12-to-24","h":8,"m":45,"half":"pm","prompt":"The film starts at 8:45 pm. What is that on the 24-hour clock?","answer":"20:45","decoys":[{"val":"08:45","err":"forgot_pm"},{"val":"18:45","err":"added_10"},{"val":"19:45","err":"counted_short"}],"working":["pm, so add 12: \\(8 + 12 = 20\\)","8:45 pm \\(\\to\\) 20:45"]},
+{"id":"s2a-920pm","stage":2,"type":"12-to-24","h":9,"m":20,"half":"pm","prompt":"Your train leaves at 9:20 pm. What is that on the 24-hour clock?","answer":"21:20","decoys":[{"val":"09:20","err":"forgot_pm"},{"val":"19:20","err":"added_10"},{"val":"20:20","err":"counted_short"}],"working":["pm, so add 12: \\(9 + 12 = 21\\)","9:20 pm \\(\\to\\) 21:20"]},
+{"id":"s2a-1055pm","stage":2,"type":"12-to-24","h":10,"m":55,"half":"pm","prompt":"Doors open for the gig at 10:55 pm. What is that on the 24-hour clock?","answer":"22:55","decoys":[{"val":"10:55","err":"forgot_pm"},{"val":"20:55","err":"added_10"},{"val":"21:55","err":"counted_short"}],"working":["pm, so add 12: \\(10 + 12 = 22\\)","10:55 pm \\(\\to\\) 22:55"]},
+{"id":"s2a-1130pm","stage":2,"type":"12-to-24","h":11,"m":30,"half":"pm","prompt":"Your shift starts at 11:30 pm. What is that on the 24-hour clock?","answer":"23:30","decoys":[{"val":"11:30","err":"forgot_pm"},{"val":"21:30","err":"added_10"},{"val":"22:30","err":"counted_short"}],"working":["pm, so add 12: \\(11 + 12 = 23\\)","11:30 pm \\(\\to\\) 23:30"]},
+{"id":"s2a-135pm","stage":2,"type":"12-to-24","h":1,"m":35,"half":"pm","prompt":"Your parcel is due at 1:35 pm. What is that on the 24-hour clock?","answer":"13:35","decoys":[{"val":"01:35","err":"forgot_pm"},{"val":"11:35","err":"added_10"},{"val":"12:35","err":"counted_short"}],"working":["pm, so add 12: \\(1 + 12 = 13\\)","1:35 pm \\(\\to\\) 13:35"]},
+{"id":"s2a-210pm","stage":2,"type":"12-to-24","h":2,"m":10,"half":"pm","prompt":"Your train leaves at 2:10 pm. What is that on the 24-hour clock?","answer":"14:10","decoys":[{"val":"02:10","err":"forgot_pm"},{"val":"12:10","err":"added_10"},{"val":"13:10","err":"counted_short"}],"working":["pm, so add 12: \\(2 + 12 = 14\\)","2:10 pm \\(\\to\\) 14:10"]},
+{"id":"s2a-345pm","stage":2,"type":"12-to-24","h":3,"m":45,"half":"pm","prompt":"The gym class starts at 3:45 pm. What is that on the 24-hour clock?","answer":"15:45","decoys":[{"val":"03:45","err":"forgot_pm"},{"val":"13:45","err":"added_10"},{"val":"14:45","err":"counted_short"}],"working":["pm, so add 12: \\(3 + 12 = 15\\)","3:45 pm \\(\\to\\) 15:45"]},
+{"id":"s2a-420pm","stage":2,"type":"12-to-24","h":4,"m":20,"half":"pm","prompt":"Your shift starts at 4:20 pm. What is that on the 24-hour clock?","answer":"16:20","decoys":[{"val":"04:20","err":"forgot_pm"},{"val":"14:20","err":"added_10"},{"val":"15:20","err":"counted_short"}],"working":["pm, so add 12: \\(4 + 12 = 16\\)","4:20 pm \\(\\to\\) 16:20"]},
+{"id":"s2a-555pm","stage":2,"type":"12-to-24","h":5,"m":55,"half":"pm","prompt":"Your parcel is due at 5:55 pm. What is that on the 24-hour clock?","answer":"17:55","decoys":[{"val":"05:55","err":"forgot_pm"},{"val":"15:55","err":"added_10"},{"val":"16:55","err":"counted_short"}],"working":["pm, so add 12: \\(5 + 12 = 17\\)","5:55 pm \\(\\to\\) 17:55"]},
+{"id":"s2a-630pm","stage":2,"type":"12-to-24","h":6,"m":30,"half":"pm","prompt":"Your train leaves at 6:30 pm. What is that on the 24-hour clock?","answer":"18:30","decoys":[{"val":"06:30","err":"forgot_pm"},{"val":"16:30","err":"added_10"},{"val":"17:30","err":"counted_short"}],"working":["pm, so add 12: \\(6 + 12 = 18\\)","6:30 pm \\(\\to\\) 18:30"]},
+{"id":"s2a-715pm","stage":2,"type":"12-to-24","h":7,"m":15,"half":"pm","prompt":"Doors open for the gig at 7:15 pm. What is that on the 24-hour clock?","answer":"19:15","decoys":[{"val":"07:15","err":"forgot_pm"},{"val":"17:15","err":"added_10"},{"val":"18:15","err":"counted_short"}],"working":["pm, so add 12: \\(7 + 12 = 19\\)","7:15 pm \\(\\to\\) 19:15"]},
+{"id":"s2a-1230pm","stage":2,"type":"12-to-24","h":12,"m":30,"half":"pm","prompt":"Your shift starts at 12:30 pm. What is that on the 24-hour clock?","answer":"12:30","decoys":[{"val":"00:30","err":"noon_midnight"},{"val":"22:30","err":"noon_changed"},{"val":"02:30","err":"noon_changed"}],"working":["12 pm is the hour after midday, so it stays 12","12:30 pm \\(\\to\\) 12:30"]},
+{"id":"s2a-1245pm","stage":2,"type":"12-to-24","h":12,"m":45,"half":"pm","prompt":"Your parcel is due at 12:45 pm. What is that on the 24-hour clock?","answer":"12:45","decoys":[{"val":"00:45","err":"noon_midnight"},{"val":"22:45","err":"noon_changed"},{"val":"02:45","err":"noon_changed"}],"working":["12 pm is the hour after midday, so it stays 12","12:45 pm \\(\\to\\) 12:45"]},
+{"id":"s2a-820pm","stage":2,"type":"12-to-24","h":8,"m":20,"half":"pm","prompt":"Your train leaves at 8:20 pm. What is that on the 24-hour clock?","answer":"20:20","decoys":[{"val":"08:20","err":"forgot_pm"},{"val":"18:20","err":"added_10"},{"val":"19:20","err":"counted_short"}],"working":["pm, so add 12: \\(8 + 12 = 20\\)","8:20 pm \\(\\to\\) 20:20"]},
+{"id":"s2a-1150pm","stage":2,"type":"12-to-24","h":11,"m":50,"half":"pm","prompt":"Doors open for the gig at 11:50 pm. What is that on the 24-hour clock?","answer":"23:50","decoys":[{"val":"11:50","err":"forgot_pm"},{"val":"21:50","err":"added_10"},{"val":"22:50","err":"counted_short"}],"working":["pm, so add 12: \\(11 + 12 = 23\\)","11:50 pm \\(\\to\\) 23:50"]},
+{"id":"s2a-730am","stage":2,"type":"12-to-24","h":7,"m":30,"half":"am","prompt":"Your shift starts at 7:30 am. What is that on the 24-hour clock?","answer":"07:30","decoys":[{"val":"19:30","err":"added_to_morning"},{"val":"17:30","err":"added_to_morning"},{"val":"18:30","err":"added_to_morning"}],"working":["am, before midday: the hour stays the same","7:30 am \\(\\to\\) 07:30"]},
+{"id":"s2a-925am","stage":2,"type":"12-to-24","h":9,"m":25,"half":"am","prompt":"Your parcel is due at 9:25 am. What is that on the 24-hour clock?","answer":"09:25","decoys":[{"val":"21:25","err":"added_to_morning"},{"val":"19:25","err":"added_to_morning"},{"val":"20:25","err":"added_to_morning"}],"working":["am, before midday: the hour stays the same","9:25 am \\(\\to\\) 09:25"]},
+{"id":"s2b-1315","stage":2,"type":"24-to-12","H":13,"m":15,"prompt":"The bus timetable says 13:15. What is that on the 12-hour clock?","answer":"1:15 pm","decoys":[{"val":"1:15 am","err":"wrong_half"},{"val":"3:15 pm","err":"took_10"},{"val":"2:15 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(13 - 12 = 1\\), and it is pm","13:15 \\(\\to\\) 1:15 pm"]},
+{"id":"s2b-1440","stage":2,"type":"24-to-12","H":14,"m":40,"prompt":"Your phone says 14:40. What is that on the 12-hour clock?","answer":"2:40 pm","decoys":[{"val":"2:40 am","err":"wrong_half"},{"val":"4:40 pm","err":"took_10"},{"val":"3:40 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(14 - 12 = 2\\), and it is pm","14:40 \\(\\to\\) 2:40 pm"]},
+{"id":"s2b-1505","stage":2,"type":"24-to-12","H":15,"m":5,"prompt":"The parcel arrives at 15:05. What is that on the 12-hour clock?","answer":"3:05 pm","decoys":[{"val":"3:05 am","err":"wrong_half"},{"val":"5:05 pm","err":"took_10"},{"val":"4:05 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(15 - 12 = 3\\), and it is pm","15:05 \\(\\to\\) 3:05 pm"]},
+{"id":"s2b-1650","stage":2,"type":"24-to-12","H":16,"m":50,"prompt":"The cinema ticket says 16:50. What is that on the 12-hour clock?","answer":"4:50 pm","decoys":[{"val":"4:50 am","err":"wrong_half"},{"val":"6:50 pm","err":"took_10"},{"val":"5:50 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(16 - 12 = 4\\), and it is pm","16:50 \\(\\to\\) 4:50 pm"]},
+{"id":"s2b-1725","stage":2,"type":"24-to-12","H":17,"m":25,"prompt":"The bus timetable says 17:25. What is that on the 12-hour clock?","answer":"5:25 pm","decoys":[{"val":"5:25 am","err":"wrong_half"},{"val":"7:25 pm","err":"took_10"},{"val":"6:25 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(17 - 12 = 5\\), and it is pm","17:25 \\(\\to\\) 5:25 pm"]},
+{"id":"s2b-1835","stage":2,"type":"24-to-12","H":18,"m":35,"prompt":"Your phone says 18:35. What is that on the 12-hour clock?","answer":"6:35 pm","decoys":[{"val":"6:35 am","err":"wrong_half"},{"val":"8:35 pm","err":"took_10"},{"val":"7:35 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(18 - 12 = 6\\), and it is pm","18:35 \\(\\to\\) 6:35 pm"]},
+{"id":"s2b-1910","stage":2,"type":"24-to-12","H":19,"m":10,"prompt":"The parcel arrives at 19:10. What is that on the 12-hour clock?","answer":"7:10 pm","decoys":[{"val":"7:10 am","err":"wrong_half"},{"val":"9:10 pm","err":"took_10"},{"val":"8:10 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(19 - 12 = 7\\), and it is pm","19:10 \\(\\to\\) 7:10 pm"]},
+{"id":"s2b-2045","stage":2,"type":"24-to-12","H":20,"m":45,"prompt":"The cinema ticket says 20:45. What is that on the 12-hour clock?","answer":"8:45 pm","decoys":[{"val":"8:45 am","err":"wrong_half"},{"val":"10:45 pm","err":"took_10"},{"val":"9:45 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(20 - 12 = 8\\), and it is pm","20:45 \\(\\to\\) 8:45 pm"]},
+{"id":"s2b-2120","stage":2,"type":"24-to-12","H":21,"m":20,"prompt":"The bus timetable says 21:20. What is that on the 12-hour clock?","answer":"9:20 pm","decoys":[{"val":"9:20 am","err":"wrong_half"},{"val":"11:20 pm","err":"took_10"},{"val":"10:20 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(21 - 12 = 9\\), and it is pm","21:20 \\(\\to\\) 9:20 pm"]},
+{"id":"s2b-2255","stage":2,"type":"24-to-12","H":22,"m":55,"prompt":"Your phone says 22:55. What is that on the 12-hour clock?","answer":"10:55 pm","decoys":[{"val":"10:55 am","err":"wrong_half"},{"val":"12:55 pm","err":"took_10"},{"val":"11:55 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(22 - 12 = 10\\), and it is pm","22:55 \\(\\to\\) 10:55 pm"]},
+{"id":"s2b-1325","stage":2,"type":"24-to-12","H":13,"m":25,"prompt":"The parcel arrives at 13:25. What is that on the 12-hour clock?","answer":"1:25 pm","decoys":[{"val":"1:25 am","err":"wrong_half"},{"val":"3:25 pm","err":"took_10"},{"val":"2:25 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(13 - 12 = 1\\), and it is pm","13:25 \\(\\to\\) 1:25 pm"]},
+{"id":"s2b-1435","stage":2,"type":"24-to-12","H":14,"m":35,"prompt":"The cinema ticket says 14:35. What is that on the 12-hour clock?","answer":"2:35 pm","decoys":[{"val":"2:35 am","err":"wrong_half"},{"val":"4:35 pm","err":"took_10"},{"val":"3:35 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(14 - 12 = 2\\), and it is pm","14:35 \\(\\to\\) 2:35 pm"]},
+{"id":"s2b-1510","stage":2,"type":"24-to-12","H":15,"m":10,"prompt":"The bus timetable says 15:10. What is that on the 12-hour clock?","answer":"3:10 pm","decoys":[{"val":"3:10 am","err":"wrong_half"},{"val":"5:10 pm","err":"took_10"},{"val":"4:10 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(15 - 12 = 3\\), and it is pm","15:10 \\(\\to\\) 3:10 pm"]},
+{"id":"s2b-1645","stage":2,"type":"24-to-12","H":16,"m":45,"prompt":"Your phone says 16:45. What is that on the 12-hour clock?","answer":"4:45 pm","decoys":[{"val":"4:45 am","err":"wrong_half"},{"val":"6:45 pm","err":"took_10"},{"val":"5:45 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(16 - 12 = 4\\), and it is pm","16:45 \\(\\to\\) 4:45 pm"]},
+{"id":"s2b-1720","stage":2,"type":"24-to-12","H":17,"m":20,"prompt":"The parcel arrives at 17:20. What is that on the 12-hour clock?","answer":"5:20 pm","decoys":[{"val":"5:20 am","err":"wrong_half"},{"val":"7:20 pm","err":"took_10"},{"val":"6:20 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(17 - 12 = 5\\), and it is pm","17:20 \\(\\to\\) 5:20 pm"]},
+{"id":"s2b-1855","stage":2,"type":"24-to-12","H":18,"m":55,"prompt":"The cinema ticket says 18:55. What is that on the 12-hour clock?","answer":"6:55 pm","decoys":[{"val":"6:55 am","err":"wrong_half"},{"val":"8:55 pm","err":"took_10"},{"val":"7:55 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(18 - 12 = 6\\), and it is pm","18:55 \\(\\to\\) 6:55 pm"]},
+{"id":"s2b-1930","stage":2,"type":"24-to-12","H":19,"m":30,"prompt":"The bus timetable says 19:30. What is that on the 12-hour clock?","answer":"7:30 pm","decoys":[{"val":"7:30 am","err":"wrong_half"},{"val":"9:30 pm","err":"took_10"},{"val":"8:30 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(19 - 12 = 7\\), and it is pm","19:30 \\(\\to\\) 7:30 pm"]},
+{"id":"s2b-2015","stage":2,"type":"24-to-12","H":20,"m":15,"prompt":"Your phone says 20:15. What is that on the 12-hour clock?","answer":"8:15 pm","decoys":[{"val":"8:15 am","err":"wrong_half"},{"val":"10:15 pm","err":"took_10"},{"val":"9:15 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(20 - 12 = 8\\), and it is pm","20:15 \\(\\to\\) 8:15 pm"]},
+{"id":"s2b-2140","stage":2,"type":"24-to-12","H":21,"m":40,"prompt":"The parcel arrives at 21:40. What is that on the 12-hour clock?","answer":"9:40 pm","decoys":[{"val":"9:40 am","err":"wrong_half"},{"val":"11:40 pm","err":"took_10"},{"val":"10:40 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(21 - 12 = 9\\), and it is pm","21:40 \\(\\to\\) 9:40 pm"]},
+{"id":"s2b-2205","stage":2,"type":"24-to-12","H":22,"m":5,"prompt":"The cinema ticket says 22:05. What is that on the 12-hour clock?","answer":"10:05 pm","decoys":[{"val":"10:05 am","err":"wrong_half"},{"val":"12:05 pm","err":"took_10"},{"val":"11:05 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(22 - 12 = 10\\), and it is pm","22:05 \\(\\to\\) 10:05 pm"]},
+{"id":"s2b-1452","stage":2,"type":"24-to-12","H":14,"m":52,"prompt":"The bus timetable says 14:52. What is that on the 12-hour clock?","answer":"2:52 pm","decoys":[{"val":"2:52 am","err":"wrong_half"},{"val":"4:52 pm","err":"took_10"},{"val":"3:52 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(14 - 12 = 2\\), and it is pm","14:52 \\(\\to\\) 2:52 pm"]},
+{"id":"s2b-1908","stage":2,"type":"24-to-12","H":19,"m":8,"prompt":"Your phone says 19:08. What is that on the 12-hour clock?","answer":"7:08 pm","decoys":[{"val":"7:08 am","err":"wrong_half"},{"val":"9:08 pm","err":"took_10"},{"val":"8:08 pm","err":"took_11"}],"working":["After 12, so take off 12: \\(19 - 12 = 7\\), and it is pm","19:08 \\(\\to\\) 7:08 pm"]},
+{"id":"s2b-1220","stage":2,"type":"24-to-12","H":12,"m":20,"prompt":"The parcel arrives at 12:20. What is that on the 12-hour clock?","answer":"12:20 pm","decoys":[{"val":"12:20 am","err":"noon_midnight"},{"val":"2:20 pm","err":"noon_changed"},{"val":"1:20 pm","err":"noon_changed"}],"working":["12:something is just after midday, so it is 12 pm","12:20 \\(\\to\\) 12:20 pm"]},
+{"id":"s2b-1255","stage":2,"type":"24-to-12","H":12,"m":55,"prompt":"The cinema ticket says 12:55. What is that on the 12-hour clock?","answer":"12:55 pm","decoys":[{"val":"12:55 am","err":"noon_midnight"},{"val":"2:55 pm","err":"noon_changed"},{"val":"1:55 pm","err":"noon_changed"}],"working":["12:something is just after midday, so it is 12 pm","12:55 \\(\\to\\) 12:55 pm"]},
+{"id":"s3a-0945-1120","stage":3,"type":"duration","start":"09:45","end":"11:20","prompt":"A train leaves at 09:45 and arrives at 11:20. How long is the journey?","answer":"1 h 35 min","decoys":[{"val":"1 h 75 min","err":"hhmm_subtract"},{"val":"2 h 25 min","err":"no_borrow"},{"val":"2 h 55 min","err":"hhmm_as_minutes"}],"working":["09:45 to 10:00 is \\(15\\) min","10:00 to 11:20 is 1 h 20 min","\\(15\\) min + 1 h 20 min = 1 h 35 min"]},
+{"id":"s3a-0850-1015","stage":3,"type":"duration","start":"08:50","end":"10:15","prompt":"The film starts at 08:50 and ends at 10:15. How long is it?","answer":"1 h 25 min","decoys":[{"val":"1 h 65 min","err":"hhmm_subtract"},{"val":"2 h 35 min","err":"no_borrow"},{"val":"2 h 45 min","err":"hhmm_as_minutes"}],"working":["08:50 to 09:00 is \\(10\\) min","09:00 to 10:15 is 1 h 15 min","\\(10\\) min + 1 h 15 min = 1 h 25 min"]},
+{"id":"s3a-1340-1505","stage":3,"type":"duration","start":"13:40","end":"15:05","prompt":"Parking starts at 13:40 and you leave at 15:05. How long did you park for?","answer":"1 h 25 min","decoys":[{"val":"1 h 65 min","err":"hhmm_subtract"},{"val":"2 h 35 min","err":"no_borrow"},{"val":"2 h 45 min","err":"hhmm_as_minutes"}],"working":["13:40 to 14:00 is \\(20\\) min","14:00 to 15:05 is 1 h 5 min","\\(20\\) min + 1 h 5 min = 1 h 25 min"]},
+{"id":"s3a-1035-1210","stage":3,"type":"duration","start":"10:35","end":"12:10","prompt":"The match kicks off at 10:35 and finishes at 12:10. How long is that?","answer":"1 h 35 min","decoys":[{"val":"1 h 75 min","err":"hhmm_subtract"},{"val":"2 h 25 min","err":"no_borrow"},{"val":"2 h 55 min","err":"hhmm_as_minutes"}],"working":["10:35 to 11:00 is \\(25\\) min","11:00 to 12:10 is 1 h 10 min","\\(25\\) min + 1 h 10 min = 1 h 35 min"]},
+{"id":"s3a-1455-1625","stage":3,"type":"duration","start":"14:55","end":"16:25","prompt":"A train leaves at 14:55 and arrives at 16:25. How long is the journey?","answer":"1 h 30 min","decoys":[{"val":"1 h 70 min","err":"hhmm_subtract"},{"val":"2 h 30 min","err":"no_borrow"},{"val":"2 h 50 min","err":"hhmm_as_minutes"}],"working":["14:55 to 15:00 is \\(5\\) min","15:00 to 16:25 is 1 h 25 min","\\(5\\) min + 1 h 25 min = 1 h 30 min"]},
+{"id":"s3a-0745-0930","stage":3,"type":"duration","start":"07:45","end":"09:30","prompt":"The film starts at 07:45 and ends at 09:30. How long is it?","answer":"1 h 45 min","decoys":[{"val":"1 h 85 min","err":"hhmm_subtract"},{"val":"2 h 15 min","err":"no_borrow"},{"val":"3 h 5 min","err":"hhmm_as_minutes"}],"working":["07:45 to 08:00 is \\(15\\) min","08:00 to 09:30 is 1 h 30 min","\\(15\\) min + 1 h 30 min = 1 h 45 min"]},
+{"id":"s3a-1150-1320","stage":3,"type":"duration","start":"11:50","end":"13:20","prompt":"Parking starts at 11:50 and you leave at 13:20. How long did you park for?","answer":"1 h 30 min","decoys":[{"val":"1 h 70 min","err":"hhmm_subtract"},{"val":"2 h 30 min","err":"no_borrow"},{"val":"2 h 50 min","err":"hhmm_as_minutes"}],"working":["11:50 to 12:00 is \\(10\\) min","12:00 to 13:20 is 1 h 20 min","\\(10\\) min + 1 h 20 min = 1 h 30 min"]},
+{"id":"s3a-1525-1610","stage":3,"type":"duration","start":"15:25","end":"16:10","prompt":"Parking starts at 15:25 and you leave at 16:10. How long did you park for?","answer":"45 min","decoys":[{"val":"85 min","err":"hhmm_subtract"},{"val":"1 h 15 min","err":"no_borrow"},{"val":"35 min","err":"stopped_at_hour"}],"working":["15:25 to 16:00 is \\(35\\) min","16:00 to 16:10 is 10 min","\\(35\\) min + 10 min = 45 min"]},
+{"id":"s3a-0640-0815","stage":3,"type":"duration","start":"06:40","end":"08:15","prompt":"A train leaves at 06:40 and arrives at 08:15. How long is the journey?","answer":"1 h 35 min","decoys":[{"val":"1 h 75 min","err":"hhmm_subtract"},{"val":"2 h 25 min","err":"no_borrow"},{"val":"2 h 55 min","err":"hhmm_as_minutes"}],"working":["06:40 to 07:00 is \\(20\\) min","07:00 to 08:15 is 1 h 15 min","\\(20\\) min + 1 h 15 min = 1 h 35 min"]},
+{"id":"s3a-1245-1430","stage":3,"type":"duration","start":"12:45","end":"14:30","prompt":"The film starts at 12:45 and ends at 14:30. How long is it?","answer":"1 h 45 min","decoys":[{"val":"1 h 85 min","err":"hhmm_subtract"},{"val":"2 h 15 min","err":"no_borrow"},{"val":"3 h 5 min","err":"hhmm_as_minutes"}],"working":["12:45 to 13:00 is \\(15\\) min","13:00 to 14:30 is 1 h 30 min","\\(15\\) min + 1 h 30 min = 1 h 45 min"]},
+{"id":"s3a-1650-1805","stage":3,"type":"duration","start":"16:50","end":"18:05","prompt":"Parking starts at 16:50 and you leave at 18:05. How long did you park for?","answer":"1 h 15 min","decoys":[{"val":"1 h 55 min","err":"hhmm_subtract"},{"val":"2 h 45 min","err":"no_borrow"},{"val":"2 h 35 min","err":"hhmm_as_minutes"}],"working":["16:50 to 17:00 is \\(10\\) min","17:00 to 18:05 is 1 h 5 min","\\(10\\) min + 1 h 5 min = 1 h 15 min"]},
+{"id":"s3a-0955-1040","stage":3,"type":"duration","start":"09:55","end":"10:40","prompt":"Your gym session starts at 09:55 and ends at 10:40. How long is it?","answer":"45 min","decoys":[{"val":"85 min","err":"hhmm_subtract"},{"val":"1 h 15 min","err":"no_borrow"},{"val":"5 min","err":"stopped_at_hour"}],"working":["09:55 to 10:00 is \\(5\\) min","10:00 to 10:40 is 40 min","\\(5\\) min + 40 min = 45 min"]},
+{"id":"s3a-1835-2020","stage":3,"type":"duration","start":"18:35","end":"20:20","prompt":"A train leaves at 18:35 and arrives at 20:20. How long is the journey?","answer":"1 h 45 min","decoys":[{"val":"1 h 85 min","err":"hhmm_subtract"},{"val":"2 h 15 min","err":"no_borrow"},{"val":"3 h 5 min","err":"hhmm_as_minutes"}],"working":["18:35 to 19:00 is \\(25\\) min","19:00 to 20:20 is 1 h 20 min","\\(25\\) min + 1 h 20 min = 1 h 45 min"]},
+{"id":"s3a-0825-0910","stage":3,"type":"duration","start":"08:25","end":"09:10","prompt":"Parking starts at 08:25 and you leave at 09:10. How long did you park for?","answer":"45 min","decoys":[{"val":"85 min","err":"hhmm_subtract"},{"val":"1 h 15 min","err":"no_borrow"},{"val":"35 min","err":"stopped_at_hour"}],"working":["08:25 to 09:00 is \\(35\\) min","09:00 to 09:10 is 10 min","\\(35\\) min + 10 min = 45 min"]},
+{"id":"s3a-1350-1635","stage":3,"type":"duration","start":"13:50","end":"16:35","prompt":"Parking starts at 13:50 and you leave at 16:35. How long did you park for?","answer":"2 h 45 min","decoys":[{"val":"2 h 85 min","err":"hhmm_subtract"},{"val":"3 h 15 min","err":"no_borrow"},{"val":"4 h 45 min","err":"hhmm_as_minutes"}],"working":["13:50 to 14:00 is \\(10\\) min","14:00 to 16:35 is 2 h 35 min","\\(10\\) min + 2 h 35 min = 2 h 45 min"]},
+{"id":"s3a-1045-1315","stage":3,"type":"duration","start":"10:45","end":"13:15","prompt":"The match kicks off at 10:45 and finishes at 13:15. How long is that?","answer":"2 h 30 min","decoys":[{"val":"2 h 70 min","err":"hhmm_subtract"},{"val":"3 h 30 min","err":"no_borrow"},{"val":"4 h 30 min","err":"hhmm_as_minutes"}],"working":["10:45 to 11:00 is \\(15\\) min","11:00 to 13:15 is 2 h 15 min","\\(15\\) min + 2 h 15 min = 2 h 30 min"]},
+{"id":"s3a-1740-1925","stage":3,"type":"duration","start":"17:40","end":"19:25","prompt":"A train leaves at 17:40 and arrives at 19:25. How long is the journey?","answer":"1 h 45 min","decoys":[{"val":"1 h 85 min","err":"hhmm_subtract"},{"val":"2 h 15 min","err":"no_borrow"},{"val":"3 h 5 min","err":"hhmm_as_minutes"}],"working":["17:40 to 18:00 is \\(20\\) min","18:00 to 19:25 is 1 h 25 min","\\(20\\) min + 1 h 25 min = 1 h 45 min"]},
+{"id":"s3a-0755-1020","stage":3,"type":"duration","start":"07:55","end":"10:20","prompt":"The film starts at 07:55 and ends at 10:20. How long is it?","answer":"2 h 25 min","decoys":[{"val":"2 h 65 min","err":"hhmm_subtract"},{"val":"3 h 35 min","err":"no_borrow"},{"val":"4 h 25 min","err":"hhmm_as_minutes"}],"working":["07:55 to 08:00 is \\(5\\) min","08:00 to 10:20 is 2 h 20 min","\\(5\\) min + 2 h 20 min = 2 h 25 min"]},
+{"id":"s3a-1930-2115","stage":3,"type":"duration","start":"19:30","end":"21:15","prompt":"Parking starts at 19:30 and you leave at 21:15. How long did you park for?","answer":"1 h 45 min","decoys":[{"val":"1 h 85 min","err":"hhmm_subtract"},{"val":"2 h 15 min","err":"no_borrow"},{"val":"3 h 5 min","err":"hhmm_as_minutes"}],"working":["19:30 to 20:00 is \\(30\\) min","20:00 to 21:15 is 1 h 15 min","\\(30\\) min + 1 h 15 min = 1 h 45 min"]},
+{"id":"s3a-1135-1220","stage":3,"type":"duration","start":"11:35","end":"12:20","prompt":"Parking starts at 11:35 and you leave at 12:20. How long did you park for?","answer":"45 min","decoys":[{"val":"85 min","err":"hhmm_subtract"},{"val":"1 h 15 min","err":"no_borrow"},{"val":"25 min","err":"stopped_at_hour"}],"working":["11:35 to 12:00 is \\(25\\) min","12:00 to 12:20 is 20 min","\\(25\\) min + 20 min = 45 min"]},
+{"id":"s3a-1445-1705","stage":3,"type":"duration","start":"14:45","end":"17:05","prompt":"A train leaves at 14:45 and arrives at 17:05. How long is the journey?","answer":"2 h 20 min","decoys":[{"val":"2 h 60 min","err":"hhmm_subtract"},{"val":"3 h 40 min","err":"no_borrow"},{"val":"4 h 20 min","err":"hhmm_as_minutes"}],"working":["14:45 to 15:00 is \\(15\\) min","15:00 to 17:05 is 2 h 5 min","\\(15\\) min + 2 h 5 min = 2 h 20 min"]},
+{"id":"s3a-0650-0925","stage":3,"type":"duration","start":"06:50","end":"09:25","prompt":"A train leaves at 06:50 and arrives at 09:25. How long is the journey?","answer":"2 h 35 min","decoys":[{"val":"2 h 75 min","err":"hhmm_subtract"},{"val":"3 h 25 min","err":"no_borrow"},{"val":"4 h 35 min","err":"hhmm_as_minutes"}],"working":["06:50 to 07:00 is \\(10\\) min","07:00 to 09:25 is 2 h 25 min","\\(10\\) min + 2 h 25 min = 2 h 35 min"]},
+{"id":"s3a-2040-2210","stage":3,"type":"duration","start":"20:40","end":"22:10","prompt":"Parking starts at 20:40 and you leave at 22:10. How long did you park for?","answer":"1 h 30 min","decoys":[{"val":"1 h 70 min","err":"hhmm_subtract"},{"val":"2 h 30 min","err":"no_borrow"},{"val":"2 h 50 min","err":"hhmm_as_minutes"}],"working":["20:40 to 21:00 is \\(20\\) min","21:00 to 22:10 is 1 h 10 min","\\(20\\) min + 1 h 10 min = 1 h 30 min"]},
+{"id":"s3a-1555-1730","stage":3,"type":"duration","start":"15:55","end":"17:30","prompt":"The match kicks off at 15:55 and finishes at 17:30. How long is that?","answer":"1 h 35 min","decoys":[{"val":"1 h 75 min","err":"hhmm_subtract"},{"val":"2 h 25 min","err":"no_borrow"},{"val":"2 h 55 min","err":"hhmm_as_minutes"}],"working":["15:55 to 16:00 is \\(5\\) min","16:00 to 17:30 is 1 h 30 min","\\(5\\) min + 1 h 30 min = 1 h 35 min"]},
+{"id":"s3b-1050+0h45","stage":3,"type":"end-time","start":"10:50","dh":0,"dm":45,"prompt":"A bus leaves at 10:50. The journey takes 45 min. What time does it arrive?","answer":"11:35","decoys":[{"val":"11:45","err":"to_hour_then_all"},{"val":"10:35","err":"forgot_hour"},{"val":"11:95","err":"carry_no_subtract"}],"working":["\\(50 + 45 = 95\\) min, which is 1 h \\(35\\) min","\\(10 + 0 + 1 = 11\\), so 11:35"]},
+{"id":"s3b-0940+1h35","stage":3,"type":"end-time","start":"09:40","dh":1,"dm":35,"prompt":"A delivery van sets off at 09:40. The drop takes 1 h 35 min. What time does it get there?","answer":"11:15","decoys":[{"val":"11:35","err":"to_hour_then_all"},{"val":"10:15","err":"forgot_hour"},{"val":"11:75","err":"carry_no_subtract"}],"working":["\\(40 + 35 = 75\\) min, which is 1 h \\(15\\) min","\\(9 + 1 + 1 = 11\\), so 11:15"]},
+{"id":"s3b-1435+2h40","stage":3,"type":"end-time","start":"14:35","dh":2,"dm":40,"prompt":"A film starts at 14:35 and lasts 2 h 40 min. What time does it finish?","answer":"17:15","decoys":[{"val":"17:40","err":"to_hour_then_all"},{"val":"16:15","err":"forgot_hour"},{"val":"17:75","err":"carry_no_subtract"}],"working":["\\(35 + 40 = 75\\) min, which is 1 h \\(15\\) min","\\(14 + 2 + 1 = 17\\), so 17:15"]},
+{"id":"s3b-0745+0h25","stage":3,"type":"end-time","start":"07:45","dh":0,"dm":25,"prompt":"A bus leaves at 07:45. The journey takes 25 min. What time does it arrive?","answer":"08:10","decoys":[{"val":"08:25","err":"to_hour_then_all"},{"val":"07:10","err":"forgot_hour"},{"val":"08:70","err":"carry_no_subtract"}],"working":["\\(45 + 25 = 70\\) min, which is 1 h \\(10\\) min","\\(7 + 0 + 1 = 8\\), so 08:10"]},
+{"id":"s3b-1630+1h50","stage":3,"type":"end-time","start":"16:30","dh":1,"dm":50,"prompt":"A delivery van sets off at 16:30. The drop takes 1 h 50 min. What time does it get there?","answer":"18:20","decoys":[{"val":"18:50","err":"to_hour_then_all"},{"val":"17:20","err":"forgot_hour"},{"val":"18:80","err":"carry_no_subtract"}],"working":["\\(30 + 50 = 80\\) min, which is 1 h \\(20\\) min","\\(16 + 1 + 1 = 18\\), so 18:20"]},
+{"id":"s3b-1155+0h20","stage":3,"type":"end-time","start":"11:55","dh":0,"dm":20,"prompt":"A delivery van sets off at 11:55. The drop takes 20 min. What time does it get there?","answer":"12:15","decoys":[{"val":"12:20","err":"to_hour_then_all"},{"val":"11:15","err":"forgot_hour"},{"val":"12:75","err":"carry_no_subtract"}],"working":["\\(55 + 20 = 75\\) min, which is 1 h \\(15\\) min","\\(11 + 0 + 1 = 12\\), so 12:15"]},
+{"id":"s3b-0850+2h15","stage":3,"type":"end-time","start":"08:50","dh":2,"dm":15,"prompt":"Your shift starts at 08:50 and lasts 2 h 15 min. What time does it end?","answer":"11:05","decoys":[{"val":"11:15","err":"to_hour_then_all"},{"val":"10:05","err":"forgot_hour"},{"val":"11:65","err":"carry_no_subtract"}],"working":["\\(50 + 15 = 65\\) min, which is 1 h \\(5\\) min","\\(8 + 2 + 1 = 11\\), so 11:05"]},
+{"id":"s3b-1325+1h45","stage":3,"type":"end-time","start":"13:25","dh":1,"dm":45,"prompt":"A delivery van sets off at 13:25. The drop takes 1 h 45 min. What time does it get there?","answer":"15:10","decoys":[{"val":"15:45","err":"to_hour_then_all"},{"val":"14:10","err":"forgot_hour"},{"val":"15:70","err":"carry_no_subtract"}],"working":["\\(25 + 45 = 70\\) min, which is 1 h \\(10\\) min","\\(13 + 1 + 1 = 15\\), so 15:10"]},
+{"id":"s3b-1840+0h55","stage":3,"type":"end-time","start":"18:40","dh":0,"dm":55,"prompt":"A delivery van sets off at 18:40. The drop takes 55 min. What time does it get there?","answer":"19:35","decoys":[{"val":"19:55","err":"to_hour_then_all"},{"val":"18:35","err":"forgot_hour"},{"val":"19:95","err":"carry_no_subtract"}],"working":["\\(40 + 55 = 95\\) min, which is 1 h \\(35\\) min","\\(18 + 0 + 1 = 19\\), so 19:35"]},
+{"id":"s3b-0635+3h30","stage":3,"type":"end-time","start":"06:35","dh":3,"dm":30,"prompt":"Your shift starts at 06:35 and lasts 3 h 30 min. What time does it end?","answer":"10:05","decoys":[{"val":"10:30","err":"to_hour_then_all"},{"val":"09:05","err":"forgot_hour"},{"val":"10:65","err":"carry_no_subtract"}],"working":["\\(35 + 30 = 65\\) min, which is 1 h \\(5\\) min","\\(6 + 3 + 1 = 10\\), so 10:05"]},
+{"id":"s3b-1245+1h25","stage":3,"type":"end-time","start":"12:45","dh":1,"dm":25,"prompt":"A delivery van sets off at 12:45. The drop takes 1 h 25 min. What time does it get there?","answer":"14:10","decoys":[{"val":"14:25","err":"to_hour_then_all"},{"val":"13:10","err":"forgot_hour"},{"val":"14:70","err":"carry_no_subtract"}],"working":["\\(45 + 25 = 70\\) min, which is 1 h \\(10\\) min","\\(12 + 1 + 1 = 14\\), so 14:10"]},
+{"id":"s3b-1550+2h30","stage":3,"type":"end-time","start":"15:50","dh":2,"dm":30,"prompt":"A film starts at 15:50 and lasts 2 h 30 min. What time does it finish?","answer":"18:20","decoys":[{"val":"18:30","err":"to_hour_then_all"},{"val":"17:20","err":"forgot_hour"},{"val":"18:80","err":"carry_no_subtract"}],"working":["\\(50 + 30 = 80\\) min, which is 1 h \\(20\\) min","\\(15 + 2 + 1 = 18\\), so 18:20"]},
+{"id":"s3b-0915+0h55","stage":3,"type":"end-time","start":"09:15","dh":0,"dm":55,"prompt":"A bus leaves at 09:15. The journey takes 55 min. What time does it arrive?","answer":"10:10","decoys":[{"val":"10:55","err":"to_hour_then_all"},{"val":"09:10","err":"forgot_hour"},{"val":"10:70","err":"carry_no_subtract"}],"working":["\\(15 + 55 = 70\\) min, which is 1 h \\(10\\) min","\\(9 + 0 + 1 = 10\\), so 10:10"]},
+{"id":"s3b-1735+1h40","stage":3,"type":"end-time","start":"17:35","dh":1,"dm":40,"prompt":"A delivery van sets off at 17:35. The drop takes 1 h 40 min. What time does it get there?","answer":"19:15","decoys":[{"val":"19:40","err":"to_hour_then_all"},{"val":"18:15","err":"forgot_hour"},{"val":"19:75","err":"carry_no_subtract"}],"working":["\\(35 + 40 = 75\\) min, which is 1 h \\(15\\) min","\\(17 + 1 + 1 = 19\\), so 19:15"]},
+{"id":"s3b-1025+2h45","stage":3,"type":"end-time","start":"10:25","dh":2,"dm":45,"prompt":"A film starts at 10:25 and lasts 2 h 45 min. What time does it finish?","answer":"13:10","decoys":[{"val":"13:45","err":"to_hour_then_all"},{"val":"12:10","err":"forgot_hour"},{"val":"13:70","err":"carry_no_subtract"}],"working":["\\(25 + 45 = 70\\) min, which is 1 h \\(10\\) min","\\(10 + 2 + 1 = 13\\), so 13:10"]},
+{"id":"s3b-1950+0h35","stage":3,"type":"end-time","start":"19:50","dh":0,"dm":35,"prompt":"A bus leaves at 19:50. The journey takes 35 min. What time does it arrive?","answer":"20:25","decoys":[{"val":"20:35","err":"to_hour_then_all"},{"val":"19:25","err":"forgot_hour"},{"val":"20:85","err":"carry_no_subtract"}],"working":["\\(50 + 35 = 85\\) min, which is 1 h \\(25\\) min","\\(19 + 0 + 1 = 20\\), so 20:25"]},
+{"id":"s3b-0840+1h25","stage":3,"type":"end-time","start":"08:40","dh":1,"dm":25,"prompt":"A delivery van sets off at 08:40. The drop takes 1 h 25 min. What time does it get there?","answer":"10:05","decoys":[{"val":"10:25","err":"to_hour_then_all"},{"val":"09:05","err":"forgot_hour"},{"val":"10:65","err":"carry_no_subtract"}],"working":["\\(40 + 25 = 65\\) min, which is 1 h \\(5\\) min","\\(8 + 1 + 1 = 10\\), so 10:05"]},
+{"id":"s3b-1355+3h10","stage":3,"type":"end-time","start":"13:55","dh":3,"dm":10,"prompt":"A film starts at 13:55 and lasts 3 h 10 min. What time does it finish?","answer":"17:05","decoys":[{"val":"17:10","err":"to_hour_then_all"},{"val":"16:05","err":"forgot_hour"},{"val":"17:65","err":"carry_no_subtract"}],"working":["\\(55 + 10 = 65\\) min, which is 1 h \\(5\\) min","\\(13 + 3 + 1 = 17\\), so 17:05"]},
+{"id":"s3b-1130+0h50","stage":3,"type":"end-time","start":"11:30","dh":0,"dm":50,"prompt":"A bus leaves at 11:30. The journey takes 50 min. What time does it arrive?","answer":"12:20","decoys":[{"val":"12:50","err":"to_hour_then_all"},{"val":"11:20","err":"forgot_hour"},{"val":"12:80","err":"carry_no_subtract"}],"working":["\\(30 + 50 = 80\\) min, which is 1 h \\(20\\) min","\\(11 + 0 + 1 = 12\\), so 12:20"]},
+{"id":"s3b-1445+1h55","stage":3,"type":"end-time","start":"14:45","dh":1,"dm":55,"prompt":"A delivery van sets off at 14:45. The drop takes 1 h 55 min. What time does it get there?","answer":"16:40","decoys":[{"val":"16:55","err":"to_hour_then_all"},{"val":"15:40","err":"forgot_hour"},{"val":"12:50","err":"subtracted"}],"working":["\\(45 + 55 = 100\\) min, which is 1 h \\(40\\) min","\\(14 + 1 + 1 = 16\\), so 16:40"]},
+{"id":"s3b-0720+2h50","stage":3,"type":"end-time","start":"07:20","dh":2,"dm":50,"prompt":"A film starts at 07:20 and lasts 2 h 50 min. What time does it finish?","answer":"10:10","decoys":[{"val":"10:50","err":"to_hour_then_all"},{"val":"09:10","err":"forgot_hour"},{"val":"10:70","err":"carry_no_subtract"}],"working":["\\(20 + 50 = 70\\) min, which is 1 h \\(10\\) min","\\(7 + 2 + 1 = 10\\), so 10:10"]},
+{"id":"s3b-1655+0h40","stage":3,"type":"end-time","start":"16:55","dh":0,"dm":40,"prompt":"A bus leaves at 16:55. The journey takes 40 min. What time does it arrive?","answer":"17:35","decoys":[{"val":"17:40","err":"to_hour_then_all"},{"val":"16:35","err":"forgot_hour"},{"val":"17:95","err":"carry_no_subtract"}],"working":["\\(55 + 40 = 95\\) min, which is 1 h \\(35\\) min","\\(16 + 0 + 1 = 17\\), so 17:35"]},
+{"id":"s3b-1235+2h35","stage":3,"type":"end-time","start":"12:35","dh":2,"dm":35,"prompt":"A coach leaves at 12:35. The trip takes 2 h 35 min. What time does it arrive?","answer":"15:10","decoys":[{"val":"15:35","err":"to_hour_then_all"},{"val":"14:10","err":"forgot_hour"},{"val":"15:70","err":"carry_no_subtract"}],"working":["\\(35 + 35 = 70\\) min, which is 1 h \\(10\\) min","\\(12 + 2 + 1 = 15\\), so 15:10"]},
+{"id":"s3b-2015+1h50","stage":3,"type":"end-time","start":"20:15","dh":1,"dm":50,"prompt":"A film starts at 20:15 and lasts 1 h 50 min. What time does it finish?","answer":"22:05","decoys":[{"val":"22:50","err":"to_hour_then_all"},{"val":"21:05","err":"forgot_hour"},{"val":"22:65","err":"carry_no_subtract"}],"working":["\\(15 + 50 = 65\\) min, which is 1 h \\(5\\) min","\\(20 + 1 + 1 = 22\\), so 22:05"]},
+{"id":"s4a-1.5","stage":4,"type":"dec-to-hm","x":"1.5","prompt":"A calculator says a job took 1.5 hours. How long is that in hours and minutes?","answer":"1 h 30 min","decoys":[{"val":"1 h 50 min","err":"decimal_read"},{"val":"2 h 30 min","err":"times100"},{"val":"1 h 5 min","err":"tenths_read"}],"working":["\\(0.5 \\times 60 = 30\\)","1.5 hours \\(=\\) 1 h 30 min"]},
+{"id":"s4a-2.25","stage":4,"type":"dec-to-hm","x":"2.25","prompt":"A sat nav works out the drive as 2.25 hours. How long is that in hours and minutes?","answer":"2 h 15 min","decoys":[{"val":"2 h 25 min","err":"decimal_read"},{"val":"1 h 35 min","err":"base100"},{"val":"3 h 45 min","err":"times100"}],"working":["\\(0.25 \\times 60 = 15\\)","2.25 hours \\(=\\) 2 h 15 min"]},
+{"id":"s4a-3.75","stage":4,"type":"dec-to-hm","x":"3.75","prompt":"A spreadsheet logs your shift as 3.75 hours. How long is that in hours and minutes?","answer":"3 h 45 min","decoys":[{"val":"3 h 75 min","err":"decimal_read"},{"val":"2 h 25 min","err":"base100"},{"val":"6 h 15 min","err":"times100"}],"working":["\\(0.75 \\times 60 = 45\\)","3.75 hours \\(=\\) 3 h 45 min"]},
+{"id":"s4a-1.2","stage":4,"type":"dec-to-hm","x":"1.2","prompt":"Your fitness app says you walked for 1.2 hours. How long is that in hours and minutes?","answer":"1 h 12 min","decoys":[{"val":"1 h 20 min","err":"decimal_read"},{"val":"2 h","err":"times100"},{"val":"1 h 2 min","err":"tenths_read"}],"working":["\\(0.2 \\times 60 = 12\\)","1.2 hours \\(=\\) 1 h 12 min"]},
+{"id":"s4a-2.4","stage":4,"type":"dec-to-hm","x":"2.4","prompt":"A calculator says a job took 2.4 hours. How long is that in hours and minutes?","answer":"2 h 24 min","decoys":[{"val":"2 h 40 min","err":"decimal_read"},{"val":"1 h 44 min","err":"base100"},{"val":"4 h","err":"times100"}],"working":["\\(0.4 \\times 60 = 24\\)","2.4 hours \\(=\\) 2 h 24 min"]},
+{"id":"s4a-3.6","stage":4,"type":"dec-to-hm","x":"3.6","prompt":"A sat nav works out the drive as 3.6 hours. How long is that in hours and minutes?","answer":"3 h 36 min","decoys":[{"val":"3 h 60 min","err":"decimal_read"},{"val":"2 h 16 min","err":"base100"},{"val":"6 h","err":"times100"}],"working":["\\(0.6 \\times 60 = 36\\)","3.6 hours \\(=\\) 3 h 36 min"]},
+{"id":"s4a-1.8","stage":4,"type":"dec-to-hm","x":"1.8","prompt":"A spreadsheet logs your shift as 1.8 hours. How long is that in hours and minutes?","answer":"1 h 48 min","decoys":[{"val":"1 h 80 min","err":"decimal_read"},{"val":"1 h 8 min","err":"base100"},{"val":"3 h","err":"times100"}],"working":["\\(0.8 \\times 60 = 48\\)","1.8 hours \\(=\\) 1 h 48 min"]},
+{"id":"s4a-2.1","stage":4,"type":"dec-to-hm","x":"2.1","prompt":"Your fitness app says you walked for 2.1 hours. How long is that in hours and minutes?","answer":"2 h 6 min","decoys":[{"val":"2 h 10 min","err":"decimal_read"},{"val":"1 h 26 min","err":"base100"},{"val":"3 h 30 min","err":"times100"}],"working":["\\(0.1 \\times 60 = 6\\)","2.1 hours \\(=\\) 2 h 6 min"]},
+{"id":"s4a-3.3","stage":4,"type":"dec-to-hm","x":"3.3","prompt":"A calculator says a job took 3.3 hours. How long is that in hours and minutes?","answer":"3 h 18 min","decoys":[{"val":"3 h 30 min","err":"decimal_read"},{"val":"1 h 98 min","err":"base100"},{"val":"5 h 30 min","err":"times100"}],"working":["\\(0.3 \\times 60 = 18\\)","3.3 hours \\(=\\) 3 h 18 min"]},
+{"id":"s4a-1.7","stage":4,"type":"dec-to-hm","x":"1.7","prompt":"A sat nav works out the drive as 1.7 hours. How long is that in hours and minutes?","answer":"1 h 42 min","decoys":[{"val":"1 h 70 min","err":"decimal_read"},{"val":"1 h 2 min","err":"base100"},{"val":"2 h 50 min","err":"times100"}],"working":["\\(0.7 \\times 60 = 42\\)","1.7 hours \\(=\\) 1 h 42 min"]},
+{"id":"s4a-2.9","stage":4,"type":"dec-to-hm","x":"2.9","prompt":"A spreadsheet logs your shift as 2.9 hours. How long is that in hours and minutes?","answer":"2 h 54 min","decoys":[{"val":"2 h 90 min","err":"decimal_read"},{"val":"1 h 74 min","err":"base100"},{"val":"4 h 50 min","err":"times100"}],"working":["\\(0.9 \\times 60 = 54\\)","2.9 hours \\(=\\) 2 h 54 min"]},
+{"id":"s4a-4.5","stage":4,"type":"dec-to-hm","x":"4.5","prompt":"Your fitness app says you walked for 4.5 hours. How long is that in hours and minutes?","answer":"4 h 30 min","decoys":[{"val":"4 h 50 min","err":"decimal_read"},{"val":"2 h 70 min","err":"base100"},{"val":"7 h 30 min","err":"times100"}],"working":["\\(0.5 \\times 60 = 30\\)","4.5 hours \\(=\\) 4 h 30 min"]},
+{"id":"s4a-2.5","stage":4,"type":"dec-to-hm","x":"2.5","prompt":"A calculator says a job took 2.5 hours. How long is that in hours and minutes?","answer":"2 h 30 min","decoys":[{"val":"2 h 50 min","err":"decimal_read"},{"val":"1 h 50 min","err":"base100"},{"val":"4 h 10 min","err":"times100"}],"working":["\\(0.5 \\times 60 = 30\\)","2.5 hours \\(=\\) 2 h 30 min"]},
+{"id":"s4a-3.25","stage":4,"type":"dec-to-hm","x":"3.25","prompt":"A sat nav works out the drive as 3.25 hours. How long is that in hours and minutes?","answer":"3 h 15 min","decoys":[{"val":"3 h 25 min","err":"decimal_read"},{"val":"1 h 95 min","err":"base100"},{"val":"5 h 25 min","err":"times100"}],"working":["\\(0.25 \\times 60 = 15\\)","3.25 hours \\(=\\) 3 h 15 min"]},
+{"id":"s4a-1.75","stage":4,"type":"dec-to-hm","x":"1.75","prompt":"A spreadsheet logs your shift as 1.75 hours. How long is that in hours and minutes?","answer":"1 h 45 min","decoys":[{"val":"1 h 75 min","err":"decimal_read"},{"val":"1 h 5 min","err":"base100"},{"val":"2 h 55 min","err":"times100"}],"working":["\\(0.75 \\times 60 = 45\\)","1.75 hours \\(=\\) 1 h 45 min"]},
+{"id":"s4a-4.2","stage":4,"type":"dec-to-hm","x":"4.2","prompt":"Your fitness app says you walked for 4.2 hours. How long is that in hours and minutes?","answer":"4 h 12 min","decoys":[{"val":"4 h 20 min","err":"decimal_read"},{"val":"2 h 52 min","err":"base100"},{"val":"7 h","err":"times100"}],"working":["\\(0.2 \\times 60 = 12\\)","4.2 hours \\(=\\) 4 h 12 min"]},
+{"id":"s4a-5.4","stage":4,"type":"dec-to-hm","x":"5.4","prompt":"A calculator says a job took 5.4 hours. How long is that in hours and minutes?","answer":"5 h 24 min","decoys":[{"val":"5 h 40 min","err":"decimal_read"},{"val":"3 h 24 min","err":"base100"},{"val":"9 h","err":"times100"}],"working":["\\(0.4 \\times 60 = 24\\)","5.4 hours \\(=\\) 5 h 24 min"]},
+{"id":"s4a-1.6","stage":4,"type":"dec-to-hm","x":"1.6","prompt":"A sat nav works out the drive as 1.6 hours. How long is that in hours and minutes?","answer":"1 h 36 min","decoys":[{"val":"1 h 60 min","err":"decimal_read"},{"val":"2 h 40 min","err":"times100"},{"val":"1 h 6 min","err":"tenths_read"}],"working":["\\(0.6 \\times 60 = 36\\)","1.6 hours \\(=\\) 1 h 36 min"]},
+{"id":"s4a-4.8","stage":4,"type":"dec-to-hm","x":"4.8","prompt":"A spreadsheet logs your shift as 4.8 hours. How long is that in hours and minutes?","answer":"4 h 48 min","decoys":[{"val":"4 h 80 min","err":"decimal_read"},{"val":"2 h 88 min","err":"base100"},{"val":"8 h","err":"times100"}],"working":["\\(0.8 \\times 60 = 48\\)","4.8 hours \\(=\\) 4 h 48 min"]},
+{"id":"s4a-3.1","stage":4,"type":"dec-to-hm","x":"3.1","prompt":"Your fitness app says you walked for 3.1 hours. How long is that in hours and minutes?","answer":"3 h 6 min","decoys":[{"val":"3 h 10 min","err":"decimal_read"},{"val":"1 h 86 min","err":"base100"},{"val":"5 h 10 min","err":"times100"}],"working":["\\(0.1 \\times 60 = 6\\)","3.1 hours \\(=\\) 3 h 6 min"]},
+{"id":"s4a-1.3","stage":4,"type":"dec-to-hm","x":"1.3","prompt":"A calculator says a job took 1.3 hours. How long is that in hours and minutes?","answer":"1 h 18 min","decoys":[{"val":"1 h 30 min","err":"decimal_read"},{"val":"2 h 10 min","err":"times100"},{"val":"1 h 3 min","err":"tenths_read"}],"working":["\\(0.3 \\times 60 = 18\\)","1.3 hours \\(=\\) 1 h 18 min"]},
+{"id":"s4a-4.7","stage":4,"type":"dec-to-hm","x":"4.7","prompt":"A sat nav works out the drive as 4.7 hours. How long is that in hours and minutes?","answer":"4 h 42 min","decoys":[{"val":"4 h 70 min","err":"decimal_read"},{"val":"2 h 82 min","err":"base100"},{"val":"7 h 50 min","err":"times100"}],"working":["\\(0.7 \\times 60 = 42\\)","4.7 hours \\(=\\) 4 h 42 min"]},
+{"id":"s4a-5.9","stage":4,"type":"dec-to-hm","x":"5.9","prompt":"A spreadsheet logs your shift as 5.9 hours. How long is that in hours and minutes?","answer":"5 h 54 min","decoys":[{"val":"5 h 90 min","err":"decimal_read"},{"val":"3 h 54 min","err":"base100"},{"val":"9 h 50 min","err":"times100"}],"working":["\\(0.9 \\times 60 = 54\\)","5.9 hours \\(=\\) 5 h 54 min"]},
+{"id":"s4a-6.5","stage":4,"type":"dec-to-hm","x":"6.5","prompt":"Your fitness app says you walked for 6.5 hours. How long is that in hours and minutes?","answer":"6 h 30 min","decoys":[{"val":"6 h 50 min","err":"decimal_read"},{"val":"3 h 90 min","err":"base100"},{"val":"10 h 50 min","err":"times100"}],"working":["\\(0.5 \\times 60 = 30\\)","6.5 hours \\(=\\) 6 h 30 min"]},
+{"id":"s4b-1h15","stage":4,"type":"hm-to-dec","h":1,"m":15,"prompt":"You worked 1 h 15 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"1.25","decoys":[{"val":"1.15","err":"minutes_as_decimal"},{"val":"75","err":"total_minutes"},{"val":"0.75","err":"minutes_over_100"}],"working":["\\(15 \\div 60 = 0.25\\)","1 h 15 min \\(= 1.25\\) hours"]},
+{"id":"s4b-2h30","stage":4,"type":"hm-to-dec","h":2,"m":30,"prompt":"A plumber was on the job for 2 h 30 min. To work out the bill, write it in hours as a decimal.","answer":"2.5","decoys":[{"val":"2.3","err":"minutes_as_decimal"},{"val":"150","err":"total_minutes"},{"val":"1.5","err":"minutes_over_100"}],"working":["\\(30 \\div 60 = 0.5\\)","2 h 30 min \\(= 2.5\\) hours"]},
+{"id":"s4b-1h45","stage":4,"type":"hm-to-dec","h":1,"m":45,"prompt":"A cyclist rode for 1 h 45 min. To work out the speed, write it in hours as a decimal.","answer":"1.75","decoys":[{"val":"1.45","err":"minutes_as_decimal"},{"val":"105","err":"total_minutes"},{"val":"1.05","err":"minutes_over_100"}],"working":["\\(45 \\div 60 = 0.75\\)","1 h 45 min \\(= 1.75\\) hours"]},
+{"id":"s4b-3h06","stage":4,"type":"hm-to-dec","h":3,"m":6,"prompt":"A cleaner worked 3 h 6 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"3.1","decoys":[{"val":"3.06","err":"minutes_as_decimal"},{"val":"186","err":"total_minutes"},{"val":"1.86","err":"minutes_over_100"}],"working":["\\(6 \\div 60 = 0.1\\)","3 h 6 min \\(= 3.1\\) hours"]},
+{"id":"s4b-2h12","stage":4,"type":"hm-to-dec","h":2,"m":12,"prompt":"You worked 2 h 12 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"2.2","decoys":[{"val":"2.12","err":"minutes_as_decimal"},{"val":"132","err":"total_minutes"},{"val":"1.32","err":"minutes_over_100"}],"working":["\\(12 \\div 60 = 0.2\\)","2 h 12 min \\(= 2.2\\) hours"]},
+{"id":"s4b-1h18","stage":4,"type":"hm-to-dec","h":1,"m":18,"prompt":"A plumber was on the job for 1 h 18 min. To work out the bill, write it in hours as a decimal.","answer":"1.3","decoys":[{"val":"1.18","err":"minutes_as_decimal"},{"val":"78","err":"total_minutes"},{"val":"0.78","err":"minutes_over_100"}],"working":["\\(18 \\div 60 = 0.3\\)","1 h 18 min \\(= 1.3\\) hours"]},
+{"id":"s4b-2h24","stage":4,"type":"hm-to-dec","h":2,"m":24,"prompt":"A cyclist rode for 2 h 24 min. To work out the speed, write it in hours as a decimal.","answer":"2.4","decoys":[{"val":"2.24","err":"minutes_as_decimal"},{"val":"144","err":"total_minutes"},{"val":"1.44","err":"minutes_over_100"}],"working":["\\(24 \\div 60 = 0.4\\)","2 h 24 min \\(= 2.4\\) hours"]},
+{"id":"s4b-1h36","stage":4,"type":"hm-to-dec","h":1,"m":36,"prompt":"A cleaner worked 1 h 36 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"1.6","decoys":[{"val":"1.36","err":"minutes_as_decimal"},{"val":"96","err":"total_minutes"},{"val":"0.96","err":"minutes_over_100"}],"working":["\\(36 \\div 60 = 0.6\\)","1 h 36 min \\(= 1.6\\) hours"]},
+{"id":"s4b-3h42","stage":4,"type":"hm-to-dec","h":3,"m":42,"prompt":"You worked 3 h 42 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"3.7","decoys":[{"val":"3.42","err":"minutes_as_decimal"},{"val":"222","err":"total_minutes"},{"val":"2.22","err":"minutes_over_100"}],"working":["\\(42 \\div 60 = 0.7\\)","3 h 42 min \\(= 3.7\\) hours"]},
+{"id":"s4b-2h48","stage":4,"type":"hm-to-dec","h":2,"m":48,"prompt":"A plumber was on the job for 2 h 48 min. To work out the bill, write it in hours as a decimal.","answer":"2.8","decoys":[{"val":"2.48","err":"minutes_as_decimal"},{"val":"168","err":"total_minutes"},{"val":"1.68","err":"minutes_over_100"}],"working":["\\(48 \\div 60 = 0.8\\)","2 h 48 min \\(= 2.8\\) hours"]},
+{"id":"s4b-1h54","stage":4,"type":"hm-to-dec","h":1,"m":54,"prompt":"A cyclist rode for 1 h 54 min. To work out the speed, write it in hours as a decimal.","answer":"1.9","decoys":[{"val":"1.54","err":"minutes_as_decimal"},{"val":"114","err":"total_minutes"},{"val":"1.14","err":"minutes_over_100"}],"working":["\\(54 \\div 60 = 0.9\\)","1 h 54 min \\(= 1.9\\) hours"]},
+{"id":"s4b-4h15","stage":4,"type":"hm-to-dec","h":4,"m":15,"prompt":"A cleaner worked 4 h 15 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"4.25","decoys":[{"val":"4.15","err":"minutes_as_decimal"},{"val":"255","err":"total_minutes"},{"val":"2.55","err":"minutes_over_100"}],"working":["\\(15 \\div 60 = 0.25\\)","4 h 15 min \\(= 4.25\\) hours"]},
+{"id":"s4b-3h30","stage":4,"type":"hm-to-dec","h":3,"m":30,"prompt":"You worked 3 h 30 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"3.5","decoys":[{"val":"3.3","err":"minutes_as_decimal"},{"val":"210","err":"total_minutes"},{"val":"2.1","err":"minutes_over_100"}],"working":["\\(30 \\div 60 = 0.5\\)","3 h 30 min \\(= 3.5\\) hours"]},
+{"id":"s4b-2h45","stage":4,"type":"hm-to-dec","h":2,"m":45,"prompt":"A plumber was on the job for 2 h 45 min. To work out the bill, write it in hours as a decimal.","answer":"2.75","decoys":[{"val":"2.45","err":"minutes_as_decimal"},{"val":"165","err":"total_minutes"},{"val":"1.65","err":"minutes_over_100"}],"working":["\\(45 \\div 60 = 0.75\\)","2 h 45 min \\(= 2.75\\) hours"]},
+{"id":"s4b-1h06","stage":4,"type":"hm-to-dec","h":1,"m":6,"prompt":"A cyclist rode for 1 h 6 min. To work out the speed, write it in hours as a decimal.","answer":"1.1","decoys":[{"val":"1.06","err":"minutes_as_decimal"},{"val":"66","err":"total_minutes"},{"val":"0.66","err":"minutes_over_100"}],"working":["\\(6 \\div 60 = 0.1\\)","1 h 6 min \\(= 1.1\\) hours"]},
+{"id":"s4b-3h12","stage":4,"type":"hm-to-dec","h":3,"m":12,"prompt":"A cleaner worked 3 h 12 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"3.2","decoys":[{"val":"3.12","err":"minutes_as_decimal"},{"val":"192","err":"total_minutes"},{"val":"1.92","err":"minutes_over_100"}],"working":["\\(12 \\div 60 = 0.2\\)","3 h 12 min \\(= 3.2\\) hours"]},
+{"id":"s4b-4h18","stage":4,"type":"hm-to-dec","h":4,"m":18,"prompt":"You worked 4 h 18 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"4.3","decoys":[{"val":"4.18","err":"minutes_as_decimal"},{"val":"258","err":"total_minutes"},{"val":"2.58","err":"minutes_over_100"}],"working":["\\(18 \\div 60 = 0.3\\)","4 h 18 min \\(= 4.3\\) hours"]},
+{"id":"s4b-3h24","stage":4,"type":"hm-to-dec","h":3,"m":24,"prompt":"A plumber was on the job for 3 h 24 min. To work out the bill, write it in hours as a decimal.","answer":"3.4","decoys":[{"val":"3.24","err":"minutes_as_decimal"},{"val":"204","err":"total_minutes"},{"val":"2.04","err":"minutes_over_100"}],"working":["\\(24 \\div 60 = 0.4\\)","3 h 24 min \\(= 3.4\\) hours"]},
+{"id":"s4b-2h36","stage":4,"type":"hm-to-dec","h":2,"m":36,"prompt":"A cyclist rode for 2 h 36 min. To work out the speed, write it in hours as a decimal.","answer":"2.6","decoys":[{"val":"2.36","err":"minutes_as_decimal"},{"val":"156","err":"total_minutes"},{"val":"1.56","err":"minutes_over_100"}],"working":["\\(36 \\div 60 = 0.6\\)","2 h 36 min \\(= 2.6\\) hours"]},
+{"id":"s4b-1h42","stage":4,"type":"hm-to-dec","h":1,"m":42,"prompt":"A cleaner worked 1 h 42 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"1.7","decoys":[{"val":"1.42","err":"minutes_as_decimal"},{"val":"102","err":"total_minutes"},{"val":"1.02","err":"minutes_over_100"}],"working":["\\(42 \\div 60 = 0.7\\)","1 h 42 min \\(= 1.7\\) hours"]},
+{"id":"s4b-4h48","stage":4,"type":"hm-to-dec","h":4,"m":48,"prompt":"You worked 4 h 48 min. Your pay calculator wants the time in hours, as a decimal. What do you type in?","answer":"4.8","decoys":[{"val":"4.48","err":"minutes_as_decimal"},{"val":"288","err":"total_minutes"},{"val":"2.88","err":"minutes_over_100"}],"working":["\\(48 \\div 60 = 0.8\\)","4 h 48 min \\(= 4.8\\) hours"]},
+{"id":"s4b-3h54","stage":4,"type":"hm-to-dec","h":3,"m":54,"prompt":"A plumber was on the job for 3 h 54 min. To work out the bill, write it in hours as a decimal.","answer":"3.9","decoys":[{"val":"3.54","err":"minutes_as_decimal"},{"val":"234","err":"total_minutes"},{"val":"2.34","err":"minutes_over_100"}],"working":["\\(54 \\div 60 = 0.9\\)","3 h 54 min \\(= 3.9\\) hours"]},
+{"id":"s4b-5h30","stage":4,"type":"hm-to-dec","h":5,"m":30,"prompt":"A cyclist rode for 5 h 30 min. To work out the speed, write it in hours as a decimal.","answer":"5.5","decoys":[{"val":"5.3","err":"minutes_as_decimal"},{"val":"330","err":"total_minutes"},{"val":"3.3","err":"minutes_over_100"}],"working":["\\(30 \\div 60 = 0.5\\)","5 h 30 min \\(= 5.5\\) hours"]},
+{"id":"s4b-2h15","stage":4,"type":"hm-to-dec","h":2,"m":15,"prompt":"A cleaner worked 2 h 15 min. The timesheet wants hours as a decimal. What goes in the box?","answer":"2.25","decoys":[{"val":"2.15","err":"minutes_as_decimal"},{"val":"135","err":"total_minutes"},{"val":"1.35","err":"minutes_over_100"}],"working":["\\(15 \\div 60 = 0.25\\)","2 h 15 min \\(= 2.25\\) hours"]}
+  ];
+
+  // Placeholders by Project Claude, 24 Nov 2026, for Jon to trim.
+  var LINES = {
+    base100: "An hour is 60 minutes, not 100. Blame the Babylonians.",
+    decimal_read: "That's a decimal, not a clock. The bit after the point is a fraction of an hour.",
+    rounded_hour: "Rounding? This isn't a bus timetable. We wanted it exact.",
+    decimal_times60: "Hours and minutes aren't a decimal. Don't put a point between them.",
+    dropped_minutes: "You've lost the minutes down the back of the sofa.",
+    forgot_pm: "pm means afternoon. Add 12, or you'll turn up in the middle of the night.",
+    added_10: "pm means add 12, not 10. Nobody's day has 22 hours.",
+    counted_short: "Add 12, not 11. Count on from 12 again.",
+    added_to_morning: "Morning times stay as they are. Don't add anything to breakfast.",
+    noon_midnight: "12 pm is lunchtime. Midnight is 12 am, which is 00 on the 24-hour clock.",
+    noon_changed: "12-something is just after midday. It stays as it is: nothing to add, nothing to take away. Leave lunchtime alone.",
+    wrong_half: "Right numbers, wrong half of the day. Your boss will notice.",
+    took_10: "Take off 12, not 10, to get back to the 12-hour clock.",
+    took_11: "Take off 12, not 11. Count back again.",
+    hhmm_subtract: "Times aren't normal numbers. An hour is 60 minutes, so you can't borrow 100.",
+    no_borrow: "Count up to the next o'clock first, then on to the end.",
+    hhmm_as_minutes: "You took the times away like normal numbers, then called the answer minutes. Two wrongs, no right.",
+    stopped_at_hour: "You got to the o'clock and stopped for a nap. Keep counting.",
+    to_hour_then_all: "You counted the minutes up to the hour twice. Greedy.",
+    forgot_hour: "The minutes went past 60, so the hour goes up by one.",
+    carry_no_subtract: "There's no such time as that. We checked every clock in the house.",
+    subtracted: "That's before you even left. Add the time on, don't take it away.",
+    times100: "Times by 60, not 100. Minutes come in sixties.",
+    tenths_read: "The bit after the point isn't minutes. Multiply it by 60.",
+    minutes_as_decimal: "The minutes aren't the decimal part. Divide them by 60 first.",
+    total_minutes: "That's the time in minutes. The question wanted hours.",
+    minutes_over_100: "Minutes divided by 100 isn't hours. An hour is 60 minutes, not 100."
+  };
+
+  // A line with its maths between \( and \): MaffsText renders each piece in KaTeX and keeps the prose as text.
+  function line(s) { return window.MaffsText ? MaffsText.html(s) : esc(s); }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0;
+
+  function stageItems(m) { var n = Number(m.slice(-1)); return BANK.filter(function (q) { return q.stage === n; }); }
+  // A run: PER items from the stage's 48, without repeats (a Fisher-Yates shuffle, then the first PER).
+  function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; qs = list; qi = 0; score = 0;
+    show('game');
+    $('hudStage').textContent = m.slice(-1);
+    $('stageLabel').textContent = 'Stage ' + m.slice(-1) + ' · ' + STAGES[m.slice(-1)];
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m, run(m)); }
+  function nextQuestion() {
+    var fb = $('feedback'), opts = $('opts');
+    if (window.MaffsNext) MaffsNext.clear(fb);
+    fb.innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++];
+    $('hudQ').textContent = qi + '/' + qs.length;
+    $('hudScore').textContent = score;
+    $('ask').textContent = Q.prompt;
+    // Four options: the answer and the item's three named errors, shuffled (MaffsOptions drops a duplicate, never draws
+    // again). Each button's dataset.val is the bank's display string, and marking reads nothing else.
+    var vals = MaffsOptions.build(Q.answer, Q.decoys.map(function (d) { return d.val; }));
+    opts.innerHTML = '';
+    vals.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.dataset.val = v; b.textContent = v;
+      b.addEventListener('click', function () { pick(b); });   // on the button itself, so each option is its own control
+      opts.appendChild(b);
+    });
+    MaffsLock.fresh(opts);
+    state = 'asking';
+  }
+  function errOf(val) {
+    for (var i = 0; i < Q.decoys.length; i++) if (Q.decoys[i].val === val) return Q.decoys[i].err;
+    return null;
+  }
+  function pick(btn) {
+    if (state !== 'asking') return;
+    var opts = $('opts');
+    if (!MaffsLock.lock(opts)) return;
+    var val = btn.dataset.val, right = val === Q.answer, fb = $('feedback');
+    state = right ? 'done' : 'wrong';
+    if (right) score++;
+    $('hudScore').textContent = score;
+    var bs = opts.querySelectorAll('.opt');
+    for (var i = 0; i < bs.length; i++) {
+      var b = bs[i];
+      b.classList.add(b.dataset.val === Q.answer ? 'is-right' : (b === btn ? 'is-wrong' : 'is-spare'));
+    }
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: right });
+    if (right) {
+      // One line, then on after a moment (canon §7.6: a right answer keeps a brisk delay).
+      fb.innerHTML = '<div class="fb right" data-why="right"><div class="fb-head">' + esc('Right: ' + Q.answer) + '</div></div>';
+      MaffsLock.timer(advance, RIGHT_MS);
+      return;
+    }
+    // A wrong answer, in order: the line for the error chosen, the answer, the working, then Next (it waits).
+    var err = errOf(val);
+    $('qcard').classList.add('fb-open');
+    fb.innerHTML = '<div class="fb wrong" data-why="wrong" data-err="' + esc(err) + '">' +
+      '<div class="fb-err">' + esc(LINES[err]) + '</div>' +
+      '<div class="fb-ans">The answer is <b>' + esc(Q.answer) + '</b></div>' +
+      '<div class="worked">' + Q.working.map(function (w) { return '<div class="w-line">' + line(w) + '</div>'; }).join('') + '</div>' +
+      '<div class="fb-next"></div></div>';
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'),
+      label: qi >= qs.length ? 'See results →' : 'Next →' });
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    nextQuestion();
+  }
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, mode, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, mode, score);
+    $('resTitle').textContent = 'Stage ' + mode.slice(-1) + ' done: ' + STAGES[mode.slice(-1)];
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + qs.length;
+    var i = MODES.indexOf(mode);
+    $('nextStageBtn').hidden = i >= MODES.length - 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (i + 2);
+    show('results');
+  });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-mode]'); if (b) startMode(b.dataset.mode); });
+  $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+  // "Why 60?": its two calculations in KaTeX (MaffsText; the plain text stays if KaTeX has not loaded), and the panel open
+  // from 1024 px wide, closed on anything narrower (a <details> cannot be opened by CSS).
+  (function () {
+    var spans = document.querySelectorAll('#why [data-maths]');
+    for (var i = 0; i < spans.length; i++) if (window.MaffsText && window.katex) spans[i].innerHTML = MaffsText.html(spans[i].getAttribute('data-maths'));
+    if (window.matchMedia && window.matchMedia('(min-width:1024px)').matches) $('why').open = true;
+  })();
+
+  // Read-only views of the bank and live state, for scripts/verify-its-just-base-60-bruv.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var i = 0; i < BANK.length; i++) if (BANK[i].id === id) return BANK[i]; return null; }
+  window.B60 = {
+    SLUG: SLUG, MODES: MODES, PER: PER, STAGES: copy(STAGES), LINES: copy(LINES),
+    bank: function () { return copy(BANK); },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in its own stage, so a verifier can see any item.
+      preview: function (id) { var q = item(id); if (q) begin('stage-' + q.stage, [q]); return !!q; },
+      // Press an option on screen: the right one, or the first wrong one.
+      answer: function (right) {
+        if (state !== 'asking') return;
+        var bs = $('opts').querySelectorAll('.opt');
+        for (var i = 0; i < bs.length; i++) if ((bs[i].dataset.val === Q.answer) === !!right) { bs[i].click(); return; }
+      },
+      next: function () { var b = document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'its-just-base-60-bruv');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>

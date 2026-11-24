@@ -1962,6 +1962,22 @@
    ]
   },
   {
+   "slug": "its-just-base-60-bruv",
+   "search_phrase": "Time Conversions",
+   "description": "Hours and minutes, the 12- and 24-hour clocks, durations and decimal hours. Every wrong answer names the mistake.",
+   "keywords": [
+    "time",
+    "24-hour clock",
+    "12-hour clock",
+    "converting time",
+    "hours and minutes",
+    "decimal hours",
+    "duration",
+    "timetables",
+    "essentials"
+   ]
+  },
+  {
    "slug": "maffscards",
    "search_phrase": "MaffsCards Number Card",
    "description": "Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi.",

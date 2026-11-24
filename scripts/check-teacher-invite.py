@@ -96,6 +96,7 @@ RESULTS = {
     "i-dropped-my-ice-cream": "results",
     "sums-in-disguise": "results",
     "some-thingies": "results",
+    "its-just-base-60-bruv": "results",
     "maffscards": "results",
 }
 
