@@ -976,7 +976,7 @@ def main():
     for size, n, shown in info.get('pics', []):
         print('%s: %d items\' wrong-answer pictures at %dx%d: %s' % (SLUG, n, size[0], size[1], 'every number recomputed, at most 72 px tall, inside the card' if shown else 'none drawn (600 px tall or less)'))
     if 'bands' in info:
-        print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for 7 scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
+        print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for %d scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):
