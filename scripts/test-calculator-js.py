@@ -22,9 +22,14 @@ Runs the real file in Chromium, with theme.css for its styles, and checks:
   Dock      a game column 720px wide (a 688px card), mounted with {dock: card}: at 1280x720, 1366x768
             and 1920x1080 the open panel sits right of the card (never over it), inside the window,
             level with the card's top, keys at least 44px; opening and closing it never moves the card;
-            scrolled 600px it stays in view (sticky). At 1240px and 390px it does not dock: it opens in
-            the flow under its toggle. Five planted faults (no dock, not sticky, over the column, docking
-            below the breakpoint, never docking) must each fail.
+            scrolled 600px it stays in view (sticky). At 1240px it docks because the column makes room (below);
+            at 1100px and 390px it does not dock: it opens in the flow under its toggle. Five planted faults
+            (no dock, not sticky, over the column, docking below the breakpoint, never docking) must each fail.
+  Column    (CALC-DOCK-COLUMN, 24 Nov 2026; canon §4.4 "The column makes room") a 1000px column shown after mount
+  makes     at 1470px is capped before the panel opens, and docks; opening and closing leave the column's width
+  room      unchanged; resized to 1920px the cap is gone (1000px again); a 720px column at 1366px is never capped
+            and docks; a 1000px column at 1100px, where the cap would fall under DOCK.colMin, is left alone and the
+            panel stays in the flow. Two planted faults (the cap below colMin, the cap set on opening) must each fail.
             A sibling mount outside the card at 1280, 1920 and 2560px has exactly the configured gap,
             remains inside the viewport without sideways scroll, and follows resize. The old percentage-left
             rule is planted and must fail this case.
@@ -160,7 +165,10 @@ DOCK_PAGE = """<!doctype html><html data-theme="light"><head><meta name="viewpor
 display:flex;flex-direction:column;gap:.6rem;min-height:1600px}</style></head>
 <body><div class="container"><div class="qcard" id="card"><input id="answer" type="text"><div id="calc"></div></div></div></body></html>"""
 
-DOCK_SIZES = [(1280, 720, True), (1366, 768, True), (1920, 1080, True), (1240, 800, False), (390, 844, False)]
+# 1240: the room is 6px short, so the column makes room (720 -> 708px) and the panel docks (CALC-DOCK-COLUMN, 24 Nov 2026).
+# 1100: the cap would fall under DOCK.colMin (640px), so the column is left alone and the panel stays in the flow.
+DOCK_SIZES = [(1280, 720, True), (1366, 768, True), (1920, 1080, True), (1240, 800, True), (1100, 800, False),
+              (390, 844, False)]
 
 DOCK_FAULTS = [
     ("no dock (the panel stays in the flow)", "style", ".maffs-calc.docked .maffs-calc-rail{position:static!important}"),
@@ -259,6 +267,84 @@ async def outside_dock_check(browser, css, fault=None):
             out.append('%s: panel left %.1f, expected card right %.1f + gap %s' % (at, m['panel'][0], m['card'][2], gap))
         if m['panel'][2] > m['cw'] or m['sw'] > m['cw']:
             out.append('%s: panel right %.1f, page width %s, viewport %s' % (at, m['panel'][2], m['sw'], m['cw']))
+    await ctx.close()
+    return out
+
+
+# The column makes room (canon §4.4, contract CALC-DOCK-COLUMN, 24 Nov 2026). A game column of `col` px (DOCK_PAGE's,
+# 1rem padding), optionally hidden at mount and shown later, as a game's question screen is.
+COLUMN_JS = """() => { const c = document.querySelector('.container'), r = e => e.getBoundingClientRect();
+  return { cap: c.style.maxWidth, colW: r(c).width, card: [r(document.getElementById('card')).left, r(document.getElementById('card')).right],
+    panel: [r(document.querySelector('.maffs-calc-panel')).left, r(document.querySelector('.maffs-calc-panel')).right],
+    docked: __calc.isDocked(), cw: document.documentElement.clientWidth }; }"""
+
+COLUMN_FAULTS = [
+    ("the cap applied below DOCK.colMin", "if (w < D.colMin) return;", "if (false) return;"),
+    ("the cap set on opening, not at layout", "if (host && layout) makeRoom(D);", "if (host && !layout) makeRoom(D);"),
+]
+
+
+async def column_check(browser, css, fault=None):
+    """The five column cases; failures (with a fault planted in calculator.js, if given)."""
+    out = []
+    script = open(CALC_JS, encoding='utf-8').read()
+    if fault:
+        script = pc.apply_plant(script, fault[1], fault[2], name=fault[0])
+
+    async def page_at(w, h, col, hidden=False):
+        ctx = await browser.new_context(viewport={'width': w, 'height': h})
+        await ctx.route('**/*', lambda r: r.abort())
+        page = await ctx.new_page()
+        html = DOCK_PAGE.replace('max-width:720px', 'max-width:%dpx' % col)
+        if hidden:
+            html = html.replace('<div class="container">', '<div class="container" id="screen" style="display:none">')
+        await page.set_content(html)
+        await page.add_style_tag(content=css)
+        await page.add_script_tag(path=KEYPAD_JS)
+        await page.add_script_tag(content=script)
+        await page.evaluate("window.__calc = MaffsCalc.mount(document.getElementById('calc'), {dock: document.getElementById('card')})")
+        if hidden:
+            await page.evaluate("document.getElementById('screen').style.display = ''")
+        await page.wait_for_timeout(150)     # the ResizeObserver's frame
+        return ctx, page
+
+    async def opened(page):
+        await page.evaluate("document.querySelector('.maffs-calc-toggle').click()")
+        await page.wait_for_timeout(150)
+        return await page.evaluate(COLUMN_JS)
+
+    # 1. A 1000px column at 1470px, shown after mount as a question screen is: capped before opening, and docks.
+    ctx, page = await page_at(1470, 900, 1000, hidden=True)
+    m0 = await page.evaluate(COLUMN_JS)
+    m1 = await opened(page)
+    if not m0['cap'] or not m1['docked'] or m1['panel'][0] < m1['card'][1] or m1['panel'][1] > m1['cw']:
+        out.append('1000px column at 1470: cap %r before opening, docked=%s, panel %r, card right %.0f' %
+                   (m0['cap'], m1['docked'], m1['panel'], m1['card'][1]))
+    # 4. Opening and closing leave the column's width unchanged.
+    await page.evaluate("document.querySelector('.maffs-calc-toggle').click()")
+    await page.wait_for_timeout(150)
+    m2 = await page.evaluate(COLUMN_JS)
+    if abs(m0['colW'] - m1['colW']) > 0.5 or abs(m0['colW'] - m2['colW']) > 0.5:
+        out.append('1000px column at 1470: column %.1fpx before opening, %.1f open, %.1f closed' % (m0['colW'], m1['colW'], m2['colW']))
+    # 5. A resize from 1470 to 1920px removes the cap (the 1000px column fits beside the panel there).
+    await page.set_viewport_size({'width': 1920, 'height': 1080})
+    await page.wait_for_timeout(250)
+    m3 = await page.evaluate(COLUMN_JS)
+    if m3['cap'] or abs(m3['colW'] - 1000) > 0.5 or not m3['docked']:
+        out.append('1000px column, resized 1470 -> 1920: cap %r, column %.1fpx, docked=%s (want no cap, 1000px, docked)' %
+                   (m3['cap'], m3['colW'], m3['docked']))
+    await ctx.close()
+    # 2. A 720px column at 1366px: room enough, never capped, docks.
+    ctx, page = await page_at(1366, 768, 720)
+    m = await opened(page)
+    if m['cap'] or abs(m['colW'] - 720) > 0.5 or not m['docked']:
+        out.append('720px column at 1366: cap %r, column %.1fpx, docked=%s (want no cap, 720px, docked)' % (m['cap'], m['colW'], m['docked']))
+    await ctx.close()
+    # 3. A 1000px column at 1100px: the cap would be under 640px, so the column is left alone and the panel in the flow.
+    ctx, page = await page_at(1100, 800, 1000)
+    m = await opened(page)
+    if m['cap'] or m['docked']:
+        out.append('1000px column at 1100: cap %r, docked=%s (want the column left alone, the panel in the flow)' % (m['cap'], m['docked']))
     await ctx.close()
     return out
 
@@ -635,6 +721,13 @@ async def run():
         for w, h, want in DOCK_SIZES:
             fails.extend(await dock_check(browser, css, w, h, want))
         fails.extend(await outside_dock_check(browser, css))
+        # The column makes room, and each planted column fault must fail
+        fails.extend(await column_check(browser, css))
+        for fault in COLUMN_FAULTS:
+            caught = await column_check(browser, css, fault)
+            print('  fault %-40s %s' % (fault[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
+            if not caught:
+                fails.append('planted fault not caught: ' + fault[0])
         caught = await outside_dock_check(browser, css, OUTSIDE_DOCK_FAULT)
         print('  fault %-40s %s' % (OUTSIDE_DOCK_FAULT[0], ('caught (%s)' % caught[0][:70]) if caught else '*** MISSED ***'))
         if not caught:
@@ -753,13 +846,16 @@ def main():
           '%d scientific expressions (^, ln, log, e^, trig DEG/RAD, π, e, errors), %d scientific plants caught, '
           'basic panel unchanged, scientific panel fits 320/390/412px; '
           '%d key sequences; keyboard, toggle, privacy; keys >= 44px at 320/375/390px; docked beside a 720px '
-          'column at 1280/1366/1920 (sticky, never over it), in the flow at 1240 and 390; %d planted dock faults caught; '
+          'column at 1280/1366/1920 and, the column making room, 1240 (sticky, never over it), in the flow at 1100 and 390; '
+          '%d planted dock faults caught; the column makes room (capped at 1470, unchanged by opening, uncapped at 1920, '
+          'never capped at 1366 or below colMin), %d planted column faults caught; '
           'sibling mount at 1280/1920/2560 (exact gap, viewport fit, no sideways scroll, resize), old percentage-left plant caught; '
           'answer target on touch phones in Chromium and WebKit (read-only, inputmode none, never focused, '
           'operators disabled, display switching, 48px keys), unchanged with a mouse; %d planted answer faults caught; '
           'the toggle unchanged without {toggle}, a 44x44 icon named "Calculator" at phone widths with {toggle: \'icon\'}, '
           'the full toggle above them; %d planted toggle faults caught'
-          % (len(CASES), len(IMPLIED_PLANTS), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(ANSWER_FAULTS), len(TOGGLE_FAULTS)))
+          % (len(CASES), len(IMPLIED_PLANTS), len(SCI_CASES), len(SCI_PLANTS), len(SEQS), len(DOCK_FAULTS), len(COLUMN_FAULTS),
+             len(ANSWER_FAULTS), len(TOGGLE_FAULTS)))
     return 0
 
 

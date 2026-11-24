@@ -258,7 +258,9 @@
   // (5 x 44 + 4 gaps of 6 + 2 x 8 padding + 2 x 1 border); the panel docks only when the room right of
   // the card, less the gap and an edge margin, is at least that. The breakpoint follows from the
   // game's own column, so it is measured, never a fixed media query.
-  var DOCK = { gap: 12, edge: 8, min: 262, max: 340 };
+  // colMin (Jon, 24 Nov 2026, contract CALC-DOCK-COLUMN): when the room is short of min, the game column is
+  // narrowed just enough for the panel to dock, but never below colMin; below that the panel stays in the flow.
+  var DOCK = { gap: 12, edge: 8, min: 262, max: 340, colMin: 640 };
 
   // Phones (canon §4.4, Jon 4 Oct 2026). "Compact" is a touch screen below the dock breakpoint: the
   // Calculator button moves into the panel (a close key in its display), keys grow to 48px and the display
@@ -364,10 +366,48 @@
       expr += val;
       render('');
     }
+    // The game column the card sits in (canon §4.4, "The column makes room"): the dock element's nearest ancestor
+    // with a pixel max-width, centred in its parent; never body or html. Looked up on every layout pass.
+    function column() {
+      for (var n = host.parentElement; n && n !== document.body && n !== document.documentElement; n = n.parentElement) {
+        var cs = getComputedStyle(n), p = n.parentElement;
+        if (!/^[0-9.]+px$/.test(cs.maxWidth) || !p) continue;
+        var r = n.getBoundingClientRect(), pr = p.getBoundingClientRect(), ps = getComputedStyle(p);
+        var lgap = r.left - pr.left - parseFloat(ps.paddingLeft) - parseFloat(ps.borderLeftWidth);
+        var rgap = pr.right - r.right - parseFloat(ps.paddingRight) - parseFloat(ps.borderRightWidth);
+        if (Math.abs(lgap - rgap) <= 1) return n;
+      }
+      return null;
+    }
+    var capped = null, capWas = '';     // the column this mount narrowed, and its own inline max-width before
+    function uncap() { if (capped) { capped.style.maxWidth = capWas; capped = null; } }
+    function room(D) { return document.documentElement.clientWidth - host.getBoundingClientRect().right - D.gap - D.edge; }
+    // Layout only (mount, the card's first layout, resize), never opening or closing, so opening never moves the
+    // column. Always from the column's natural width: the cap is cleared first, so a wider window loses it.
+    function makeRoom(D) {
+      uncap();
+      var q = window.MaffsCalc.ANSWER.query;
+      if (window.matchMedia && window.matchMedia(q).matches) return;      // a touch screen: compact, never capped
+      var short = D.min - room(D);
+      if (short <= 0) return;
+      var col = column();
+      if (!col) return;
+      // A centred column narrowed by 2s moves the card's right edge left by s.
+      var w = Math.floor(col.getBoundingClientRect().width - 2 * short);
+      if (w < D.colMin) return;
+      var cs = getComputedStyle(col), extra = cs.boxSizing === 'border-box' ? 0 : parseFloat(cs.paddingLeft) +
+        parseFloat(cs.paddingRight) + parseFloat(cs.borderLeftWidth) + parseFloat(cs.borderRightWidth);
+      capped = col;
+      capWas = col.style.maxWidth;
+      col.style.maxWidth = (w - extra) + 'px';
+      if (room(D) < D.min) uncap();       // it did not make the room (the column was not centred after all)
+    }
     // Dock beside the card when the room to its right holds the panel; otherwise stay in the flow.
-    function dock() {
+    // layout: true from mount, the card's first layout and resize, which may narrow the column (makeRoom).
+    function dock(layout) {
       var D = window.MaffsCalc.DOCK;     // read live, so a test can move the threshold
       if (host && !host.getBoundingClientRect().width) return el.classList.contains('docked');   // not laid out yet
+      if (host && layout) makeRoom(D);
       var room = host ? document.documentElement.clientWidth - host.getBoundingClientRect().right - D.gap - D.edge : 0;
       var on = !!host && room >= D.min;
       el.classList.toggle('docked', on);
@@ -432,9 +472,16 @@
 
     if (host) {
       var t = null;
-      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { dock(); applyMode(); }, 100); });
+      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(function () { dock(true); applyMode(); }, 100); });
+      // Most games mount while the card is hidden (the start screen): its first layout is when play begins, which
+      // is when the column makes room. In the next frame, never inside the observer, so a cap is no resize loop.
+      if (window.ResizeObserver) {
+        new ResizeObserver(function () {
+          window.requestAnimationFrame(function () { dock(true); applyMode(); });
+        }).observe(host);
+      }
     }
-    dock();
+    dock(true);
     applyMode();
 
     toggle.addEventListener('click', function () { setOpen(panel.hidden); });
