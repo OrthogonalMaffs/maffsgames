@@ -159,7 +159,7 @@ def selftest():
                 return f.read()
 
         def write(rel, text):
-            with open(os.path.join(tmp, rel), "w", encoding="utf-8") as f:
+            with open(os.path.join(tmp, rel), "w", encoding="utf-8", newline="") as f:
                 f.write(text)
 
         # Each plant must fail only that page, only for calculator.css (keypad.js shares it, so it may be named twice).
