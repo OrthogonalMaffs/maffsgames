@@ -642,7 +642,7 @@ function restartGame(){startGame();}
 <script>
 // The scientific calculator: a scratch pad under the question card (below Next, so Next does not move), not given
 // an {answer}, since every answer here is a choice (contract SCI-CALC; Jon's tagging ruling, 10 Oct 2026).
-if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{keys:'scientific'});
+if(window.MaffsCalc)MaffsCalc.mount(document.getElementById('calc'),{dock:document.querySelector('#questionArea .q-card'),keys:'scientific'});
 </script>
 <script src="../../schools/assets/teacher-invite.js"></script>
 <script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'core-maths-paper2c');</script>

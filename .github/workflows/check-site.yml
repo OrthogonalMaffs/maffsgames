@@ -534,6 +534,7 @@ jobs:
               Top scores, static (no date or number in the browser's locale under games/; no own *_scores list; panels on renderTop)|python scripts/check-top-scores.py && python scripts/check-top-scores.py --selftest
               KaTeX CSS (canon 7.1.1: no rule on a KaTeX page ends in a descendant span or * with display:block)|python scripts/check-katex-css.py && python scripts/check-katex-css.py --selftest
               KaTeX on load (no .katex-error or unrendered maths on any page outside games/ that loads KaTeX: the parent guides, the portal, the-6-ps)|python scripts/check-katex-pages.py && python scripts/check-katex-pages.py --selftest
+              Calculator docks (canon 4.4: every calculator game docks beside its card at 1366 and 1440)|python scripts/check-calc-dock.py && python scripts/check-calc-dock.py --selftest
 
           # Checker tier 4, layer A: does every game's question bank still look like the
           # one the ledger already knows about? Extracts fresh (the live bank, post any
