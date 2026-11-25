@@ -33,6 +33,7 @@ Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`.
   - The panel's one fixed sentence is a placeholder: "One deal a day, the same for everyone: main deck, first to 10, Marvin on Hard."
   - In Aa on a phone the panel's text is .8rem, so a 240-character line and the button fit one 320 x 568 screen.
   - The script also has `--check` (the committed file is all nulls or a valid result), run in CI beside `--selftest`.
+- **HELD, and it blocks the merge:** the workflow file is not on the branch. The home lane's token has no `workflow` scope and GitHub refused the push (25 Nov, 21:20). The file is ready in WSL at `~/dd-tools/maffscards-daily.yml` and in the PR's first comment. It needs Jon to give the token the scope, or the cloud lane or Jon to add the file to the branch.
 - **Not run:** the workflow itself cannot run before it is on main, so the bot's push to main is unproven until Jon's first row (STOP IF 1 would apply then).
 - **Waiting on Jon after merge:** the runbook, from step 1; then his rewrite of the placeholder wording (`docs/todo.md` §6).
 - **Run IDs:** in the close-out, as usual.
