@@ -66,6 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-25 (cloud): LIKE-TERMS-PLUS (Like Terms Collector's Stage 1 and 2 answer boxes read as a sum, "[ ] a + [ ] b", and the feedback says "9a + 7b"; `docs/handover/contracts/2026-11-25-like-terms-plus.md`)
+
+Claude Code (cloud, lane 2), branch `claude/affectionate-franklin-bo5qis` from main 6fae481 (c788f40 and its timings and archive commits). Small tier: merges on green with merge-pr.py (point 4).
+
+- **Close-out, BANKS-40 PR C ([#912](https://github.com/OrthogonalMaffs/maffsgames/pull/912)):** merged 25 Nov 16:44:40Z as c788f40. Main's runs on c788f40: check-site 45657227135 success, phone-fit-full 45657227259 success, pages 45657227058 success (attempt 1 each). Route: the lane 2 session's entry (archived before the merge, unchanged) said merge-pr.py after Jon's "merge"; this session cannot see that session's output, so it records the route as stated, not observed. The contract moved to `docs/history/contracts/2026-11-25-banks-40.md`. PRs A (#908) and B (#910) were closed out in the archived entry. Not closed out here: MARVIN-LOG #911 (lane 1's; its contract is still in `docs/handover/contracts/`).
+- **Next:** the page change, the verifier check and its plant, the /updates/ line.
+
 ## 2026-11-25 (cloud): MARVIN-LOG (MaffsCards' game_completed carries the winner and the tally in the Sheet's existing columns; `docs/handover/contracts/2026-11-25-marvin-log.md`)
 
 Claude Code (cloud, lane 1), branch `claude/stoic-wright-o60xub` from main c7805e6. Merges on green with merge-pr.py (point 5). First commit: #909's close-out (in the TIER3-GUARD entry below) and this contract.
