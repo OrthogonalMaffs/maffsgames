@@ -16,6 +16,23 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-25 (home): SITE-BAR-PILOT (one site bar on three pilot games: logo home, back link to the hub, name on big screens) STOPPED on a STOP IF
+
+Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar-pilot`, no PR yet. The contract is at `docs/handover/contracts/2026-11-25-site-bar-pilot.md` (verbatim). The first commit closed out MAFFSCARDS-CHALLENGE.
+
+- **STOPPED (STOP IF 4):** on a fine pointer the pinned bar overlaps Better Value's own sticky element, the docked calculator, which is not one of the two named overlays.
+  - Measured in Chromium at 1280x720, 1366x768 and 1920x1080, in play with the calculator open: the bar is 0 to 48 px; the calculator's panel (`.maffs-calc.docked .maffs-calc-panel`, sticky, top 16 px) is 16 to 355 px, at every scroll position. The bar covers its top 32 px.
+  - On main the same panel already sits over the right end of the game's own header (0 to 65 px), covering Aa, the level and the score while it is open. Not this contract's; reported.
+  - A fix measured, not applied: in Better Value's own CSS, on a fine pointer, `.maffs-calc.docked .maffs-calc-panel{top:64px}`. The panel is then 64 to 403 px at every scroll position at 1280x720 and 1280x600, 16 px clear of the bar. `check-calc-dock.py --only better-value` passes with the bar as built.
+- **Built so far (committed, not reviewed):**
+  - `schools/assets/site-bar.css` (new): 48 px and pinned on a fine pointer, 36 px and in the flow otherwise.
+  - `site-nav.js`: fills the slot (logo, `a.site-bar-back`, name); no margin logo or name on a slot page; the fallback link stays if anything throws.
+  - `stage-exit.js`: on a slot page, the button only, no home link, no `a.back-link` needed.
+  - `apply-site-nav.py` writes the slot and the stylesheet link for `SITE_BAR_PAGES`; `check-site-nav.py` holds the static rule (passes).
+  - The three pages: slot and stylesheet in, every back link out. Also out, decided here: the header divider that stood beside the back link on Spot the Muppet and Better Value.
+- **Still to build:** the Chromium checks and the four plants; `verify-stage-exit.py` needs `a.site-bar-back` added to its two back-link selectors for Base 60 (the other games' results do not change); canon's paragraph; the /updates/ line; the PR.
+- **Seen, not yet judged:** the bar's 48 px makes Better Value's play screen scroll at 1280x720 with the calculator open (document 773 px in a 720 px window; 720 px on main).
+
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
 Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/history/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.

@@ -27,6 +27,18 @@
       Re-measured exactly when the logo is. window.MaffsNav.gameName is the name (null without one), and
       MaffsNav.nameHiddenBy why the label is hidden ('' while it shows). Not a link, aria-hidden (the page's <title>
       names the game), and it takes no clicks.
+   4. The site bar (contract SITE-BAR-PILOT, Jon 25 Nov 2026). A page whose <body> starts with the slot
+      <nav class="site-bar" data-site-bar> (scripts/apply-site-nav.py writes it, for the pages in
+      scripts/check-site-nav.py's SITE_BAR_PAGES) gets one bar instead of points 2 and 3: the slot's contents become,
+      left to right, the logo (a link to "/", named "MaffsGames home"), the back link (a.site-bar-back, never
+      a.back-link: to the hub and "← Back to <label>" when there is one, by point 1's rules, else to "/" and "← Back to
+      Games"; its short form, "← <label>" or "← Games", on a coarse pointer) and, on a fine pointer, the game's name as
+      plain text, aria-hidden. schools/assets/site-bar.css lays it out and reserves its height before this file runs:
+      pinned to the top on a fine pointer, in the flow on a coarse one. Its colours are the body's own; its z-index on
+      a fine pointer is one above the highest z-index of anything positioned in the page's flow, so the page's content
+      scrolls under it and a fixed overlay of the page's own, written later in the page, still covers it. On such a
+      page the margin logo and name are never made. If anything here throws, the slot keeps the link it was written
+      with. MaffsNav.siteBar is 'built', 'fallback', or null on a page without the slot.
 
    No dependencies. Any failure leaves the page as written. */
 (function () {
@@ -89,7 +101,7 @@
 
   function norm(path) { return path.replace(/index\.html$/, ''); }
 
-  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS, gameName: null, nameHiddenBy: 'no name' }, hubPath = null;
+  var nav = { backHref: null, backLabel: null, shortLabel: null, hubs: HUBS, gameName: null, nameHiddenBy: 'no name', siteBar: null }, hubPath = null;
   try {
     var named = document.currentScript && document.currentScript.getAttribute('data-game-name');
     if (named && /\S/.test(named)) { nav.gameName = named; nav.nameHiddenBy = 'no logo on this page'; }
@@ -341,8 +353,83 @@
     ['click', 'keyup', 'touchend'].forEach(function (ev) { document.addEventListener(ev, afterInput, true); });
   }
 
+  // ---- the site bar (point 4) ----
+  var BAR = { z: 10 };                 // site-bar.css's own z-index, kept unless the page's flow reaches higher
+  function clear(colour) { return !colour || colour === 'transparent' || /rgba\([^)]*,\s*0\)$/.test(colour); }
+
+  // One above the highest z-index of anything positioned in the page's flow (never a fixed box: an overlay of the
+  // page's own keeps its place above the bar, by its own z-index or, level with it, by coming later in the page).
+  function barZ(slot) {
+    var top = BAR.z - 1, all = document.body.getElementsByTagName('*');
+    for (var i = 0; i < all.length; i++) {
+      var el = all[i];
+      if (el === slot || slot.contains(el)) continue;
+      var cs = getComputedStyle(el), z = parseInt(cs.zIndex, 10);
+      if (!(z > top) || cs.position === 'static' || fixedish(el)) continue;
+      top = z;
+    }
+    return top + 1;
+  }
+
+  function buildBar(slot) {
+    if (!src) throw new Error('no logo address');
+    var parts = document.createDocumentFragment();
+    var home = document.createElement('a');
+    home.className = 'site-bar-logo';
+    home.href = '/';
+    home.setAttribute('aria-label', 'MaffsGames home');
+    var img = document.createElement('img');
+    img.src = src;
+    img.alt = '';
+    img.width = 35;
+    img.height = 30;
+    home.appendChild(img);
+    parts.appendChild(home);
+    var back = document.createElement('a');
+    back.className = 'site-bar-back';
+    back.href = nav.backHref || '/';
+    var full = document.createElement('span'), brief = document.createElement('span');
+    full.className = 'site-bar-long';
+    full.textContent = nav.backLabel || '← Back to Games';
+    brief.className = 'site-bar-short';
+    brief.textContent = nav.shortLabel || '← Games';
+    back.appendChild(full);
+    back.appendChild(brief);
+    parts.appendChild(back);
+    if (nav.gameName) {
+      var name = document.createElement('span');
+      name.className = 'site-bar-name';
+      name.setAttribute('aria-hidden', 'true');
+      name.textContent = nav.gameName;
+      parts.appendChild(name);
+    }
+    var bg = '';
+    if (clear(getComputedStyle(document.body).backgroundColor)) {       // the body paints none: the page's, else white
+      bg = getComputedStyle(document.documentElement).backgroundColor;
+      if (clear(bg)) bg = '#ffffff';
+    }
+    var z = barZ(slot);
+    while (slot.firstChild) slot.removeChild(slot.firstChild);
+    slot.appendChild(parts);
+    if (bg) slot.style.backgroundColor = bg;
+    slot.style.setProperty('--site-bar-z', String(z));
+    nav.siteBar = 'built';
+    nav.nameHiddenBy = 'the site bar names the game';
+    // Scripts further down the page can add to its flow (a docked calculator): measured once more when all has loaded.
+    window.addEventListener('load', function () {
+      try { slot.style.setProperty('--site-bar-z', String(barZ(slot))); } catch (e) { /* keep the first measure */ }
+    });
+  }
+
   function ready() {
     try { relink(); } catch (e) { /* leave the links as written */ }
+    var slot = null;
+    try { slot = document.querySelector('[data-site-bar]'); } catch (e) { slot = null; }
+    if (slot) {                                   // a site-bar page: no margin logo, no margin name
+      nav.siteBar = 'fallback';
+      try { buildBar(slot); } catch (e) { /* the slot keeps the link it was written with */ }
+      return;
+    }
     try { addLogo(); } catch (e) { if (logo) logo.style.display = 'none'; if (label) label.style.display = 'none'; }
   }
   nav.place = function () { place(); return logo ? logo.getAttribute('data-blocked-by') : 'no logo'; };

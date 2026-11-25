@@ -156,6 +156,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script src="../../schools/assets/answer-lock.js"></script>
 <script src="../../schools/assets/options.js"></script>
 <script src="../../schools/assets/mathtext.js"></script>
+<link rel="stylesheet" href="/schools/assets/site-bar.css">
 <script src="/schools/assets/site-nav.js" data-game-name="It&#x27;s Just Base 60, Bruv"></script>
 <script src="../../schools/assets/stage-exit.js"></script>
 <!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 presses the right option; with i >= 1 it presses the first wrong one, which is marked wrong and waits on Next.
@@ -171,8 +172,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 </head>
 <body>
+<nav class="site-bar" data-site-bar aria-label="Site"><a class="site-bar-fallback" href="/">← MaffsGames</a></nav>
 <div class="container">
-  <a href="../../" class="back-link">← Back to Games</a>
   <div id="menu" class="screen active">
     <div class="header"><h1>It's Just Base 60, Bruv</h1><div class="sub">Time counts in 60s, not 100s. Hours, minutes, clocks and what the calculator really means.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
     <img class="start-art" src="assets/start.webp" width="1600" height="873" alt="An old clock shop crammed with clocks of every kind: grandfather clocks with brass pendulums, cuckoo clocks, a giant clock face on the back wall, pocket watches in a glass counter, an hourglass, and a sundial by the window">

@@ -96,8 +96,66 @@ def tag_for(rel, names):
 
 
 def nav_pages(texts, names):
-    """Every page that must load site-nav.js: one with an a.back-link, or a roster game's page."""
-    return [r for r, t in sorted(texts.items()) if BACK_LINK.search(t) or game_slug(r) in names]
+    """Every page that must load site-nav.js: one with an a.back-link, a roster game's page, or a site-bar page."""
+    return [r for r, t in sorted(texts.items()) if BACK_LINK.search(t) or game_slug(r) in names or r in SITE_BAR_PAGES]
+
+
+# The site bar (contract SITE-BAR-PILOT, Jon 25 Nov 2026; canon §7.5.8). The pages on it: grow the list only by a contract
+# (the pilot is these three; the sweep of the rest is Jon's to approve). scripts/apply-site-nav.py writes BAR_SLOT as
+# the first child of <body> and BAR_CSS in <head> on each; site-nav.js fills the slot. A page on it also needs a
+# BAR_DRIVE entry below, so the bar is checked on its start, play and results screens.
+SITE_BAR_PAGES = ('games/better-value/index.html', 'games/its-just-base-60-bruv/index.html', 'games/spot-the-muppet/index.html')
+BAR_SLOT = '<nav class="site-bar" data-site-bar aria-label="Site"><a class="site-bar-fallback" href="/">← MaffsGames</a></nav>'
+BAR_CSS = '<link rel="stylesheet" href="/schools/assets/site-bar.css">'
+BAR_CSS_ASSET = os.path.join(ROOT, 'schools', 'assets', 'site-bar.css')
+BAR_ATTR = re.compile(r'<[a-zA-Z][^<>]*\sdata-site-bar\b')
+BAR_CSS_LINK = re.compile(r'<link\b[^>]*\bhref="[^"]*schools/assets/site-bar\.css"[^>]*>')
+BODY_OPEN = re.compile(r'<body\b[^>]*>')
+ANY_LINK = re.compile(r'<a\b[^>]*>(.*?)</a>', re.S)
+BAR_SIZES = ((1920, 1080, False), (1280, 720, False), (390, 844, True), (320, 568, True))   # (width, height, touch)
+BAR_HEIGHT = {False: 48, True: 36}             # px: on a fine pointer, on a coarse one
+BAR_HUB = ('essentials/index.html', 'Essentials')
+# How the check reaches each bar page's screens, by the page's own functions (test-only; nothing here is a rule for the
+# page): the selector that matches while each screen shows; `finish`, run during play, ends the session, and `advance`,
+# where one is needed, is run until the results show; `overlay` is the page's one transient overlay that may cover the
+# bar while it shows (the check shows it and holds it on top); `stage` is stage-exit's button, pressed during play.
+BAR_DRIVE = {
+    'games/spot-the-muppet/index.html': {
+        'start': '#startScreen.active', 'play': '#gameScreen.active', 'results': '#resultsScreen.active',
+        'finish': 'endGame()', 'overlay': '#muppetBanner'},
+    'games/better-value/index.html': {
+        'start': '#startScreen.active', 'play': '#gameScreen.active', 'results': '#resultsScreen.active',
+        'finish': 'endGame()', 'overlay': '#methodOverlay'},
+    'games/its-just-base-60-bruv/index.html': {
+        'start': '#menu.active', 'play': '#game.active', 'results': '#results.active',
+        'finish': 'B60.ui.preview(B60.bank()[0].id); B60.ui.answer(true)', 'advance': 'B60.ui.next()',
+        'stage': {'begin': "B60.ui.start('stage-1')", 'button': '#stageExitHudBtn', 'label': '← Stages', 'lands': '#menu.active'}},
+}
+
+
+def bar_static_faults(rel, text):
+    """The static rule for one page: on SITE_BAR_PAGES, the slot once and first in <body>, the stylesheet once, no
+    a.back-link and no other link whose text starts "← Back to" (the bar is the page's one back link); off it, no slot
+    and no stylesheet."""
+    slots, links = len(BAR_ATTR.findall(text)), len(BAR_CSS_LINK.findall(text))
+    if rel not in SITE_BAR_PAGES:
+        return ['%s: carries the site bar\'s %s but is not on SITE_BAR_PAGES' % (rel, what)
+                for what, n in (('slot (data-site-bar)', slots), ('stylesheet (site-bar.css)', links)) if n]
+    out = []
+    if slots != 1:
+        out.append('%s: is on SITE_BAR_PAGES and has %d [data-site-bar] slot(s) (one: python scripts/apply-site-nav.py)' % (rel, slots))
+    body = BODY_OPEN.search(text)
+    if slots == 1 and not (body and text[body.end():].lstrip().startswith(BAR_SLOT)):
+        out.append('%s: its site-bar slot is not the first child of <body>, written exactly as BAR_SLOT' % rel)
+    if links != 1 or BAR_CSS not in text:
+        out.append('%s: is on SITE_BAR_PAGES and links site-bar.css %d time(s) (once, as BAR_CSS: python scripts/apply-site-nav.py)' % (rel, links))
+    if BACK_LINK.search(text):
+        out.append('%s: is on SITE_BAR_PAGES and still has an a.back-link (the bar is its one back link)' % rel)
+    for inner in ANY_LINK.findall(text):
+        said = ' '.join(htmllib.unescape(re.sub(r'<[^>]+>', '', inner)).split())
+        if said.startswith('← Back to'):
+            out.append('%s: is on SITE_BAR_PAGES and has another back link, "%s" (the bar is its one back link)' % (rel, said[:40]))
+    return out
 
 # Pages that keep the margin logo off, each with its reason (contract SITE-NAV names them). Shrink or grow only with a
 # reason; a page carrying the attribute and missing here fails, and so does an entry for a page without it.
@@ -243,6 +301,13 @@ def static_faults(texts=None, js=None, opt_out=None, names=None):
     for r in opt_out:
         if r not in texts:
             out.append('%s: on LOGO_OPT_OUT but no such page' % r)
+    for r in SITE_BAR_PAGES:
+        if r not in texts:
+            out.append('%s: on SITE_BAR_PAGES but no such page' % r)
+        elif r not in BAR_DRIVE:
+            out.append('%s: on SITE_BAR_PAGES without a BAR_DRIVE entry (how the check reaches its play and results screens)' % r)
+    for r, t in sorted(texts.items()):
+        out += bar_static_faults(r, t)
     return out
 
 
