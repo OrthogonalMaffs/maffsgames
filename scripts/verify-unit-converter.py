@@ -3,7 +3,7 @@
 """Independent verification of Unit Converter (contract UC-FIX and its amendment, 8 Oct 2026; tranche 4 and resit audits,
 docs/audits/findings/unit-converter.yml).
 
-The bank is read from the served page (L, A, V, T, E: 58 items; GCSE serves 48, A-Level 38, Level 4 42).
+The bank is read from the served page (L, A, V, T, E: 64 items; GCSE serves 54, A-Level 44, Level 4 46; BANKS-40, 25 Nov 2026, added 2 each to A, V and T).
 
   - KEYS (t4-004, r-001, r-002): every key is recomputed from the prompt's own numbers, exactly: a unit table of exact
     factors (a conversion the prompt defines, "1 inch = 2.54 cm", is read from the prompt), shapes from the numbers the
@@ -15,7 +15,7 @@ The bank is read from the served page (L, A, V, T, E: 58 items; GCSE serves 48, 
   - "≈" (t4-006): never before an exact definition (1 inch = 2.54 cm, 1 foot = 0.3048 m, ...); and "=" never
     before a rounded one (t4-007, Jon, 9 Oct 2026: "1 mile ≈ 1609 m", the exact mile being 1609.344 m).
   - DISPLAY (t4-006; Jon's ruling, 9 Oct 2026: "One formatter function for all displayed numbers. Verifier proves
-    marking unchanged on all 59 items and that every displayed number of 1,000 or more has a comma"; the bank has 58):
+    marking unchanged on all 59 items and that every displayed number of 1,000 or more has a comma"; the bank has 64):
     in Chromium every item is rendered by the game's own nextQ(); each option's dataset.val is exactly a stored
     string (the key or a distractor), so marking compares what it always did; the key is marked right and every
     distractor wrong, read from the page's classes; every visible number of 1,000 or more on every screen (start,
@@ -55,7 +55,7 @@ GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
 # The level reader the game declares (LEVEL-RESOLVER, 13 Oct 2026); the t4-003 plant swaps it for the unvalidated read.
 RESOLVE_CALL = "MaffsLevel.resolve({slug:'unit-converter',levels:['gcse','alevel','level4'],fallback:'gcse'})"
 LEVELS = {'gcse': ('L', 'A', 'V', 'T'), 'alevel': ('A', 'V', 'T'), 'level4': None}
-SERVED = {'gcse': 48, 'alevel': 38, 'level4': 42}
+SERVED = {'gcse': 54, 'alevel': 44, 'level4': 46}
 PER_CORRECT = 100
 # pi to 50 places, as a fraction: enough to round any key here to its stated figures without doubt
 PI = F('3.14159265358979323846264338327950288419716939937510')
