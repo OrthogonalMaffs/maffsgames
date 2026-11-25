@@ -60,7 +60,9 @@ KNOWN_ROOT_FILES = {"index.html", "sitemap.xml", "robots.txt", "CNAME", "_config
                     ".gitignore", ".gitleaks.toml"}
 # Folders too wide to be a dependency: a literal naming one is a URL prefix or a search root, not a file
 # the verifier reads (its games come from the slugs it names). Never a prefix match.
-WIDE = {"", ".", "..", "games", "schools", "schools/assets", "docs", "data", "scripts", "escape-rooms"}
+WIDE = {"", ".", "..", "games", "schools", "schools/assets", "docs", "data", "scripts", "escape-rooms",
+        # contract folders: a verifier that reads a contract declares that file in # ci-deps (VERIFIER-SPLIT)
+        "docs/handover/contracts", "docs/history/contracts"}
 ANY_PAGE = "any-page"       # the "# ci-deps:" token for a site-wide page scanner
 ANY_PAGE_PREFIXES = ("schools/assets/", "escape-rooms/assets/", "data/")
 NOT_SERVED = ("docs/", "scripts/", "tools/")
@@ -658,6 +660,15 @@ def selftest():
               for t in loaders}
     check("none inherits ci-deps.py or its fixture docs/todo.md", not any(leaked.values()),
           "; ".join("%s: %s" % (k, ", ".join(v)) for k, v in sorted(leaked.items()) if v))
+    # A verifier that reads its own contract (its literal is the contracts folder, its "# ci-deps:" names that one file)
+    # is selected by its contract and not by another's: the folders are WIDE, so the literal is never a dependency
+    # (VERIFIER-SPLIT, 25 Nov 2026: every close-out ran all four such verifiers).
+    check("the literal 'docs/history/contracts' names no dependency (WIDE)",
+          not literal_paths([("docs/history/contracts", False, OWN), ("docs/handover/contracts", False, OWN)]), "")
+    vm, own, other = ("scripts/verify-maffscards.py", "docs/history/contracts/2026-11-20-maffscards-game.md",
+                      "docs/history/contracts/2026-11-25-like-terms-plus.md")
+    check("%s is selected by its own contract" % os.path.basename(vm), vm in select([own], dmap)[2], own)
+    check("%s is not selected by another contract" % os.path.basename(vm), vm not in select([other], dmap)[2], other)
     # Every selective verifier is reachable: some path selects it (or it always runs).
     for s, i in sorted(sel.items()):
         _, _, picked = select([s], dmap)
