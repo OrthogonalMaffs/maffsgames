@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; sixteen planted faults caught) | | 3
+# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; the start art's three cards (96, 1, 89) equal to cards.json, each beating all 31 other main-deck cards in its category, the title in front, start screen only, no control pushed under the fold at 320x568, 375x667 and 1280x720 in normal and Aa; seventeen planted faults caught) | | 3
 # ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/*2026-11-20-maffscards-game.md docs/history/contracts/*2026-11-20-maffscards-game.md scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
@@ -76,16 +76,26 @@ cards.json, never from the page:
             fit (with the fit unit): the challenge section with a made code and the bad-code message, and a
               challenge game's results, inside 320x568 in normal and Aa with no sideways scroll at five sizes.
 
+  art       (MAFFSCARDS-START-ART, 25 Nov 2026) the start screen's three card tops behind the title. In Python, from
+            cards.json: 96, 1 and 89 are main-deck cards and each beats all 31 others in its category (sum of factors,
+            superpowers, largest prime factor), no ties. In Chromium at 320x568, 375x667 and 1280x720, normal and Aa: the
+            cards left to right are 96, 1, 89 with cards.json's nicknames; every number and nickname line shows (the
+            topmost element at points along it is that text: not another card, the title or the bar); no card above
+            the page; the title block opaque, title and subtitle 4.5:1 on it and in front of the art; aria-hidden; no
+            sideways scroll; every control, the title and the subtitle above the fold with #mcArt hidden is above it with
+            the art (section headings moved under the fold are reported, not failed). The rise runs once, not looping,
+            and its class is gone by 1.7 s; the art is not shown in play or on the results.
+
 Plants (each must FAIL): distance judged highest-wins; a one-tap play; a repeated line of Marvin's; a submit after a
 loss; Hard back to always best (MARVIN_BEST.hard 1); Easy never best (MARVIN_BEST.easy 0); the random branch choosing the
 best category always; three on game_completed's tally; and for challenges: the check character ignored; Marvin's
 challenge choice drawn from rng; the challenge deal shuffled from rng; the key a sum, not a hash; a challenge game
-submitted to the leaderboard; a normal game drawing once more from rng.
+submitted to the leaderboard; a normal game drawing once more from rng; and for the start art, 89 changed to 98.
 
     python -X utf8 scripts/verify-maffscards.py [--selftest] [--only UNIT ...] [--shard I/K] [--list-units]
 
 CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py): its work units are data, balance, rules, marvin, sim, play,
-challenge, fit and the planted faults (selftest), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
+challenge, fit, art and the planted faults (selftest), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
 --shard every unit and the plants run, as before; --only runs the named units without the plants (local use).
 """
 import argparse
@@ -1195,6 +1205,156 @@ def check_fit(br, base, html, game, out, info):
     info['fit_n'] = measured
 
 
+# ---------------------------------------------------------------- the start art (MAFFSCARDS-START-ART)
+# Jon, 25 Nov 2026: three card tops fanned behind the title, 96, 1 and 89 left to right, each with the category in which
+# it beats every other main-deck card (Project Claude's measurement, recomputed here from cards.json).
+ART = [(96, 'sof'), (1, 'powers'), (89, 'lpf')]
+ART_SIZES = [(320, 568), (375, 667), (1280, 720)]
+ART_JS = r"""() => {
+  const art = document.getElementById('mcArt'), head = document.querySelector('#menu .header');
+  if (!art || !head) return { missing: true };
+  art.style.pointerEvents = 'auto';               // elementFromPoint skips pointer-events: none; restored below
+  // A point shows the text only if the topmost element there is that text (not another card, the title or the bar).
+  const shows = (el) => {
+    const r = el.getBoundingClientRect(), pts = [];
+    const rg = document.createRange(); rg.selectNodeContents(el);
+    for (const b of rg.getClientRects()) for (const fx of [0.3, 0.5, 0.7]) pts.push([b.left + b.width * fx, b.top + b.height / 2]);
+    const hidden = pts.filter(([x, y]) => { const t = document.elementFromPoint(x, y); return !t || (t !== el && !el.contains(t)); });
+    return { n: pts.length, hidden: hidden.map(p => p.map(Math.round)), top: r.top, bottom: r.bottom };
+  };
+  const cards = [...art.querySelectorAll('.art-card')].map(c => {
+    const r = c.getBoundingClientRect(), num = c.querySelector('.art-num'), nick = c.querySelector('.art-nick');
+    return { x: (r.left + r.right) / 2, top: r.top, num: num ? num.textContent : null, nick: nick ? nick.textContent : null,
+             numShows: num ? shows(num) : null, nickShows: nick ? shows(nick) : null };
+  });
+  const hr = head.getBoundingClientRect(), h1 = head.querySelector('h1'), sub = head.querySelector('.sub');
+  art.style.pointerEvents = '';
+  const at = (el) => { const r = el.getBoundingClientRect(), t = document.elementFromPoint((r.left + r.right) / 2, (r.top + r.bottom) / 2); return !!t && (t === el || el.contains(t)); };
+  return { inMenu: !!art.closest('#menu'), aria: art.getAttribute('aria-hidden'), shown: art.getClientRects().length > 0,
+           cards: cards, headTop: hr.top, bg: getComputedStyle(head).backgroundColor,
+           h1: getComputedStyle(h1).color, sub: getComputedStyle(sub).color, h1Front: at(h1), subFront: at(sub),
+           sideways: document.documentElement.scrollWidth > innerWidth + 1 };
+}"""
+# The start screen's controls, title and subtitle (kind 'c'): any above the fold without the art must stay above it with
+# the art. Section headings and labels (kind 'h') are reported when they move under the fold, not failed: running text
+# always crosses the fold when anything is added above it, and a heading whose buttons are already below is that kind.
+ART_FOLD_JS = r"""() => {
+  const out = {};
+  const name = (e, i) => (e.id ? '#' + e.id : e.tagName.toLowerCase() + (e.className ? '.' + String(e.className).split(' ')[0] : '')) + ' ' + i;
+  [['c', '.topbar a, .topbar button, #menu h1, #menu .sub, #menu button, #menu input, #menu a'], ['h', '#menu .mode-h, #menu .ch-lab']].forEach(([kind, sel]) => {
+    document.querySelectorAll(sel).forEach((e, i) => {
+      const r = e.getBoundingClientRect();
+      if (r.height > 0) out[kind + ' ' + name(e, i) + (e.id ? '' : ' "' + e.textContent.trim().slice(0, 24) + '"')] = r.bottom;
+    });
+  });
+  return { fold: innerHeight, bottoms: out };
+}"""
+
+
+def _rgb(c):
+    m = re.match(r'rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)', c)
+    return (float(m.group(1)), float(m.group(2)), float(m.group(3)), float(m.group(4)) if m.group(4) else 1.0) if m else None
+
+
+def _contrast(a, b):
+    def lum(c):
+        ch = [v / 255 for v in c[:3]]
+        ch = [v / 12.92 if v <= 0.04045 else ((v + 0.055) / 1.055) ** 2.4 for v in ch]
+        return 0.2126 * ch[0] + 0.7152 * ch[1] + 0.0722 * ch[2]
+    la, lb = sorted((lum(a), lum(b)), reverse=True)
+    return (la + 0.05) / (lb + 0.05)
+
+
+def check_art(br, base, html, game, out, info):
+    """The start art: its cards equal cards.json's, each unbeatable in its category (recomputed here), the title in front,
+    on the start screen only, aria-hidden, and nothing above the fold pushed below it at ART_SIZES, normal and Aa."""
+    cats = {c['key']: c for c in game['categories']}
+    main = [c for c in game['cards'] if c['deck'] == 'main']
+    if len(main) != 32:
+        out.append('art: the main deck has %d cards, not 32' % len(main))
+    for n, key in ART:
+        card = next((c for c in main if c['n'] == n), None)
+        if card is None:
+            out.append('art: %d is not in the main deck' % n)
+            continue
+        others = [o for o in main if o is not card]
+        not_beaten = [o['n'] for o in others if judge(cats, key, card, o) != 'a']
+        if not_beaten:
+            out.append('art: %d on %s does not beat %s (it must beat all %d others, no ties)' % (n, key, not_beaten, len(others)))
+        info.setdefault('art', []).append('%d beats all %d other main-deck cards on %s (%s)' % (n, len(others), cats[key]['label'], measure(cats, card, key)))
+    want = [(n, next(c['nickname'] for c in game['cards'] if c['n'] == n)) for n, _ in ART]
+    for size in ART_SIZES:
+        for aa in (False, True):
+            tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
+            ctx, page, errs = open_page(br, base, html, size, aa=aa, fonts=True)
+            page.evaluate("document.fonts.ready.then(() => 0)")
+            a = page.evaluate(ART_JS)
+            if a.get('missing'):
+                out.append('art %s: no #mcArt or no title block on the start screen' % tag)
+                ctx.close()
+                continue
+            got = [(c['num'], c['nick']) for c in sorted(a['cards'], key=lambda c: c['x'])]
+            if got != [(str(n), k) for n, k in want]:
+                out.append('art: the numbers left to right are %r, not cards.json\'s %r (%s)' % (got, [(str(n), k) for n, k in want], tag))
+            if not a['inMenu'] or a['aria'] != 'true' or not a['shown']:
+                out.append('art %s: not shown on the start screen, or not aria-hidden="true" (in the menu %s, aria-hidden %r)' % (tag, a['inMenu'], a['aria']))
+            for c in a['cards']:
+                for part in ('numShows', 'nickShows'):
+                    sh = c[part]
+                    if sh is None or sh['hidden']:
+                        out.append('art %s: card %s\'s %s is covered at %r' % (tag, c['num'], 'number' if part == 'numShows' else 'nickname', sh and sh['hidden']))
+                if c['top'] < 0:
+                    out.append('art %s: card %s starts above the page (%.0f px)' % (tag, c['num'], c['top']))
+            bg, h1, sub = _rgb(a['bg']), _rgb(a['h1']), _rgb(a['sub'])
+            if not bg or bg[3] < 1:
+                out.append('art %s: the title block is not solid (background %s)' % (tag, a['bg']))
+            else:
+                for what, col in (('title', h1), ('subtitle', sub)):
+                    if _contrast(col, bg) < 4.5:
+                        out.append('art %s: the %s is %.2f:1 on the title block, under 4.5:1' % (tag, what, _contrast(col, bg)))
+            if not (a['h1Front'] and a['subFront']):
+                out.append('art %s: the title or subtitle is not in front of the art' % tag)
+            if a['sideways']:
+                out.append('art %s: the start screen scrolls sideways' % tag)
+            with_art = page.evaluate(ART_FOLD_JS)
+            page.add_style_tag(content='#mcArt{display:none!important}')
+            without = page.evaluate(ART_FOLD_JS)
+            fold = with_art['fold']
+            pushed = [k for k, b in without['bottoms'].items() if b <= fold + 0.5 and with_art['bottoms'].get(k, 1e9) > fold + 0.5]
+            if [k for k in pushed if k.startswith('c ')]:
+                out.append('art %s: above the fold without the art, below it with the art: %s' % (tag, ', '.join(k[2:] for k in pushed if k.startswith('c '))))
+            above = [k for k, b in without['bottoms'].items() if b <= fold + 0.5 and k.startswith('c ')]
+            h1 = [k for k in without['bottoms'] if k.startswith('c h1 ')][0]
+            info.setdefault('artfit', []).append('%s: the title %.0f px lower; the lowest control above the fold ends %.0f px above it without the art, %.0f px with it%s'
+                                                 % (tag, with_art['bottoms'][h1] - without['bottoms'][h1],
+                                                    fold - max([without['bottoms'][k] for k in above] or [0]),
+                                                    fold - max([with_art['bottoms'].get(k, 1e9) for k in above] or [0]),
+                                                    ''.join('; heading now under the fold: ' + k[2:] for k in pushed if k.startswith('h '))))
+            out.extend('page error (art %s): %s' % (tag, e) for e in errs if 'production host' not in e)
+            ctx.close()
+    # The start screen only: not in play, not on the results. And the rise runs once (motion allowed), never looping.
+    ctx, page, errs = open_page(br, base, html, (390, 844), still=False)
+    anim = page.evaluate("() => { const c = document.querySelector('#mcArt .art-card'); const s = getComputedStyle(c); return [s.animationName, s.animationIterationCount]; }")
+    if anim[0] != 'none' and anim[1] != '1':
+        out.append('art: the rise animation repeats (%s, iteration count %s)' % tuple(anim))
+    page.wait_for_timeout(1700)
+    if page.evaluate("document.getElementById('mcArt').classList.contains('rise')"):
+        out.append('art: the rise class is still on after 1.7 s, so the rise would replay when the menu shows again')
+    out.extend('page error (art rise): %s' % e for e in errs if 'production host' not in e)
+    ctx.close()
+    ctx, page, errs = open_page(br, base, html, (390, 844))
+    page.evaluate("MC.seed(2); MC.ui.start()")
+    if page.evaluate("document.getElementById('mcArt').getClientRects().length > 0"):
+        out.append('art: shown during play')
+    page.evaluate("MC.ui.rig([64, 5], [2], 30, {you: 9, marvin: 9}); MC.ui.tap('sof'); MC.ui.tap('sof'); MC.ui.next()")
+    if not page.evaluate("document.getElementById('results').classList.contains('active')"):
+        out.append('art: the rigged game did not reach the results')
+    elif page.evaluate("document.getElementById('mcArt').getClientRects().length > 0"):
+        out.append('art: shown on the results')
+    out.extend('page error (art screens): %s' % e for e in errs if 'production host' not in e)
+    ctx.close()
+
+
 # ---------------------------------------------------------------- run
 def check(html, out, units):
     info = {}
@@ -1245,6 +1405,8 @@ def check(html, out, units):
                 if 'fit' in browser:
                     guarded('fit', check_fit, br, base, html, game, out, info)
                     guarded('challenge fit', check_challenge_fit, br, base, html, out, info)
+                if 'art' in browser:
+                    guarded('art', check_art, br, base, html, game, out, info)
             finally:
                 br.close()
     finally:
@@ -1288,6 +1450,9 @@ PLANTS = [
      ['challenge'], r'^challenge leaderboard: a won first-to-10 challenge game submitted'),
     ('a normal game drawing once more from rng', [("function marvinChoice(level, card, pool) { return rng()", "function marvinChoice(level, card, pool) { rng(); return rng()")],
      ['challenge'], r'^normal game, seed \d+: '),
+    # MAFFSCARDS-START-ART
+    ('a start-art card number changed (89 to 98)', [('<span class="art-num">89</span>', '<span class="art-num">98</span>')],
+     ['art'], r"^art: the numbers left to right are "),
 ]
 
 
@@ -1335,7 +1500,7 @@ def print_golden(html):
 
 # The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
 # each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
-UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit']
+UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art']
 
 
 def merge_info(info, part):
@@ -1402,6 +1567,10 @@ def main():
         print('%s: challenge menu: ?c= fills and never starts; bad codes show the message; a made code, its link, Copy link, Play it and a typed code checked' % SLUG)
     for f in info.get('chfit', []):
         print('%s: challenge fit %s' % (SLUG, f))
+    for f in info.get('art', []):
+        print('%s: start art: %s' % (SLUG, f))
+    for f in info.get('artfit', []):
+        print('%s: start art fit %s' % (SLUG, f))
     ok = True
     if 'selftest' in plan:
         with shard.unit('selftest'):
