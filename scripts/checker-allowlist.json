@@ -76,20 +76,12 @@
       "reason": "The answer is BUILT, not picked: #primeBtns offers 2,3,5,7,11,13 and the student presses several to compose a factorisation before submitting. One press is an unfinished answer, not a wrong one, so nothing is marked. Read 2026-09-23."
     },
     {
-      "slug": "expectation-station",
-      "reason": "Stage 1 fills a probability table from a tile bank and is marked by 'Check Table' (checkStage1) only once every blank is filled -- several placements per question. Also the reason its repeated tiles are legitimate: es_gcse_001 ships ['0.25','0.25','0.50','0.10'] because two cells of its table are both 0.25. Read 2026-09-23."
-    },
-    {
       "slug": "seven-bridges",
       "reason": "Builds its options as SVG nodes. The driver now dispatches a MouseEvent rather than calling .click() (which SVGElement lacks in Chromium), but the game is a graph-traversal puzzle rather than a question with options, so there is still nothing for a pick-one driver to answer. Read 2026-09-23."
     },
     {
       "slug": "the-perfect-prank",
       "reason": "The unlisted escape-room prototype, already a declared roster_exception above. Built to the old 40-minute spec and never on the portal, so it is not a quiz game and has no option group to drive. Read 2026-09-23."
-    },
-    {
-      "slug": "spot-the-muppet",
-      "reason": "Answers question 1 cleanly and then presents a second phase of the same question that the driver has no move for. The game is fine -- this is the driver's limit. Traced 2026-09-23."
     },
     {
       "slug": "better-value",

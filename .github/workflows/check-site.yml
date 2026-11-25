@@ -435,6 +435,7 @@ jobs:
             job_timeout: 22
             checks: |
               Tier 3 KaTeX parse check (self-test)|python scripts/check-site.py --tier3-katex-selftest
+              Tier 3 answer-lock self-test|python scripts/check-site.py --tier3-lock-selftest
               Tier 3 (play-through) shard 1/4|python scripts/check-site.py --tier 3 --workers 4 --shard 1/4
           - name: Tier 3 (play-through) shard 2/4
             timeout: 12
