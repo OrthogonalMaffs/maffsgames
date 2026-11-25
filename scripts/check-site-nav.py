@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-# ci-line: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the class page's name carried there and back; the margin logo only where it fits; planted faults caught) | --selftest && --check
+# ci-shards: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the class page's name carried there and back; the margin logo only where it fits; planted faults caught) | | 3
 # ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg class/index.html schools/assets/kids-look.js scripts/apply-class-page.py games/sums-in-disguise/index.html games/some-thingies/index.html games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html games/scale-factor-scaling/index.html games/dimension-checker/index.html games/suvat/index.html .claude/rules/game-roster.md scripts/apply-site-nav.py scripts/check-start-mount.py schools/assets/site-bar.css schools/assets/calculator.css schools/assets/calculator.js games/spot-the-muppet/index.html games/better-value/index.html games/its-just-base-60-bruv/index.html
 """Site navigation (contract SITE-NAV, Jon 21 Nov 2026; canon §7.5.8): schools/assets/site-nav.js.
 
     python scripts/check-site-nav.py --static     # the static rule (check-site.py runs this in its site-wide part)
     python scripts/check-site-nav.py --check      # the rule, then the pages played in Chromium
     python scripts/check-site-nav.py --selftest   # planted faults caught (static and Chromium)
+    python scripts/check-site-nav.py --shard I/K  # CI: part I of K of the work units (--list-units prints them)
+
+CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py; SITE-BAR-PILOT, 25 Nov 2026: with the site bar's checks the
+one line ran 201 s against a 189 s limit). Its work units are UNITS below: the static rule, each Chromium unit, the site
+bar on each of its pages, and the planted faults in two halves; each runs in exactly one part. --check and --selftest
+still run everything, as before.
     python scripts/check-site-nav.py --survey     # the logo on every back-link page at 1920x1080: shown or what blocks it
     python scripts/check-site-nav.py --survey-names [--out FILE]   # every roster game at 1280x720, 1366x768 and 1920x1080,
                                                   # start screen and first question: the logo and the name label
@@ -1207,12 +1213,9 @@ def survey():
     return 1 if any(why for _, why in shown) else 0
 
 
-def selftest():
+def _selftest_nav(texts, js):
+    """The plants for the back link, the hubs, the margin logo and the name label."""
     fails = []
-    texts = {r: read(r) for r in pages()}
-    js = open(ASSET, encoding='utf-8').read()
-    if static_faults(texts, js):
-        fails.append('the repo fails the static rule, so the plants prove nothing: %s' % static_faults(texts, js)[:2])
     planted = dict(texts)
     planted[GAME] = LOADS.sub('', planted[GAME], 1)
     hit = [f for f in static_faults(planted, js) if f.startswith(GAME) and 'loads site-nav.js 0' in f]
@@ -1277,6 +1280,12 @@ def selftest():
     hit = [f for f in got if f.startswith('name:') and 'overlaps' in f]
     print('  self-test a label over the game column         %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
     fails += [] if hit else ['a label overlapping the game column passed']
+    return fails
+
+
+def _selftest_bar(texts, js):
+    """The plants for the site bar."""
+    fails = []
     # The site bar (SITE-BAR-PILOT). Static: a pilot page with a second back link. In Chromium, one page at one size each:
     # a page hiding the bar on its results screen; site-nav.js drawing the margin logo on a bar page; the bar not sticky on
     # a fine pointer; calculator.css's offset back to a fixed 16px, so the bar covers the docked panel.
@@ -1312,10 +1321,55 @@ def selftest():
     hit = [f for f in got if f.startswith('bar:') and 'calculator open' in f and 'overlap' in f]
     print('  self-test the calculator\'s offset fixed at 16px  %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
     fails += [] if hit else ['calculator.css with a fixed top: 16px passed (the bar covers the docked panel)']
+    return fails
+
+
+def selftest(halves=('nav', 'bar')):
+    """The planted faults: 'nav' (site navigation, the margin logo, the name) and 'bar' (the site bar), or one of them."""
+    fails = []
+    texts = {r: read(r) for r in pages()}
+    js = open(ASSET, encoding='utf-8').read()
+    if static_faults(texts, js):
+        fails.append('the repo fails the static rule, so the plants prove nothing: %s' % static_faults(texts, js)[:2])
+    if 'nav' in halves:
+        fails += _selftest_nav(texts, js)
+    if 'bar' in halves:
+        fails += _selftest_bar(texts, js)
     for f in fails:
         print('FAIL  self-test: ' + f)
     print('self-test: %s' % ('FAILED' if fails else 'PASS'))
     return 1 if fails else 0
+
+
+# The work units, in run order (CI's SHARD parts; scripts/ci_shards.py): the static rule, browser_faults()'s units, the
+# site bar on each of its pages, and the planted faults in two halves. Each runs in exactly one part.
+BROWSER_UNITS = ['hub', 'direct', 'stage', 'class', 'phone', 'logo', 'name']
+UNITS = (['static'] + BROWSER_UNITS + ['bar ' + r.split('/')[1] for r in SITE_BAR_PAGES] + ['selftest nav', 'selftest bar'])
+
+
+def run_units(shard):
+    """Run this part's units; 1 if any failed."""
+    bad = 0
+    for uid in shard.pick(UNITS):
+        with shard.unit(uid):
+            if uid == 'static':
+                got = static_report()
+            elif uid.startswith('selftest '):
+                got = ['the planted faults were not all caught'] if selftest((uid.split()[1],)) else []
+            elif uid.startswith('bar '):
+                got = browser_faults(only={'bar'}, bar_pages=['games/%s/index.html' % uid[4:]])
+            else:
+                got = browser_faults(only={uid})
+            if uid != 'static':
+                for x in got:
+                    print('FAIL  ' + x)
+            print('unit %s: %s' % (uid, 'FAILED' if got else 'PASS'))
+            bad += len(got)
+    for where, got in BAR_CALC_SEEN:
+        print('  docked calculator, %s: %s' % (where, '; '.join('scrolled %d px: bar %d to %d px, panel %d to %d px' % (
+            a['y'], a['bar'][1], a['bar'][3], a['panel'][1], a['panel'][3]) for a in got['at'])))
+    print('FAILED' if bad else 'PASS')
+    return 1 if bad else 0
 
 
 def main():
@@ -1327,11 +1381,16 @@ def main():
     ap.add_argument('--survey-names', action='store_true')
     ap.add_argument('--out', help='with --survey-names: write the table here')
     ap.add_argument('--only', help='with --survey-names: these slugs only (comma separated)')
+    sys.path.insert(0, HERE)
+    import bank_common as bc
+    bc.shard_args(ap)
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
+    if args.shard or args.list_units:
+        return run_units(bc.Shard(__file__, args))
     if args.selftest:
         return selftest()
     if args.survey:

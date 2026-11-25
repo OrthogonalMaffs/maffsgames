@@ -44,7 +44,10 @@ Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar
   - normal: Base 60 PASS; Better Value known failure (last option 1209 / 528 at 320x568, 1109 / 627 at 375x667, 1081 / 804 at 390x844); Spot the Muppet known failure (699 / 528, 668 / 627). Both were on the known-failures list before this PR.
   - Aa: Base 60 warns at 320x568 (scrolls; the options start above the fold); the other two as above, and no longer sideways.
   - laptop: Base 60 and Spot the Muppet PASS; Better Value as above.
-- **Next:** a green Gate needs the MaffsCards line fixed first; then Project Claude's review and Jon's "merge".
+- **Second Gate, head c8d8bc2a:** phone-fit-full 45679077905 green in every mode; check-site 45679077903 red on the Plan job alone (the MaffsCards line). Ruling (Project Claude, 19:20): lane 2 shards it in #917; this lane waits, then merges main in.
+- **Third Gate, head 0bd254f3 (main 3050a01 merged in):** phone-fit-full 45685545291 green; check-site 45685545302 red on one job, "PR budget (measured times)": this PR's own `check-site-nav.py` line ran 201 s (main median 108 s) against the 189 s per-line limit. All 112 verifier jobs passed.
+  - Fixed in `check-site-nav.py`: it now declares `# ci-shards` and runs as parts (13 work units: the static rule, the seven Chromium units, the bar on each of its three pages, and the plants in two halves). `--check` and `--selftest` run everything as before. Locally, two parts took 1:14 and 2:15, both passing; CI starts at three parts.
+- **Next:** Gate green, Project Claude's review, Jon's "merge".
 
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
