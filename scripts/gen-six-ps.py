@@ -2988,7 +2988,7 @@ async def topic_estimation(h):
     return out
 
 
-# --- metric-units: unit-converter's gcse bank (length, area, volume, mixed units: 48), a choice ---
+# --- metric-units: unit-converter's gcse bank (length, area, volume, mixed units: 54), a choice ---
 UC_MM = {"mm": 1, "cm": 10, "m": 1000, "km": 10 ** 6, "metres": 1000}                       # in mm
 UC_UNITS = {}
 for _u, _f in UC_MM.items():
@@ -3041,6 +3041,10 @@ UC_WORDS = {
     "Pipe: diameter 20 mm, length 3 m. Volume in cm³? (π ≈ 3.14)": Fraction(314, 100) * 1 * 300,
     "Sheet metal: 1.2 m × 800 mm. Area in cm²?": Fraction(9600),
     "A swimming pool is 25 m × 10 m × 1.5 m. Volume in litres?": Fraction(375000),
+    "A rectangle is 1.6 m by 25 cm. Area in cm²?": Fraction(4000),                  # 160 × 25 (BANKS-40)
+    "A cube has side 30 cm. Volume in m³?": Fraction(27, 1000),                     # 0.3³
+    "Rectangle: 1.8 m by 450 mm. Area in m²?": Fraction(81, 100),                   # 1.8 × 0.45
+    "Box: 2 m × 50 cm × 30 cm. Volume in litres?": Fraction(300),                   # 2 × 0.5 × 0.3 m³ × 1000
 }
 
 
@@ -3069,7 +3073,7 @@ def half_sf(x, sf):
 
 
 async def topic_metric_units(h):
-    """unit-converter's gcse bank: length 10, area 15, volume 15, mixed units 8 (48); the level 4 Engineering items are
+    """unit-converter's gcse bank: length 10, area 17, volume 17, mixed units 10 (54); the level 4 Engineering items are
     above Foundation and are left out. A choice: the game's key and its three wrong answers, the game's steps as the
     worked lines. Every answer is recomputed from the words (conversion factors, the item's own constants and its pi);
     the game's `mc` line is a general reminder, not tied to an option, so it is not a slip. Non-calculator, except the one item that asks for 3 significant figures."""
