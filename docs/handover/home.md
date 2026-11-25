@@ -18,7 +18,7 @@
 
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
-Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/handover/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
+Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/history/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
 
 - **Jon's rulings (25 Nov 2026):** "option 1 please" (a challenge code, not live two-player); challenge games are off the leaderboard; a 6-character code plus a link; both events carry a challenge flag, never the code; placeholder wording, which Jon rewrites after playing.
 - **The code:** 5 data characters (settings and a seed, base 31) and a check character. One wrong character, or two neighbours swapped, never reads as a code.
@@ -30,7 +30,10 @@ Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/ma
 - **Verifier:** a `challenge` unit (codes, keys, fairness at all 8 settings, leaderboard, menu, the recorded normal games) and a challenge fit check; six new plants, sixteen in all, each caught.
 - **Decided here:** in Aa on a phone a challenge game's results are set tighter, with the two buttons side by side, so the extra line keeps both above the fold at 320 x 568. A normal game's Aa results are as they were (its second button already ends 11 px under the fold; not this contract's).
 - **Privacy page:** its list of what is collected is by kind ("which game was played", "session completion and score data"), not by parameter, so the flag does not make it untrue. Not edited.
-- **Run IDs:** in the close-out, as usual.
+- **Merged** on 25 Nov as c4fbeff (#913) via merge-pr.py, which ended "main c4fbeff run 45664836376: GREEN".
+- **PR head 2f1a995:** check-site 45661649440 and phone-fit-full 45661649720, both success.
+- **Main on c4fbeff:** check-site 45664836376 success, phone-fit-full 45664836401 success, pages build 45664836155 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by SITE-BAR-PILOT's first commit.
 
 Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
 
