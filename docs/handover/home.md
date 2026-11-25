@@ -16,6 +16,24 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
+
+Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/handover/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
+
+- **Jon's rulings (25 Nov 2026):** "option 1 please" (a challenge code, not live two-player); challenge games are off the leaderboard; a 6-character code plus a link; both events carry a challenge flag, never the code; placeholder wording, which Jon rewrites after playing.
+- **The code:** 5 data characters (settings and a seed, base 31) and a check character. One wrong character, or two neighbours swapped, never reads as a code.
+- **Fairness:** a challenge deal has its own generator, and each of Marvin's choices a fresh one keyed by a 32-bit hash of (seed, his card, k). Nothing in a challenge game's play draws from rng; only Marvin's lines do.
+- **Menu:** a "Challenge a friend" section under the start button: make a code (with its link, Copy link and Play it), or type one. `?c=CODE` fills the box and sets the options; it never starts a game.
+- **Results:** one more line for a challenge game, nothing submitted, and "Play again" is a normal game at the same settings.
+- **Analytics:** game_started and game_completed carry `challenge: true` or `false`; game_completed's detail ends " · challenge" when true. No new event.
+- **Normal games:** unchanged. The verifier holds three seeded games recorded from main c788f401's page (deal, Marvin's choices, every round and line) and the new page plays them the same.
+- **Verifier:** a `challenge` unit (codes, keys, fairness at all 8 settings, leaderboard, menu, the recorded normal games) and a challenge fit check; six new plants, sixteen in all, each caught.
+- **Decided here:** in Aa on a phone a challenge game's results are set tighter, with the two buttons side by side, so the extra line keeps both above the fold at 320 x 568. A normal game's Aa results are as they were (its second button already ends 11 px under the fold; not this contract's).
+- **Privacy page:** its list of what is collected is by kind ("which game was played", "session completion and score data"), not by parameter, so the flag does not make it untrue. Not edited.
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-24 (home): THREE-GAMES-LIST (MaffsCards, Sums in Disguise and Some Thingies are listed)
 
 Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-games-list`. The contract is at `docs/history/contracts/2026-11-24-three-games-list.md` (verbatim, with Amendment 1). The first commit closed out TIER3-LOCK-FIX.
