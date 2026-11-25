@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: I Dropped My Ice Cream (all 96 answers and every trap recomputed from "given" with exact decimals, 40-digit pi, half up to 1 d.p.; no answer within 0.005 of a 1 d.p. boundary; early rounding never the answer; every trap off its answer and its box's other traps; 48 items a level, 12 a stage, ids unique, no repeated given, none of Jon's assessment numbers, every stage-4 prompt "solid"; the bank, Jon's lines, tagline and picture against the saved contract, verbatim; every box marked by its answer only, box (b) from full accuracy and never from the student's (a), every trap showing Jon's line; the working's cut values; the formula panel by level and stage; the calculator on every stage; every diagram from its given values, the cone to its true proportion, the height's label clear of both slant edges, labels exact, no overlap and nothing cut off at 360 px; every stage at both levels played: one board submission each, on <level>-<mode>; fault-injection self-test) | | 1
-# ci-deps: games/i-dropped-my-ice-cream/ docs/handover/contracts/ docs/history/contracts/
+# ci-deps: games/i-dropped-my-ice-cream/ docs/handover/contracts/*i-dropped-my-ice-cream.md docs/history/contracts/*i-dropped-my-ice-cream.md
 r"""Independent verification for I Dropped My Ice Cream (games/i-dropped-my-ice-cream/), contract I-DROPPED-MY-ICE-CREAM,
 18 Nov 2026. SR-30: checked from its first PR.
 
