@@ -126,6 +126,9 @@ body{padding-bottom:44px;background:var(--bg);font-family:'Outfit',system-ui,san
    24 Nov 2026 (CALC-DOCK-COLUMN, Amendment 1): the calculator's dock now narrows this column to make room (756px at
    1280), so the spacing here is tighter to keep Next above the fold; spacing only, no type size changed. */
 @media(min-width:601px) and (max-height:800px){
+/* SITE-BAR-PILOT (25 Nov 2026): the site bar takes 48px above this header on a computer, which put Next 1px under the
+   fold at 1280x720; the header gives 16px back (padding only, nothing in it smaller). */
+.header{padding:6px 24px}
 #gameScreen{padding-top:6px;max-width:1180px}
 .scenario-card{padding:8px 18px;margin-bottom:8px}
 .scenario-text{font-size:1rem;line-height:1.55}

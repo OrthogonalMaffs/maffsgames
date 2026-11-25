@@ -36,8 +36,15 @@ Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar
 - **For Jon's look:** with the calculator open at 1280x720, Better Value's play screen was 773 px tall on one question (720 on main), so it scrolls; shorter questions still fit in 720.
 - **Todo:** row 3.20 has its note; new row CALC-OVER-HEADER.
 - **Screenshots:** 19, in `Downloads/site-bar-pilot/` on Jon's Windows machine, named in the PR.
-- **Run IDs and phone-fit numbers:** in the PR's report at Gate green, then in the close-out.
-- **Next:** Gate green, Project Claude's review, Jon's "merge".
+- **First Gate, head fdb6e50d: RED** (check-site 45675641141, phone-fit-full 45675641232). Three causes:
+  - **Laptop fit, Better Value:** Next was 681 px against a 680 px fold at 1280x720, from the bar's 48 px. Fixed in the page's own laptop rule: the header's padding is 6 px instead of 14 px there. Next is now 665 / 680 (measured locally, where the before figure matched CI's).
+  - **Aa mode, stale list entries:** Better Value and Spot the Muppet no longer scroll sideways at 320x568 in Aa (their header back links are gone), so the Gate asked for both to come off `scripts/phone-fit-state.json`'s sideways list. Both taken off; nothing else in that file changed.
+  - **Plan, not this contract's: STOPPED for Project Claude.** `verify-maffscards.py`'s line is 231 s (median, main run 45667562512) plus 15 s setup, past the 189 s per-line limit, so every PR that selects it fails the Plan job. This PR selects every verifier (shared paths). It needs `# ci-shards` in that verifier (grown by #913); lane 2 is working in games/maffscards/.
+- **Phone fit on fdb6e50d (CI):**
+  - normal: Base 60 PASS; Better Value known failure (last option 1209 / 528 at 320x568, 1109 / 627 at 375x667, 1081 / 804 at 390x844); Spot the Muppet known failure (699 / 528, 668 / 627). Both were on the known-failures list before this PR.
+  - Aa: Base 60 warns at 320x568 (scrolls; the options start above the fold); the other two as above, and no longer sideways.
+  - laptop: Base 60 and Spot the Muppet PASS; Better Value as above.
+- **Next:** a green Gate needs the MaffsCards line fixed first; then Project Claude's review and Jon's "merge".
 
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
