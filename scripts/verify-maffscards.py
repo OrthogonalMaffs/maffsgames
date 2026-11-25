@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; seven planted faults caught) |
+# ci-line: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; ten planted faults caught) |
 # ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/ docs/history/contracts/ scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
@@ -23,7 +23,12 @@ cards.json, never from the page:
             row or on "Play <label>: <value>" plays; Marvin's choice is shown ("Marvin plays <label>") before the
             reveal; the reveal waits on Next; the 100-round cap ends the entire-deck game (more cards wins, equal is a
             draw with the draw line); the leaderboard gets a score only for a first-to-10 game the player wins, the
-            round count, on the board '<deck>-<marvin>'; analytics sends game_started and game_completed only.
+            round count, on the board '<deck>-<marvin>'; analytics sends game_started and game_completed only, and
+            game_completed carries (MARVIN-LOG, 25 Nov 2026) won and, in the Sheet's own columns, correct (the
+            player won), questions_answered (rounds played), questions_correct (rounds the player won) and detail
+            'you <won> · Marvin <lost> · ties <tied> · <win|loss|draw> · <why>', checked for a won and a lost
+            first-to-10 game and entire-deck games at the cap against the tally the test set up, and for the two
+            played games against this script's own count of the rounds; won + lost + tied = rounds played.
   marvin    (MARVIN-BALANCE, 25 Nov 2026) Marvin plays his best category with probability MARVIN_BEST[level] (easy 0.30,
             hard 0.60), otherwise one of the six at random. In Chromium, seeded first-to-10 games until Marvin has chosen
             2,000 times at each level: the share of his choices equal to his best (by this script's rule) within 3
@@ -247,6 +252,31 @@ def open_page(br, base, html, size, aa=False, still=True, fonts=False):
     return ctx, page, errors
 
 
+def check_completed(what, p, want, out):
+    """game_completed's result and tally (MARVIN-LOG). want: (winner, why, you, marvin, ties, rounds), from the test, never the page."""
+    winner, why, you, mar, ties, rounds = want
+    outcome = {'you': 'win', 'marvin': 'loss', 'draw': 'draw'}[winner]
+    line = 'you %d · Marvin %d · ties %d · %s · %s' % (you, mar, ties, outcome, why)
+    if you + mar + ties != rounds:
+        out.append('game_completed, %s: the test tally %d + %d + %d is not %d rounds' % (what, you, mar, ties, rounds))
+    if p.get('correct') is not (winner == 'you'):
+        out.append('game_completed, %s: correct %r on a %s' % (what, p.get('correct'), outcome))
+    if p.get('won') is not (winner == 'you'):
+        out.append('game_completed, %s: won %r on a %s' % (what, p.get('won'), outcome))
+    if p.get('questions_answered') != rounds or p.get('score') != rounds:
+        out.append('game_completed, %s: questions_answered %r, score %r, expected %d rounds played' % (what, p.get('questions_answered'), p.get('score'), rounds))
+    if p.get('questions_correct') != you:
+        out.append('game_completed, %s: questions_correct %r, expected the player\'s %d rounds won' % (what, p.get('questions_correct'), you))
+    d = p.get('detail')
+    m = re.match(r'^you (\d+) · Marvin (\d+) · ties (\d+) · (win|loss|draw) · (\w+)$', d or '')
+    if not m:
+        out.append('game_completed, %s: detail %r is not "you N · Marvin N · ties N · win|loss|draw · why"' % (what, d))
+    elif sum(int(x) for x in m.group(1, 2, 3)) != p.get('questions_answered'):
+        out.append('game_completed, %s: detail %r does not add up to %r rounds played' % (what, d, p.get('questions_answered')))
+    elif d != line:
+        out.append('game_completed, %s: detail %r, expected %r' % (what, d, line))
+
+
 def check_rules(page, game, out, info):
     cats = {c['key']: c for c in game['categories']}
     order = [c['key'] for c in game['categories']]
@@ -315,30 +345,50 @@ def check_rules(page, game, out, info):
     fresh({'deck': 'main', 'length': 'deck', 'marvin': 'easy'})
     tie = next((y['n'], m['n']) for y in game['cards'] for m in game['cards']
                if y['deck'] == m['deck'] == 'main' and y['n'] != m['n'] and judge(cats, 'lpf', y, m) == 'tie')
-    page.evaluate('a => MC.ui.rig([a[0], 11, 17], [a[1], 53, 61], 100)', list(tie))
+    page.evaluate('a => MC.ui.rig([a[0], 11, 17], [a[1], 53, 61], 100, {you: 40, marvin: 39}, 20)', list(tie))
     page.evaluate("MC.ui.tap('lpf'); MC.ui.tap('lpf'); MC.ui.next()")
     g = page.evaluate("[MC.ui.state(), MC.ui.game().result, document.getElementById('resQuip').textContent, document.getElementById('resTitle').textContent]")
     if g[0] != 'over' or g[1] != {'winner': 'draw', 'why': 'cap'} or not g[2].endswith('Unsettling.') or g[3] != 'A draw':
         out.append('the 100-round cap with equal cards: %r, expected a draw after round 100 with the draw line' % g)
+    done = page.evaluate("window.__ev.filter(e => e[0] === 'game_completed').map(e => e[1])")
+    if len(done) != 1:
+        out.append('entire deck, draw at the cap: %d game_completed events, expected 1' % len(done))
+    else:                                          # the last round a tie: 40 + 39 + 21 = 100
+        check_completed('entire deck, draw at the cap', done[0], ('draw', 'cap', 40, 39, 21, 100), out)
     fresh({'deck': 'main', 'length': 'deck', 'marvin': 'easy'})
-    page.evaluate('MC.ui.rig([64, 11, 17], [2, 53, 61], 100)')
+    page.evaluate('MC.ui.rig([64, 11, 17], [2, 53, 61], 100, {you: 45, marvin: 49}, 5)')
     page.evaluate("MC.ui.tap('sof'); MC.ui.tap('sof'); MC.ui.next()")
-    g = page.evaluate("[MC.ui.game().result, window.__sub.length, window.__ev.map(e => e[0])]")
+    g = page.evaluate("[MC.ui.game().result, window.__sub.length, window.__ev.filter(e => e[0] === 'game_completed').map(e => e[1])]")
     if g[0] != {'winner': 'you', 'why': 'cap'} or g[1]:
-        out.append('the 100-round cap, more cards: %r, expected a win at the cap and no leaderboard score' % g)
+        out.append('the 100-round cap, more cards: %r, expected a win at the cap and no leaderboard score' % g[:2])
+    if len(g[2]) != 1:
+        out.append('entire deck, win at the cap: %d game_completed events, expected 1' % len(g[2]))
+    else:                                          # more cards wins the deck game, whatever the rounds: 46 + 49 + 5 = 100
+        check_completed('entire deck, win at the cap', g[2][0], ('you', 'cap', 46, 49, 5, 100), out)
 
     # the leaderboard: a first-to-10 win only, the rounds taken, on '<deck>-<marvin>'
-    cases = [({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [64, 1], [2, 7], 13, {'you': 9, 'marvin': 3}, [['maffscards', 'main-easy', 13, 13]]),
-             ({'deck': 'all', 'length': 'ten', 'marvin': 'hard'}, [64, 1], [2, 7], 10, {'you': 9, 'marvin': 0}, [['maffscards', 'all48-hard', 10, 10]]),
-             ({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [2, 1], [64, 7], 15, {'you': 3, 'marvin': 9}, []),
-             ({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [64], [2], 12, {'you': 5, 'marvin': 6}, [])]
-    for settings, you, mar, rnd, wins, want in cases:
+    # each case: settings, piles, round, wins and ties before the round, the leaderboard call, then game_completed's
+    # (winner, why, you, marvin, ties, rounds) after it (the round is won on sum of factors, 64's 127 against 2's 3)
+    cases = [({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [64, 1], [2, 7], 13, {'you': 9, 'marvin': 3}, 0, [['maffscards', 'main-easy', 13, 13]],
+              ('you', 'ten', 10, 3, 0, 13)),
+             ({'deck': 'all', 'length': 'ten', 'marvin': 'hard'}, [64, 1], [2, 7], 10, {'you': 9, 'marvin': 0}, 0, [['maffscards', 'all48-hard', 10, 10]],
+              ('you', 'ten', 10, 0, 0, 10)),
+             ({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [2, 1], [64, 7], 15, {'you': 3, 'marvin': 9}, 2, [],
+              ('marvin', 'ten', 3, 10, 2, 15)),
+             ({'deck': 'main', 'length': 'ten', 'marvin': 'easy'}, [64], [2], 12, {'you': 5, 'marvin': 6}, 0, [],
+              ('you', 'out', 6, 6, 0, 12))]
+    for settings, you, mar, rnd, wins, ties, want, tally in cases:
         fresh(settings)
-        page.evaluate('a => MC.ui.rig(a[0], a[1], a[2], a[3])', [you, mar, rnd, wins])
+        page.evaluate('a => MC.ui.rig(a[0], a[1], a[2], a[3], a[4])', [you, mar, rnd, wins, ties])
         page.evaluate("MC.ui.tap('sof'); MC.ui.tap('sof'); MC.ui.next()")
-        got = page.evaluate("[MC.ui.state(), window.__sub, MC.ui.game().result]")
+        got = page.evaluate("[MC.ui.state(), window.__sub, MC.ui.game().result, window.__ev.filter(e => e[0] === 'game_completed').map(e => e[1])]")
+        what = '%s %s, %s' % (settings['deck'], settings['marvin'], 'won' if want else 'not won to 10')
         if got[0] != 'over' or got[1] != want:
-            out.append('leaderboard, %s %s, %s: submitted %r (result %r), expected %r' % (settings['deck'], settings['marvin'], 'won' if want else 'not won to 10', got[1], got[2], want))
+            out.append('leaderboard, %s: submitted %r (result %r), expected %r' % (what, got[1], got[2], want))
+        if len(got[3]) != 1:
+            out.append('game_completed, first to 10, %s: %d events, expected 1' % (what, len(got[3])))
+        else:
+            check_completed('first to 10, %s, %s' % (what, tally[0] + ' ' + tally[1]), got[3][0], tally, out)
     allowed = page.evaluate("b => b.map(k => MaffsLevel.allows('maffscards', k))", BOARDS)
     if not all(allowed):
         out.append('MaffsLevel does not allow every board: %r' % dict(zip(BOARDS, allowed)))
@@ -485,7 +535,7 @@ def check_play(page, game, marvin, out, info):
     by = {c['n']: c for c in game['cards']}
     page.evaluate("s => { MC.seed(s === 'hard' ? 11 : 3); MC.ui.set('deck', 'main'); MC.ui.set('length', 'ten'); MC.ui.set('marvin', s); window.__ev = []; window.__sub = []; }", marvin)
     page.click('#startBtn')
-    rounds = 0
+    rounds, tally = 0, {'you': 0, 'marvin': 0, 'tie': 0}   # this script's own count, from its judgement of each reveal
     for i in range(400):
         st = page.evaluate('MC.ui.state()')
         if st == 'over':
@@ -522,12 +572,13 @@ def check_play(page, game, marvin, out, info):
             if not r['nextShown']:
                 out.append('play vs %s: no Next on the reveal' % marvin)
             rounds += 1
+            tally[j] += 1
             page.click('#nextBtn')
             page.wait_for_function("MC.ui.state() !== 'moving'", timeout=5000)
         else:
             page.wait_for_timeout(30)
-    g = page.evaluate("[MC.ui.state(), MC.ui.game(), window.__ev.map(e => [e[0], e[1].level, e[1].score, e[1].won]), window.__sub]")
-    st, gm, ev, sub = g
+    g = page.evaluate("[MC.ui.state(), MC.ui.game(), window.__ev.map(e => [e[0], e[1].level, e[1].score, e[1].won]), window.__sub, window.__ev.map(e => e[1])]")
+    st, gm, ev, sub, params = g
     if st != 'over':
         out.append('play vs %s: the game did not end in 400 steps' % marvin)
         return
@@ -538,13 +589,16 @@ def check_play(page, game, marvin, out, info):
         out.append('play vs %s: analytics sent %r, expected game_started and game_completed only' % (marvin, names))
     elif ev[1][1] != 'main-' + marvin or ev[1][2] != gm['round'] or ev[1][3] != (gm['result']['winner'] == 'you'):
         out.append('play vs %s: game_completed %r' % (marvin, ev[1]))
+    else:
+        winner = 'you' if tally['you'] == 10 else 'marvin' if tally['marvin'] == 10 else 'draw'
+        check_completed('play vs %s' % marvin, params[1], (winner, 'ten', tally['you'], tally['marvin'], tally['tie'], rounds), out)
     want = [['maffscards', 'main-' + marvin, gm['round'], gm['round']]] if gm['result']['winner'] == 'you' else []
     if sub != want:
         out.append('play vs %s: submitted %r, expected %r' % (marvin, sub, want))
     lines = [q for q in gm['quips'] if q]
     if len(lines) != len(set(lines)):
         out.append('play vs %s: a line of Marvin\'s repeated' % marvin)
-    info.setdefault('played', []).append('%s: %d rounds, %s won %d-%d' % (marvin, rounds, gm['result']['winner'], gm['wins']['you'], gm['wins']['marvin']))
+    info.setdefault('played', []).append('%s: %d rounds, %s won %d-%d, %d tied' % (marvin, rounds, gm['result']['winner'], gm['wins']['you'], gm['wins']['marvin'], tally['tie']))
 
 
 FIT_JS = r"""() => {
@@ -695,6 +749,12 @@ PLANTS = [
     ('the random branch choosing the best always', [('return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : easyChoice();',
                                                      'return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : hardChoice(card, pool);')],
      ['marvin'], r'^marvin (easy|hard): [\d.]+% of \d+ choices are his best category, expected'),
+    ('game_completed correct true on a loss', [("correct: res.winner === 'you', questions_answered:", "correct: true, questions_answered:")],
+     ['rules'], r"^game_completed, first to 10, main easy, not won to 10, marvin ten: correct True on a loss"),
+    ("questions_correct counting Marvin's wins", [("questions_correct: G.wins.you,", "questions_correct: G.wins.marvin,")],
+     ['rules'], r"^game_completed, .*: questions_correct \d+, expected the player's"),
+    ('a detail that does not add up (ties not counted)', [("else { G.mid.push(you, mar); G.ties++; }", "else { G.mid.push(you, mar); }")],
+     ['rules'], r'^game_completed, entire deck, draw at the cap: detail .* does not add up to 100 rounds played'),
 ]
 
 
