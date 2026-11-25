@@ -1,4 +1,4 @@
-/* The "100 games" announcement strip (schools/assets/launch-sash.js). A thin full-width gold strip between the hero and the scores
+/* The homepage announcement strip (schools/assets/launch-sash.js; its text is the homepage's #announcements data). A thin full-width gold strip between the hero and the scores
    ticker, in the page's flow. Static: no motion. Navy on gold is about 9:1 (WCAG AA needs 4.5:1). Homepage only. */
 .launch-sash { --announce-bg: #f5c542; --announce-fg: #1a2744; }
 .launch-sash-link {
@@ -20,4 +20,5 @@
 }
 .launch-sash-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 .launch-sash-link:focus-visible { outline: 3px solid var(--announce-fg); outline-offset: -5px; text-decoration: underline; }
-@media (max-width: 380px) { .launch-sash-link { font-size: 13px; padding: 0 8px; } }
+/* Narrow phones: the sentence may wrap to two lines, so the whole of it shows at 320 px (ANNOUNCE-STRIP). */
+@media (max-width: 380px) { .launch-sash-link { font-size: 13px; padding: 0 8px; white-space: normal; } }
