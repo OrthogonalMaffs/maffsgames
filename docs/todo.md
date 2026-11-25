@@ -406,6 +406,7 @@ Only what needs Jon: a ruling, a content review, or a task only he can do. Build
 - Analytics checkpoint (overdue): re-answer the open questions in the project's `analytics-notes.md`. From 10 Nov 2026 GA4 excludes Jon's home IPv4 and IPv6 /56 (filter Version 3), so figures step down from that date: compare like with like.
 - Events sheet: confirm no `game_abandoned` against the homepage, 1–15 Sep.
 - Events sheet (optional): `binomial-blaster` `game_completed`, score 400, about 17:16 UTC 16 Sep; if present, the deleted Firebase score was real and can be restored.
+- DAILY-DEAL (MaffsCards' "Today's deal", 25 Nov 2026), after its PR merges: set up the Creator sheet by `docs/apps-script-creator.md` (the Sheet, the script, a GitHub token, the trigger, a first test row); then rewrite the panel's placeholder words in `games/maffscards/index.html` (`#daily`) after playing.
 
 ## 7. Housekeeping
 
