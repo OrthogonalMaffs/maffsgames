@@ -65,7 +65,7 @@
   "Escape-room search order and herrings (every live room shows the note and treats a searched herring like a clue; Chromium checks shuffled positions over 60 plays, refresh persistence, replay and an old save without order)": "26",
   "Escape-room set codes (every live room, every lock, every set forced through a saved state in Chromium: the lock screen shows its letter, and a fresh teacher page with no game gives, under that letter, the answer that opens the lock; no bare single-set answer without a live game; four faults planted and caught)": "46",
   "Escape-room times (every live room played on a fake clock: game_completed's detail is exactly \"escaped or timeout, wrongs, hints, used, played, locks\", used - played is the wrong-setting penalties, capped when a wrong runs the clock out, locks in lock order with \"-\" unopened, a resumed save keeps played and openAt, an old save resumes from nought, every room's worst case at most 100 characters; planted fault caught)": "45",
-  "Escape-room token minus sign (formatToken in rating.js and format_token in escape_set_checks.py print a fixed table identically, negatives with U+2212; a hyphen-printing JS rule and a hyphen-printing Python rule planted and caught)": "68",
+  "Escape-room token minus sign (formatToken in rating.js and format_token in escape_set_checks.py print a fixed table identically, negatives with U+2212; a hyphen-printing JS rule and a hyphen-printing Python rule planted and caught)": "87",
   "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section (including Exam technique) and its data-calc is the roster's Calculator field read separately with the named CALC_ACROSS_PAPERS exception, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "69",
   "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
   "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "68",
@@ -358,7 +358,7 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (5 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
