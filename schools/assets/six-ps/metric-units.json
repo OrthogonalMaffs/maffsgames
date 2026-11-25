@@ -553,6 +553,51 @@
    },
    "band": 2,
    "calc": false,
+   "stem": "Convert 0.3 km² to m².",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 300000
+   },
+   "worked": [
+    "1 km = 1000 m.",
+    "1 km² = 1000² = 1,000,000 m².",
+    "0.3 × 1,000,000 = 300,000 m²."
+   ],
+   "slip": [],
+   "unit": "m²"
+  },
+  {
+   "id": "metric-units-0185260c",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][26]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A rectangle is 1.6 m by 25 cm. Area in cm²?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 4000
+   },
+   "worked": [
+    "Convert: 1.6 m = 160 cm.",
+    "Area = 160 × 25 = 4000 cm²."
+   ],
+   "slip": [],
+   "unit": "cm²"
+  },
+  {
+   "id": "metric-units-dc9c1584",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][27]"
+   },
+   "band": 2,
+   "calc": false,
    "stem": "Convert 2,000,000 cm³ to m³.",
    "diagram": null,
    "format": "number",
@@ -568,11 +613,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-0185260c",
+   "id": "metric-units-762bffc5",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][26]"
+    "ref": "[L,A,V,T][28]"
    },
    "band": 2,
    "calc": false,
@@ -589,11 +634,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-dc9c1584",
+   "id": "metric-units-e3e20232",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][27]"
+    "ref": "[L,A,V,T][29]"
    },
    "band": 2,
    "calc": false,
@@ -610,11 +655,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-762bffc5",
+   "id": "metric-units-f50c40a8",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][28]"
+    "ref": "[L,A,V,T][30]"
    },
    "band": 2,
    "calc": false,
@@ -633,11 +678,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-e3e20232",
+   "id": "metric-units-ef70f553",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][29]"
+    "ref": "[L,A,V,T][31]"
    },
    "band": 2,
    "calc": false,
@@ -654,11 +699,11 @@
    "unit": "mm³"
   },
   {
-   "id": "metric-units-f50c40a8",
+   "id": "metric-units-540e4110",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][30]"
+    "ref": "[L,A,V,T][32]"
    },
    "band": 2,
    "calc": false,
@@ -676,11 +721,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-ef70f553",
+   "id": "metric-units-8b12b13d",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][31]"
+    "ref": "[L,A,V,T][33]"
    },
    "band": 2,
    "calc": false,
@@ -698,11 +743,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-540e4110",
+   "id": "metric-units-3388224c",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][32]"
+    "ref": "[L,A,V,T][34]"
    },
    "band": 2,
    "calc": false,
@@ -720,11 +765,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-8b12b13d",
+   "id": "metric-units-b3f2510f",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][33]"
+    "ref": "[L,A,V,T][35]"
    },
    "band": 2,
    "calc": false,
@@ -742,11 +787,11 @@
    "unit": "litres"
   },
   {
-   "id": "metric-units-3388224c",
+   "id": "metric-units-c2259fb2",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][34]"
+    "ref": "[L,A,V,T][36]"
    },
    "band": 2,
    "calc": false,
@@ -763,11 +808,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-b3f2510f",
+   "id": "metric-units-b6b12b6b",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][35]"
+    "ref": "[L,A,V,T][37]"
    },
    "band": 2,
    "calc": false,
@@ -785,11 +830,11 @@
    "unit": "litres"
   },
   {
-   "id": "metric-units-c2259fb2",
+   "id": "metric-units-702924dd",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][36]"
+    "ref": "[L,A,V,T][38]"
    },
    "band": 2,
    "calc": false,
@@ -807,11 +852,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-b6b12b6b",
+   "id": "metric-units-bfa9cad4",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][37]"
+    "ref": "[L,A,V,T][39]"
    },
    "band": 2,
    "calc": false,
@@ -829,11 +874,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-702924dd",
+   "id": "metric-units-2cc7bf95",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][38]"
+    "ref": "[L,A,V,T][40]"
    },
    "band": 2,
    "calc": false,
@@ -850,11 +895,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-bfa9cad4",
+   "id": "metric-units-87baf032",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][39]"
+    "ref": "[L,A,V,T][41]"
    },
    "band": 2,
    "calc": false,
@@ -871,11 +916,55 @@
    "unit": "litres"
   },
   {
-   "id": "metric-units-2cc7bf95",
+   "id": "metric-units-6a16421a",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][40]"
+    "ref": "[L,A,V,T][42]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "Convert 0.75 m³ to litres.",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 750
+   },
+   "worked": [
+    "1 m³ = 1000 litres.",
+    "0.75 × 1000 = 750 litres."
+   ],
+   "slip": [],
+   "unit": "litres"
+  },
+  {
+   "id": "metric-units-4f32ecfd",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][43]"
+   },
+   "band": 2,
+   "calc": false,
+   "stem": "A cube has side 30 cm. Volume in m³?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.027
+   },
+   "worked": [
+    "30 cm = 0.3 m.",
+    "Volume = 0.3³ = 0.027 m³."
+   ],
+   "slip": [],
+   "unit": "m³"
+  },
+  {
+   "id": "metric-units-d974cd05",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][44]"
    },
    "band": 3,
    "calc": false,
@@ -893,11 +982,11 @@
    "unit": "m²"
   },
   {
-   "id": "metric-units-87baf032",
+   "id": "metric-units-356c1b13",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][41]"
+    "ref": "[L,A,V,T][45]"
    },
    "band": 3,
    "calc": false,
@@ -917,11 +1006,11 @@
    "unit": "m³"
   },
   {
-   "id": "metric-units-6a16421a",
+   "id": "metric-units-5074fd59",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][42]"
+    "ref": "[L,A,V,T][46]"
    },
    "band": 3,
    "calc": false,
@@ -939,11 +1028,11 @@
    "unit": "m²"
   },
   {
-   "id": "metric-units-4f32ecfd",
+   "id": "metric-units-fab4c063",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][43]"
+    "ref": "[L,A,V,T][47]"
    },
    "band": 3,
    "calc": true,
@@ -962,11 +1051,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-d974cd05",
+   "id": "metric-units-4503fd1b",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][44]"
+    "ref": "[L,A,V,T][48]"
    },
    "band": 3,
    "calc": false,
@@ -984,11 +1073,11 @@
    "unit": "litres"
   },
   {
-   "id": "metric-units-356c1b13",
+   "id": "metric-units-2711ec97",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][45]"
+    "ref": "[L,A,V,T][49]"
    },
    "band": 3,
    "calc": false,
@@ -1006,11 +1095,11 @@
    "unit": "cm³"
   },
   {
-   "id": "metric-units-5074fd59",
+   "id": "metric-units-8d05ff47",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][46]"
+    "ref": "[L,A,V,T][50]"
    },
    "band": 3,
    "calc": false,
@@ -1028,11 +1117,11 @@
    "unit": "cm²"
   },
   {
-   "id": "metric-units-fab4c063",
+   "id": "metric-units-fd6ac6c5",
    "topic": "metric-units",
    "source": {
     "game": "unit-converter",
-    "ref": "[L,A,V,T][47]"
+    "ref": "[L,A,V,T][51]"
    },
    "band": 3,
    "calc": false,
@@ -1045,6 +1134,51 @@
    "worked": [
     "V = 375 m³.",
     "375 × 1000 = 375,000 litres."
+   ],
+   "slip": [],
+   "unit": "litres"
+  },
+  {
+   "id": "metric-units-c22b9794",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][52]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Rectangle: 1.8 m by 450 mm. Area in m²?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 0.81
+   },
+   "worked": [
+    "Convert: 450 mm = 0.45 m.",
+    "Area = 1.8 × 0.45 = 0.81 m²."
+   ],
+   "slip": [],
+   "unit": "m²"
+  },
+  {
+   "id": "metric-units-904a1b50",
+   "topic": "metric-units",
+   "source": {
+    "game": "unit-converter",
+    "ref": "[L,A,V,T][53]"
+   },
+   "band": 3,
+   "calc": false,
+   "stem": "Box: 2 m × 50 cm × 30 cm. Volume in litres?",
+   "diagram": null,
+   "format": "number",
+   "answer": {
+    "value": 300
+   },
+   "worked": [
+    "50 cm = 0.5 m, 30 cm = 0.3 m.",
+    "V = 2 × 0.5 × 0.3 = 0.3 m³.",
+    "0.3 × 1000 = 300 litres."
    ],
    "slip": [],
    "unit": "litres"

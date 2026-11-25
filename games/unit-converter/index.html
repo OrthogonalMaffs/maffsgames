@@ -169,6 +169,9 @@ const A=[
 {sec:'Area',p:'A hectare is a square 100 m by 100 m. Convert 1 hectare to m²',c:'10,000 m²',d:['1000 m²','100 m²','100,000 m²'],s:['100 m × 100 m = 10,000 m²']},
 {sec:'Area',p:'A floor is 4.5 m by 3.2 m. Area in cm²?',c:'144,000 cm²',d:['14,400 cm²','1,440 cm²','14.4 cm²'],s:['Area = 4.5 × 3.2 = 14.4 m²','14.4 × 10,000 = 144,000 cm²']},
 {sec:'Area',p:'Convert 0.08 m² to mm²',c:'80,000 mm²',d:['800 mm²','8000 mm²','800,000 mm²'],s:['1 m² = 1,000,000 mm² (1000²)','0.08 × 1,000,000 = 80,000 mm²']},
+// BANKS-40 (25 Nov 2026)
+{sec:'Area',p:'Convert 0.3 km² to m²',c:'300,000 m²',d:['300 m²','3000 m²','30,000 m²'],s:['1 km = 1000 m','1 km² = 1000² = 1,000,000 m²','0.3 × 1,000,000 = 300,000 m²'],mc:'1 km² = 1,000,000 m², NOT 1000 m². Square the conversion factor.'},
+{sec:'Area',p:'A rectangle is 1.6 m by 25 cm. Area in cm²?',c:'4000 cm²',d:['40 cm²','400 cm²','40,000 cm²'],s:['Convert: 1.6 m = 160 cm','Area = 160 × 25 = 4000 cm²'],mc:'Convert to the SAME unit before multiplying.'},
 ];
 
 // VOLUME — the nightmare
@@ -188,6 +191,9 @@ const V=[
 {sec:'Volume',p:'A cube has side 0.2 m. Volume in cm³?',c:'8000 cm³',d:['800 cm³','80 cm³','8 cm³'],s:['0.2 m = 20 cm','Volume = 20³ = 8000 cm³']},
 {sec:'Volume',p:'Convert 250,000 mm³ to cm³',c:'250 cm³',d:['25 cm³','2500 cm³','2.5 cm³'],s:['250,000 ÷ 1000 = 250 cm³']},
 {sec:'Volume',p:'A tank holds 0.5 m³. How many litres?',c:'500 litres',d:['50 litres','5000 litres','5 litres'],s:['0.5 × 1000 = 500 litres']},
+// BANKS-40 (25 Nov 2026)
+{sec:'Volume',p:'Convert 0.75 m³ to litres',c:'750 litres',d:['75 litres','7500 litres','75,000 litres'],s:['1 m³ = 1000 litres','0.75 × 1000 = 750 litres']},
+{sec:'Volume',p:'A cube has side 30 cm. Volume in m³?',c:'0.027 m³',d:['0.27 m³','2.7 m³','0.0027 m³'],s:['30 cm = 0.3 m','Volume = 0.3³ = 0.027 m³'],mc:'Convert the side first, THEN cube it.'},
 ];
 
 // TWO-STAGE PROBLEMS
@@ -200,6 +206,9 @@ const T=[
 {sec:'Mixed Units',p:'Pipe: diameter 20 mm, length 3 m. Volume in cm³? (π ≈ 3.14)',c:'942 cm³',d:['94.2 cm³','9420 cm³','9.42 cm³'],s:['Radius = 10 mm = 1 cm, length = 300 cm','V = π × 1² × 300 = 942 cm³']},
 {sec:'Mixed Units',p:'Sheet metal: 1.2 m × 800 mm. Area in cm²?',c:'9600 cm²',d:['960 cm²','96,000 cm²','96 cm²'],s:['1.2 m = 120 cm, 800 mm = 80 cm','A = 120 × 80 = 9600 cm²']},
 {sec:'Mixed Units',p:'A swimming pool is 25 m × 10 m × 1.5 m. Volume in litres?',c:'375,000 litres',d:['37,500 litres','3,750 litres','3,750,000 litres'],s:['V = 375 m³','375 × 1000 = 375,000 litres']},
+// BANKS-40 (25 Nov 2026)
+{sec:'Mixed Units',p:'Rectangle: 1.8 m by 450 mm. Area in m²?',c:'0.81 m²',d:['8.1 m²','81 m²','0.081 m²'],s:['Convert: 450 mm = 0.45 m','Area = 1.8 × 0.45 = 0.81 m²']},
+{sec:'Mixed Units',p:'Box: 2 m × 50 cm × 30 cm. Volume in litres?',c:'300 litres',d:['30 litres','3000 litres','30,000 litres'],s:['50 cm = 0.5 m, 30 cm = 0.3 m','V = 2 × 0.5 × 0.3 = 0.3 m³','0.3 × 1000 = 300 litres']},
 ];
 
 // LEVEL 4 ENGINEERING
