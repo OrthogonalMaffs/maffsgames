@@ -18,7 +18,7 @@
 
 ## 2026-11-25 (home): DAILY-DEAL (MaffsCards gets "Today's deal": one deal a UK day, the same for everyone, with Jon's result on it)
 
-Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`. The contract is at `docs/handover/contracts/2026-11-25-daily-deal.md` (verbatim). No close-out rode on the first commit: MAFFSCARDS-CHALLENGE's is in #916, which stays open (Jon's ruling).
+Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`. The contract is at `docs/handover/contracts/2026-11-25-daily-deal.md` (verbatim, as reissued by Amendment 1). No close-out rode on the first commit: MAFFSCARDS-CHALLENGE's is in #916, which stays open (Jon's ruling).
 
 - **Jon's rulings (25 Nov 2026, 19:16-20:05):** a daily deal with his own result on it, set from a Google Sheet; a new Creator sheet with its own script; a Sheet line over 240 characters is skipped for a pool line; "Today's deal" at the top of the menu.
 - **The deal:** the UK date (Intl, Europe/London) goes through the page's mix32 to a seed; the day's code is that seed at main / ten / hard, played through `deal(ch)` as a challenge. Normal and challenge play are unchanged (the recorded normal games still match).
@@ -34,11 +34,12 @@ Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`.
   - In Aa on a phone the panel's text is .8rem, so a 240-character line and the button fit one 320 x 568 screen.
   - The script also has `--check` (the committed file is all nulls or a valid result), run in CI beside `--selftest`.
 - **The workflow file came from the cloud lane:** the home lane's token has no `workflow` scope and GitHub refused its push (25 Nov, 21:20), so the cloud lane pushed the file as b7b6b47f, from the text in the PR's first comment. It is byte-identical to the home lane's copy (checked with cmp).
+- **Amendment 1 (Project Claude, 25 Nov, 22:20):** the first Gate (check-site 45704002404 on 21b142ec) failed on the clock-seed scan alone: today's UK date reaching the day's seed, which is the feature. The lane stopped, since `scripts/check-site.py` was outside the contract. The amendment allows one entry in `CLOCK_SEED_ALLOW` (`dayCode`), as Equatle and Free Daily Pizza have, and accepts the decisions listed below.
 - **Not run:** the workflow itself cannot run before it is on main, so the bot's push to main is unproven until Jon's first row (STOP IF 1 would apply then).
 - **Waiting on Jon after merge:** the runbook, from step 1; then his rewrite of the placeholder wording (`docs/todo.md` §6).
 - **Run IDs:** in the close-out, as usual.
 
-Record: agent Claude Code; wall 1:25; review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall 1:25 to the first Gate, which stopped it; review cycles 0; amendments 1; usage n/a.
 
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
