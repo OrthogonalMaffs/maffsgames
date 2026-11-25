@@ -4028,3 +4028,15 @@ Row WHEN-WILL-I-USE-THIS as it stood, word for word:
 | WHEN-WILL-I-USE-THIS | WHEN-WILL-I-USE-THIS — a 'When will I use this?' section: for each area of maths, where it appears in real life and careers, by topic and by vocational route (Skills England's 15 routes), each scenario sourced and linked to the games that practise it; as many areas of maths as possible (Jon, 10 Nov 2026). Spec: Project Claude (draft 10 Nov), then contract. | **Project Claude** (spec) |
 
 Its owner cell, **Project Claude** (spec), is done. The spec was approved (Jon, 10 Nov 2026) and the pilot build is the contract `docs/handover/contracts/2026-11-22-when-will-i-use-this.md`; the row now reads "pilot in build". The rest of the row stays.
+
+## Closed by THREE-GAMES-LIST (24 Nov 2026)
+
+Rows MAFFSCARDS-LIST, SUMS-IN-DISGUISE-LIST and SOME-THINGIES-LIST as they stood, word for word:
+
+| # | Item | Owner |
+|---|---|---|
+| MAFFSCARDS-LIST | **MaffsCards online (`maffscards`), merged unlisted** (contract MAFFSCARDS-GAME, 20 Nov 2026). Live by URL only: `/games/maffscards/`. **Jon:** play it (both decks, both lengths, Marvin easy and hard), approve the look and Marvin's lines (rewrite any after play-testing), then rule on listing: the section, a portal card, the hub row (`NOT_ON_HUB` entry off), the sitemap and an /updates/ line. | Jon; home lane (listing) |
+| SUMS-IN-DISGUISE-LIST | **Sums in Disguise (`sums-in-disguise`), merged unlisted** (contract SUMS-IN-DISGUISE, 18 Nov 2026). **Jon:** play all five stages in both looks (`/games/sums-in-disguise/` and `/games/sums-in-disguise/#kids/Maple`), rewrite LINES, then rule on listing with an /essentials/ card. Start picture in (SUMS-IN-DISGUISE-ART). Stage 5 bridges to the next ten, as the class is taught (SUMS-IN-DISGUISE-BRIDGE). | Jon; home lane (listing) |
+| SOME-THINGIES-LIST | **Some Thingies (`some-thingies`), merged unlisted** (contract SOME-THINGIES, 21 Nov 2026). **Jon:** play both modes in both looks (`/games/some-thingies/` and `/games/some-thingies/#kids/Maple`), rewrite LINES, send it to Miss O'Brien and ask her: "groups of" or "lots of"; dots or counters; her stage order; multipliers to 10 or 12; is ? × 5 = 15 in her unit. Jon checks the new stage 3 picture, the scaffold and winner stays on (SOME-THINGIES-TWEAKS). Then rule on listing. Built choice to confirm: a Stage 2 adding item scores only when both the count and the total are right. | Jon; home lane (listing) |
+
+**Closed 24 Nov 2026 (THREE-GAMES-LIST).** Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."; about 21:35, answering Project Claude: "No Essentials cards". All three are listed in the KS3 section: portal cards with New badges, sitemap, leaderboard hub and /updates/, and MaffsCards on the spec map (GCSE N4); roster KS3 Games #113, #114 and #115, look signed off by Jon, 2026-11-24; no /essentials/ card. Listed by the home lane. MAFFSCARDS-LIST moved whole: nothing is owed. SUMS-IN-DISGUISE-LIST keeps Jon's LINES rewrite. SOME-THINGIES-LIST keeps Jon's LINES rewrite, Miss O'Brien's questions, his check of the SOME-THINGIES-TWEAKS changes and the built choice to confirm.

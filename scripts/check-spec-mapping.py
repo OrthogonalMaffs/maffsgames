@@ -47,6 +47,11 @@ UNMAPPED = []
 EXCEPTIONS = {
     "truth-buster": "enrichment by design: every session mixes KS3/GCSE, A-Level and 'beyond the "
                     "curriculum' statements (Jon, 3 Oct 2026)",
+    # Listed 24 Nov 2026 (contract THREE-GAMES-LIST, Amendment 1: Jon, 24 Nov 2026, "EXCEPTIONS entry").
+    "sums-in-disguise": "primary content (adding within 100 with a known fact): the spec map has no Year 6 or "
+                        "KS2 rows (Jon, 24 Nov 2026)",
+    "some-thingies": "primary content (the 2, 5 and 10 times tables, then the 3, 4 and 8): the spec map has no "
+                     "Year 6 or KS2 rows (Jon, 24 Nov 2026)",
 }
 
 PORTAL_GAME = re.compile(r"""href\s*=\s*["'](?:\./|/)?games/([a-z0-9-]+)/?""", re.I)
