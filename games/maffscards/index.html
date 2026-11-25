@@ -135,6 +135,16 @@ a.back-link:hover{color:var(--text)}
 .res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
 .lb-note{font-size:.85rem;color:var(--muted);margin:.3rem 0 .6rem}
 
+/* ---------- challenge a friend (MAFFSCARDS-CHALLENGE): a section of the menu, in the menu's own styles ---------- */
+.ch{border-top:1px solid var(--border);margin-top:1rem}
+.ch p{font-size:.9rem}
+.ch-row{display:flex;gap:.4rem;flex-wrap:wrap;align-items:center;margin-top:.5rem}
+.ch-code{font-family:var(--font-num);font-weight:700;font-size:1.9rem;line-height:1.2;letter-spacing:.12em;text-align:center;color:var(--ink);margin-top:.6rem}
+.ch-box{flex:1 1 12rem;min-width:0;width:100%;min-height:44px;border:2px solid var(--border);border-radius:10px;background:var(--surface-alt);color:var(--text);font:inherit;font-size:1rem;padding:.3rem .55rem}
+.ch-box.code{flex:1 1 7rem;font-family:var(--font-num);text-transform:uppercase;letter-spacing:.08em}
+.ch-lab{display:block;font-weight:600;font-size:.9rem;margin-top:.9rem}
+.ch-msg{font-weight:600;margin-top:.5rem}
+
 @media (max-width:420px){
   .container{padding:.5rem}
   .card{padding:.3rem .5rem .35rem}
@@ -176,6 +186,12 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   body.accessible .play-row{margin-top:.35rem}
   body.accessible .say{margin-bottom:.25rem}
   body.accessible .quip{font-size:.8rem}
+  /* A challenge game's results carry one more line: set tighter, the buttons side by side, so both stay above the fold
+     (MAFFSCARDS-CHALLENGE item 7). A normal game's results are as they were. */
+  body.accessible .results.ch-res .stats{font-size:.85rem;line-height:1.5}
+  body.accessible .results.ch-res .lb-note{font-size:.78rem;margin:.2rem 0 .35rem}
+  body.accessible .results.ch-res .res-btns{gap:.35rem;flex-wrap:nowrap}
+  body.accessible .results.ch-res .res-btns .btn{font-size:.78rem;padding:.25rem .4rem;line-height:1.25}
 }
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 </style>
@@ -264,6 +280,19 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       <div class="start-row"><button class="btn solid" id="startBtn" type="button">Deal the cards</button></div>
       <p class="note">First to 10 games you win go on the leaderboard: the fewer rounds you take, the better. The entire-deck game (at most 100 rounds) has no leaderboard.</p>
       <p class="note" id="loadMsg" hidden></p>
+      <!-- Challenge a friend (MAFFSCARDS-CHALLENGE, 25 Nov 2026). Placeholder wording: Jon rewrites it after playing. -->
+      <div class="ch" id="challenge">
+        <div class="mode-h">Challenge a friend</div>
+        <p>Same deal, same Marvin. Make a code, send it to a friend, and see who takes fewer rounds.</p>
+        <div class="ch-row"><button class="btn" id="chMake" type="button">Make a challenge code</button></div>
+        <div id="chOut" hidden>
+          <div class="ch-code" id="chCode" aria-live="polite"></div>
+          <div class="ch-row"><input class="ch-box" id="chLink" type="text" readonly aria-label="Challenge link"><button class="btn" id="chCopy" type="button">Copy link</button><button class="btn solid" id="chPlay" type="button">Play it</button></div>
+        </div>
+        <label class="ch-lab" for="chInput">Got a code?</label>
+        <div class="ch-row"><input class="ch-box code" id="chInput" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" autocorrect="off" spellcheck="false"><button class="btn" id="chGo" type="button">Play the challenge</button></div>
+        <p class="ch-msg" id="chMsg" role="alert" hidden></p>
+      </div>
     </div>
     <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
     <div class="maffs-start-note" data-maffs-start-note></div>
@@ -297,6 +326,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       <h2 id="resTitle"></h2>
       <div class="stats" id="resStats"></div>
       <div class="quip res-quip" id="resQuip" hidden></div>
+      <div class="lb-note" id="chLine" hidden></div>
       <div class="lb-note" id="lbNote"></div>
       <div class="res-btns">
         <button class="btn solid" id="againBtn" type="button">Play again</button>
@@ -334,6 +364,41 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   function shuffle(a) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(rng() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function pickOne(a) { return a[Math.floor(rng() * a.length)]; }
 
+  /* ---------- challenge codes (MAFFSCARDS-CHALLENGE, 25 Nov 2026) ----------
+     A code is 5 data characters and 1 check character from ALPHABET (31 characters: no 0, 1, I, L or O). The data
+     characters are a base-31 number v, first character most significant: settings = v % 8 (bit 1 deck: 0 main, 1 all;
+     bit 2 length: 0 ten, 1 deck; bit 4 Marvin: 0 easy, 1 hard) and seed = floor(v / 8). The check character is
+     ALPHABET[(1*d1 + 2*d2 + 3*d3 + 4*d4 + 5*d5) mod 31]: 31 is prime, so one wrong character, or two neighbouring
+     data characters swapped, never passes.
+     A challenge game never plays from rng: the deal has its own generator, and each of Marvin's choices a fresh one
+     keyed to (seed, his card, how many times he has already chosen with it), so two students on one code meet the
+     same deal and the same Marvin however differently they play. rng still picks Marvin's lines, which change nothing. */
+  var ALPHABET = '23456789ABCDEFGHJKMNPQRSTUVWXYZ', CH_SPAN = Math.pow(ALPHABET.length, 5), CH_SEEDS = Math.floor(CH_SPAN / 8);
+  function chCheck(d) { var t = 0; for (var i = 0; i < 5; i++) t += (i + 1) * d[i]; return t % ALPHABET.length; }
+  // The code for a seed and the settings {deck, length, marvin}; null if they do not fit in five characters.
+  function chEncode(seed, o) {
+    var v = seed * 8 + (o.deck === 'all' ? 1 : 0) + (o.length === 'deck' ? 2 : 0) + (o.marvin === 'hard' ? 4 : 0), d = [];
+    if (!(Math.floor(seed) === seed && v >= 0 && v < CH_SPAN)) return null;
+    for (var i = 4; i >= 0; i--) { d[i] = v % ALPHABET.length; v = Math.floor(v / ALPHABET.length); }
+    return d.map(function (x) { return ALPHABET.charAt(x); }).join('') + ALPHABET.charAt(chCheck(d));
+  }
+  // {code, seed, deck, length, marvin} for a typed code (spaces trimmed, any case), or null: not 6 characters, a
+  // character outside ALPHABET, or the wrong check character.
+  function chDecode(text) {
+    var code = String(text == null ? '' : text).trim().toUpperCase(), d = [], v = 0, i;
+    if (code.length !== 6) return null;
+    for (i = 0; i < 6; i++) { var x = ALPHABET.indexOf(code.charAt(i)); if (x < 0) return null; d.push(x); }
+    if (chCheck(d) !== d[5]) return null;
+    for (i = 0; i < 5; i++) v = v * ALPHABET.length + d[i];
+    var bits = v % 8;
+    return { code: code, seed: Math.floor(v / 8), deck: bits & 1 ? 'all' : 'main', length: bits & 2 ? 'deck' : 'ten', marvin: bits & 4 ? 'hard' : 'easy' };
+  }
+  // A 32-bit integer hash (the murmur3 finaliser, a bijection on 32 bits), chained over (seed, n, k): one key for each
+  // of Marvin's decisions, and (seed, 0, 0) for the deal, since no card is numbered 0.
+  function mix32(h) { h ^= h >>> 16; h = Math.imul(h, 0x85EBCA6B); h ^= h >>> 13; h = Math.imul(h, 0xC2B2AE35); h ^= h >>> 16; return h >>> 0; }
+  function chKey(seed, n, k) { return mix32(mix32(mix32(seed + 0x9E3779B9 | 0) + n | 0) + k | 0); }
+  function shuffleBy(a, gen) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(gen() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+
   /* =====================================================================================================
      THE RULES: every value comes from cards.json (tools/maffscards/gen.py); nothing here recomputes one.
      ===================================================================================================== */
@@ -362,6 +427,13 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   // Marvin's choice at either level: his best category with probability MARVIN_BEST[level], otherwise one of the six at
   // random (rng, so a seeded game is reproducible).
   function marvinChoice(level, card, pool) { return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : easyChoice(); }
+  // Marvin's choice in a challenge game: the same rule from a generator of its own for this decision, never rng. Its
+  // first draw decides best or random against MARVIN_BEST, its second draws the random category. k: how many times
+  // Marvin has already chosen with this card in this game.
+  function challengeChoice(seed, level, card, pool, k) {
+    var gen = seeded(chKey(seed, card.n, k));
+    return gen() < MARVIN_BEST[level] ? hardChoice(card, pool) : CATS[Math.floor(gen() * CATS.length)].key;
+  }
   // What a card shows for a category (the printed deck's rule: lpf 0 is "none"; Roman and superpowers count).
   function shown(card, key) {
     if (key === 'lpf' && card.lpf === 0) return 'none';
@@ -405,14 +477,17 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     MaffsLock.screen($(id));
   }
 
-  function deal() {
+  // ch: a decoded challenge code (chDecode) for a challenge game; nothing for a normal game, which is as it always was.
+  function deal(ch) {
     MaffsLock.newSession();
-    var pool = deckOf(opts.deck), cards = shuffle(pool.slice());
+    if (ch) { setOpt('deck', ch.deck); setOpt('length', ch.length); setOpt('marvin', ch.marvin); }   // the code's settings, shown on the menu
+    var pool = deckOf(opts.deck), cards = ch ? shuffleBy(pool.slice(), seeded(chKey(ch.seed, 0, 0))) : shuffle(pool.slice());
     G = { deck: opts.deck, length: opts.length, marvin: opts.marvin, pool: pool, you: [], mar: [], mid: [],
-          round: 0, wins: { you: 0, marvin: 0 }, ties: 0, chooser: 'you', used: {}, quips: [], result: null };
+          round: 0, wins: { you: 0, marvin: 0 }, ties: 0, chooser: 'you', used: {}, quips: [], result: null,
+          challenge: ch ? ch.code : null, seed: ch ? ch.seed : null, chosen: {} };
     cards.forEach(function (c, i) { (i % 2 === 0 ? G.you : G.mar).push(c); });   // dealt one each, face down
     show('game');
-    ev('game_started', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck' });
+    ev('game_started', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', challenge: !!G.challenge });
     beginRound();
   }
 
@@ -460,7 +535,12 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       $('playBtn').hidden = true; $('hint').hidden = false;
     } else {
       state = 'marvin';
-      var key = marvinChoice(G.marvin, G.mar[0], G.pool);
+      var key;
+      if (G.challenge) {
+        var mc = G.mar[0], k = G.chosen[mc.n] || 0;
+        G.chosen[mc.n] = k + 1;
+        key = challengeChoice(G.seed, G.marvin, mc, G.pool, k);
+      } else key = marvinChoice(G.marvin, G.mar[0], G.pool);
       sel = key;
       say.innerHTML = '<span class="who">Marvin plays ' + esc(BYKEY[key].label) + '</span>';
       $('playBtn').textContent = 'Turn Marvin\'s card over';
@@ -558,7 +638,9 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     return null;
   }
   // A leaderboard score only for a first-to-10 game the player wins by reaching 10: the rounds taken, fewest best.
+  // A challenge game never goes on the leaderboard (Jon, 25 Nov 2026).
   function boardScore() {
+    if (G.challenge) return null;
     if (G.length !== 'ten' || G.result.winner !== 'you' || G.result.why !== 'ten') return null;
     return G.round;
   }
@@ -572,7 +654,8 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     var outcome = res.winner === 'you' ? 'win' : res.winner === 'marvin' ? 'loss' : 'draw';
     ev('game_completed', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', score: G.round, won: res.winner === 'you',
       correct: res.winner === 'you', questions_answered: G.round, questions_correct: G.wins.you,
-      detail: 'you ' + G.wins.you + ' · Marvin ' + G.wins.marvin + ' · ties ' + G.ties + ' · ' + outcome + ' · ' + res.why });
+      detail: 'you ' + G.wins.you + ' · Marvin ' + G.wins.marvin + ' · ties ' + G.ties + ' · ' + outcome + ' · ' + res.why + (G.challenge ? ' · challenge' : ''),
+      challenge: !!G.challenge });                 // true or false, never the code
     if (score !== null && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board(), score, score).catch(function () {});
     var end = res.winner === 'you' ? pickOne(LINES.playerWins) : res.winner === 'marvin' ? pickOne(LINES.marvinWins)
       : res.why === 'cap' ? LINES.draw[0] : null;
@@ -583,7 +666,11 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       '<br>Cards: you <b>' + G.you.length + '</b>, middle <b>' + G.mid.length + '</b>, Marvin <b>' + G.mar.length + '</b>';
     $('resQuip').hidden = !end;
     $('resQuip').innerHTML = end ? '<span class="who">Marvin:</span> ' + esc(end) : '';
-    $('lbNote').textContent = score !== null ? 'Leaderboard score: ' + score + ' rounds (fewer is better).'
+    document.querySelector('#results .results').classList.toggle('ch-res', !!G.challenge);
+    $('chLine').hidden = !G.challenge;
+    $('chLine').textContent = G.challenge ? 'Challenge ' + G.challenge + ': ' + G.round + ' rounds. Your friend plays the same deal with the same code.' : '';
+    $('lbNote').textContent = G.challenge ? 'Challenge games don\'t go on the leaderboard.'
+      : score !== null ? 'Leaderboard score: ' + score + ' rounds (fewer is better).'
       : G.length === 'ten' ? 'Win a first-to-10 game to get on the leaderboard.' : 'The entire-deck game has no leaderboard.';
     show('results');
   });
@@ -594,13 +681,45 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     var bs = document.querySelectorAll('.opt-btn[data-opt="' + name + '"]');
     for (var i = 0; i < bs.length; i++) bs[i].setAttribute('aria-pressed', String(bs[i].dataset.val === val));
   }
-  $('menu').addEventListener('click', function (e) { var b = e.target.closest('.opt-btn'); if (b) setOpt(b.dataset.opt, b.dataset.val); });
+  // A code is made for the options showing: change one and the made code goes, so the menu never shows a code for other settings.
+  $('menu').addEventListener('click', function (e) { var b = e.target.closest('.opt-btn'); if (b) { setOpt(b.dataset.opt, b.dataset.val); made = null; $('chOut').hidden = true; } });
   // Start before cards.json has arrived: the deal waits for it.
   $('startBtn').addEventListener('click', function () { if (DATA) deal(); else ready.then(function (ok) { if (ok && state === 'menu') deal(); }); });
   $('yourCard').addEventListener('click', function (e) { var r = e.target.closest('.mc-row'); if (r && !r.disabled) tap(r.dataset.key); });
   $('playBtn').addEventListener('click', play);
   $('nextBtn').addEventListener('click', next);
-  $('againBtn').addEventListener('click', function () { if (state === 'over') deal(); });
+  $('againBtn').addEventListener('click', function () { if (state === 'over') deal(); });   // after a challenge too: a normal game, same settings
+
+  /* ---------- challenge a friend: make a code, or play one ---------- */
+  var made = null;
+  function startChallenge(d) { if (DATA) deal(d); else ready.then(function (ok) { if (ok && state === 'menu') deal(d); }); }
+  function badCode(on) { $('chMsg').hidden = !on; $('chMsg').textContent = on ? 'That code doesn\'t work. Check each letter and number.' : ''; }
+  function selectLink() { try { $('chLink').focus(); $('chLink').select(); } catch (e) {} }
+  $('chMake').addEventListener('click', function () {
+    made = chEncode(Math.floor(rng() * CH_SEEDS), opts);     // the seed from rng, so scripts/verify-maffscards.py can fix it
+    $('chCode').textContent = made;
+    $('chLink').value = location.origin + '/games/maffscards/?c=' + made;
+    $('chCopy').textContent = 'Copy link';
+    $('chOut').hidden = false;
+  });
+  $('chCopy').addEventListener('click', function () {
+    try { navigator.clipboard.writeText($('chLink').value).then(function () { $('chCopy').textContent = 'Copied'; }, selectLink); }
+    catch (e) { selectLink(); }                    // no clipboard here: the link is selected, ready to copy by hand
+  });
+  $('chPlay').addEventListener('click', function () { var d = chDecode(made); if (d) startChallenge(d); });
+  function playTyped() { var d = chDecode($('chInput').value); badCode(!d); if (d) startChallenge(d); }
+  $('chGo').addEventListener('click', playTyped);
+  $('chInput').addEventListener('keydown', function (e) { if (e.key === 'Enter') playTyped(); });
+  // A link, ?c=CODE: the code goes in the box and the options show its settings. It never starts a game by itself.
+  (function () {
+    var c = null;
+    try { c = new URLSearchParams(location.search).get('c'); } catch (e) {}
+    if (c === null) return;
+    $('chInput').value = c.trim().toUpperCase().slice(0, 12);
+    var d = chDecode(c);
+    badCode(!d);
+    if (d) { setOpt('deck', d.deck); setOpt('length', d.length); setOpt('marvin', d.marvin); }
+  })();
   $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
@@ -645,6 +764,18 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     },
     hardAll: function (deck) { var pool = deckOf(deck); return pool.map(function (c) { return [c.n, hardChoice(c, pool)]; }); },
     quipFor: function (x, used) { return quipFor(x, used); },
+    challenge: {
+      ALPHABET: ALPHABET, seeds: CH_SEEDS,
+      encode: function (seed, o) { return chEncode(seed, o); },
+      decode: function (text) { return chDecode(text); },
+      key: function (seed, n, k) { return chKey(seed, n, k); },
+      // Marvin's challenge choice for card number n in the deck in use, the k-th time he chooses with it.
+      choice: function (seed, level, deck, n, k) {
+        var pool = deckOf(deck), card = pool.filter(function (c) { return c.n === n; })[0];
+        return challengeChoice(seed, level, card, pool, k);
+      },
+      start: function (code) { var d = chDecode(code); if (d) deal(d); return !!d; }
+    },
     ui: {
       state: function () { return state; },
       selected: function () { return sel; },
@@ -656,7 +787,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       last: function () { return R ? copy(R) : null; },
       board: function () { return G ? board() : null; },
       game: function () {
-        return G ? { deck: G.deck, length: G.length, marvin: G.marvin, round: G.round, wins: copy(G.wins), ties: G.ties, chooser: G.chooser,
+        return G ? { challenge: G.challenge, deck: G.deck, length: G.length, marvin: G.marvin, round: G.round, wins: copy(G.wins), ties: G.ties, chooser: G.chooser,
           you: G.you.map(function (c) { return c.n; }), mar: G.mar.map(function (c) { return c.n; }), mid: G.mid.map(function (c) { return c.n; }),
           quips: G.quips.slice(), result: G.result ? copy(G.result) : null } : null;
       },
