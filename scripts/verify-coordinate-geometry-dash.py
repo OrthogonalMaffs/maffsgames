@@ -2,7 +2,7 @@
 # ci-line: Coordinate Geometry Dash (every key recomputed from its question; exactly one correct option, equations compared as curves; every option marked in Chromium) |
 """Coordinate Geometry Dash: every key recomputed from its question, and exactly one option correct.
 
-The game (45 multiple-choice items: gcse 24, alevel 21) asks for midpoints, gradients, lines, distances,
+The game (80 multiple-choice items: gcse 40, alevel 40; BANKS-40, 25 Nov 2026, added 16 and 19) asks for midpoints, gradients, lines, distances,
 intersections, circles, tangents and parametric curves, each over a canvas. Its bank was keyed by hand with
 no verifier. The tranche 1 audit of 6 Oct 2026 found alevel[13] (x = 3t, y = 4/t) offering xy = 12, y = 12/x
 and x = 12/y, all correct, and keying "All equivalent", so each correct equation was marked wrong
@@ -17,7 +17,7 @@ xy = 12 are the same equation). Then: the key equals the target; no other option
 equal in value (SR-4; B11-CLEAR, 12 Oct 2026: none expected, so EQUAL_PAIRS is empty); and in Chromium
 (390x844) every item is shown through nextQ() and every option clicked through handleAnswer(): the key
 marked right, the others wrong. A self-test plants the audit's item back into a copy of the page; it must
-FAIL naming alevel[13].
+FAIL naming alevel[13]. A plant keys a new item (gcse[24], BANKS-40) to a distractor; it must FAIL naming it.
 
     python scripts/verify-coordinate-geometry-dash.py [--no-selftest] [--against FILE]
 """
@@ -172,6 +172,23 @@ G = [
      ('point', tuple(sp.solve([Y - 2 * X + 1, Y - X / 2 - 2], [X, Y]).values()))),
     ('Line L has gradient 2.', ('num', Q(-1, 2))),
     ('vertices (1,1), (5,1), (5,4)', ('num', dist((1, 1), (5, 4)))),
+    # BANKS-40 (25 Nov 2026)
+    ('A = (−4, 1) and B = (2, −5)', ('point', mid((-4, 1), (2, -5)))),
+    ('M = (3, 4) is the midpoint of AB, and A = (1, 1)', ('point', (2 * 3 - 1, 2 * 4 - 1))),
+    ('A = (−1, 5) and B = (3, −3)', ('num', grad((-1, 5), (3, -3)))),
+    ('2y = 6x + 4', ('num', sp.solve(2 * Y - 6 * X - 4, Y)[0].coeff(X))),
+    ('the line through (0, −1) and (2, 5)', ('eq', line(grad((0, -1), (2, 5)), (0, -1)))),
+    ('Line through (−2, 3) with gradient ½', ('eq', line(Q(1, 2), (-2, 3)))),
+    ('3x + 2y = 12', ('point', (0, sp.solve(2 * Y - 12, Y)[0]))),
+    ('A = (2, −1) and B = (8, 7)', ('num', dist((2, -1), (8, 7)))),
+    ('A = (1, 1) and B = (4, 7)', ('num', dist((1, 1), (4, 7)))),
+    ('parallel to y = 4x − 3 that passes through (1, 6)', ('eq', line(4, (1, 6)))),
+    ('Line A has gradient −2/3. Line B is perpendicular', ('num', -1 / Q(-2, 3))),
+    ('Line L: y = −2x + 1. Find the line perpendicular to L through (4, 3).', ('eq', line(-1 / Q(-2), (4, 3)))),
+    ('Line 1: y = 3x − 2. Line 2: y = x + 4', ('point', tuple(sp.solve([Y - 3 * X + 2, Y - X - 4], [X, Y]).values()))),
+    ('Line 1: y = 2x + 1. Line 2: x + y = 7', ('point', tuple(sp.solve([Y - 2 * X - 1, X + Y - 7], [X, Y]).values()))),
+    ('A = (−3, −2) and B = (7, 4)', ('point', mid((-3, -2), (7, 4)))),
+    ('passes through (0, 4) and (6, 0)', ('num', grad((0, 4), (6, 0)))),
 ]
 L = [
     ('Circle with centre (3, 4) and radius 3', ('eq', circle((3, 4), 9))),
@@ -200,6 +217,26 @@ L = [
          crossings(circle((2, 3), 5), Y - 2 * X + 1)])),
     ('A = (−2, 3) and B = (4, −1)', ('eq', line(-1 / grad((-2, 3), (4, -1)), mid((-2, 3), (4, -1))))),
     ('vertices (0,0), (6,0), (3,5)', ('num', area((0, 0), (6, 0), (3, 5)))),
+    # BANKS-40 (25 Nov 2026)
+    ('Circle with centre (−2, 5) and radius 4', ('eq', circle((-2, 5), 16))),
+    ('x² + y² + 8x − 6y = 0', ('cr', centre_radius(X ** 2 + Y ** 2 + 8 * X - 6 * Y))),
+    ('(x−1)² + (y+2)² = 25', text({-1: 'Inside', 0: 'On the circle', 1: 'Outside'}[sp.sign(circle((1, -2), 25).subs({X: 4, Y: 1}))])),
+    ('A = (−1, 2), B = (3, 6)', ('eq', circle(mid((-1, 2), (3, 6)), (dist((-1, 2), (3, 6)) / 2) ** 2))),
+    ('Circle centre (1, 2). Point P = (4, 6)', ('num', -1 / grad((1, 2), (4, 6)))),
+    ('x² + y² = 10. Find the tangent at (1, 3).', ('eq', line(-1 / grad((0, 0), (1, 3)), (1, 3)))),
+    ('Circle centre (2, −1). Point P = (5, 3)', ('eq', line(grad((2, -1), (5, 3)), (5, 3)))),
+    ('(x−3)² + (y−1)² = 10. Find the tangent at (4, 4).', ('eq', line(-1 / grad((3, 1), (4, 4)), (4, 4)))),
+    ('Circle: x² + y² = 20. Line: y = 2x', text({2: '2', 1: '1 (tangent)', 0: '0'}[crossings(circle((0, 0), 20), Y - 2 * X)])),
+    ('Circle: (x−1)² + (y−1)² = 4. Line: y = 3', text({2: '2', 1: '1 (tangent)', 0: '0'}[crossings(circle((1, 1), 4), Y - 3)])),
+    ('Line: y = x + 1. Circle: x² + y² = 13', text('x = 2 and x = −3' if set(sp.solve(X ** 2 + (X + 1) ** 2 - 13, X)) == {2, -3} else '?')),
+    ('Line: y = x + 6. Circle: x² + y² = 4', text({2: 'Positive (2 points)', 1: '0 (tangent)', 0: 'Negative (no intersection)'}[crossings(circle((0, 0), 4), Y - X - 6)])),
+    ('x = 2t, y = t² + 1', ('eq', para(lambda t: 2 * t, lambda t: t ** 2 + 1))),
+    ('x = t − 2, y = 3t', ('eq', para(lambda t: t - 2, lambda t: 3 * t))),
+    ('x = 1 + 2cos t, y = 3 + 2sin t', ('eq', circle((1, 3), 4))),
+    ('x = 1/t, y = 2t, t > 0', ('eq', para(lambda t: 1 / t, lambda t: 2 * t))),
+    ('x = t², y = 4t', ('num', dydx(lambda t: t ** 2, lambda t: 4 * t, 2))),
+    ('x = 3t + 1, y = t³', ('num', dydx(lambda t: 3 * t + 1, lambda t: t ** 3, 2))),
+    ('x = t², y = t³', ('num', dydx(lambda t: t ** 2, lambda t: t ** 3, 2))),
 ]
 TARGETS = {'gcse': G, 'alevel': L}
 AUDIT = {('alevel', 13): 'coordinate-geometry-dash-t1-001'}
@@ -318,6 +355,9 @@ PLANTS = [
      'opts:["xy = 12","y = 12/x","x = 12/y","All equivalent"],correct:"All equivalent"'),
     ('alevel[15]', 'SR-4: two wrong options equal in value (½ and 1/2)',
      'opts:["1","2","½","−2"],correct:"1"', 'opts:["1","2","½","1/2"],correct:"1"'),
+    ('gcse[24]', 'BANKS-40: a new item keyed to a distractor',
+     'opts:["(−1, −2)","(3, −3)","(−2, −4)","(1, 2)"],correct:"(−1, −2)"',
+     'opts:["(−1, −2)","(3, −3)","(−2, −4)","(1, 2)"],correct:"(3, −3)"'),
     ('gcse[6]', 's1-001: "∞" beside "Undefined (vertical)"',
      'opts:["Undefined (vertical)","0","4","1"]', 'opts:["Undefined (vertical)","0","4","∞"]'),
 ]
