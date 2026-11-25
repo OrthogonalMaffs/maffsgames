@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's choice for every card in both decks; Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; four planted faults caught) |
+# ci-line: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; seven planted faults caught) |
 # ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/ docs/history/contracts/ scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
@@ -16,7 +16,7 @@ cards.json, never from the page:
             ties) and every card line reachable by a pair of cards in the main deck; LOWER_IS_BETTER holds
             'maffscards' in schools/assets/firebase-leaderboard.js.
   rules     in Chromium: the page's judgement of all 48 x 48 pairs on all 6 categories equal to Python's (highest wins,
-            distance lowest, equal is a tie); hard Marvin's choice for every card of both decks equal to the rule (the
+            distance lowest, equal is a tie); Marvin's best category for every card of both decks equal to the rule (the
             category in which his card beats the most other cards of the deck in use, ties to the higher row); the
             card lines win over the sets when their conditions hold, and a used line is never shown again (none when
             a set is used up); one tap on a row never plays, a second row moves the highlight, a second tap on the
@@ -24,6 +24,15 @@ cards.json, never from the page:
             reveal; the reveal waits on Next; the 100-round cap ends the entire-deck game (more cards wins, equal is a
             draw with the draw line); the leaderboard gets a score only for a first-to-10 game the player wins, the
             round count, on the board '<deck>-<marvin>'; analytics sends game_started and game_completed only.
+  marvin    (MARVIN-BALANCE, 25 Nov 2026) Marvin plays his best category with probability MARVIN_BEST[level] (easy 0.30,
+            hard 0.60), otherwise one of the six at random. In Chromium, seeded first-to-10 games until Marvin has chosen
+            2,000 times at each level: the share of his choices equal to his best (by this script's rule) within 3
+            percentage points of MARVIN_BEST + (1 - MARVIN_BEST) x 1/6, the chance a random pick of six is the best one.
+  balance   in Python, seeded, with this script's judge and best-category rule and the MARVIN_BEST the page declares:
+            2,000 first-to-10 games on the main deck at each level, a model player who plays their card's best category
+            half the time and otherwise one at random; the player chooses first, the round's winner chooses next, a tie
+            goes to the middle pile and the chooser stays. The player must win 60-74% on easy and 39-53% on hard (Jon's
+            targets, 60-70% and 40-50%, with room for sampling).
   sim       300 seeded games (entire deck and first to 10, both decks, easy and hard): every game ends, no line of
             Marvin's twice in one game, every set and card line seen.
   play      a full first-to-10 game against easy and one against hard, by real clicks at 390x844 on a touch screen:
@@ -34,13 +43,15 @@ cards.json, never from the page:
             scroll at 320x568, 375x667, 390x844, 1366x768 and 1280x720.
 
 Plants (each must FAIL): distance judged highest-wins; a one-tap play; a repeated line of Marvin's; a submit after a
-loss.
+loss; Hard back to always best (MARVIN_BEST.hard 1); Easy never best (MARVIN_BEST.easy 0); the random branch choosing the
+best category always.
 
     python -X utf8 scripts/verify-maffscards.py [--selftest]
 """
 import argparse
 import glob
 import json
+import random
 import os
 import re
 import sys
@@ -63,6 +74,10 @@ CARD_IDS = ['64-played', '1-wins-pi', '1-powers', '28-sof', '88-roman', '37-lose
 FIT_SIZES = [(320, 568)]
 SIDEWAYS_SIZES = [(320, 568), (375, 667), (390, 844), (1366, 768), (1280, 720)]
 SIMS = 300
+CHOICES = 2000                       # Marvin's choices sampled in the page, per level
+BALANCE_GAMES = 2000                 # simulated first-to-10 games, per level
+PLAYER_BEST = 0.5                    # the model player plays their best category half the time
+BANDS = {'easy': (0.60, 0.74), 'hard': (0.39, 0.53)}   # Jon, 25 Nov 2026: 60-70% and 40-50%, with room for sampling
 
 
 # ---------------------------------------------------------------- the rules, in Python
@@ -329,6 +344,103 @@ def check_rules(page, game, out, info):
         out.append('MaffsLevel does not allow every board: %r' % dict(zip(BOARDS, allowed)))
 
 
+CHOICES_JS = r"""([marvin, want]) => {
+  const keys = ['sof', 'lpf', 'roman', 'dist', 'powers', 'pi'], got = [];
+  for (let seed = 1; got.length < want && seed < 5000; seed++) {
+    MC.seed(seed); MC.ui.set('deck', 'main'); MC.ui.set('length', 'ten'); MC.ui.set('marvin', marvin); MC.ui.start();
+    for (let i = 0; i < 2000 && MC.ui.state() !== 'over' && got.length < want; i++) {
+      const s = MC.ui.state();
+      if (s === 'choosing') { const k = keys[(seed + i) % 6]; MC.ui.tap(k); MC.ui.tap(k); }
+      else if (s === 'marvin') { got.push([MC.ui.selected(), MC.ui.game().mar[0]]); MC.ui.play(); }
+      else if (s === 'reveal') MC.ui.next();
+    }
+  }
+  return got;
+}"""
+
+
+def declared_best(html):
+    """MARVIN_BEST as the page declares it: {'easy': p, 'hard': p}."""
+    m = re.search(r'var MARVIN_BEST = \{ easy: ([\d.]+), hard: ([\d.]+) \};', html)
+    if not m:
+        raise ValueError('no MARVIN_BEST declaration in the page')
+    return {'easy': float(m.group(1)), 'hard': float(m.group(2))}
+
+
+def check_marvin(page, game, out, info):
+    """Marvin's choices in the page: the share equal to his best category against MARVIN_BEST plus chance."""
+    cats = {c['key']: c for c in game['categories']}
+    order = [c['key'] for c in game['categories']]
+    pool = [c for c in game['cards'] if c['deck'] == 'main']
+    by = {c['n']: c for c in game['cards']}
+    best = {c['n']: hard_choice(cats, order, c, pool) for c in pool}
+    declared = page.evaluate('MC.marvinBest')
+    chance = 1 / len(order)
+    for level in ('easy', 'hard'):
+        got = page.evaluate(CHOICES_JS, [level, CHOICES])
+        if len(got) < CHOICES:
+            out.append('marvin %s: only %d choices sampled' % (level, len(got)))
+            continue
+        share = sum(1 for k, n in got if k == best[n]) / len(got)
+        want = declared[level] + (1 - declared[level]) * chance
+        info.setdefault('marvin', []).append((level, share, want, declared[level]))
+        if abs(share - want) > 0.03:
+            out.append('marvin %s: %.1f%% of %d choices are his best category, expected %.1f%% (MARVIN_BEST %.2f + %.2f x 1/6 by chance)'
+                       % (level, 100 * share, len(got), 100 * want, declared[level], 1 - declared[level]))
+        if any(k not in cats for k, n in got) or any(n not in by for k, n in got):
+            out.append('marvin %s: a choice outside the six categories or the deck' % level)
+
+
+def check_balance(html, out, info):
+    """A model player against Marvin, in Python: the first-to-10 win rate at each level against Jon's bands."""
+    game = load(CARDS)
+    cats = {c['key']: c for c in game['categories']}
+    order = [c['key'] for c in game['categories']]
+    pool = [c for c in game['cards'] if c['deck'] == 'main']
+    best = {c['n']: hard_choice(cats, order, c, pool) for c in pool}
+    declared = declared_best(html)
+    for level in ('easy', 'hard'):
+        rng = random.Random(25112026 + (level == 'hard'))
+        wins = 0
+        for _ in range(BALANCE_GAMES):
+            cards = pool[:]
+            rng.shuffle(cards)
+            you, mar, mid = cards[0::2], cards[1::2], []
+            won = {'you': 0, 'marvin': 0}
+            chooser = 'you'
+            while True:
+                if won['you'] >= 10 or won['marvin'] >= 10 or not you or not mar:
+                    break
+                a, b = you[0], mar[0]
+                if chooser == 'you':
+                    key = best[a['n']] if rng.random() < PLAYER_BEST else rng.choice(order)
+                else:
+                    key = best[b['n']] if rng.random() < declared[level] else rng.choice(order)
+                r = judge(cats, key, a, b)
+                you.pop(0)
+                mar.pop(0)
+                if r == 'a':
+                    you += [a, b] + mid
+                    mid = []
+                    won['you'] += 1
+                    chooser = 'you'
+                elif r == 'b':
+                    mar += [b, a] + mid
+                    mid = []
+                    won['marvin'] += 1
+                    chooser = 'marvin'
+                else:
+                    mid += [a, b]
+            if won['you'] >= 10 or (won['marvin'] < 10 and len(you) > len(mar)):
+                wins += 1
+        rate = wins / BALANCE_GAMES
+        lo, hi = BANDS[level]
+        info.setdefault('balance', []).append((level, rate, declared[level]))
+        if not lo <= rate <= hi:
+            out.append('balance %s: a typical player (best category half the time) wins %.1f%% of %d first-to-10 games against MARVIN_BEST %.2f, outside %d-%d%%'
+                       % (level, 100 * rate, BALANCE_GAMES, declared[level], 100 * lo, 100 * hi))
+
+
 SIM_JS = r"""([seed, settings]) => {
   MC.seed(seed); Object.keys(settings).forEach(k => MC.ui.set(k, settings[k])); MC.ui.start();
   const keys = ['sof', 'lpf', 'roman', 'dist', 'powers', 'pi'];
@@ -518,7 +630,12 @@ def check(html, out, units):
     game = load(CARDS)
     if 'data' in units:
         check_data(html, out, info)
-    browser = [u for u in units if u != 'data']
+    if 'balance' in units:
+        try:
+            check_balance(html, out, info)
+        except Exception as e:  # noqa: BLE001
+            out.append('balance threw: %s' % str(e).splitlines()[0][:200])
+    browser = [u for u in units if u not in ('data', 'balance')]
     if not browser:
         return info
     from playwright.sync_api import sync_playwright
@@ -533,10 +650,12 @@ def check(html, out, units):
                         fn(*a)
                     except Exception as e:  # noqa: BLE001
                         out.append('%s threw: %s' % (name, str(e).splitlines()[0][:200]))
-                if 'rules' in browser or 'sim' in browser:
+                if 'rules' in browser or 'sim' in browser or 'marvin' in browser:
                     ctx, page, errs = open_page(br, base, html, (1280, 800))
                     if 'rules' in browser:
                         guarded('rules', check_rules, page, game, out, info)
+                    if 'marvin' in browser:
+                        guarded('marvin', check_marvin, page, game, out, info)
                     if 'sim' in browser:
                         ctx.close()
                         ctx, page, errs2 = open_page(br, base, html, (1280, 800))
@@ -569,6 +688,13 @@ PLANTS = [
     ('a submit after a loss', [("if (G.length !== 'ten' || G.result.winner !== 'you' || G.result.why !== 'ten') return null;",
                                 "if (G.length !== 'ten' || G.result.why !== 'ten') return null;")],
      ['rules'], r'^leaderboard, main easy, not won to 10: submitted \[\[\'maffscards\''),
+    ('Hard back to always best (MARVIN_BEST.hard 1)', [('var MARVIN_BEST = { easy: 0.30, hard: 0.60 };', 'var MARVIN_BEST = { easy: 0.30, hard: 1 };')],
+     ['balance'], r'^balance hard: .* outside 39-53%'),
+    ('Easy never best (MARVIN_BEST.easy 0)', [('var MARVIN_BEST = { easy: 0.30, hard: 0.60 };', 'var MARVIN_BEST = { easy: 0, hard: 0.60 };')],
+     ['balance'], r'^balance easy: .* outside 60-74%'),
+    ('the random branch choosing the best always', [('return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : easyChoice();',
+                                                     'return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : hardChoice(card, pool);')],
+     ['marvin'], r'^marvin (easy|hard): [\d.]+% of \d+ choices are his best category, expected'),
 ]
 
 
@@ -598,7 +724,7 @@ def selftest(html):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
-    ap.add_argument('--only', nargs='*', help='run only these units: data rules sim play fit')
+    ap.add_argument('--only', nargs='*', help='run only these units: data balance rules marvin sim play fit')
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
@@ -606,12 +732,19 @@ def main():
         pass
     html = open(GAME, encoding='utf-8').read()
     out = []
-    units = [] if args.selftest else (args.only or ['data', 'rules', 'sim', 'play', 'fit'])
+    units = [] if args.selftest else (args.only or ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'fit'])
     info = check(html, out, units) if units else {}
     if 'how' in info:
         print('%s: cards.json is the data plus %d how lines, each ending on its value; %d of Marvin\'s lines equal to the contract; every set and card line reachable' % (SLUG, info['how'], info.get('lines', 0)))
     if 'pairs' in info:
-        print('%s: %d judgements equal to the rule; hard Marvin right for every card of both decks; one tap never plays; the cap, the leaderboard and analytics checked' % (SLUG, info['pairs']))
+        print('%s: %d judgements equal to the rule; Marvin\'s best category right for every card of both decks; one tap never plays; the cap, the leaderboard and analytics checked' % (SLUG, info['pairs']))
+    for level, share, want, p in info.get('marvin', []):
+        print('%s: Marvin %s (MARVIN_BEST %.2f): %.1f%% of %d choices his best category, expected %.1f%% (%.2f + %.2f x 1/6, the chance a random pick of six is the best)'
+              % (SLUG, level, p, 100 * share, CHOICES, 100 * want, p, 1 - p))
+    for level, rate, p in info.get('balance', []):
+        lo, hi = BANDS[level]
+        print('%s: a typical player (best category half the time) wins %.1f%% of %d first-to-10 games against %s Marvin (MARVIN_BEST %.2f; band %d-%d%%)'
+              % (SLUG, 100 * rate, BALANCE_GAMES, level, p, 100 * lo, 100 * hi))
     if 'sims' in info:
         print('%s: %d seeded games, none with a line of Marvin\'s twice, every set and card line seen' % (SLUG, info['sims']))
     for p in info.get('played', []):

@@ -258,8 +258,8 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       </div>
       <div class="mode-h">Marvin</div>
       <div class="opts" id="optMarvin">
-        <button class="opt-btn" type="button" data-opt="marvin" data-val="easy" aria-pressed="true">Easy<small>picks at random</small></button>
-        <button class="opt-btn" type="button" data-opt="marvin" data-val="hard" aria-pressed="false">Hard<small>knows the deck</small></button>
+        <button class="opt-btn" type="button" data-opt="marvin" data-val="easy" aria-pressed="true">Easy<small>sometimes spots his best</small></button>
+        <button class="opt-btn" type="button" data-opt="marvin" data-val="hard" aria-pressed="false">Hard<small>usually knows the deck</small></button>
       </div>
       <div class="start-row"><button class="btn solid" id="startBtn" type="button">Deal the cards</button></div>
       <p class="note">First to 10 games you win go on the leaderboard: the fewer rounds you take, the better. The entire-deck game (at most 100 rounds) has no leaderboard.</p>
@@ -311,6 +311,10 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
 (function () {
   'use strict';
   var SLUG = 'maffscards', TEN = 10, CAP = 100;
+  // How often Marvin plays his card's best category (hardChoice); otherwise a category at random, which may be the best.
+  // MARVIN-BALANCE (Jon, 25 Nov 2026): a typical student wins about two first-to-10 games in three on easy, a little
+  // under half on hard (Jon's targets 60-70% and 40-50%; scripts/verify-maffscards.py simulates them).
+  var MARVIN_BEST = { easy: 0.30, hard: 0.60 };
   // Four boards, first-to-10 wins only, fewest rounds best (LOWER_IS_BETTER): '<deck>-<marvin>'.
   var BOARDS = ['main-easy', 'main-hard', 'all48-easy', 'all48-hard'];
   var level = MaffsLevel.resolve({ slug: 'maffscards', levels: ['ks3'], fallback: 'ks3',
@@ -355,6 +359,9 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     return best;
   }
   function easyChoice() { return pickOne(CATS).key; }
+  // Marvin's choice at either level: his best category with probability MARVIN_BEST[level], otherwise one of the six at
+  // random (rng, so a seeded game is reproducible).
+  function marvinChoice(level, card, pool) { return rng() < MARVIN_BEST[level] ? hardChoice(card, pool) : easyChoice(); }
   // What a card shows for a category (the printed deck's rule: lpf 0 is "none"; Roman and superpowers count).
   function shown(card, key) {
     if (key === 'lpf' && card.lpf === 0) return 'none';
@@ -453,7 +460,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       $('playBtn').hidden = true; $('hint').hidden = false;
     } else {
       state = 'marvin';
-      var key = G.marvin === 'hard' ? hardChoice(G.mar[0], G.pool) : easyChoice();
+      var key = marvinChoice(G.marvin, G.mar[0], G.pool);
       sel = key;
       say.innerHTML = '<span class="who">Marvin plays ' + esc(BYKEY[key].label) + '</span>';
       $('playBtn').textContent = 'Turn Marvin\'s card over';
@@ -621,7 +628,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   // Read-only views and drivers, for scripts/verify-maffscards.py.
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
   window.MC = {
-    SLUG: SLUG, BOARDS: BOARDS, TEN: TEN, CAP: CAP, ready: ready,
+    SLUG: SLUG, BOARDS: BOARDS, TEN: TEN, CAP: CAP, ready: ready, marvinBest: copy(MARVIN_BEST),
     loaded: function () { return !!DATA; },
     lines: function () { return copy(LINES); },
     seed: function (n) { rng = seeded(n); },
