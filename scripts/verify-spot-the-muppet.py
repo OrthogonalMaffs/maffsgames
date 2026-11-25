@@ -6,7 +6,7 @@ Each item is a character's advice and four options, one keyed correct. A questio
 retry and marks nothing; the question is marked once, when it is right or at the second wrong pick. The bank is read
 from the live page, then:
 
-  Bank: 18 KS3, 20 GCSE, 12 Core items; ids unique; four distinct options, exactly one keyed correct.
+  Bank: 40 KS3, 40 GCSE, 40 Core items (BANKS-40, 25 Nov 2026: 22, 20 and 28 added); ids unique; four distinct options, exactly one keyed correct.
   Arithmetic: every equation chain in the advice and in the key ("a = b = c", "a ≈ b") holds, a written decimal to its
     own places. A muppet's deliberate wrong sum is in MUPPET_SUMS with its reason (a stale entry fails), so a slip in
     the working a student reads is caught (spot-the-muppet-t2-009: £1,000 × 1.05 × 20 was "£21,050").
@@ -50,7 +50,7 @@ import bank_common as bc  # noqa: E402
 
 SLUG = 'spot-the-muppet'
 GAME = os.path.join(os.path.dirname(HERE), 'games', SLUG, 'index.html')
-COUNTS = {'ks3': 18, 'gcse': 20, 'core': 12}
+COUNTS = {'ks3': 40, 'gcse': 40, 'core': 40}
 TAG = 'spot-the-muppet-'
 
 
@@ -58,6 +58,12 @@ def amortised(p, apr, months):
     """The monthly repayment of a loan of p at an annual percentage rate apr, repaid over months."""
     r = (1 + apr) ** (1 / 12) - 1
     return p * r / (1 - (1 + r) ** -months)
+
+
+def r1sf(n):
+    """A positive whole number rounded to 1 significant figure, half up (48 -> 50, 21 -> 20)."""
+    place = 10 ** (len(str(n)) - 1)
+    return (n + place // 2) // place * place
 
 
 # Every item with a numeric answer: the values the key must state, recomputed from the item's own givens.
@@ -78,6 +84,28 @@ KEYS = {
     'stm_ks3_015': (F(2 * (9 + 4)),),
     'stm_ks3_016': (F(350, 7) * 2, F(350, 7) * 5),
     'stm_ks3_018': (F(3), F(7)),                             # the two modes
+    'stm_ks3_019': (F(2 + 3 * 4),),  # multiply before adding
+    'stm_ks3_020': (F(-3 - 5),),
+    'stm_ks3_021': (F(3448 // 100, 10),),  # 3.448 to 1 d.p.: the second decimal is 4, so round down
+    'stm_ks3_022': (F(3, 10) * F(2, 10),),
+    'stm_ks3_023': (F(12) / F(1, 2),),
+    'stm_ks3_024': (F(180 - 65),),
+    'stm_ks3_025': (F((5 - 2) * 180),),  # interior angles of a pentagon
+    'stm_ks3_026': (2 * math.pi * 4,),  # circumference, r = 4
+    'stm_ks3_027': (F(5 * 4 * 3),),
+    'stm_ks3_028': (F(25, 10) * 100,),  # 2.5 m in cm
+    'stm_ks3_029': (F(2), F(25, 10) * 60 - 2 * 60,),  # 2.5 hours: the whole hours, then the minutes left
+    'stm_ks3_030': (F(max(4, 9, 2, 7, 12) - min(4, 9, 2, 7, 12)),),
+    'stm_ks3_031': (F(5 + 8, 2),),  # the middle two of 3, 5, 8, 10
+    'stm_ks3_032': (1 - F(35, 100) - F(4, 10),),
+    'stm_ks3_033': (F(12 // math.gcd(12, 18)), F(18 // math.gcd(12, 18)),),
+    'stm_ks3_034': (F(4 * 6 // math.gcd(4, 6)),),
+    'stm_ks3_035': (F(5) ** 2,),
+    'stm_ks3_036': (F(4 * 3),),  # 4a with a = 3
+    'stm_ks3_037': (F(15 - 7),),
+    'stm_ks3_038': (F(12, 3),),
+    'stm_ks3_039': (F(40) * F(115, 100),),
+    'stm_ks3_040': (F(1, 2) / F(1, 4),),
     'stm_gcse_001': (F(85) / F(85, 100),),
     'stm_gcse_002': (F(500) * F(104, 100) ** 3,),
     'stm_gcse_003': (F(3), F(4)),                            # 2x + y = 10, x + y = 7
@@ -93,6 +121,26 @@ KEYS = {
     'stm_gcse_017': (F(13),),                                # sqrt(5^2 + 12^2)
     'stm_gcse_018': (F(1, 2) * F(1, 6),),
     'stm_gcse_020': (F(4), F(2)),                            # 3x + 2y = 16, x + 2y = 8
+    'stm_gcse_021': (F(1, 2) * (6 + 10) * 4,),
+    'stm_gcse_022': (math.pi * 3 ** 2 * 10,),
+    'stm_gcse_023': (F(15, 60) * 360,),
+    'stm_gcse_024': (F(24, 3) * 5,),
+    'stm_gcse_025': (F(0 * 4 + 1 * 6 + 2 * 8 + 3 * 2, 4 + 6 + 8 + 2),),
+    'stm_gcse_026': (F(60 + 60) / (F(60, 60) + F(60, 30)),),  # total distance over total time
+    'stm_gcse_027': (180 - F(360, 6),),
+    'stm_gcse_028': (12000 * F(85, 100) ** 2,),  # two years at 15% off the current value
+    'stm_gcse_029': (F(4 * 6, 8),),  # same work, more builders
+    'stm_gcse_030': (F(3, 5) * F(2, 4),),
+    'stm_gcse_031': (F(240, 30),),
+    'stm_gcse_032': (math.degrees(math.atan(5 / 12)),),  # opposite 5, adjacent 12
+    'stm_gcse_033': (F(2), F(3),),  # the roots of x^2 - 5x + 6, each checked in the explanation
+    'stm_gcse_034': (F(3, 9),),  # 0.3 recurring
+    'stm_gcse_035': (F(12, 2 ** 2) * 4 ** 2,),  # y = kx^2 through (2, 12), at x = 4
+    'stm_gcse_036': (F(60, 360) * math.pi * 6 ** 2,),
+    'stm_gcse_037': (5 * F(3) ** 2,),  # area scale factor k^2
+    'stm_gcse_038': (F(230) / F(115, 100),),
+    'stm_gcse_039': (F(1, 6) * 120,),
+    'stm_gcse_040': (F(70),),  # alternate angles are equal
     'stm_core_001': (F(10) * F(1, 10) - 2,),                 # expected profit per game
     'stm_core_002': (F(350, 500), F(480, 750)),              # pence per ml, 500 ml and 750 ml
     'stm_core_004': (1000 * 1.05 ** 20,),                    # compound, 20 years
@@ -101,6 +149,32 @@ KEYS = {
     'stm_core_008': (F(120) / F(120, 100),),
     'stm_core_009': (F(2000, 15 - 5),),
     'stm_core_012': (amortised(12000, 0.06, 36),),           # the monthly repayment
+    'stm_core_013': ((1 - F(103, 105)) * 100,),  # the fall in real pay, %
+    'stm_core_014': ((F(3) - 2) / 2 * 100,),  # the relative rise, %
+    'stm_core_016': (F(5, 10) * 2,),  # a 100% rise on 0.5%
+    'stm_core_017': (F(1, 10) * 400,),
+    'stm_core_018': ((F(102, 100) ** 12 - 1) * 100,),  # 2% a month for 12 months, compounded
+    'stm_core_019': (2000 * F(103, 100) ** 2 - 2000,),
+    'stm_core_021': (F(r1sf(48) * r1sf(21)),),  # each number to 1 s.f., then multiply (SR-12)
+    'stm_core_022': ((F(250) - 200) / 200 * 100,),
+    'stm_core_023': (500 * F(98, 100) * F(116, 100),),  # 2% taken off the pounds, then changed
+    'stm_core_024': (F(100 - 80, 100) * 100,),  # profit over selling price, %
+    'stm_core_025': (F(sorted([20000, 22000, 24000, 25000, 150000])[2]),),  # the 3rd of 5 in order
+    'stm_core_026': (F(170 - 2 * 8), F(170 + 2 * 8),),  # mean plus and minus 2 SD
+    'stm_core_027': (2 - F(1, 500) * 600,),  # the expected loss per ticket
+    'stm_core_028': ((F(11, 10) ** 2 - 1) * 100,),
+    'stm_core_029': (F(1250, 100) * F(375, 10) * 52,),
+    'stm_core_030': (2 * F(540, 100) / 3,),
+    'stm_core_031': (F(18, 50) * 1200,),
+    'stm_core_032': ((1 - F(9, 10) ** 5) * 100,),  # 1 - P(never late), %
+    'stm_core_033': ((F(132) - 120) / 120 * 100,),
+    'stm_core_034': (F(30, 5),),  # the number of visits at which both cost the same
+    'stm_core_035': (F(5 * 4 + 15 * 6, 4 + 6),),  # midpoints 5 and 15
+    'stm_core_036': ((F(107, 100) ** 10 - 1) * 100,),
+    'stm_core_037': (500 * (1.399 ** (1 / 12) - 1),),  # EAR: the monthly rate compounds to 39.9%
+    'stm_core_038': (F(95 * 12 - 1000),),
+    'stm_core_039': ((F(10033, 10000) ** 12 - 1) * 100,),  # B's AER, %
+    'stm_core_040': (F(2600 - 2000, 2023 - 2020),),  # the change over the years it took
 }
 
 # Items with no numeric answer to recompute: reviewed (8 Oct 2026), the reason the key is the one true option.
@@ -116,6 +190,8 @@ CONCEPT = {
     'stm_core_006': 'an index of 115 is a 15% rise on the base year, not a price',
     'stm_core_010': 'a least-squares line passes through the mean point, not the origin',
     'stm_core_011': 'bias towards heads is a one-tailed test',
+    'stm_core_015': 'a sample taken outside a leisure centre over-represents people who exercise: biased, not representative',
+    'stm_core_020': 'ice cream and fan sales: hot weather drives both (correlation is not cause)',
 }
 
 # A muppet's deliberate wrong sum in the advice: (item, the equation as written) -> why it is wrong on purpose.
@@ -128,6 +204,11 @@ MUPPET_SUMS = {
 CONVENTIONS = {
     'stm_core_004': ('compound', TAG + 't2-001'),
     'stm_gcse_002': ('compound', None),
+    'stm_gcse_028': ('current', None),     # depreciation: each 15% comes off the current value, not the first
+    'stm_core_018': ('compound', None),
+    'stm_core_019': ('compound', None),
+    'stm_core_036': ('compound', None),
+    'stm_core_039': ('compound', None),
 }
 
 # A key that is a verdict with no figure in it (right answer, wrong method): the explanation states the values (SR-34).
@@ -479,8 +560,9 @@ def check_bank(fails, opens, bank):
         if qid in CONVENTIONS:
             word, tag = CONVENTIONS[qid]
             if word not in q['advice'].lower():
-                fails.append('%s%s: the key depends on %s interest, but the advice never says so (the topic field is '
-                             'not shown), so a true simple-interest statement is marked wrong: "%s"'
+                fails.append('%s%s: the key depends on the convention "%s", but the advice never says so (the topic '
+                             'field is not shown), so a statement true under another convention (simple interest, '
+                             'a fixed amount off) is marked wrong: "%s"'
                              % (tag + ' ' if tag else '', qid, word, q['advice']))
         # a muppet's "is correct — V" repeats the advice's own V
         for o in opts:
@@ -793,6 +875,8 @@ PLANTS = [
      "  box.classList.add('show');\n}", "}"),
     ('stm_ks3_001', 'ks3_001 explanation with a wrong sum',
      "0.30 \\u00d7 80 = 24.'}", "0.30 \\u00d7 80 = 25.'}"),
+    ('stm_ks3_019', 'ks3_019 (BANKS-40) key changed to a wrong value',
+     "Leftwich is wrong \\u2014 it\\'s 14',correct:true", "Leftwich is wrong \\u2014 it\\'s 15',correct:true"),
     ('SR-34', 'SR-34: gcse_008 explanation loses the unit prices',
      "In pence: 650g costs 715 \\u00f7 650 = 1.10p/g and 400g costs 480 \\u00f7 400 = 1.20p/g. But", "In pence: 650g is cheaper per gram. But"),
     (TAG + 't2-008', 't2-008: core_003 prescribing televisions',
