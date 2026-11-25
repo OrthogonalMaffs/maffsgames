@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px) |
+# ci-line: Like Terms Collector (all 45 keys recomputed, SymPy; typed answers marked as exact whole numbers in Chromium at 390px; Stage 1-2 boxes and feedback read as a sum, 9a + 7b) |
 """Independent verification of like-terms-collector (tranche 3 audit, like-terms-collector-t3-001).
 
 The game has one level (year6), 45 items in three stages: Stage 1 (5) and Stage 2 (10) are typed,
@@ -18,6 +18,11 @@ Marking, in Chromium at 390x844, through the game's own Check button, read from 
 a whole number; 8 and 6 must be marked right. Every typed item's keys must be marked right, and
 its first key plus 0.9 (a decimal parseInt would truncate back to the key) marked wrong. Marking
 is MaffsAnswer.exact() (schools/assets/answer.js, canon §7.1.3); parseInt truncated 8.9 to 8.
+
+Notation (LIKE-TERMS-PLUS, Jon, 25 Nov 2026): for every Stage 1 and Stage 2 item the answer row reads
+"<box> <label1> + <box> <label2>", the one "+" first in the second term's group (terms side by side read as a
+product, 9a 7b); a wrong answer's feedback ends "The answer is 9a + 7b." (Stage 2) or "The answer is 8 apples +
+6 tangerines." (Stage 1), on the item's own keys. A self-test removes the "+" span and must FAIL.
 
 A self-test plants the parseInt marking back into the served page and must FAIL; it runs unless
 --no-selftest.
@@ -165,6 +170,52 @@ BOXES_JS = """async () => {
   } finally { MaffsAnswer.exact = orig; }
   return out;
 }"""
+# LIKE-TERMS-PLUS: every Stage 1 and 2 item's row, read child by child, and the feedback a wrong answer gets.
+NOTATION_JS = """async () => {
+  const out = [];
+  for (const [stage, bank] of [[0, STAGE1], [1, STAGE2]]) {
+    for (let q = 0; q < bank.length; q++) {
+      currentStage = stage; currentQ = q; loadQuestion();
+      const row = document.getElementById('inputRow');
+      const groups = [...row.children].map(g => g.className + ':' + [...g.children].map(c =>
+        c.tagName === 'INPUT' ? '<box>' : (c.className + '=' + c.textContent)).join('|'));
+      const text = [...row.querySelectorAll('.input-group > *')].map(c =>
+        c.tagName === 'INPUT' ? '<box>' : c.textContent).join(' ');
+      const plusses = (row.textContent.match(/\\+/g) || []).length;
+      document.getElementById('ans0').value = String(bank[q].answers[0] + 1);
+      document.getElementById('ans1').value = String(bank[q].answers[1]);
+      document.getElementById('checkBtn').click();
+      for (let t = 0; MARK() === null && t < 250; t++) await new Promise(r => setTimeout(r, 20));
+      out.push({stage, q, groups, text, plusses, mark: MARK(),
+                fb: document.getElementById('feedbackDetail').textContent});
+    }
+  }
+  return out;
+}"""
+PLUS_LINE = ("if(i>0){const op=document.createElement('span');op.className='input-op';op.textContent='+';"
+             "g.appendChild(op);}")
+PLUS_SWAP = (PLUS_LINE, '')
+
+
+def check_notation(fails, rows, bank):
+    for r in rows:
+        item = bank['STAGE1' if r['stage'] == 0 else 'STAGE2'][r['q']]
+        l, k = item['labels'], item['answers']
+        where = 'notation: stage %d item %d' % (r['stage'] + 1, r['q'] + 1)
+        want_text = '<box> %s + <box> %s' % (l[0], l[1])
+        want_groups = ['input-group:<box>|input-label=%s' % l[0],
+                       'input-group:input-op=+|<box>|input-label=%s' % l[1]]
+        if r['text'] != want_text or r['groups'] != want_groups or r['plusses'] != 1:
+            fails.append('%s: the row reads %r (groups %s, %d "+"), expected %r'
+                         % (where, r['text'], r['groups'], r['plusses'], want_text))
+        sep = ' ' if r['stage'] == 0 else ''
+        want_fb = 'The answer is %d%s%s + %d%s%s.' % (k[0], sep, l[0], k[1], sep, l[1])
+        if r['mark'] is not False:
+            fails.append('%s: typed %d/%d, marked correct=%s, expected False' % (where, k[0] + 1, k[1], r['mark']))
+        elif not r['fb'].endswith(want_fb):
+            fails.append('%s: the feedback %r does not end %r' % (where, r['fb'][-80:], want_fb))
+
+
 BOX_SWAP = ("inp.type='text';inp.setAttribute('inputmode','decimal');", "inp.type='number';")
 
 
@@ -264,6 +315,7 @@ def play(fails, against=None, planted=False, deferred=None, swap=None):
             for (where, typed, want), g in zip(labels, got):
                 if g is not want:
                     fails.append('%s: typed %s, marked correct=%s, expected %s' % (where, typed, g, want))
+            check_notation(fails, page.evaluate(NOTATION_JS), bank)
             fails.extend('answer box: ' + f for f in page.evaluate(BOXES_JS))
             browser.close()
             if errors:
@@ -285,7 +337,7 @@ def main():
     bank = play(fails, args.against)
     if bank is not None:
         check_bank(fails, bank, args.verbose)
-    print('%s: %d keys recomputed (SymPy), 15 typed items marked in Chromium at 390px'
+    print('%s: %d keys recomputed (SymPy), 15 typed items marked and their rows and feedback read in Chromium at 390px'
           % (SLUG, sum(len(bank[k]) for k in bank) if bank else 0))
 
     ok = True
@@ -302,6 +354,12 @@ def main():
         ok = ok and caught
         print('  self-test %-40s %s' % ('ANSWER-BOX-TEXT: boxes back to type=number',
                                         ('caught: ' + [f for f in boxed if f.startswith('answer box: ')][0][:100]) if caught else '*** MISSED ***'))
+        noplus = []
+        play(noplus, swap=PLUS_SWAP)
+        caught = any(f.startswith('notation: ') for f in noplus)
+        ok = ok and caught
+        print('  self-test %-40s %s' % ('LIKE-TERMS-PLUS: the "+" span removed',
+                                        ('caught: ' + [f for f in noplus if f.startswith('notation: ')][0][:100]) if caught else '*** MISSED ***'))
         late, early = [], []
         play(late, deferred=early)
         held = not late and early and all(e is None for e in early)
