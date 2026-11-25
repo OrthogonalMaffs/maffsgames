@@ -78,7 +78,7 @@
    width and left; .maffs-calc-host makes the card the rail's containing block. */
 .maffs-calc-host { position: relative; }
 .maffs-calc.docked .maffs-calc-rail { position: absolute; top: 0; bottom: 0; display: block; }
-.maffs-calc.docked .maffs-calc-panel { position: sticky; top: 16px; max-width: none; }
+.maffs-calc.docked .maffs-calc-panel { position: sticky; top: calc(var(--site-bar-offset, 0px) + 16px); max-width: none; }
 .maffs-calc-panel:focus { outline: none; }
 .maffs-calc-panel:focus-visible { outline: 2px solid var(--accent, var(--text)); outline-offset: 2px; }
 .maffs-calc-screen {

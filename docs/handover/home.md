@@ -16,9 +16,42 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-25 (home): SITE-BAR-PILOT (one site bar on three pilot games: logo home, back link to the hub, name on big screens)
+
+Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar-pilot`, PR #916. The contract is at `docs/handover/contracts/2026-11-25-site-bar-pilot.md` (Amendment 1, the whole contract reissued, verbatim). The first commit closed out MAFFSCARDS-CHALLENGE.
+
+- **Pilot pages:** Spot the Muppet, Better Value and It's Just Base 60, Bruv (`SITE_BAR_PAGES` in `check-site-nav.py`). Every other page is unchanged.
+- **The bar:** `schools/assets/site-bar.css` (new) reserves 48 px, pinned, on a fine pointer and 36 px, in the flow, otherwise. `site-nav.js` fills the slot: the logo, `a.site-bar-back` (short form on a coarse pointer) and, on a fine pointer, the name. No margin logo or name on a slot page; the written link stays if anything throws.
+- **Stopped once (STOP IF 4, 17:58):** the pinned bar covered the top 32 px of Better Value's docked calculator. Amendment 1 fixed it in the shared layer: site-bar.css sets `--site-bar-offset: 48px` on a fine pointer and `calculator.css` adds it to the panel's sticky top.
+  - Panel now, calculator open: 64 to 403 px at scroll 0 and at the bottom, at 1280x720, 1280x600 (scrolled 56 px) and 1920x1080; the bar is 0 to 48 px.
+  - `check-calc-dock.py` passes for all 23 calculator games.
+- **Pages:** slot and stylesheet written by `apply-site-nav.py`; every back link out, and the header divider beside it on Spot the Muppet and Better Value (accepted in Amendment 1).
+- **stage-exit.js:** on a slot page, the button only. A slot page with no `.hud` in its play screen is not handled yet (none is on the bar); the sweep adds it.
+- **Decided here:**
+  - the name always shows on a fine pointer, also while the page's own title shows;
+  - the bar's z-index is one above the highest z-index positioned in the page's flow (Spot the Muppet's header is 1001), so a page's fixed overlay written later in the page still covers it;
+  - the logo's contrast is its tile or its mark, whichever is stronger, against the bar, and the mark on its tile.
+- **Checks (`check-site-nav.py`):** the static rule, and in Chromium each page at four sizes on start, play and results. Five new plants, each caught. Local: `--check` PASS in 2:02, `--selftest` PASS in 1:22.
+- **Also run locally, all pass:** verify-stage-exit.py (its two selectors accept `a.site-bar-back`), the three games' verifiers, check-start-back-link for the three, check-teacher-invite, check-start-mount, check-asset-styles.
+- **For Jon's look:** with the calculator open at 1280x720, Better Value's play screen was 773 px tall on one question (720 on main), so it scrolls; shorter questions still fit in 720.
+- **Todo:** row 3.20 has its note; new row CALC-OVER-HEADER.
+- **Screenshots:** 19, in `Downloads/site-bar-pilot/` on Jon's Windows machine, named in the PR.
+- **First Gate, head fdb6e50d: RED** (check-site 45675641141, phone-fit-full 45675641232). Three causes:
+  - **Laptop fit, Better Value:** Next was 681 px against a 680 px fold at 1280x720, from the bar's 48 px. Fixed in the page's own laptop rule: the header's padding is 6 px instead of 14 px there. Next is now 665 / 680 (measured locally, where the before figure matched CI's).
+  - **Aa mode, stale list entries:** Better Value and Spot the Muppet no longer scroll sideways at 320x568 in Aa (their header back links are gone), so the Gate asked for both to come off `scripts/phone-fit-state.json`'s sideways list. Both taken off; nothing else in that file changed.
+  - **Plan, not this contract's: STOPPED for Project Claude.** `verify-maffscards.py`'s line is 231 s (median, main run 45667562512) plus 15 s setup, past the 189 s per-line limit, so every PR that selects it fails the Plan job. This PR selects every verifier (shared paths). It needs `# ci-shards` in that verifier (grown by #913); lane 2 is working in games/maffscards/.
+- **Phone fit on fdb6e50d (CI):**
+  - normal: Base 60 PASS; Better Value known failure (last option 1209 / 528 at 320x568, 1109 / 627 at 375x667, 1081 / 804 at 390x844); Spot the Muppet known failure (699 / 528, 668 / 627). Both were on the known-failures list before this PR.
+  - Aa: Base 60 warns at 320x568 (scrolls; the options start above the fold); the other two as above, and no longer sideways.
+  - laptop: Base 60 and Spot the Muppet PASS; Better Value as above.
+- **Second Gate, head c8d8bc2a:** phone-fit-full 45679077905 green in every mode; check-site 45679077903 red on the Plan job alone (the MaffsCards line). Ruling (Project Claude, 19:20): lane 2 shards it in #917; this lane waits, then merges main in.
+- **Third Gate, head 0bd254f3 (main 3050a01 merged in):** phone-fit-full 45685545291 green; check-site 45685545302 red on one job, "PR budget (measured times)": this PR's own `check-site-nav.py` line ran 201 s (main median 108 s) against the 189 s per-line limit. All 112 verifier jobs passed.
+  - Fixed in `check-site-nav.py`: it now declares `# ci-shards` and runs as parts (13 work units: the static rule, the seven Chromium units, the bar on each of its three pages, and the plants in two halves). `--check` and `--selftest` run everything as before. Locally, two parts took 1:14 and 2:15, both passing; CI starts at three parts.
+- **Next:** Gate green, Project Claude's review, Jon's "merge".
+
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
-Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/handover/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
+Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/history/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
 
 - **Jon's rulings (25 Nov 2026):** "option 1 please" (a challenge code, not live two-player); challenge games are off the leaderboard; a 6-character code plus a link; both events carry a challenge flag, never the code; placeholder wording, which Jon rewrites after playing.
 - **The code:** 5 data characters (settings and a seed, base 31) and a check character. One wrong character, or two neighbours swapped, never reads as a code.
@@ -30,7 +63,10 @@ Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/ma
 - **Verifier:** a `challenge` unit (codes, keys, fairness at all 8 settings, leaderboard, menu, the recorded normal games) and a challenge fit check; six new plants, sixteen in all, each caught.
 - **Decided here:** in Aa on a phone a challenge game's results are set tighter, with the two buttons side by side, so the extra line keeps both above the fold at 320 x 568. A normal game's Aa results are as they were (its second button already ends 11 px under the fold; not this contract's).
 - **Privacy page:** its list of what is collected is by kind ("which game was played", "session completion and score data"), not by parameter, so the flag does not make it untrue. Not edited.
-- **Run IDs:** in the close-out, as usual.
+- **Merged** on 25 Nov as c4fbeff (#913) via merge-pr.py, which ended "main c4fbeff run 45664836376: GREEN".
+- **PR head 2f1a995:** check-site 45661649440 and phone-fit-full 45661649720, both success.
+- **Main on c4fbeff:** check-site 45664836376 success, phone-fit-full 45664836401 success, pages build 45664836155 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by SITE-BAR-PILOT's first commit.
 
 Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
 

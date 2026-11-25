@@ -1,11 +1,17 @@
 #!/usr/bin/env python3
-# ci-line: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the class page's name carried there and back; the margin logo only where it fits; planted faults caught) | --selftest && --check
-# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg class/index.html schools/assets/kids-look.js scripts/apply-class-page.py games/sums-in-disguise/index.html games/some-thingies/index.html games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html games/scale-factor-scaling/index.html games/dimension-checker/index.html games/suvat/index.html .claude/rules/game-roster.md scripts/apply-site-nav.py scripts/check-start-mount.py
+# ci-shards: Site navigation (back link to the hub the student came from, kept on reload and level switch, as written otherwise; stage-exit's row and HUD agree; the class page's name carried there and back; the margin logo only where it fits; planted faults caught) | | 3
+# ci-deps: schools/assets/site-nav.js schools/assets/stage-exit.js schools/assets/favicon.svg class/index.html schools/assets/kids-look.js scripts/apply-class-page.py games/sums-in-disguise/index.html games/some-thingies/index.html games/angle-ace/index.html games/free-daily-pizza/index.html games/52dle/index.html games/chart-interrogator/index.html op/index.html essentials/index.html games/scale-factor-scaling/index.html games/dimension-checker/index.html games/suvat/index.html .claude/rules/game-roster.md scripts/apply-site-nav.py scripts/check-start-mount.py schools/assets/site-bar.css schools/assets/calculator.css schools/assets/calculator.js games/spot-the-muppet/index.html games/better-value/index.html games/its-just-base-60-bruv/index.html
 """Site navigation (contract SITE-NAV, Jon 21 Nov 2026; canon §7.5.8): schools/assets/site-nav.js.
 
     python scripts/check-site-nav.py --static     # the static rule (check-site.py runs this in its site-wide part)
     python scripts/check-site-nav.py --check      # the rule, then the pages played in Chromium
     python scripts/check-site-nav.py --selftest   # planted faults caught (static and Chromium)
+    python scripts/check-site-nav.py --shard I/K  # CI: part I of K of the work units (--list-units prints them)
+
+CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py; SITE-BAR-PILOT, 25 Nov 2026: with the site bar's checks the
+one line ran 201 s against a 189 s limit). Its work units are UNITS below: the static rule, each Chromium unit, the site
+bar on each of its pages, and the planted faults in two halves; each runs in exactly one part. --check and --selftest
+still run everything, as before.
     python scripts/check-site-nav.py --survey     # the logo on every back-link page at 1920x1080: shown or what blocks it
     python scripts/check-site-nav.py --survey-names [--out FILE]   # every roster game at 1280x720, 1366x768 and 1920x1080,
                                                   # start screen and first question: the logo and the name label
@@ -45,6 +51,30 @@ IN CHROMIUM (--check), served by serve-stubbed.py with the network cut:
   - every distinct label in HUBS on a small phone (SITE-NAV-GUIDE-LABEL, Jon 21 Nov 2026): at 360x640, opened with that
     hub as referrer, Angle Ace's a.back-link and Free Daily Pizza's stage-exit row link each sit on one line (no text
     of the link starts below its first line). A 60-character plant label is caught.
+
+THE SITE BAR (contract SITE-BAR-PILOT with Amendment 1, Jon 25 Nov 2026; canon §7.5.8). The pages on SITE_BAR_PAGES carry
+one bar instead of the margin logo and name. Static (bar_static_faults(), part of the static rule): each has exactly one
+[data-site-bar], first in <body> and written as BAR_SLOT, the site-bar.css link once, no a.back-link and no other link
+whose text starts "← Back to"; a page off the list has neither the slot nor the stylesheet. In Chromium, each page at
+1920x1080, 1280x720, 390x844 and 320x568 (the last two as touch devices), on its start, play and results screens:
+  - one bar, built by site-nav.js, at the top of the window, edge to edge, 48 px tall on a fine pointer and 36 px on a
+    coarse one; no margin logo or name; no other back link on the page;
+  - the logo is drawn, named "MaffsGames home" and goes to "/" (clicked on the results screen); the back link is
+    a.site-bar-back, to "/" reading "← Back to Games" (coarse: "← Games") opened directly, and to /essentials/ reading
+    "← Back to Essentials" (coarse: "← Essentials") opened from there and again reloaded, where it is clicked; the name
+    shows on a fine pointer only, plain text, aria-hidden, reading the roster's name;
+  - at scroll 0 nothing the page paints is under the bar (elementsFromPoint over a grid on its box) and no visible fixed
+    or sticky element of the page crosses it; with a spacer added so every screen scrolls, at eight positions down to the
+    bottom a fine pointer's bar stays at the top with nothing on top of it or crossing it, and a coarse pointer's bar
+    has scrolled away;
+  - the page's own transient overlay (BAR_DRIVE's `overlay`), shown, is on top of the bar;
+  - the logo (its tile or its mark, read from favicon.svg, whichever is stronger; and the mark on its tile), the link and
+    the name are each at least 4.5:1 against the bar's own opaque background;
+  - Better Value with its calculator open and docked (fine pointer): the bar and the panel do not overlap at scroll 0 or
+    at the bottom (calculator.css adds site-bar.css's --site-bar-offset to the panel's sticky top);
+  - Base 60 in play: stage-exit's "← Stages" button is on screen and goes back to the stage picker.
+Plants: a bar page with a second back link; the bar hidden on a results screen; site-nav.js drawing the margin logo on a
+bar page; the bar not sticky on a fine pointer; calculator.css's offset back to a fixed 16px.
 """
 import argparse
 import html as htmllib
@@ -96,8 +126,67 @@ def tag_for(rel, names):
 
 
 def nav_pages(texts, names):
-    """Every page that must load site-nav.js: one with an a.back-link, or a roster game's page."""
-    return [r for r, t in sorted(texts.items()) if BACK_LINK.search(t) or game_slug(r) in names]
+    """Every page that must load site-nav.js: one with an a.back-link, a roster game's page, or a site-bar page."""
+    return [r for r, t in sorted(texts.items()) if BACK_LINK.search(t) or game_slug(r) in names or r in SITE_BAR_PAGES]
+
+
+# The site bar (contract SITE-BAR-PILOT, Jon 25 Nov 2026; canon §7.5.8). The pages on it: grow the list only by a contract
+# (the pilot is these three; the sweep of the rest is Jon's to approve). scripts/apply-site-nav.py writes BAR_SLOT as
+# the first child of <body> and BAR_CSS in <head> on each; site-nav.js fills the slot. A page on it also needs a
+# BAR_DRIVE entry below, so the bar is checked on its start, play and results screens.
+SITE_BAR_PAGES = ('games/better-value/index.html', 'games/its-just-base-60-bruv/index.html', 'games/spot-the-muppet/index.html')
+BAR_SLOT = '<nav class="site-bar" data-site-bar aria-label="Site"><a class="site-bar-fallback" href="/">← MaffsGames</a></nav>'
+BAR_CSS = '<link rel="stylesheet" href="/schools/assets/site-bar.css">'
+BAR_CSS_ASSET = os.path.join(ROOT, 'schools', 'assets', 'site-bar.css')
+BAR_ATTR = re.compile(r'<[a-zA-Z][^<>]*\sdata-site-bar\b')
+BAR_CSS_LINK = re.compile(r'<link\b[^>]*\bhref="[^"]*schools/assets/site-bar\.css"[^>]*>')
+BODY_OPEN = re.compile(r'<body\b[^>]*>')
+ANY_LINK = re.compile(r'<a\b[^>]*>(.*?)</a>', re.S)
+BAR_SIZES = ((1920, 1080, False), (1280, 720, False), (390, 844, True), (320, 568, True))   # (width, height, touch)
+BAR_HEIGHT = {False: 48, True: 36}             # px: on a fine pointer, on a coarse one
+BAR_HUB = ('essentials/index.html', 'Essentials')
+# How the check reaches each bar page's screens, by the page's own functions (test-only; nothing here is a rule for the
+# page): the selector that matches while each screen shows; `finish`, run during play, ends the session, and `advance`,
+# where one is needed, is run until the results show; `overlay` is the page's one transient overlay that may cover the
+# bar while it shows (the check shows it and holds it on top); `stage` is stage-exit's button, pressed during play;
+# `calc` marks a page with the shared docked calculator, opened during play on a fine pointer and held clear of the bar.
+BAR_DRIVE = {
+    'games/spot-the-muppet/index.html': {
+        'start': '#startScreen.active', 'play': '#gameScreen.active', 'results': '#resultsScreen.active',
+        'finish': 'endGame()', 'overlay': '#muppetBanner'},
+    'games/better-value/index.html': {
+        'start': '#startScreen.active', 'play': '#gameScreen.active', 'results': '#resultsScreen.active',
+        'finish': 'endGame()', 'overlay': '#methodOverlay', 'calc': True},
+    'games/its-just-base-60-bruv/index.html': {
+        'start': '#menu.active', 'play': '#game.active', 'results': '#results.active',
+        'finish': 'B60.ui.preview(B60.bank()[0].id); B60.ui.answer(true)', 'advance': 'B60.ui.next()',
+        'stage': {'begin': "B60.ui.start('stage-1')", 'button': '#stageExitHudBtn', 'label': '← Stages', 'lands': '#menu.active'}},
+}
+
+
+def bar_static_faults(rel, text):
+    """The static rule for one page: on SITE_BAR_PAGES, the slot once and first in <body>, the stylesheet once, no
+    a.back-link and no other link whose text starts "← Back to" (the bar is the page's one back link); off it, no slot
+    and no stylesheet."""
+    slots, links = len(BAR_ATTR.findall(text)), len(BAR_CSS_LINK.findall(text))
+    if rel not in SITE_BAR_PAGES:
+        return ['%s: carries the site bar\'s %s but is not on SITE_BAR_PAGES' % (rel, what)
+                for what, n in (('slot (data-site-bar)', slots), ('stylesheet (site-bar.css)', links)) if n]
+    out = []
+    if slots != 1:
+        out.append('%s: is on SITE_BAR_PAGES and has %d [data-site-bar] slot(s) (one: python scripts/apply-site-nav.py)' % (rel, slots))
+    body = BODY_OPEN.search(text)
+    if slots == 1 and not (body and text[body.end():].lstrip().startswith(BAR_SLOT)):
+        out.append('%s: its site-bar slot is not the first child of <body>, written exactly as BAR_SLOT' % rel)
+    if links != 1 or BAR_CSS not in text:
+        out.append('%s: is on SITE_BAR_PAGES and links site-bar.css %d time(s) (once, as BAR_CSS: python scripts/apply-site-nav.py)' % (rel, links))
+    if BACK_LINK.search(text):
+        out.append('%s: is on SITE_BAR_PAGES and still has an a.back-link (the bar is its one back link)' % rel)
+    for inner in ANY_LINK.findall(text):
+        said = ' '.join(htmllib.unescape(re.sub(r'<[^>]+>', '', inner)).split())
+        if said.startswith('← Back to'):
+            out.append('%s: is on SITE_BAR_PAGES and has another back link, "%s" (the bar is its one back link)' % (rel, said[:40]))
+    return out
 
 # Pages that keep the margin logo off, each with its reason (contract SITE-NAV names them). Shrink or grow only with a
 # reason; a page carrying the attribute and missing here fails, and so does an entry for a page without it.
@@ -243,6 +332,13 @@ def static_faults(texts=None, js=None, opt_out=None, names=None):
     for r in opt_out:
         if r not in texts:
             out.append('%s: on LOGO_OPT_OUT but no such page' % r)
+    for r in SITE_BAR_PAGES:
+        if r not in texts:
+            out.append('%s: on SITE_BAR_PAGES but no such page' % r)
+        elif r not in BAR_DRIVE:
+            out.append('%s: on SITE_BAR_PAGES without a BAR_DRIVE entry (how the check reaches its play and results screens)' % r)
+    for r, t in sorted(texts.items()):
+        out += bar_static_faults(r, t)
     return out
 
 
@@ -346,6 +442,142 @@ LABEL_JS = r"""async () => {
   return out;
 }"""
 
+# The site bar (SITE-BAR-PILOT), judged in the page independently of site-nav.js: what the slot holds, where it is, what
+# it reads, its colours' contrast against its own background, and what else is at its place. At scroll 0: every element
+# under a grid of points over the bar that paints anything (elementsFromPoint), and every visible fixed or sticky box of
+# the page's own that crosses it. Then, with a spacer added so every screen scrolls, at eight positions down to the
+# bottom: where the bar is, what is on top of it at its own points, and what fixed or sticky box crosses it.
+BAR_JS = r"""async (arg) => {
+  const two = () => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+  const bar = document.querySelector('[data-site-bar]');
+  const out = { slots: document.querySelectorAll('[data-site-bar]').length,
+                margin: document.querySelectorAll('.maffs-site-logo, .maffs-site-name').length,
+                state: window.MaffsNav ? MaffsNav.siteBar : 'no site-nav.js',
+                old: document.querySelectorAll('a.back-link, a.stage-exit-home').length, vw: document.documentElement.clientWidth };
+  if (!bar) return out;
+  const vis = (el) => {
+    if (!el) return false;
+    const r = el.getBoundingClientRect();
+    if (!(r.width > 0 && r.height > 0)) return false;
+    for (let e = el; e && e.nodeType === 1; e = e.parentElement) {
+      const s = getComputedStyle(e);
+      if (s.display === 'none' || s.visibility === 'hidden' || parseFloat(s.opacity) === 0) return false;
+    }
+    return true;
+  };
+  const paints = (el) => {
+    const cs = getComputedStyle(el);
+    if (/^(IMG|SVG|CANVAS|VIDEO|INPUT|BUTTON|SELECT|TEXTAREA|IFRAME)$/i.test(el.tagName)) return true;
+    if (cs.backgroundColor && !/rgba\([^)]*,\s*0\)$|transparent/.test(cs.backgroundColor)) return true;
+    if (cs.backgroundImage !== 'none' || cs.boxShadow !== 'none') return true;
+    if (['Top','Right','Bottom','Left'].some(s => parseFloat(cs['border'+s+'Width']) > 0 && cs['border'+s+'Style'] !== 'none')) return true;
+    return [...el.childNodes].some(n => n.nodeType === 3 && /\S/.test(n.nodeValue));
+  };
+  const tag = (el) => el.tagName.toLowerCase() + (el.id ? '#' + el.id : '')
+    + (typeof el.className === 'string' && el.className.trim() ? '.' + el.className.trim().split(/\s+/)[0] : '');
+  const mine = (el) => el === bar || bar.contains(el);
+  const root = (el) => el === document.body || el === document.documentElement;
+  const grid = (r, fn) => {
+    for (let x = Math.max(r.left, 0) + 2; x < Math.min(r.right, innerWidth) - 1; x += 8)
+      for (let y = Math.max(r.top, 0) + 2; y < r.bottom - 1; y += 6) fn(x, y);
+  };
+  const pinnedOver = (r) => [...document.body.querySelectorAll('*')].filter(el => {
+    if (mine(el)) return false;
+    const p = getComputedStyle(el).position;
+    if ((p !== 'fixed' && p !== 'sticky') || !vis(el)) return false;
+    const q = el.getBoundingClientRect();
+    return q.left < r.right && q.right > r.left && q.top < r.bottom && q.bottom > r.top;
+  }).map(tag);
+  scrollTo(0, 0); await two();
+  const r = bar.getBoundingClientRect();
+  out.shown = vis(bar);
+  out.box = [r.left, r.top, r.right, r.bottom].map(v => Math.round(v * 10) / 10);
+  out.position = getComputedStyle(bar).position;
+  const logo = bar.querySelector('a.site-bar-logo'), back = bar.querySelector('a.site-bar-back'), name = bar.querySelector('.site-bar-name');
+  const img = logo && logo.querySelector('img');
+  out.logo = logo ? { href: logo.getAttribute('href'), label: logo.getAttribute('aria-label'), shown: vis(logo),
+                      drawn: !!img && img.complete && img.naturalWidth > 0 && vis(img) } : null;
+  out.back = back ? { href: back.getAttribute('href'), shown: vis(back), cls: back.className,
+                      text: [...back.children].filter(vis).map(n => n.textContent).join('').trim(),
+                      clipped: back.scrollWidth > back.clientWidth + 1 } : null;
+  out.name = name ? { text: name.textContent, shown: vis(name), hidden: name.getAttribute('aria-hidden'), link: !!name.closest('a') } : null;
+  out.others = [...document.querySelectorAll('a')].filter(a => !mine(a) && vis(a) && /^←\s*Back to/.test(a.textContent.trim()))
+    .map(a => a.textContent.trim().slice(0, 30));
+  const rgb = (c) => (String(c).match(/[\d.]+/g) || []).map(Number);
+  const hex = (h) => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16));
+  const lum = (c) => { const [R, G, B] = c.slice(0, 3).map(v => { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); }); return 0.2126 * R + 0.7152 * G + 0.0722 * B; };
+  const ratio = (a, b) => { const x = lum(a), y = lum(b); return Math.round((Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05) * 100) / 100; };
+  const bg = rgb(getComputedStyle(bar).backgroundColor);
+  out.bg = bg;
+  out.opaque = bg.length === 3 || bg[3] === 1;
+  out.contrast = { back: back ? ratio(rgb(getComputedStyle(back).color), bg) : null,
+                   name: name && vis(name) ? ratio(rgb(getComputedStyle(name).color), bg) : null,
+                   logo: Math.max(ratio(hex(arg.tile), bg), ratio(hex(arg.mark), bg)), mark: ratio(hex(arg.mark), hex(arg.tile)) };
+  const under = new Set();
+  grid(r, (x, y) => { for (const el of document.elementsFromPoint(x, y)) { if (mine(el) || root(el)) continue; if (paints(el)) { under.add(tag(el)); break; } } });
+  out.under = [...under];
+  out.pinned = pinnedOver(r);
+  const sp = document.createElement('div');
+  sp.style.cssText = 'height:' + (innerHeight * 2) + 'px;width:1px;flex:none';
+  document.body.appendChild(sp);
+  await two();
+  out.steps = [];
+  const max = document.documentElement.scrollHeight - innerHeight;
+  for (let i = 1; i <= 8; i++) {
+    scrollTo(0, Math.round(max * i / 8)); await two();
+    const q = bar.getBoundingClientRect(), cover = new Set();
+    if (q.bottom > 0) grid(q, (x, y) => { const el = document.elementFromPoint(x, y); if (el && !mine(el)) cover.add(tag(el)); });
+    out.steps.push({ y: Math.round(scrollY), top: Math.round(q.top * 10) / 10, cover: [...cover], pinned: q.bottom > 0 ? pinnedOver(q) : [] });
+  }
+  sp.remove();
+  scrollTo(0, 0); await two();
+  return out;
+}"""
+
+# A transient overlay of the page's own, shown by force (its .show class, with any slide-in animation settled and its
+# pointer events on, so a hit test can see it): at points along the bar that the overlay covers, is the overlay on top?
+BAR_OVERLAY_JS = r"""async (sel) => {
+  const two = () => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+  const bar = document.querySelector('[data-site-bar]'), o = document.querySelector(sel);
+  if (!bar || !o) return { found: false };
+  const was = o.getAttribute('style'), had = o.classList.contains('show');
+  o.classList.add('show');
+  o.style.animation = 'none'; o.style.transform = 'none'; o.style.opacity = '1'; o.style.pointerEvents = 'auto';
+  scrollTo(0, 0); await two();
+  const r = bar.getBoundingClientRect(), q = o.getBoundingClientRect();
+  const pts = [0.1, 0.3, 0.5, 0.7, 0.9].map(f => [r.left + r.width * f, r.top + r.height / 2])
+    .filter(([x, y]) => x >= q.left && x < q.right && y >= q.top && y < q.bottom);
+  const beaten = pts.map(([x, y]) => document.elementFromPoint(x, y)).filter(el => !(el === o || o.contains(el))).length;
+  if (!had) o.classList.remove('show');
+  if (was === null) o.removeAttribute('style'); else o.setAttribute('style', was);
+  await two();
+  return { found: true, points: pts.length, beaten: beaten };
+}"""
+
+# The docked calculator (schools/assets/calculator.css) beside the pinned bar: opened, then where its panel and the bar
+# are at scroll 0 and at the bottom of the page as it is (no spacer: the panel sticks only inside its own rail).
+BAR_CALC_JS = r"""async () => {
+  const two = () => new Promise(res => requestAnimationFrame(() => requestAnimationFrame(res)));
+  const bar = document.querySelector('[data-site-bar]'), t = document.querySelector('.maffs-calc-toggle');
+  if (t && !t.classList.contains('open')) t.click();
+  await two();
+  const calc = document.querySelector('.maffs-calc'), panel = document.querySelector('.maffs-calc-panel');
+  const out = { docked: !!calc && calc.classList.contains('docked'), open: !!panel && !panel.hidden, at: [] };
+  if (!bar || !panel) return out;
+  const box = (el) => { const r = el.getBoundingClientRect(); return [r.left, r.top, r.right, r.bottom].map(Math.round); };
+  for (const y of [0, 1e6]) {
+    scrollTo(0, y); await two();
+    const b = box(bar), p = box(panel);
+    out.at.push({ y: Math.round(scrollY), bar: b, panel: p, top: getComputedStyle(panel).top,
+                  overlap: p[0] < b[2] && p[2] > b[0] && p[1] < b[3] && p[3] > b[1] });
+  }
+  scrollTo(0, 0); await two();
+  if (t && t.classList.contains('open')) t.click();
+  return out;
+}"""
+
+BAR_CALC_SEEN = []      # (where, BAR_CALC_JS's result) from the last run, for the report
+
 _cs = None
 
 
@@ -437,14 +669,16 @@ def as_written(text):
     return out
 
 
-def browser_faults(swap=None, only=None, js_swap=None):
-    """[fault] from the pages played in Chromium. swap {served path: html} and js_swap {served path: javascript} serve
-    planted copies instead of the repo's files."""
+def browser_faults(swap=None, only=None, js_swap=None, css_swap=None, bar_pages=None, bar_sizes=None, navigation=True):
+    """[fault] from the pages played in Chromium. swap {served path: html}, js_swap {served path: javascript} and css_swap
+    {served path: css} serve planted copies instead of the repo's files. bar_pages and bar_sizes narrow the site-bar
+    unit to those pages and sizes, and navigation=False leaves out its clicks through to "/" and the hub (the plants)."""
     from playwright.sync_api import sync_playwright
     sys.path.insert(0, HERE)
     import bank_common as bc
     swap = swap or {}
     js_swap = js_swap or {}
+    css_swap = css_swap or {}
     proc, base = bc.start_stub_server()
     faults = []
 
@@ -466,6 +700,8 @@ def browser_faults(swap=None, only=None, js_swap=None):
                     ctx.route(base + path + '*', serve(text, 'text/html'))
                 for path, text in js_swap.items():
                     ctx.route(base + path, serve(text, 'application/javascript'))
+                for path, text in css_swap.items():
+                    ctx.route(base + path, serve(text, 'text/css'))
                 return ctx
 
             def open_from(page, hub_rel, target):
@@ -677,6 +913,172 @@ def browser_faults(swap=None, only=None, js_swap=None):
                     elif rel == TITLE_GOES:
                         faults.append('name: %s could not be started' % where)
                     ctx.close()
+            if want('bar'):
+                names = roster_names()
+                cs = _check_site()
+                svg = open(os.path.join(ROOT, 'schools', 'assets', 'favicon.svg'), encoding='utf-8').read()
+                tile, mark = re.search(r'<rect\b[^>]*\bfill="(#[0-9a-fA-F]{6})"', svg), re.search(r'<path\b[^>]*\bfill="(#[0-9a-fA-F]{6})"', svg)
+                colours = {'tile': tile.group(1), 'mark': mark.group(1)} if tile and mark else None
+                if not colours:
+                    faults.append('bar: favicon.svg no longer has a tile <rect> and a mark <path> with six-digit fills: the logo\'s contrast is unchecked')
+                hub_path, hub_label = url_path(BAR_HUB[0]), BAR_HUB[1]
+
+                def bar_judge(page, rel, where, touch, sel, href, long, short, full=True):
+                    """One screen of one bar page. full=False: the links only (after a navigation the bar itself is as judged)."""
+                    def bad(msg):
+                        faults.append('bar: %s: %s' % (where, msg))
+                    if sel and not page.evaluate('(s) => !!document.querySelector(s)', sel):
+                        bad('the check could not reach this screen (%s does not match)' % sel)
+                        return
+                    res = page.evaluate(BAR_JS, colours or {'tile': '#000000', 'mark': '#ffffff'})
+                    if res['slots'] != 1 or res['state'] != 'built':
+                        bad('%d slot(s), MaffsNav.siteBar %r (one slot, built)' % (res['slots'], res['state']))
+                        return
+                    if res['margin']:
+                        bad('the margin logo or name was made on a site-bar page (%d element(s))' % res['margin'])
+                    if res['old'] or res['others']:
+                        bad('another back link is on the page: %d a.back-link or stage-exit home link(s), visible "← Back to" links %s'
+                            % (res['old'], res['others']))
+                    box, tall = res['box'], BAR_HEIGHT[touch]
+                    if not res['shown']:
+                        bad('the bar is hidden')
+                        return
+                    if abs(box[1]) > 0.5 or abs(box[0]) > 0.5 or abs(box[2] - res['vw']) > 1 or abs(box[3] - box[1] - tall) > 0.5:
+                        bad('the bar\'s box is %s in a %d px wide window (the top, edge to edge, %d px tall)' % (box, res['vw'], tall))
+                    logo, back, name = res['logo'], res['back'], res['name']
+                    if not logo or logo['href'] != '/' or logo['label'] != 'MaffsGames home' or not logo['shown'] or not logo['drawn']:
+                        bad('the logo is %s (a drawn link to "/" named "MaffsGames home")' % logo)
+                    want_text = short if touch else long
+                    if not back or not back['shown'] or back['cls'] != 'site-bar-back' or back['href'] != href or back['text'] != want_text or back['clipped']:
+                        bad('the back link is %s (a.site-bar-back to %s reading "%s", unclipped)' % (back, href, want_text))
+                    slug = game_slug(rel)
+                    if touch:
+                        if name and name['shown']:
+                            bad('the game\'s name shows on a coarse pointer')
+                    elif not name or not name['shown'] or name['text'] != names.get(slug) or name['hidden'] != 'true' or name['link']:
+                        bad('the name is %s (plain text reading %r, aria-hidden)' % (name, names.get(slug)))
+                    if not full:
+                        return
+                    if (res['position'] == 'sticky') != (not touch):
+                        bad('the bar is position:%s on a %s pointer' % (res['position'], 'coarse' if touch else 'fine'))
+                    if res['under']:
+                        bad('at scroll 0 the page paints under the bar: %s' % ', '.join(res['under']))
+                    if res['pinned']:
+                        bad('at scroll 0 a fixed or sticky element of the page crosses the bar: %s' % ', '.join(res['pinned']))
+                    c = res['contrast']
+                    if not res['opaque']:
+                        bad('the bar\'s background %s is not opaque' % res['bg'])
+                    low = ['%s %s:1' % (k, c[k]) for k in ('logo', 'mark', 'back', 'name') if c[k] is not None and c[k] < 4.5]
+                    if c['back'] is None or (not touch and c['name'] is None):
+                        low.append('unmeasured')
+                    if low:
+                        bad('contrast against the bar\'s background %s: %s (4.5:1 at least)' % (res['bg'], ', '.join(low)))
+                    steps = res['steps']
+                    if not steps or steps[-1]['y'] < 100:
+                        bad('the check could not scroll the page (%s)' % steps[-1:])
+                    elif touch:
+                        if steps[-1]['top'] >= 0:
+                            bad('on a coarse pointer the bar stays at %s px after scrolling %d px (it is in the flow, never pinned)'
+                                % (steps[-1]['top'], steps[-1]['y']))
+                    else:
+                        for s in steps:
+                            if abs(s['top']) > 0.5:
+                                bad('on a fine pointer the bar is at %s px after scrolling %d px (pinned to the top)' % (s['top'], s['y']))
+                                break
+                            if s['cover'] or s['pinned']:
+                                bad('scrolled %d px, the bar is covered by %s and crossed by fixed or sticky %s'
+                                    % (s['y'], s['cover'] or 'nothing', s['pinned'] or 'nothing'))
+                                break
+
+                def bar_wait(page, sel, ms=6000):
+                    try:
+                        page.wait_for_selector(sel, state='attached', timeout=ms)
+                        return True
+                    except Exception:
+                        return False
+
+                def bar_go(page, sel, where):
+                    """Click a link in the bar and report the path landed on."""
+                    try:
+                        with page.expect_navigation(wait_until='load', timeout=10000):
+                            page.click(sel)
+                        return re.sub(r'^https?://[^/]+', '', page.url).split('?')[0].split('#')[0]
+                    except Exception as e:
+                        return 'no navigation (%s)' % str(e).splitlines()[0][:60]
+
+                for rel in (bar_pages or SITE_BAR_PAGES):
+                    drive, slug = BAR_DRIVE[rel], game_slug(rel)
+                    for w, h, touch in (bar_sizes or BAR_SIZES):
+                        where = '%s at %dx%d%s' % (slug, w, h, ' (touch)' if touch else '')
+                        ctx = context(viewport={'width': w, 'height': h}, has_touch=touch, is_mobile=touch)
+                        ctx.add_init_script(cs.TIER3_INIT)
+                        ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
+                        page = ctx.new_page()
+                        page.goto(base + url_path(rel), wait_until='load')
+                        page.wait_for_timeout(500)
+                        direct = ('/', '← Back to Games', '← Games')
+                        bar_judge(page, rel, where + ', start', touch, drive['start'], *direct)
+                        if drive.get('overlay'):
+                            got = page.evaluate(BAR_OVERLAY_JS, drive['overlay'])
+                            if not got['found'] or not got['points'] or got['beaten']:
+                                faults.append('bar: %s: the page\'s overlay %s, shown, is not on top of the bar (%s)' % (where, drive['overlay'], got))
+                        to_first_question(page, slug)
+                        bar_wait(page, drive['play'])
+                        page.wait_for_timeout(500)
+                        bar_judge(page, rel, where + ', play', touch, drive['play'], *direct)
+                        if drive.get('calc') and not touch:
+                            got = page.evaluate(BAR_CALC_JS)
+                            BAR_CALC_SEEN.append((where, got))
+                            if not got['docked'] or not got['open'] or len(got['at']) != 2:
+                                faults.append('bar: %s: the calculator did not open docked, so it is unchecked against the bar (%s)' % (where, got))
+                            for at in got['at']:
+                                if at['overlap']:
+                                    faults.append('bar: %s, calculator open: scrolled %d px, the pinned bar %s and the docked panel %s overlap (its top is %s)'
+                                                  % (where, at['y'], at['bar'], at['panel'], at['top']))
+                        stage = drive.get('stage')
+                        if stage:
+                            got = page.evaluate('''(s) => { const b = document.querySelector(s); if (!b) return null; const r = b.getBoundingClientRect();
+                                return { text: b.textContent.trim(), shown: r.width > 0 && r.height > 0 && getComputedStyle(b).display !== 'none',
+                                         inside: r.top >= 0 && r.bottom <= innerHeight && r.left >= 0 && r.right <= innerWidth }; }''', stage['button'])
+                            if not got or got['text'] != stage['label'] or not got['shown'] or not got['inside']:
+                                faults.append('bar: %s, play: stage-exit\'s button %s is %s (shown on screen reading "%s")' % (where, stage['button'], got, stage['label']))
+                            else:
+                                page.click(stage['button'])
+                                if not bar_wait(page, stage['lands'], 3000):
+                                    faults.append('bar: %s, play: "%s" did not go back (%s does not match)' % (where, stage['label'], stage['lands']))
+                                page.wait_for_timeout(200)
+                                page.evaluate(stage['begin'])
+                                bar_wait(page, drive['play'])
+                                page.wait_for_timeout(300)
+                        try:
+                            page.evaluate(drive['finish'])
+                            for _ in range(20):
+                                if page.evaluate('(s) => !!document.querySelector(s)', drive['results']):
+                                    break
+                                page.wait_for_timeout(300)
+                                if drive.get('advance'):
+                                    page.evaluate(drive['advance'])
+                        except Exception as e:
+                            faults.append('bar: %s: the page\'s own finish failed (%s)' % (where, str(e).splitlines()[0][:80]))
+                        page.wait_for_timeout(400)
+                        bar_judge(page, rel, where + ', results', touch, drive['results'], *direct)
+                        if not navigation:
+                            ctx.close()
+                            continue
+                        landed = bar_go(page, 'a.site-bar-logo', where)
+                        if landed != '/':
+                            faults.append('bar: %s, results: the logo went to %s, not "/"' % (where, landed))
+                        from_hub = (hub_path, '← Back to ' + hub_label, '← ' + hub_label)
+                        open_from(page, BAR_HUB[0], url_path(rel))
+                        page.wait_for_timeout(300)
+                        bar_judge(page, rel, where + ', opened from %s' % hub_path, touch, drive['start'], *from_hub, full=False)
+                        page.reload(wait_until='load')
+                        page.wait_for_timeout(300)
+                        bar_judge(page, rel, where + ', opened from %s and reloaded' % hub_path, touch, drive['start'], *from_hub, full=False)
+                        landed = bar_go(page, 'a.site-bar-back', where)
+                        if landed != hub_path:
+                            faults.append('bar: %s, opened from %s: the back link went to %s' % (where, hub_path, landed))
+                        ctx.close()
             browser.close()
     finally:
         proc.terminate()
@@ -811,12 +1213,9 @@ def survey():
     return 1 if any(why for _, why in shown) else 0
 
 
-def selftest():
+def _selftest_nav(texts, js):
+    """The plants for the back link, the hubs, the margin logo and the name label."""
     fails = []
-    texts = {r: read(r) for r in pages()}
-    js = open(ASSET, encoding='utf-8').read()
-    if static_faults(texts, js):
-        fails.append('the repo fails the static rule, so the plants prove nothing: %s' % static_faults(texts, js)[:2])
     planted = dict(texts)
     planted[GAME] = LOADS.sub('', planted[GAME], 1)
     hit = [f for f in static_faults(planted, js) if f.startswith(GAME) and 'loads site-nav.js 0' in f]
@@ -881,10 +1280,96 @@ def selftest():
     hit = [f for f in got if f.startswith('name:') and 'overlaps' in f]
     print('  self-test a label over the game column         %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
     fails += [] if hit else ['a label overlapping the game column passed']
+    return fails
+
+
+def _selftest_bar(texts, js):
+    """The plants for the site bar."""
+    fails = []
+    # The site bar (SITE-BAR-PILOT). Static: a pilot page with a second back link. In Chromium, one page at one size each:
+    # a page hiding the bar on its results screen; site-nav.js drawing the margin logo on a bar page; the bar not sticky on
+    # a fine pointer; calculator.css's offset back to a fixed 16px, so the bar covers the docked panel.
+    bar_rel = 'games/spot-the-muppet/index.html'
+    calc_rel = 'games/better-value/index.html'
+    fine = [(1280, 720, False)]
+    planted = dict(texts)
+    planted[bar_rel] = planted[bar_rel].replace('</body>', '<a href="/">← Back to Games</a>\n</body>', 1)
+    hit = [f for f in static_faults(planted, js) if f.startswith(bar_rel) and 'another back link' in f] if planted[bar_rel] != texts[bar_rel] else []
+    print('  self-test a bar page with a second back link    %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED ***'))
+    fails += [] if hit else ['a bar page with a second back link passed']
+    hides = texts[bar_rel].replace('</head>', '<style>body:has(%s) .site-bar{display:none}</style>\n</head>' % BAR_DRIVE[bar_rel]['results'], 1)
+    got = browser_faults(only={'bar'}, swap={url_path(bar_rel): hides}, bar_pages=[bar_rel], bar_sizes=fine, navigation=False) if hides != texts[bar_rel] else []
+    hit = [f for f in got if f.startswith('bar:') and ', results: the bar is hidden' in f]
+    clean = not [f for f in got if ', start:' in f or ', play:' in f]
+    print('  self-test the bar hidden on a results screen     %s' % ('caught: ' + hit[0][:100] if hit and clean else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit and clean else ['a bar hidden on a results screen passed (or its start and play screens failed too)']
+    both = js.replace("      try { buildBar(slot); } catch (e) { /* the slot keeps the link it was written with */ }\n      return;\n",
+                      "      try { buildBar(slot); } catch (e) { /* the slot keeps the link it was written with */ }\n", 1)
+    got = browser_faults(only={'bar'}, js_swap={'/schools/assets/site-nav.js': both}, bar_pages=[bar_rel], bar_sizes=fine, navigation=False) if both != js else []
+    hit = [f for f in got if f.startswith('bar:') and 'the margin logo or name was made' in f]
+    print('  self-test the margin logo drawn on a bar page    %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['the margin logo drawn on a bar page passed']
+    css = open(BAR_CSS_ASSET, encoding='utf-8').read()
+    loose = css.replace('.site-bar{position:sticky;top:0;', '.site-bar{position:static;', 1)
+    got = browser_faults(only={'bar'}, css_swap={'/schools/assets/site-bar.css': loose}, bar_pages=[bar_rel], bar_sizes=fine, navigation=False) if loose != css else []
+    hit = [f for f in got if f.startswith('bar:') and 'on a fine pointer the bar is at' in f]
+    print('  self-test the bar not sticky on a fine pointer   %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['a bar that is not sticky on a fine pointer passed']
+    calc_css = open(os.path.join(ROOT, 'schools', 'assets', 'calculator.css'), encoding='utf-8').read()
+    fixed = calc_css.replace('top: calc(var(--site-bar-offset, 0px) + 16px);', 'top: 16px;', 1)
+    got = browser_faults(only={'bar'}, css_swap={'/schools/assets/calculator.css': fixed}, bar_pages=[calc_rel], bar_sizes=fine, navigation=False) if fixed != calc_css else []
+    hit = [f for f in got if f.startswith('bar:') and 'calculator open' in f and 'overlap' in f]
+    print('  self-test the calculator\'s offset fixed at 16px  %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
+    fails += [] if hit else ['calculator.css with a fixed top: 16px passed (the bar covers the docked panel)']
+    return fails
+
+
+def selftest(halves=('nav', 'bar')):
+    """The planted faults: 'nav' (site navigation, the margin logo, the name) and 'bar' (the site bar), or one of them."""
+    fails = []
+    texts = {r: read(r) for r in pages()}
+    js = open(ASSET, encoding='utf-8').read()
+    if static_faults(texts, js):
+        fails.append('the repo fails the static rule, so the plants prove nothing: %s' % static_faults(texts, js)[:2])
+    if 'nav' in halves:
+        fails += _selftest_nav(texts, js)
+    if 'bar' in halves:
+        fails += _selftest_bar(texts, js)
     for f in fails:
         print('FAIL  self-test: ' + f)
     print('self-test: %s' % ('FAILED' if fails else 'PASS'))
     return 1 if fails else 0
+
+
+# The work units, in run order (CI's SHARD parts; scripts/ci_shards.py): the static rule, browser_faults()'s units, the
+# site bar on each of its pages, and the planted faults in two halves. Each runs in exactly one part.
+BROWSER_UNITS = ['hub', 'direct', 'stage', 'class', 'phone', 'logo', 'name']
+UNITS = (['static'] + BROWSER_UNITS + ['bar ' + r.split('/')[1] for r in SITE_BAR_PAGES] + ['selftest nav', 'selftest bar'])
+
+
+def run_units(shard):
+    """Run this part's units; 1 if any failed."""
+    bad = 0
+    for uid in shard.pick(UNITS):
+        with shard.unit(uid):
+            if uid == 'static':
+                got = static_report()
+            elif uid.startswith('selftest '):
+                got = ['the planted faults were not all caught'] if selftest((uid.split()[1],)) else []
+            elif uid.startswith('bar '):
+                got = browser_faults(only={'bar'}, bar_pages=['games/%s/index.html' % uid[4:]])
+            else:
+                got = browser_faults(only={uid})
+            if uid != 'static':
+                for x in got:
+                    print('FAIL  ' + x)
+            print('unit %s: %s' % (uid, 'FAILED' if got else 'PASS'))
+            bad += len(got)
+    for where, got in BAR_CALC_SEEN:
+        print('  docked calculator, %s: %s' % (where, '; '.join('scrolled %d px: bar %d to %d px, panel %d to %d px' % (
+            a['y'], a['bar'][1], a['bar'][3], a['panel'][1], a['panel'][3]) for a in got['at'])))
+    print('FAILED' if bad else 'PASS')
+    return 1 if bad else 0
 
 
 def main():
@@ -896,11 +1381,16 @@ def main():
     ap.add_argument('--survey-names', action='store_true')
     ap.add_argument('--out', help='with --survey-names: write the table here')
     ap.add_argument('--only', help='with --survey-names: these slugs only (comma separated)')
+    sys.path.insert(0, HERE)
+    import bank_common as bc
+    bc.shard_args(ap)
     args = ap.parse_args()
     try:
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
+    if args.shard or args.list_units:
+        return run_units(bc.Shard(__file__, args))
     if args.selftest:
         return selftest()
     if args.survey:
@@ -912,6 +1402,9 @@ def main():
         b = browser_faults()
         for x in b:
             print('FAIL  ' + x)
+        for where, got in BAR_CALC_SEEN:
+            print('  docked calculator, %s: %s' % (where, '; '.join('scrolled %d px: bar %d to %d px, panel %d to %d px' % (
+                a['y'], a['bar'][1], a['bar'][3], a['panel'][1], a['panel'][3]) for a in got['at'])))
         f += b
         print('site nav in Chromium: %s' % ('PASS' if not b else 'FAILED'))
     print('FAILED' if f else 'PASS')

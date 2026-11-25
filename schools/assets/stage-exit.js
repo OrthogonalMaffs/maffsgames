@@ -13,6 +13,8 @@
  * button clicks that button, so leaving runs the page's own path to the picker: no new route to keep in step.
  * Leaving is not finishing: nothing here fires game_completed, submits to a board or records a score.
  * Any pending "Next →" control is cleared first, so its fallback timer cannot advance a stage that was left.
+ * On a page with the site bar ([data-site-bar]; SITE-BAR-PILOT, 25 Nov 2026) the bar is the way home: this file makes
+ * the button only, no "← Games" link, and needs no `a.back-link`.
  *
  * Options, each an attribute on the script tag; leaving one out keeps the behaviour above:
  *   data-label="← Rounds"        the button's label (default "← Stages").
@@ -89,7 +91,24 @@
     return btn;
   }
 
+  // A page with the site bar (schools/assets/site-nav.js, contract SITE-BAR-PILOT, Jon 25 Nov 2026): the bar is the
+  // way home on every screen, so no home link is made here and no a.back-link is needed. The button is where it is
+  // on every other stage game: first in the HUD, and in the row, which goes first in the screens' parent (where the
+  // back link was) and shows its button on the worked example. A bar page whose in-play screen has no .hud (the
+  // data-game shape) gets nothing here yet: none is on the bar, and the sweep that puts one there adds it.
+  function buildBesideBar() {
+    var game = document.querySelector(gameSel);
+    var hud = game && game.querySelector('.hud');
+    if (!hud || document.querySelector('.stage-exit-row')) return;
+    var row = document.createElement('div');
+    row.className = 'stage-exit-row';
+    game.parentNode.insertBefore(row, game.parentNode.firstChild);
+    row.appendChild(button('stageExitBtn'));
+    hud.insertBefore(button('stageExitHudBtn'), hud.firstChild);
+  }
+
   function build() {
+    if (document.querySelector('[data-site-bar]')) { buildBesideBar(); return; }
     var link = document.querySelector('a.back-link');
     if (!link || document.querySelector('.stage-exit-row')) return;
     // The hub the student came from (schools/assets/site-nav.js, contract SITE-NAV), read here so the row link and

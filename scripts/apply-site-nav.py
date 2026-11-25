@@ -12,6 +12,9 @@ attribute loses it. A new tag goes just before
 stage-exit.js where a page loads that (so MaffsNav is set first; stage-exit.js also reads it lazily), else just before
 </head>. Which pages, and the tag itself, come from scripts/check-site-nav.py, which holds every page to them in CI.
 Nothing else in a page is touched: not its header, its back link's markup or its layout.
+
+The site bar (contract SITE-BAR-PILOT, 25 Nov 2026): on the pages in check-site-nav.py's SITE_BAR_PAGES, and only those, it
+also links schools/assets/site-bar.css and writes the bar's slot as the first child of <body> (bar() below).
 """
 import argparse
 import importlib.util
@@ -41,6 +44,22 @@ def fix(text, tag=None):
     return text[:at] + tag + '\n' + text[at:]
 
 
+def bar(text):
+    """The page's text with the site bar's stylesheet linked (just before its site-nav.js tag) and the slot as the first
+    child of <body>; each is added only where the page has none, so a second run changes nothing. For the pages on
+    check-site-nav.py's SITE_BAR_PAGES only (contract SITE-BAR-PILOT, 25 Nov 2026). It removes nothing: a page's own back
+    links are taken out by hand, and check-site-nav.py fails a page on the list that still has one."""
+    if not csn.BAR_CSS_LINK.search(text):
+        at = csn.LOADS.search(text).start()
+        text = text[:at] + csn.BAR_CSS + '\n' + text[at:]
+    if not csn.BAR_ATTR.search(text):
+        body = csn.BODY_OPEN.search(text)
+        if not body:
+            raise ValueError('no <body> to put the site bar\'s slot in')
+        text = text[:body.end()] + '\n' + csn.BAR_SLOT + text[body.end():]
+    return text
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true')
@@ -53,11 +72,12 @@ def main():
         path = os.path.join(csn.ROOT, rel)
         with open(path, encoding='utf-8', newline='') as f:
             text = f.read()
-        new = fix(text, csn.tag_for(rel, names))
+        named = fix(text, csn.tag_for(rel, names))
+        new = bar(named) if rel in csn.SITE_BAR_PAGES else named
         if new != text:
             changed += 1
             had = bool(csn.LOADS.search(text))
-            print(('would ' if args.dry_run else '') + ('name ' if had else 'link ') + rel)
+            print(('would ' if args.dry_run else '') + ('bar ' if named == text else 'name ' if had else 'link ') + rel)
             if not args.dry_run:
                 with open(path, 'w', encoding='utf-8', newline='') as f:
                     f.write(new)

@@ -1,0 +1,32 @@
+/* The site bar (contract SITE-BAR-PILOT, Jon 25 Nov 2026; canon §7.5.8): one bar at the top of a page, on every screen.
+   The page's HTML carries the slot as the first child of <body> (scripts/apply-site-nav.py writes it, for the pages in
+   scripts/check-site-nav.py's SITE_BAR_PAGES); schools/assets/site-nav.js fills it: the logo (home), the back link (to
+   the hub the student came from), and on a fine pointer the game's name.
+
+   This file reserves the bar's height before any script runs, so nothing jumps when it is filled: 48 px on a fine
+   pointer, where it is pinned to the top of the window at every scroll position; 36 px otherwise (phones and tablets),
+   where it is in the flow and scrolls away with the page. Colours are the page's own: the body's text colour and
+   background colour (site-nav.js sets the background where the body has none of its own). No page hides it. */
+.site-bar{box-sizing:border-box;display:flex;align-items:center;gap:8px;align-self:stretch;flex:none;height:36px;margin:0;
+  padding:0 10px 0 6px;overflow:hidden;background-color:inherit;color:inherit;border-bottom:1px solid rgba(128,128,128,.35);
+  font-size:13px;font-weight:500;line-height:1.2;letter-spacing:normal;word-spacing:normal;text-align:left;white-space:nowrap}
+.site-bar a{display:inline-flex;align-items:center;flex:none;height:100%;color:inherit;text-decoration:none}
+.site-bar a:hover{text-decoration:underline}
+.site-bar-fallback{padding:0 6px}
+.site-bar-logo{justify-content:center;min-width:36px}
+.site-bar-logo img{display:block;width:28px;height:24px}
+.site-bar a.site-bar-back{flex:0 1 auto;min-width:44px;padding:0 4px;overflow:hidden}
+.site-bar-long,.site-bar-name{display:none}
+@media (hover:hover) and (pointer:fine){
+  /* The pinned bar's height, for shared sticky elements to add to their own top (the docked calculator,
+     schools/assets/calculator.css). Unset on a coarse pointer and on every page without this file. */
+  :root{--site-bar-offset:48px}
+  .site-bar{position:sticky;top:0;z-index:var(--site-bar-z,10);height:48px;gap:12px;padding:0 16px 0 10px;font-size:14px}
+  .site-bar-logo img{width:35px;height:30px}
+  .site-bar-long{display:inline}
+  .site-bar-short{display:none}
+  .site-bar-name{display:block;flex:0 1 auto;min-width:0;padding-left:14px;overflow:hidden;text-overflow:ellipsis;
+    border-left:1px solid rgba(128,128,128,.45);font-weight:600}
+  /* A pinned bar covers the top 48 px: anything the page scrolls into view stops below it. */
+  html:has(.site-bar){scroll-padding-top:48px}
+}
