@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-line: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; sixteen planted faults caught) |
-# ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/ docs/history/contracts/ scripts/plant_common.py
+# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; sixteen planted faults caught) | | 3
+# ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/*2026-11-20-maffscards-game.md docs/history/contracts/*2026-11-20-maffscards-game.md scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -82,7 +82,11 @@ best category always; three on game_completed's tally; and for challenges: the c
 challenge choice drawn from rng; the challenge deal shuffled from rng; the key a sum, not a hash; a challenge game
 submitted to the leaderboard; a normal game drawing once more from rng.
 
-    python -X utf8 scripts/verify-maffscards.py [--selftest]
+    python -X utf8 scripts/verify-maffscards.py [--selftest] [--only UNIT ...] [--shard I/K] [--list-units]
+
+CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py): its work units are data, balance, rules, marvin, sim, play,
+challenge, fit and the planted faults (selftest), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
+--shard every unit and the plants run, as before; --only runs the named units without the plants (local use).
 """
 import argparse
 import glob
@@ -1329,11 +1333,26 @@ def print_golden(html):
     return 0
 
 
+# The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
+# each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
+UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit']
+
+
+def merge_info(info, part):
+    """One unit's findings into the run's: lists extended, the rest set (no two units write the same scalar key)."""
+    for k, v in part.items():
+        if isinstance(v, list) and isinstance(info.get(k), list):
+            info[k].extend(v)
+        else:
+            info[k] = v
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
-    ap.add_argument('--only', nargs='*', help='run only these units: data balance rules marvin sim play challenge fit')
+    ap.add_argument('--only', nargs='*', help='run only these units (local use; no plants): ' + ' '.join(UNITS))
     ap.add_argument('--golden', metavar='PAGE', help='print NORMAL_GOLDEN as this page (an index.html) plays the normal seeded games')
+    bc.shard_args(ap)
     args = ap.parse_args()
     if args.golden:
         return print_golden(open(args.golden, encoding='utf-8').read())
@@ -1341,10 +1360,17 @@ def main():
         sys.stdout.reconfigure(encoding='utf-8')
     except (AttributeError, ValueError):
         pass
+    shard = bc.Shard(__file__, args)
+    mine = shard.pick(UNITS + ['selftest'])
+    plan = ['selftest'] if args.selftest else (list(args.only) if args.only else mine)
     html = open(GAME, encoding='utf-8').read()
     out = []
-    units = [] if args.selftest else (args.only or ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit'])
-    info = check(html, out, units) if units else {}
+    info = {}
+    for uid in plan:
+        if uid == 'selftest':
+            continue
+        with shard.unit(uid):
+            merge_info(info, check(html, out, [uid]))
     if 'how' in info:
         print('%s: cards.json is the data plus %d how lines, each ending on its value; %d of Marvin\'s lines equal to the contract; every set and card line reachable' % (SLUG, info['how'], info.get('lines', 0)))
     if 'pairs' in info:
@@ -1377,8 +1403,9 @@ def main():
     for f in info.get('chfit', []):
         print('%s: challenge fit %s' % (SLUG, f))
     ok = True
-    if args.selftest or not args.only:
-        ok = selftest(html)
+    if 'selftest' in plan:
+        with shard.unit('selftest'):
+            ok = selftest(html)
     for f in out[:80]:
         print('FAIL  ' + f)
     if len(out) > 80:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: Sums in Disguise (the bank's SHA-256 against the contract's; all 226 items recomputed from little and the big sum's tens, every decoy by its rule, distinct, never the answer, never negative; Stage 4's decoys different facts in range; coverage of every pair, no repeated big sum, no ones sum in two of Stages 1, 3 and 4; the 67 counts; the lines against the contract, verbatim; the fragment never sent or stored; in both looks every tile, option and Stage 4 sum marked by dataset.val alone, every decoy's aha line then the learning line, the 67 after marking on exactly the firing items; the greeting for each fragment; Amendment 1: the question as maths, the stacked working, one LINES string in feedback, kid lines of 6 words or fewer, the hand, read aloud on local voices only against a mocked speechSynthesis; every item of every stage above the fold at 360x640 in both looks, speaker showing: every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every stage played in both looks at 360x640, one board submission on stage-N, no payload naming the look; fault-injection self-test) | | 1
-# ci-deps: games/sums-in-disguise/ docs/handover/contracts/ docs/history/contracts/
+# ci-deps: games/sums-in-disguise/ docs/handover/contracts/*sums-in-disguise.md docs/history/contracts/*sums-in-disguise.md
 r"""Independent verification for Sums in Disguise (games/sums-in-disguise/), contract SUMS-IN-DISGUISE, 18 Nov 2026.
 SR-30: checked from its first PR.
 
