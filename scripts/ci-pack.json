@@ -310,7 +310,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (2 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -358,7 +358,7 @@
    "tier": "content"
   },
   "verify-how-many-parts.py": {
-   "how": "kept from the pack (4 needed)",
+   "how": "kept from the pack (5 needed)",
    "label": "How Many Parts? (pools and Foundation's five, keys, every stage's own errors and options, every question's bar and worked steps recomputed, the palette, sessions easiest first, every Foundation stage and Advanced played at 320, 390 and 1280px; every question, worked example and wrong-answer screen drawn by the game and read back step by step; every wrong-answer screen and worked example at 320x568, 375x667, 390x844 and 1280x800, normal and Aa: the reason and Next above the fold, brackets kept with their maths, typed questions' boxes and keypad in the window at 320x568; fault-injection self-test: eighteen planted faults, each caught)",
    "parts": 5,
    "tier": "content"
