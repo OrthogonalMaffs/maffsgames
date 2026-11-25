@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; the start art's three cards (96, 1, 89) equal to cards.json, each beating all 31 other main-deck cards in its category, the title in front, start screen only, no control pushed under the fold at 320x568, 375x667 and 1280x720 in normal and Aa; seventeen planted faults caught) | | 3
-# ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/*2026-11-20-maffscards-game.md docs/history/contracts/*2026-11-20-maffscards-game.md scripts/plant_common.py
+# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; today's deal: the date-to-code rule against this script's own for 400 days across both clock changes, the same code in two loads, main / ten / hard; every line of the pool verbatim from the contract and every number in one against cards.json; every state of the panel and every branch of the results line; never on the leaderboard, mode daily; the panel and results fit 320x568 and 375x667 in normal and Aa; the start art's three cards (96, 1, 89) equal to cards.json, each beating all 31 other main-deck cards in its category, the title in front, start screen only, no control pushed under the fold at 320x568, 375x667 and 1280x720 in normal and Aa; twenty-three planted faults caught) | | 3
+# ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/*2026-11-20-maffscards-game.md docs/history/contracts/*2026-11-20-maffscards-game.md docs/handover/contracts/*2026-11-25-daily-deal.md docs/history/contracts/*2026-11-25-daily-deal.md .claude/rules/game-roster.md scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
 
@@ -76,6 +76,35 @@ cards.json, never from the page:
             fit (with the fit unit): the challenge section with a made code and the bad-code message, and a
               challenge game's results, inside 320x568 in normal and Aa with no sideways scroll at five sizes.
 
+  today's deal (DAILY-DEAL, 25 Nov 2026): one deal a UK day, the same for everyone, with Jon's result beside it. Four units:
+  pool      no browser: the page's dailyLines equal to THE LINE POOL in the saved contract (docs/.../2026-11-25-daily-deal.md),
+            word for word, 11 won and 12 lost; every number and game name in a line held to games/maffscards/cards.json
+            (POOL_FACTS: 100 once in pi's first 1,000 digits, 96's factors summing to 252, 88 as LXXXVIII, 64 a square and
+            a cube, 1 with no largest prime factor, 89 once in the main deck and 8 from 81 with 100 further off, 9 = 3 x 3,
+            first to 10) or to the roster (Some Thingies and Eigenvector Engine are listed games); a number in a line
+            that no fact names fails.
+  daily     in Chromium, twice (a device in London and one in Auckland): the day's code for 400 consecutive dates from
+            25 Nov 2026 equal to this script's own rule (the date's characters through mix32, reduced to a seed, at main /
+            ten / hard), all different, each reading back as main / ten / hard; the page's UK date at every half hour of
+            those 400 days, and at the second each side of 23:00 and 24:00 UTC, equal to this script's own (BST from the
+            last Sunday of March to the last Sunday of October, 01:00 UTC), with 15 instants written out by hand; with
+            no hook, today is the UK's today; "Play today's deal" starts that day's code as a challenge game with the
+            menu showing its settings, the same code and deal in both loads; a won daily game submits nothing, says so,
+            sends mode 'daily' and challenge true on both events with detail ending " · challenge · daily", and never the
+            code, the date, or Jon's line or rounds; Play again is today's deal again; a normal game afterwards is normal.
+  dailyui   in Chromium with the page's date hook (MC.daily.setToday) and file hook (MC.daily.file): the panel above the
+            Deck options with its date; "Jon hasn't played today's deal yet." for nulls, a stale date, tomorrow's date and
+            every kind of invalid record; on 12 days running, won and lost with no line: the pool's line for the day
+            (day number since 1 Jan 2026 modulo the pool's length, by this script's count), {N} filled in, and "Jon took
+            N rounds." only when Jon won and the line lacks {N}; a Sheet line shown as plain text (markup included), at
+            240 characters shown and at 241 replaced by the pool's; every branch of the results line (you won against
+            Jon's more, the same and fewer rounds, Jon lost, Jon not played or stale; you lost against each). Then the
+            file itself, fetched beside the page: two loads on one day show the same line, and a stale, missing,
+            unreadable or failing file reads as not played with no error on screen.
+  dailyfit  at 320x568 and 375x667, normal and Aa: the panel with a 240-character line and the rounds, with 240
+            characters and no space, and not played: nothing off the screen, no sideways scroll, the button at least
+            44 px, no text under 12 px, and the panel (with a line of words) no taller than the screen above the
+            fold; a daily game's results with the longest results line above the fold.
   art       (MAFFSCARDS-START-ART, 25 Nov 2026) the start screen's three card tops behind the title. In Python, from
             cards.json: 96, 1 and 89 are main-deck cards and each beats all 31 others in its category (sum of factors,
             superpowers, largest prime factor), no ties. In Chromium at 320x568, 375x667 and 1280x720, normal and Aa: the
@@ -91,14 +120,18 @@ loss; Hard back to always best (MARVIN_BEST.hard 1); Easy never best (MARVIN_BES
 best category always; three on game_completed's tally; and for challenges: the check character ignored; Marvin's
 challenge choice drawn from rng; the challenge deal shuffled from rng; the key a sum, not a hash; a challenge game
 submitted to the leaderboard; a normal game drawing once more from rng; and for the start art, 89 changed to 98.
+For today's deal (their own unit, dailyplants): the day's code from Math.random; a pool line changed by one word; W8's 252
+changed to 250 in this script's facts table; a stale-date daily.json shown as today's; a 241-character line shown; a daily
+game submitted to the leaderboard.
 
     python -X utf8 scripts/verify-maffscards.py [--selftest] [--only UNIT ...] [--shard I/K] [--list-units]
 
 CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py): its work units are data, balance, rules, marvin, sim, play,
-challenge, fit, art and the planted faults (selftest), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
+challenge, fit, art, pool, daily, dailyui, dailyfit and the planted faults (selftest, and dailyplants for today's deal), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
 --shard every unit and the plants run, as before; --only runs the named units without the plants (local use).
 """
 import argparse
+import datetime as dt
 import glob
 import hashlib
 import json
@@ -337,10 +370,11 @@ def check_data(html, out, info):
 
 
 # ---------------------------------------------------------------- the browser
-def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify'):
+def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify', daily=None, tz=None):
+    """daily: (status, body) to answer games/maffscards/daily.json with, or None for the committed file. tz: the device's time zone."""
     touch = size[0] <= 600
     ctx = br.new_context(viewport={'width': size[0], 'height': size[1]}, has_touch=touch, is_mobile=touch,
-                         reduced_motion='reduce' if still else 'no-preference')
+                         reduced_motion='reduce' if still else 'no-preference', **({'timezone_id': tz} if tz else {}))
     ctx.add_init_script(bc.NO_LOCK_FRESH_INIT)
     if aa:
         ctx.add_init_script("try { localStorage.setItem('mfg_accessible', 'true'); } catch (e) {}")
@@ -350,6 +384,10 @@ def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?c
     page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
     ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
+    if daily is not None:
+        file_url = re.compile(r'/games/%s/daily\.json(\?.*)?$' % SLUG)
+        ctx.route(lambda url: bool(file_url.search(url)), lambda route: route.fulfill(
+            status=daily[0], content_type='application/json; charset=utf-8', body=daily[1]))
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
@@ -1355,10 +1393,514 @@ def check_art(br, base, html, game, out, info):
     ctx.close()
 
 
+# ---------------------------------------------------------------- today's deal (DAILY-DEAL, 25 Nov 2026)
+DAILY_CONTRACT = '2026-11-25-daily-deal.md'
+ROSTER = os.path.join(ROOT, '.claude', 'rules', 'game-roster.md')
+DAILY_BITS = 4                       # main deck, first to 10, Marvin hard: the settings number of every day's code
+DAILY_START = dt.date(2026, 11, 25)  # 400 days from here take in the clock changes of 28 March and 31 October 2027
+DAILY_DAYS = 400
+LINE_MAX = 240
+NOT_PLAYED = "Jon hasn't played today's deal yet."
+DAILY_SIZES = [(320, 568), (375, 667)]
+DAY_NAMES = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+# Instants whose UK date is known without any rule (written out by hand): GMT days end at 24:00 UTC, BST days at 23:00 UTC.
+UK_ANCHORS = [('2027-01-10T23:59:59', '2027-01-10'), ('2027-01-11T00:00:00', '2027-01-11'), ('2027-03-27T23:30:00', '2027-03-27'),
+              ('2027-03-28T00:59:59', '2027-03-28'), ('2027-03-28T22:59:59', '2027-03-28'), ('2027-03-28T23:00:00', '2027-03-29'),
+              ('2027-06-01T22:59:59', '2027-06-01'), ('2027-06-01T23:00:00', '2027-06-02'), ('2027-10-30T23:00:00', '2027-10-31'),
+              ('2027-10-31T00:59:59', '2027-10-31'), ('2027-10-31T23:00:00', '2027-10-31'), ('2027-10-31T23:59:59', '2027-10-31'),
+              ('2027-11-01T00:00:00', '2027-11-01'), ('2026-12-31T23:59:59', '2026-12-31'), ('2027-01-01T00:00:00', '2027-01-01')]
+# Every number and every game name in the pool, as (the line, the words that state it, the kind of fact, its values).
+# check_pool holds each to games/maffscards/cards.json (or the roster, or arithmetic), and fails a line that holds a
+# number no fact covers. {N} is Jon's round count, filled in by the page.
+POOL_FACTS = [
+    ('W2', '9 should be a prime number', 'not prime', (9, 3, 3)),
+    ('W5', 'an extra 89 card', 'once in the main deck', (89,)),
+    ('W6', 'Some Thingies', 'roster', ('Some Thingies',)),
+    ('W7', '100 appears only once', 'card', (100, 'pi', 1)),
+    ('W7', 'the first 1,000 digits of pi', 'pi digits', (1000,)),
+    ('W8', "96's factors add up to 252", 'card', (96, 'sof', 252)),
+    ('W9', 'LXXXVIII', 'card', (88, 'roman', 'LXXXVIII')),
+    ('W10', '64. Being a square AND a cube', 'powers', (64, ('square', 'cube'))),
+    ('W11', "1's largest prime factor. There isn't one", 'card', (1, 'lpf', 0)),
+    ('L3', 'Marvin 10', 'first to', (10,)),
+    ('L7', 'Eigenvector Engine', 'roster', ('Eigenvector Engine',)),
+    ('L10', '89 being exactly 8 from the nearest square', 'distance', (89, 8, 81, 100)),
+    ('L11', 'the first 1,000 digits of pi', 'pi digits', (1000,)),
+]
+
+
+def mix32(h):
+    """The page's 32-bit hash step (the murmur3 finaliser), in this script's own arithmetic."""
+    h &= 0xFFFFFFFF
+    h ^= h >> 16
+    h = (h * 0x85EBCA6B) & 0xFFFFFFFF
+    h ^= h >> 13
+    h = (h * 0xC2B2AE35) & 0xFFFFFFFF
+    return h ^ (h >> 16)
+
+
+def py_day_code(date):
+    """The day's code by this script's own rule: the date's characters chained through mix32, reduced to a seed that takes all 8 settings."""
+    h = 0
+    for ch in date:
+        h = mix32(h + ord(ch))
+    return py_encode(h % (CODE_SPAN // 8), DAILY_BITS)
+
+
+def uk_date(now):
+    """The UK calendar date at a UTC datetime, with no time zone database: BST from 01:00 UTC on the last Sunday of March
+    to 01:00 UTC on the last Sunday of October."""
+    def last_sunday(month):
+        d = dt.date(now.year, month, 31)
+        return dt.datetime.combine(d - dt.timedelta(days=(d.weekday() + 1) % 7), dt.time(1))
+    return (now + dt.timedelta(hours=1 if last_sunday(3) <= now < last_sunday(10) else 0)).date()
+
+
+def ms_of(now):
+    return int((now - dt.datetime(1970, 1, 1)).total_seconds() * 1000)
+
+
+def day_label(date):
+    d = dt.date.fromisoformat(date)
+    return '%s %d %s' % (DAY_NAMES[d.weekday()], d.day, MONTH_NAMES[d.month - 1])
+
+
+def daily_pool():
+    """THE LINE POOL from the saved contract: ({'won': [...], 'lost': [...]}, {'W1': text, ...}), or None with no file."""
+    for d in ('docs/handover/contracts', 'docs/history/contracts'):
+        for f in glob.glob(os.path.join(ROOT, d, '*' + DAILY_CONTRACT)):
+            pool, by = {'won': [], 'lost': []}, {}
+            for line in open(f, encoding='utf-8').read().split('\n'):
+                m = re.match(r'^([WL])(\d+) (.+)$', line)
+                if m:
+                    lines = pool['won' if m.group(1) == 'W' else 'lost']
+                    lines.append(m.group(3))
+                    by[m.group(1) + m.group(2)] = m.group(3)
+                    if int(m.group(2)) != len(lines):
+                        return {'won': [], 'lost': []}, {}          # not numbered 1, 2, 3...: not the pool
+            return pool, by
+    return None
+
+
+def page_daily_lines(html):
+    m = re.search(r'<script type="application/json" id="dailyLines">(.*?)</script>', html, re.S)
+    return json.loads(m.group(1)) if m else None
+
+
+def pool_line(pool, result, date):
+    """The pool's line for a result on a date: the day number since 1 January 2026, modulo the pool's length."""
+    n = (dt.date.fromisoformat(date) - dt.date(2026, 1, 1)).days
+    return pool[result][n % len(pool[result])]
+
+
+def listed_games():
+    """Names of the roster's listed games: every numbered row above the Unlisted section."""
+    names, listed = set(), True
+    for line in open(ROSTER, encoding='utf-8').read().split('\n'):
+        if line.startswith('## '):
+            listed = not re.match(r'## (Unlisted|Withdrawn)\b', line)
+        m = re.match(r'^\| \d+ \| ([^|]+?) \| `[a-z0-9-]+` \|', line)
+        if m and listed:
+            names.add(m.group(1))
+    return names
+
+
+def check_pool(html, out, info, facts=None):
+    """The page's dailyLines against the contract, word for word; every number and game name in a line against the cards."""
+    facts = POOL_FACTS if facts is None else facts
+    got, want = page_daily_lines(html), daily_pool()
+    if want is None:
+        out.append('daily pool: the contract file *%s is not in docs/handover/contracts/ or docs/history/contracts/' % DAILY_CONTRACT)
+        return
+    pool, by = want
+    if len(pool['won']) != 11 or len(pool['lost']) != 12:
+        out.append('daily pool: the contract holds %d won and %d lost lines, not 11 and 12' % (len(pool['won']), len(pool['lost'])))
+    if got is None:
+        out.append('daily pool: the page has no dailyLines block')
+        return
+    if sorted(got) != ['lost', 'won']:
+        out.append('daily pool: dailyLines holds %r, not won and lost' % sorted(got))
+    for result in ('won', 'lost'):
+        mine = got.get(result) or []
+        if len(mine) != len(pool[result]):
+            out.append('daily pool: %d %s lines in the page, %d in the contract' % (len(mine), result, len(pool[result])))
+        for i, (a, b) in enumerate(zip(mine, pool[result])):
+            if a != b:
+                out.append("daily pool: %s line %d is not the contract's: %r, the contract's %r" % (result, i + 1, a, b))
+    game = load(CARDS)
+    cards = {c['n']: c for c in game['cards']}
+    main = [c['n'] for c in game['cards'] if c['deck'] == 'main']
+    listed = listed_games()
+    for lid, words, kind, v in facts:
+        line = by.get(lid)
+        if line is None or words not in line:
+            out.append('daily pool: %s: the line does not say %r: %r' % (lid, words, line))
+            continue
+        why = None
+        if kind == 'card':
+            n, key, val = v
+            if n not in main or cards[n][key] != val:
+                why = 'cards.json gives %d %s %r, not %r (main deck: %s)' % (n, key, cards.get(n, {}).get(key), val, n in main)
+        elif kind == 'powers':
+            n, names = v
+            if n not in main or not set(names) <= set(cards[n]['powers']) or round(n ** 0.5) ** 2 != n or round(n ** (1 / 3)) ** 3 != n:
+                why = 'cards.json gives %d the superpowers %r, the line needs %r' % (n, cards.get(n, {}).get('powers'), list(names))
+        elif kind == 'once in the main deck':
+            if main.count(v[0]) != 1:
+                why = '%d is in the main deck %d times, not once' % (v[0], main.count(v[0]))
+        elif kind == 'distance':
+            n, d, below, above = v
+            lo = int(n ** 0.5) ** 2
+            hi = (int(n ** 0.5) + 1) ** 2
+            if (lo, hi) != (below, above) or n - lo != d or not n - lo < hi - n or cards.get(n, {}).get('dist') != d:
+                why = '%d lies between the squares %d and %d, %d and %d away; cards.json gives its distance as %r, the line says %d' % (
+                    n, lo, hi, n - lo, hi - n, cards.get(n, {}).get('dist'), d)
+        elif kind == 'not prime':
+            n, a, b = v
+            if a * b != n or not 1 < a < n:
+                why = '%d is not %d x %d' % (n, a, b)
+        elif kind == 'pi digits':
+            if game.get('pi_decimals') != v[0]:
+                why = "cards.json counts in pi's first %r digits, not %d" % (game.get('pi_decimals'), v[0])
+        elif kind == 'first to':
+            if not re.search(r"var SLUG = 'maffscards', TEN = %d," % v[0], html):
+                why = 'the page does not play first to %d' % v[0]
+        elif kind == 'roster':
+            if v[0] not in listed:
+                why = '%r is not the roster name of a listed game' % v[0]
+        else:
+            why = 'no rule for a %r fact' % kind
+        if why:
+            out.append('daily pool: %s: %r does not hold: %s' % (lid, words, why))
+    # no number in any line without a fact that names it
+    for lid, line in sorted(by.items()):
+        said = ' '.join(f[1] for f in facts if f[0] == lid)
+        for num in re.findall(r'\d+(?:,\d{3})*', line):
+            if not re.search(r'(?<![\d,])%s(?![\d,])' % re.escape(num), said):
+                out.append('daily pool: %s holds the number %s and no fact in this script checks it' % (lid, num))
+    info['pool'] = (len(got.get('won') or []), len(got.get('lost') or []), len(facts))
+
+
+DAILY_PLAY_JS = r"""([date, piles, round, wins, ties]) => {
+  MC.seed(9); window.__ev = []; window.__sub = [];
+  MC.daily.setToday(date);
+  MC.ui.set('deck', 'all'); MC.ui.set('length', 'deck'); MC.ui.set('marvin', 'easy');     // the opposite settings: the deal's must win
+  document.getElementById('ddPlay').click();
+  const g0 = MC.ui.game(), daily = MC.daily.playing();
+  const pressed = [...document.querySelectorAll('.opt-btn[aria-pressed="true"]')].map(b => b.dataset.val);
+  if (!g0) return null;
+  MC.ui.rig(piles[0], piles[1], round, wins, ties); MC.ui.tap('sof'); MC.ui.tap('sof'); MC.ui.next();
+  const $ = id => document.getElementById(id), g = MC.ui.game();
+  return { code: g0.challenge, daily: daily, pressed: pressed, you: g0.you, mar: g0.mar, settings: [g0.deck, g0.length, g0.marvin],
+    state: MC.ui.state(), result: g.result, round: g.round, ev: window.__ev, sub: window.__sub,
+    line: $('chLine').hidden ? null : $('chLine').textContent, lbNote: $('lbNote').textContent, marks: $('chLine').children.length };
+}"""
+# A daily game won in round 13 (64's sum of factors, 127, beats 2's 3) and one lost in round 15.
+WIN_13 = [[[64, 1], [2, 7]], 13, {'you': 9, 'marvin': 3}, 0]
+LOSS_15 = [[[2, 1], [64, 7]], 15, {'you': 3, 'marvin': 9}, 2]
+
+
+def check_daily(br, base, html, game, out, info):
+    """The date-to-code rule, the same code in two loads, the code's settings; off the board; analytics."""
+    dates = [(DAILY_START + dt.timedelta(days=i)).isoformat() for i in range(DAILY_DAYS)]
+    want = [py_day_code(d) for d in dates]
+    if None in want or len(set(want)) != len(want) or any(py_decode(c)[1] != DAILY_BITS for c in want if c):
+        out.append("daily rule: this script's own codes for %d days are not %d different main / ten / hard codes" % (DAILY_DAYS, DAILY_DAYS))
+    # every half hour of the 400 days, and the second each side of 23:00 and 24:00 UTC (UK midnight in summer and winter)
+    start = dt.datetime.combine(DAILY_START, dt.time(0))
+    stamps = [start + dt.timedelta(minutes=30 * i) for i in range(DAILY_DAYS * 48)]
+    for i in range(DAILY_DAYS):
+        day = start + dt.timedelta(days=i)
+        stamps += [day + dt.timedelta(hours=23) - dt.timedelta(seconds=1), day + dt.timedelta(hours=23),
+                   day + dt.timedelta(hours=24) - dt.timedelta(seconds=1)]
+    anchors = [(dt.datetime.fromisoformat(s), d) for s, d in UK_ANCHORS]
+    for when, d in anchors:
+        if uk_date(when).isoformat() != d:
+            out.append("daily rule: this script's own UK date at %s UTC is %s, not %s" % (when.isoformat(), uk_date(when), d))
+    loads = []
+    for tz, rng_seed in (('Europe/London', 1), ('Pacific/Auckland', 2)):
+        ctx, page, errs = open_page(br, base, html, (1280, 800), tz=tz)
+        page.evaluate('MC.daily.ready')
+        tag = 'daily rule (a device in %s)' % tz
+        got = page.evaluate('ds => ds.map(d => MC.daily.code(d))', dates)
+        bad = [(d, g, w) for d, g, w in zip(dates, got, want) if g != w]
+        for d, g, w in bad[:3]:
+            out.append("%s: the code for %s is %r, this script's own rule gives %r" % (tag, d, g, w))
+        if len(set(got)) != len(got):
+            out.append('%s: %d days share a code with another day' % (tag, len(got) - len(set(got))))
+        back = page.evaluate('cs => cs.map(c => { const d = MC.challenge.decode(c); return d && [d.deck, d.length, d.marvin].join(" "); })', got)
+        if set(back) != {'main ten hard'}:
+            out.append('%s: a day\'s code does not read back as main / ten / hard: %r' % (tag, sorted(set(str(b) for b in back))[:3]))
+        at = page.evaluate('ms => ms.map(m => MC.daily.at(m))', [ms_of(s) for s in stamps])
+        off = [(s, a) for s, a in zip(stamps, at) if a != uk_date(s).isoformat()]
+        for s, a in off[:3]:
+            out.append('%s: at %s UTC the page says the UK date is %s, it is %s' % (tag, s.isoformat(), a, uk_date(s)))
+        hand = page.evaluate('ms => ms.map(m => MC.daily.at(m))', [ms_of(w) for w, d in anchors])
+        for (w, d), a in zip(anchors, hand):
+            if a != d:
+                out.append('%s: at %s UTC the page says the UK date is %s, it is %s' % (tag, w.isoformat(), a, d))
+        # no hook: today is the UK's today (read either side of the page's own reading, in case midnight falls between)
+        before = uk_date(dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)).isoformat()
+        today = page.evaluate('MC.daily.today()')
+        if today not in (before, uk_date(dt.datetime.now(dt.timezone.utc).replace(tzinfo=None)).isoformat()):
+            out.append('%s: with no hook the page\'s today is %s, the UK date is %s' % (tag, today, before))
+        # the button plays the day's code, as a challenge, with the deal's settings on the menu; off the board; analytics
+        day = dates[7]
+        page.evaluate("o => MC.daily.file(o)", {'date': day, 'result': 'won', 'rounds': 77, 'line': 'Zebra crossing, Marvin.'})
+        g = page.evaluate(DAILY_PLAY_JS, [day] + WIN_13)
+        loads.append(g)
+        if g is None or g['code'] != py_day_code(day) or not g['daily'] or g['settings'] != ['main', 'ten', 'hard'] or g['pressed'] != ['main', 'ten', 'hard']:
+            out.append("%s: Play today's deal on %s started %r, expected the day's code %s as a daily game at main / ten / hard with the menu showing it"
+                       % (tag, day, g and [g['code'], g['daily'], g['settings'], g['pressed']], py_day_code(day)))
+        if g is None:
+            ctx.close()
+            continue
+        if g['state'] != 'over' or g['result'] != {'winner': 'you', 'why': 'ten'}:
+            out.append('daily board: the rigged daily game ended %r, not won at 10' % [g['state'], g['result']])
+        if g['sub']:
+            out.append('daily board: a won daily game submitted %r to the leaderboard' % g['sub'])
+        if g['lbNote'] != NO_BOARD:
+            out.append('daily board: the leaderboard note reads %r, expected %r' % (g['lbNote'], NO_BOARD))
+        sent = [(e[0], e[1].get('mode'), e[1].get('challenge')) for e in g['ev']]
+        detail = 'you 10 · Marvin 3 · ties 0 · win · ten · challenge · daily'
+        if sent != [('game_started', 'daily', True), ('game_completed', 'daily', True)]:
+            out.append("daily analytics: a daily game sent %r, expected game_started and game_completed with mode 'daily' and challenge true" % sent)
+        elif g['ev'][1][1].get('detail') != detail or g['ev'][1][1].get('level') != 'main-hard':
+            out.append('daily analytics: game_completed detail %r on level %r, expected %r on main-hard' % (g['ev'][1][1].get('detail'), g['ev'][1][1].get('level'), detail))
+        dumped = json.dumps(g['ev'], ensure_ascii=False)
+        for what, secret in (('the code', g['code'] or '?'), ('the date', day), ("Jon's line", 'Zebra'), ("Jon's rounds", '77')):
+            if secret in dumped:
+                out.append('daily analytics: an event carries %s (%s)' % (what, secret))
+        # Play again: today's deal again, the same code and the same deal
+        page.evaluate('window.__ev = []; window.__sub = []')
+        page.click('#againBtn')
+        n = page.evaluate("[MC.ui.state(), MC.ui.game().challenge, MC.daily.playing(), MC.ui.game().you, window.__ev.map(e => [e[0], e[1].mode, e[1].challenge])]")
+        if n[0] not in ('choosing', 'marvin') or n[1] != py_day_code(day) or not n[2] or n[3] != g['you'] or n[4] != [['game_started', 'daily', True]]:
+            out.append("daily, Play again: %r, expected today's deal again (%s, the same piles, mode 'daily')" % (n, py_day_code(day)))
+        # and a normal game afterwards is a normal game: its own modes, challenge false, on the board
+        page.evaluate("MC.ui.next(); window.__ev = []; window.__sub = []; MC.ui.set('deck', 'main'); MC.ui.set('length', 'ten'); MC.ui.set('marvin', 'easy'); MC.ui.start();"
+                      " MC.ui.rig([64, 1], [2, 7], 13, {you: 9, marvin: 3}, 0); MC.ui.tap('sof'); MC.ui.tap('sof'); MC.ui.next()")
+        n = page.evaluate("[MC.daily.playing(), window.__sub, window.__ev.map(e => [e[0], e[1].mode, e[1].challenge, e[1].detail || null])]")
+        if n != [False, [['maffscards', 'main-easy', 13, 13]], [['game_started', 'first-to-10', False, None],
+                                                              ['game_completed', 'first-to-10', False, 'you 10 · Marvin 3 · ties 0 · win · ten']]]:
+            out.append('daily, a normal game afterwards: %r, expected a first-to-10 game with challenge false and its score submitted' % n)
+        out.extend('page error (%s): %s' % (tag, e) for e in errs if 'production host' not in e)
+        ctx.close()
+    if len(loads) == 2 and None not in loads and (loads[0]['code'] != loads[1]['code'] or loads[0]['you'] != loads[1]['you'] or loads[0]['mar'] != loads[1]['mar']):
+        out.append('daily rule: two page loads on the same date gave different codes or deals: %r and %r' % (loads[0]['code'], loads[1]['code']))
+    info['daily'] = (len(dates), len(stamps))
+
+
+STATUS_JS = r"""() => { const $ = id => document.getElementById(id);
+  return { date: $('ddDate').textContent, status: $('ddStatus').textContent, rounds: $('ddRounds').hidden ? null : $('ddRounds').textContent,
+           marks: $('ddStatus').children.length + $('ddRounds').children.length, button: $('ddPlay').textContent,
+           shown: !!$('daily').offsetParent, above: !!($('daily').compareDocumentPosition($('optDeck')) & Node.DOCUMENT_POSITION_FOLLOWING) }; }"""
+
+
+def check_daily_ui(br, base, html, out, info):
+    """Every state of the panel and every branch of a daily game's results line, with the page's clock hook."""
+    want = daily_pool()
+    if not want or not want[0]['won'] or not want[0]['lost']:
+        out.append('daily status: no line pool in the contract file to check against')
+        return
+    pool = want[0]
+    today = '2027-03-05'
+    ctx, page, errs = open_page(br, base, html, (1280, 800))
+    page.evaluate('MC.daily.ready')
+
+    def panel(file, date=today):
+        return page.evaluate('([o, d]) => { MC.daily.setToday(d); MC.daily.file(o); return (%s)(); }' % STATUS_JS, [file, date])
+
+    def expect(what, got, status, rounds):
+        if got['status'] != status or got['rounds'] != rounds or got['marks']:
+            out.append('daily status, %s: the panel says %r and %r (%d elements inside), expected %r and %r as plain text'
+                       % (what, got['status'], got['rounds'], got['marks'], status, rounds))
+
+    first = panel(None)
+    if not first['shown'] or not first['above'] or first['button'] != "Play today's deal" or first['date'] != day_label(today):
+        out.append("daily status: the panel is not above the Deck options with the date %r and the button \"Play today's deal\": %r" % (day_label(today), first))
+    for date in ('2026-11-26', '2027-01-01', '2027-02-28', '2028-02-29', '2027-10-31'):
+        got = panel(None, date)['date']
+        if got != day_label(date):
+            out.append('daily status: on %s the panel\'s date reads %r, expected %r' % (date, got, day_label(date)))
+    won = {'date': today, 'result': 'won', 'rounds': 14, 'line': None}
+    lost = {'date': today, 'result': 'lost', 'rounds': 31, 'line': None}
+    # not played: nulls, a stale date, tomorrow's, and every kind of invalid content
+    idle = [('all nulls', {'date': None, 'result': None, 'rounds': None, 'line': None}), ('no file contents', None),
+            ("a stale date (yesterday's result)", dict(won, date='2027-03-04')), ("tomorrow's date", dict(won, date='2027-03-06')),
+            ('a stale date with a line', dict(lost, date='2026-03-05', line='Old news.')), ('no date', dict(won, date=None)),
+            ('a result that is neither won nor lost', dict(won, result='drew')), ('no result', dict(won, result=None)),
+            ('rounds as text', dict(won, rounds='14')), ('rounds not whole', dict(won, rounds=14.5)), ('no rounds', dict(won, rounds=None)),
+            ('a win in 9 rounds', dict(won, rounds=9)), ('a win in 101 rounds', dict(won, rounds=101)), ('a loss in 201 rounds', dict(lost, rounds=201)),
+            ('a list, not a record', [today, 'won', 14, None]), ('a string, not a record', 'won'), ('a number, not a record', 14)]
+    for what, file in idle:
+        expect('not played, %s' % what, panel(file), NOT_PLAYED, None)
+    # won and lost with no line, on 12 days running (every line of both pools): the pool's line for the day, {N} filled in,
+    # and "Jon took N rounds." only when Jon won and the line does not say it
+    seen = set()
+    for i in range(12):
+        date = (dt.date.fromisoformat(today) + dt.timedelta(days=i)).isoformat()
+        for rec in (won, lost):
+            raw = pool_line(pool, rec['result'], date)
+            seen.add(raw)
+            text = raw.replace('{N}', str(rec['rounds']))
+            took = 'Jon took %d rounds.' % rec['rounds'] if rec['result'] == 'won' and '{N}' not in raw else None
+            got = panel(dict(rec, date=date), date)
+            expect('%s with no line on %s (the pool line %r)' % (rec['result'], date, raw[:40]), got, text, took)
+            if '{N}' in got['status']:
+                out.append('daily status, %s on %s: {N} is left in the line: %r' % (rec['result'], date, got['status']))
+    if len(seen) != len(pool['won']) + len(pool['lost']):
+        out.append('daily status: 12 days running showed %d different pool lines, not all %d' % (len(seen), len(pool['won']) + len(pool['lost'])))
+    if not any('{N}' in t for t in pool['won']) or all('{N}' in t for t in pool['won']):
+        out.append('daily status: the won pool does not hold lines both with and without {N}, so one branch is untested')
+    # a line from the Sheet
+    fallback_won, fallback_lost = pool_line(pool, 'won', today), pool_line(pool, 'lost', today)
+    took14 = None if '{N}' in fallback_won else 'Jon took 14 rounds.'
+    fb_won = fallback_won.replace('{N}', '14')
+    long240 = ('Marvin is sulking. ' * 13)[:LINE_MAX - 1] + '.'
+    cases = [('won with a Sheet line', dict(won, line='Beat that, Marvin.'), 'Beat that, Marvin.', 'Jon took 14 rounds.'),
+             ('won with a Sheet line holding {N}', dict(won, line='I took {N}. Beat {N}.'), 'I took 14. Beat 14.', None),
+             ('won with a Sheet line with spaces round it', dict(won, line='  Beat that.  '), 'Beat that.', 'Jon took 14 rounds.'),
+             ('won with a Sheet line of markup', dict(won, line='<b>Bold</b> <img src=x onerror=alert(1)> & co'), '<b>Bold</b> <img src=x onerror=alert(1)> & co', 'Jon took 14 rounds.'),
+             ('won with a 240-character line', dict(won, line=long240), long240, 'Jon took 14 rounds.'),
+             ('won with a 241-character line (the pool line shown)', dict(won, line=long240 + '!'), fb_won, took14),
+             ('won with an empty line', dict(won, line=''), fb_won, took14),
+             ('won with a line of spaces', dict(won, line='   '), fb_won, took14),
+             ('won with a line that is a number', dict(won, line=7), fb_won, took14),
+             ('lost with a Sheet line', dict(lost, line='A tactical loss in {N}.'), 'A tactical loss in 31.', None),
+             ('lost with a 241-character line (the pool line shown)', dict(lost, line='x' * (LINE_MAX + 1)), fallback_lost.replace('{N}', '31'), None),
+             ('lost with no line', lost, fallback_lost.replace('{N}', '31'), None)]
+    if len(long240) != LINE_MAX:
+        out.append('daily status: the test line is %d characters, not %d' % (len(long240), LINE_MAX))
+    for what, file, status, rounds in cases:
+        expect(what, panel(file), status, rounds)
+
+    # the results line of a daily game: every branch
+    jon_won = lambda n: dict(won, rounds=n)                      # noqa: E731
+    branches = [
+        ('you won in 13, Jon in 14', WIN_13, jon_won(14), 'You took 13 rounds. Jon took 14: you beat him.'),
+        ('you won in 13, Jon in 13', WIN_13, jon_won(13), 'You took 13 rounds. Jon took 13: you matched him.'),
+        ('you won in 13, Jon in 12', WIN_13, jon_won(12), 'You took 13 rounds. Jon took 12: he beat you.'),
+        ('you won in 13, Jon lost', WIN_13, lost, 'You took 13 rounds. Jon lost to Marvin today. You did what Jon could not.'),
+        ('you won in 13, Jon has not played', WIN_13, None, 'You took 13 rounds. ' + NOT_PLAYED),
+        ("you won in 13, Jon's result is yesterday's", WIN_13, dict(jon_won(12), date='2027-03-04'), 'You took 13 rounds. ' + NOT_PLAYED),
+        ('you lost, Jon lost', LOSS_15, lost, 'Marvin beat you too.'),
+        ('you lost, Jon won', LOSS_15, jon_won(14), 'Marvin won this time.'),
+        ('you lost, Jon has not played', LOSS_15, None, 'Marvin won this time. ' + NOT_PLAYED),
+    ]
+    for what, rig, file, line in branches:
+        page.evaluate('o => MC.daily.file(o)', file)
+        g = page.evaluate(DAILY_PLAY_JS, [today] + rig)
+        if g is None or g['state'] != 'over' or not g['daily']:
+            out.append('daily results, %s: the daily game did not start or did not end' % what)
+        elif g['line'] != line or g['marks']:
+            out.append('daily results, %s: the results line reads %r, expected %r as plain text' % (what, g['line'], line))
+        page.evaluate("document.getElementById('menuBtn').click()")
+    out.extend('page error (daily status): %s' % e for e in errs if 'production host' not in e)
+    ctx.close()
+
+    # the file itself, fetched beside the page: two loads on one day show the same line; missing and unreadable files are "not played"
+    day = '2027-07-19'
+    body = json.dumps({'date': day, 'result': 'lost', 'rounds': 22, 'line': None})
+    line = pool_line(pool, 'lost', day)
+    files = [('the file for today, first load', (200, body), 'Europe/London', line),
+             ('the file for today, a second load on another device', (200, body), 'America/Los_Angeles', line),
+             ("the file with a Sheet line", (200, json.dumps({'date': day, 'result': 'won', 'rounds': 12, 'line': 'Twelve. Beat it.'})), None, 'Twelve. Beat it.'),
+             ("yesterday's file, a stale date", (200, body.replace(day, '2027-07-18')), None, NOT_PLAYED),
+             ('a missing file', (404, 'Not found'), None, NOT_PLAYED),
+             ('a file that is not JSON', (200, '{"date": "%s", "result": "lost"' % day), None, NOT_PLAYED),
+             ('an empty file', (200, ''), None, NOT_PLAYED),
+             ('a server error', (500, body), None, NOT_PLAYED),
+             ('the file as committed, all nulls', None, None, NOT_PLAYED)]
+    for what, daily, tz, status in files:
+        ctx, page, errs = open_page(br, base, html, (390, 844), daily=daily, tz=tz)
+        page.evaluate('MC.daily.ready')
+        got = page.evaluate('d => { MC.daily.setToday(d); return (%s)(); }' % STATUS_JS, day)
+        if got['status'] != status or page.evaluate("!document.getElementById('loadMsg').hidden"):
+            out.append('daily status, %s: the panel says %r, expected %r and no error on screen' % (what, got['status'], status))
+        if not page.evaluate("document.getElementById('startBtn').disabled === false && document.getElementById('ddPlay').disabled === false"):
+            out.append('daily status, %s: a start button is disabled' % what)
+        out.extend('page error (daily status, %s): %s' % (what, e) for e in errs if 'production host' not in e)
+        ctx.close()
+    info['dailyui'] = (len(idle), 24 + len(cases), len(branches), len(files))
+
+
+DAILY_FIT_JS = r"""() => {
+  window.scrollTo(0, 0);
+  const foot = document.querySelector('.site-footer');
+  const fixed = foot && getComputedStyle(foot).position === 'fixed';
+  const fold = innerHeight - (fixed ? foot.getBoundingClientRect().height : 0);
+  const shown = e => !!e && !!e.offsetParent;
+  const sec = document.getElementById('daily');
+  const parts = shown(sec) ? [sec, ...sec.querySelectorAll('*')].filter(shown) : [];
+  const wide = parts.filter(e => { const r = e.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1; }).map(e => e.id || e.className || e.tagName);
+  const small = parts.filter(e => e.tagName === 'BUTTON' && e.getBoundingClientRect().height < 44).map(e => e.id);
+  const tiny = parts.filter(e => e.children.length === 0 && e.textContent.trim() && parseFloat(getComputedStyle(e).fontSize) < 12).map(e => e.id || e.tagName);
+  const bottom = id => { const e = document.getElementById(id); return shown(e) ? e.getBoundingClientRect().bottom + scrollY : null; };
+  return { fold: fold, sideways: document.documentElement.scrollWidth > innerWidth + 1, wide: wide, small: small, tiny: tiny,
+           panel: shown(sec) ? sec.getBoundingClientRect().height : null, results: ['chLine', 'lbNote', 'againBtn', 'menuBtn'].map(bottom) };
+}"""
+
+
+def check_daily_fit(br, base, html, out, info):
+    """The panel with the longest lines it can show, and a daily game's results with the longest results line, on small phones."""
+    lines = page_lines(html) or {}
+    day = '2027-03-05'
+    long_words = ('Marvin wants a recount, a rematch and an apology. ' * 6)[:LINE_MAX - 1] + '.'
+    files = [('a 240-character line and the rounds', {'date': day, 'result': 'won', 'rounds': 100, 'line': long_words}),
+             ('240 characters with no space', {'date': day, 'result': 'won', 'rounds': 100, 'line': 'W' * LINE_MAX}),
+             ('not played', None)]
+    for size in DAILY_SIZES:
+        for aa in (False, True):
+            tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
+            ctx, page, errs = open_page(br, base, html, size, aa=aa, fonts=True)
+            page.evaluate('MC.daily.ready')
+            page.evaluate("document.fonts.ready.then(() => 0)")
+            tallest = 0
+            for what, file in files:
+                page.evaluate('([o, d]) => { MC.daily.setToday(d); MC.daily.file(o); }', [file, day])
+                f = page.evaluate(DAILY_FIT_JS)
+                if f['panel'] is None:
+                    out.append('daily fit %s, %s: the panel is not showing' % (tag, what))
+                    continue
+                if f['sideways'] or f['wide']:
+                    out.append('daily fit %s, %s: the menu scrolls sideways or a part of the panel runs off the screen: %r' % (tag, what, f['wide']))
+                if f['small']:
+                    out.append('daily fit %s, %s: a button under 44 px tall: %r' % (tag, what, f['small']))
+                if f['tiny']:
+                    out.append('daily fit %s, %s: text under 12 px: %r' % (tag, what, f['tiny']))
+                if f['panel'] > f['fold'] and ' ' in ((file or {}).get('line') or ' '):      # a line of words; one unbroken word need only wrap
+                    out.append('daily fit %s, %s: the panel is %.0f px tall, more than the %.0f px above the fold' % (tag, what, f['panel'], f['fold']))
+                tallest = max(tallest, f['panel'] if ' ' in ((file or {}).get('line') or ' ') else 0)
+            # the results: the longest results line, the longer of Marvin's end lines, both buttons above the fold
+            page.evaluate('o => MC.daily.file(o)', {'date': day, 'result': 'lost', 'rounds': 200, 'line': None})
+            g = page.evaluate(DAILY_PLAY_JS, [day, [[64, 1], [2, 7]], 100, {'you': 9, 'marvin': 80}, 10])
+            want = 'You took 100 rounds. Jon lost to Marvin today. You did what Jon could not.'
+            if g is None or g['line'] != want:
+                out.append('daily fit %s: the daily game\'s results line is %r, expected the longest, %r' % (tag, g and g['line'], want))
+            page.evaluate("t => { const q = document.getElementById('resQuip'); q.hidden = false; q.innerHTML = '<span class=\"who\">Marvin:</span> ' + t; }",
+                          max(lines.get('playerWins') or [''], key=len))
+            r = page.evaluate(DAILY_FIT_JS)
+            if r['sideways']:
+                out.append('daily fit %s: a daily game\'s results scroll sideways' % tag)
+            if None in r['results']:
+                out.append('daily fit %s: a part of a daily game\'s results is not shown: %r' % (tag, r['results']))
+            else:
+                over = max(r['results']) - r['fold']
+                if over > 0:
+                    out.append('daily fit %s: a daily game\'s results end at %.0f px, below the fold at %.0f px' % (tag, max(r['results']), r['fold']))
+                info.setdefault('dailyfit', []).append('%s: the panel at most %.0f px tall; a daily game\'s results end %.0f px above the fold' % (tag, tallest, -over))
+            out.extend('page error (daily fit %s): %s' % (tag, e) for e in errs if 'production host' not in e)
+            ctx.close()
+
+
 # ---------------------------------------------------------------- run
-def check(html, out, units):
+def check(html, out, units, facts=None):
     info = {}
     game = load(CARDS)
+    if 'pool' in units:
+        check_pool(html, out, info, facts)
     if 'data' in units:
         check_data(html, out, info)
     if 'balance' in units:
@@ -1366,7 +1908,7 @@ def check(html, out, units):
             check_balance(html, out, info)
         except Exception as e:  # noqa: BLE001
             out.append('balance threw: %s' % str(e).splitlines()[0][:200])
-    browser = [u for u in units if u not in ('data', 'balance')]
+    browser = [u for u in units if u not in ('data', 'balance', 'pool')]
     if not browser:
         return info
     from playwright.sync_api import sync_playwright
@@ -1407,6 +1949,12 @@ def check(html, out, units):
                     guarded('challenge fit', check_challenge_fit, br, base, html, out, info)
                 if 'art' in browser:
                     guarded('art', check_art, br, base, html, game, out, info)
+                if 'daily' in browser:
+                    guarded('daily', check_daily, br, base, html, game, out, info)
+                if 'dailyui' in browser:
+                    guarded('daily status', check_daily_ui, br, base, html, out, info)
+                if 'dailyfit' in browser:
+                    guarded('daily fit', check_daily_fit, br, base, html, out, info)
             finally:
                 br.close()
     finally:
@@ -1454,11 +2002,29 @@ PLANTS = [
     ('a start-art card number changed (89 to 98)', [('<span class="art-num">89</span>', '<span class="art-num">98</span>')],
      ['art'], r"^art: the numbers left to right are "),
 ]
+# DAILY-DEAL: the unit "dailyplants". A fifth item is passed to check(): W8's fact is planted in this script's table, not the page.
+DAILY_PLANTS = [
+    ("the day's code from Math.random", [("return h % CH_SEEDS; }", "return Math.floor(Math.random() * CH_SEEDS); }")],
+     ['daily'], r"^daily rule \(a device in [\w/]+\): the code for \d{4}-\d\d-\d\d is "),
+    ('a pool line changed by one word', [("Marvin has requested a recount. Can you take fewer?", "Marvin has demanded a recount. Can you take fewer?")],
+     ['pool'], r"^daily pool: won line 4 is not the contract's"),
+    ("W8's 252 changed to 250 in the facts table", [],
+     ['pool'], r"^daily pool: W8: the line does not say \"96's factors add up to 250\"",
+     {'facts': [("W8", "96's factors add up to 250", 'card', (96, 'sof', 250)) if f[0] == 'W8' else f for f in POOL_FACTS]}),
+    ("a stale-date daily.json shown as today's", [("if (!d || typeof d !== 'object' || d.date !== today) return null;", "if (!d || typeof d !== 'object') return null;")],
+     ['dailyui'], r"^daily status, not played, a stale date \(yesterday's result\): "),
+    ('a 241-character line shown', [("j.line.length <= DAILY_LINE_MAX ?", "j.line.length <= DAILY_LINE_MAX + 1 ?")],
+     ['dailyui'], r'^daily status, won with a 241-character line \(the pool line shown\): '),
+    ('a daily game submitted to the leaderboard', [("challenge: ch ? ch.code : null, seed:", "challenge: ch && !daily ? ch.code : null, seed:")],
+     ['daily'], r'^daily board: a won daily game submitted '),
+]
 
 
-def selftest(html):
+def selftest(html, plants=None):
     ok = True
-    for what, edits, units, want in PLANTS:
+    for plant in (PLANTS if plants is None else plants):
+        what, edits, units, want = plant[:4]
+        opts = plant[4] if len(plant) > 4 else {}
         try:
             src = html
             for old, new in edits:
@@ -1469,7 +2035,7 @@ def selftest(html):
             continue
         got, err = [], None
         try:
-            check(src, got, units)
+            check(src, got, units, **opts)
         except Exception as e:  # noqa: BLE001
             err = e
         hit = [g for g in got if re.search(want, g)]
@@ -1500,7 +2066,8 @@ def print_golden(html):
 
 # The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
 # each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
-UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art']
+UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art', 'pool', 'daily', 'dailyui', 'dailyfit']
+PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first seventeen, and today's deal's six
 
 
 def merge_info(info, part):
@@ -1526,13 +2093,13 @@ def main():
     except (AttributeError, ValueError):
         pass
     shard = bc.Shard(__file__, args)
-    mine = shard.pick(UNITS + ['selftest'])
-    plan = ['selftest'] if args.selftest else (list(args.only) if args.only else mine)
+    mine = shard.pick(UNITS + PLANT_UNITS)
+    plan = PLANT_UNITS if args.selftest else (list(args.only) if args.only else mine)
     html = open(GAME, encoding='utf-8').read()
     out = []
     info = {}
     for uid in plan:
-        if uid == 'selftest':
+        if uid in PLANT_UNITS:
             continue
         with shard.unit(uid):
             merge_info(info, check(html, out, [uid]))
@@ -1571,10 +2138,22 @@ def main():
         print('%s: start art: %s' % (SLUG, f))
     for f in info.get('artfit', []):
         print('%s: start art fit %s' % (SLUG, f))
+    if 'pool' in info:
+        print('%s: today\'s deal: %d won and %d lost lines equal to the contract; %d facts in them hold against cards.json and the roster; no number unchecked' % ((SLUG,) + info['pool']))
+    if 'daily' in info:
+        print('%s: today\'s deal: the code for %d days equal to this script\'s own rule, all different, all main / ten / hard; the UK date right at %d instants across both clock changes; two loads the same; off the leaderboard; mode daily'
+              % ((SLUG,) + info['daily']))
+    if 'dailyui' in info:
+        print('%s: today\'s deal: %d not-played records, %d won and lost panels, %d results lines and %d files as fetched, each as the contract words it' % ((SLUG,) + info['dailyui']))
+    for f in info.get('dailyfit', []):
+        print('%s: today\'s deal fit %s' % (SLUG, f))
     ok = True
     if 'selftest' in plan:
         with shard.unit('selftest'):
             ok = selftest(html)
+    if 'dailyplants' in plan:
+        with shard.unit('dailyplants'):
+            ok = selftest(html, DAILY_PLANTS) and ok
     for f in out[:80]:
         print('FAIL  ' + f)
     if len(out) > 80:

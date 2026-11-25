@@ -16,6 +16,31 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-25 (home): DAILY-DEAL (MaffsCards gets "Today's deal": one deal a UK day, the same for everyone, with Jon's result on it)
+
+Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`. The contract is at `docs/handover/contracts/2026-11-25-daily-deal.md` (verbatim, as reissued by Amendment 1). No close-out rode on the first commit: MAFFSCARDS-CHALLENGE's is in #916, which stays open (Jon's ruling).
+
+- **Jon's rulings (25 Nov 2026, 19:16-20:05):** a daily deal with his own result on it, set from a Google Sheet; a new Creator sheet with its own script; a Sheet line over 240 characters is skipped for a pool line; "Today's deal" at the top of the menu.
+- **The deal:** the UK date (Intl, Europe/London) goes through the page's mix32 to a seed; the day's code is that seed at main / ten / hard, played through `deal(ch)` as a challenge. Normal and challenge play are unchanged (the recorded normal games still match).
+- **Jon's result:** `games/maffscards/daily.json`, all nulls as committed. It shows only on its own UK date; a missing, unreadable or invalid file reads as not played.
+- **The workflow:** `.github/workflows/maffscards-daily.yml`, started by hand only, runs `scripts/set-maffscards-daily.py` and commits the file as answer-counts.yml commits its figures. The four fields reach the script through the environment.
+- **The Creator sheet:** `docs/apps-script-creator.js` and its runbook `docs/apps-script-creator.md`. No token, secret or Sheet id is in the repo.
+- **Verifier:** units `pool`, `daily`, `dailyui`, `dailyfit` and six planted faults in their own unit, `dailyplants`; twenty-two plants in all, each caught.
+- **Decided here (each for Project Claude's review):**
+  - The repo has no personal-details check to call (the list is private, outside the repo), so the script drops a line holding an e-mail address, a web address, an @name or seven or more digits.
+  - A daily game's detail ends " · challenge · daily" (challenge is still true).
+  - A drawn daily game (not reachable in practice) reads "Nobody won this time."
+  - The panel's one fixed sentence is a placeholder: "One deal a day, the same for everyone: main deck, first to 10, Marvin on Hard."
+  - In Aa on a phone the panel's text is .8rem, so a 240-character line and the button fit one 320 x 568 screen.
+  - The script also has `--check` (the committed file is all nulls or a valid result), run in CI beside `--selftest`.
+- **The workflow file came from the cloud lane:** the home lane's token has no `workflow` scope and GitHub refused its push (25 Nov, 21:20), so the cloud lane pushed the file as b7b6b47f, from the text in the PR's first comment. It is byte-identical to the home lane's copy (checked with cmp).
+- **Amendment 1 (Project Claude, 25 Nov, 22:20):** the first Gate (check-site 45704002404 on 21b142ec) failed on the clock-seed scan alone: today's UK date reaching the day's seed, which is the feature. The lane stopped, since `scripts/check-site.py` was outside the contract. The amendment allows one entry in `CLOCK_SEED_ALLOW` (`dayCode`), as Equatle and Free Daily Pizza have, and accepts the decisions listed below.
+- **Not run:** the workflow itself cannot run before it is on main, so the bot's push to main is unproven until Jon's first row (STOP IF 1 would apply then).
+- **Waiting on Jon after merge:** the runbook, from step 1; then his rewrite of the placeholder wording (`docs/todo.md` §6).
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 1:25 to the first Gate, which stopped it; review cycles 0; amendments 1; usage n/a.
+
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 
 Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/handover/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.

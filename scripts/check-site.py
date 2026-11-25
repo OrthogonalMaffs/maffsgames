@@ -531,6 +531,8 @@ CLOCK_SEED_ALLOW = [
      "reason": "daily puzzle, the same for everyone all day by design (Jon, option A, 12 Nov 2026)"},
     {"file": "games/free-daily-pizza/index.html", "functions": ["dailySet", "ukDate"],
      "reason": "daily pizza set, the same all day by design (Jon, option A, 12 Nov 2026)"},
+    {"file": "games/maffscards/index.html", "functions": ["dayCode"],
+     "reason": "today's deal, the same for everyone all UK day by design (Jon, 25 Nov 2026; contract DAILY-DEAL)"},
 ]
 JS_WORDS = {"var", "let", "const", "function", "return", "if", "else", "for", "while", "do", "switch", "case",
             "break", "continue", "new", "typeof", "instanceof", "in", "of", "this", "null", "true", "false",

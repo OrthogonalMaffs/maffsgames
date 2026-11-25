@@ -172,6 +172,14 @@ a.back-link:hover{color:var(--text)}
 .ch-lab{display:block;font-weight:600;font-size:.9rem;margin-top:.9rem}
 .ch-msg{font-weight:600;margin-top:.5rem}
 
+/* ---------- today's deal (DAILY-DEAL): a section at the top of the menu's options, in the menu's own styles ---------- */
+.dd{border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin-top:.9rem;padding-bottom:.9rem}
+.dd p{font-size:.9rem}
+.dd-date{font-weight:600;margin-left:.4rem}
+.dd .dd-status{font-weight:600;overflow-wrap:anywhere}
+/* Aa on a phone: a 240-character line and the button stay inside one 320 x 568 screen. Nothing below .75rem. */
+@media (max-width:420px){body.accessible .dd p{font-size:.8rem;line-height:1.4}}
+
 @media (max-width:420px){
   .container{padding:.5rem}
   .card{padding:.3rem .5rem .35rem}
@@ -279,6 +287,40 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
  "draw": ["A hundred rounds and no winner. We are, it seems, perfectly matched. Unsettling."]
 }
 </script>
+<!-- The lines under "Today's deal", verbatim from the contract (DAILY-DEAL, 25 Nov 2026; Jon's, or approved by him).
+     {N} is Jon's round count. scripts/verify-maffscards.py checks every line against the contract and every number
+     in one against cards.json. -->
+<script type="application/json" id="dailyLines">
+{
+ "won": [
+  "Marvin dreamt that Jon changed his parameters and that is why he lost. Jon did not, he's just a proper maths nerd. Are you?",
+  "Marvin is busy running algorithms to prove that 9 should be a prime number so he can challenge the latest loss. It's not going well so far.",
+  "Jon beat Marvin in {N} rounds. Marvin says he let him win. Marvin is lying. Beat {N}.",
+  "Jon took {N} rounds. Marvin has requested a recount. Can you take fewer?",
+  "Marvin insists that Jon wear short sleeves in future matches. He's convinced Jon had an extra 89 card up his sleeve.",
+  "Jon won. Marvin has asked if they can play Some Thingies instead, as he's having an off day.",
+  "Marvin has filed a complaint that 100 appears only once in the first 1,000 digits of pi. Pi has declined to comment.",
+  "Marvin says Jon only won because 96's factors add up to 252, and that's 'just showing off'. Yes, Marvin. That's how winning works.",
+  "Marvin has demanded a recount in Roman numerals. LXXXVIII apologises for nothing.",
+  "Marvin has asked Jon to stop playing 64. Being a square AND a cube is, apparently, 'unsporting'.",
+  "Marvin tried to play 1's largest prime factor. There isn't one. Marvin is having a quiet sit-down."
+ ],
+ "lost": [
+  "Marvin hacked his own code and won, Jon is trying to figure out the right ones and zeroes to fix this, check if he fixed it yet.",
+  "Marvin beat Jon today. Jon has asked us to describe it as 'a tactical loss'. It was not.",
+  "Today's deal: Marvin 10, Jon wept. Your turn to avenge him.",
+  "Jon lost to Marvin. Jon built Marvin. Make of that what you will.",
+  "Marvin beat Jon today and has been insufferable ever since. Please, someone, humble him.",
+  "Jon was defeated by a computer he coded himself. Can you do what the creator could not?",
+  "Jon lost to Marvin. Jon is now polishing his maths degree certificate and has challenged Marvin to Eigenvector Engine. Marvin says he doesn't do matrices on a school night.",
+  "Marvin won and has changed his status to 'smarter than my creator'. Jon has changed his to 'rebooting'.",
+  "Marvin beat Jon and now insists on being called Marvin the Magnificent. Please beat him so we can stop.",
+  "Jon lost to Marvin. In his defence, he was distracted by 89 being exactly 8 from the nearest square. Pathetic, Jon.",
+  "Marvin won today and celebrated by reciting the first 1,000 digits of pi. All of them. Twice. Make it stop.",
+  "Jon says Marvin got lucky. Marvin says luck is just probability Jon didn't calculate. Settle it: win today's deal."
+ ]
+}
+</script>
 <script src="/schools/assets/site-nav.js" data-game-name="MaffsCards"></script>
 </head>
 <body>
@@ -294,6 +336,14 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     <div class="panel menu-info">
       <p>Every card is a number with six values: sum of factors, largest prime factor, Roman numeral length, distance to the nearest square, superpowers and how often it turns up in pi. Pick a value you think beats Marvin's card. Highest wins, except distance to a square: lowest wins.</p>
       <p>Win the round and you take both cards, and you choose next. A tie sends both cards to the middle pile, and the next round's winner takes those too.</p>
+      <!-- Today's deal (DAILY-DEAL, 25 Nov 2026). Placeholder wording for the fixed words: Jon rewrites it after playing. -->
+      <div class="dd" id="daily">
+        <div class="mode-h">Today's deal <span class="dd-date" id="ddDate"></span></div>
+        <p>One deal a day, the same for everyone: main deck, first to 10, Marvin on Hard.</p>
+        <p class="dd-status" id="ddStatus">Jon hasn't played today's deal yet.</p>
+        <p id="ddRounds" hidden></p>
+        <div class="ch-row"><button class="btn solid" id="ddPlay" type="button">Play today's deal</button></div>
+      </div>
       <div class="mode-h">Deck</div>
       <div class="opts" id="optDeck">
         <button class="opt-btn" type="button" data-opt="deck" data-val="main" aria-pressed="true">Main deck<small>32 cards</small></button>
@@ -431,6 +481,31 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   function chKey(seed, n, k) { return mix32(mix32(mix32(seed + 0x9E3779B9 | 0) + n | 0) + k | 0); }
   function shuffleBy(a, gen) { for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(gen() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
 
+  /* ---------- today's deal (DAILY-DEAL, 25 Nov 2026) ----------
+     One deal a UK day, the same for everyone. The date in Europe/London (YYYY-MM-DD) is hashed to a seed, and the day's
+     code is that seed at main deck, first to 10, Marvin hard: an ordinary challenge code, played through deal(ch) as a
+     challenge is (the same deal generator, the same Marvin for each decision), so it is off the leaderboard and can be
+     played again. It changes at UK midnight. */
+  var DAILY_SET = { deck: 'main', length: 'ten', marvin: 'hard' }, DAILY_LINE_MAX = 240;
+  var dayHook = null;                              // a date for scripts/verify-maffscards.py (MC.daily.setToday); never set here
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  // The UK calendar day at an instant, whatever the device's own time zone.
+  function ukDate(when) {
+    try {
+      var o = {};
+      new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London', year: 'numeric', month: '2-digit', day: '2-digit' })
+        .formatToParts(when).forEach(function (p) { o[p.type] = p.value; });
+      if (/^\d{4}$/.test(o.year) && /^\d{2}$/.test(o.month) && /^\d{2}$/.test(o.day)) return o.year + '-' + o.month + '-' + o.day;
+    } catch (e) {}
+    return when.getUTCFullYear() + '-' + pad2(when.getUTCMonth() + 1) + '-' + pad2(when.getUTCDate());   // no time zones here: the UTC day
+  }
+  function ukToday() { return dayHook || ukDate(new Date()); }
+  // The day's seed: the date's characters chained through mix32, reduced to a seed that takes every setting.
+  function daySeed(date) { var h = 0; for (var i = 0; i < date.length; i++) h = mix32(h + date.charCodeAt(i) | 0); return h % CH_SEEDS; }
+  function dayCode(date) { return chEncode(daySeed(date), DAILY_SET); }
+  // Whole days from 1 January 2026 to a YYYY-MM-DD date: it picks the day's line from the pool.
+  function dayNumber(date) { var p = date.split('-'); return Math.round((Date.UTC(+p[0], p[1] - 1, +p[2]) - Date.UTC(2026, 0, 1)) / 86400000); }
+
   /* =====================================================================================================
      THE RULES: every value comes from cards.json (tools/maffscards/gen.py); nothing here recomputes one.
      ===================================================================================================== */
@@ -502,6 +577,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   var G = null, state = 'menu', sel = null, R = null;
 
   function board() { return (G.deck === 'all' ? 'all48' : 'main') + '-' + G.marvin; }
+  function modeOf() { return G.daily ? 'daily' : G.length === 'ten' ? 'first-to-10' : 'entire-deck'; }
   function show(id) {
     ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
     document.body.classList.toggle('playing', id !== 'menu');
@@ -510,16 +586,17 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   }
 
   // ch: a decoded challenge code (chDecode) for a challenge game; nothing for a normal game, which is as it always was.
-  function deal(ch) {
+  // daily: true when ch is today's deal (DAILY-DEAL): a challenge game in every way, named 'daily' in analytics.
+  function deal(ch, daily) {
     MaffsLock.newSession();
     if (ch) { setOpt('deck', ch.deck); setOpt('length', ch.length); setOpt('marvin', ch.marvin); }   // the code's settings, shown on the menu
     var pool = deckOf(opts.deck), cards = ch ? shuffleBy(pool.slice(), seeded(chKey(ch.seed, 0, 0))) : shuffle(pool.slice());
     G = { deck: opts.deck, length: opts.length, marvin: opts.marvin, pool: pool, you: [], mar: [], mid: [],
           round: 0, wins: { you: 0, marvin: 0 }, ties: 0, chooser: 'you', used: {}, quips: [], result: null,
-          challenge: ch ? ch.code : null, seed: ch ? ch.seed : null, chosen: {} };
+          challenge: ch ? ch.code : null, seed: ch ? ch.seed : null, chosen: {}, daily: !!(ch && daily) };
     cards.forEach(function (c, i) { (i % 2 === 0 ? G.you : G.mar).push(c); });   // dealt one each, face down
     show('game');
-    ev('game_started', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', challenge: !!G.challenge });
+    ev('game_started', { game_slug: SLUG, level: board(), mode: modeOf(), challenge: !!G.challenge });
     beginRound();
   }
 
@@ -684,10 +761,10 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     // The Sheet keeps fixed columns and drops 'won' (MARVIN-LOG, Jon 25 Nov 2026): the result rides in correct,
     // the tally in questions_answered (rounds played) and questions_correct (rounds won), the score line in detail.
     var outcome = res.winner === 'you' ? 'win' : res.winner === 'marvin' ? 'loss' : 'draw';
-    ev('game_completed', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', score: G.round, won: res.winner === 'you',
+    ev('game_completed', { game_slug: SLUG, level: board(), mode: modeOf(), score: G.round, won: res.winner === 'you',
       correct: res.winner === 'you', questions_answered: G.round, questions_correct: G.wins.you,
-      detail: 'you ' + G.wins.you + ' · Marvin ' + G.wins.marvin + ' · ties ' + G.ties + ' · ' + outcome + ' · ' + res.why + (G.challenge ? ' · challenge' : ''),
-      challenge: !!G.challenge });                 // true or false, never the code
+      detail: 'you ' + G.wins.you + ' · Marvin ' + G.wins.marvin + ' · ties ' + G.ties + ' · ' + outcome + ' · ' + res.why + (G.challenge ? ' · challenge' : '') + (G.daily ? ' · daily' : ''),
+      challenge: !!G.challenge });                 // true or false, never the code, the date or Jon's result
     if (score !== null && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board(), score, score).catch(function () {});
     var end = res.winner === 'you' ? pickOne(LINES.playerWins) : res.winner === 'marvin' ? pickOne(LINES.marvinWins)
       : res.why === 'cap' ? LINES.draw[0] : null;
@@ -700,7 +777,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     $('resQuip').innerHTML = end ? '<span class="who">Marvin:</span> ' + esc(end) : '';
     document.querySelector('#results .results').classList.toggle('ch-res', !!G.challenge);
     $('chLine').hidden = !G.challenge;
-    $('chLine').textContent = G.challenge ? 'Challenge ' + G.challenge + ': ' + G.round + ' rounds. Your friend plays the same deal with the same code.' : '';
+    $('chLine').textContent = G.daily ? dailyResult() : G.challenge ? 'Challenge ' + G.challenge + ': ' + G.round + ' rounds. Your friend plays the same deal with the same code.' : '';
     $('lbNote').textContent = G.challenge ? 'Challenge games don\'t go on the leaderboard.'
       : score !== null ? 'Leaderboard score: ' + score + ' rounds (fewer is better).'
       : G.length === 'ten' ? 'Win a first-to-10 game to get on the leaderboard.' : 'The entire-deck game has no leaderboard.';
@@ -720,7 +797,8 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   $('yourCard').addEventListener('click', function (e) { var r = e.target.closest('.mc-row'); if (r && !r.disabled) tap(r.dataset.key); });
   $('playBtn').addEventListener('click', play);
   $('nextBtn').addEventListener('click', next);
-  $('againBtn').addEventListener('click', function () { if (state === 'over') deal(); });   // after a challenge too: a normal game, same settings
+  // After a challenge: a normal game, same settings. After today's deal: today's deal again.
+  $('againBtn').addEventListener('click', function () { if (state !== 'over') return; if (G.daily) startDaily(); else deal(); });
 
   /* ---------- challenge a friend: make a code, or play one ---------- */
   var made = null;
@@ -752,7 +830,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     badCode(!d);
     if (d) { setOpt('deck', d.deck); setOpt('length', d.length); setOpt('marvin', d.marvin); }
   })();
-  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; renderDaily(); show('menu'); });
   (function () {
     var KEY = 'mfg_accessible', btn = $('a11yToggle');
     function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
@@ -762,6 +840,65 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
 
   // The start art rises once, on load: the class goes after it, so showing the menu again does not replay it.
   setTimeout(function () { $('mcArt').classList.remove('rise'); }, 1500);
+
+  /* ---------- today's deal: Jon's result (daily.json), the panel and the results line ----------
+     daily.json sits beside this page: {date, result, rounds, line}, all null until the maffscards-daily workflow writes
+     Jon's result from his Creator sheet (docs/apps-script-creator.md). It counts only on its own UK date; a missing,
+     unreadable or invalid file is the same as Jon not having played. Every word is set with textContent. */
+  var DAILY_LINES = JSON.parse($('dailyLines').textContent), JON = null;      // JON: daily.json as it arrived
+  var NOT_PLAYED = 'Jon hasn\'t played today\'s deal yet.';
+  var DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  var MONTH_NAMES = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  // Jon's result if the file is valid and is for this date; otherwise null, as if he has not played.
+  function jonToday(today) {
+    var d = JON;
+    if (!d || typeof d !== 'object' || d.date !== today) return null;
+    if (d.result !== 'won' && d.result !== 'lost') return null;
+    if (typeof d.rounds !== 'number' || Math.floor(d.rounds) !== d.rounds || d.rounds < TEN || d.rounds > (d.result === 'won' ? 100 : 200)) return null;
+    return { result: d.result, rounds: d.rounds, line: typeof d.line === 'string' ? d.line.trim() : '' };
+  }
+  // The day's line: the Sheet's, if it has one of at most 240 characters; otherwise the pool's line for the result,
+  // chosen by the day number, so everyone sees the same line that day. raw: as written; text: with {N} filled in.
+  function dayLine(j, today) {
+    var pool = DAILY_LINES[j.result], n = dayNumber(today);
+    var raw = j.line && j.line.length <= DAILY_LINE_MAX ? j.line : pool[((n % pool.length) + pool.length) % pool.length];
+    return { raw: raw, text: raw.split('{N}').join(String(j.rounds)) };
+  }
+  function renderDaily() {
+    var today = ukToday(), p = today.split('-'), j = jonToday(today), line = j ? dayLine(j, today) : null;
+    $('ddDate').textContent = DAY_NAMES[new Date(Date.UTC(+p[0], p[1] - 1, +p[2])).getUTCDay()] + ' ' + (+p[2]) + ' ' + MONTH_NAMES[p[1] - 1];
+    $('ddStatus').textContent = line ? line.text : NOT_PLAYED;
+    var took = !!j && j.result === 'won' && line.raw.indexOf('{N}') < 0;       // the line already says how many
+    $('ddRounds').hidden = !took;
+    $('ddRounds').textContent = took ? 'Jon took ' + j.rounds + ' rounds.' : '';
+  }
+  // The one line on a daily game's results. Fewer rounds is better.
+  function dailyResult() {
+    var j = jonToday(ukToday()), x = G.round, out;
+    if (G.result.winner === 'you') {
+      out = 'You took ' + x + ' rounds.';
+      if (j) out += j.result === 'lost' ? ' Jon lost to Marvin today. You did what Jon could not.'
+        : ' Jon took ' + j.rounds + ': ' + (x < j.rounds ? 'you beat him.' : x === j.rounds ? 'you matched him.' : 'he beat you.');
+    } else if (G.result.winner === 'marvin') out = j && j.result === 'lost' ? 'Marvin beat you too.' : 'Marvin won this time.';
+    else out = 'Nobody won this time.';
+    return j ? out : out + ' ' + NOT_PLAYED;
+  }
+  function startDaily() {
+    var d = chDecode(dayCode(ukToday()));
+    if (!d) return;
+    if (DATA) deal(d, true); else ready.then(function (ok) { if (ok && state === 'menu') deal(d, true); });
+  }
+  $('ddPlay').addEventListener('click', startDaily);
+  // XMLHttpRequest, as cards.json below. Nothing here ever shows an error: no file, no result.
+  var dailyReady = new Promise(function (resolve) {
+    function done() { renderDaily(); resolve(); }
+    var x = new XMLHttpRequest();
+    x.open('GET', 'daily.json');
+    x.onload = function () { if (x.status === 200) { try { JON = JSON.parse(x.responseText); } catch (e) { JON = null; } } done(); };
+    x.onerror = done;
+    try { x.send(); } catch (e) { done(); }
+  });
+  renderDaily();
 
   // The deck: cards.json, written by tools/maffscards/gen.py beside this page. XMLHttpRequest, not fetch: the local
   // test server (scripts/serve-stubbed.py) replaces window.fetch on every page, so a fetch would never load in a check.
@@ -810,6 +947,18 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
         return challengeChoice(seed, level, card, pool, k);
       },
       start: function (code) { var d = chDecode(code); if (d) deal(d); return !!d; }
+    },
+    daily: {
+      ready: dailyReady, LINE_MAX: DAILY_LINE_MAX,
+      today: function () { return ukToday(); },
+      at: function (ms) { return ukDate(new Date(ms)); },
+      setToday: function (date) { dayHook = date; renderDaily(); },
+      seed: function (date) { return daySeed(date); },
+      code: function (date) { return dayCode(date); },
+      dayNumber: function (date) { return dayNumber(date); },
+      file: function (o) { JON = o; renderDaily(); },     // daily.json's contents, as if they had just arrived
+      playing: function () { return !!(G && G.daily); },
+      start: startDaily
     },
     ui: {
       state: function () { return state; },
