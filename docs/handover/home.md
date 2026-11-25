@@ -16,22 +16,28 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
-## 2026-11-25 (home): SITE-BAR-PILOT (one site bar on three pilot games: logo home, back link to the hub, name on big screens) STOPPED on a STOP IF
+## 2026-11-25 (home): SITE-BAR-PILOT (one site bar on three pilot games: logo home, back link to the hub, name on big screens)
 
-Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar-pilot`, no PR yet. The contract is at `docs/handover/contracts/2026-11-25-site-bar-pilot.md` (verbatim). The first commit closed out MAFFSCARDS-CHALLENGE.
+Claude Code (home lane), worktree `~/mg-site-bar-pilot`, branch `claude/site-bar-pilot`, PR #916. The contract is at `docs/handover/contracts/2026-11-25-site-bar-pilot.md` (Amendment 1, the whole contract reissued, verbatim). The first commit closed out MAFFSCARDS-CHALLENGE.
 
-- **STOPPED (STOP IF 4):** on a fine pointer the pinned bar overlaps Better Value's own sticky element, the docked calculator, which is not one of the two named overlays.
-  - Measured in Chromium at 1280x720, 1366x768 and 1920x1080, in play with the calculator open: the bar is 0 to 48 px; the calculator's panel (`.maffs-calc.docked .maffs-calc-panel`, sticky, top 16 px) is 16 to 355 px, at every scroll position. The bar covers its top 32 px.
-  - On main the same panel already sits over the right end of the game's own header (0 to 65 px), covering Aa, the level and the score while it is open. Not this contract's; reported.
-  - A fix measured, not applied: in Better Value's own CSS, on a fine pointer, `.maffs-calc.docked .maffs-calc-panel{top:64px}`. The panel is then 64 to 403 px at every scroll position at 1280x720 and 1280x600, 16 px clear of the bar. `check-calc-dock.py --only better-value` passes with the bar as built.
-- **Built so far (committed, not reviewed):**
-  - `schools/assets/site-bar.css` (new): 48 px and pinned on a fine pointer, 36 px and in the flow otherwise.
-  - `site-nav.js`: fills the slot (logo, `a.site-bar-back`, name); no margin logo or name on a slot page; the fallback link stays if anything throws.
-  - `stage-exit.js`: on a slot page, the button only, no home link, no `a.back-link` needed.
-  - `apply-site-nav.py` writes the slot and the stylesheet link for `SITE_BAR_PAGES`; `check-site-nav.py` holds the static rule (passes).
-  - The three pages: slot and stylesheet in, every back link out. Also out, decided here: the header divider that stood beside the back link on Spot the Muppet and Better Value.
-- **Still to build:** the Chromium checks and the four plants; `verify-stage-exit.py` needs `a.site-bar-back` added to its two back-link selectors for Base 60 (the other games' results do not change); canon's paragraph; the /updates/ line; the PR.
-- **Seen, not yet judged:** the bar's 48 px makes Better Value's play screen scroll at 1280x720 with the calculator open (document 773 px in a 720 px window; 720 px on main).
+- **Pilot pages:** Spot the Muppet, Better Value and It's Just Base 60, Bruv (`SITE_BAR_PAGES` in `check-site-nav.py`). Every other page is unchanged.
+- **The bar:** `schools/assets/site-bar.css` (new) reserves 48 px, pinned, on a fine pointer and 36 px, in the flow, otherwise. `site-nav.js` fills the slot: the logo, `a.site-bar-back` (short form on a coarse pointer) and, on a fine pointer, the name. No margin logo or name on a slot page; the written link stays if anything throws.
+- **Stopped once (STOP IF 4, 17:58):** the pinned bar covered the top 32 px of Better Value's docked calculator. Amendment 1 fixed it in the shared layer: site-bar.css sets `--site-bar-offset: 48px` on a fine pointer and `calculator.css` adds it to the panel's sticky top.
+  - Panel now, calculator open: 64 to 403 px at scroll 0 and at the bottom, at 1280x720, 1280x600 (scrolled 56 px) and 1920x1080; the bar is 0 to 48 px.
+  - `check-calc-dock.py` passes for all 23 calculator games.
+- **Pages:** slot and stylesheet written by `apply-site-nav.py`; every back link out, and the header divider beside it on Spot the Muppet and Better Value (accepted in Amendment 1).
+- **stage-exit.js:** on a slot page, the button only. A slot page with no `.hud` in its play screen is not handled yet (none is on the bar); the sweep adds it.
+- **Decided here:**
+  - the name always shows on a fine pointer, also while the page's own title shows;
+  - the bar's z-index is one above the highest z-index positioned in the page's flow (Spot the Muppet's header is 1001), so a page's fixed overlay written later in the page still covers it;
+  - the logo's contrast is its tile or its mark, whichever is stronger, against the bar, and the mark on its tile.
+- **Checks (`check-site-nav.py`):** the static rule, and in Chromium each page at four sizes on start, play and results. Five new plants, each caught. Local: `--check` PASS in 2:02, `--selftest` PASS in 1:22.
+- **Also run locally, all pass:** verify-stage-exit.py (its two selectors accept `a.site-bar-back`), the three games' verifiers, check-start-back-link for the three, check-teacher-invite, check-start-mount, check-asset-styles.
+- **For Jon's look:** with the calculator open at 1280x720, Better Value's play screen was 773 px tall on one question (720 on main), so it scrolls; shorter questions still fit in 720.
+- **Todo:** row 3.20 has its note; new row CALC-OVER-HEADER.
+- **Screenshots:** 19, in `Downloads/site-bar-pilot/` on Jon's Windows machine, named in the PR.
+- **Run IDs and phone-fit numbers:** in the PR's report at Gate green, then in the close-out.
+- **Next:** Gate green, Project Claude's review, Jon's "merge".
 
 ## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
 

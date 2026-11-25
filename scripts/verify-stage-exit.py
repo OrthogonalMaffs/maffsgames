@@ -63,7 +63,7 @@ MEASURE = """() => {
   const vis = (e) => { const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     return cs.display !== 'none' && cs.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
   const pick = (sel) => { const all = [...document.querySelectorAll(sel)]; return all.find(vis) || all[0] || null; };
-  const b = pick('.stage-exit-stages'), a = pick('a.back-link, a.stage-exit-home');
+  const b = pick('.stage-exit-stages'), a = pick('a.back-link, a.stage-exit-home, a.site-bar-back');
   const box = (e) => { if (!e) return null; const cs = getComputedStyle(e), r = e.getBoundingClientRect();
     return { shown: vis(e), x: r.left, y: r.top, r: r.right, b: r.bottom, fs: parseFloat(cs.fontSize), h: r.height,
              txt: (e.textContent || '').trim() }; };
@@ -211,7 +211,7 @@ def exit_game(base, slug, size, out, sources=None):
                 out.append('%s: game_completed fired after leaving' % where)
             # the standard link takes a student to the portal in one tap, from a question too
             scr = through_example(page, start_stage(page, out, where))
-            page.locator('a.back-link:visible, a.stage-exit-home:visible').first.click()
+            page.locator('a.back-link:visible, a.stage-exit-home:visible, a.site-bar-back:visible').first.click()
             page.wait_for_load_state('load')
             path = re.sub(r'^https?://[^/]+', '', page.url).split('?')[0]
             if path != '/':

@@ -1703,6 +1703,8 @@ every roster game's page carries `data-game-name`, the roster's Game column for 
 published). **Every roster game page loads `site-nav.js`**, with or without an `a.back-link`. No game's markup changes
 beyond that tag. `window.MaffsNav.gameName` is the name; `MaffsNav.nameHiddenBy` says why the label is hidden.
 
+**Site bar pilot** (SITE-BAR-PILOT, Jon 25 Nov 2026): on the pages in check-site-nav.py's SITE_BAR_PAGES the margin logo and name are replaced by one site bar (logo home, back link to the hub, name on a fine pointer), pinned on a fine pointer, compact and in the flow on a coarse one, on every screen. A pinned bar sets --site-bar-offset, which shared sticky elements (the docked calculator) add to their top. The rest of the site keeps the rule above until the sweep.
+
 **Checked:** `check-site.py`'s site-wide part holds every page with an `a.back-link`, and every roster game's page, to
 loading `site-nav.js` once; every roster game page's `data-game-name` to the roster's name exactly (and no page outside
 `games/` to carrying one); every page outside `games/` that links to a game to being in `HUBS`; and the opt-outs to

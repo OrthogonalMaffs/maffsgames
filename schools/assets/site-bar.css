@@ -18,6 +18,9 @@
 .site-bar a.site-bar-back{flex:0 1 auto;min-width:44px;padding:0 4px;overflow:hidden}
 .site-bar-long,.site-bar-name{display:none}
 @media (hover:hover) and (pointer:fine){
+  /* The pinned bar's height, for shared sticky elements to add to their own top (the docked calculator,
+     schools/assets/calculator.css). Unset on a coarse pointer and on every page without this file. */
+  :root{--site-bar-offset:48px}
   .site-bar{position:sticky;top:0;z-index:var(--site-bar-z,10);height:48px;gap:12px;padding:0 16px 0 10px;font-size:14px}
   .site-bar-logo img{width:35px;height:30px}
   .site-bar-long{display:inline}
