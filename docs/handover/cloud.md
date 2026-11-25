@@ -76,6 +76,7 @@ Claude Code (cloud, lane 1), branch `claude/gracious-cori-62jzp2` from main d3a2
 - **Shard 1/4 time:** main 2b78900 (run 45581276557): the group 9m13s (KaTeX self-test 30 s, tier 3 513 s; 43 PASS, 0 FAIL, 51 UNSUPPORTED). The PR's figure is in the PR.
 - **For Project Claude:** better-value's tier3_exceptions reason begins "Same shape as spot-the-muppet", whose entry is now gone; not touched (DO NOT TOUCH). Expectation-station's removed reason also said why its repeated tiles are legitimate; tier 3's WARN line says the same ("expected in a tile bank"), so nothing is lost from the output.
 - **Merged main in (af77bc4, #908 BANKS-40 A) before the merge:** cloud.md conflicted (both lanes' entries), resolved by keeping both. #908 rebuilt Spot the Muppet's banks, so tier 3 ran again on the new page without its entry: 4 PASS of 4, 40 questions. The first Gate (head 5ad2666, before the merge, run 45590981250): green; shard 1/4 9m25s (answer-lock self-test 7 s; tier 3 517 s), tier 3 0 FAIL on all four shards (43, 54, 35 and 56 PASS).
+- **Closed out (MARVIN-LOG's first commit):** #909 squash-merged as 419c531 through merge-pr.py; its last line `main 419c531 run 45597594977: GREEN`. Main's runs on 419c531, read back from the API: check-site 45597594977 success, phone-fit-full 45597595086 success, pages 45597594816 success. Contract moved to `docs/history/contracts/`.
 
 ## 2026-11-25 (cloud): BANKS-40 (every level of Spot the Muppet and Coordinate Geometry Dash, and Unit Converter's A-Level, to 40 or more; `docs/handover/contracts/2026-11-25-banks-40.md`)
 
