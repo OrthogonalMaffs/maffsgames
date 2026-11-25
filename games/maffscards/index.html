@@ -409,7 +409,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     MaffsLock.newSession();
     var pool = deckOf(opts.deck), cards = shuffle(pool.slice());
     G = { deck: opts.deck, length: opts.length, marvin: opts.marvin, pool: pool, you: [], mar: [], mid: [],
-          round: 0, wins: { you: 0, marvin: 0 }, chooser: 'you', used: {}, quips: [], result: null };
+          round: 0, wins: { you: 0, marvin: 0 }, ties: 0, chooser: 'you', used: {}, quips: [], result: null };
     cards.forEach(function (c, i) { (i % 2 === 0 ? G.you : G.mar).push(c); });   // dealt one each, face down
     show('game');
     ev('game_started', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck' });
@@ -540,7 +540,7 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     var you = G.you.shift(), mar = G.mar.shift();
     if (R.winner === 'you') { G.you.push(you, mar); G.you = G.you.concat(G.mid); G.mid = []; G.wins.you++; G.chooser = 'you'; }
     else if (R.winner === 'marvin') { G.mar.push(mar, you); G.mar = G.mar.concat(G.mid); G.mid = []; G.wins.marvin++; G.chooser = 'marvin'; }
-    else G.mid.push(you, mar);                     // a tie: the same player chooses again
+    else { G.mid.push(you, mar); G.ties++; }       // a tie: the same player chooses again
     var end = over();
     if (end) { G.result = end; finish(); } else beginRound();
   }
@@ -567,7 +567,12 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   var finish = MaffsLock.finishOnce(function () {
     state = 'over';
     var res = G.result, score = boardScore();
-    ev('game_completed', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', score: G.round, won: res.winner === 'you' });
+    // The Sheet keeps fixed columns and drops 'won' (MARVIN-LOG, Jon 25 Nov 2026): the result rides in correct,
+    // the tally in questions_answered (rounds played) and questions_correct (rounds won), the score line in detail.
+    var outcome = res.winner === 'you' ? 'win' : res.winner === 'marvin' ? 'loss' : 'draw';
+    ev('game_completed', { game_slug: SLUG, level: board(), mode: G.length === 'ten' ? 'first-to-10' : 'entire-deck', score: G.round, won: res.winner === 'you',
+      correct: res.winner === 'you', questions_answered: G.round, questions_correct: G.wins.you,
+      detail: 'you ' + G.wins.you + ' · Marvin ' + G.wins.marvin + ' · ties ' + G.ties + ' · ' + outcome + ' · ' + res.why });
     if (score !== null && window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, board(), score, score).catch(function () {});
     var end = res.winner === 'you' ? pickOne(LINES.playerWins) : res.winner === 'marvin' ? pickOne(LINES.marvinWins)
       : res.why === 'cap' ? LINES.draw[0] : null;
@@ -651,15 +656,15 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       last: function () { return R ? copy(R) : null; },
       board: function () { return G ? board() : null; },
       game: function () {
-        return G ? { deck: G.deck, length: G.length, marvin: G.marvin, round: G.round, wins: copy(G.wins), chooser: G.chooser,
+        return G ? { deck: G.deck, length: G.length, marvin: G.marvin, round: G.round, wins: copy(G.wins), ties: G.ties, chooser: G.chooser,
           you: G.you.map(function (c) { return c.n; }), mar: G.mar.map(function (c) { return c.n; }), mid: G.mid.map(function (c) { return c.n; }),
           quips: G.quips.slice(), result: G.result ? copy(G.result) : null } : null;
       },
       // For the cap and end tests: replace the piles (by card number) and the round count mid-game.
-      rig: function (youNs, marNs, round, wins) {
+      rig: function (youNs, marNs, round, wins, ties) {
         var by = {}; DATA.cards.forEach(function (c) { by[c.n] = c; });
         G.you = youNs.map(function (n) { return by[n]; }); G.mar = marNs.map(function (n) { return by[n]; }); G.mid = [];
-        G.round = round - 1; if (wins) G.wins = copy(wins);
+        G.round = round - 1; if (wins) G.wins = copy(wins); if (ties != null) G.ties = ties;
         beginRound();
       }
     }
