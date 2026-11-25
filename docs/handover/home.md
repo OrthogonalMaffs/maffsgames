@@ -18,7 +18,7 @@
 
 ## 2026-11-24 (home): THREE-GAMES-LIST (MaffsCards, Sums in Disguise and Some Thingies are listed)
 
-Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-games-list`. The contract is at `docs/handover/contracts/2026-11-24-three-games-list.md` (verbatim, with Amendment 1). The first commit closed out TIER3-LOCK-FIX.
+Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-games-list`. The contract is at `docs/history/contracts/2026-11-24-three-games-list.md` (verbatim, with Amendment 1). The first commit closed out TIER3-LOCK-FIX.
 
 - **Approval (verbatim):**
   - Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."
@@ -30,6 +30,10 @@ Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-
 - **Coverage check:** it needed LEVEL_OVERRIDES entries for the two primary games' stage boards, as the contract allowed.
 - **Todo:** MAFFSCARDS-LIST moved whole; the other two rows keep Jon's LINES rewrites and Miss O'Brien's questions.
 - **Screenshots:** the three cards at 1366 x 768 and 375 x 667, sent to Jon in session.
+- **Merged** on 24 Nov as ee09c84 (#905) via merge-pr.py, which ended "main ee09c84 run 45497440759: GREEN".
+- **PR head b8569cd:** check-site 45494570251 and phone-fit-full 45494570226, both success.
+- **Main on ee09c84:** check-site 45497440759 success, phone-fit-full 45497440773 success, pages build 45497440296 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by MAFFSCARDS-CHALLENGE's first commit.
 
 Record: agent Claude Code; wall 0:40; review cycles 0; amendments 1; usage n/a.
 
