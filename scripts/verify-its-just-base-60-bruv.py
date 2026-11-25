@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; fault-injection self-test) | | 1
+# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; every item's wrong-answer picture (hour bar, day strip, counting on, clock faces) with every number recomputed, its size, and gone on short screens; the cuckoo's states, right-answer lines and results bands; fault-injection self-test) | | 1
 # ci-deps: games/its-just-base-60-bruv/ tools/its-just-base-60-bruv/
 r"""Independent verification for It's Just Base 60, Bruv (games/its-just-base-60-bruv/), contract BASE-60 (Amendment 1),
 24 Nov 2026. SR-30: checked from its first PR.
@@ -35,8 +35,22 @@ arithmetic on whole minutes and exact fractions:
            coordinates), the prompt and the two marked options are on screen above it, the line shown is that option's,
            and the page does not scroll sideways.
 
-Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "art 375x667", "fit <W>x<H>" (four) and
-"plant: <what>" (one per planted fault).
+  Picture  (contract BASE-60-PLAY, 24 Nov 2026) every item's wrong answer at 375 x 667 and 320 x 700: the picture is its
+           stage's kind and every number in it is recomputed here from the item's fields, never by the page's drawing code:
+           stage 1 the count of 60-blocks and the part block's fill against minutes/60 (to 0.5%), its label and the caption;
+           stage 2 the marker's x as a fraction of the strip against (60H + m)/1440 (to 0.5%) and its "24-hour = 12-hour"
+           label; stage 3 each jump, every point's time and the caption, the jumps' sum equal to the item's answer
+           (duration) or its dh h dm min (end-time); stage 4 the count of full faces, the sector's angle from its path's own
+           end point against minutes/60 of a turn (to 1 degree) and the caption. Every picture is at most 72 px tall, inside
+           the card's width and has an aria-label; at 320 x 568 none is drawn. The cuckoo is aria-hidden and in its wrong
+           state on every wrong-answer screen.
+  Cuckoo   at 1280 x 720: a run of ten right answers, each head "Right: <answer>. <line>" with a CUCKOO.right line, no line
+           twice; the cuckoo's right state, and its wrong state still there a second later and gone after Next; RIGHT_MS long
+           enough to read the longest CUCKOO.right line at 238 words a minute; the results line from CUCKOO.results for the
+           score's band at scores 0, 3, 4, 6, 7, 9 and 10 (the right-answer timer shortened for these runs only).
+
+Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "art 375x667", "pic 375x667", "pic 320x700",
+"pic 320x568", "cuckoo 1280x720", "fit <W>x<H>" (four) and "plant: <what>" (one per planted fault).
 
     python scripts/verify-its-just-base-60-bruv.py              # every unit, then the self-test
     python scripts/verify-its-just-base-60-bruv.py --selftest   # the planted faults only
@@ -46,6 +60,7 @@ import ast
 import contextlib
 import hashlib
 import json
+import math
 import os
 import re
 import sys
@@ -359,6 +374,239 @@ def check_bank(html, out, info):
     return items
 
 
+# ---------------------------------------------------------------- the wrong-answer pictures (BASE-60-PLAY)
+PIC_MAX_H = 72
+READ_WPM = 238   # average adult silent reading rate, non-fiction (Brysbaert 2019)
+
+
+def mins_of(clock):
+    h, m = hm(clock)
+    return 60 * h + m
+
+
+def expected_pic(q):
+    """What the item's picture must show, from the item's own fields and this script's arithmetic."""
+    t, st = q['type'], q['stage']
+    if st == 1:
+        total = q['T'] if t == 'min-to-hm' else 60 * q['h'] + q['m']
+        h, m = divmod(total, 60)
+        cap = ('%d = %d × 60 + %d' % (total, h, m)) if t == 'min-to-hm' else ('%d × 60 + %d = %d min' % (h, m, total))
+        if (t == 'min-to-hm' and q['answer'] != dur(h, m)) or (t == 'hm-to-min' and q['answer'] != str(total)):
+            raise ValueError('the hour bar (%d min) disagrees with the answer %r' % (total, q['answer']))
+        return {'kind': 'hour-bar', 'blocks': h, 'part': Fraction(m, 60) if m else None, 'partLabel': str(m) if m else None, 'cap': cap}
+    if st == 2:
+        if t == '12-to-24':
+            H = q['h'] % 12 + (12 if q['half'] == 'pm' else 0)
+        else:
+            H = q['H']
+        m = q['m']
+        h12, half = (H % 12 or 12), ('am' if H < 12 else 'pm')
+        ans = c24(H, m) if t == '12-to-24' else c12(h12, m, half)
+        if ans != q['answer']:
+            raise ValueError('the day strip (%s) disagrees with the answer %r' % (ans, q['answer']))
+        return {'kind': 'day-strip', 'x': Fraction(60 * H + m, 1440), 'label': '%s = %s' % (c24(H, m), c12(h12, m, half))}
+    if st == 3:
+        S = mins_of(q['start'])
+        E = mins_of(q['end']) if t == 'duration' else mins_of(q['answer'])
+        N, L = -(-S // 60) * 60, E // 60 * 60
+        pts = [S]
+        if N <= E:
+            if N > S:
+                pts.append(N)
+            if L > N:
+                pts.append(L)
+        if E > pts[-1]:
+            pts.append(E)
+        jumps = []
+        for a, b in zip(pts, pts[1:]):
+            d = b - a
+            jumps.append(('%d h' % (d // 60)) if d % 60 == 0 and a % 60 == 0 else ('%d min' % d))
+        total = sum(b - a for a, b in zip(pts, pts[1:]))
+        want = q['answer'] if t == 'duration' else dur(q['dh'], q['dm'])
+        if dur(*divmod(total, 60)) != want:
+            raise ValueError('the counting-on jumps add to %s, the item says %s' % (dur(*divmod(total, 60)), want))
+        return {'kind': 'count-on', 'jumps': ['+' + j for j in jumps], 'points': [c24(*divmod(p, 60)) for p in pts],
+                'cap': ' + '.join(jumps) + ' = ' + want}
+    if t == 'dec-to-hm':
+        x = Fraction(q['x'])
+        whole_h = int(x)
+        mins = (x - whole_h) * 60
+        if mins.denominator != 1:
+            raise ValueError('%s h is not whole minutes' % q['x'])
+        mins = int(mins)
+        cap = '%s × 60 = %d min' % (dec(x - whole_h), mins)
+        if q['answer'] != dur(whole_h, mins):
+            raise ValueError('the faces (%d h %d min) disagree with the answer %r' % (whole_h, mins, q['answer']))
+    else:
+        whole_h, mins = q['h'], q['m']
+        cap = '%d ÷ 60 = %s' % (mins, dec(Fraction(mins, 60)))
+        if q['answer'] != dec(whole_h + Fraction(mins, 60)):
+            raise ValueError('the faces disagree with the answer %r' % q['answer'])
+    return {'kind': 'faces', 'full': whole_h, 'deg': Fraction(mins, 60) * 360, 'cap': cap}
+
+
+# What the picture on screen shows, read from its SVG as drawn: attributes, path coordinates and text, nothing computed.
+PIC_JS = r"""() => {
+  const svg = document.querySelector('#feedback .fb-pic');
+  const ck = document.getElementById('cuckoo');
+  const card = document.getElementById('qcard').getBoundingClientRect();
+  const out = { cuckoo: ck ? { state: ck.getAttribute('data-state'), hidden: ck.getAttribute('aria-hidden') } : null };
+  if (!svg) return out;
+  const r = svg.getBoundingClientRect(), num = (el, a) => el ? Number(el.getAttribute(a)) : null;
+  const T = (sel) => [...svg.querySelectorAll(sel)].map(e => e.textContent);
+  out.pic = { kind: svg.dataset.kind, label: svg.getAttribute('aria-label'), shown: svg.getClientRects().length > 0 && r.height > 0,
+              h: r.height, left: r.left, right: r.right, cardLeft: card.left, cardRight: card.right, cap: T('.pic-cap')[0] || null,
+              blocks: svg.querySelectorAll('rect.blk').length,
+              partFill: num(svg.querySelector('.blk-fill'), 'width'), partOut: num(svg.querySelector('.blk-out'), 'width'),
+              partLabel: T('.blk-label')[0] || null,
+              stripX: num(svg.querySelector('rect.strip'), 'x'), stripW: num(svg.querySelector('rect.strip'), 'width'),
+              markerX: num(svg.querySelector('line.marker'), 'x1'), markerLabel: T('.marker-label')[0] || null,
+              jumps: T('.jump'), points: T('.pt-label'),
+              full: svg.querySelectorAll('circle.face-full').length,
+              face: svg.querySelector('circle.face-part') ? [num(svg.querySelector('circle.face-part'), 'cx'), num(svg.querySelector('circle.face-part'), 'cy')] : null,
+              sector: svg.querySelector('path.sector') ? svg.querySelector('path.sector').getAttribute('d') : null };
+  return out;
+}"""
+
+
+def check_pic(tag, q, got, out, shown=True):
+    """One wrong-answer screen's picture and cuckoo against the item."""
+    ck = got.get('cuckoo')
+    if not ck or ck['hidden'] != 'true' or ck['state'] != 'wrong':
+        out.append('%s: the cuckoo is %s, not present, aria-hidden and in its wrong state' % (tag, ck))
+    p = got.get('pic')
+    if not shown:
+        if p and p['shown']:
+            out.append('%s: a picture is drawn on a screen 600 px tall or less' % tag)
+        return
+    if not p or not p['shown']:
+        out.append('%s: no picture on the wrong answer' % tag)
+        return
+    try:
+        e = expected_pic(q)
+    except ValueError as ex:
+        out.append('%s: BANK FAULT: %s' % (tag, ex))
+        return
+    if p['kind'] != e['kind']:
+        out.append('%s: a %s picture, stage %d draws a %s' % (tag, p['kind'], q['stage'], e['kind']))
+        return
+    if p['h'] > PIC_MAX_H + 0.5:
+        out.append('%s: the picture is %.1f px tall, over %d' % (tag, p['h'], PIC_MAX_H))
+    if p['left'] < p['cardLeft'] - 0.5 or p['right'] > p['cardRight'] + 0.5:
+        out.append('%s: the picture (%.0f to %.0f px) is wider than the card (%.0f to %.0f px)' % (tag, p['left'], p['right'], p['cardLeft'], p['cardRight']))
+    if not (p['label'] or '').strip():
+        out.append('%s: the picture has no aria-label' % tag)
+    k = e['kind']
+    if k == 'hour-bar':
+        if p['blocks'] != e['blocks']:
+            out.append('%s: the hour bar has %d blocks of 60, the item has %d whole hours' % (tag, p['blocks'], e['blocks']))
+        if e['part'] is None:
+            if p['partFill'] is not None:
+                out.append('%s: a part block drawn where there are no minutes left over' % tag)
+        elif not p['partOut'] or p['partFill'] is None or abs(p['partFill'] / p['partOut'] - float(e['part'])) > 0.005:
+            out.append('%s: the part block is filled to %s of a block, not %s (minutes/60)' % (tag, (p['partFill'] / p['partOut']) if p['partOut'] and p['partFill'] is not None else None, e['part']))
+        if p['partLabel'] != e['partLabel']:
+            out.append('%s: the part block is labelled %r, not %r' % (tag, p['partLabel'], e['partLabel']))
+        if p['cap'] != e['cap']:
+            out.append('%s: the hour bar says %r, not %r' % (tag, p['cap'], e['cap']))
+    elif k == 'day-strip':
+        fx = (p['markerX'] - p['stripX']) / p['stripW'] if p['stripW'] else None
+        if fx is None or abs(fx - float(e['x'])) > 0.005:
+            out.append('%s: the marker is at %s of the day strip, not %.4f ((60H + m)/1440)' % (tag, fx, float(e['x'])))
+        if p['markerLabel'] != e['label']:
+            out.append('%s: the marker says %r, not %r' % (tag, p['markerLabel'], e['label']))
+    elif k == 'count-on':
+        if p['jumps'] != e['jumps']:
+            out.append('%s: the jumps are %s, not %s' % (tag, p['jumps'], e['jumps']))
+        if p['points'] != e['points']:
+            out.append('%s: the points are %s, not %s' % (tag, p['points'], e['points']))
+        if p['cap'] != e['cap']:
+            out.append('%s: counting on says %r, not %r' % (tag, p['cap'], e['cap']))
+    else:
+        if p['full'] != e['full']:
+            out.append('%s: %d full faces, the item has %d whole hours' % (tag, p['full'], e['full']))
+        mt = re.match(r'^M([-\d.]+) ([-\d.]+) L([-\d.]+) ([-\d.]+) A[-\d.]+ [-\d.]+ 0 [01] 1 ([-\d.]+) ([-\d.]+) Z$', p['sector'] or '')
+        if not mt or not p['face']:
+            out.append('%s: no sector on the last face (%r)' % (tag, p['sector']))
+        else:
+            cx, cy, ex, ey = float(mt.group(1)), float(mt.group(2)), float(mt.group(5)), float(mt.group(6))
+            deg = math.degrees(math.atan2(ex - cx, cy - ey)) % 360
+            if abs(deg - float(e['deg'])) > 1 and abs(abs(deg - float(e['deg'])) - 360) > 1:
+                out.append('%s: the sector turns %.1f degrees, not %s (minutes/60 of 360)' % (tag, deg, float(e['deg'])))
+        if p['cap'] != e['cap']:
+            out.append('%s: the clock faces say %r, not %r' % (tag, p['cap'], e['cap']))
+
+
+def check_pics(page, items, size, out, info):
+    """Every item's wrong answer (its first decoy): the picture and the cuckoo."""
+    shown = size[1] > 600
+    for q in items:
+        d = q['decoys'][0]
+        tag = '%s, choosing %r, at %dx%d' % (q['id'], d['val'], size[0], size[1])
+        page.evaluate('(id) => B60.ui.preview(id)', q['id'])
+        if not page.evaluate(PRESS_JS, d['val']):
+            out.append('%s: that option is not on screen' % tag)
+            continue
+        check_pic(tag, q, page.evaluate(PIC_JS), out, shown)
+    info.setdefault('pics', []).append((size, len(items), shown))
+
+
+def check_cuckoo(page, lines, out, info):
+    ck = page.evaluate('B60.CUCKOO')
+    right_ms = page.evaluate('B60.RIGHT_MS')
+    longest = max(ck['right'], key=lambda s: len(s.split()))
+    need = len(longest.split()) / READ_WPM * 60000
+    if right_ms < need:
+        out.append('cuckoo: RIGHT_MS is %d ms; %r needs %.0f ms at %d words a minute' % (right_ms, longest, need, READ_WPM))
+    if page.evaluate("() => document.getElementById('cuckoo').getAttribute('aria-hidden')") != 'true':
+        out.append('cuckoo: not aria-hidden')
+    # A run of ten right answers: each head carries a CUCKOO.right line, none twice.
+    page.evaluate("(m) => B60.ui.start(m)", 'stage-1')
+    said = []
+    for k in range(PER):
+        q = page.evaluate('B60.ui.question()')
+        page.evaluate('B60.ui.answer(true)')
+        a = page.evaluate("() => { const f = document.querySelector('#feedback .fb'); return { head: f && f.querySelector('.fb-head') ? f.querySelector('.fb-head').textContent : null, ck: document.getElementById('cuckoo').getAttribute('data-state') }; }")
+        pre = 'Right: %s. ' % q['answer']
+        line = a['head'][len(pre):] if a['head'] and a['head'].startswith(pre) else None
+        if line not in ck['right']:
+            out.append('cuckoo: question %d shows %r, not "%s<a CUCKOO.right line>"' % (k + 1, a['head'], pre))
+        said.append(line)
+        if a['ck'] != 'right':
+            out.append('cuckoo: question %d, a right answer leaves the cuckoo %r, not right' % (k + 1, a['ck']))
+        page.wait_for_function('(id) => B60.ui.state() === "over" || (B60.ui.state() === "asking" && B60.ui.question().id !== id)', arg=q['id'], timeout=right_ms + 4000)
+    rep_ = sorted(l for l, n in Counter(said).items() if n > 1)
+    if rep_:
+        out.append('cuckoo: a run of %d repeats %s' % (PER, rep_))
+    info['cuckoo_lines'] = len(set(said))
+    # The wrong state stays until Next, then goes.
+    page.evaluate("(m) => B60.ui.start(m)", 'stage-2')
+    page.evaluate('B60.ui.answer(false)')
+    page.wait_for_timeout(1000)
+    if page.evaluate("document.getElementById('cuckoo').getAttribute('data-state')") != 'wrong':
+        out.append('cuckoo: the wrong state did not last until Next')
+    page.evaluate('B60.ui.next()')
+    if page.evaluate("document.getElementById('cuckoo').getAttribute('data-state')") != 'idle':
+        out.append('cuckoo: still not idle after Next')
+    page.evaluate("document.getElementById('menuBtn').click()")
+    # The results line for each band, the right-answer timer shortened for these runs only.
+    page.evaluate("() => { const t = MaffsLock.timer; MaffsLock.timer = (fn, ms) => t(fn, 0); }")
+    for n in (0, 3, 4, 6, 7, 9, 10):
+        page.evaluate("(m) => B60.ui.start(m)", 'stage-3')
+        for k in range(PER):
+            page.wait_for_function('B60.ui.state() === "asking"', timeout=5000)
+            page.evaluate('(r) => B60.ui.answer(r)', k < n)
+            if k >= n:
+                page.evaluate('B60.ui.next()')
+        page.wait_for_function('B60.ui.state() === "over"', timeout=5000)
+        b = '10' if n >= 10 else '7-9' if n >= 7 else '4-6' if n >= 4 else '0-3'
+        got = page.evaluate("() => ({ s: B60.ui.score(), t: document.getElementById('resCuckoo').textContent })")
+        if got['s'] != n or got['t'] not in ck['results'][b]:
+            out.append('cuckoo: a score of %d (shown %s) gets %r, not a line from the %s band' % (n, got['s'], got['t'], b))
+        page.evaluate("document.getElementById('menuBtn').click()")
+    info['bands'] = 7
+
+
 # ---------------------------------------------------------------- the start picture
 def webp_size(path):
     """(width, height) from a WebP file's own header (VP8, VP8L or VP8X), or None if it is not one."""
@@ -458,12 +706,12 @@ def play(page, m, lines, out):
             page.evaluate(PRESS_JS, q['answer'])
             a = page.evaluate(SCREEN_JS)
             right += 1
-            if a['why'] != 'right' or a['head'] != 'Right: ' + q['answer']:
-                out.append('%s: the right answer shows %r (%s), not "Right: %s"' % (tag, a['head'], a['why'], q['answer']))
+            if a['why'] != 'right' or not (a['head'] or '').startswith('Right: %s. Cuckoo!' % q['answer']):
+                out.append('%s: the right answer shows %r (%s), not "Right: %s. <the cuckoo\'s line>"' % (tag, a['head'], a['why'], q['answer']))
             if a['next']:
                 out.append('%s: a right answer waits on Next' % tag)
             try:
-                page.wait_for_function('(id) => B60.ui.state() === "over" || (B60.ui.state() === "asking" && B60.ui.question().id !== id)', arg=q['id'], timeout=4000)
+                page.wait_for_function('(id) => B60.ui.state() === "over" || (B60.ui.state() === "asking" && B60.ui.question().id !== id)', arg=q['id'], timeout=page.evaluate('B60.RIGHT_MS') + 4000)
             except Exception:  # noqa: BLE001
                 out.append('%s: a right answer did not move on by itself' % tag)
                 return
@@ -610,6 +858,10 @@ def check(html, out, units, shard=None, sample=None):
                                 if page.evaluate(ART_SHOWN_JS):
                                     out.append('art: the start picture is shown during play (%s) at %dx%d' % ((m,) + size))
                             info['art'] = 1
+                        elif uid.startswith('pic'):
+                            check_pics(page, items, size, out, info)
+                        elif uid.startswith('cuckoo'):
+                            check_cuckoo(page, lines, out, info)
                         elif uid.startswith('play'):
                             for m in MODES:
                                 play(page, m, lines, out)
@@ -633,7 +885,8 @@ ART_LINE = ('    <img class="start-art" src="assets/start.webp" width="1600" hei
 
 
 # Each plant: (what, [(old, new)], the unit it needs, the pattern its finding must match). The six the contract names, and
-# the panel opened on load (GAME-TITLE-IN-PLAY, 24 Nov 2026), and the two the start picture needs (BASE-60-LOOK, 24 Nov 2026).
+# the panel opened on load (GAME-TITLE-IN-PLAY, 24 Nov 2026), the two the start picture needs (BASE-60-LOOK, 24 Nov 2026) and
+# the five BASE-60-PLAY names (24 Nov 2026).
 PLANTS = [
     ('a wrong answer', [('"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 15 min"',
                          '"prompt":"A film lasts 135 minutes. How long is that in hours and minutes?","answer":"2 h 5 min"')],
@@ -656,6 +909,16 @@ PLANTS = [
     ('the start picture shown on the play screen', [(ART_LINE, ''),
                                                     ('  <div id="game" class="screen">\n', '  <div id="game" class="screen">\n%s' % ART_LINE)],
      'art 375x667', r'art: the start picture is shown during play'),
+    ('a stage 2 marker drawn at the 12-hour time', [('var mx = x0 + w * (60 * H + m) / 1440', 'var mx = x0 + w * (60 * h12 + m) / 1440')],
+     'pic 375x667', r'the marker is at .* of the day strip, not'),
+    ('a stage 3 jump of 0 drawn', [('if (L > N) pts.push(L);', 'if (L >= N) pts.push(L);')],
+     'pic 375x667', r"the jumps are \[.*'\+0 h'"),
+    ('a stage 4 sector drawn as minutes/100 of the turn', [('th = mins / 60 * 2 * Math.PI', 'th = mins / 100 * 2 * Math.PI')],
+     'pic 375x667', r'the sector turns [\d.]+ degrees, not'),
+    ('a stage 1 part block for 75 min drawn as 0.75 of a block', [("width=\"' + f2(bw * m / 60) + '\"", "width=\"' + f2(bw * (total % 100) / 100) + '\"")],
+     'pic 375x667', r'^s1b-1h15, .*the part block is filled to 0\.75'),
+    ('a cuckoo line repeated within a run', [('var said = deck[dealt++ % deck.length];', 'var said = deck[dealt++ % 5];')],
+     'cuckoo 1280x720', r'cuckoo: a run of 10 repeats'),
     ('the working pushed below the fold', [('.worked{font-size:.94rem;line-height:1.5}', '.worked{font-size:.94rem;line-height:1.5;padding-top:420px}')],
      'fit 375x667', r'the working ends at \d+ px, below the fold at 627 px'),
 ]
@@ -691,7 +954,8 @@ def main():
     ap.add_argument('--selftest', action='store_true', help='the planted faults only')
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
-    units = ['bank', 'play 375x667', 'why 1280x720', 'why 375x667', 'art 375x667'] + ['fit %dx%d' % s for s in SIZES]
+    units = (['bank', 'play 375x667', 'why 1280x720', 'why 375x667', 'art 375x667', 'pic 375x667', 'pic 320x700', 'pic 320x568',
+              'cuckoo 1280x720'] + ['fit %dx%d' % s for s in SIZES])
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -709,6 +973,10 @@ def main():
         print('%s: the "Why 60?" panel closed on load (%d size(s))' % (SLUG, info['why']))
     if 'art' in info:
         print('%s: the start picture (img.start-art, assets/start.webp 1600 x 873, alt present) on the start screen, not in play' % SLUG)
+    for size, n, shown in info.get('pics', []):
+        print('%s: %d items\' wrong-answer pictures at %dx%d: %s' % (SLUG, n, size[0], size[1], 'every number recomputed, at most 72 px tall, inside the card' if shown else 'none drawn (600 px tall or less)'))
+    if 'bands' in info:
+        print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for %d scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):

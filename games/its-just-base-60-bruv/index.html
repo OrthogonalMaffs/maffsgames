@@ -27,8 +27,9 @@
 /* Theme: schools/assets/theme.css (canon §7.5), light row: the roster levels are KS3 and GCSE (the palette rule).
    This game's own tokens. The accent is walnut, from the clock cases in Jon's start picture (BASE-60-LOOK): 8.1:1 on white,
    7.4:1 on --surface-alt, 7.5:1 on the Aa (dyslexia-friendly) background and 6.8:1 on --accent-dim; white on it 8.1:1, so every
-   pairing clears 4.5:1. */
-:root{--accent:#7c3f1d;--accent-dim:#f5e9e0;--on-accent:#ffffff;--right-bg:#dcfce7;--wrong-bg:#fee2e2}
+   pairing clears 4.5:1. Brass and its light tint (BASE-60-PLAY) are for drawing only, never for text: the cuckoo clock's dial
+   and the feedback pictures. */
+:root{--accent:#7c3f1d;--accent-dim:#f5e9e0;--on-accent:#ffffff;--right-bg:#dcfce7;--wrong-bg:#fee2e2;--brass:#b08d57;--brass-dim:#f3e7cf}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
@@ -69,6 +70,18 @@ a.back-link:hover{color:var(--text)}
 .hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
 .qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.7rem .8rem;display:flex;flex-direction:column;gap:.5rem}
 .stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;text-align:center}
+/* The stage row (BASE-60-PLAY): the label in the middle column, the cuckoo clock in the right one, so the two never meet. */
+.stage-row{display:grid;grid-template-columns:40px 1fr 40px;align-items:center}
+.stage-row .stage-label{grid-column:2}
+/* The cuckoo: idle (door shut), right (the bird pops out and back, about 600 ms), wrong (out and drooping until Next). Under
+   prefers-reduced-motion the global rule below stops the movement, and each state shows as it stands. */
+.cuckoo{grid-column:3;justify-self:end;display:block;width:40px;height:36px;overflow:visible}
+.ck-door{transform-box:fill-box;transform-origin:left center;transition:transform .15s}
+.cuckoo[data-state="right"] .ck-door,.cuckoo[data-state="wrong"] .ck-door{transform:scaleX(.15)}
+.ck-bird{transform-box:fill-box;transform-origin:right center;opacity:0;transition:transform .3s,opacity .15s}
+.cuckoo[data-state="right"] .ck-bird{opacity:1;transform:translateX(-11px);animation:ck-pop .6s ease-in-out forwards}
+.cuckoo[data-state="wrong"] .ck-bird{opacity:1;transform:translateX(-11px) rotate(-35deg)}
+@keyframes ck-pop{0%{opacity:0;transform:translateX(0)}25%{opacity:1;transform:translateX(-11px)}75%{opacity:1;transform:translateX(-11px)}100%{opacity:0;transform:translateX(0)}}
 .ask{font-size:1.05rem;line-height:1.4;text-align:center}
 /* The four options: one to a row, or two to a row where every option fits on one line (fold.js decides, .maffs-two-up). */
 .opts{display:flex;flex-direction:column;gap:.45rem}
@@ -90,6 +103,11 @@ a.back-link:hover{color:var(--text)}
 .fb-ans{font-size:.98rem;line-height:1.4}
 .fb-ans b{font-family:var(--font-num)}
 .worked{font-size:.94rem;line-height:1.5}
+/* The wrong answer's picture of the maths (BASE-60-PLAY), drawn from the item's own fields: at most 72 px tall, the card's
+   width at most. Not drawn on a short screen (600 px tall or less), the phone rule's pattern below. */
+.fb-pic{display:block;width:100%;max-width:320px;height:auto;max-height:72px;margin:0 auto;overflow:visible}
+.fb-pic text{font-family:inherit}
+@media (max-height:600px){.fb-pic{display:none}}
 .fb-next{display:flex;justify-content:center}
 .feedback:empty{display:none}
 
@@ -97,13 +115,14 @@ a.back-link:hover{color:var(--text)}
 .results h2{font-size:1.35rem;margin-bottom:.3rem}
 .final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
 .final-of{color:var(--muted);font-size:.9rem;margin-bottom:.8rem}
+.cuckoo-res{color:var(--accent);font-weight:600;font-size:.98rem;line-height:1.4;max-width:30em;margin:-.3rem auto .9rem}
 
 @media (max-width:420px){
   .container{padding:.5rem}
   .qcard{padding:.5rem .55rem;gap:.4rem}
   .ask{font-size:1rem}
 }
-@media (max-height:620px){.hud-label{display:none}.stage-label{display:none}}
+@media (max-height:620px){.hud-label{display:none}.stage-row{display:none}}
 /* The phone rule (canon §7.6.1: hide what cannot be used): on a short screen (600 px tall or less) the two options that are
    neither the one chosen nor the answer go while the feedback shows, so the line, the answer, the working and Next fit;
    they are back with the next question. A fixed rule, so the same phone always gets the same layout. */
@@ -114,7 +133,7 @@ a.back-link:hover{color:var(--text)}
 }
 body.accessible p,body.accessible .fb-err,body.accessible .fb-ans,body.accessible .worked,body.accessible li{line-height:1.7}
 @media (max-width:420px){
-  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud-label,body.accessible .stage-row{display:none}
   body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
   body.accessible .opt{font-size:.92rem}
 }
@@ -191,7 +210,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     </div>
     <div class="qcard" id="qcard">
-      <div class="stage-label" id="stageLabel"></div>
+      <div class="stage-row"><div class="stage-label" id="stageLabel"></div>
+      <svg class="cuckoo" id="cuckoo" data-state="idle" viewBox="12 0 40 36" aria-hidden="true" focusable="false">
+        <polygon points="20,12 36,1 52,12" fill="var(--accent)" stroke="var(--brass)" stroke-width="1"/>
+        <rect x="23" y="11" width="26" height="24" rx="1.5" fill="var(--accent)"/>
+        <rect x="32" y="13" width="8" height="7" fill="var(--text)"/>
+        <rect class="ck-door" x="32" y="13" width="8" height="7" fill="var(--brass)" stroke="var(--brass-dim)" stroke-width=".6"/>
+        <circle cx="36" cy="27.5" r="5.6" fill="var(--brass-dim)" stroke="var(--brass)" stroke-width="1"/>
+        <g stroke="var(--accent)" stroke-width=".7"><line x1="36" y1="22.6" x2="36" y2="23.8"/><line x1="40.9" y1="27.5" x2="39.7" y2="27.5"/><line x1="36" y1="32.4" x2="36" y2="31.2"/><line x1="31.1" y1="27.5" x2="32.3" y2="27.5"/><line x1="39.5" y1="24" x2="38.8" y2="24.7"/><line x1="39.5" y1="31" x2="38.8" y2="30.3"/><line x1="32.5" y1="31" x2="33.2" y2="30.3"/><line x1="32.5" y1="24" x2="33.2" y2="24.7"/></g>
+        <g class="ck-bird"><ellipse cx="35" cy="16.5" rx="5" ry="3.1" fill="var(--brass-dim)" stroke="var(--text)" stroke-width=".7"/><circle cx="30.6" cy="14.6" r="2.5" fill="var(--brass-dim)" stroke="var(--text)" stroke-width=".7"/><polygon points="28.3,14 25.4,15 28.3,15.8" fill="var(--brass)"/><circle cx="30.1" cy="14" r=".6" fill="var(--text)"/><path d="M34 15.6 q2.4 -1.6 4.4 .4" fill="none" stroke="var(--text)" stroke-width=".6"/></g>
+      </svg></div>
       <div class="ask" id="ask"></div>
       <div class="opts maffs-options" id="opts"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
@@ -203,6 +231,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <h2 id="resTitle">Stage done</h2>
       <div class="final-score" id="resScore">0</div>
       <div class="final-of" id="resOf">out of 10</div>
+      <p class="cuckoo-res" id="resCuckoo"></p>
       <div class="res-btns">
         <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
         <button class="btn" id="againBtn" type="button">Play this stage again</button>
@@ -216,7 +245,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 <script>
 (function () {
   'use strict';
-  var SLUG = 'its-just-base-60-bruv', PER = 10, RIGHT_MS = 1000;
+  // RIGHT_MS: how long a right answer shows before moving on. 3000, not 1000 (BASE-60-PLAY, point 1c): the head now carries a
+  // cuckoo line, the longest 11 words, about 2.8 s at 238 words a minute (the average adult silent reading rate for
+  // non-fiction, Brysbaert 2019); 1000 ms would not let anyone read it.
+  var SLUG = 'its-just-base-60-bruv', PER = 10, RIGHT_MS = 3000;
   var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
   // One level of content; the roster lists KS3 and GCSE (Take a Walk's pattern): the stages are boards, not levels, each
   // its own analytics mode.
@@ -461,13 +493,177 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     minutes_over_100: "Minutes divided by 100 isn't hours. An hour is 60 minutes, not 100."
   };
 
+  // The cuckoo's lines (contract BASE-60-PLAY, written by Project Claude, 24 Nov 2026, for Jon to trim after playing). right: one
+  // after "Right: <answer>.", dealt without repeats within a run. results: one under the score, by band, at random in it.
+  var CUCKOO = {
+    right: [
+      "Cuckoo! Bang on time.",
+      "Cuckoo! The grandfather clock just nodded.",
+      "Cuckoo! Not a second wasted.",
+      "Cuckoo! Sixty out of sixty.",
+      "Cuckoo! The Babylonians would be proud.",
+      "Cuckoo! Even the sundial agrees, and it's cloudy.",
+      "Cuckoo! I came out specially for that.",
+      "Cuckoo! Tick, tock, correct.",
+      "Cuckoo! The hourglass has stopped crying.",
+      "Cuckoo! I've waited all day to say that.",
+      "Cuckoo! The pocket watches are applauding.",
+      "Cuckoo! You're running like clockwork.",
+      "Cuckoo! The digital clock is sulking.",
+      "Cuckoo! I'd give you a gold watch, but I'm a bird.",
+      "Cuckoo! Not 100. Never 100.",
+      "Cuckoo! The shopkeeper's taking notes.",
+      "Cuckoo! Quick as a second hand.",
+      "Cuckoo! Every pendulum in here is swinging for you.",
+      "Cuckoo! Correct. I'm going back in now.",
+      "Cuckoo! I'm not even cuckoo about it. That's right."
+    ],
+    results: {
+      '10': ["Ten out of ten. I'm putting you in the shop window.", "Perfect. I've stopped every clock in the shop in your honour."],
+      '7-9': ["Nearly perfect. One more lap of the minute hand.", "Strong. The grandfather clock approves, and he approves of nobody."],
+      '4-6': ["Halfway round the clock. Have another go.", "Not bad. Remember: 60, not 100."],
+      '0-3': ["Rough one. Even clocks need winding up. Go again.", "Don't worry, the digital clock gets it wrong too. Have another go."]
+    }
+  };
+  function band(n) { return n >= 10 ? '10' : n >= 7 ? '7-9' : n >= 4 ? '4-6' : '0-3'; }
+
   // A line with its maths between \( and \): MaffsText renders each piece in KaTeX and keeps the prose as text.
   function line(s) { return window.MaffsText ? MaffsText.html(s) : esc(s); }
+
+
+  /* =====================================================================================================
+     THE PICTURES (contract BASE-60-PLAY): one per wrong answer, drawn from the item's own fields only, never from its prompt
+     or working. A 320 x 72 viewBox; walnut and brass from the page's tokens; labels in the page's font.
+     scripts/verify-its-just-base-60-bruv.py recomputes every number in them with its own arithmetic.
+     ===================================================================================================== */
+  var PW = 320, PH = 72;
+  function f2(n) { return String(Math.round(n * 100) / 100); }
+  function pad2(n) { return (n < 10 ? '0' : '') + n; }
+  function clock(t) { return pad2(Math.floor(t / 60)) + ':' + pad2(t % 60); }                 // minutes after midnight, as 09:45
+  function clockMins(s) { return Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5)); }
+  function hmText(t) { var h = Math.floor(t / 60), m = t % 60; return h === 0 ? m + ' min' : m === 0 ? h + ' h' : h + ' h ' + m + ' min'; }
+  // The shortest exact decimal of n/d (a terminating one), written as the bank's dec() writes it.
+  function decStr(n, d) {
+    for (var dp = 0; dp < 7; dp++) {
+      var p = Math.pow(10, dp);
+      if ((n * p) % d === 0) {
+        var v = String(n * p / d);
+        while (v.length <= dp) v = '0' + v;
+        return dp ? v.slice(0, v.length - dp) + '.' + v.slice(v.length - dp) : v;
+      }
+    }
+    return String(n / d);
+  }
+  function txt(x, y, s, o) {
+    o = o || {};
+    return '<text x="' + f2(x) + '" y="' + f2(y) + '" font-size="' + (o.size || 11) + '" text-anchor="' + (o.anchor || 'middle') + '"' +
+      (o.cls ? ' class="' + o.cls + '"' : '') + ' fill="' + (o.fill || 'var(--text)') + '"' + (o.bold ? ' font-weight="700"' : '') + '>' + esc(s) + '</text>';
+  }
+  function svg(kind, label, body) {
+    return '<svg class="fb-pic" data-kind="' + kind + '" viewBox="0 0 ' + PW + ' ' + PH + '" role="img" aria-label="' + esc(label) + '">' + body + '</svg>';
+  }
+
+  // Stage 1: the hour bar. A block of 60 for each whole hour, then one block filled to the minutes left over out of 60.
+  function picHourBar(q) {
+    var total = q.type === 'min-to-hm' ? q.T : 60 * q.h + q.m, h = Math.floor(total / 60), m = total % 60;
+    var k = h + (m ? 1 : 0), gap = 3, bw = Math.min(58, (PW - 8 - (k - 1) * gap) / k), x = (PW - (k * bw + (k - 1) * gap)) / 2;
+    var y = 3, bh = 34, out = '';
+    for (var i = 0; i < h; i++, x += bw + gap) {
+      out += '<rect class="blk" x="' + f2(x) + '" y="' + y + '" width="' + f2(bw) + '" height="' + bh + '" rx="3" fill="var(--accent-dim)" stroke="var(--accent)" stroke-width="1.2"/>' +
+        txt(x + bw / 2, y + bh / 2 + 4.5, '60', { size: 12.5, bold: true, fill: 'var(--accent)' });
+    }
+    if (m) {
+      out += '<g class="blk-part"><rect class="blk-fill" x="' + f2(x) + '" y="' + y + '" width="' + f2(bw * m / 60) + '" height="' + bh + '" fill="var(--brass)"/>' +
+        '<rect class="blk-out" x="' + f2(x) + '" y="' + y + '" width="' + f2(bw) + '" height="' + bh + '" rx="3" fill="none" stroke="var(--accent)" stroke-width="1.2" stroke-dasharray="3 2"/>' +
+        txt(x + bw / 2, y + bh / 2 + 4.5, String(m), { size: 12.5, bold: true, cls: 'blk-label' }) + '</g>';
+    }
+    var cap = q.type === 'min-to-hm' ? total + ' = ' + h + ' × 60 + ' + m : h + ' × 60 + ' + m + ' = ' + total + ' min';
+    out += txt(PW / 2, 60, cap, { size: 13.5, cls: 'pic-cap' });
+    return svg('hour-bar', 'An hour bar: ' + h + (h === 1 ? ' full hour' : ' full hours') + ' of 60 minutes' +
+      (m ? ' and ' + m + ' minutes more' : '') + ', ' + total + ' minutes in all.', out);
+  }
+
+  // Stage 2: the day strip, 00:00 to 24:00, am and pm halves, a marker at the item's time.
+  function picDayStrip(q) {
+    var H = q.type === '12-to-24' ? (q.h % 12) + (q.half === 'pm' ? 12 : 0) : q.H, m = q.m;
+    var h12 = H % 12 === 0 ? 12 : H % 12, half = H < 12 ? 'am' : 'pm';
+    var x0 = 16, w = PW - 32, y = 30, sh = 14, out = '';
+    out += '<rect class="half-am" x="' + x0 + '" y="' + y + '" width="' + f2(w / 2) + '" height="' + sh + '" fill="var(--accent-dim)"/>' +
+      '<rect class="half-pm" x="' + f2(x0 + w / 2) + '" y="' + y + '" width="' + f2(w / 2) + '" height="' + sh + '" fill="var(--brass-dim)"/>' +
+      '<rect class="strip" x="' + x0 + '" y="' + y + '" width="' + w + '" height="' + sh + '" fill="none" stroke="var(--accent)" stroke-width="1.2"/>' +
+      txt(x0 + w / 4, y + 10.5, 'am', { size: 10, bold: true, fill: 'var(--accent)' }) + txt(x0 + 3 * w / 4, y + 10.5, 'pm', { size: 10, bold: true, fill: 'var(--accent)' });
+    for (var i = 0; i <= 4; i++) {
+      var tx = x0 + w * i / 4;
+      out += '<line x1="' + f2(tx) + '" y1="' + (y + sh) + '" x2="' + f2(tx) + '" y2="' + (y + sh + 4) + '" stroke="var(--accent)" stroke-width="1"/>' +
+        txt(tx, y + sh + 14, pad2(i * 6) + ':00', { size: 10, anchor: i === 0 ? 'start' : i === 4 ? 'end' : 'middle', cls: 'tick-label' });
+    }
+    var mx = x0 + w * (60 * H + m) / 1440, lab = pad2(H) + ':' + pad2(m) + ' = ' + h12 + ':' + pad2(m) + ' ' + half;
+    var anchor = mx < PW * 0.3 ? 'start' : mx > PW * 0.7 ? 'end' : 'middle', lx = anchor === 'start' ? mx - 4 : anchor === 'end' ? mx + 4 : mx;
+    out += '<line class="marker" x1="' + f2(mx) + '" y1="' + (y - 7) + '" x2="' + f2(mx) + '" y2="' + (y + sh + 2) + '" stroke="var(--text)" stroke-width="2.2"/>' +
+      txt(lx, y - 11, lab, { size: 13, anchor: anchor, bold: true, cls: 'marker-label' });
+    return svg('day-strip', 'A day from midnight to midnight, morning in one colour and afternoon in another, with ' +
+      pad2(H) + ':' + pad2(m) + ', ' + h12 + ':' + pad2(m) + ' ' + half + ', marked.', out);
+  }
+
+  // Stage 3: counting on. The start, the next o'clock, the last o'clock before the end, the end; a jump of 0 is left out.
+  function picCountOn(q) {
+    var S = clockMins(q.start), E = clockMins(q.type === 'duration' ? q.end : q.answer);
+    var N = Math.ceil(S / 60) * 60, L = Math.floor(E / 60) * 60, pts = [S];
+    if (N <= E) { if (N > S) pts.push(N); if (L > N) pts.push(L); }
+    if (E > pts[pts.length - 1]) pts.push(E);
+    var x0 = 30, x1 = PW - 30, n = pts.length, y = 38, out = '', jumps = [];
+    out += '<line x1="' + x0 + '" y1="' + y + '" x2="' + x1 + '" y2="' + y + '" stroke="var(--accent)" stroke-width="1.4"/>';
+    var xs = pts.map(function (_, i) { return n === 1 ? (x0 + x1) / 2 : x0 + (x1 - x0) * i / (n - 1); });
+    for (var i = 0; i + 1 < n; i++) {
+      var d = pts[i + 1] - pts[i], hours = d % 60 === 0 && pts[i] % 60 === 0;
+      var lab = hours ? '+' + (d / 60) + ' h' : '+' + d + ' min';
+      jumps.push(hours ? (d / 60) + ' h' : d + ' min');
+      var mid = (xs[i] + xs[i + 1]) / 2;
+      out += '<path d="M' + f2(xs[i] + 3) + ' ' + (y - 3) + ' Q' + f2(mid) + ' ' + (y - 24) + ' ' + f2(xs[i + 1] - 3) + ' ' + (y - 3) + '" fill="none" stroke="var(--brass)" stroke-width="1.8"/>' +
+        txt(mid, y - 18, lab, { size: 12, bold: true, cls: 'jump', fill: 'var(--accent)' });
+    }
+    xs.forEach(function (x, i) {
+      out += '<circle cx="' + f2(x) + '" cy="' + y + '" r="3.2" fill="var(--accent)"/>' + txt(x, y + 14, clock(pts[i]), { size: 11, cls: 'pt-label' });
+    });
+    out += txt(PW / 2, 69, jumps.join(' + ') + ' = ' + hmText(E - S), { size: 12.5, cls: 'pic-cap' });
+    return svg('count-on', 'Counting on from ' + clock(S) + ' to ' + clock(E) + ' in jumps of ' + jumps.join(', then ') + ': ' + hmText(E - S) + ' in all.', out);
+  }
+
+  // Stage 4: clock faces. A full face for each whole hour, then one face with the minutes shaded from 12 o'clock, clockwise.
+  function picFaces(q) {
+    var whole, mins, cap;
+    if (q.type === 'dec-to-hm') {
+      var dot = q.x.indexOf('.'), frac = dot === -1 ? '0' : '0' + q.x.slice(dot);
+      whole = Number(dot === -1 ? q.x : q.x.slice(0, dot));
+      mins = Math.round(Number(frac) * 60);
+      cap = frac + ' × 60 = ' + mins + ' min';
+    } else {
+      whole = q.h; mins = q.m;
+      cap = q.m + ' ÷ 60 = ' + decStr(q.m, 60);
+    }
+    var k = whole + 1, gap = 7, r = Math.min(22, (PW - 8 - (k - 1) * gap) / (2 * k)), x = (PW - (k * 2 * r + (k - 1) * gap)) / 2 + r, cy = 24, out = '';
+    for (var i = 0; i < whole; i++, x += 2 * r + gap) {
+      out += '<circle class="face-full" cx="' + f2(x) + '" cy="' + cy + '" r="' + f2(r) + '" fill="var(--brass)" stroke="var(--accent)" stroke-width="1.4"/>' +
+        txt(x, cy + 4.5, '1 h', { size: 12, bold: true });
+    }
+    var th = mins / 60 * 2 * Math.PI, ex = x + r * Math.sin(th), ey = cy - r * Math.cos(th);
+    out += '<circle class="face-part" cx="' + f2(x) + '" cy="' + cy + '" r="' + f2(r) + '" fill="var(--surface)" stroke="var(--accent)" stroke-width="1.4"/>' +
+      '<path class="sector" d="M' + f2(x) + ' ' + cy + ' L' + f2(x) + ' ' + f2(cy - r) + ' A' + f2(r) + ' ' + f2(r) + ' 0 ' + (mins > 30 ? 1 : 0) + ' 1 ' + f2(ex) + ' ' + f2(ey) + ' Z" fill="var(--brass)" stroke="var(--accent)" stroke-width=".8"/>';
+    for (var t = 0; t < 12; t++) {
+      var a = t / 12 * 2 * Math.PI, s0 = Math.sin(a), c0 = Math.cos(a);
+      out += '<line x1="' + f2(x + (r - 3.5) * s0) + '" y1="' + f2(cy - (r - 3.5) * c0) + '" x2="' + f2(x + r * s0) + '" y2="' + f2(cy - r * c0) + '" stroke="var(--accent)" stroke-width="1"/>';
+    }
+    out += txt(PW / 2, 66, cap, { size: 13.5, cls: 'pic-cap' });
+    return svg('faces', 'Clock faces: ' + whole + (whole === 1 ? ' full hour' : ' full hours') + ', then ' + mins +
+      ' minutes shaded on the last face, ' + mins + ' out of 60.', out);
+  }
+  var PICS = { 1: picHourBar, 2: picDayStrip, 3: picCountOn, 4: picFaces };
 
   /* =====================================================================================================
      THE GAME
      ===================================================================================================== */
-  var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0;
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, deck = [], dealt = 0;
+  function cuckoo(st) { $('cuckoo').setAttribute('data-state', st); }
 
   function stageItems(m) { var n = Number(m.slice(-1)); return BANK.filter(function (q) { return q.stage === n; }); }
   // A run: PER items from the stage's 48, without repeats (a Fisher-Yates shuffle, then the first PER).
@@ -480,6 +676,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function begin(m, list) {
     MaffsLock.newSession();
     mode = m; qs = list; qi = 0; score = 0;
+    deck = MaffsOptions.shuffle(CUCKOO.right.slice()); dealt = 0;   // once a run, then in order: no line twice in a run
     show('game');
     $('hudStage').textContent = m.slice(-1);
     $('stageLabel').textContent = 'Stage ' + m.slice(-1) + ' · ' + STAGES[m.slice(-1)];
@@ -492,6 +689,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (window.MaffsNext) MaffsNext.clear(fb);
     fb.innerHTML = '';
     $('qcard').classList.remove('fb-open');
+    cuckoo('idle');
     if (qi >= qs.length) { finish(); return; }
     Q = qs[qi++];
     $('hudQ').textContent = qi + '/' + qs.length;
@@ -530,16 +728,19 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: right });
     if (right) {
       // One line, then on after a moment (canon §7.6: a right answer keeps a brisk delay).
-      fb.innerHTML = '<div class="fb right" data-why="right"><div class="fb-head">' + esc('Right: ' + Q.answer) + '</div></div>';
+      var said = deck[dealt++ % deck.length];
+      cuckoo('right');
+      fb.innerHTML = '<div class="fb right" data-why="right" data-cuckoo="' + esc(said) + '"><div class="fb-head">' + esc('Right: ' + Q.answer + '. ' + said) + '</div></div>';
       MaffsLock.timer(advance, RIGHT_MS);
       return;
     }
     // A wrong answer, in order: the line for the error chosen, the answer, the working, then Next (it waits).
     var err = errOf(val);
     $('qcard').classList.add('fb-open');
+    cuckoo('wrong');
     fb.innerHTML = '<div class="fb wrong" data-why="wrong" data-err="' + esc(err) + '">' +
       '<div class="fb-err">' + esc(LINES[err]) + '</div>' +
-      '<div class="fb-ans">The answer is <b>' + esc(Q.answer) + '</b></div>' +
+      '<div class="fb-ans">The answer is <b>' + esc(Q.answer) + '</b></div>' + PICS[Q.stage](Q) +
       '<div class="worked">' + Q.working.map(function (w) { return '<div class="w-line">' + line(w) + '</div>'; }).join('') + '</div>' +
       '<div class="fb-next"></div></div>';
     MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'),
@@ -559,6 +760,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('resTitle').textContent = 'Stage ' + mode.slice(-1) + ' done: ' + STAGES[mode.slice(-1)];
     $('resScore').textContent = score;
     $('resOf').textContent = 'out of ' + qs.length;
+    var said = CUCKOO.results[band(score)];
+    $('resCuckoo').textContent = said[Math.floor(Math.random() * said.length)];
+    $('resCuckoo').setAttribute('data-band', band(score));
     var i = MODES.indexOf(mode);
     $('nextStageBtn').hidden = i >= MODES.length - 1;
     $('nextStageBtn').textContent = 'Next: Stage ' + (i + 2);
@@ -587,7 +791,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   function copy(o) { return JSON.parse(JSON.stringify(o)); }
   function item(id) { for (var i = 0; i < BANK.length; i++) if (BANK[i].id === id) return BANK[i]; return null; }
   window.B60 = {
-    SLUG: SLUG, MODES: MODES, PER: PER, STAGES: copy(STAGES), LINES: copy(LINES),
+    SLUG: SLUG, MODES: MODES, PER: PER, STAGES: copy(STAGES), LINES: copy(LINES), CUCKOO: copy(CUCKOO), RIGHT_MS: RIGHT_MS,
     bank: function () { return copy(BANK); },
     ui: {
       state: function () { return state; },
