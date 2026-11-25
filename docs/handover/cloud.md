@@ -75,7 +75,8 @@ Claude Code (cloud, lane 2), branch `claude/peaceful-cannon-55f09a` from main 10
 - **Verifier:** scripts/verify-maffscards.py gains the unit `art` (docstring) and one plant (89 changed to 98).
 - **Full verifier run on the branch (before #919):** every unit and all 17 plants pass or are caught, except `art 320x568`: the Deck buttons, 0 px above the fold on main, go under it (expected until #919 is merged in).
 - **Rulings (Project Claude, 25 Nov 2026, 22:35):** (1) the fit check fails on controls, the title and the subtitle only; a section heading whose buttons were already below the fold may move below it; headings stay reported. (2) No PR until #919 is on main; then merge main in (every line of #919 kept), open the PR, Gate, merge-pr.py on green. (3) Accepted: Outfit for the art in Aa, the values in the page checked against cards.json, the cards rising into the top bar from 640 px.
-- **Next:** wait for #919.
+- **#919 merged (6db4954, 22:44 UTC); main merged in (fb4308a):** three files conflicted where both added lines (the page's script, the verifier's header, docstring, units, dispatch and prints, /updates/); every line of #919 kept, the two descriptions joined (ci-shards: twenty-three plants; UNITS has art before pool; PLANT_UNITS' comment now says the first seventeen). Full verifier on the merged page: PASS, 23 plants caught; art fit as measured above.
+- **Next:** the PR, its Gate, merge-pr.py.
 
 ## 2026-11-25 (cloud): ANNOUNCE-STRIP (the homepage strip reads its announcement from data and announces MaffsCards' Challenge a friend until 10 Dec; MaffsCards' Aa results fit at 320x568; `docs/handover/contracts/2026-11-25-announce-strip.md`)
 
