@@ -189,7 +189,43 @@ HOST_UNITS = ['host %s %dx%d %s' % (look, sz[0], sz[1], aa) for look in ('grown'
 HOST_MIN, HOST_MAX = 48, 96
 # Items where main already loses the fold (options or Next under it, right and wrong both played): the character stays in
 # the top row there. CI's own figures (the container's fallback fonts differ): (unit, item) -> what main loses, where.
+# Gate run 45877385081 (head 9148825f).
 HOST_KNOWN = {
+    ('host grown 320x568 Aa', 'm3-2r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r6c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r7c'): 'right: Next 537 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r8c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r9c'): 'right: Next 550 px / fold 528 px; wrong: Next 535 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r10c'): 'right: Next 565 px / fold 528 px; wrong: Next 550 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-3r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-4r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r6c'): 'right: Next 530 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r7c'): 'wrong: Next 530 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r8c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r9c'): 'right: Next 537 px / fold 528 px; wrong: Next 543 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r10c'): 'right: Next 553 px / fold 528 px; wrong: Next 558 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-3r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host grown 375x667 Aa', 'm3-2r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-2r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-5r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-5r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-3r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-4r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-3r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-3r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-4r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-4r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-2r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-2r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-5r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-5r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-3r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-4r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-3r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-3r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-4r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-4r10c'): 'right: Next 632 px / fold 627 px',
 }
 TAGLINE = 'how many thingies can you collect'
 MENU_NOTE = 'At least 10 questions, then see how many thingies you can collect: keep going until a slip, or press End. A point for each one right.'
