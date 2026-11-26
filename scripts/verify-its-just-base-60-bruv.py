@@ -840,7 +840,28 @@ CK_SLACK = 14   # a clock above the question but under CK_MAX leaves at most thi
 # reported, not a gate. In Aa at 320x568 and 375x667 these items already end below the fold on main (dd74964), with the
 # clock in the stage row as it was: {size: {item id: px below the fold on main, its lowest screen}}. Measured from main's
 # page by this script's own ck_item(). Shrink-only: an item that fits is taken off; one that ends lower than this fails.
-KNOWN_AA_OVER = {}
+KNOWN_AA_OVER = {
+    '320x568': {   # 82 items
+        's1a-135': 25, 's1a-150': 25, 's1a-165': 25, 's1a-195': 25, 's1a-210': 25, 's1a-225': 25, 's1a-255': 47,
+        's1a-270': 25, 's1a-285': 47, 's1a-315': 25, 's1a-330': 47, 's1a-345': 25, 's1a-375': 47, 's1a-390': 25,
+        's1a-405': 47, 's1a-435': 25, 's1a-450': 47, 's1a-465': 25, 's1a-495': 47, 's1a-510': 25, 's1a-525': 47,
+        's1a-555': 25, 's1a-570': 47, 's1a-585': 25, 's2a-1230pm': 49, 's2a-1245pm': 49, 's2b-1220': 76,
+        's2b-1255': 76, 's2b-1315': 17, 's2b-1452': 17, 's2b-1510': 17, 's2b-1725': 17, 's2b-1930': 17,
+        's2b-2120': 17, 's3a-0640-0815': 156, 's3a-0650-0925': 156, 's3a-0745-0930': 133, 's3a-0755-1020': 133,
+        's3a-0825-0910': 49, 's3a-0850-1015': 133, 's3a-0945-1120': 156, 's3a-0955-1040': 49, 's3a-1035-1210': 133,
+        's3a-1045-1315': 133, 's3a-1135-1220': 49, 's3a-1150-1320': 156, 's3a-1245-1430': 133, 's3a-1340-1505': 156,
+        's3a-1350-1635': 156, 's3a-1445-1705': 156, 's3a-1455-1625': 156, 's3a-1525-1610': 49, 's3a-1555-1730': 133,
+        's3a-1650-1805': 156, 's3a-1740-1925': 156, 's3a-1835-2020': 156, 's3a-1930-2115': 156, 's3a-2040-2210': 156,
+        's4a-1.2': 47, 's4a-1.3': 25, 's4a-1.5': 25, 's4a-1.6': 25, 's4a-1.7': 25, 's4a-1.75': 47, 's4a-1.8': 25,
+        's4a-2.1': 47, 's4a-2.25': 25, 's4a-2.4': 25, 's4a-2.5': 25, 's4a-2.9': 25, 's4a-3.1': 47, 's4a-3.25': 25,
+        's4a-3.3': 25, 's4a-3.6': 25, 's4a-3.75': 47, 's4a-4.2': 47, 's4a-4.5': 47, 's4a-4.7': 25, 's4a-4.8': 25,
+        's4a-5.4': 25, 's4a-5.9': 25, 's4a-6.5': 47},
+    '375x667': {   # 20 items
+        's3a-0640-0815': 23, 's3a-0650-0925': 23, 's3a-0745-0930': 23, 's3a-0755-1020': 23, 's3a-0850-1015': 23,
+        's3a-0945-1120': 23, 's3a-1035-1210': 23, 's3a-1045-1315': 23, 's3a-1150-1320': 23, 's3a-1245-1430': 23,
+        's3a-1340-1505': 23, 's3a-1350-1635': 23, 's3a-1445-1705': 23, 's3a-1455-1625': 23, 's3a-1555-1730': 23,
+        's3a-1650-1805': 23, 's3a-1740-1925': 23, 's3a-1835-2020': 23, 's3a-1930-2115': 23, 's3a-2040-2210': 23},
+}
 
 # One screen of an item: the clock's box and place, then (with `val`) the option pressed and the screen after marking.
 # `force` puts the clock above the question at that width before anything is pressed, by moving the element itself, so the
