@@ -145,7 +145,7 @@ game submitted to the leaderboard; daily.json asked for with no query string (DA
     python -X utf8 scripts/verify-maffscards.py [--selftest] [--only UNIT ...] [--shard I/K] [--list-units]
 
 CI runs it as SHARD parts (# ci-shards; scripts/ci_shards.py): its work units are data, balance, rules, marvin, sim, play,
-challenge, fit, art, pool, daily, dailyui, dailyfit and the planted faults (selftest, and dailyplants for today's deal), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
+challenge, fit, art, pool, daily, dailyui, dailyfit and the planted faults (selftest and selftest2, and dailyplants for today's deal), each in exactly one part (contract VERIFIER-SPLIT, 25 Nov 2026). With no
 --shard every unit and the plants run, as before; --only runs the named units without the plants (local use).
 """
 import argparse
@@ -2234,7 +2234,10 @@ def print_golden(html):
 # The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
 # each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
 UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art', 'pool', 'daily', 'dailyui', 'dailyfit']
-PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first twenty, and today's deal's seven
+# The first twenty planted faults are two units, eleven and nine (LARGE-SCREEN-LAYER, 26 Nov 2026: as one unit they took
+# 182 to 187 s in CI, past the 172 s a line has; about half each now).
+PLANT_UNITS = ['selftest', 'selftest2', 'dailyplants']       # the planted faults: the first twenty in two units, and today's deal's seven
+SELFTEST_FIRST = 11
 
 
 def merge_info(info, part):
@@ -2319,7 +2322,10 @@ def main():
     ok = True
     if 'selftest' in plan:
         with shard.unit('selftest'):
-            ok = selftest(html)
+            ok = selftest(html, PLANTS[:SELFTEST_FIRST])
+    if 'selftest2' in plan:
+        with shard.unit('selftest2'):
+            ok = selftest(html, PLANTS[SELFTEST_FIRST:]) and ok
     if 'dailyplants' in plan:
         with shard.unit('dailyplants'):
             ok = selftest(html, DAILY_PLANTS) and ok
