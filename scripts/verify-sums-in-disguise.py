@@ -31,7 +31,7 @@ numbers to check the page's numbers:
             for the answer (Stage 4: answer_sum as "p+q"); a decoy shows its own aha line (Stage 4: the duck's), then the
             learning line built here from the item, in KaTeX; the 67 hidden before marking and shown after it exactly
             when a 6 and a 7 are among the big sum's numbers and the answer.
-  Greeting  "#kids/Maple" and "#kids/Maple%20Class" -> "Welcome, Maple Class!"; "#KIDS" and "#kids" -> the kid look
+  Greeting  "#kids/Example" and "#kids/Example%20Class" -> "Welcome, Example Class!"; "#KIDS" and "#kids" -> the kid look
             and its welcome; "#kids/<script>" -> the kid look, no class greeting, nothing injected; no hash or "#kidsx"
             -> the grown-up look; a bad ?level= rewritten by MaffsLevel keeps the fragment.
   Amendment 1 (Jon, 18 Nov 2026, 09:19): every question is the sum and "= ?" (Stage 4: LINES' find, with the little
@@ -66,10 +66,10 @@ numbers to check the page's numbers:
             nothing spoken before a tap; the question, then the one feedback line and the working, in words from the
             item; never the greeting; cancel() on Next and on leaving the play screen; nothing in an mfg() payload or
             storage. (The fold with the speaker showing is Fit's.)
-  Play      every stage in each look at 360 x 640 (the kid look from #kids/Maple): 10 different items of the stage, played
+  Play      every stage in each look at 360 x 640 (the kid look from #kids/Example): 10 different items of the stage, played
             to the end (the fold is Fit's, every item, not these 10); one game_completed with the score,
             one board submission [slug, 'stage-N', score, 10]; Stage 3's "Done without peeking"; the end line; no mfg()
-            payload, localStorage or sessionStorage value containing "kids", "Maple" or "#".
+            payload, localStorage or sessionStorage value containing "kids", "Example" or "#".
   Fit       every item above the fold (PRIMARY-FIT-SWEEP, scripts/fit_common.py): all 226 in each look at 360 x 640
             with a local voice, so the speaker shows, the real fonts and the settled layout: each previewed by itself and
             walked step by step, every control measured at every step (take off, the tiles, fill the ten, put back, the
@@ -846,8 +846,8 @@ GREETINGS = [
     ('#kidsx', 'grown', None),
     ('#kids', 'kids', None),
     ('#KIDS', 'kids', None),
-    ('#kids/Maple', 'kids', 'Welcome, Maple Class!'),
-    ('#kids/Maple%20Class', 'kids', 'Welcome, Maple Class!'),
+    ('#kids/Example', 'kids', 'Welcome, Example Class!'),
+    ('#kids/Example%20Class', 'kids', 'Welcome, Example Class!'),
     ('#kids/%3Cscript%3Ealert(1)%3C%2Fscript%3E', 'kids', None),
     ('#kids/<script>', 'kids', None),
 ]
@@ -855,7 +855,7 @@ GREETINGS = [
 
 def check_greeting(pw, base, html, out):
     L = contract_lines()
-    cases = GREETINGS + [('#kids/Maple', 'kids', 'Welcome, Maple Class!', '?level=bogus')]
+    cases = GREETINGS + [('#kids/Example', 'kids', 'Welcome, Example Class!', '?level=bogus')]
     for c in cases:
         frag, look, greet = c[:3]
         query = c[3] if len(c) > 3 else '?cb=verify'
@@ -937,7 +937,7 @@ FIT_STEPPER = r"""{
 def check_fit(pw, base, html, look, st, out, info):
     """Every stage-st item in one look at 360 x 640, the speaker showing: every control at every step and Next after every
     feedback variant above the fold (fit_common.sweep)."""
-    frag = '#kids/Maple' if look == 'kids' else ''
+    frag = '#kids/Example' if look == 'kids' else ''
     br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.SID && !!SID.ui', frag, PHONE)
     try:
         if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
@@ -1031,7 +1031,7 @@ def play(page, look, m, out):
     if not set(names) <= {'game_started', 'question_answered', 'game_completed', 'personal_best_set'}:
         out.append('%s: events %s' % (tag, names))
     blob = json.dumps(ev)
-    for bad in ('kids', 'Maple', '#'):
+    for bad in ('kids', 'Example', '#'):
         if bad in blob:
             out.append('%s: an mfg() payload contains %r' % (tag, bad))
     if bad_in_storage(page):
@@ -1103,7 +1103,7 @@ def check_speech(pw, base, html, out, info):
         finally:
             br.close()
     bank = bank_of(html)
-    for frag, look in (('', 'grown'), ('#kids/Maple', 'kids')):
+    for frag, look in (('', 'grown'), ('#kids/Example', 'kids')):
         br, page = speech_page(pw, base, html, [], frag)
         try:
             spoken = lambda: page.evaluate('window.__spoken')
@@ -1161,7 +1161,7 @@ def check_speech(pw, base, html, out, info):
                         out.append('read aloud (%s) %s: spoke %s, expected %s' % (look, q['id'], [x['text'] for x in got], want))
                     if any(not x['local'] for x in got):
                         out.append('read aloud (%s) %s: a voice that is not local was passed to speak()' % (look, q['id']))
-                    if any('Maple' in x['text'] or 'Welcome' in x['text'] for x in got):
+                    if any('Example' in x['text'] or 'Welcome' in x['text'] for x in got):
                         out.append('read aloud (%s): it read the greeting' % look)
                     before = page.evaluate('window.__cancels')
                     page.evaluate('SID.ui.next()')
@@ -1187,7 +1187,7 @@ def bad_in_storage(page):
     dump = page.evaluate("""() => { const o = {};
       for (const s of [localStorage, sessionStorage]) for (let i = 0; i < s.length; i++) o[s.key(i)] = s.getItem(s.key(i));
       return JSON.stringify(o); }""")
-    return [b for b in ('kids', 'Maple', '#') if b in dump]
+    return [b for b in ('kids', 'Example', '#') if b in dump]
 
 
 def check(html, out, units, shard=None):
@@ -1231,7 +1231,7 @@ def check(html, out, units, shard=None):
                             out.append('greeting threw: %s' % str(e).splitlines()[0][:220])
                         continue
                     look = 'kids' if ' kids' in uid else 'grown'
-                    frag = '#kids/Maple' if look == 'kids' else ''
+                    frag = '#kids/Example' if look == 'kids' else ''
                     size = PHONE if uid.startswith('play') else (1280, 800)
                     br, page, errs = open_page(pw, base, html, size, frag)
                     try:
@@ -1288,10 +1288,10 @@ PLANTS = [
     ('the class name written with innerHTML',
      edit("$('welcome').textContent = greeting();", "$('welcome').innerHTML = greeting();"),
      'bank', r'the greeting \(the class name\) is written with innerHTML'),
-    ('"Maple" in an mfg() payload',
+    ('"Example" in an mfg() payload',
      edit("ev('game_started', { game_slug: SLUG, level: level, mode: mode });",
           "ev('game_started', { game_slug: SLUG, level: level, mode: mode, cls: CLASS_NAME || '' });"),
-     'play kids %dx%d' % PHONE, r"an mfg\(\) payload contains 'Maple'"),
+     'play kids %dx%d' % PHONE, r"an mfg\(\) payload contains 'Example'"),
     # Amendment 1's five.
     ('feedback showing two LINES strings',
      edit("      sayText = L[sayKey];\n", "      sayText = L[sayKey] + ' ' + L.reveal[mode];\n"),

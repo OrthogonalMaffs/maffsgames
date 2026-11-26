@@ -172,6 +172,15 @@ a.back-link:hover{color:var(--text)}
 .sarge-mini{display:none}
 .sarge-mini .th{width:22px;height:22px}
 @media (max-width:599px){.sarge-wide{display:none}.qcard.parade .sarge-mini{display:block}}
+/* Stage 4, the quiz show (SOME-THINGIES-FACTS, Jon, 26 Nov 2026): the thingy in glasses sits in the card's top row at
+   every width and reacts as Sarge does. Once the answer is marked the fact is drawn as plates (factPic()), under the
+   options and above the working, so nothing the student was reading moves. --ps is the picture's thingy, 18 px (Stage
+   1's plates exactly) down to 10 px, its gaps and the plates' padding in step with it. */
+.qcard.quiz .sarge-mini{display:block}
+.qcard.quiz .pic{order:1}.qcard.quiz .feedback{order:2}.qcard.quiz .crowd{order:3}
+.pic.fact{gap:calc(var(--ps) / 3)}
+.pic.fact .plate{gap:calc(var(--ps) / 9);padding:calc(var(--ps) / 4.5) calc(var(--ps) / 3.6)}
+.pic.fact .th{width:var(--ps);height:var(--ps)}
 /* Winner stays on, the crowd: from question 11 each right answer adds a thingy, wrapping into rows, every one drawn
    (CROWD-FILL): 16 px until the crowd reaches the bottom of the screen, then all shrink together to fit (--ts, set by
    fitCrowd(), never below 6 px; past that the rows carry on and the page scrolls). The run-ending wrong answer: they
@@ -943,7 +952,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (kind === 'rows') $('arrSide').textContent = L.label_rows.replace('{n}', String(Q.rows));
     else $('arrTop').textContent = L.label_cols.replace('{n}', String(Q.cols));
   }
-  function clearPic() { var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned', 'steps', 'step1', 'step2', 'conga'].forEach(function (k) { delete p.dataset[k]; }); }
+  function clearPic() {
+    var p = $('pic'); p.innerHTML = ''; ['groups', 'each', 'rows', 'cols', 'turned', 'steps', 'step1', 'step2', 'conga', 'fact'].forEach(function (k) { delete p.dataset[k]; });
+    p.classList.remove('fact'); p.style.removeProperty('--ps');
+  }
   function reduced() { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (e) { return false; } }
 
   /* =====================================================================================================
@@ -1017,10 +1029,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (qi === PER + 1) setSay(L.overtime, 'overtime'); else setSay('');
     clearPic(); setSum(''); setPrompt('');
     var tq = Q.type;
-    // The stage's scene: the conga line (Stage 2: the sum above the line), the parade ground (Stage 3, with Sarge).
+    // The stage's scene: the conga line (Stage 2: the sum above the line), the parade ground (Stage 3, with Sarge), the
+    // quiz show (Stage 4: the thingy in glasses beside the question; its picture comes after marking, factPic()).
     $('qcard').classList.toggle('conga', tq === 'sum-to-groups' || tq === 'groups-to-sum');
     $('qcard').classList.toggle('parade', tq === 'array');
-    $('sargeMini').innerHTML = tq === 'array' ? SARGE : '';
+    $('qcard').classList.toggle('quiz', !!factOf(Q));
+    $('sargeMini').innerHTML = tq === 'array' ? SARGE : factOf(Q) ? thingy(6) : '';
     ['pic', 'sargeMini'].forEach(function (id) { $(id).classList.remove('react-right', 'react-wrong'); });
     if (qi > PER) drawCrowd();
     ['opts1', 'opts'].forEach(function (id) { $(id).hidden = true; $(id).innerHTML = ''; });
@@ -1061,6 +1075,40 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (over()) { $('pic').innerHTML = ''; $('pic').dataset.conga = 'off'; }
   }
 
+  // Stage 4, the fact as plates, once it is marked (SOME-THINGIES-FACTS; decoration only, never before marking, when it
+  // would give the answer away): a x b as a plates of b; ? x b = product as answer plates of b, the game's "a groups of
+  // b". Stage 4's facts run to 120 thingies on 12 plates, so the picture is measured, never a breakpoint: 18 px (Stage
+  // 1's plates) while Next stays above the fold (congaFit's fold), then a pixel smaller at a time, gaps with it, to 10
+  // px; if Next would still be under the fold, no picture for this item at this size (the working shows the fact).
+  // The crowd (past question 10) is sized first, as if there were no picture, and the picture must fit the room it
+  // leaves: the card, crowd and all, must still end above the fold, so the picture never changes the crowd's size.
+  var FACT_FULL = 18, FACT_FLOOR = 10;
+  function factOf(q) { return !q ? null : q.type === 'fact' ? [q.a, q.b] : q.type === 'missing' ? [q.answer, q.b] : null; }
+  function factPic() {
+    var fq = factOf(Q), p = $('pic'), nb = document.querySelector('#feedback .maffs-next, #nextBtn');
+    if (!fq || !nb) return;
+    var f = document.querySelector('.site-footer');
+    var fold = window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+    var crowd = !!$('crowd').querySelector('.th');
+    function over() {
+      return nb.getBoundingClientRect().bottom + window.scrollY > fold + 0.5 ||
+        (crowd && $('qcard').getBoundingClientRect().bottom + window.scrollY > fold + 0.5);
+    }
+    plates(fq[0], fq[1]);
+    p.classList.add('fact');
+    p.dataset.fact = 'on';
+    // plates() fixes its columns at 18 px: here they follow the picture's size.
+    [].forEach.call(p.querySelectorAll('.plate'), function (pl) { pl.style.gridTemplateColumns = pl.style.gridTemplateColumns.replace(/18px/g, 'var(--ps)'); });
+    for (var sz = FACT_FULL; sz >= FACT_FLOOR; sz--) { p.style.setProperty('--ps', sz + 'px'); if (!over()) return; }
+    clearPic();
+    p.dataset.fact = 'off';
+  }
+  // Whatever changes the room (a resize, Aa, a late font): the crowd first, without the picture, then the picture again.
+  function refit() {
+    if (factOf(Q) && (state === 'done' || state === 'wrong') && $('game').classList.contains('active')) { clearPic(); fitCrowd(); factPic(); }
+    else fitCrowd();
+  }
+
   // Winner stays on, the crowd (decoration only: nothing here reads or writes the score or the counts). From question 11
   // it cheers; each right answer after question 10 adds a thingy, the next colour in order, and every one is drawn
   // (CROWD-FILL, 26 Nov 2026: no cap, no "+n"). The cheer is the line for the largest size the crowd has reached.
@@ -1099,9 +1147,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (fits(mid / 2)) lo = mid; else hi = mid; }
     c.style.setProperty('--ts', (lo / 2) + 'px');
   }
-  window.addEventListener('resize', fitCrowd);
+  window.addEventListener('resize', refit);
   if (window.ResizeObserver) (function () {
-    var ro = new ResizeObserver(fitCrowd);
+    var ro = new ResizeObserver(refit);
     for (var el = $('qcard').firstElementChild; el && el.id !== 'crowd'; el = el.nextElementSibling) ro.observe(el);
   })();
   // The run-ending wrong answer: the whole crowd faints (reduced motion: lies down at once).
@@ -1244,6 +1292,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, label: runOver ? 'See results →' : 'Next →' });
     congaFit();
     fitCrowd();
+    factPic();
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('pic') });
   }
   // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
@@ -1421,7 +1470,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       end: function () { var b = $('endBtn'); if (!b.hidden) b.click(); return !b.hidden; },
       // The crowd at n thingies, past question 10 (a verifier's: a crowd of thousands without playing thousands of
       // questions; decoration only, the score and the counts are untouched). Returns the crowd's number.
-      crowd: function (n) { if (qi > PER && n >= 0) { crowdN = Math.floor(n); drawCrowd(); fitCrowd(); } return crowdN; },
+      crowd: function (n) { if (qi > PER && n >= 0) { crowdN = Math.floor(n); drawCrowd(); refit(); } return crowdN; },
       // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy. line
       // (a verifier's, PRIMARY-FIT-SWEEP): the index in LINES.right of the line a right answer says, in place of a random one.
       answer: function (right, line) {
