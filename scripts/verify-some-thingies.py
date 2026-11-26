@@ -1101,8 +1101,10 @@ def check_crowd(pw, base, html, look, size, mode, out, info):
             # A shorter window shrinks it (resize); the first size brings it back; back at 125 it is 16 px again.
             page.evaluate('ST.ui.crowd(300)')
             a = view()
-            # Short enough that the crowd as it is ends 40 px past the new fold (or 200 px shorter, if that is shorter).
-            page.set_viewport_size({'width': size[0], 'height': int(min(size[1] - 200, size[1] - (a['fold'] - a['end']) - 40))})
+            # Short enough that the crowd as it is ends 40 px past the new fold (or 200 px shorter, if that is shorter),
+            # and HOST_MAX px more: the character beside the question gives way first (SOME-THINGIES-HOST), which can
+            # free up to that much before the crowd has to shrink.
+            page.set_viewport_size({'width': size[0], 'height': int(min(size[1] - 200, size[1] - (a['fold'] - a['end']) - 40 - HOST_MAX))})
             b = view()
             ok = crowd_judge('%s at 300, the window shorter' % tag, b, 300, look, out, seen)
             if ok and not b['w'] < a['w']:
