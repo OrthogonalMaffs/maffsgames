@@ -301,7 +301,7 @@
    "tier": "content"
   },
   "check-large-screen.py": {
-   "how": "chosen from 51 timed unit(s)",
+   "how": "kept from the pack (9 needed)",
    "label": "Large-screen layer (schools/assets/large-screen.js: every MIGRATED page carries the layer's tag once, written from data/large-screen.json; each page's zoom at 1920x955, 2560x1310, 1366x650 and 390x844 equal to this script's own reading of rules a-f; a session played on each page at each size with the answer controls and Next above the fold, no sideways scroll and every media query answering as on the unzoomed page; planted faults caught)",
    "parts": 9,
    "tier": "content"
@@ -457,7 +457,7 @@
    "tier": "content"
   },
   "verify-squared-squirrel.py": {
-   "how": "kept from the pack (3 needed)",
+   "how": "kept from the pack (4 needed)",
    "label": "Football Pitches per Squared Squirrel (Stage 1 the fixed ramp in order; every pool question's key recomputed from its data by units and dimensions, its unit the quantity asked, its named slips recomputed and none equal to the key, Stages 2-3 friendly whole numbers, at least 40 a stage, sessions easiest first; no nonsense unit or squirrel in any question, option, hint or worked line; no formula-triangle wording or drawing; every stage played to its results screen at 1280 and 320 px: the worked example logs nothing, Stage 1's retry keeps the mark, the no-unit \"squirrels\" message loud, spaced from the unit buttons, marking nothing and cleared by picking a unit, the wrong unit marks nothing, named slips, the calculator in Stages 4-5 only, no sideways scroll; fault-injection self-test: twelve planted faults, each caught)",
    "parts": 4,
    "tier": "content"
