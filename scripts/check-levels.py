@@ -94,6 +94,7 @@ sums-in-disguise
 maffscards
 some-thingies
 its-just-base-60-bruv
+d-by-dx-why
 index-laws integration-duel just-pythag-it-bruv like-terms-collector linear-equation-solver log-laws
 maths-court matrix-crunch modular-battle moments-master negative-number-line new-shapes normal-navigator
 partial-fractions-duel percentage-flip prime-factorisation prime-or-composite prisoners-dilemma

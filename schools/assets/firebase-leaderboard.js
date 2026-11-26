@@ -133,6 +133,8 @@
     'pro-stage-1':'Pro · Stage 1','pro-stage-2':'Pro · Stage 2','pro-stage-3':'Pro · Stage 3','pro-stage-4':'Pro · Stage 4',
     // Football Pitches per Squared Squirrel's fifth stage (contract FOOTBALL-PITCHES, 23 Oct 2026; Jon's lane exception, 23:05).
     'stage-5':'Stage 5',
+    // d by dx? Why? Pro mode, Stage 5 (contract D-BY-DX-BUILD; Jon's lane exception, 26 Nov 2026, 20:48).
+    'pro-stage-5':'Pro · Stage 5',
     // It's a SINE!!: one board per level and stage (contract ITS-A-SINE; Jon's lane exception, 17 Nov 2026).
     'gcse-stage-1':'GCSE · Stage 1','gcse-stage-2':'GCSE · Stage 2','gcse-stage-3':'GCSE · Stage 3','gcse-all-three':'GCSE · All three',
     'level3-stage-1':'Level 3 · Stage 1','level3-stage-2':'Level 3 · Stage 2','level3-stage-3':'Level 3 · Stage 3','level3-all-three':'Level 3 · All three',
