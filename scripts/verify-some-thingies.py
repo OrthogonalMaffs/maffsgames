@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing, capped and never scoring; Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -68,11 +68,29 @@ SOME-THINGIES-PERSONALITY (Jon, 21 Nov 2026):
             in order, one group per line at 360 px and at 320 px (or stepped aside after marking at 320 x 568), with Next
             above the fold; Sarge in the top row on a phone and beside the array on a wide screen, Next above the fold for
             every array, his line on a right answer.
-  Crowd     none in questions 1-10; from 11 the cheer and one more thingy per right answer, in colour order, 48 shown and
-            "+n" beyond; the score always the game's; the run-ending wrong answer makes it faint, with the faint line.
+  Crowd     none in questions 1-10; from 11 the cheer and one more thingy per right answer, in colour order, every one
+            drawn; the score always the game's; the run-ending wrong answer makes it faint, with the faint line.
+
+CROWD-FILL (Jon, 25-26 Nov 2026), at 1280 x 720, 1904 x 864 and 375 x 667, in each look:
+  Crowd     a run of 135 right answers: after every answer and on every new question the crowd holds exactly one thingy
+            for each right answer after question 10, in colour order, with no "+n" and no text but the cheer; every
+            thingy the same size, measured here from the DOM against the fold (the screen, less the fixed footer):
+            16 px while the card, crowd and all, ends above the fold; smaller only when 16 px would not, and then the
+            largest half pixel that fits (one half pixel more, set here, must not fit); never under 6 px, where the
+            rows carry on and the page may scroll. Then the crowd at 300 to 12,000 (ST.ui.crowd, the page's hook for
+            this) until each of the three states has been seen: full size, shrunk to fit, and the floor with the card
+            past the fold; back at 125 it is 16 px again; a shorter window shrinks it (re-measured on resize). At
+            every step everything in the card above the crowd is where it is with the crowd taken out, and ends above
+            the crowd's top. The cheer is the contract's line for the largest of 1, 10, 20, 30, 50, 75, 100 reached
+            (written out here, not read from the page), checked at every size from 0 to 125. The accessory and the
+            medal (pro) at full size and shrunk. The slip: the crowd faints with the faint line, still whole, nothing
+            animating. The overtime line at question 11 and the menu note carry Jon's tagline; the results screen
+            reads "You collected n thingies." (kids "!"), "1 thingy" for one, and nothing for none. The time to draw
+            and size the crowd of 120 (the median of five) is printed (and fails over 500 ms: the contract's stop is
+            50 ms).
 
 Work units: "bank" (no browser), "scenes", "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
-"play kids 360x640", "winner 360x640", "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
+"play kids 360x640", "winner 360x640", "crowd <look> <W>x<H>" (one per look and CROWD-FILL size), "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
     python scripts/verify-some-thingies.py --selftest   # the planted faults only
@@ -106,6 +124,26 @@ PHONE = (360, 640)
 WINNER = 'winner %dx%d' % PHONE
 SCENES = 'scenes'
 TURN = 'turn'
+# CROWD-FILL: the contract's sizes, the mode each plays (pro for the medal), and its lines, written out here.
+CROWD_SIZES = [((1280, 720), 'pro-4'), ((1904, 864), 'main-1'), ((375, 667), 'pro-1')]
+CROWD_UNITS = ['crowd %s %dx%d' % (look, sz[0], sz[1]) for look in ('grown', 'kids') for sz, _ in CROWD_SIZES]
+CHEERS = {
+    'grown': {0: 'A crowd is gathering.', 1: 'A crowd is gathering.', 10: 'Word is spreading.', 20: "Someone's selling hot dogs.",
+              30: 'The thingies have formed a fan club.', 50: "Stadium capacity reached. They've opened another stadium.",
+              75: 'Thingies are queuing round the block. The block is concerned.', 100: 'Every thingy on Earth is here. Some came from Mars.'},
+    'kids': {0: 'The crowd goes wild!', 1: 'The crowd goes wild!', 10: 'More thingies are coming!', 20: 'The thingies are dancing!',
+             30: 'A thingy party!', 50: 'Fifty thingies! Wow!', 75: 'The whole town is here!', 100: 'Thingies from space!'},
+}
+TAGLINE = 'how many thingies can you collect'
+MENU_NOTE = 'At least 10 questions, then see how many thingies you can collect: keep going until a slip, or press End. A point for each one right.'
+
+
+def cheer_for(look, n):
+    return CHEERS[look][max(t for t in CHEERS[look] if t <= n)]
+
+
+def collected_line(look, n):
+    return 'You collected %d %s%s' % (n, 'thingy' if n == 1 else 'thingies', '!' if look == 'kids' else '.')
 # SOME-THINGIES-PERSONALITY: the accessory for each of the 10 colours (k1..k10, #866's fixed order: red, orange, amber,
 # green, teal, sky, indigo, purple, pink, brown). Jon's three: the oranges' spiky hair, the blues' glasses, the purples'
 # top hat; the other seven in the contract's order. Each is told by its own shape, read here from the SVG.
@@ -405,7 +443,7 @@ def check_marking(page, html, look, out, info):
             for j, s in enumerate(lines['kids'][k2]):
                 if words(s) > 6:
                     out.append('LINES.kids.%s.%d has %d words' % (k2, j, words(s)))
-        for k2, s in list(lines['kids']['wrong'].items()) + [('stages.' + a, b) for a, b in lines['kids']['stages'].items()]:
+        for k2, s in list(lines['kids']['wrong'].items()) + [('stages.' + a, b) for a, b in lines['kids']['stages'].items()] + [('cheers.' + a, b) for a, b in lines['kids']['cheers'].items()]:
             if words(s) > 6:
                 out.append('LINES.kids.wrong.%s has %d words' % (k2, words(s)))
     every = set(all_lines(L))
@@ -763,8 +801,8 @@ def check_winner(page, look, out):
 
     # (4) the supply: no repeat until every item is used, never the item just answered (main Stage 1 has 22).
     # And the crowd (SOME-THINGIES-PERSONALITY): none in questions 1-10; from 11 the cheer, and one thingy more per right
-    # answer after question 10, the next colour in order; 48 shown at most, "+n" beyond; the score is the game's, never
-    # the crowd's; the run-ending wrong answer makes the crowd faint, with the faint line.
+    # answer after question 10, the next colour in order, every one drawn (CROWD-FILL: no cap, no "+n"); the score is the
+    # game's, never the crowd's; the run-ending wrong answer makes the crowd faint, with the faint line.
     Lw = page.evaluate('ST.lines()')[look]
     CROWD_JS = """() => { const c = document.getElementById('crowd'); const m = document.getElementById('crowdMore');
         return { n: c.querySelectorAll('svg.th').length, more: m ? m.textContent : null, line: (document.getElementById('crowdLine') || {}).textContent || null,
@@ -776,15 +814,15 @@ def check_winner(page, look, out):
         page.evaluate('ST.ui.answer(true)')
         c = page.evaluate(CROWD_JS)
         want = max(0, k - 10)
-        shown = min(want, 48)
-        if c['n'] != shown or (want > 48) != (c['more'] is not None) or (want > 48 and c['more'] != '+%d' % (want - 48)):
-            out.append('%s: after %d right the crowd shows %d thingies and %r, expected %d%s' % (tag, k, c['n'], c['more'], shown, ' and +%d' % (want - 48) if want > 48 else ''))
+        shown = want
+        if c['n'] != want or c['more'] is not None:
+            out.append('%s: after %d right the crowd draws %d thingies and %r, expected %d and no "+n"' % (tag, k, c['n'], c['more'], want))
             break
         if c['ks'] != [(j % 10) + 1 for j in range(shown)]:
             out.append('%s: after %d right the crowd\'s colours are %s, not the fixed order' % (tag, k, c['ks'][:12]))
             break
-        if k > 10 and c['line'] != Lw['cheer']:
-            out.append('%s: at question %d the crowd line is %r, expected LINES.%s.cheer' % (tag, k, c['line'], look))
+        if k > 10 and c['line'] != cheer_for(look, want):
+            out.append('%s: with %d in the crowd the cheer is %r, expected %r' % (tag, want, c['line'], cheer_for(look, want)))
             break
         if page.evaluate('ST.ui.score()') != k:
             out.append('%s: after %d right the score is %d (the crowd must never change it)' % (tag, k, page.evaluate('ST.ui.score()')))
@@ -799,8 +837,8 @@ def check_winner(page, look, out):
     page.evaluate('() => { window.__sub = []; }')
     page.evaluate('ST.ui.answer(false)')
     c = page.evaluate(CROWD_JS)
-    if not c['faint'] or c['line'] != Lw['faint'] or c['n'] != 48:
-        out.append('%s: the run-ending wrong: crowd faint %s, line %r, %d shown; expected fainted, LINES.%s.faint, 48' % (tag, c['faint'], c['line'], c['n'], look))
+    if not c['faint'] or c['line'] != Lw['faint'] or c['n'] != 52:
+        out.append('%s: the run-ending wrong: crowd faint %s, line %r, %d shown; expected fainted, LINES.%s.faint, 52' % (tag, c['faint'], c['line'], c['n'], look))
     still(page, '%s (the crowd fainted)' % tag, out)
     page.evaluate('ST.ui.next()')
     if page.evaluate('ST.ui.score()') != 62 or page.evaluate('window.__sub') != [[SLUG, 'stage-1', 62, 63]]:
@@ -846,6 +884,195 @@ def check_winner(page, look, out):
         page.evaluate('ST.ui.next()')
     page.evaluate('ST.ui.end()')
     page.evaluate("document.getElementById('menuBtn').click()")
+
+
+# ---------------------------------------------------------------- CROWD-FILL
+# The crowd as drawn, measured from the DOM: how many thingies, their sizes, the card's end against the fold, whether one
+# half pixel more would fit (set here, measured, put back), and everything in the card above the crowd with the crowd in
+# and with it taken out.
+CROWD_FILL_JS = r"""() => { const $ = (id) => document.getElementById(id);
+  const c = $('crowd'), card = $('qcard'), ths = [...c.querySelectorAll('svg.th')];
+  const f = document.querySelector('.site-footer');
+  const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  const end = () => card.getBoundingClientRect().bottom + scrollY;
+  const ws = ths.map(t => t.getBoundingClientRect().width), hs = ths.map(t => t.getBoundingClientRect().height);
+  const w = ws.length ? Math.min(...ws) : 0, wmax = ws.length ? Math.max(...ws) : 0;
+  const line = $('crowdLine');
+  const o = { n: ths.length, w: w, wmax: wmax, hmin: hs.length ? Math.min(...hs) : 0, hmax: hs.length ? Math.max(...hs) : 0,
+              end: end(), fold: fold, fits: end() <= fold + 0.5, line: line ? line.textContent : null,
+              other: c.textContent.replace(line ? line.textContent : '', '').trim(), more: !!c.querySelector('.more, #crowdMore'),
+              faint: c.classList.contains('faint'), scrolls: document.documentElement.scrollHeight > innerHeight,
+              order: ths.every((t, i) => (t.getAttribute('class') || '').split(/\s+/).includes('k' + ((i % 10) + 1))),
+              shown: getComputedStyle(c).display !== 'none' };
+  const above = () => { const a = []; for (let e = card.firstElementChild; e && e !== c; e = e.nextElementSibling) { const r = e.getBoundingClientRect();
+      a.push([e.id || e.className, Math.round(r.left * 10), Math.round((r.top + scrollY) * 10), Math.round(r.width * 10), Math.round(r.height * 10)]); }
+    const nb = document.querySelector('#feedback .maffs-next, #nextBtn'); if (nb) { const r = nb.getBoundingClientRect(); a.push(['Next', Math.round(r.left * 10), Math.round((r.top + scrollY) * 10), Math.round(r.width * 10), Math.round(r.height * 10)]); }
+    return a; };
+  const withCrowd = above();
+  o.aboveEnd = Math.max(...withCrowd.map(r => (r[2] + r[4]) / 10));
+  o.top = c.getBoundingClientRect().top + scrollY;
+  if (ths.length && w < 16) { const was = c.style.getPropertyValue('--ts'); c.style.setProperty('--ts', (w + 0.5) + 'px'); o.biggerFits = end() <= fold + 0.5; c.style.setProperty('--ts', was); }
+  const d = c.style.display; c.style.display = 'none'; const without = above(); c.style.display = d;
+  o.moved = withCrowd.filter((r, i) => JSON.stringify(r) !== JSON.stringify(without[i])).map(r => r[0]);
+  return o; }"""
+FRAMES_JS = "() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))"
+
+
+def crowd_judge(tag, c, want, look, out, seen, cheer=True):
+    """One view of the crowd against the contract. Returns False at the first finding (the unit stops there)."""
+    n0 = len(out)
+    if c['n'] != want or c['more'] or c['other']:
+        out.append('%s: the crowd draws %d thingies%s, expected %d and no "+n"' % (tag, c['n'], (' and %r' % c['other']) if c['other'] or c['more'] else '', want))
+    elif want and not c['order']:
+        out.append('%s: the crowd\'s colours are not in the fixed order' % tag)
+    elif want:
+        if c['w'] < 6 - 0.01 or c['hmin'] < 6 - 0.01:
+            out.append('%s: thingies are drawn at %.1f px, below the 6 px floor (%d in the crowd)' % (tag, min(c['w'], c['hmin']), want))
+        elif c['wmax'] - c['w'] > 0.01 or c['hmax'] - c['hmin'] > 0.01 or abs(c['w'] - c['hmin']) > 0.01 or c['wmax'] > 16.01:
+            out.append('%s: thingies are not one size (%.1f to %.1f px wide, %.1f to %.1f px tall; 16 px at most)' % (tag, c['w'], c['wmax'], c['hmin'], c['hmax']))
+        elif c['w'] > 15.99:
+            seen.add('full')
+            if not c['fits']:
+                out.append('%s: %d thingies at 16 px end at %.0f px, past the fold at %.0f px: they should have shrunk' % (tag, want, c['end'], c['fold']))
+        elif c['biggerFits']:
+            out.append('%s: %d thingies are %.1f px though %.1f px fits above the fold: shrunk further than the room needs' % (tag, want, c['w'], c['w'] + 0.5))
+        elif c['fits']:
+            seen.add('shrunk')
+        elif c['w'] > 6.01:
+            out.append('%s: %d thingies at %.1f px end at %.0f px, past the fold at %.0f px, above the 6 px floor' % (tag, want, c['w'], c['end'], c['fold']))
+        else:
+            seen.add('floor')
+    if len(out) == n0 and c['moved']:
+        out.append('%s: with %d in the crowd, %s is not where it is without the crowd' % (tag, want, ', '.join(c['moved'])))
+    if len(out) == n0 and c['shown'] and c['top'] < c['aboveEnd'] - 0.5:
+        out.append('%s: the crowd starts at %.0f px, over the card\'s content, which ends at %.0f px' % (tag, c['top'], c['aboveEnd']))
+    if len(out) == n0 and cheer and c['line'] != cheer_for(look, want):
+        out.append('%s: with %d in the crowd the cheer is %r, expected %r' % (tag, want, c['line'], cheer_for(look, want)))
+    return len(out) == n0
+
+
+def check_crowd(pw, base, html, look, size, mode, out, info):
+    tag = 'crowd %s %dx%d' % (look, size[0], size[1])
+    br, page, errs = open_page(pw, base, html, size, '#kids/Maple' if look == 'kids' else '')
+    seen, cheered = set(), set()
+    view = lambda: (page.evaluate(FRAMES_JS), page.evaluate(CROWD_FILL_JS))[1]
+    results = lambda: page.evaluate("""() => { const e = document.getElementById('collected');
+        return { on: document.getElementById('results').classList.contains('active'), hidden: e.hidden || getComputedStyle(e).display === 'none', text: e.textContent,
+                 after: !!(document.getElementById('endLine').compareDocumentPosition(e) & Node.DOCUMENT_POSITION_FOLLOWING) }; }""")
+    try:
+        L = page.evaluate('ST.lines()')[look]
+        note = page.evaluate("document.getElementById('menuNote').textContent")
+        if note != MENU_NOTE:
+            out.append('%s: the menu note reads %r, expected the contract\'s' % (tag, note))
+        # No crowd, no line: 10 right, a slip at 11.
+        page.evaluate("(m) => ST.ui.start(m)", mode)
+        for k in range(1, 12):
+            if k == 11:
+                say = page.evaluate("document.getElementById('say').textContent")
+                if say != L['overtime'] or TAGLINE not in say.lower():
+                    out.append('%s: at question 11 the line is %r, expected LINES.%s.overtime with Jon\'s tagline' % (tag, say, look))
+            page.evaluate('(r) => ST.ui.answer(r)', k <= 10)
+            page.evaluate('ST.ui.next()')
+        r = results()
+        if not r['on'] or not r['hidden'] or r['text']:
+            out.append('%s: a run with no crowd: the results screen\'s collected line is %r (hidden %s), expected none' % (tag, r['text'], r['hidden']))
+        page.evaluate("document.getElementById('menuBtn').click()")
+        # One thingy: 11 right, a slip at 12.
+        page.evaluate("(m) => ST.ui.start(m)", mode)
+        for k in range(1, 13):
+            page.evaluate('(r) => ST.ui.answer(r)', k <= 11)
+            page.evaluate('ST.ui.next()')
+        r = results()
+        if not r['on'] or r['hidden'] or r['text'] != collected_line(look, 1) or not r['after']:
+            out.append('%s: a run with one in the crowd: the results screen reads %r (hidden %s), expected %r under the end line' % (tag, r['text'], r['hidden'], collected_line(look, 1)))
+        page.evaluate("document.getElementById('menuBtn').click()")
+
+        # The long run: 135 right answers, the crowd judged after each answer and on each new question.
+        page.evaluate("(m) => ST.ui.start(m)", mode)
+        ok = True
+        for k in range(1, 136):
+            want = max(0, k - 10)
+            page.evaluate('ST.ui.answer(true)')
+            if want == 120:
+                # Drawing and sizing the crowd of 120, laid out: the median of five.
+                ms = page.evaluate("""() => { const ts = []; for (let i = 0; i < 5; i++) { const t = performance.now(); ST.ui.crowd(120); document.body.offsetHeight; ts.push(performance.now() - t); }
+                    return ts.sort((a, b) => a - b)[2]; }""")
+                info.setdefault('crowd ms', []).append(ms)
+                if ms > 500:
+                    out.append('%s: drawing the crowd of 120 took %.0f ms' % (tag, ms))
+            c = view()
+            if k <= 10:
+                if c['n'] or c['line'] is not None:
+                    out.append('%s: a crowd (%d thingies, line %r) at question %d' % (tag, c['n'], c['line'], k))
+                    ok = False
+            else:
+                ok = crowd_judge('%s after %d right' % (tag, k), c, want, look, out, seen)
+                cheered.add(want)
+            if ok and page.evaluate('ST.ui.score()') != k:
+                out.append('%s: after %d right the score is %d (the crowd must never change it)' % (tag, k, page.evaluate('ST.ui.score()')))
+                ok = False
+            if not ok:
+                break
+            if want in (1, 55, 125):
+                check_thingies(page, '#crowd', mode.startswith('pro'), '%s (%d in the crowd)' % (tag, want), out)
+            page.evaluate('ST.ui.next()')
+            if k >= 10 and not crowd_judge('%s question %d' % (tag, k + 1), view(), want, look, out, seen):
+                ok = False
+                break
+        if ok and not {0, 1, 9, 10, 20, 30, 50, 75, 100} <= (cheered | {0}):
+            out.append('%s: the cheer was not checked at every threshold' % tag)
+        if ok:
+            # Thousands, by the page's hook, until full size, shrunk to fit and the floor have each been seen.
+            for n in (300, 700, 1500, 3000, 6000, 12000):
+                if page.evaluate('(n) => ST.ui.crowd(n)', n) != n:
+                    out.append('%s: ST.ui.crowd(%d) did not set the crowd' % (tag, n))
+                    ok = False
+                    break
+                c = view()
+                ok = crowd_judge('%s at %d' % (tag, n), c, n, look, out, seen)
+                if not ok:
+                    break
+                if 'shrunk' in seen and n <= 3000 and c['w'] < 15.99:
+                    check_thingies(page, '#crowd', mode.startswith('pro'), '%s (%d in the crowd, %.1f px)' % (tag, n, c['w']), out)
+                if 'floor' in seen:
+                    if not c['scrolls']:
+                        out.append('%s at %d: at the floor, past the fold, the page does not scroll' % (tag, n))
+                    break
+            if ok and seen != {'full', 'shrunk', 'floor'}:
+                out.append('%s: saw only %s of full size, shrunk to fit and the floor' % (tag, sorted(seen)))
+        if ok:
+            # A shorter window shrinks it (resize); the first size brings it back; back at 125 it is 16 px again.
+            page.evaluate('ST.ui.crowd(300)')
+            a = view()
+            # Short enough that the crowd as it is ends 40 px past the new fold (or 200 px shorter, if that is shorter).
+            page.set_viewport_size({'width': size[0], 'height': int(min(size[1] - 200, size[1] - (a['fold'] - a['end']) - 40))})
+            b = view()
+            ok = crowd_judge('%s at 300, the window shorter' % tag, b, 300, look, out, seen)
+            if ok and not b['w'] < a['w']:
+                out.append('%s: 300 thingies are %.1f px, and %.1f px in a shorter window: not re-measured on resize' % (tag, a['w'], b['w']))
+            page.set_viewport_size({'width': size[0], 'height': size[1]})
+            page.evaluate('ST.ui.crowd(125)')
+            c = view()
+            ok = ok and crowd_judge('%s back at 125' % tag, c, 125, look, out, seen)
+        if ok:
+            # The slip: the crowd faints, whole; then the results screen counts it.
+            page.evaluate('ST.ui.answer(false)')
+            c = view()
+            if not c['faint'] or c['line'] != L['faint']:
+                out.append('%s: the run-ending wrong: crowd faint %s, line %r; expected fainted, LINES.%s.faint' % (tag, c['faint'], c['line'], look))
+            crowd_judge('%s fainted' % tag, c, 125, look, out, seen, cheer=False)
+            still(page, '%s (the crowd fainted)' % tag, out)
+            page.evaluate('ST.ui.next()')
+            r = results()
+            if not r['on'] or r['hidden'] or r['text'] != collected_line(look, 125) or not r['after']:
+                out.append('%s: after 125 in the crowd the results screen reads %r (hidden %s), expected %r under the end line' % (tag, r['text'], r['hidden'], collected_line(look, 125)))
+            if page.evaluate('ST.ui.score()') != 135:
+                out.append('%s: 135 right then a slip: the score is %d' % (tag, page.evaluate('ST.ui.score()')))
+    except Exception as e:  # noqa: BLE001
+        out.append('%s threw: %s' % (tag, str(e).splitlines()[0][:220]))
+    out.extend('page error (%s): %s' % (tag, e) for e in errs if 'production host' not in e)
+    br.close()
+    info['crowd'] = info.get('crowd', 0) + 1
 
 
 CONGA_JS = r"""() => { const line = document.getElementById('conga');
@@ -1092,6 +1319,11 @@ def check(html, out, units, shard=None):
                         except Exception as e:  # noqa: BLE001
                             out.append('scenes threw: %s' % str(e).splitlines()[0][:220])
                         continue
+                    if uid.startswith('crowd '):
+                        _, look, wh = uid.split(' ')
+                        sz = tuple(int(x) for x in wh.split('x'))
+                        check_crowd(pw, base, html, look, sz, dict(CROWD_SIZES)[sz], out, info)
+                        continue
                     if uid.startswith('fit '):
                         _, look, m = uid.split(' ')
                         try:
@@ -1185,6 +1417,16 @@ PLANTS = [
     ('the crowd changing the score',
      edit("if (right && qi > PER) { crowdN++; drawCrowd(); }", "if (right && qi > PER) { crowdN++; score++; drawCrowd(); }"),
      WINNER, r'the score is \d+ \(the crowd must never change it\)'),
+    # CROWD-FILL's three.
+    ('the crowd capped at 48 again',
+     edit("for (var i = 0; i < crowdN; i++) h += thingy((i % 10) + 1);", "for (var i = 0; i < Math.min(crowdN, 48); i++) h += thingy((i % 10) + 1);"),
+     'crowd grown 375x667', r'after 59 right: the crowd draws 48 thingies, expected 49'),
+    ('a thingy drawn below 6 px',
+     edit("var CROWD_FULL = 16, CROWD_FLOOR = 6, crowdN = 0;", "var CROWD_FULL = 16, CROWD_FLOOR = 4, crowdN = 0;"),
+     'crowd kids 375x667', r'thingies are drawn at [45]\.\d px, below the 6 px floor'),
+    ('the cheer stuck on its first line',
+     edit("if (crowdN >= t) line = L.cheers[t];", "if (crowdN >= t && t < 10) line = L.cheers[t];"),
+     'crowd grown 375x667', r"with 10 in the crowd the cheer is 'A crowd is gathering\.', expected 'Word is spreading\.'"),
     # SOME-THINGIES-TURN-LABELS.
     ('labels left visible during the turn',
      lambda html, what: pc.apply_plant(pc.apply_plant(html,
@@ -1235,6 +1477,7 @@ def main():
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
     units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES, TURN]
+    units += CROWD_UNITS
     units += ['fit %s %s' % (look, m) for look in ('grown', 'kids') for m in MODES]
     if args.selftest:
         units = []
@@ -1259,6 +1502,9 @@ def main():
         print('%s: the start screen crowd (Start above the fold at every phone-fit size), the conga line (one group per line on a phone, Next above the fold) and Sarge (Next above the fold), every thingy in its own colour\'s accessory, nothing moving under reduced motion' % SLUG)
     if 'winner' in info:
         print('%s: winner stays on (at least 10, then to the first wrong or End; no End before 11; the supply never repeats at once) and the Stage 3 scaffold (3, 2, then 1 steps; steps never score)' % SLUG)
+    if 'crowd' in info:
+        print('%s: the crowd at %d size-and-look pairs: every thingy drawn through 135 right answers and to the floor, 16 px until the screen is full, then the largest size that fits, never under 6 px, nothing above it moved; the cheer by its size; the count on the results screen; the crowd of 120 drawn and sized in %s ms'
+              % (SLUG, info['crowd'], ', '.join('%.1f' % m for m in info.get('crowd ms', []))))
     if 'fit' in info:
         print('%s: every item above the fold at %dx%d, speaker showing: %d item views, %d feedback variants, %d controls measured (the looks and stages in this shard)'
               % (SLUG, PHONE[0], PHONE[1], info['fit']['items'], info['fit']['variants'], info['fit']['measures']))
