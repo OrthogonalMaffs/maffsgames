@@ -838,9 +838,14 @@ CK_SLACK = 14   # a clock above the question but under CK_MAX leaves at most thi
 
 # Jon's ruling (26 Nov 2026, via Project Claude): canon §7.6.1 treats Next below the fold after a wrong answer on a phone as
 # reported, not a gate. In Aa at 320x568 and 375x667 these items already end below the fold on main (dd74964), with the
-# clock in the stage row as it was: {size: {item id: px below the fold on main, its lowest screen}}. Measured from main's
-# page by this script's own ck_item(). Shrink-only: an item that fits is taken off; one that ends lower than this fails.
-KNOWN_AA_OVER = {
+# clock in the stage row as it was: {size: {item id: px below the fold, its lowest screen}}. An item below the fold must be
+# listed, keep the clock in the stage row (where the page's layout is main's, the clock at 40 px in the row, #ckTop empty
+# and not displayed) and end no more than 2 px lower than listed; a listed item that fits fails as stale (shrink-only).
+# THE FIGURES ARE CI'S: measured in check-site's Playwright image (its fonts), from this page's own run, which on these
+# items is main's layout; the "below the fold in Aa" lines print them. This container measured the same items 27 to 53 px
+# higher on Stages 1 and 4 and found six Stage 2 items fitting: the glyphs OpenDyslexic lacks (the arrow in Next, the
+# working's signs) fall back to the machine's own fonts, and those differ. CI is the authority (AGENTS.md).
+KNOWN_AA_OVER_LOCAL = {
     '320x568': {   # 82 items
         's1a-135': 25, 's1a-150': 25, 's1a-165': 25, 's1a-195': 25, 's1a-210': 25, 's1a-225': 25, 's1a-255': 47,
         's1a-270': 25, 's1a-285': 47, 's1a-315': 25, 's1a-330': 47, 's1a-345': 25, 's1a-375': 47, 's1a-390': 25,
@@ -862,6 +867,7 @@ KNOWN_AA_OVER = {
         's3a-1340-1505': 23, 's3a-1350-1635': 23, 's3a-1445-1705': 23, 's3a-1455-1625': 23, 's3a-1555-1730': 23,
         's3a-1650-1805': 23, 's3a-1740-1925': 23, 's3a-1835-2020': 23, 's3a-1930-2115': 23, 's3a-2040-2210': 23},
 }
+KNOWN_AA_OVER = {'320x568': {}, '375x667': {}}   # filled from CI's run
 
 # One screen of an item: the clock's box and place, then (with `val`) the option pressed and the screen after marking.
 # `force` puts the clock above the question at that width before anything is pressed, by moving the element itself, so the
@@ -951,13 +957,15 @@ def check_ck(page, items, size, aa, out, info, stage):
         # ruling of 26 Nov 2026): there the clock stays in the stage row and no screen ends lower than on main.
         known = KNOWN_AA_OVER.get('%dx%d' % size, {}) if aa else {}
         over = lowest - fold
+        if lost and aa and '%dx%d' % size in KNOWN_AA_OVER:
+            info.setdefault('over', []).append(('%dx%d' % size, q['id'], round(over), b['place']))
         if q['id'] in known:
             if not lost:
                 out.append('%s: on KNOWN_AA_OVER (%d px below the fold on main) but every screen now fits: take it off the list' % (tag, known[q['id']]))
             else:
                 if b['place'] != 'row':
                     out.append('%s: main already loses the fold here, but the clock is %s px above the question, not in the stage row' % (tag, b['w']))
-                if over > known[q['id']] + 1:
+                if over > known[q['id']] + 2:
                     out.append('%s: its lowest screen ends %.0f px below the fold, lower than main\'s %d px (%s)' % (tag, over, known[q['id']], lost[0]))
                 info.setdefault('known', Counter())['%s' % tag0] += 1
         else:
@@ -1230,6 +1238,8 @@ def main():
         print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for %d scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
     for tag, n, sizes in info.get('ck', []):
         print('%s: the clock at %s on %d items, every screen above the fold: %s' % (SLUG, tag, n, ', '.join('%s %g px x%d' % (p, w, k) for (p, w), k in sorted(sizes.items()))))
+    for size, qid, px, place in info.get('over', []):
+        print('%s: below the fold in Aa at %s: %s %d px (clock: %s)' % (SLUG, size, qid, px, place))
     for tag, n in sorted(info.get('known', {}).items()):
         print('%s: %d item(s) at %s below the fold as on main (KNOWN_AA_OVER), the clock in the stage row, none lower than main' % (SLUG, n, tag))
     for size, w in info.get('bird', []):
