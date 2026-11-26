@@ -881,8 +881,9 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
      result shows above the fold. So: at full size, read which of those a no-result day keeps above the fold (the panel
      is set to its no-result words for the reading, then put back, before anything paints); if today's panel pushes
      one of them, or the Play button, under the fold, the art shrinks, height and cards together (--as), to the largest
-     size at which they fit, never under ART_FLOOR, never hidden. A control that would be under the fold even with the
-     art at its floor (a long line of Jon's does that) is not shrunk for. Run after the panel is drawn, when the
+     size at which they fit, never under ART_FLOOR, never hidden. Anything that would be under the fold even with the
+     art at its floor is not shrunk for (a control under a long line of Jon's; the Play button on a small phone, Jon's
+     Amendment 1): the art then keeps the size the rest needs. Run after the panel is drawn, when the
      panel changes size (daily.json arriving, Aa, a late font, the menu shown again) and on resize. */
   var ART_FLOOR = 0.4;
   function fitArt() {
@@ -903,7 +904,9 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     if (fits()) return;
     var lo = ART_FLOOR * 100, hi = 100;                       // in hundredths: hi does not fit; lo fits, or is the floor
     size(lo);
-    keep = keep.filter(function (el) { return el === play || above(el); });
+    keep = keep.filter(above);
+    size(hi);
+    if (fits()) return;                                       // nothing left that shrinking would bring back: full size
     while (hi - lo > 1) { var mid = (lo + hi) >> 1; size(mid); if (fits()) lo = mid; else hi = mid; }
     size(lo);
   }
