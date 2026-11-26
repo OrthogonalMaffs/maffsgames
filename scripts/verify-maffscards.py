@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; today's deal: the date-to-code rule against this script's own for 400 days across both clock changes, the same code in two loads, main / ten / hard; every line of the pool verbatim from the contract and every number in one against cards.json; every state of the panel and every branch of the results line; never on the leaderboard, mode daily; the panel and results fit 320x568 and 375x667 in normal and Aa; the start art's three cards (96, 1, 89) equal to cards.json, each beating all 31 other main-deck cards in its category, the title in front, start screen only, no control pushed under the fold at 320x568, 375x667 and 1280x720 in normal and Aa; twenty-three planted faults caught) | | 3
+# ci-shards: MaffsCards game (games/maffscards/: every card pair on every category judged against cards.json, distance lowest; every how line ends on its value; hard Marvin's best category for every card in both decks; Marvin's share of best-category picks at easy and hard against MARVIN_BEST over 2,000 choices each; a simulated typical player's first-to-10 win rate in Jon's bands (easy 60-74%, hard 39-53%); Marvin's lines verbatim from the contract, every condition reachable, none repeated in 300 games; one tap never plays; the 100-round cap; the leaderboard only for first-to-10 wins, with the round count; game_completed's result and tally (correct, questions_answered, questions_correct, detail) for a won and a lost first-to-10 game and entire-deck games, adding up to the rounds played; full first-to-10 games against easy and hard in Chromium; the card and the reveal fit 320x568 in normal and Aa; challenge codes: encode and decode for all 8 settings over 1,003 seeds against this script's own, every single wrong character and neighbouring swap on 200 codes rejected; one key for each of Marvin's challenge decisions; two players with different strategies on one code get the same deal and the same Marvin for every (card, k) both reach, at all 8 settings; a challenge game never on the leaderboard, challenge true or false on both events, never the code; ?c= fills and never starts; normal seeded games equal to the page before challenges for 3 seeds; the challenge section and results line fit 320x568 in normal and Aa; today's deal: the date-to-code rule against this script's own for 400 days across both clock changes, the same code in two loads, main / ten / hard; every line of the pool verbatim from the contract and every number in one against cards.json; every state of the panel and every branch of the results line; never on the leaderboard, mode daily; the panel and results fit 320x568 and 375x667 in normal and Aa; the start art's three cards (96, 1, 89) equal to cards.json, each beating all 31 other main-deck cards in its category, the title in front, start screen only, no control pushed under the fold at 320x568, 375x667, 1280x720 and 1920x1080 in normal and Aa; DAILY-FIT: no unit reads the committed daily.json (a pinned not-played file); at those sizes with no result, Jon lost with the longest pool line and Jon won with a 240-character line, Play today's deal above Jon's line and above the fold where it can be, the art from 40% to full size and never smaller than the room needs; twenty-six planted faults caught) | | 3
 # ci-deps: games/maffscards/ tools/maffscards/ data/maffscards.json schools/assets/firebase-leaderboard.js schools/assets/level.js schools/assets/answer-lock.js docs/handover/contracts/*2026-11-20-maffscards-game.md docs/history/contracts/*2026-11-20-maffscards-game.md docs/handover/contracts/*2026-11-25-daily-deal.md docs/history/contracts/*2026-11-25-daily-deal.md .claude/rules/game-roster.md scripts/plant_common.py
 r"""Independent verification for MaffsCards online (games/maffscards/), contract MAFFSCARDS-GAME, 20 Nov 2026.
 SR-30: checked from its first PR.
@@ -107,19 +107,35 @@ cards.json, never from the page:
             fold; a daily game's results with the longest results line above the fold.
   art       (MAFFSCARDS-START-ART, 25 Nov 2026) the start screen's three card tops behind the title. In Python, from
             cards.json: 96, 1 and 89 are main-deck cards and each beats all 31 others in its category (sum of factors,
-            superpowers, largest prime factor), no ties. In Chromium at 320x568, 375x667 and 1280x720, normal and Aa: the
+            superpowers, largest prime factor), no ties. In Chromium at 320x568, 375x667, 1280x720 and 1920x1080, normal and Aa: the
             cards left to right are 96, 1, 89 with cards.json's nicknames; every number and nickname line shows (the
             topmost element at points along it is that text: not another card, the title or the bar); no card above
             the page; the title block opaque, title and subtitle 4.5:1 on it and in front of the art; aria-hidden; no
             sideways scroll; every control, the title and the subtitle above the fold with #mcArt hidden is above it with
             the art (section headings moved under the fold are reported, not failed). The rise runs once, not looping,
             and its class is gone by 1.7 s; the art is not shown in play or on the results.
+            DAILY-FIT (26 Nov 2026, Amendment 1): at each size and font the panel in three states, set through the
+            page's hooks: not played; Jon lost, on a day the pool gives its longest lost line; Jon won with a
+            240-character line and the rounds. In each: the panel's order is the heading, the sentence, the Play
+            button, then Jon's line and rounds; the art and its three cards show, at 40% to 100% of full size, height
+            and cards together (read from the drawn height and width, never from --as). The art's size is judged by
+            measurement, with --as set here to full size, the floor and one hundredth above the page's: Play today's
+            deal and every start control a no-result day's full-size art keeps above the fold (the screen less the
+            fixed footer) must be above it now wherever the floor would keep them there, and the art is no smaller
+            than that needs. Play today's deal is above the fold at 375x667, and at 1280x720 and 1920x1080 in normal
+            and Aa; at 320x568 and 375x667 Aa (under the fold on a no-result day too) it is no lower than with no
+            result on the same day. A start control a line pushes under the fold is reported, never failed.
+  pinned    open_page answers games/maffscards/daily.json with a pinned not-played file unless a unit passes its own; in
+            dailyui every fetched-file case runs over a stand-in for the committed file that looks like a result for
+            the day, and the page must never show it.
 
 Plants (each must FAIL): distance judged highest-wins; a one-tap play; a repeated line of Marvin's; a submit after a
 loss; Hard back to always best (MARVIN_BEST.hard 1); Easy never best (MARVIN_BEST.easy 0); the random branch choosing the
 best category always; three on game_completed's tally; and for challenges: the check character ignored; Marvin's
 challenge choice drawn from rng; the challenge deal shuffled from rng; the key a sum, not a hash; a challenge game
-submitted to the leaderboard; a normal game drawing once more from rng; and for the start art, 89 changed to 98.
+submitted to the leaderboard; a normal game drawing once more from rng; and for the start art, 89 changed to 98; and for
+DAILY-FIT: Play today's deal back below Jon's line; the art's shrink switched off; open_page's default back to the
+committed daily.json.
 For today's deal (their own unit, dailyplants): the day's code from Math.random; a pool line changed by one word; W8's 252
 changed to 250 in this script's facts table; a stale-date daily.json shown as today's; a 241-character line shown; a daily
 game submitted to the leaderboard.
@@ -370,8 +386,17 @@ def check_data(html, out, info):
 
 
 # ---------------------------------------------------------------- the browser
-def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify', daily=None, tz=None):
-    """daily: (status, body) to answer games/maffscards/daily.json with, or None for the committed file. tz: the device's time zone."""
+# DAILY-FIT (26 Nov 2026): no unit reads the committed games/maffscards/daily.json, which the maffscards-daily workflow
+# rewrites on any day Jon plays. open_page answers the page's request for it with this pinned file unless a unit passes its
+# own. PIN_DAILY is True always; one planted fault (check()'s pin=False) turns it off to prove the check for it works.
+NOT_PLAYED_FILE = (200, json.dumps({'date': None, 'result': None, 'rounds': None, 'line': None}))
+PIN_DAILY = True
+
+
+def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify', daily=None, tz=None, live=None):
+    """daily: (status, body) to answer games/maffscards/daily.json with; None: the pinned not-played file (never the
+    committed one). live: a (status, body) standing in for the committed file, under the pin, for the check that the
+    pin holds. tz: the device's time zone."""
     touch = size[0] <= 600
     ctx = br.new_context(viewport={'width': size[0], 'height': size[1]}, has_touch=touch, is_mobile=touch,
                          reduced_motion='reduce' if still else 'no-preference', **({'timezone_id': tz} if tz else {}))
@@ -384,8 +409,13 @@ def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?c
     page_url = re.compile(r'/games/%s/(\?[^/]*)?$' % SLUG)
     ctx.route(lambda url: bool(page_url.search(url)), lambda route: route.fulfill(
         status=200, content_type='text/html; charset=utf-8', body=html))
+    file_url = re.compile(r'/games/%s/daily\.json(\?.*)?$' % SLUG)
+    if live is not None:            # registered first, so the pin below (the later route runs first) covers it
+        ctx.route(lambda url: bool(file_url.search(url)), lambda route: route.fulfill(
+            status=live[0], content_type='application/json; charset=utf-8', body=live[1]))
+    if daily is None and PIN_DAILY:
+        daily = NOT_PLAYED_FILE
     if daily is not None:
-        file_url = re.compile(r'/games/%s/daily\.json(\?.*)?$' % SLUG)
         ctx.route(lambda url: bool(file_url.search(url)), lambda route: route.fulfill(
             status=daily[0], content_type='application/json; charset=utf-8', body=daily[1]))
     page = ctx.new_page()
@@ -1247,7 +1277,40 @@ def check_fit(br, base, html, game, out, info):
 # Jon, 25 Nov 2026: three card tops fanned behind the title, 96, 1 and 89 left to right, each with the category in which
 # it beats every other main-deck card (Project Claude's measurement, recomputed here from cards.json).
 ART = [(96, 'sof'), (1, 'powers'), (89, 'lpf')]
-ART_SIZES = [(320, 568), (375, 667), (1280, 720)]
+ART_SIZES = [(320, 568), (375, 667), (1280, 720), (1920, 1080)]
+# DAILY-FIT: where Play today's deal must be above the fold (the screen less the fixed footer), as (size, Aa). At the
+# others (Jon's Amendment 1, 26 Nov 2026: it is under the fold there on a no-result day too) it must be no lower than on a
+# no-result day.
+ART_PLAY_STRICT = {((375, 667), False), ((1280, 720), False), ((1280, 720), True), ((1920, 1080), False), ((1920, 1080), True)}
+ART_FLOOR = 0.4
+ART_DAY = '2027-03-05'
+ART_LONG_LINE = ('Marvin wants a recount, a rematch and an apology. ' * 6)[:239] + '.'
+PLAY = 'Play today\u2019s deal'
+# The start screen as it stands, and what the art's size does to it, all measured: the art's scale read from its drawn
+# height and its cards' drawn width against their full sizes (never from --as); the bottom of Play today's deal and of
+# every start control at the page's own scale, at full size, at the floor and one hundredth above the page's scale.
+ART_STATE_JS = r"""() => {
+  window.scrollTo(0, 0);
+  const art = document.getElementById('mcArt'), foot = document.querySelector('.site-footer');
+  const fold = innerHeight - (foot && getComputedStyle(foot).position === 'fixed' ? foot.getBoundingClientRect().height : 0);
+  const wide = matchMedia('(min-width:640px)').matches, fullH = wide ? 30 : 64, fullW = wide ? 124 : 96;
+  const els = [['Play today\u2019s deal', document.getElementById('ddPlay')]];
+  document.querySelectorAll('#optDeck .opt-btn, #optLength .opt-btn, #optMarvin .opt-btn').forEach(b => els.push([b.firstChild.textContent.trim(), b]));
+  els.push(['Deal the cards', document.getElementById('startBtn')]);
+  const bottoms = () => { const o = {}; els.forEach(([n, e]) => { o[n] = e.getBoundingClientRect().bottom + scrollY; }); return o; };
+  const card = art.querySelector('.art-card.c');
+  const was = art.style.getPropertyValue('--as');
+  const scale = art.getBoundingClientRect().height / fullH, cardScale = card.offsetWidth / fullW;
+  const o = { fold: fold, scale: scale, cardScale: cardScale, shown: art.getClientRects().length > 0 && getComputedStyle(art).visibility === 'visible' && +getComputedStyle(art).opacity > 0,
+              cardsShown: [...art.querySelectorAll('.art-card')].every(c => c.offsetWidth > 0 && c.offsetHeight > 0 && c.getBoundingClientRect().top < art.getBoundingClientRect().bottom),
+              status: document.getElementById('ddStatus').textContent, rounds: document.getElementById('ddRounds').hidden ? null : document.getElementById('ddRounds').textContent,
+              order: [...document.querySelectorAll('#daily > *')].map(e => e.id || (e.querySelector('#ddPlay') ? 'play' : e.className || e.tagName.toLowerCase())),
+              now: bottoms() };
+  const at = (k) => { art.style.setProperty('--as', String(k)); return bottoms(); };
+  o.full = at(1); o.floor = at(0.4); o.more = at(Math.min(1, Math.round(scale * 100 + 1) / 100));
+  if (was) art.style.setProperty('--as', was); else art.style.removeProperty('--as');
+  return o;
+}"""
 ART_JS = r"""() => {
   const art = document.getElementById('mcArt'), head = document.querySelector('#menu .header');
   if (!art || !head) return { missing: true };
@@ -1321,11 +1384,69 @@ def check_art(br, base, html, game, out, info):
             out.append('art: %d on %s does not beat %s (it must beat all %d others, no ties)' % (n, key, not_beaten, len(others)))
         info.setdefault('art', []).append('%d beats all %d other main-deck cards on %s (%s)' % (n, len(others), cats[key]['label'], measure(cats, card, key)))
     want = [(n, next(c['nickname'] for c in game['cards'] if c['n'] == n)) for n, _ in ART]
+    # DAILY-FIT: the three states of the panel. Lost: the pool's longest lost line, on a day the page's rule picks it.
+    pool = (daily_pool() or ({'won': [], 'lost': []}, {}))[0]
+    longest = max(pool['lost'] or [''], key=len)
+    lost_day = next((d.isoformat() for d in (DAILY_START + dt.timedelta(days=i) for i in range(DAILY_DAYS)) if pool['lost'] and pool_line(pool, 'lost', d.isoformat()) == longest), None)
+    if lost_day is None:
+        out.append('art: no day in %d on which the pool gives its longest lost line' % DAILY_DAYS)
+        lost_day = ART_DAY
+    states = [('not played', ART_DAY, None, NOT_PLAYED, None),
+              ('Jon lost, the longest pool line', lost_day, {'date': lost_day, 'result': 'lost', 'rounds': 19, 'line': None}, longest.replace('{N}', '19'), None),
+              ('Jon won, a 240-character line', ART_DAY, {'date': ART_DAY, 'result': 'won', 'rounds': 100, 'line': ART_LONG_LINE}, ART_LONG_LINE, 'Jon took 100 rounds.')]
+    frames = "() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)))"
     for size in ART_SIZES:
         for aa in (False, True):
             tag = '%dx%d%s' % (size[0], size[1], ' Aa' if aa else '')
             ctx, page, errs = open_page(br, base, html, size, aa=aa, fonts=True)
+            page.evaluate('MC.daily.ready')
             page.evaluate("document.fonts.ready.then(() => 0)")
+            base_above = None
+            for what, day, file, status, rounds in states:
+                # The no-result panel on this state's own day first (a longer date can wrap the panel's heading).
+                page.evaluate('([o, d]) => { MC.daily.setToday(d); MC.daily.file(o); }', [None, day])
+                page.evaluate(frames)
+                base_play = page.evaluate(ART_STATE_JS)['now'][PLAY]
+                page.evaluate('([o, d]) => { MC.daily.setToday(d); MC.daily.file(o); }', [file, day])
+                page.evaluate(frames)
+                st = page.evaluate(ART_STATE_JS)
+                t = 'art %s, %s' % (tag, what)
+                fold = st['fold']
+                up = lambda b: b <= fold + 0.5
+                if st['status'] != status or st['rounds'] != rounds:
+                    out.append('%s: the panel reads %r and %r, not the state under test' % (t, st['status'][:40], st['rounds']))
+                    continue
+                if st['order'] != ['mode-h', 'p', 'play', 'ddStatus', 'ddRounds']:
+                    out.append("%s: the panel's order is %s, expected the heading, the sentence, the Play button, then Jon's line and rounds" % (t, st['order']))
+                if not st['shown'] or not st['cardsShown']:
+                    out.append('%s: the art or one of its cards is not showing' % t)
+                if st['scale'] < ART_FLOOR - 0.005 or st['cardScale'] < ART_FLOOR - 0.005 or st['scale'] > 1.005 or abs(st['scale'] - st['cardScale']) > 0.02:
+                    out.append('%s: the art is at %.0f%% of its height and its cards at %.0f%% of their width (together, from %d%% to 100%%)' % (t, 100 * st['scale'], 100 * st['cardScale'], 100 * ART_FLOOR))
+                if base_above is None:              # the no-result day: what its full-size art keeps above the fold
+                    base_above = [k for k, b in st['full'].items() if up(b) and k != PLAY]
+                # What the art answers for: Play today's deal and the no-result day's controls, where the floor would keep them.
+                keep = [k for k in base_above + [PLAY] if up(st['floor'][k])]
+                lost_now = [k for k in keep if not up(st['now'][k])]
+                if lost_now:
+                    out.append('%s: with the art at %.0f%%, under the fold though a smaller art would keep it above: %s' % (t, 100 * st['scale'], ', '.join('%s (%.0f px under)' % (k, st['now'][k] - fold) for k in lost_now)))
+                elif st['scale'] < 0.995 and all(up(st['more'][k]) for k in keep):
+                    out.append('%s: the art is at %.0f%% though one hundredth more keeps everything it answers for above the fold' % (t, 100 * st['scale']))
+                play = st['now'][PLAY]
+                if (size, aa) in ART_PLAY_STRICT:
+                    if not up(play):
+                        out.append("%s: Play today's deal ends at %.0f px, %.0f px under the fold at %.0f px" % (t, play, play - fold, fold))
+                elif play > base_play + 0.5:
+                    out.append("%s: Play today's deal ends at %.0f px, lower than on a no-result day (%.0f px)" % (t, play, base_play))
+                under = ['%s %.0f px' % (k, st['now'][k] - fold) for k in base_above if not up(st['now'][k])]
+                if file is None and under:
+                    out.append('%s: above the fold with a full-size art, under it now: %s' % (t, ', '.join(under)))
+                info.setdefault('artstates', []).append("%s: art %.0f%%; Play today's deal %s%s" % (
+                    t, 100 * st['scale'], ('%.0f px above the fold' % max(0, fold - play)) if up(play) else ('%.0f px under the fold' % (play - fold)),
+                    ('; REPORTED, under the fold because of the line: ' + ', '.join(under)) if under else ''))
+            page.evaluate('([o, d]) => { MC.daily.setToday(d); MC.daily.file(o); }', [None, ART_DAY])
+            page.evaluate(frames)
+            if page.evaluate(ART_STATE_JS)['scale'] < 0.9:
+                out.append('art %s: the art is under 90%% of its size on a no-result day' % tag)
             a = page.evaluate(ART_JS)
             if a.get('missing'):
                 out.append('art %s: no #mcArt or no title block on the start screen' % tag)
@@ -1812,12 +1933,15 @@ def check_daily_ui(br, base, html, out, info):
              ('a file that is not JSON', (200, '{"date": "%s", "result": "lost"' % day), None, NOT_PLAYED),
              ('an empty file', (200, ''), None, NOT_PLAYED),
              ('a server error', (500, body), None, NOT_PLAYED),
-             ('the file as committed, all nulls', None, None, NOT_PLAYED)]
+             ("open_page's pinned file, all nulls", None, None, NOT_PLAYED)]
     for what, daily, tz, status in files:
-        ctx, page, errs = open_page(br, base, html, (390, 844), daily=daily, tz=tz)
+        # Under every one, a stand-in for the committed file that looks like today's result: it must never reach the page.
+        ctx, page, errs = open_page(br, base, html, (390, 844), daily=daily, tz=tz, live=(200, json.dumps({'date': day, 'result': 'lost', 'rounds': 19, 'line': 'THE COMMITTED FILE'})))
         page.evaluate('MC.daily.ready')
         got = page.evaluate('d => { MC.daily.setToday(d); return (%s)(); }' % STATUS_JS, day)
-        if got['status'] != status or page.evaluate("!document.getElementById('loadMsg').hidden"):
+        if got['status'] == 'THE COMMITTED FILE':
+            out.append('daily status, %s: the page read the committed daily.json, not the file this script pins' % what)
+        elif got['status'] != status or page.evaluate("!document.getElementById('loadMsg').hidden"):
             out.append('daily status, %s: the panel says %r, expected %r and no error on screen' % (what, got['status'], status))
         if not page.evaluate("document.getElementById('startBtn').disabled === false && document.getElementById('ddPlay').disabled === false"):
             out.append('daily status, %s: a start button is disabled' % what)
@@ -1896,7 +2020,17 @@ def check_daily_fit(br, base, html, out, info):
 
 
 # ---------------------------------------------------------------- run
-def check(html, out, units, facts=None):
+def check(html, out, units, facts=None, pin=True):
+    """pin=False (one planted fault only): open_page's default goes back to the committed daily.json."""
+    global PIN_DAILY
+    PIN_DAILY = pin
+    try:
+        return _check(html, out, units, facts)
+    finally:
+        PIN_DAILY = True
+
+
+def _check(html, out, units, facts=None):
     info = {}
     game = load(CARDS)
     if 'pool' in units:
@@ -2001,6 +2135,21 @@ PLANTS = [
     # MAFFSCARDS-START-ART
     ('a start-art card number changed (89 to 98)', [('<span class="art-num">89</span>', '<span class="art-num">98</span>')],
      ['art'], r"^art: the numbers left to right are "),
+    # DAILY-FIT
+    ("Play today's deal back below Jon's line",
+     [("""        <div class="ch-row"><button class="btn solid" id="ddPlay" type="button">Play today's deal</button></div>
+        <p class="dd-status" id="ddStatus">Jon hasn't played today's deal yet.</p>
+        <p id="ddRounds" hidden></p>
+""", """        <p class="dd-status" id="ddStatus">Jon hasn't played today's deal yet.</p>
+        <p id="ddRounds" hidden></p>
+        <div class="ch-row"><button class="btn solid" id="ddPlay" type="button">Play today's deal</button></div>
+""")],
+     ['art'], r"^art 375x667, Jon won, a 240-character line: Play today's deal ends at \d+ px, \d+ px under the fold"),
+    ("the art's shrink switched off",
+     [("    function size(k) { art.style.setProperty('--as', String(k / 100)); }", "    function size(k) { art.style.setProperty('--as', '1'); }")],
+     ['art'], r"^art 1280x720, Jon won, a 240-character line: with the art at 100%, under the fold though a smaller art would keep it above"),
+    ("open_page's default back to the committed daily.json", [],
+     ['dailyui'], r"^daily status, open_page's pinned file, all nulls: the page read the committed daily.json", {'pin': False}),
 ]
 # DAILY-DEAL: the unit "dailyplants". A fifth item is passed to check(): W8's fact is planted in this script's table, not the page.
 DAILY_PLANTS = [
@@ -2067,7 +2216,7 @@ def print_golden(html):
 # The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
 # each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
 UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art', 'pool', 'daily', 'dailyui', 'dailyfit']
-PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first seventeen, and today's deal's six
+PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first twenty, and today's deal's six
 
 
 def merge_info(info, part):
@@ -2136,6 +2285,8 @@ def main():
         print('%s: challenge fit %s' % (SLUG, f))
     for f in info.get('art', []):
         print('%s: start art: %s' % (SLUG, f))
+    for f in info.get('artstates', []):
+        print('%s: start %s' % (SLUG, f))
     for f in info.get('artfit', []):
         print('%s: start art fit %s' % (SLUG, f))
     if 'pool' in info:

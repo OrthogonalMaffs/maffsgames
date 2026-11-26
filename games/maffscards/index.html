@@ -43,24 +43,26 @@ a.back-link:hover{color:var(--text)}
    the title, in the deck's own card style. Each beats every other main-deck card in one category (sum of factors,
    superpowers, largest prime factor); their numbers and nicknames are cards.json's, checked by scripts/verify-maffscards.py
    (unit art). The title block sits in front, solid. Decorative: aria-hidden, no pointer events. On a wide screen the
-   cards rise into the empty middle of the top bar, so the menu moves down only 30 px. ---------- */
+   cards rise into the empty middle of the top bar, so the menu moves down only 30 px. Every length is times --as, the
+   art's scale (DAILY-FIT): 1, or what fitArt() measures, down to 0.4, when the art would push Play today's deal or a
+   start control below the fold. ---------- */
 #menu .header{position:relative;z-index:1;background:var(--bg)}
 /* The art is a picture of the printed deck, so it keeps the deck's Outfit in Aa too: OpenDyslexic's wider letters would
    push the nicknames out of the card tops. Stacked left to right, as a hand is held: 96, then 1, then 89 on top. */
-.mc-art{position:relative;z-index:0;height:64px;pointer-events:none;-webkit-user-select:none;user-select:none;font-family:'Outfit',system-ui,sans-serif}
-.art-card{position:absolute;left:50%;top:2px;bottom:-30px;width:96px;margin-left:-48px;background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:12px;padding:.2rem .25rem 0;text-align:center;transform-origin:50% 100%}
-.art-card.l{transform:translateX(-74px) rotate(-14deg)}
+.mc-art{--as:1;position:relative;z-index:0;height:calc(64px * var(--as));pointer-events:none;-webkit-user-select:none;user-select:none;font-family:'Outfit',system-ui,sans-serif}
+.art-card{position:absolute;left:50%;top:calc(2px * var(--as));bottom:calc(-30px * var(--as));width:calc(96px * var(--as));margin-left:calc(-48px * var(--as));background:var(--surface);color:var(--ink);border:2px solid var(--ink);border-radius:calc(12px * var(--as));padding:calc(.2rem * var(--as)) calc(.25rem * var(--as)) 0;text-align:center;transform-origin:50% 100%}
+.art-card.l{transform:translateX(calc(-74px * var(--as))) rotate(-14deg)}
 .art-card.c{z-index:1}
-.art-card.r{z-index:2;transform:translateX(74px) rotate(14deg)}
-.art-num{display:block;font-weight:800;font-size:1.4rem;line-height:1;letter-spacing:-.02em}
-.art-nick{display:block;font-weight:700;color:var(--accent);font-size:.75rem;line-height:1.1;margin-top:.1rem}
+.art-card.r{z-index:2;transform:translateX(calc(74px * var(--as))) rotate(14deg)}
+.art-num{display:block;font-weight:800;font-size:calc(1.4rem * var(--as));line-height:1;letter-spacing:-.02em}
+.art-nick{display:block;font-weight:700;color:var(--accent);font-size:calc(.75rem * var(--as));line-height:1.1;margin-top:calc(.1rem * var(--as))}
 @media (min-width:640px){
-  .mc-art{height:30px}
-  .art-card{top:-46px;width:124px;margin-left:-62px}
-  .art-card.l{transform:translateX(-96px) rotate(-14deg)}
-  .art-card.r{transform:translateX(96px) rotate(14deg)}
-  .art-num{font-size:1.85rem}
-  .art-nick{font-size:.8rem}
+  .mc-art{height:calc(30px * var(--as))}
+  .art-card{top:calc(-46px * var(--as));width:calc(124px * var(--as));margin-left:calc(-62px * var(--as))}
+  .art-card.l{transform:translateX(calc(-96px * var(--as))) rotate(-14deg)}
+  .art-card.r{transform:translateX(calc(96px * var(--as))) rotate(14deg)}
+  .art-num{font-size:calc(1.85rem * var(--as))}
+  .art-nick{font-size:calc(.8rem * var(--as))}
 }
 @keyframes artRise{from{translate:0 26px;opacity:0}}
 .mc-art.rise .art-card{animation:artRise .6s ease-out both}
@@ -340,9 +342,9 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
       <div class="dd" id="daily">
         <div class="mode-h">Today's deal <span class="dd-date" id="ddDate"></span></div>
         <p>One deal a day, the same for everyone: main deck, first to 10, Marvin on Hard.</p>
+        <div class="ch-row"><button class="btn solid" id="ddPlay" type="button">Play today's deal</button></div>
         <p class="dd-status" id="ddStatus">Jon hasn't played today's deal yet.</p>
         <p id="ddRounds" hidden></p>
-        <div class="ch-row"><button class="btn solid" id="ddPlay" type="button">Play today's deal</button></div>
       </div>
       <div class="mode-h">Deck</div>
       <div class="opts" id="optDeck">
@@ -871,7 +873,45 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
     var took = !!j && j.result === 'won' && line.raw.indexOf('{N}') < 0;       // the line already says how many
     $('ddRounds').hidden = !took;
     $('ddRounds').textContent = took ? 'Jon took ' + j.rounds + ' rounds.' : '';
+    fitArt();
   }
+  /* The start art's scale (DAILY-FIT, 26 Nov 2026), measured, never a breakpoint. The art sits above the title, so its
+     height pushes the whole menu down. It must never put below the fold (the first screen, less a fixed footer):
+     Play today's deal, or a start control (the Deck, Length and Marvin buttons, Deal the cards) that a day with no
+     result shows above the fold. So: at full size, read which of those a no-result day keeps above the fold (the panel
+     is set to its no-result words for the reading, then put back, before anything paints); if today's panel pushes
+     one of them, or the Play button, under the fold, the art shrinks, height and cards together (--as), to the largest
+     size at which they fit, never under ART_FLOOR, never hidden. Anything that would be under the fold even with the
+     art at its floor is not shrunk for (a control under a long line of Jon's; the Play button on a small phone, Jon's
+     Amendment 1): the art then keeps the size the rest needs. Run after the panel is drawn, when the
+     panel changes size (daily.json arriving, Aa, a late font, the menu shown again) and on resize. */
+  var ART_FLOOR = 0.4;
+  function fitArt() {
+    var art = $('mcArt'), play = $('ddPlay');
+    if (!$('menu').classList.contains('active') || !play.getClientRects().length) return;
+    var f = document.querySelector('.site-footer');
+    var fold = window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+    function above(el) { return el.getBoundingClientRect().bottom + window.scrollY <= fold + 0.5; }
+    function size(k) { art.style.setProperty('--as', String(k / 100)); }
+    var controls = [].slice.call(document.querySelectorAll('#optDeck .opt-btn, #optLength .opt-btn, #optMarvin .opt-btn, #startBtn'));
+    size(100);
+    var st = $('ddStatus'), ro = $('ddRounds'), text = st.textContent, hid = ro.hidden;
+    st.textContent = NOT_PLAYED; ro.hidden = true;
+    var keep = controls.filter(above);
+    st.textContent = text; ro.hidden = hid;
+    keep.push(play);
+    function fits() { return keep.every(above); }
+    if (fits()) return;
+    var lo = ART_FLOOR * 100, hi = 100;                       // in hundredths: hi does not fit; lo fits, or is the floor
+    size(lo);
+    keep = keep.filter(above);
+    size(hi);
+    if (fits()) return;                                       // nothing left that shrinking would bring back: full size
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; size(mid); if (fits()) lo = mid; else hi = mid; }
+    size(lo);
+  }
+  window.addEventListener('resize', fitArt);
+  if (window.ResizeObserver) new ResizeObserver(fitArt).observe(document.querySelector('#menu .menu-info'));
   // The one line on a daily game's results. Fewer rounds is better.
   function dailyResult() {
     var j = jonToday(ukToday()), x = G.round, out;
