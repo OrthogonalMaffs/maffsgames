@@ -71,7 +71,7 @@ Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-
 - **Roster:** #113, #114 and #115 are in KS3 Games (38), look signed off by Jon, 2026-11-24. Unlisted is 9.
 - **Amendment 1 (Jon, in session):** check-spec-mapping.py failed the two primary games, which the contract keeps off the spec map. Jon chose "EXCEPTIONS entry (Recommended)"; both are in that script's EXCEPTIONS.
 - **Coverage check:** it needed LEVEL_OVERRIDES entries for the two primary games' stage boards, as the contract allowed.
-- **Todo:** MAFFSCARDS-LIST moved whole; the other two rows keep Jon's LINES rewrites and Miss O'Brien's questions.
+- **Todo:** MAFFSCARDS-LIST moved whole; the other two rows keep Jon's LINES rewrites and the class teacher's questions.
 - **Screenshots:** the three cards at 1366 x 768 and 375 x 667, sent to Jon in session.
 - **Merged** on 24 Nov as ee09c84 (#905) via merge-pr.py, which ended "main ee09c84 run 45497440759: GREEN".
 - **PR head b8569cd:** check-site 45494570251 and phone-fit-full 45494570226, both success.

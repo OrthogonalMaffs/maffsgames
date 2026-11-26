@@ -39,7 +39,7 @@ EXACT CHANGE:
    - "MaffsCards: a number card game against Marvin, the computer. Pick the value you think beats his card: sum of factors, largest prime factor, superpowers and more."
    - "Sums in Disguise: adding within 100 with a fact you already know. Take off the disguise, find the little sum, then put it back on. For primary classes."
    - "Some Thingies: multiplication as equal groups, adding, arrays and times-table facts, the 2, 5 and 10 times tables, then the 3, 4 and 8. For primary classes."
-9. docs/todo.md: rows MAFFSCARDS-LIST, SUMS-IN-DISGUISE-LIST and SOME-THINGIES-LIST: by the TODO-TRIM rule, move the listing part word for word to docs/history/todo-done.md and rewrite each row to what is still owed (e.g. SOME-THINGIES-LIST keeps Miss O'Brien's questions and Jon's LINES rewrites); a row with nothing owed moves whole. Add no new row. home.md entry with the approval verbatim.
+9. docs/todo.md: rows MAFFSCARDS-LIST, SUMS-IN-DISGUISE-LIST and SOME-THINGIES-LIST: by the TODO-TRIM rule, move the listing part word for word to docs/history/todo-done.md and rewrite each row to what is still owed (e.g. SOME-THINGIES-LIST keeps the class teacher's questions and Jon's LINES rewrites); a row with nothing owed moves whole. Add no new row. home.md entry with the approval verbatim.
 10. Merge with python -X utf8 scripts/merge-pr.py <n> --watch --wait 3600 when the Gate is green (per MERGE TIMING); report its last line.
 
 DO NOT TOUCH:
