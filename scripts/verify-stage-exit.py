@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: Stage exit (the shared stage button and the standard back link on every stage game, played in Chromium: shown on the worked example and on a question of all eight games, one tap to the stage picker and one to the portal, no game_completed, no board submission, no score recorded, a pending Next control cleared so it cannot advance a stage that was left; the four Core Maths papers' two-tap Exit paper, in play and on the section banner only, back to the start with nothing recorded and a fresh run after; fits at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught) | | 4
-# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css schools/assets/calculator.js schools/assets/calculator.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/whose-side-are-you-on/ games/i-found-a-mark/ games/free-daily-pizza/ games/who-ate-all-the-pies/ games/cast-away/ games/its-a-sine/ games/i-dropped-my-ice-cream/ games/sums-in-disguise/ games/core-maths-paper1/ games/core-maths-paper2a/ games/core-maths-paper2b/ games/core-maths-paper2c/ games/some-thingies/ games/its-just-base-60-bruv/
+# ci-deps: schools/assets/stage-exit.js schools/assets/stage-exit.css schools/assets/calculator.js schools/assets/calculator.css games/its-on-sale/ games/as-you-can-see/ games/possibly-maybe/ games/hc-factor/ games/y-so-steep/ games/whose-side-are-you-on/ games/i-found-a-mark/ games/free-daily-pizza/ games/who-ate-all-the-pies/ games/cast-away/ games/its-a-sine/ games/i-dropped-my-ice-cream/ games/sums-in-disguise/ games/core-maths-paper1/ games/core-maths-paper2a/ games/core-maths-paper2b/ games/core-maths-paper2c/ games/some-thingies/ games/its-just-base-60-bruv/ games/d-by-dx-why/
 """Verification for the shared stage-exit shell (contract STAGE-EXIT, Jon, 28 Oct 2026).
 
 The stage games hid "Back to Games" while a question was on screen and had no way back to the stage picker,
@@ -49,7 +49,7 @@ from playwright.sync_api import sync_playwright  # noqa: E402
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXEMPT = []
 GAMES = ['its-on-sale', 'as-you-can-see', 'possibly-maybe',
-         'hc-factor', 'y-so-steep', 'whose-side-are-you-on', 'i-found-a-mark', 'free-daily-pizza', 'who-ate-all-the-pies', 'cast-away', 'its-a-sine', 'i-dropped-my-ice-cream', 'sums-in-disguise', 'some-thingies', 'its-just-base-60-bruv']
+         'hc-factor', 'y-so-steep', 'whose-side-are-you-on', 'i-found-a-mark', 'free-daily-pizza', 'who-ate-all-the-pies', 'cast-away', 'its-a-sine', 'i-dropped-my-ice-cream', 'sums-in-disguise', 'some-thingies', 'its-just-base-60-bruv', 'd-by-dx-why']
 SIZES = [(320, 568), (360, 640), (375, 667), (390, 844), (1280, 720)]
 ASSETS = {'stage-exit.js': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.js'),
           'stage-exit.css': os.path.join(ROOT, 'schools', 'assets', 'stage-exit.css')}

@@ -97,6 +97,7 @@ RESULTS = {
     "sums-in-disguise": "results",
     "some-thingies": "results",
     "its-just-base-60-bruv": "results",
+    "d-by-dx-why": "results",
     "maffscards": "results",
 }
 

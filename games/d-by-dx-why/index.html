@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- UNLISTED (contract D-BY-DX-BUILD, 26 Nov 2026): merged for Jon to play; not on the portal, the sitemap or the
+     leaderboard hub until he lists it (todo D-BY-DX). -->
+<meta name="description" content="The power rule, roots and fractions as powers, sin and cos, e and ln. Every wrong answer names the mistake. For Level 3. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/d-by-dx-why/">
+<meta property="og:title" content="Differentiation Game – Level 3 Maths | MaffsGames">
+<meta property="og:description" content="The power rule, roots and fractions as powers, sin and cos, e and ln. Every wrong answer names the mistake. For Level 3. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/d-by-dx-why/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Differentiation Game – Level 3 Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<script src="/schools/assets/fold.js" defer></script>
+<link rel="stylesheet" href="/schools/assets/fold.css">
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), dark row: the one level served is Level 3 (the palette rule), as CAST Away.
+   This game's own tokens: a violet accent (11.0:1 on --bg, 9.6:1 on --surface, 8.4:1 on --surface-alt; dark text on it
+   12.6:1), the marked options' tints and the highlighted table row. The look is a placeholder until Jon has played it. */
+:root{--accent:#c4b5fd;--accent-dim:#2b2750;--on-accent:#0f1420;--right-bg:#143524;--wrong-bg:#3d1a25;--row-hl:#3a3470;--ref-bg:#182033;--ref-edge:#4a4480}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.5rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 .35rem}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.calc-row{text-align:center;margin:.2rem 0 .5rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+/* The Pro switch: a toggle button (aria-pressed). Off on every load, never stored. */
+.pro-row{display:flex;flex-direction:column;align-items:center;gap:.25rem;margin:0 0 .7rem}
+.pro-switch{min-height:44px;padding:.45rem 1.1rem;border-radius:100px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font:inherit;font-weight:700;font-size:.92rem;cursor:pointer}
+.pro-switch:hover{border-color:var(--accent)}
+.pro-switch[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--on-accent)}
+.pro-state{font-size:.82rem;color:var(--muted);text-align:center}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.7rem .8rem;display:flex;flex-direction:column;gap:.5rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em;text-align:center}
+.ask{font-size:1.08rem;line-height:1.5;text-align:center}
+/* The four options: one to a row, or two to a row where every option fits on one line (fold.js decides, .maffs-two-up). */
+.opts{display:flex;flex-direction:column;gap:.45rem}
+.opt{min-height:56px;padding:.3rem .6rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-size:1.3rem;cursor:pointer;font-family:inherit}
+/* An expression is never broken across two lines inside its option. */
+.opt .katex{white-space:nowrap}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt:disabled{cursor:default;opacity:1}
+/* The mark sits in the option's corner, out of the line, so marking an option never changes its width or wraps it. */
+.opt{position:relative}
+.opt::after{content:"\2713";visibility:hidden;position:absolute;top:.1rem;right:.4rem;font-size:.85rem;font-weight:700;line-height:1.2}
+.opt.is-right{border-color:var(--correct);background:var(--right-bg);color:var(--correct)}
+.opt.is-right::after{visibility:visible}
+.opt.is-wrong{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong)}
+.opt.is-wrong::after{content:"\2717";visibility:visible}
+.opt.is-spare{color:var(--muted)}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.3rem}
+.fb-head{font-weight:700;font-size:1.02rem;text-align:center}
+.fb.right .fb-head{color:var(--correct)}
+.fb-err{font-size:1rem;font-weight:700;color:var(--wrong);line-height:1.35}
+.fb-ans{font-size:.98rem;line-height:1.4}
+.worked{font-size:.94rem;line-height:1.45}
+.fb-rows{display:flex;flex-wrap:wrap;align-items:center;gap:.25rem .6rem;font-size:.94rem}
+.fb-rows-h{font-weight:700;color:var(--muted);font-size:.84rem}
+.fb-next{display:flex;justify-content:center}
+.feedback:empty{display:none}
+
+/* The derivative table, as printed on the paper: two columns, six rows, written in x (tableHtml). */
+.dt{border-collapse:collapse;margin:0 auto}
+.dt th,.dt td{border:1px solid var(--border);padding:.3rem .7rem;text-align:center;font-weight:400}
+.dt th{background:var(--surface-alt);font-size:.9rem}
+.dtable .dt td{font-size:1.1rem}
+.dt tr.hl td{background:var(--row-hl);border-color:var(--accent)}
+/* A wrong answer's rows: each a pair of cells as in the table, side by side on one line where two are needed. */
+.fb-row-set{display:inline-flex;gap:.4rem}
+.fb-row{display:inline-flex}
+.fb-row .c{border:1px solid var(--accent);background:var(--row-hl);padding:.2rem .6rem;text-align:center}
+.fb-row .c+.c{border-left:0}
+/* The table's panel: the shared reference card (.maffs-ref, fold.css; canon §7.6.2). Narrower than 1024 px it is the
+   closed "Derivative table" button under the options; from 1024 px it is open in its own column beside the question. */
+.dtable{margin-top:.5rem}
+.dtable .maffs-ref-body{overflow-x:auto}
+@media (min-width:1024px){
+  body.with-table .container{max-width:1060px}
+  body.with-table .screen:not(#game){max-width:720px;margin-left:auto;margin-right:auto}
+  .play.has-table{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:1rem;align-items:start}
+  .play.has-table .dtable{margin-top:0}
+}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.8rem}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.5rem .55rem;gap:.4rem}
+  .ask{font-size:1.02rem}
+}
+@media (max-height:620px){.hud-label{display:none}.stage-label{display:none}}
+/* The phone rule (canon §7.6.1: hide what cannot be used): while a wrong answer's feedback shows, the two options that are
+   neither the one chosen nor the answer go, and the two that stay share one row (where both fit on it), so the line, the answer, the working, the
+   table rows and Next fit above the fold; all four are back with the next question. A fixed rule on the screen's size
+   (narrower than 1024 px, or 660 px tall or less), so the same screen always gets the same layout. A laptop (1280 x 720,
+   1366 x 768) has the room and keeps all four. */
+@media (max-width:1023px),(max-height:660px){
+  .qcard.fb-open .opt.is-spare{display:none}
+  .qcard.fb-open .opts{display:flex;flex-direction:row;flex-wrap:wrap;gap:.45rem}
+  .qcard.fb-open .opts .opt{flex:1 1 auto;width:auto}
+  .qcard.fb-open .stage-label{display:none}
+}
+/* A short screen (640 px tall or less, a 320 x 568 phone): the feedback sits closer together and the two marked options,
+   locked by then, are 44 px tall. The same text at the same size. The HUD row stays 44 px tall, the height of the two
+   exit controls in it (stage-exit.js), so they never reach past it. */
+@media (max-height:640px){
+  body.playing .container{padding-top:.2rem}
+  .hud{margin-bottom:.1rem;padding-top:0;padding-bottom:0;min-height:44px}
+  body:not(.accessible) .qcard.fb-open .ask{line-height:1.3}
+  body:not(.accessible) .qcard.fb-open .fb-err{line-height:1.2}
+  body:not(.accessible) .qcard.fb-open .worked{line-height:1.28}
+  body:not(.accessible) .qcard.fb-open .fb-ans{line-height:1.25}
+  .qcard.fb-open{gap:.2rem;padding-top:.25rem;padding-bottom:.25rem}
+  .qcard.fb-open .opt{min-height:44px}
+  .qcard.fb-open .fb{padding:.2rem .5rem;gap:.1rem}
+  .qcard.fb-open .fb-next .maffs-next{margin-top:4px;margin-bottom:0}
+}
+/* Canon §7.6.1's fixed rule for a short screen (600 px tall or less): what still cannot fit moves below Next. Here that is
+   the table's rows, on a 320 x 568 phone. The visual order only: the reading order stays line, answer, working, rows, Next. */
+@media (max-height:600px){.fb-rows{order:1}}
+@media (min-width:1024px){
+  .ask{font-size:clamp(1.08rem,2.6vh,1.4rem)}
+}
+body.accessible p,body.accessible .fb-err,body.accessible .fb-ans,body.accessible .worked,body.accessible li{line-height:1.5}
+/* Aa on a phone: OpenDyslexic is wide, so a wrong answer's lines wrap more. The feedback sits closer together (the same
+   text at the same size) so that the longest, a Stage 5 sum with a constant, still ends above the fold at 375 x 667. */
+@media (max-width:420px){
+  body.accessible .hud-label,body.accessible .stage-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+  body.accessible .fb-err,body.accessible .fb-ans,body.accessible .worked{line-height:1.4}
+  body.accessible .qcard.fb-open{gap:.3rem}
+  body.accessible .fb{padding:.3rem .5rem;gap:.2rem}
+}
+body.accessible .katex{letter-spacing:normal;word-spacing:normal}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="../../schools/assets/mathtext.js"></script>
+<script src="/schools/assets/site-nav.js" data-game-name="d by dx? Why?"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 presses the right option; with i >= 1 it presses the first wrong one, which is marked wrong and waits on Next.
+{
+  "start": "DDX.ui.start('stage-1')",
+  "ready": "!!window.DDX && DDX.ui.state() === 'asking'",
+  "answer": [
+    "DDX.ui.answer(i === 0);"
+  ]
+}
+-->
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>d by dx? Why?</h1><div class="sub">Differentiation for Level 3 engineers: the power rule, roots and fractions, sin and cos, e and ln. The table is there; Pro takes it away.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel">
+      <div class="calc-row"><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <div class="pro-row">
+        <button class="pro-switch" id="proBtn" type="button" aria-pressed="false">Pro: no table</button>
+        <div class="pro-state" id="proState">The derivative table is on screen while you answer.</div>
+      </div>
+      <div class="mode-h">Pick a stage</div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1"><span class="n">1</span><span><span class="t">Power terms</span><span class="d">One term: a number times a power.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2"><span class="n">2</span><span><span class="t">Rewrite first</span><span class="d">Fractions and roots, written as powers first.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3"><span class="n">3</span><span><span class="t">Sin and cos</span><span class="d">Sine and cosine of a multiple of the letter.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4"><span class="n">4</span><span><span class="t">e and ln</span><span class="d">Exponentials and natural logs.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="5"><span class="n">5</span><span><span class="t">Sums of terms</span><span class="d">Two or three terms, one at a time.</span></span></button>
+      </div>
+      <p class="note">8 questions a run, from 12 in each stage. A point for each one right.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/8</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="play" id="play">
+      <div class="qcard" id="qcard">
+        <div class="stage-label" id="stageLabel"></div>
+        <div class="ask" id="ask"></div>
+        <div class="opts maffs-options" id="opts"></div>
+        <div class="feedback" id="feedback" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 8</div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = 'd-by-dx-why', PER = 8, RIGHT_MS = 1000;
+  // Ten boards: one a stage with the table, one a stage in Pro (no table). The board key is the run's analytics mode.
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5',
+    'pro-stage-1', 'pro-stage-2', 'pro-stage-3', 'pro-stage-4', 'pro-stage-5'];
+  // One level of content, no picker: the stages and Pro are boards, not levels.
+  var level = MaffsLevel.resolve({ slug: 'd-by-dx-why', levels: ['level3'], fallback: 'level3',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5',
+      'pro-stage-1', 'pro-stage-2', 'pro-stage-3', 'pro-stage-4', 'pro-stage-5'] });
+  var STAGES = { 1: 'Power terms', 2: 'Rewrite first', 3: 'Sin and cos', 4: 'e and ln', 5: 'Sums of terms' };
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* =====================================================================================================
+     THE BANK: the output of tools/d-by-dx-why/bank.py (contract D-BY-DX-BUILD, 26 Nov 2026), one item a line, exactly as
+     the generator writes it. Never edited by hand: change the generator and embed its output again.
+     scripts/verify-d-by-dx-why.py holds these lines to the contract's SHA-256, differentiates every question in sympy and
+     recomputes every decoy and every TeX string from the item's own terms.
+     ===================================================================================================== */
+  var BANK = [
+{"id":"s1-01","stage":1,"var":"x","form":"wrt","q":[["pow","5","4"]],"qtex":"5x^{4}","prompt":"Differentiate with respect to \\(x\\): \\(y = 5x^{4}\\)","answer":{"tex":"20x^{3}","terms":[["pow","20","3"]]},"decoys":[{"err":"power_kept","tex":"20x^{4}","terms":[["pow","20","4"]]},{"err":"coeff_lost","tex":"4x^{3}","terms":[["pow","4","3"]]},{"err":"new_power_used","tex":"15x^{3}","terms":[["pow","15","3"]]}],"rows":["axn"],"working":["Bring the power down: \\(5 \\times 4 = 20\\)","Take one off the power: \\(4 - 1 = 3\\)","\\(\\dfrac{dy}{dx} = 20x^{3}\\)"]},
+{"id":"s1-02","stage":1,"var":"t","form":"bare","q":[["pow","3","5"]],"qtex":"3t^{5}","prompt":"Differentiate: \\(3t^{5}\\)","answer":{"tex":"15t^{4}","terms":[["pow","15","4"]]},"decoys":[{"err":"power_kept","tex":"15t^{5}","terms":[["pow","15","5"]]},{"err":"coeff_lost","tex":"5t^{4}","terms":[["pow","5","4"]]},{"err":"new_power_used","tex":"12t^{4}","terms":[["pow","12","4"]]}],"rows":["axn"],"working":["Bring the power down: \\(3 \\times 5 = 15\\)","Take one off the power: \\(5 - 1 = 4\\)","\\(\\dfrac{d}{dt}\\left(3t^{5}\\right) = 15t^{4}\\)"]},
+{"id":"s1-03","stage":1,"var":"r","form":"fn","q":[["pow","7","2"]],"qtex":"7r^{2}","prompt":"If \\(f(r) = 7r^{2}\\), find \\(f'(r)\\)","answer":{"tex":"14r","terms":[["pow","14","1"]]},"decoys":[{"err":"power_kept","tex":"14r^{2}","terms":[["pow","14","2"]]},{"err":"coeff_lost","tex":"2r","terms":[["pow","2","1"]]},{"err":"new_power_used","tex":"7r","terms":[["pow","7","1"]]}],"rows":["axn"],"working":["Bring the power down: \\(7 \\times 2 = 14\\)","Take one off the power: \\(2 - 1 = 1\\)","\\(f'(r) = 14r\\)"]},
+{"id":"s1-04","stage":1,"var":"x","form":"wrt","q":[["pow","6","3"]],"qtex":"6x^{3}","prompt":"Differentiate with respect to \\(x\\): \\(y = 6x^{3}\\)","answer":{"tex":"18x^{2}","terms":[["pow","18","2"]]},"decoys":[{"err":"power_kept","tex":"18x^{3}","terms":[["pow","18","3"]]},{"err":"coeff_lost","tex":"3x^{2}","terms":[["pow","3","2"]]},{"err":"new_power_used","tex":"12x^{2}","terms":[["pow","12","2"]]}],"rows":["axn"],"working":["Bring the power down: \\(6 \\times 3 = 18\\)","Take one off the power: \\(3 - 1 = 2\\)","\\(\\dfrac{dy}{dx} = 18x^{2}\\)"]},
+{"id":"s1-05","stage":1,"var":"t","form":"bare","q":[["pow","2","6"]],"qtex":"2t^{6}","prompt":"Differentiate: \\(2t^{6}\\)","answer":{"tex":"12t^{5}","terms":[["pow","12","5"]]},"decoys":[{"err":"power_kept","tex":"12t^{6}","terms":[["pow","12","6"]]},{"err":"coeff_lost","tex":"6t^{5}","terms":[["pow","6","5"]]},{"err":"new_power_used","tex":"10t^{5}","terms":[["pow","10","5"]]}],"rows":["axn"],"working":["Bring the power down: \\(2 \\times 6 = 12\\)","Take one off the power: \\(6 - 1 = 5\\)","\\(\\dfrac{d}{dt}\\left(2t^{6}\\right) = 12t^{5}\\)"]},
+{"id":"s1-06","stage":1,"var":"r","form":"fn","q":[["pow","4","5"]],"qtex":"4r^{5}","prompt":"If \\(f(r) = 4r^{5}\\), find \\(f'(r)\\)","answer":{"tex":"20r^{4}","terms":[["pow","20","4"]]},"decoys":[{"err":"power_kept","tex":"20r^{5}","terms":[["pow","20","5"]]},{"err":"coeff_lost","tex":"5r^{4}","terms":[["pow","5","4"]]},{"err":"new_power_used","tex":"16r^{4}","terms":[["pow","16","4"]]}],"rows":["axn"],"working":["Bring the power down: \\(4 \\times 5 = 20\\)","Take one off the power: \\(5 - 1 = 4\\)","\\(f'(r) = 20r^{4}\\)"]},
+{"id":"s1-07","stage":1,"var":"z","form":"wrt","q":[["pow","9","2"]],"qtex":"9z^{2}","prompt":"Differentiate with respect to \\(z\\): \\(y = 9z^{2}\\)","answer":{"tex":"18z","terms":[["pow","18","1"]]},"decoys":[{"err":"power_kept","tex":"18z^{2}","terms":[["pow","18","2"]]},{"err":"coeff_lost","tex":"2z","terms":[["pow","2","1"]]},{"err":"new_power_used","tex":"9z","terms":[["pow","9","1"]]}],"rows":["axn"],"working":["Bring the power down: \\(9 \\times 2 = 18\\)","Take one off the power: \\(2 - 1 = 1\\)","\\(\\dfrac{dy}{dz} = 18z\\)"]},
+{"id":"s1-08","stage":1,"var":"x","form":"bare","q":[["pow","-3","4"]],"qtex":"-3x^{4}","prompt":"Differentiate: \\(-3x^{4}\\)","answer":{"tex":"-12x^{3}","terms":[["pow","-12","3"]]},"decoys":[{"err":"power_kept","tex":"-12x^{4}","terms":[["pow","-12","4"]]},{"err":"coeff_lost","tex":"4x^{3}","terms":[["pow","4","3"]]},{"err":"new_power_used","tex":"-9x^{3}","terms":[["pow","-9","3"]]}],"rows":["axn"],"working":["Bring the power down: \\(-3 \\times 4 = -12\\)","Take one off the power: \\(4 - 1 = 3\\)","\\(\\dfrac{d}{dx}\\left(-3x^{4}\\right) = -12x^{3}\\)"]},
+{"id":"s1-09","stage":1,"var":"t","form":"fn","q":[["pow","8","3"]],"qtex":"8t^{3}","prompt":"If \\(f(t) = 8t^{3}\\), find \\(f'(t)\\)","answer":{"tex":"24t^{2}","terms":[["pow","24","2"]]},"decoys":[{"err":"power_kept","tex":"24t^{3}","terms":[["pow","24","3"]]},{"err":"coeff_lost","tex":"3t^{2}","terms":[["pow","3","2"]]},{"err":"new_power_used","tex":"16t^{2}","terms":[["pow","16","2"]]}],"rows":["axn"],"working":["Bring the power down: \\(8 \\times 3 = 24\\)","Take one off the power: \\(3 - 1 = 2\\)","\\(f'(t) = 24t^{2}\\)"]},
+{"id":"s1-10","stage":1,"var":"x","form":"bare","q":[["pow","7","1"]],"qtex":"7x","prompt":"Differentiate: \\(7x\\)","answer":{"tex":"7","terms":[["const","7"]]},"decoys":[{"err":"kept_variable","tex":"7x","terms":[["pow","7","1"]]},{"err":"coeff_lost","tex":"1","terms":[["const","1"]]},{"err":"treated_as_constant","tex":"0","terms":[["const","0"]]}],"rows":["x"],"working":["\\(x\\) on its own differentiates to \\(1\\), so the \\(x\\) goes and the number stays: \\(7 \\times 1 = 7\\)","\\(\\dfrac{d}{dx}\\left(7x\\right) = 7\\)"]},
+{"id":"s1-11","stage":1,"var":"t","form":"fn","q":[["pow","12","1"]],"qtex":"12t","prompt":"If \\(f(t) = 12t\\), find \\(f'(t)\\)","answer":{"tex":"12","terms":[["const","12"]]},"decoys":[{"err":"kept_variable","tex":"12t","terms":[["pow","12","1"]]},{"err":"coeff_lost","tex":"1","terms":[["const","1"]]},{"err":"treated_as_constant","tex":"0","terms":[["const","0"]]}],"rows":["x"],"working":["\\(t\\) on its own differentiates to \\(1\\), so the \\(t\\) goes and the number stays: \\(12 \\times 1 = 12\\)","\\(f'(t) = 12\\)"]},
+{"id":"s1-12","stage":1,"var":"r","form":"wrt","q":[["pow","-5","1"]],"qtex":"-5r","prompt":"Differentiate with respect to \\(r\\): \\(y = -5r\\)","answer":{"tex":"-5","terms":[["const","-5"]]},"decoys":[{"err":"kept_variable","tex":"-5r","terms":[["pow","-5","1"]]},{"err":"coeff_lost","tex":"1","terms":[["const","1"]]},{"err":"treated_as_constant","tex":"0","terms":[["const","0"]]}],"rows":["x"],"working":["\\(r\\) on its own differentiates to \\(1\\), so the \\(r\\) goes and the number stays: \\(-5 \\times 1 = -5\\)","\\(\\dfrac{dy}{dr} = -5\\)"]},
+{"id":"s2-01","stage":2,"var":"x","form":"wrt","q":[["pow","3","-2"]],"qtex":"\\frac{3}{x^2}","prompt":"Differentiate with respect to \\(x\\): \\(y = \\frac{3}{x^2}\\)","answer":{"tex":"-6x^{-3}","terms":[["pow","-6","-3"]]},"decoys":[{"err":"sign_lost","tex":"6x^{-3}","terms":[["pow","6","-3"]]},{"err":"power_wrong_way","tex":"-6x^{-1}","terms":[["pow","-6","-1"]]},{"err":"bottom_differentiated","tex":"\\frac{3}{2x}","terms":[["overpow","3","2","1"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\frac{3}{x^2} = 3x^{-2}\\)","Bring the power down: \\(3 \\times (-2) = -6\\)","Take one off the power: \\(-2 - 1 = -3\\)","\\(\\dfrac{dy}{dx} = -6x^{-3}\\)"]},
+{"id":"s2-02","stage":2,"var":"t","form":"bare","q":[["pow","4","-3"]],"qtex":"\\frac{4}{t^3}","prompt":"Differentiate: \\(\\frac{4}{t^3}\\)","answer":{"tex":"-12t^{-4}","terms":[["pow","-12","-4"]]},"decoys":[{"err":"sign_lost","tex":"12t^{-4}","terms":[["pow","12","-4"]]},{"err":"power_wrong_way","tex":"-12t^{-2}","terms":[["pow","-12","-2"]]},{"err":"bottom_differentiated","tex":"\\frac{4}{3t^{2}}","terms":[["overpow","4","3","2"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\frac{4}{t^3} = 4t^{-3}\\)","Bring the power down: \\(4 \\times (-3) = -12\\)","Take one off the power: \\(-3 - 1 = -4\\)","\\(\\dfrac{d}{dt}\\left(\\frac{4}{t^3}\\right) = -12t^{-4}\\)"]},
+{"id":"s2-03","stage":2,"var":"r","form":"fn","q":[["pow","6","-1"]],"qtex":"\\frac{6}{r}","prompt":"If \\(f(r) = \\frac{6}{r}\\), find \\(f'(r)\\)","answer":{"tex":"-6r^{-2}","terms":[["pow","-6","-2"]]},"decoys":[{"err":"sign_lost","tex":"6r^{-2}","terms":[["pow","6","-2"]]},{"err":"power_wrong_way","tex":"-6","terms":[["pow","-6","0"]]},{"err":"bottom_differentiated","tex":"6","terms":[["const","6"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\frac{6}{r} = 6r^{-1}\\)","Bring the power down: \\(6 \\times (-1) = -6\\)","Take one off the power: \\(-1 - 1 = -2\\)","\\(f'(r) = -6r^{-2}\\)"]},
+{"id":"s2-04","stage":2,"var":"x","form":"wrt","q":[["pow","5","-4"]],"qtex":"\\frac{5}{x^4}","prompt":"Differentiate with respect to \\(x\\): \\(y = \\frac{5}{x^4}\\)","answer":{"tex":"-20x^{-5}","terms":[["pow","-20","-5"]]},"decoys":[{"err":"sign_lost","tex":"20x^{-5}","terms":[["pow","20","-5"]]},{"err":"power_wrong_way","tex":"-20x^{-3}","terms":[["pow","-20","-3"]]},{"err":"bottom_differentiated","tex":"\\frac{5}{4x^{3}}","terms":[["overpow","5","4","3"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\frac{5}{x^4} = 5x^{-4}\\)","Bring the power down: \\(5 \\times (-4) = -20\\)","Take one off the power: \\(-4 - 1 = -5\\)","\\(\\dfrac{dy}{dx} = -20x^{-5}\\)"]},
+{"id":"s2-05","stage":2,"var":"z","form":"bare","q":[["pow","8","-2"]],"qtex":"\\frac{8}{z^2}","prompt":"Differentiate: \\(\\frac{8}{z^2}\\)","answer":{"tex":"-16z^{-3}","terms":[["pow","-16","-3"]]},"decoys":[{"err":"sign_lost","tex":"16z^{-3}","terms":[["pow","16","-3"]]},{"err":"power_wrong_way","tex":"-16z^{-1}","terms":[["pow","-16","-1"]]},{"err":"bottom_differentiated","tex":"\\frac{8}{2z}","terms":[["overpow","8","2","1"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\frac{8}{z^2} = 8z^{-2}\\)","Bring the power down: \\(8 \\times (-2) = -16\\)","Take one off the power: \\(-2 - 1 = -3\\)","\\(\\dfrac{d}{dz}\\left(\\frac{8}{z^2}\\right) = -16z^{-3}\\)"]},
+{"id":"s2-06","stage":2,"var":"t","form":"fn","q":[["pow","-2","-3"]],"qtex":"-\\frac{2}{t^3}","prompt":"If \\(f(t) = -\\frac{2}{t^3}\\), find \\(f'(t)\\)","answer":{"tex":"6t^{-4}","terms":[["pow","6","-4"]]},"decoys":[{"err":"sign_lost","tex":"-6t^{-4}","terms":[["pow","-6","-4"]]},{"err":"power_wrong_way","tex":"6t^{-2}","terms":[["pow","6","-2"]]},{"err":"bottom_differentiated","tex":"-\\frac{2}{3t^{2}}","terms":[["overpow","-2","3","2"]]}],"rows":["axn"],"working":["Rewrite first: \\(-\\frac{2}{t^3} = -2t^{-3}\\)","Bring the power down: \\(-2 \\times (-3) = 6\\)","Take one off the power: \\(-3 - 1 = -4\\)","\\(f'(t) = 6t^{-4}\\)"]},
+{"id":"s2-07","stage":2,"var":"x","form":"bare","q":[["pow","1","5/2"]],"qtex":"\\sqrt{x^{5}}","prompt":"Differentiate: \\(\\sqrt{x^{5}}\\)","answer":{"tex":"\\frac{5}{2}x^{\\frac{3}{2}}","terms":[["pow","5/2","3/2"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{2}{5}x^{-\\frac{3}{5}}","terms":[["pow","2/5","-3/5"]]},{"err":"power_kept","tex":"\\frac{5}{2}x^{\\frac{5}{2}}","terms":[["pow","5/2","5/2"]]},{"err":"power_wrong_way","tex":"\\frac{5}{2}x^{\\frac{7}{2}}","terms":[["pow","5/2","7/2"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\sqrt{x^{5}} = x^{\\frac{5}{2}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(1 \\times \\frac{5}{2} = \\frac{5}{2}\\)","Take one off the power: \\(\\frac{5}{2} - 1 = \\frac{3}{2}\\)","\\(\\dfrac{d}{dx}\\left(\\sqrt{x^{5}}\\right) = \\frac{5}{2}x^{\\frac{3}{2}}\\)"]},
+{"id":"s2-08","stage":2,"var":"r","form":"fn","q":[["pow","1","2/3"]],"qtex":"\\sqrt[3]{r^{2}}","prompt":"If \\(f(r) = \\sqrt[3]{r^{2}}\\), find \\(f'(r)\\)","answer":{"tex":"\\frac{2}{3}r^{-\\frac{1}{3}}","terms":[["pow","2/3","-1/3"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{3}{2}r^{\\frac{1}{2}}","terms":[["pow","3/2","1/2"]]},{"err":"power_kept","tex":"\\frac{2}{3}r^{\\frac{2}{3}}","terms":[["pow","2/3","2/3"]]},{"err":"power_wrong_way","tex":"\\frac{2}{3}r^{\\frac{5}{3}}","terms":[["pow","2/3","5/3"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\sqrt[3]{r^{2}} = r^{\\frac{2}{3}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(1 \\times \\frac{2}{3} = \\frac{2}{3}\\)","Take one off the power: \\(\\frac{2}{3} - 1 = -\\frac{1}{3}\\)","\\(f'(r) = \\frac{2}{3}r^{-\\frac{1}{3}}\\)"]},
+{"id":"s2-09","stage":2,"var":"t","form":"wrt","q":[["pow","4","3/2"]],"qtex":"4\\sqrt{t^{3}}","prompt":"Differentiate with respect to \\(t\\): \\(y = 4\\sqrt{t^{3}}\\)","answer":{"tex":"6t^{\\frac{1}{2}}","terms":[["pow","6","1/2"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{8}{3}t^{-\\frac{1}{3}}","terms":[["pow","8/3","-1/3"]]},{"err":"power_kept","tex":"6t^{\\frac{3}{2}}","terms":[["pow","6","3/2"]]},{"err":"power_wrong_way","tex":"6t^{\\frac{5}{2}}","terms":[["pow","6","5/2"]]}],"rows":["axn"],"working":["Rewrite first: \\(4\\sqrt{t^{3}} = 4t^{\\frac{3}{2}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(4 \\times \\frac{3}{2} = 6\\)","Take one off the power: \\(\\frac{3}{2} - 1 = \\frac{1}{2}\\)","\\(\\dfrac{dy}{dt} = 6t^{\\frac{1}{2}}\\)"]},
+{"id":"s2-10","stage":2,"var":"x","form":"bare","q":[["pow","1","7/2"]],"qtex":"\\sqrt{x^{7}}","prompt":"Differentiate: \\(\\sqrt{x^{7}}\\)","answer":{"tex":"\\frac{7}{2}x^{\\frac{5}{2}}","terms":[["pow","7/2","5/2"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{2}{7}x^{-\\frac{5}{7}}","terms":[["pow","2/7","-5/7"]]},{"err":"power_kept","tex":"\\frac{7}{2}x^{\\frac{7}{2}}","terms":[["pow","7/2","7/2"]]},{"err":"power_wrong_way","tex":"\\frac{7}{2}x^{\\frac{9}{2}}","terms":[["pow","7/2","9/2"]]}],"rows":["axn"],"working":["Rewrite first: \\(\\sqrt{x^{7}} = x^{\\frac{7}{2}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(1 \\times \\frac{7}{2} = \\frac{7}{2}\\)","Take one off the power: \\(\\frac{7}{2} - 1 = \\frac{5}{2}\\)","\\(\\dfrac{d}{dx}\\left(\\sqrt{x^{7}}\\right) = \\frac{7}{2}x^{\\frac{5}{2}}\\)"]},
+{"id":"s2-11","stage":2,"var":"r","form":"fn","q":[["pow","6","4/3"]],"qtex":"6\\sqrt[3]{r^{4}}","prompt":"If \\(f(r) = 6\\sqrt[3]{r^{4}}\\), find \\(f'(r)\\)","answer":{"tex":"8r^{\\frac{1}{3}}","terms":[["pow","8","1/3"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{9}{2}r^{-\\frac{1}{4}}","terms":[["pow","9/2","-1/4"]]},{"err":"power_kept","tex":"8r^{\\frac{4}{3}}","terms":[["pow","8","4/3"]]},{"err":"power_wrong_way","tex":"8r^{\\frac{7}{3}}","terms":[["pow","8","7/3"]]}],"rows":["axn"],"working":["Rewrite first: \\(6\\sqrt[3]{r^{4}} = 6r^{\\frac{4}{3}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(6 \\times \\frac{4}{3} = 8\\)","Take one off the power: \\(\\frac{4}{3} - 1 = \\frac{1}{3}\\)","\\(f'(r) = 8r^{\\frac{1}{3}}\\)"]},
+{"id":"s2-12","stage":2,"var":"t","form":"wrt","q":[["pow","2","5/3"]],"qtex":"2\\sqrt[3]{t^{5}}","prompt":"Differentiate with respect to \\(t\\): \\(y = 2\\sqrt[3]{t^{5}}\\)","answer":{"tex":"\\frac{10}{3}t^{\\frac{2}{3}}","terms":[["pow","10/3","2/3"]]},"decoys":[{"err":"root_upside_down","tex":"\\frac{6}{5}t^{-\\frac{2}{5}}","terms":[["pow","6/5","-2/5"]]},{"err":"power_kept","tex":"\\frac{10}{3}t^{\\frac{5}{3}}","terms":[["pow","10/3","5/3"]]},{"err":"power_wrong_way","tex":"\\frac{10}{3}t^{\\frac{8}{3}}","terms":[["pow","10/3","8/3"]]}],"rows":["axn"],"working":["Rewrite first: \\(2\\sqrt[3]{t^{5}} = 2t^{\\frac{5}{3}}\\) (the root's number goes on the bottom of the power)","Bring the power down: \\(2 \\times \\frac{5}{3} = \\frac{10}{3}\\)","Take one off the power: \\(\\frac{5}{3} - 1 = \\frac{2}{3}\\)","\\(\\dfrac{dy}{dt} = \\frac{10}{3}t^{\\frac{2}{3}}\\)"]},
+{"id":"s3-01","stage":3,"var":"x","form":"wrt","q":[["sin","1","4"]],"qtex":"\\sin 4x","prompt":"Differentiate with respect to \\(x\\): \\(y = \\sin 4x\\)","answer":{"tex":"4\\cos 4x","terms":[["cos","4","4"]]},"decoys":[{"err":"a_forgotten","tex":"\\cos 4x","terms":[["cos","1","4"]]},{"err":"sign_slip","tex":"-4\\cos 4x","terms":[["cos","-4","4"]]},{"err":"a_dropped_from_angle","tex":"4\\cos x","terms":[["cos","4","1"]]}],"rows":["sin"],"working":["\\(\\sin ax \\to a\\cos ax\\): the \\(4\\) comes out front and stays in the angle","\\(\\dfrac{dy}{dx} = 4\\cos 4x\\)"]},
+{"id":"s3-02","stage":3,"var":"t","form":"bare","q":[["cos","1","5"]],"qtex":"\\cos 5t","prompt":"Differentiate: \\(\\cos 5t\\)","answer":{"tex":"-5\\sin 5t","terms":[["sin","-5","5"]]},"decoys":[{"err":"a_forgotten","tex":"-\\sin 5t","terms":[["sin","-1","5"]]},{"err":"sign_slip","tex":"5\\sin 5t","terms":[["sin","5","5"]]},{"err":"a_dropped_from_angle","tex":"-5\\sin t","terms":[["sin","-5","1"]]}],"rows":["cos"],"working":["\\(\\cos at \\to -a\\sin at\\): the \\(5\\) comes out front, stays in the angle, and cos gives a minus","\\(\\dfrac{d}{dt}\\left(\\cos 5t\\right) = -5\\sin 5t\\)"]},
+{"id":"s3-03","stage":3,"var":"t","form":"fn","q":[["sin","3","2"]],"qtex":"3\\sin 2t","prompt":"If \\(f(t) = 3\\sin 2t\\), find \\(f'(t)\\)","answer":{"tex":"6\\cos 2t","terms":[["cos","6","2"]]},"decoys":[{"err":"a_forgotten","tex":"3\\cos 2t","terms":[["cos","3","2"]]},{"err":"sign_slip","tex":"-6\\cos 2t","terms":[["cos","-6","2"]]},{"err":"a_dropped_from_angle","tex":"6\\cos t","terms":[["cos","6","1"]]}],"rows":["sin"],"working":["\\(\\sin at \\to a\\cos at\\): the \\(2\\) comes out front and stays in the angle","\\(3 \\times 2 = 6\\)","\\(f'(t) = 6\\cos 2t\\)"]},
+{"id":"s3-04","stage":3,"var":"x","form":"wrt","q":[["cos","2","6"]],"qtex":"2\\cos 6x","prompt":"Differentiate with respect to \\(x\\): \\(y = 2\\cos 6x\\)","answer":{"tex":"-12\\sin 6x","terms":[["sin","-12","6"]]},"decoys":[{"err":"a_forgotten","tex":"-2\\sin 6x","terms":[["sin","-2","6"]]},{"err":"sign_slip","tex":"12\\sin 6x","terms":[["sin","12","6"]]},{"err":"a_dropped_from_angle","tex":"-12\\sin x","terms":[["sin","-12","1"]]}],"rows":["cos"],"working":["\\(\\cos ax \\to -a\\sin ax\\): the \\(6\\) comes out front, stays in the angle, and cos gives a minus","\\(2 \\times 6 = 12\\)","\\(\\dfrac{dy}{dx} = -12\\sin 6x\\)"]},
+{"id":"s3-05","stage":3,"var":"r","form":"bare","q":[["sin","5","3"]],"qtex":"5\\sin 3r","prompt":"Differentiate: \\(5\\sin 3r\\)","answer":{"tex":"15\\cos 3r","terms":[["cos","15","3"]]},"decoys":[{"err":"a_forgotten","tex":"5\\cos 3r","terms":[["cos","5","3"]]},{"err":"sign_slip","tex":"-15\\cos 3r","terms":[["cos","-15","3"]]},{"err":"a_dropped_from_angle","tex":"15\\cos r","terms":[["cos","15","1"]]}],"rows":["sin"],"working":["\\(\\sin ar \\to a\\cos ar\\): the \\(3\\) comes out front and stays in the angle","\\(5 \\times 3 = 15\\)","\\(\\dfrac{d}{dr}\\left(5\\sin 3r\\right) = 15\\cos 3r\\)"]},
+{"id":"s3-06","stage":3,"var":"t","form":"fn","q":[["cos","4","2"]],"qtex":"4\\cos 2t","prompt":"If \\(f(t) = 4\\cos 2t\\), find \\(f'(t)\\)","answer":{"tex":"-8\\sin 2t","terms":[["sin","-8","2"]]},"decoys":[{"err":"a_forgotten","tex":"-4\\sin 2t","terms":[["sin","-4","2"]]},{"err":"sign_slip","tex":"8\\sin 2t","terms":[["sin","8","2"]]},{"err":"a_dropped_from_angle","tex":"-8\\sin t","terms":[["sin","-8","1"]]}],"rows":["cos"],"working":["\\(\\cos at \\to -a\\sin at\\): the \\(2\\) comes out front, stays in the angle, and cos gives a minus","\\(4 \\times 2 = 8\\)","\\(f'(t) = -8\\sin 2t\\)"]},
+{"id":"s3-07","stage":3,"var":"x","form":"wrt","q":[["sin","1","7"]],"qtex":"\\sin 7x","prompt":"Differentiate with respect to \\(x\\): \\(y = \\sin 7x\\)","answer":{"tex":"7\\cos 7x","terms":[["cos","7","7"]]},"decoys":[{"err":"a_forgotten","tex":"\\cos 7x","terms":[["cos","1","7"]]},{"err":"sign_slip","tex":"-7\\cos 7x","terms":[["cos","-7","7"]]},{"err":"a_dropped_from_angle","tex":"7\\cos x","terms":[["cos","7","1"]]}],"rows":["sin"],"working":["\\(\\sin ax \\to a\\cos ax\\): the \\(7\\) comes out front and stays in the angle","\\(\\dfrac{dy}{dx} = 7\\cos 7x\\)"]},
+{"id":"s3-08","stage":3,"var":"z","form":"bare","q":[["cos","1","8"]],"qtex":"\\cos 8z","prompt":"Differentiate: \\(\\cos 8z\\)","answer":{"tex":"-8\\sin 8z","terms":[["sin","-8","8"]]},"decoys":[{"err":"a_forgotten","tex":"-\\sin 8z","terms":[["sin","-1","8"]]},{"err":"sign_slip","tex":"8\\sin 8z","terms":[["sin","8","8"]]},{"err":"a_dropped_from_angle","tex":"-8\\sin z","terms":[["sin","-8","1"]]}],"rows":["cos"],"working":["\\(\\cos az \\to -a\\sin az\\): the \\(8\\) comes out front, stays in the angle, and cos gives a minus","\\(\\dfrac{d}{dz}\\left(\\cos 8z\\right) = -8\\sin 8z\\)"]},
+{"id":"s3-09","stage":3,"var":"t","form":"fn","q":[["sin","2","10"]],"qtex":"2\\sin 10t","prompt":"If \\(f(t) = 2\\sin 10t\\), find \\(f'(t)\\)","answer":{"tex":"20\\cos 10t","terms":[["cos","20","10"]]},"decoys":[{"err":"a_forgotten","tex":"2\\cos 10t","terms":[["cos","2","10"]]},{"err":"sign_slip","tex":"-20\\cos 10t","terms":[["cos","-20","10"]]},{"err":"a_dropped_from_angle","tex":"20\\cos t","terms":[["cos","20","1"]]}],"rows":["sin"],"working":["\\(\\sin at \\to a\\cos at\\): the \\(10\\) comes out front and stays in the angle","\\(2 \\times 10 = 20\\)","\\(f'(t) = 20\\cos 10t\\)"]},
+{"id":"s3-10","stage":3,"var":"r","form":"wrt","q":[["cos","3","4"]],"qtex":"3\\cos 4r","prompt":"Differentiate with respect to \\(r\\): \\(y = 3\\cos 4r\\)","answer":{"tex":"-12\\sin 4r","terms":[["sin","-12","4"]]},"decoys":[{"err":"a_forgotten","tex":"-3\\sin 4r","terms":[["sin","-3","4"]]},{"err":"sign_slip","tex":"12\\sin 4r","terms":[["sin","12","4"]]},{"err":"a_dropped_from_angle","tex":"-12\\sin r","terms":[["sin","-12","1"]]}],"rows":["cos"],"working":["\\(\\cos ar \\to -a\\sin ar\\): the \\(4\\) comes out front, stays in the angle, and cos gives a minus","\\(3 \\times 4 = 12\\)","\\(\\dfrac{dy}{dr} = -12\\sin 4r\\)"]},
+{"id":"s3-11","stage":3,"var":"x","form":"bare","q":[["sin","6","5"]],"qtex":"6\\sin 5x","prompt":"Differentiate: \\(6\\sin 5x\\)","answer":{"tex":"30\\cos 5x","terms":[["cos","30","5"]]},"decoys":[{"err":"a_forgotten","tex":"6\\cos 5x","terms":[["cos","6","5"]]},{"err":"sign_slip","tex":"-30\\cos 5x","terms":[["cos","-30","5"]]},{"err":"a_dropped_from_angle","tex":"30\\cos x","terms":[["cos","30","1"]]}],"rows":["sin"],"working":["\\(\\sin ax \\to a\\cos ax\\): the \\(5\\) comes out front and stays in the angle","\\(6 \\times 5 = 30\\)","\\(\\dfrac{d}{dx}\\left(6\\sin 5x\\right) = 30\\cos 5x\\)"]},
+{"id":"s3-12","stage":3,"var":"t","form":"fn","q":[["cos","5","3"]],"qtex":"5\\cos 3t","prompt":"If \\(f(t) = 5\\cos 3t\\), find \\(f'(t)\\)","answer":{"tex":"-15\\sin 3t","terms":[["sin","-15","3"]]},"decoys":[{"err":"a_forgotten","tex":"-5\\sin 3t","terms":[["sin","-5","3"]]},{"err":"sign_slip","tex":"15\\sin 3t","terms":[["sin","15","3"]]},{"err":"a_dropped_from_angle","tex":"-15\\sin t","terms":[["sin","-15","1"]]}],"rows":["cos"],"working":["\\(\\cos at \\to -a\\sin at\\): the \\(3\\) comes out front, stays in the angle, and cos gives a minus","\\(5 \\times 3 = 15\\)","\\(f'(t) = -15\\sin 3t\\)"]},
+{"id":"s4-01","stage":4,"var":"x","form":"wrt","q":[["exp","1","3"]],"qtex":"e^{3x}","prompt":"Differentiate with respect to \\(x\\): \\(y = e^{3x}\\)","answer":{"tex":"3e^{3x}","terms":[["exp","3","3"]]},"decoys":[{"err":"a_forgotten","tex":"e^{3x}","terms":[["exp","1","3"]]},{"err":"integrated_instead","tex":"\\frac{1}{3}e^{3x}","terms":[["exp","1/3","3"]]},{"err":"power_rule_used","tex":"3xe^{3x-1}","terms":[["xexp","3","3"]]}],"rows":["exp"],"working":["\\(e^{ax} \\to ae^{ax}\\): the \\(3\\) comes down and the power stays the same","\\(\\dfrac{dy}{dx} = 3e^{3x}\\)"]},
+{"id":"s4-02","stage":4,"var":"t","form":"bare","q":[["exp","2","4"]],"qtex":"2e^{4t}","prompt":"Differentiate: \\(2e^{4t}\\)","answer":{"tex":"8e^{4t}","terms":[["exp","8","4"]]},"decoys":[{"err":"a_forgotten","tex":"2e^{4t}","terms":[["exp","2","4"]]},{"err":"integrated_instead","tex":"\\frac{1}{2}e^{4t}","terms":[["exp","1/2","4"]]},{"err":"power_rule_used","tex":"8te^{4t-1}","terms":[["xexp","8","4"]]}],"rows":["exp"],"working":["\\(e^{at} \\to ae^{at}\\): the \\(4\\) comes down and the power stays the same","\\(2 \\times 4 = 8\\)","\\(\\dfrac{d}{dt}\\left(2e^{4t}\\right) = 8e^{4t}\\)"]},
+{"id":"s4-03","stage":4,"var":"z","form":"fn","q":[["exp","5","2"]],"qtex":"5e^{2z}","prompt":"If \\(f(z) = 5e^{2z}\\), find \\(f'(z)\\)","answer":{"tex":"10e^{2z}","terms":[["exp","10","2"]]},"decoys":[{"err":"a_forgotten","tex":"5e^{2z}","terms":[["exp","5","2"]]},{"err":"integrated_instead","tex":"\\frac{5}{2}e^{2z}","terms":[["exp","5/2","2"]]},{"err":"power_rule_used","tex":"10ze^{2z-1}","terms":[["xexp","10","2"]]}],"rows":["exp"],"working":["\\(e^{az} \\to ae^{az}\\): the \\(2\\) comes down and the power stays the same","\\(5 \\times 2 = 10\\)","\\(f'(z) = 10e^{2z}\\)"]},
+{"id":"s4-04","stage":4,"var":"x","form":"wrt","q":[["exp","3","6"]],"qtex":"3e^{6x}","prompt":"Differentiate with respect to \\(x\\): \\(y = 3e^{6x}\\)","answer":{"tex":"18e^{6x}","terms":[["exp","18","6"]]},"decoys":[{"err":"a_forgotten","tex":"3e^{6x}","terms":[["exp","3","6"]]},{"err":"integrated_instead","tex":"\\frac{1}{2}e^{6x}","terms":[["exp","1/2","6"]]},{"err":"power_rule_used","tex":"18xe^{6x-1}","terms":[["xexp","18","6"]]}],"rows":["exp"],"working":["\\(e^{ax} \\to ae^{ax}\\): the \\(6\\) comes down and the power stays the same","\\(3 \\times 6 = 18\\)","\\(\\dfrac{dy}{dx} = 18e^{6x}\\)"]},
+{"id":"s4-05","stage":4,"var":"t","form":"bare","q":[["exp","1","7"]],"qtex":"e^{7t}","prompt":"Differentiate: \\(e^{7t}\\)","answer":{"tex":"7e^{7t}","terms":[["exp","7","7"]]},"decoys":[{"err":"a_forgotten","tex":"e^{7t}","terms":[["exp","1","7"]]},{"err":"integrated_instead","tex":"\\frac{1}{7}e^{7t}","terms":[["exp","1/7","7"]]},{"err":"power_rule_used","tex":"7te^{7t-1}","terms":[["xexp","7","7"]]}],"rows":["exp"],"working":["\\(e^{at} \\to ae^{at}\\): the \\(7\\) comes down and the power stays the same","\\(\\dfrac{d}{dt}\\left(e^{7t}\\right) = 7e^{7t}\\)"]},
+{"id":"s4-06","stage":4,"var":"r","form":"fn","q":[["exp","4","3"]],"qtex":"4e^{3r}","prompt":"If \\(f(r) = 4e^{3r}\\), find \\(f'(r)\\)","answer":{"tex":"12e^{3r}","terms":[["exp","12","3"]]},"decoys":[{"err":"a_forgotten","tex":"4e^{3r}","terms":[["exp","4","3"]]},{"err":"integrated_instead","tex":"\\frac{4}{3}e^{3r}","terms":[["exp","4/3","3"]]},{"err":"power_rule_used","tex":"12re^{3r-1}","terms":[["xexp","12","3"]]}],"rows":["exp"],"working":["\\(e^{ar} \\to ae^{ar}\\): the \\(3\\) comes down and the power stays the same","\\(4 \\times 3 = 12\\)","\\(f'(r) = 12e^{3r}\\)"]},
+{"id":"s4-07","stage":4,"var":"x","form":"bare","q":[["ln","1","4"]],"qtex":"\\ln 4x","prompt":"Differentiate: \\(\\ln 4x\\)","answer":{"tex":"\\frac{1}{x}","terms":[["over","1","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{4}{x}","terms":[["over","4","1"]]},{"err":"a_divided","tex":"\\frac{1}{4x}","terms":[["over","1","4"]]},{"err":"ln_flipped","tex":"\\frac{1}{\\ln 4x}","terms":[["recipln","1","4"]]}],"rows":["ln"],"working":["\\(\\ln ax \\to \\frac{1}{x}\\): the \\(4\\) cancels out, \\(\\frac{4}{4x} = \\frac{1}{x}\\)","\\(\\dfrac{d}{dx}\\left(\\ln 4x\\right) = \\frac{1}{x}\\)"]},
+{"id":"s4-08","stage":4,"var":"t","form":"fn","q":[["ln","3","2"]],"qtex":"3\\ln 2t","prompt":"If \\(f(t) = 3\\ln 2t\\), find \\(f'(t)\\)","answer":{"tex":"\\frac{3}{t}","terms":[["over","3","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{6}{t}","terms":[["over","6","1"]]},{"err":"a_divided","tex":"\\frac{3}{2t}","terms":[["over","3","2"]]},{"err":"ln_flipped","tex":"\\frac{3}{\\ln 2t}","terms":[["recipln","3","2"]]}],"rows":["ln"],"working":["\\(\\ln at \\to \\frac{1}{t}\\): the \\(2\\) cancels out, \\(\\frac{2}{2t} = \\frac{1}{t}\\)","\\(3 \\times \\frac{1}{t} = \\frac{3}{t}\\)","\\(f'(t) = \\frac{3}{t}\\)"]},
+{"id":"s4-09","stage":4,"var":"x","form":"wrt","q":[["ln","2","5"]],"qtex":"2\\ln 5x","prompt":"Differentiate with respect to \\(x\\): \\(y = 2\\ln 5x\\)","answer":{"tex":"\\frac{2}{x}","terms":[["over","2","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{10}{x}","terms":[["over","10","1"]]},{"err":"a_divided","tex":"\\frac{2}{5x}","terms":[["over","2","5"]]},{"err":"ln_flipped","tex":"\\frac{2}{\\ln 5x}","terms":[["recipln","2","5"]]}],"rows":["ln"],"working":["\\(\\ln ax \\to \\frac{1}{x}\\): the \\(5\\) cancels out, \\(\\frac{5}{5x} = \\frac{1}{x}\\)","\\(2 \\times \\frac{1}{x} = \\frac{2}{x}\\)","\\(\\dfrac{dy}{dx} = \\frac{2}{x}\\)"]},
+{"id":"s4-10","stage":4,"var":"r","form":"bare","q":[["ln","6","3"]],"qtex":"6\\ln 3r","prompt":"Differentiate: \\(6\\ln 3r\\)","answer":{"tex":"\\frac{6}{r}","terms":[["over","6","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{18}{r}","terms":[["over","18","1"]]},{"err":"a_divided","tex":"\\frac{6}{3r}","terms":[["over","6","3"]]},{"err":"ln_flipped","tex":"\\frac{6}{\\ln 3r}","terms":[["recipln","6","3"]]}],"rows":["ln"],"working":["\\(\\ln ar \\to \\frac{1}{r}\\): the \\(3\\) cancels out, \\(\\frac{3}{3r} = \\frac{1}{r}\\)","\\(6 \\times \\frac{1}{r} = \\frac{6}{r}\\)","\\(\\dfrac{d}{dr}\\left(6\\ln 3r\\right) = \\frac{6}{r}\\)"]},
+{"id":"s4-11","stage":4,"var":"t","form":"fn","q":[["ln","1","9"]],"qtex":"\\ln 9t","prompt":"If \\(f(t) = \\ln 9t\\), find \\(f'(t)\\)","answer":{"tex":"\\frac{1}{t}","terms":[["over","1","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{9}{t}","terms":[["over","9","1"]]},{"err":"a_divided","tex":"\\frac{1}{9t}","terms":[["over","1","9"]]},{"err":"ln_flipped","tex":"\\frac{1}{\\ln 9t}","terms":[["recipln","1","9"]]}],"rows":["ln"],"working":["\\(\\ln at \\to \\frac{1}{t}\\): the \\(9\\) cancels out, \\(\\frac{9}{9t} = \\frac{1}{t}\\)","\\(f'(t) = \\frac{1}{t}\\)"]},
+{"id":"s4-12","stage":4,"var":"z","form":"wrt","q":[["ln","4","7"]],"qtex":"4\\ln 7z","prompt":"Differentiate with respect to \\(z\\): \\(y = 4\\ln 7z\\)","answer":{"tex":"\\frac{4}{z}","terms":[["over","4","1"]]},"decoys":[{"err":"a_kept","tex":"\\frac{28}{z}","terms":[["over","28","1"]]},{"err":"a_divided","tex":"\\frac{4}{7z}","terms":[["over","4","7"]]},{"err":"ln_flipped","tex":"\\frac{4}{\\ln 7z}","terms":[["recipln","4","7"]]}],"rows":["ln"],"working":["\\(\\ln az \\to \\frac{1}{z}\\): the \\(7\\) cancels out, \\(\\frac{7}{7z} = \\frac{1}{z}\\)","\\(4 \\times \\frac{1}{z} = \\frac{4}{z}\\)","\\(\\dfrac{dy}{dz} = \\frac{4}{z}\\)"]},
+{"id":"s5-01","stage":5,"var":"t","form":"fn","q":[["pow","5","1"],["pow","2","3"]],"qtex":"5t+2t^{3}","prompt":"If \\(f(t) = 5t+2t^{3}\\), find \\(f'(t)\\)","answer":{"tex":"5+6t^{2}","terms":[["const","5"],["pow","6","2"]]},"decoys":[{"err":"kept_variable","tex":"5t+6t^{2}","terms":[["pow","5","1"],["pow","6","2"]]},{"err":"power_kept","tex":"5+6t^{3}","terms":[["const","5"],["pow","6","3"]]},{"err":"coeff_lost","tex":"5+3t^{2}","terms":[["const","5"],["pow","3","2"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(5t \\to 5\\)","\\(2t^{3} \\to 6t^{2}\\)","\\(f'(t) = 5+6t^{2}\\)"]},
+{"id":"s5-02","stage":5,"var":"t","form":"fn","q":[["pow","4","1"],["pow","3","2"]],"qtex":"4t+3t^{2}","prompt":"If \\(f(t) = 4t+3t^{2}\\), find \\(f'(t)\\)","answer":{"tex":"4+6t","terms":[["const","4"],["pow","6","1"]]},"decoys":[{"err":"kept_variable","tex":"4t+6t","terms":[["pow","4","1"],["pow","6","1"]]},{"err":"power_kept","tex":"4+6t^{2}","terms":[["const","4"],["pow","6","2"]]},{"err":"coeff_lost","tex":"4+2t","terms":[["const","4"],["pow","2","1"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(4t \\to 4\\)","\\(3t^{2} \\to 6t\\)","\\(f'(t) = 4+6t\\)"]},
+{"id":"s5-03","stage":5,"var":"x","form":"fn","q":[["pow","2","1"],["pow","5","4"]],"qtex":"2x+5x^{4}","prompt":"If \\(f(x) = 2x+5x^{4}\\), find \\(f'(x)\\)","answer":{"tex":"2+20x^{3}","terms":[["const","2"],["pow","20","3"]]},"decoys":[{"err":"kept_variable","tex":"2x+20x^{3}","terms":[["pow","2","1"],["pow","20","3"]]},{"err":"power_kept","tex":"2+20x^{4}","terms":[["const","2"],["pow","20","4"]]},{"err":"coeff_lost","tex":"2+4x^{3}","terms":[["const","2"],["pow","4","3"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(2x \\to 2\\)","\\(5x^{4} \\to 20x^{3}\\)","\\(f'(x) = 2+20x^{3}\\)"]},
+{"id":"s5-04","stage":5,"var":"t","form":"wrt","q":[["pow","7","1"],["pow","2","5"]],"qtex":"7t+2t^{5}","prompt":"Differentiate with respect to \\(t\\): \\(y = 7t+2t^{5}\\)","answer":{"tex":"7+10t^{4}","terms":[["const","7"],["pow","10","4"]]},"decoys":[{"err":"kept_variable","tex":"7t+10t^{4}","terms":[["pow","7","1"],["pow","10","4"]]},{"err":"power_kept","tex":"7+10t^{5}","terms":[["const","7"],["pow","10","5"]]},{"err":"coeff_lost","tex":"7+5t^{4}","terms":[["const","7"],["pow","5","4"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(7t \\to 7\\)","\\(2t^{5} \\to 10t^{4}\\)","\\(\\dfrac{dy}{dt} = 7+10t^{4}\\)"]},
+{"id":"s5-05","stage":5,"var":"r","form":"fn","q":[["pow","3","1"],["pow","4","3"]],"qtex":"3r+4r^{3}","prompt":"If \\(f(r) = 3r+4r^{3}\\), find \\(f'(r)\\)","answer":{"tex":"3+12r^{2}","terms":[["const","3"],["pow","12","2"]]},"decoys":[{"err":"kept_variable","tex":"3r+12r^{2}","terms":[["pow","3","1"],["pow","12","2"]]},{"err":"power_kept","tex":"3+12r^{3}","terms":[["const","3"],["pow","12","3"]]},{"err":"coeff_lost","tex":"3+3r^{2}","terms":[["const","3"],["pow","3","2"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(3r \\to 3\\)","\\(4r^{3} \\to 12r^{2}\\)","\\(f'(r) = 3+12r^{2}\\)"]},
+{"id":"s5-06","stage":5,"var":"t","form":"fn","q":[["pow","6","1"],["pow","2","4"]],"qtex":"6t+2t^{4}","prompt":"If \\(f(t) = 6t+2t^{4}\\), find \\(f'(t)\\)","answer":{"tex":"6+8t^{3}","terms":[["const","6"],["pow","8","3"]]},"decoys":[{"err":"kept_variable","tex":"6t+8t^{3}","terms":[["pow","6","1"],["pow","8","3"]]},{"err":"power_kept","tex":"6+8t^{4}","terms":[["const","6"],["pow","8","4"]]},{"err":"coeff_lost","tex":"6+4t^{3}","terms":[["const","6"],["pow","4","3"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(6t \\to 6\\)","\\(2t^{4} \\to 8t^{3}\\)","\\(f'(t) = 6+8t^{3}\\)"]},
+{"id":"s5-07","stage":5,"var":"t","form":"fn","q":[["pow","2","1"],["pow","3","3"],["const","9"]],"qtex":"2t+3t^{3}+9","prompt":"If \\(f(t) = 2t+3t^{3}+9\\), find \\(f'(t)\\)","answer":{"tex":"2+9t^{2}","terms":[["const","2"],["pow","9","2"]]},"decoys":[{"err":"kept_variable","tex":"2t+9t^{2}","terms":[["pow","2","1"],["pow","9","2"]]},{"err":"power_kept","tex":"2+9t^{3}","terms":[["const","2"],["pow","9","3"]]},{"err":"constant_kept","tex":"2+9t^{2}+9","terms":[["const","2"],["pow","9","2"],["const","9"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(2t \\to 2\\)","\\(3t^{3} \\to 9t^{2}\\)","\\(9\\) on its own is a constant: it doesn't change, so it differentiates to \\(0\\)","\\(f'(t) = 2+9t^{2}\\)"]},
+{"id":"s5-08","stage":5,"var":"x","form":"wrt","q":[["pow","8","1"],["pow","2","2"],["const","4"]],"qtex":"8x+2x^{2}+4","prompt":"Differentiate with respect to \\(x\\): \\(y = 8x+2x^{2}+4\\)","answer":{"tex":"8+4x","terms":[["const","8"],["pow","4","1"]]},"decoys":[{"err":"kept_variable","tex":"8x+4x","terms":[["pow","8","1"],["pow","4","1"]]},{"err":"power_kept","tex":"8+4x^{2}","terms":[["const","8"],["pow","4","2"]]},{"err":"constant_kept","tex":"8+4x+4","terms":[["const","8"],["pow","4","1"],["const","4"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(8x \\to 8\\)","\\(2x^{2} \\to 4x\\)","\\(4\\) on its own is a constant: it doesn't change, so it differentiates to \\(0\\)","\\(\\dfrac{dy}{dx} = 8+4x\\)"]},
+{"id":"s5-09","stage":5,"var":"t","form":"fn","q":[["pow","5","1"],["pow","6","2"],["const","-3"]],"qtex":"5t+6t^{2}-3","prompt":"If \\(f(t) = 5t+6t^{2}-3\\), find \\(f'(t)\\)","answer":{"tex":"5+12t","terms":[["const","5"],["pow","12","1"]]},"decoys":[{"err":"kept_variable","tex":"5t+12t","terms":[["pow","5","1"],["pow","12","1"]]},{"err":"power_kept","tex":"5+12t^{2}","terms":[["const","5"],["pow","12","2"]]},{"err":"constant_kept","tex":"5+12t-3","terms":[["const","5"],["pow","12","1"],["const","-3"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(5t \\to 5\\)","\\(6t^{2} \\to 12t\\)","\\(-3\\) on its own is a constant: it doesn't change, so it differentiates to \\(0\\)","\\(f'(t) = 5+12t\\)"]},
+{"id":"s5-10","stage":5,"var":"t","form":"fn","q":[["pow","9","1"],["pow","1","4"],["const","7"]],"qtex":"9t+t^{4}+7","prompt":"If \\(f(t) = 9t+t^{4}+7\\), find \\(f'(t)\\)","answer":{"tex":"9+4t^{3}","terms":[["const","9"],["pow","4","3"]]},"decoys":[{"err":"kept_variable","tex":"9t+4t^{3}","terms":[["pow","9","1"],["pow","4","3"]]},{"err":"power_kept","tex":"9+4t^{4}","terms":[["const","9"],["pow","4","4"]]},{"err":"constant_kept","tex":"9+4t^{3}+7","terms":[["const","9"],["pow","4","3"],["const","7"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(9t \\to 9\\)","\\(t^{4} \\to 4t^{3}\\)","\\(7\\) on its own is a constant: it doesn't change, so it differentiates to \\(0\\)","\\(f'(t) = 9+4t^{3}\\)"]},
+{"id":"s5-11","stage":5,"var":"z","form":"fn","q":[["pow","4","1"],["pow","5","3"]],"qtex":"4z+5z^{3}","prompt":"If \\(f(z) = 4z+5z^{3}\\), find \\(f'(z)\\)","answer":{"tex":"4+15z^{2}","terms":[["const","4"],["pow","15","2"]]},"decoys":[{"err":"kept_variable","tex":"4z+15z^{2}","terms":[["pow","4","1"],["pow","15","2"]]},{"err":"power_kept","tex":"4+15z^{3}","terms":[["const","4"],["pow","15","3"]]},{"err":"coeff_lost","tex":"4+3z^{2}","terms":[["const","4"],["pow","3","2"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(4z \\to 4\\)","\\(5z^{3} \\to 15z^{2}\\)","\\(f'(z) = 4+15z^{2}\\)"]},
+{"id":"s5-12","stage":5,"var":"t","form":"wrt","q":[["pow","3","1"],["pow","7","2"],["const","-8"]],"qtex":"3t+7t^{2}-8","prompt":"Differentiate with respect to \\(t\\): \\(y = 3t+7t^{2}-8\\)","answer":{"tex":"3+14t","terms":[["const","3"],["pow","14","1"]]},"decoys":[{"err":"kept_variable","tex":"3t+14t","terms":[["pow","3","1"],["pow","14","1"]]},{"err":"power_kept","tex":"3+14t^{2}","terms":[["const","3"],["pow","14","2"]]},{"err":"constant_kept","tex":"3+14t-8","terms":[["const","3"],["pow","14","1"],["const","-8"]]}],"rows":["x","axn"],"working":["Differentiate each term on its own:","\\(3t \\to 3\\)","\\(7t^{2} \\to 14t\\)","\\(-8\\) on its own is a constant: it doesn't change, so it differentiates to \\(0\\)","\\(\\dfrac{dy}{dt} = 3+14t\\)"]}
+  ];
+
+  // Placeholders by Project Claude, 26 Nov 2026; Jon writes the real lines after playing.
+  var LINES = {
+    power_kept: "You multiplied by the power, then forgot to take one off it.",
+    coeff_lost: "The number in front got lost. Multiply it by the power too.",
+    new_power_used: "Multiply by the power you started with, not the new one.",
+    kept_variable: "A letter on its own differentiates to 1, so it disappears and the number stays.",
+    treated_as_constant: "That's a letter times a number, not a constant. It differentiates to the number.",
+    sign_lost: "The power was negative, so bringing it down gives a minus.",
+    power_wrong_way: "Take one off the power, even when it's negative or a fraction: -2 goes to -3.",
+    bottom_differentiated: "Rewrite it as a power first. You can't differentiate the bottom on its own.",
+    root_upside_down: "A square root is the power 1/2: the root's number goes on the bottom of the power.",
+    a_forgotten: "The number in the angle or the power comes out to the front.",
+    sign_slip: "sin goes to cos, and cos goes to minus sin. Check the sign.",
+    a_dropped_from_angle: "The number comes out to the front, but it stays in the angle too.",
+    integrated_instead: "That's integrating: you divided by the number. Differentiating multiplies by it.",
+    power_rule_used: "e to a power isn't x to a power. The power stays the same.",
+    a_kept: "ln of ax goes to 1/x. The number cancels out.",
+    a_divided: "ln of ax goes to 1/x, not 1/(ax). The number cancels out.",
+    ln_flipped: "ln of ax differentiates to 1/x, not 1 over the ln.",
+    constant_kept: "A number on its own doesn't change, so it differentiates to 0."
+  };
+
+  // The derivative table, as printed on the paper: written in x only, whatever the item's letter. [key, y, dy/dx].
+  var TABLE_HEAD = ["\\(y\\) or \\(f(x)\\)", "\\(\\dfrac{dy}{dx}\\) or \\(f'(x)\\)"];
+  var TABLE = [
+    ['x', "\\(x\\)", "\\(1\\)"],
+    ['axn', "\\(ax^{n}\\)", "\\(anx^{n-1}\\)"],
+    ['sin', "\\(\\sin ax\\)", "\\(a\\cos ax\\)"],
+    ['cos', "\\(\\cos ax\\)", "\\(-a\\sin ax\\)"],
+    ['exp', "\\(e^{ax}\\)", "\\(ae^{ax}\\)"],
+    ['ln', "\\(\\ln ax\\)", "\\(\\frac{1}{x}\\)"]
+  ];
+
+  // A line with its maths between \( and \): MaffsText renders each piece in KaTeX and keeps the prose as text.
+  function line(s) { return window.MaffsText ? MaffsText.html(s) : esc(s); }
+  // One TeX string from the bank (an option, an answer), rendered by KaTeX.
+  function maths(tex) { return line('\\(' + tex + '\\)'); }
+  // The table's markup: the two headings and all six rows.
+  function tableHtml() {
+    var h = '<table class="dt"><thead><tr><th scope="col">' + line(TABLE_HEAD[0]) + '</th><th scope="col">' + line(TABLE_HEAD[1]) + '</th></tr></thead><tbody>';
+    TABLE.forEach(function (r) { h += '<tr data-row="' + r[0] + '"><td>' + line(r[1]) + '</td><td>' + line(r[2]) + '</td></tr>'; });
+    return h + '</tbody></table>';
+  }
+  // The rows a wrong answer shows ("From the table:"): the rows named, in the table's order, each a pair of cells.
+  function rowsHtml(rows) {
+    return TABLE.filter(function (r) { return rows.indexOf(r[0]) !== -1; }).map(function (r) {
+      return '<span class="fb-row" data-row="' + r[0] + '"><span class="c">' + line(r[1]) + '</span><span class="c">' + line(r[2]) + '</span></span>';
+    }).join('');
+  }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, pro = false;
+  var WIDE = window.matchMedia ? window.matchMedia('(min-width:1024px)') : null;
+
+  function stageOf(m) { return Number(m.slice(-1)); }
+  function isPro(m) { return m.indexOf('pro-') === 0; }
+  function stageItems(m) { var n = stageOf(m); return BANK.filter(function (q) { return q.stage === n; }); }
+  // A run: PER items from the stage's 12, without repeats (a Fisher-Yates shuffle, then the first PER).
+  function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  // The table's panel is in the page only for a run with the table: a Pro run has no table to open, show or find.
+  function setTable(on) {
+    var old = $('dtable');
+    if (old) old.parentNode.removeChild(old);
+    $('play').classList.toggle('has-table', on);
+    document.body.classList.toggle('with-table', on);
+    if (!on) return;
+    var d = document.createElement('details');
+    d.className = 'maffs-ref dtable'; d.id = 'dtable';
+    d.innerHTML = '<summary><span class="maffs-ref-show">Derivative table</span><span class="maffs-ref-title">Derivative table</span></summary>' +
+      '<div class="maffs-ref-body">' + tableHtml() + '</div>';
+    d.open = !!(WIDE && WIDE.matches);   // open from 1024 px wide; a closed button on anything narrower
+    $('play').appendChild(d);
+  }
+  function highlight(rows) {
+    var trs = document.querySelectorAll('#dtable tr[data-row]');
+    for (var i = 0; i < trs.length; i++) trs[i].classList.toggle('hl', !!rows && rows.indexOf(trs[i].getAttribute('data-row')) !== -1);
+  }
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; qs = list; qi = 0; score = 0;
+    setTable(!isPro(m));
+    show('game');
+    $('hudStage').textContent = stageOf(m) + (isPro(m) ? ' Pro' : '');
+    $('stageLabel').textContent = (isPro(m) ? 'Pro · ' : '') + 'Stage ' + stageOf(m) + ' · ' + STAGES[stageOf(m)];
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m, run(m)); }
+  function nextQuestion() {
+    var fb = $('feedback'), opts = $('opts');
+    if (window.MaffsNext) MaffsNext.clear(fb);
+    fb.innerHTML = '';
+    $('qcard').classList.remove('fb-open');
+    highlight(null);
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++];
+    $('hudQ').textContent = qi + '/' + qs.length;
+    $('hudScore').textContent = score;
+    $('ask').innerHTML = line(Q.prompt);
+    // Four options: the answer and the item's three named errors, shuffled (MaffsOptions drops a duplicate, never draws
+    // again). Each button's dataset.val is the bank's TeX string, its label that TeX in KaTeX; marking reads dataset.val.
+    var vals = MaffsOptions.build(Q.answer.tex, Q.decoys.map(function (d) { return d.tex; }));
+    opts.innerHTML = '';
+    vals.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt'; b.dataset.val = v; b.innerHTML = maths(v);
+      b.addEventListener('click', function () { pick(b); });   // on the button itself, so each option is its own control
+      opts.appendChild(b);
+    });
+    MaffsLock.fresh(opts);
+    state = 'asking';
+  }
+  function errOf(val) {
+    for (var i = 0; i < Q.decoys.length; i++) if (Q.decoys[i].tex === val) return Q.decoys[i].err;
+    return null;
+  }
+  function pick(btn) {
+    if (state !== 'asking') return;
+    var opts = $('opts');
+    if (!MaffsLock.lock(opts)) return;
+    var val = btn.dataset.val, right = val === Q.answer.tex, fb = $('feedback');
+    state = right ? 'done' : 'wrong';
+    if (right) score++;
+    $('hudScore').textContent = score;
+    var bs = opts.querySelectorAll('.opt');
+    for (var i = 0; i < bs.length; i++) {
+      var b = bs[i];
+      b.classList.add(b.dataset.val === Q.answer.tex ? 'is-right' : (b === btn ? 'is-wrong' : 'is-spare'));
+    }
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: right });
+    if (right) {
+      // One line, then on after a moment (canon §7.6: a right answer keeps a brisk delay).
+      fb.innerHTML = '<div class="fb right" data-why="right"><div class="fb-head">Right: <span class="fb-val">' + maths(Q.answer.tex) + '</span></div></div>';
+      MaffsLock.timer(advance, RIGHT_MS);
+      return;
+    }
+    // A wrong answer, in order: the line for the error chosen, the answer, the working, the table's rows, then Next (it
+    // waits). With the table on screen, the same rows are lit in it until Next.
+    var err = errOf(val);
+    $('qcard').classList.add('fb-open');
+    fb.innerHTML = '<div class="fb wrong" data-why="wrong" data-err="' + esc(err) + '">' +
+      '<div class="fb-err">' + esc(LINES[err]) + '</div>' +
+      '<div class="fb-ans">The answer is <span class="fb-val">' + maths(Q.answer.tex) + '</span></div>' +
+      '<div class="worked">' + Q.working.map(function (w) { return '<div class="w-line">' + line(w) + '</div>'; }).join('') + '</div>' +
+      '<div class="fb-rows" data-rows="' + esc(Q.rows.join(' ')) + '"><span class="fb-rows-h">From the table:</span><span class="fb-row-set">' + rowsHtml(Q.rows) + '</span></div>' +
+      '<div class="fb-next"></div></div>';
+    highlight(Q.rows);
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'),
+      label: qi >= qs.length ? 'See results →' : 'Next →' });
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    nextQuestion();
+  }
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, mode, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, mode, score);
+    setTable(false);
+    var n = stageOf(mode);
+    $('resTitle').textContent = (isPro(mode) ? 'Pro · ' : '') + 'Stage ' + n + ' done: ' + STAGES[n];
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + qs.length;
+    $('nextStageBtn').hidden = n >= 5;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (n + 1);
+    show('results');
+  });
+  // A stage's board: with the table, or (Pro) without it.
+  function board(n, p) { return (p ? 'pro-' : '') + 'stage-' + n; }
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-stage]'); if (b) startMode(board(b.dataset.stage, pro)); });
+  $('nextStageBtn').addEventListener('click', function () { startMode(board(Math.min(stageOf(mode) + 1, 5), isPro(mode))); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; setTable(false); show('menu'); });
+  // The Pro switch: off on every load, kept only in this page's memory, and read when a stage is chosen.
+  function setPro(on) {
+    pro = !!on;
+    $('proBtn').setAttribute('aria-pressed', String(pro));
+    $('proState').textContent = pro ? 'Pro is on: no table while you answer. Pro has its own leaderboards.'
+      : 'The derivative table is on screen while you answer.';
+  }
+  $('proBtn').addEventListener('click', function () { setPro(!pro); });
+  // The table follows the screen's width if it changes mid-run (a rotated tablet, a resized window): open from 1024 px.
+  if (WIDE) {
+    var onWide = function () { var d = $('dtable'); if (d) d.open = WIDE.matches; };
+    if (WIDE.addEventListener) WIDE.addEventListener('change', onWide); else if (WIDE.addListener) WIDE.addListener(onWide);
+  }
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of the bank and live state, for scripts/verify-d-by-dx-why.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var i = 0; i < BANK.length; i++) if (BANK[i].id === id) return BANK[i]; return null; }
+  window.DDX = {
+    SLUG: SLUG, MODES: MODES, PER: PER, STAGES: copy(STAGES), LINES: copy(LINES), TABLE: copy(TABLE), TABLE_HEAD: copy(TABLE_HEAD),
+    bank: function () { return copy(BANK); },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      pro: function () { return pro; },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in its own stage (Pro or not), so a verifier can see any item.
+      preview: function (id, p) { var q = item(id); if (q) begin(board(q.stage, !!p), [q]); return !!q; },
+      // Press an option on screen: the right one, or the first wrong one.
+      answer: function (right) {
+        if (state !== 'asking') return;
+        var bs = $('opts').querySelectorAll('.opt');
+        for (var i = 0; i < bs.length; i++) if ((bs[i].dataset.val === Q.answer.tex) === !!right) { bs[i].click(); return; }
+      },
+      next: function () { var b = document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), 'd-by-dx-why');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
