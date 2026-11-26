@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: Large-screen layer (schools/assets/large-screen.js: every MIGRATED page carries the layer's tag once, written from data/large-screen.json; each page's zoom at 1920x955, 2560x1310, 1366x650 and 390x844 equal to this script's own reading of rules a-f; a session played on each page at each size with the answer controls and Next above the fold, no sideways scroll and every media query answering as on the unzoomed page; planted faults caught) | | 12
-# ci-deps: schools/assets/ data/large-screen.json scripts/apply-large-screen.py scripts/measure-large-screen.py scripts/measure-phone-fit.py scripts/check-site.py scripts/check-answer-lock.py scripts/plant_common.py games/maffscards/ games/factor-race/ games/surd-simplifier/ games/negative-number-line/ games/bearing-blitz/ games/core-maths-paper1/ games/its-just-base-60-bruv/
+# ci-deps: schools/assets/large-screen.js data/large-screen.json scripts/apply-large-screen.py scripts/measure-large-screen.py scripts/measure-phone-fit.py scripts/check-site.py scripts/check-answer-lock.py scripts/plant_common.py games/maffscards/ games/factor-race/ games/surd-simplifier/ games/negative-number-line/ games/bearing-blitz/ games/core-maths-paper1/ games/its-just-base-60-bruv/
 """The large-screen layer: who loads it, what each page's zoom must be, and that a zoomed page still works
 (SR-34's goal; contract LARGE-SCREEN-LAYER, 26 Nov 2026).
 
