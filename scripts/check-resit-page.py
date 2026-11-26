@@ -51,7 +51,8 @@ PAGE = "essentials/index.html"
 SUITE = [
     ("number", "Number", ["six-sevens-bruv", "free-daily-pizza", "how-many-parts", "negative-number-line",
         "decimal-detective", "think-of-a-number", "factor-race", "prime-factorisation",
-        "estimation-engine", "estimation-golf", "unit-converter"]),
+        "estimation-engine", "estimation-golf", "unit-converter", "its-just-base-60-bruv"]),  # its-just-base-60-bruv added 26 Nov 2026
+    # (Jon approved listing, 26 Nov 2026, 13:36; contract BASE-60-LIST): Number, after unit-converter (both N13); it picks a stage, never a level, so "One level".
     ("algebra", "Algebra", ["formula-plug-in", "like-terms-collector", "linear-equation-solver",
         "equation-builder", "four-quadrant-explorer", "formula-unlocked", "formula-forge", "sequence-solver"]),
     ("ratio", "Ratio, proportion and percentages", ["split-it", "proportion-blaster",

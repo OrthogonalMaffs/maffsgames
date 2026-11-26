@@ -1,0 +1,443 @@
+{
+ "about": "Written by scripts/measure-large-screen.py; never edit by hand. need: the height in CSS px each page's answer controls and Next need (schools/assets/large-screen.js, rule d).",
+ "pages": {
+  "games/maffscards/index.html": {
+   "need": 535,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     620.0
+    ],
+    [
+     "width",
+     "ge",
+     640.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "ROUTES in check-large-screen.py",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "ks3"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 3,
+    "questions": 53,
+    "answers": 53,
+    "wrong_answers": 0,
+    "tallest": {
+     "what": "the answer controls",
+     "question": 8,
+     "seed": 3,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "ks3",
+     "start": null
+    }
+   }
+  },
+  "games/factor-race/index.html": {
+   "need": 562,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     480.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "year6",
+     "ks3"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 6,
+    "questions": 60,
+    "answers": 60,
+    "wrong_answers": 60,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 1,
+     "seed": 1,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "year6",
+     "start": null
+    }
+   }
+  },
+  "games/surd-simplifier/index.html": {
+   "need": 816,
+   "thresholds": [
+    [
+     "height",
+     "ge",
+     860.0
+    ],
+    [
+     "height",
+     "ge",
+     980.0
+    ],
+    [
+     "width",
+     "ge",
+     320.0
+    ],
+    [
+     "width",
+     "ge",
+     760.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     759.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720,
+     860,
+     980
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "gcse",
+     "alevel"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 18,
+    "questions": 360,
+    "answers": 360,
+    "wrong_answers": 360,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 19,
+     "seed": 1,
+     "window": [
+      1280,
+      860
+     ],
+     "level": "gcse",
+     "start": null
+    }
+   }
+  },
+  "games/negative-number-line/index.html": {
+   "need": 609,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     480.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "year6"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 3,
+    "questions": 30,
+    "answers": 29,
+    "wrong_answers": 29,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 3,
+     "seed": 1,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "year6",
+     "start": null
+    }
+   }
+  },
+  "games/bearing-blitz/index.html": {
+   "need": 715,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "gcse"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 3,
+    "questions": 9,
+    "answers": 9,
+    "wrong_answers": 9,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 1,
+     "seed": 1,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "gcse",
+     "start": null
+    }
+   }
+  },
+  "games/core-maths-paper1/index.html": {
+   "need": 1102,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     360.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     500.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "core"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 3,
+    "questions": 108,
+    "answers": 108,
+    "wrong_answers": 108,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 3,
+     "seed": 2,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "core",
+     "start": null
+    }
+   }
+  },
+  "games/its-just-base-60-bruv/index.html": {
+   "need": 589,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     600.0
+    ],
+    [
+     "height",
+     "le",
+     620.0
+    ],
+    [
+     "width",
+     "ge",
+     1024.0
+    ],
+    [
+     "width",
+     "le",
+     360.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "ks3",
+     "gcse"
+    ],
+    "starts": [
+     "B60.ui.start('stage-1')",
+     "B60.ui.start('stage-2')",
+     "B60.ui.start('stage-3')",
+     "B60.ui.start('stage-4')"
+    ],
+    "sessions": 24,
+    "questions": 240,
+    "answers": 240,
+    "wrong_answers": 240,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 7,
+     "seed": 1,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "ks3",
+     "start": "B60.ui.start('stage-3')"
+    }
+   }
+  }
+ }
+}

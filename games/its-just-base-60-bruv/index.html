@@ -176,6 +176,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 -->
 <link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<script src="/schools/assets/large-screen.js" data-need="589" data-pointer="none"></script>
 </head>
 <body>
 <div class="container">
@@ -740,9 +741,12 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (!Q || !$('game').classList.contains('active')) return;
     if (window.MaffsFold) MaffsFold.decide($('opts'));   // two to a row or not, settled before measuring (width only)
     var fold = foldLine() - CK.SPARE, size = 0, low = reach(CK.MIN);
+    // The room is in screen px; the clock's width is in the page's own px. Under the large-screen layer's zoom
+    // (schools/assets/large-screen.js: zoom on <html>, boxes measured in screen px) one page px is z screen px.
+    var card = $('qcard'), z = card.offsetWidth ? card.getBoundingClientRect().width / card.offsetWidth : 1;
     if (low <= fold) {
       // A taller clock moves everything under it down by its own extra height, so the room left at CK.MIN gives the size.
-      size = Math.min(CK.MAX, $('qcard').clientWidth - 24, Math.floor(CK.MIN + (fold - low) / CK.H));
+      size = Math.min(CK.MAX, card.clientWidth - 24, Math.floor(CK.MIN + (fold - low) / (CK.H * z)));
       while (size > CK.MIN && reach(size) > fold) size -= 2;
       if (size < CK.MIN) size = CK.MIN;
     }

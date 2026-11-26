@@ -175,9 +175,7 @@ const NOT_ON_HUB = {
   // New (contract POSSIBLY-MAYBE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
   'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing',
   // New (contract I-DROPPED-MY-ICE-CREAM, 18 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'i-dropped-my-ice-cream': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract BASE-60, 24 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'its-just-base-60-bruv': 'new, unlisted until Jon has played and approved it; hub row added at listing'
+  'i-dropped-my-ice-cream': 'new, unlisted until Jon has played and approved it; hub row added at listing'
 };
 
 // The levels a game submits under are read from its source by submittedLevels() below
@@ -206,7 +204,8 @@ const LEVEL_OVERRIDES = {
   'its-a-sine':           [['gcse-stage-1', 'gcse-stage-2', 'gcse-stage-3', 'gcse-all-three', 'level3-stage-1', 'level3-stage-2', 'level3-stage-3', 'level3-all-three', 'level4-stage-1', 'level4-stage-2', 'level4-stage-3', 'level4-all-three'], "board = level + '-' + mode: one board per level and mode (Jon's ruling, 17 Nov 2026; every key already has a label; contract SINE-NOT-SINE)"],
   'maffscards':           [['main-easy', 'main-hard', 'all48-easy', 'all48-hard'], "board(): '<deck>-<marvin>', first-to-10 wins only, the rounds taken, fewest best (LOWER_IS_BETTER); the entire-deck game submits nothing (contract MAFFSCARDS-GAME, 20 Nov 2026)"],
   'sums-in-disguise':     [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'], "board() = mode: one board a stage, stage-1..stage-5 (contract SUMS-IN-DISGUISE, 18 Nov 2026; listed by THREE-GAMES-LIST, 24 Nov 2026)"],
-  'some-thingies':        [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'pro-stage-1', 'pro-stage-2', 'pro-stage-3', 'pro-stage-4'], "board(): 'stage-' + stage for Main, 'pro-stage-' + stage for Pro: one board per mode and stage (contract SOME-THINGIES, 21 Nov 2026; listed by THREE-GAMES-LIST, 24 Nov 2026)"]
+  'some-thingies':        [['stage-1', 'stage-2', 'stage-3', 'stage-4', 'pro-stage-1', 'pro-stage-2', 'pro-stage-3', 'pro-stage-4'], "board(): 'stage-' + stage for Main, 'pro-stage-' + stage for Pro: one board per mode and stage (contract SOME-THINGIES, 21 Nov 2026; listed by THREE-GAMES-LIST, 24 Nov 2026)"],
+  'its-just-base-60-bruv': [['stage-1', 'stage-2', 'stage-3', 'stage-4'], "board = 'stage-' + stage: one board a stage, stage-1..stage-4 (contract BASE-60, 24 Nov 2026; listed by BASE-60-LIST, 26 Nov 2026)"]
 };
 
 // Games that may submit only under keys ending '-tournament' (SR-22): the level argument of every submitScore()

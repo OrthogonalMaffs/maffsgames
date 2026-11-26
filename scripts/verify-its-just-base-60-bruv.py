@@ -880,8 +880,10 @@ CK_JS = r"""async ([id, val, force]) => {
   const f = document.querySelector('.site-footer');
   const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
   const low = (els) => { let m = null; for (const e of els) { if (!e.getClientRects().length) continue; const b = e.getBoundingClientRect(); if (b.height) m = Math.max(m === null ? -1e9 : m, b.bottom + scrollY); } return m; };
-  const box = () => { const r = ck.getBoundingClientRect(), a = document.getElementById('ask').getBoundingClientRect(), c = document.getElementById('qcard').getBoundingClientRect();
-    return { w: Math.round(r.width * 10) / 10, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.classList.contains('stage-row') ? 'row' : String(ck.parentElement.className)),
+  // The clock's width in the page's own px: under the large-screen layer's zoom boxes are in screen px (z per page px).
+  const card = document.getElementById('qcard'), z = card.getBoundingClientRect().width / card.offsetWidth;
+  const box = () => { const r = ck.getBoundingClientRect(), a = document.getElementById('ask').getBoundingClientRect(), c = card.getBoundingClientRect();
+    return { w: Math.round(r.width / z * 10) / 10, z: Math.round(z * 100) / 100, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.classList.contains('stage-row') ? 'row' : String(ck.parentElement.className)),
              row: getComputedStyle(document.querySelector('.stage-row')).display !== 'none',
              above: r.bottom <= a.top + 0.5, centre: Math.abs((r.left + r.right) / 2 - (c.left + c.right) / 2) }; };
   const before = box(), opts = [...document.querySelectorAll('#opts .opt')];

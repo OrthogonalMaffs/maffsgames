@@ -3,6 +3,14 @@
 Moved out of `docs/todo.md` on 10 Oct 2026 (contract TODO-SLIM) without rewording. Item numbers are
 unchanged, so a citation such as §1.10 resolves here. Newest moves at the top of each part.
 
+## Moved by BASE-60-LIST, 26 Nov 2026
+
+The row as it stood in `docs/todo.md` on main 42270b2, word for word; the game was listed on 26 Nov 2026 and the row now holds only Jon's lines.
+
+### BASE60-LIST
+
+| BASE60-LIST | **It's Just Base 60, Bruv (`its-just-base-60-bruv`), merged unlisted** (contract BASE-60, 24 Nov 2026). **Jon:** plays all four stages (`/games/its-just-base-60-bruv/`), trims LINES and the "Why 60?" panel, and rules on listing (the Essentials page, the roster's Resit Fluency Strand, the hub and an /updates/ line come with listing). 'Why 60?' starts closed (Jon, 24 Nov 2026, 16:28; GAME-TITLE-IN-PLAY). Start picture and walnut accent in (BASE-60-LOOK, 24 Nov 2026). Play screen: cuckoo and stage pictures (BASE-60-PLAY, 24 Nov 2026); Jon to trim CUCKOO lines after playing. | Jon; home lane (listing) |
+
 ## Moved by TODO-TRIM, 19 Nov 2026
 
 Contract TODO-TRIM (`docs/history/contracts/2026-11-19-todo-trim.md` once merged). Each block below is the text as it stood in `docs/todo.md` on main 527f8b8, word for word; where a row stayed open, `docs/todo.md` now holds its remainder under the same ID.
@@ -4040,3 +4048,11 @@ Rows MAFFSCARDS-LIST, SUMS-IN-DISGUISE-LIST and SOME-THINGIES-LIST as they stood
 | SOME-THINGIES-LIST | **Some Thingies (`some-thingies`), merged unlisted** (contract SOME-THINGIES, 21 Nov 2026). **Jon:** play both modes in both looks (`/games/some-thingies/` and `/games/some-thingies/#kids/Example`), rewrite LINES, send it to the class teacher and ask her: "groups of" or "lots of"; dots or counters; her stage order; multipliers to 10 or 12; is ? × 5 = 15 in her unit. Jon checks the new stage 3 picture, the scaffold and winner stays on (SOME-THINGIES-TWEAKS). Then rule on listing. Built choice to confirm: a Stage 2 adding item scores only when both the count and the total are right. | Jon; home lane (listing) |
 
 **Closed 24 Nov 2026 (THREE-GAMES-LIST).** Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."; about 21:35, answering Project Claude: "No Essentials cards". All three are listed in the KS3 section: portal cards with New badges, sitemap, leaderboard hub and /updates/, and MaffsCards on the spec map (GCSE N4); roster KS3 Games #113, #114 and #115, look signed off by Jon, 2026-11-24; no /essentials/ card. Listed by the home lane. MAFFSCARDS-LIST moved whole: nothing is owed. SUMS-IN-DISGUISE-LIST keeps Jon's LINES rewrite. SOME-THINGIES-LIST keeps Jon's LINES rewrite, the class teacher's questions, his check of the SOME-THINGIES-TWEAKS changes and the built choice to confirm.
+
+**Closed 24 Nov 2026 (THREE-GAMES-LIST).** Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."; about 21:35, answering Project Claude: "No Essentials cards". All three are listed in the KS3 section: portal cards with New badges, sitemap, leaderboard hub and /updates/, and MaffsCards on the spec map (GCSE N4); roster KS3 Games #113, #114 and #115, look signed off by Jon, 2026-11-24; no /essentials/ card. Listed by the home lane. MAFFSCARDS-LIST moved whole: nothing is owed. SUMS-IN-DISGUISE-LIST keeps Jon's LINES rewrite. SOME-THINGIES-LIST keeps Jon's LINES rewrite, Miss O'Brien's questions, his check of the SOME-THINGIES-TWEAKS changes and the built choice to confirm.
+
+## Part closed by LARGE-SCREEN-LAYER (26 Nov 2026)
+
+| LARGE-SCREEN-LAYER | **Large screens (SR-34's goal; not yet in canon). The CSS-zoom pilot is parked** (Jon, 20 Nov 2026, 21:34: "can wait a bit, but it is definitely something we need to fix") on `claude/youthful-fermi-ujam6l` @ 63b758c: `large-screen.css`, apply and check scripts, steps 1.15/1.25/1.4/1.6, the vh divide-back. Contract: `docs/handover/contracts/2026-11-20-large-screen-pilot.md`; measurements: cloud.md's LARGE-SCREEN-PILOT entry. **Cause, a class:** under zoom, media queries read the real viewport while layout is in zoomed px, so viewport-height fold queries go wrong (fold.css's open-card swap; 41 game pages have height queries), and code writing clientX into style.left/top draws off the pointer (decimal-detective, negative-number-line). scroll.js:42's innerHeight and rects were both visual px in the pilot's probe; its scroll units are unmeasured. **Fix at the shared layer:** fold decisions read the effective height (e.g. container queries on a full-height root), drag code in the same unit; then re-pilot the same six. Not per-game zoom caps. Covers MaffsCards list item (1). | Project Claude (contract) |
+
+**Part closed 26 Nov 2026 (LARGE-SCREEN-LAYER).** The row above, moved word for word: the parked CSS-zoom pilot and its cause are answered by the shared layer (`schools/assets/large-screen.js`), which chooses each page's zoom from its own breakpoints, its measured height need and its pointer use. The row in docs/todo.md now holds what is still owed; LARGE-SCREEN-ROLLOUT and LARGE-SCREEN-POINTER are new rows.
