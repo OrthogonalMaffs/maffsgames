@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; every item's wrong-answer picture (hour bar, day strip, counting on, clock faces) with every number recomputed, its size, and gone on short screens; the cuckoo's states, right-answer lines and results bands; fault-injection self-test) | | 1
+# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; every item's wrong-answer picture (hour bar, day strip, counting on, clock faces) with every number recomputed, its size, and gone on short screens; the cuckoo's states, right-answer lines and results bands; the cuckoo's place and size, 80-160 px above the question where every screen fits, in the stage row otherwise, judged against room measured here, unchanged at marking, every item's screens above the fold at 320x568, 375x667, 1366x768 and 1920x955, normal and Aa; the bird right out of the house through a right answer's hold, drooping on a wrong one, still under reduced motion; fault-injection self-test) | | 1
 # ci-deps: games/its-just-base-60-bruv/ tools/its-just-base-60-bruv/
 r"""Independent verification for It's Just Base 60, Bruv (games/its-just-base-60-bruv/), contract BASE-60 (Amendment 1),
 24 Nov 2026. SR-30: checked from its first PR.
@@ -48,9 +48,24 @@ arithmetic on whole minutes and exact fractions:
            twice; the cuckoo's right state, and its wrong state still there a second later and gone after Next; RIGHT_MS long
            enough to read the longest CUCKOO.right line at 238 words a minute; the results line from CUCKOO.results for the
            score's band at scores 0, 3, 4, 6, 7, 9 and 10 (the right-answer timer shortened for these runs only).
+  Clock    (contract BASE-60-CUCKOO, 26 Nov 2026) at 320 x 568, 375 x 667, 1366 x 768 and 1920 x 955, normal and Aa
+           (the Aa button pressed, its fonts loaded), every item, every screen it can show: asking, the right answer and
+           each wrong option. The four options end above the fold while asking (the viewport less the fixed footer, in page
+           coordinates); after marking, the right answer's feedback or Next does, and every option still shown; nothing
+           scrolls sideways. The clock's width and place are the same on every drawing of the item and before and after
+           marking. Its place: above the question (#ckTop, centred, its bottom above the prompt's top) at 80 to 160 px, or
+           in the stage row at 40 px (0 where the row is hidden, as on main). The room is judged here, not by the page's
+           fitting code: a clock above the question under 160 px leaves at most 14 px unused under the item's tallest
+           screen; a clock in the stage row is moved by this script to the top at 80 px and pressed again, and some screen
+           must then end below the fold (5 px allowed for the page's own 4 px spare).
+  Bird     at 1920 x 955 and 320 x 568: a right answer's animation paused and read at 300, 600, 900, 1200 and 1450 ms, the
+           bird showing and its box wholly left of the roof's corner (out of the house) at each, gone at the end; a wrong
+           answer leaves it out and drooping (rotated); under prefers-reduced-motion, both states show at once with no
+           animation or transition running.
 
 Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "art 375x667", "pic 375x667", "pic 320x700",
-"pic 320x568", "cuckoo 1280x720", "fit <W>x<H>" (four) and "plant: <what>" (one per planted fault).
+"pic 320x568", "cuckoo 1280x720", "fit <W>x<H>" (four), "ck <W>x<H> <normal|Aa> stage-<n>" (32: four sizes, two modes, four stages), "bird 1920x955", "bird 320x568"
+and "plant: <what>" (one per planted fault).
 
     python scripts/verify-its-just-base-60-bruv.py              # every unit, then the self-test
     python scripts/verify-its-just-base-60-bruv.py --selftest   # the planted faults only
@@ -815,6 +830,158 @@ def check_fit(page, items, size, lines, out, info):
     info.setdefault('fit', []).append((size, n, worst))
 
 
+# ---------------------------------------------------------------- the cuckoo's place and size (BASE-60-CUCKOO)
+CK_SIZES = [(320, 568), (375, 667), (1366, 768), (1920, 955)]
+CK_MIN, CK_MAX, CK_ROW = 80, 160, 40   # the contract's range above the question (CK_MIN this lane's choice, named in its report)
+CK_SPARE = 5    # the page keeps 4 px spare under its tallest screen; a forced clock inside that is not counted as room
+CK_SLACK = 14   # a clock above the question but under CK_MAX leaves at most this much room unused on its tallest screen (px)
+
+# One screen of an item: the clock's box and place, then (with `val`) the option pressed and the screen after marking.
+# `force` puts the clock above the question at that width before anything is pressed, by moving the element itself, so the
+# room is judged here, never by the page's own fitting code.
+CK_JS = r"""async ([id, val, force]) => {
+  B60.ui.preview(id);
+  const fr = () => new Promise(r => requestAnimationFrame(() => r()));
+  await fr(); await fr();
+  const ck = document.getElementById('cuckoo');
+  if (force) { const t = document.getElementById('ckTop'); t.appendChild(ck); ck.style.width = force + 'px'; ck.style.height = Math.round(force * 0.9) + 'px'; await fr(); await fr(); }
+  const f = document.querySelector('.site-footer');
+  const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  const low = (els) => { let m = null; for (const e of els) { if (!e.getClientRects().length) continue; const b = e.getBoundingClientRect(); if (b.height) m = Math.max(m === null ? -1e9 : m, b.bottom + scrollY); } return m; };
+  const box = () => { const r = ck.getBoundingClientRect(), a = document.getElementById('ask').getBoundingClientRect(), c = document.getElementById('qcard').getBoundingClientRect();
+    return { w: Math.round(r.width * 10) / 10, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.id === 'stageRow' ? 'row' : String(ck.parentElement.id)),
+             row: getComputedStyle(document.getElementById('stageRow')).display !== 'none',
+             above: r.bottom <= a.top + 0.5, centre: Math.abs((r.left + r.right) / 2 - (c.left + c.right) / 2) }; };
+  const before = box(), opts = [...document.querySelectorAll('#opts .opt')];
+  const out = { fold, before, n: opts.length, opts: low(opts), wide: document.documentElement.scrollWidth > innerWidth };
+  if (val === null) return out;
+  const b = opts.find(x => x.dataset.val === val);
+  if (!b) { out.missing = true; return out; }
+  b.click();
+  await fr(); await fr();
+  out.after = box();
+  out.optsAfter = low(document.querySelectorAll('#opts .opt'));
+  out.next = low(document.querySelectorAll('#feedback .maffs-next'));
+  out.head = low(document.querySelectorAll('#feedback .fb.right'));
+  // The bird out (its transition finished) must not cover the stage label's text.
+  const bird = ck.querySelector('.ck-bird');
+  bird.getAnimations().forEach(x => { if (!x.animationName) x.finish(); });
+  const lab = document.getElementById('stageLabel'), rg = document.createRange(); rg.selectNodeContents(lab);
+  const bb = bird.getBoundingClientRect(), tb = rg.getBoundingClientRect();
+  out.cover = lab.getClientRects().length && tb.width && bb.width && getComputedStyle(bird).opacity > 0.5
+    && bb.left < tb.right && tb.left < bb.right && bb.top < tb.bottom && tb.top < bb.bottom;
+  return out;
+}"""
+
+
+def ck_item(page, q, force=None):
+    """Every screen of one item: asking, the right answer, each wrong option. Returns (screens, the lowest point any reaches)."""
+    vals = page.evaluate('(id) => { B60.ui.preview(id); return [...document.querySelectorAll("#opts .opt")].map(b => b.dataset.val); }', q['id'])
+    screens = [page.evaluate(CK_JS, [q['id'], v, force]) for v in vals]
+    lows = [x for r in screens for x in (r['opts'], r.get('optsAfter'), r.get('next'), r.get('head')) if x is not None]
+    return vals, screens, max(lows)
+
+
+def check_ck(page, items, size, aa, out, info, stage):
+    tag0 = '%dx%d %s' % (size[0], size[1], 'Aa' if aa else 'normal')
+    sizes = Counter()
+    for q in items:
+        vals, screens, lowest = ck_item(page, q)
+        fold = screens[0]['fold']
+        tag = '%s at %s' % (q['id'], tag0)
+        b = screens[0]['before']
+        for v, r in zip(vals, screens):
+            t = '%s, %s' % (tag, 'right' if v == q['answer'] else 'choosing %r' % v)
+            if r.get('missing'):
+                out.append('%s: that option is not on screen' % t)
+                continue
+            if r['wide']:
+                out.append('%s: the page scrolls sideways' % t)
+            if r['opts'] is None or r['opts'] > fold or r['n'] != len(vals):
+                out.append('%s: the options end at %s px, below the fold at %d px, while asking' % (t, r['opts'], fold))
+            if r['before']['w'] != b['w'] or r['before']['place'] != b['place']:
+                out.append('%s: the clock is %s px (%s) on one drawing of the question and %s px (%s) on another' % (t, b['w'], b['place'], r['before']['w'], r['before']['place']))
+            a = r['after']
+            if a['w'] != r['before']['w'] or a['place'] != r['before']['place']:
+                out.append('%s: the clock is %s px (%s) before marking and %s px (%s) after' % (t, r['before']['w'], r['before']['place'], a['w'], a['place']))
+            if v == q['answer']:
+                if r['head'] is None or r['head'] > fold:
+                    out.append('%s: the right answer\'s feedback ends at %s px, below the fold at %d px' % (t, r['head'], fold))
+            elif r['next'] is None or r['next'] > fold:
+                out.append('%s: Next ends at %s px, below the fold at %d px' % (t, r['next'], fold))
+            if r.get('cover'):
+                out.append('%s: the bird, out of the house, covers the stage label' % t)
+            if r['optsAfter'] is not None and r['optsAfter'] > fold:
+                out.append('%s: an option shown after marking ends at %d px, below the fold at %d px' % (t, r['optsAfter'], fold))
+        # The place and size, judged against the room this script measures itself.
+        if b['place'] == 'top':
+            if not (CK_MIN <= b['w'] <= CK_MAX):
+                out.append('%s: the clock above the question is %s px wide, not %d to %d' % (tag, b['w'], CK_MIN, CK_MAX))
+            if not b['above'] or b['centre'] > 2:
+                out.append('%s: the clock is not centred above the question (%s)' % (tag, b))
+            if b['w'] < CK_MAX - 1 and fold - lowest > CK_SLACK:
+                out.append('%s: the clock is %s px with %.0f px unused under its tallest screen (more than %d): it could be bigger' % (tag, b['w'], fold - lowest, CK_SLACK))
+        elif b['place'] == 'row':
+            if b['w'] != (CK_ROW if b['row'] else 0):
+                out.append('%s: the clock in the stage row is %s px wide, not %d (the row %s)' % (tag, b['w'], CK_ROW, 'shown' if b['row'] else 'hidden'))
+            _, _, forced = ck_item(page, q, CK_MIN)
+            if forced <= fold - CK_SPARE:
+                out.append('%s: the clock is in the stage row, but at %d px above the question every screen still fits (lowest %d px, fold %d px)' % (tag, CK_MIN, forced, fold))
+        else:
+            out.append('%s: the clock is in %r, neither above the question nor in the stage row' % (tag, b['place']))
+        sizes[(b['place'], b['w'])] += 1
+    info.setdefault('ck', []).append((tag0 + ' ' + stage, len(items), sizes))
+
+
+# The bird, read from the drawing as it moves: its box against the house's (the roof's left corner is the house's left edge).
+BIRD_JS = r"""(t) => {
+  const ck = document.getElementById('cuckoo'), bird = ck.querySelector('.ck-bird'), roof = ck.querySelector('polygon');
+  const anims = bird.getAnimations().concat(ck.querySelector('.ck-door').getAnimations());
+  const a = bird.getAnimations().find(x => x.animationName);
+  if (a && t !== null) { a.pause(); a.currentTime = t; }
+  const r = bird.getBoundingClientRect(), h = roof.getBoundingClientRect(), cs = getComputedStyle(bird);
+  return { state: ck.getAttribute('data-state'), n: anims.length, dur: a ? a.effect.getComputedTiming().duration : null,
+           out: r.right < h.left, gap: h.left - r.right, op: Number(cs.opacity), tf: cs.transform, w: ck.getBoundingClientRect().width };
+}"""
+HOLD = [300, 600, 900, 1200, 1450]   # ms into the right answer's animation: the bird must be out, and showing, at each
+
+
+def check_bird(page, size, out, info):
+    tag = 'the bird at %dx%d' % size
+    page.evaluate("(m) => B60.ui.start(m)", 'stage-1')
+    page.evaluate('B60.ui.answer(true)')
+    first = page.evaluate(BIRD_JS, None)
+    if first['dur'] is None or first['dur'] < HOLD[-1] + 200:
+        out.append('%s: a right answer runs the bird for %s ms, not long enough to hold it out until %d ms' % (tag, first['dur'], HOLD[-1]))
+    else:
+        for t in HOLD:
+            r = page.evaluate(BIRD_JS, t)
+            if not r['out'] or r['op'] < 0.99:
+                out.append('%s: %d ms into a right answer the bird does not leave the house (%.1f px clear of the roof, opacity %.2f)' % (tag, t, r['gap'], r['op']))
+        end = page.evaluate(BIRD_JS, first['dur'])
+        if end['op'] > 0.01:
+            out.append('%s: the bird has not gone back at the end of a right answer (opacity %.2f)' % (tag, end['op']))
+    page.evaluate("document.getElementById('menuBtn').click()")
+    page.evaluate("(m) => B60.ui.start(m)", 'stage-2')
+    page.evaluate('B60.ui.answer(false)')
+    page.wait_for_timeout(600)
+    r = page.evaluate(BIRD_JS, None)
+    if r['state'] != 'wrong' or not r['out'] or r['op'] < 0.99 or 'matrix' not in r['tf'] or abs(float(r['tf'].split('(')[1].split(',')[1])) < 0.3:
+        out.append('%s: a wrong answer does not leave the bird out and drooping (%s)' % (tag, r))
+    # Reduced motion: each state as it stands, nothing moving.
+    page.emulate_media(reduced_motion='reduce')
+    page.evaluate("document.getElementById('menuBtn').click()")
+    for m, right, st in (('stage-3', True, 'right'), ('stage-4', False, 'wrong')):
+        page.evaluate("(m) => B60.ui.start(m)", m)
+        page.evaluate('(r) => B60.ui.answer(r)', right)
+        r = page.evaluate(BIRD_JS, None)
+        if r['n'] or r['state'] != st or not r['out'] or r['op'] < 0.99:
+            out.append('%s, reduced motion, %s answer: %d animation(s) running, the bird %s (it should stand out of the house, still)' % (tag, st, r['n'], r))
+        page.evaluate("document.getElementById('menuBtn').click()")
+    page.emulate_media(reduced_motion='no-preference')
+    info.setdefault('bird', []).append((size, first['w']))
+
+
 def check(html, out, units, shard=None, sample=None):
     unit = shard.unit if shard is not None else (lambda uid: contextlib.nullcontext())
     info, items = {}, None
@@ -862,6 +1029,16 @@ def check(html, out, units, shard=None, sample=None):
                             check_pics(page, items, size, out, info)
                         elif uid.startswith('cuckoo'):
                             check_cuckoo(page, lines, out, info)
+                        elif uid.startswith('ck '):
+                            aa = uid.split(' ')[2] == 'Aa'
+                            if aa:
+                                page.evaluate("document.getElementById('a11yToggle').click()")
+                                page.evaluate("async () => { if (document.fonts && document.fonts.ready) await document.fonts.ready; }")
+                            st = int(uid.split(' ')[3][-1])
+                            mine = [q for q in items if q['stage'] == st]
+                            check_ck(page, mine[:sample] if sample else mine, size, aa, out, info, uid.split(' ')[3])
+                        elif uid.startswith('bird'):
+                            check_bird(page, size, out, info)
                         elif uid.startswith('play'):
                             for m in MODES:
                                 play(page, m, lines, out)
@@ -921,6 +1098,19 @@ PLANTS = [
      'cuckoo 1280x720', r'cuckoo: a run of 10 repeats'),
     ('the working pushed below the fold', [('.worked{font-size:.94rem;line-height:1.5}', '.worked{font-size:.94rem;line-height:1.5;padding-top:420px}')],
      'fit 375x667', r'the working ends at \d+ px, below the fold at 627 px'),
+    # BASE-60-CUCKOO (26 Nov 2026): the contract's three, then the clock left small where there is room and reduced motion
+    # ignored.
+    ('the clock fixed at 160 px regardless of room', [("    ckPlace($('qcard'), size);\n  }", "    ckPlace($('qcard'), CK.MAX);\n  }")],
+     'ck 320x568 normal stage-1', r'(Next|the right answer\'s feedback|the options) end(s)? at [\d.]+ px, below the fold'),
+    ('the clock\'s size changing at marking', [("function cuckoo(st) { $('cuckoo').setAttribute('data-state', st); }",
+                                               "function cuckoo(st) { $('cuckoo').setAttribute('data-state', st); if (st !== 'idle') ckPlace($('qcard'), CK.MIN); }")],
+     'ck 1920x955 normal stage-1', r'the clock is 160 px \(top\) before marking and 80 px \(top\) after'),
+    ('the bird not leaving the house on a right answer', [('.ck-bird{--out:-24px;', '.ck-bird{--out:-11px;')],
+     'bird 1920x955', r'ms into a right answer the bird does not leave the house'),
+    ('the clock left at its smallest where there is room', [('Math.floor(CK.MIN + (fold - low) / CK.H)', 'CK.MIN')],
+     'ck 1920x955 normal stage-1', r'the clock is 80 px with \d+ px unused under its tallest screen'),
+    ('reduced motion ignored', [('@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}', '')],
+     'bird 1920x955', r'reduced motion, right answer: [1-9]\d* animation'),
 ]
 
 
@@ -955,7 +1145,8 @@ def main():
     args = ap.parse_args()
     shard = bc.Shard(__file__, args)
     units = (['bank', 'play 375x667', 'why 1280x720', 'why 375x667', 'art 375x667', 'pic 375x667', 'pic 320x700', 'pic 320x568',
-              'cuckoo 1280x720'] + ['fit %dx%d' % s for s in SIZES])
+              'cuckoo 1280x720'] + ['fit %dx%d' % s for s in SIZES]
+             + ['ck %dx%d %s %s' % (s + (m, st)) for s in CK_SIZES for m in ('normal', 'Aa') for st in MODES] + ['bird 1920x955', 'bird 320x568'])
     if args.selftest:
         units = []
     mine = shard.pick(units + ['plant: ' + p[0] for p in PLANTS])
@@ -977,6 +1168,10 @@ def main():
         print('%s: %d items\' wrong-answer pictures at %dx%d: %s' % (SLUG, n, size[0], size[1], 'every number recomputed, at most 72 px tall, inside the card' if shown else 'none drawn (600 px tall or less)'))
     if 'bands' in info:
         print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for %d scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
+    for tag, n, sizes in info.get('ck', []):
+        print('%s: the clock at %s on %d items, every screen above the fold: %s' % (SLUG, tag, n, ', '.join('%s %g px x%d' % (p, w, k) for (p, w), k in sorted(sizes.items()))))
+    for size, w in info.get('bird', []):
+        print('%s: the bird at %dx%d (clock %g px): right out of the house from %d to %d ms of a right answer, back after; drooping on a wrong one; still under reduced motion' % (SLUG, size[0], size[1], w, HOLD[0], HOLD[-1]))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):
