@@ -893,6 +893,14 @@ def unit_names(engines):
     return out
 
 
+def launch_options(engine):
+    """Firefox will not start as root when HOME belongs to another user, which is how a GitHub Actions container runs
+    (HOME=/github/home, uid 0; Playwright's documented case): give it root's own home."""
+    if engine == "firefox" and hasattr(os, "geteuid") and os.geteuid() == 0:
+        return {"env": dict(os.environ, HOME="/root")}
+    return {}
+
+
 async def run_units(units, shots=None):
     from playwright.async_api import async_playwright
     bc = mpf().bc
@@ -905,10 +913,10 @@ async def run_units(units, shots=None):
             async def browser_for(engine):
                 if engine not in browsers:
                     try:
-                        browsers[engine] = await getattr(pw, engine).launch()
+                        browsers[engine] = await getattr(pw, engine).launch(**launch_options(engine))
                     except Exception as e:  # noqa: BLE001
                         browsers[engine] = None
-                        missing.append("%s: %s" % (engine, str(e).split("\n")[0][:120]))
+                        missing.append("%s: %s" % (engine, " / ".join(x.strip() for x in str(e).split("\n") if x.strip())[:700]))
                 return browsers[engine]
             for uid, shard_unit in units:
                 parts = uid.split(" ")
@@ -1035,7 +1043,7 @@ async def run_plants(engine="chromium"):
     proc, base = bc.start_stub_server()
     try:
         async with async_playwright() as pw:
-            browser = await getattr(pw, engine).launch()
+            browser = await getattr(pw, engine).launch(**launch_options(engine))
             try:
                 plants = layer_plants()
             except pc.StalePlant as e:
