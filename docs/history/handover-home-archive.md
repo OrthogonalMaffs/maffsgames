@@ -1,5 +1,62 @@
 # Handover archive: home lane
 
+## Moved 2026-11-26 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
+## 2026-11-24 (home): TIER3-COVERAGE-REPORT (which games CI's tier 3 really plays, and whether the 300 ms answer lock is why it skips the rest)
+
+Claude Code (home lane), worktree `~/mg-t3`, branch `claude/tier3-coverage-report`. The contract is at `docs/history/contracts/2026-11-24-tier3-coverage-report.md` (verbatim). The first commit closed out HALF-THE-SIZE.
+
+- **Report:** `docs/audits/tier3-coverage-2026-11.md`, with one row per game, every run's reason in full, and the result when waited out.
+- **Stock tier 3, local = CI exactly** (main 77b6a78, run 45255198196, all four shards' numbers and the same 106 UNSUPPORTED games):
+  - 116 games, 352 runs;
+  - 10 games PLAYED in every run, 4 more at some levels;
+  - 49 runs PASS, 303 UNSUPPORTED, 0 FAIL, 556 questions;
+  - 9 UNSUPPORTED games are recorded in tier3_exceptions and 97 are not.
+- **Waited out** (each tap waits until `MaffsLock.isFresh()` is false, as check-answer-lock.py does; throwaway wrapper, never committed): of the 97 unrecorded games,
+  - 39 now play fully, 4 at some levels;
+  - 54 are still UNSUPPORTED: 25 never offer an option group, 29 are still unmarked after a waited tap;
+  - runs passing site-wide 49 to 167, questions 556 to 1597.
+- **Control:** FRESH_MS set to 0 and no wait gives the same 39 + 4, so the 300 ms window is the cause for those 43.
+- **Cloud lane's report confirmed:** formula-unlocked and scale-factor-scaling are UNSUPPORTED on every run stock and PASS on every run (10 questions) waited out.
+- **Also found:** quadratic-factoriser's tier3_exceptions entry is stale (it PASSES).
+- **Decided for you:** tier 3 was run through a throwaway wrapper that calls check-site.py's own `tier3()` with CI's arguments, rather than the bare command, because CI's output truncates reasons to 90 characters and never lists the games it played. Its numbers match the bare command's (CI's) on all four shards.
+- **Merged** on 24 Nov as fa3f7be (#895) via merge-pr.py, which ended "main fa3f7be run 45356433810: GREEN".
+- **PR head de3cfbe:** check-site 45354282188 and phone-fit-full 45354282154, both success.
+- **Main on fa3f7be:** check-site 45356433810 success, phone-fit-full 45356433623 success, pages build 45356433627 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-24-tier3-coverage-report.md`, closed out by TIER3-LOCK-FIX's first commit.
+
+## 2026-11-23 (home): HALF-THE-SIZE (Scale Factor Scaling becomes "But It's Only Half the Size!": funny prompts, 8 new questions, KaTeX notation, calculator required)
+
+Claude Code (home lane), worktree `~/mg-hs`, branch `claude/half-the-size`. The contract is at `docs/handover/contracts/2026-11-23-half-the-size.md` (verbatim). The first commit closed out FORMULA-UNLOCKED-BANK.
+
+- **Banks:** APPENDIX A, verbatim: 54 items in five tiers. GCSE serves 46, A-Level and Level 4 serve 54.
+- **KaTeX:** steps and notes go through MaffsText, and fraction options show as \dfrac. The start screen renders once KaTeX has loaded, and startGame waits for it.
+- **Calculator:** required, docked to the question card.
+- **Name:** changed everywhere step 5 lists except `<title>`/og:title, which stay as before by Jon's ruling, because check-meta ties them to data/games.json, which this contract cannot touch.
+- **Verifier:** APPENDIX B and T5, plus a KaTeX check on all 54 items. PASS, with all 7 plants caught.
+- **First fix:**
+  - scroll.js loads with keypad.js;
+  - the KaTeX wait's setTimeout carries a `// lock-ok:` reason;
+  - verify-formula-unlocked.py, which grew in #893 and was over the per-line budget at 213s, is split into 3 ci-shards parts (base run plus 9 plants), as Project Claude authorised.
+- **Merged** on 23 Nov as 77b6a78 (#894) via merge-pr.py, which ended "main 77b6a78 run 45255198196: GREEN".
+- **PR head d4393cfe:** check-site 45252185356 and phone-fit-full 45252185350, both success.
+- **Main on 77b6a78:** check-site 45255198196 success, phone-fit-full 45255197837 success, pages build 45255197006 success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-half-the-size.md`, closed out by TIER3-COVERAGE-REPORT's first commit.
+
+## 2026-11-23 (home): FORMULA-UNLOCKED-BANK (Formula Unlocked's A-Level mode stops repeating questions; 57 new questions take every level to 40 or more)
+
+Claude Code (home lane), worktree `~/mg-fu`, branch `claude/formula-unlocked-bank`. The contract is at `docs/history/contracts/2026-11-23-formula-unlocked-bank.md` (verbatim). The first commit closed out WWIUT-RESTORE-7.
+
+- **Banks:** the 57 appendix questions, verbatim. Q_GCSE is now 40, Q_ALEVEL 26 and Q_LEVEL4 40, with the contract's stage counts.
+- **A-Level draw:** now 6+7+7 from the stage lists, which hold each question once.
+- **verify-formula-unlocked.py:** BANKS, GREEK and the \ln\left( fix. A new session check runs startGame() 1000 times at each level: no repeats, and no session shorter than its draw. It passes at all three levels: 106 questions, and all 9 self-test plants caught, including the old A-Level line.
+- **Decided for Jon:** Level 4's session minimum is 18, not 20, because its draw (unchanged by contract) takes 4+5+5+4. Also, the session check runs only for its own plant during the self-test.
+- **First fix:** the Gate's 6 P's bank line failed, because change-subject.json is generated from this game. I regenerated it (schools/assets/six-ps/, allowed by Jon on 23 Nov). The time budget was not the failure.
+- **Merged** on 23 Nov as 28be68a (#893) via merge-pr.py, which ended "main 28be68a run 45236117062: GREEN".
+- **PR head 6d1fc0eb:** check-site 45233939506 and phone-fit-full 45233939165, both success.
+- **Main on the merge commit:** check-site 45236117062, phone-fit-full 45236117010 and pages 45236116620, all success.
+- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/2026-11-23-formula-unlocked-bank.md`, closed out by HALF-THE-SIZE's first commit.
+
 ## Moved 2026-11-25 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
 ## 2026-11-23 (home): WWIUT-RESTORE-7 ("When will I use this?" gets back the 7 jobs #888 left out, and a Probability page: 47 jobs in 17 topics)

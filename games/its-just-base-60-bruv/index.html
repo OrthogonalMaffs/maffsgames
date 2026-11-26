@@ -73,15 +73,22 @@ a.back-link:hover{color:var(--text)}
 /* The stage row (BASE-60-PLAY): the label in the middle column, the cuckoo clock in the right one, so the two never meet. */
 .stage-row{display:grid;grid-template-columns:40px 1fr 40px;align-items:center}
 .stage-row .stage-label{grid-column:2}
-/* The cuckoo: idle (door shut), right (the bird pops out and back, about 600 ms), wrong (out and drooping until Next). Under
-   prefers-reduced-motion the global rule below stops the movement, and each state shows as it stands. */
+/* The cuckoo's place (BASE-60-CUCKOO): centred above the question, 80 to 160 px wide, wherever the room allows; otherwise
+   in the stage row at 40 px, as before. fitCuckoo() below measures the room and moves it; never a breakpoint. */
+.ck-top{display:flex;justify-content:center}
+.ck-top:empty{display:none}
+/* The cuckoo: idle (door shut), right (the bird comes right out of the house, bows twice, holds about 1.2 s and goes back),
+   wrong (out and drooping until Next). Every distance is in the drawing's own units, so the movement scales with the
+   clock. Under prefers-reduced-motion the global rule below stops the movement, and each state shows as it stands. */
 .cuckoo{grid-column:3;justify-self:end;display:block;width:40px;height:36px;overflow:visible}
 .ck-door{transform-box:fill-box;transform-origin:left center;transition:transform .15s}
 .cuckoo[data-state="right"] .ck-door,.cuckoo[data-state="wrong"] .ck-door{transform:scaleX(.15)}
-.ck-bird{transform-box:fill-box;transform-origin:right center;opacity:0;transition:transform .3s,opacity .15s}
-.cuckoo[data-state="right"] .ck-bird{opacity:1;transform:translateX(-11px);animation:ck-pop .6s ease-in-out forwards}
-.cuckoo[data-state="wrong"] .ck-bird{opacity:1;transform:translateX(-11px) rotate(-35deg)}
-@keyframes ck-pop{0%{opacity:0;transform:translateX(0)}25%{opacity:1;transform:translateX(-11px)}75%{opacity:1;transform:translateX(-11px)}100%{opacity:0;transform:translateX(0)}}
+.ck-bird{--out:-24px;transform-box:fill-box;transform-origin:right center;opacity:0;transition:transform .3s,opacity .15s}
+/* --out, 24 units left: the bird's tail (x 40.4) ends at 16.4, 17.2 at the bottom of a bow, clear of the roof's corner (19.5),
+   so it is right out of the house. The 1.8 s: out in 0.27 s, two bows, held out until 1.48 s (1.2 s out), back by 1.8 s; RIGHT_MS is 3 s. */
+.cuckoo[data-state="right"] .ck-bird{opacity:1;transform:translateX(var(--out));animation:ck-pop 1.8s ease-in-out forwards}
+.cuckoo[data-state="wrong"] .ck-bird{opacity:1;transform:translateX(var(--out)) rotate(-35deg)}
+@keyframes ck-pop{0%{opacity:0;transform:translateX(0)}15%{opacity:1;transform:translateX(var(--out))}28%{transform:translateX(var(--out)) rotate(-14deg)}40%{transform:translateX(var(--out))}53%{transform:translateX(var(--out)) rotate(-14deg)}66%{transform:translateX(var(--out))}82%{opacity:1;transform:translateX(var(--out))}100%{opacity:0;transform:translateX(0)}}
 .ask{font-size:1.05rem;line-height:1.4;text-align:center}
 /* The four options: one to a row, or two to a row where every option fits on one line (fold.js decides, .maffs-two-up). */
 .opts{display:flex;flex-direction:column;gap:.45rem}
@@ -169,7 +176,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
 -->
 <link rel="stylesheet" href="../../schools/assets/stage-exit.css">
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
-<script src="/schools/assets/large-screen.js" data-need="589" data-pointer="none"></script>
+<script src="/schools/assets/large-screen.js" data-need="716" data-pointer="none"></script>
 </head>
 <body>
 <div class="container">
@@ -211,7 +218,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
     </div>
     <div class="qcard" id="qcard">
-      <div class="stage-row"><div class="stage-label" id="stageLabel"></div>
+      <div class="stage-row" id="stageRow"><div class="stage-label" id="stageLabel"></div>
       <svg class="cuckoo" id="cuckoo" data-state="idle" viewBox="12 0 40 36" aria-hidden="true" focusable="false">
         <polygon points="20,12 36,1 52,12" fill="var(--accent)" stroke="var(--brass)" stroke-width="1"/>
         <rect x="23" y="11" width="26" height="24" rx="1.5" fill="var(--accent)"/>
@@ -221,6 +228,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
         <g stroke="var(--accent)" stroke-width=".7"><line x1="36" y1="22.6" x2="36" y2="23.8"/><line x1="40.9" y1="27.5" x2="39.7" y2="27.5"/><line x1="36" y1="32.4" x2="36" y2="31.2"/><line x1="31.1" y1="27.5" x2="32.3" y2="27.5"/><line x1="39.5" y1="24" x2="38.8" y2="24.7"/><line x1="39.5" y1="31" x2="38.8" y2="30.3"/><line x1="32.5" y1="31" x2="33.2" y2="30.3"/><line x1="32.5" y1="24" x2="33.2" y2="24.7"/></g>
         <g class="ck-bird"><ellipse cx="35" cy="16.5" rx="5" ry="3.1" fill="var(--brass-dim)" stroke="var(--text)" stroke-width=".7"/><circle cx="30.6" cy="14.6" r="2.5" fill="var(--brass-dim)" stroke="var(--text)" stroke-width=".7"/><polygon points="28.3,14 25.4,15 28.3,15.8" fill="var(--brass)"/><circle cx="30.1" cy="14" r=".6" fill="var(--text)"/><path d="M34 15.6 q2.4 -1.6 4.4 .4" fill="none" stroke="var(--text)" stroke-width=".6"/></g>
       </svg></div>
+      <div class="ck-top" id="ckTop"></div>
       <div class="ask" id="ask"></div>
       <div class="opts maffs-options" id="opts"></div>
       <div class="feedback" id="feedback" aria-live="polite"></div>
@@ -666,6 +674,96 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, deck = [], dealt = 0;
   function cuckoo(st) { $('cuckoo').setAttribute('data-state', st); }
 
+  /* ---------- the cuckoo's place and size (BASE-60-CUCKOO, 26 Nov 2026) ----------
+     Above the question, as big as the room allows from CK.MIN to CK.MAX px wide (3 to 4 times the stage row's 40 at 120 to
+     160); with less room than CK.MIN, in the stage row at 40 px. 80 px, twice the row's size, is the smallest worth giving it
+     a line of its own: smaller, it is the corner icon again and costs a line. The room is measured, never a breakpoint: the
+     fold is the viewport less the fixed footer (fit_common.py's MEASURE_JS and measure-phone-fit.py measure it the same way),
+     and the size is chosen when a question is drawn, against every screen that question can show: the four options while
+     asking, the right answer's line, and each wrong option's line, answer, picture, working and Next. Marking never changes it,
+     so nothing jumps as the bird comes out. The screens are laid out in a hidden copy of the card, never the card itself. */
+  var CK = { MAX: 160, MIN: 80, ROW: 40, H: 36 / 40, SPARE: 4 };
+  function ckPlace(card, size) {                    // size 0: in the stage row
+    var ck = card.querySelector('.cuckoo'), top = card.querySelector('.ck-top'), row = card.querySelector('.stage-row');
+    if (size) {
+      if (ck.parentNode !== top) top.appendChild(ck);
+      ck.style.width = size + 'px'; ck.style.height = Math.round(size * CK.H) + 'px';
+    } else {
+      if (ck.parentNode !== row) row.appendChild(ck);
+      ck.style.width = ''; ck.style.height = '';
+    }
+    ck.setAttribute('data-place', size ? 'top' : 'row');
+  }
+  function foldLine() {
+    var f = document.querySelector('.site-footer');
+    return window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  }
+  // The lowest page y that any screen of the question on screen reaches with the clock at `size`.
+  function reach(size) {
+    var real = $('qcard'), c = real.cloneNode(true);
+    var all = c.querySelectorAll('[id]');
+    for (var i = 0; i < all.length; i++) all[i].removeAttribute('id');
+    c.removeAttribute('id');
+    c.setAttribute('aria-hidden', 'true');
+    c.style.cssText = 'position:absolute;left:0;top:0;width:' + real.offsetWidth + 'px;visibility:hidden;pointer-events:none';
+    ckPlace(c, size);
+    var fb = c.querySelector('.feedback'), bs = c.querySelectorAll('.opt');
+    fb.innerHTML = ''; c.classList.remove('fb-open');
+    real.parentNode.appendChild(c);
+    var base = real.getBoundingClientRect().top + window.scrollY - c.getBoundingClientRect().top, low = -Infinity;
+    function at(sel) {
+      var els = c.querySelectorAll(sel);
+      for (var k = 0; k < els.length; k++) if (els[k].getClientRects().length) low = Math.max(low, els[k].getBoundingClientRect().bottom + base);
+    }
+    function mark(chosen) {
+      for (var k = 0; k < bs.length; k++) {
+        bs[k].classList.remove('is-right', 'is-wrong', 'is-spare');
+        if (chosen !== null) bs[k].classList.add(bs[k].dataset.val === Q.answer ? 'is-right' : (bs[k].dataset.val === chosen ? 'is-wrong' : 'is-spare'));
+      }
+    }
+    mark(null); at('.opt');
+    mark(Q.answer); fb.innerHTML = rightHtml(deck[dealt % deck.length]); at('.opt'); at('.fb');
+    c.classList.add('fb-open');
+    for (var j = 0; j < bs.length; j++) {
+      var v = bs[j].dataset.val;
+      if (v === Q.answer) continue;
+      mark(v);
+      fb.innerHTML = wrongHtml(errOf(v));
+      // Next's footprint: MaffsNext's 44 px control with its 11 px and 2 px margins (next-control.js); its own bottom edge
+      // is what must clear the fold, as the real Next's is.
+      fb.querySelector('.fb-next').innerHTML = '<div class="maffs-next-wrap" style="display:flex"><div class="ck-next" style="height:44px;width:44px;margin:11px auto 2px"></div></div>';
+      at('.opt'); at('.ck-next');
+    }
+    c.parentNode.removeChild(c);
+    return low;
+  }
+  function fitCuckoo() {
+    if (!Q || !$('game').classList.contains('active')) return;
+    if (window.MaffsFold) MaffsFold.decide($('opts'));   // two to a row or not, settled before measuring (width only)
+    var fold = foldLine() - CK.SPARE, size = 0, low = reach(CK.MIN);
+    // The room is in screen px; the clock's width is in the page's own px. Under the large-screen layer's zoom
+    // (schools/assets/large-screen.js: zoom on <html>, boxes measured in screen px) one page px is z screen px.
+    var card = $('qcard'), z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+    if (low <= fold) {
+      // A taller clock moves everything under it down by its own extra height, so the room left at CK.MIN gives the size.
+      size = Math.min(CK.MAX, card.clientWidth - 24, Math.floor(CK.MIN + (fold - low) / (CK.H * z)));
+      while (size > CK.MIN && reach(size) > fold) size -= 2;
+      if (size < CK.MIN) size = CK.MIN;
+    }
+    ckPlace($('qcard'), size);
+  }
+  // Re-measured on a resize: a change of width at any time, a change of height only while asking (a phone's address bar
+  // showing or hiding as the feedback scrolls into view must not resize the clock at marking).
+  var ckFrame = 0, ckW = window.innerWidth;
+  window.addEventListener('resize', function () {
+    if (ckFrame) return;
+    ckFrame = requestAnimationFrame(function () {
+      ckFrame = 0;
+      if (window.innerWidth !== ckW || state === 'asking') { ckW = window.innerWidth; fitCuckoo(); }
+    });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (state === 'asking') fitCuckoo(); });
+
   function stageItems(m) { var n = Number(m.slice(-1)); return BANK.filter(function (q) { return q.stage === n; }); }
   // A run: PER items from the stage's 48, without repeats (a Fisher-Yates shuffle, then the first PER).
   function run(m) { return MaffsOptions.shuffle(stageItems(m).slice()).slice(0, PER); }
@@ -708,10 +806,22 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     });
     MaffsLock.fresh(opts);
     state = 'asking';
+    fitCuckoo();
   }
   function errOf(val) {
     for (var i = 0; i < Q.decoys.length; i++) if (Q.decoys[i].val === val) return Q.decoys[i].err;
     return null;
+  }
+  // The feedback's markup, one function each, so fitCuckoo() measures exactly what marking draws.
+  function rightHtml(said) {
+    return '<div class="fb right" data-why="right" data-cuckoo="' + esc(said) + '"><div class="fb-head">' + esc('Right: ' + Q.answer + '. ' + said) + '</div></div>';
+  }
+  function wrongHtml(err) {
+    return '<div class="fb wrong" data-why="wrong" data-err="' + esc(err) + '">' +
+      '<div class="fb-err">' + esc(LINES[err]) + '</div>' +
+      '<div class="fb-ans">The answer is <b>' + esc(Q.answer) + '</b></div>' + PICS[Q.stage](Q) +
+      '<div class="worked">' + Q.working.map(function (w) { return '<div class="w-line">' + line(w) + '</div>'; }).join('') + '</div>' +
+      '<div class="fb-next"></div></div>';
   }
   function pick(btn) {
     if (state !== 'asking') return;
@@ -731,7 +841,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       // One line, then on after a moment (canon §7.6: a right answer keeps a brisk delay).
       var said = deck[dealt++ % deck.length];
       cuckoo('right');
-      fb.innerHTML = '<div class="fb right" data-why="right" data-cuckoo="' + esc(said) + '"><div class="fb-head">' + esc('Right: ' + Q.answer + '. ' + said) + '</div></div>';
+      fb.innerHTML = rightHtml(said);
       MaffsLock.timer(advance, RIGHT_MS);
       return;
     }
@@ -739,11 +849,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var err = errOf(val);
     $('qcard').classList.add('fb-open');
     cuckoo('wrong');
-    fb.innerHTML = '<div class="fb wrong" data-why="wrong" data-err="' + esc(err) + '">' +
-      '<div class="fb-err">' + esc(LINES[err]) + '</div>' +
-      '<div class="fb-ans">The answer is <b>' + esc(Q.answer) + '</b></div>' + PICS[Q.stage](Q) +
-      '<div class="worked">' + Q.working.map(function (w) { return '<div class="w-line">' + line(w) + '</div>'; }).join('') + '</div>' +
-      '<div class="fb-next"></div></div>';
+    fb.innerHTML = wrongHtml(err);
     MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'),
       label: qi >= qs.length ? 'See results →' : 'Next →' });
   }
