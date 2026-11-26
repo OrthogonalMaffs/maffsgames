@@ -165,18 +165,25 @@ a.back-link:hover{color:var(--text)}
 .cgroup .hand{display:block;width:5px;height:2px;background:var(--hand);border-radius:1px}
 @keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
 @media (max-width:420px){.conga-line{flex-direction:column;gap:var(--cg,5px)}}
-/* Stage 3, the parade ground: Sarge beside the array on wide screens, in the card's top row on phones (no extra
-   height, so the array, the options and Next stay where SOME-THINGIES-TWEAKS put them). */
-.sarge-wide{grid-column:3;grid-row:2;align-self:end;margin-left:10px}
-.sarge-wide .th,.sarge-mini .th{width:30px;height:30px}
+/* The character beside the question (SOME-THINGIES-HOST, Jon, 26 Nov 2026): Sarge in Stage 3, the thingy in glasses in
+   Stage 4, one rule for both. hostFit() measures the room when the question is drawn: where it has room, the card is
+   .host-big and the character is drawn at --host (48 to 96 px), Sarge beside the array, the quiz-show host beside the
+   sum line; otherwise it stands in the card's top row at 22 px (no extra height), as before. */
+.sarge-wide{grid-column:3;grid-row:2;align-self:end;margin-left:10px;display:none}
+.qcard.host-big .sarge-wide{display:block}
+.host .th,.sarge-wide .th{width:var(--host);height:var(--host)}
 .sarge-mini{display:none}
 .sarge-mini .th{width:22px;height:22px}
-@media (max-width:599px){.sarge-wide{display:none}.qcard.parade .sarge-mini{display:block}}
-/* Stage 4, the quiz show (SOME-THINGIES-FACTS, Jon, 26 Nov 2026): the thingy in glasses sits in the card's top row at
-   every width and reacts as Sarge does. Once the answer is marked the fact is drawn as plates (factPic()), under the
+.qcard.parade:not(.host-big) .sarge-mini,.qcard.quiz:not(.host-big) .sarge-mini{display:block}
+.host{display:none}
+.qcard.quiz.host-big{display:grid;grid-template-columns:var(--host) minmax(0,1fr) var(--host);column-gap:8px}
+.qcard.quiz.host-big>*{grid-column:1/-1}
+.qcard.quiz.host-big>.host{display:block;grid-column:1;align-self:center}
+.qcard.quiz.host-big>.sum{grid-column:2;align-self:center}
+/* Stage 4, the quiz show (SOME-THINGIES-FACTS, Jon, 26 Nov 2026): the thingy in glasses beside the question reacts as
+   Sarge does. Once the answer is marked the fact is drawn as plates (factPic()), under the
    options and above the working, so nothing the student was reading moves. --ps is the picture's thingy, 18 px (Stage
    1's plates exactly) down to 10 px, its gaps and the plates' padding in step with it. */
-.qcard.quiz .sarge-mini{display:block}
 .qcard.quiz .pic{order:1}.qcard.quiz .feedback{order:2}.qcard.quiz .crowd{order:3}
 .pic.fact{gap:calc(var(--ps) / 3)}
 .pic.fact .plate{gap:calc(var(--ps) / 9);padding:calc(var(--ps) / 4.5) calc(var(--ps) / 3.6)}
@@ -303,6 +310,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     <div class="qcard" id="qcard">
       <div class="qhead"><span class="sarge-mini" id="sargeMini" aria-hidden="true"></span><div class="stage-label" id="stageLabel"></div><button class="speak" id="speakBtn" type="button" aria-label="Read aloud" title="Read aloud" hidden><svg viewBox="0 0 24 24" aria-hidden="true"><path class="s-fill" d="M3 9 H7 L12 4.5 V19.5 L7 15 H3 Z"/><path class="s-wave" d="M15.5 8.5 Q18 12 15.5 15.5 M18.5 6 Q22.5 12 18.5 18"/></svg></button></div>
       <div class="pic" id="pic" aria-hidden="true"></div>
+      <span class="host" id="host" aria-hidden="true"></span>
       <div class="sum" id="sum"></div>
       <div class="prompt" id="prompt"></div>
       <div class="choices three maffs-options" id="opts1" hidden></div>
@@ -1035,7 +1043,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('qcard').classList.toggle('parade', tq === 'array');
     $('qcard').classList.toggle('quiz', !!factOf(Q));
     $('sargeMini').innerHTML = tq === 'array' ? SARGE : factOf(Q) ? thingy(6) : '';
-    ['pic', 'sargeMini'].forEach(function (id) { $(id).classList.remove('react-right', 'react-wrong'); });
+    $('host').innerHTML = factOf(Q) ? thingy(6) : '';
+    ['pic', 'sargeMini', 'host'].forEach(function (id) { $(id).classList.remove('react-right', 'react-wrong'); });
     if (qi > PER) drawCrowd();
     ['opts1', 'opts'].forEach(function (id) { $(id).hidden = true; $(id).innerHTML = ''; });
     var t = Q.type;
@@ -1060,6 +1069,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else if (t === 'fact') { setSum(Q.a + ' \\times ' + Q.b + ' = {?}', Q.a + 'x' + Q.b); ask(numOpts(Q)); }
     else { setSum('{?} \\times ' + Q.b + ' = ' + Q.product, '?x' + Q.b + '=' + Q.product); ask(numOpts(Q)); }
     fitCrowd();
+    hostFit();
   }
   function numOpts(q) { return MaffsOptions.shuffle([q.answer].concat(q.decoys)); }
 
@@ -1103,6 +1113,152 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     clearPic();
     p.dataset.fact = 'off';
   }
+  // The feedback after marking: the working, then Next on a right answer (MaffsNext mounts its own after a wrong one).
+  function fbHtml(right) {
+    var w = working(Q);
+    return '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '">' +
+      '<div class="fb-line work" id="learn" data-learn="' + esc(w[0]) + '">' + tex(w[1]) + '</div>' +
+      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">Next →</button>' : '') + '</div></div>';
+  }
+
+  // SOME-THINGIES-HOST (Jon, 26 Nov 2026; SR-35): the character beside the question, Sarge (Stage 3) and the thingy in
+  // glasses (Stage 4), one size for both, measured, never a breakpoint. When the question is drawn, every screen it can
+  // show is laid out once as before this contract (the character in the top row): each step still to ask, then after
+  // marking right (the tallest LINES.right line; Sarge's line on an array) and wrong, Stage 3's array before and after
+  // it turns, with the crowd past question 10 and Stage 4's fact picture fitted by their own rules. On each, the largest
+  // size from 96 to 48 px at which the options (asking) or Next (marked), and with a crowd the card, still end above the
+  // fold (the screen less the fixed footer), nothing is wider than its room (the picture's width) and the sum does not
+  // wrap, with the picture and the crowd kept at the sizes they were given without it: the character gives way first,
+  // so neither ever shrinks for it. The smallest of these is the size, kept through marking (no jump as it reacts);
+  // under 48 px the character stays in the top row at 22 px, so an item where Next or the options are under the fold
+  // even without it stays exactly as before. The one exception is the array marked but not yet turned (780 ms): there
+  // the character only may not push Next lower than it already is. Every screen tried is put back exactly as it was
+  // (the options are only shown, hidden or given stand-ins, never rebuilt). Run again when the room changes: a resize,
+  // Aa, a late font (asking only).
+  var HOST_MAX = 96, HOST_MIN = 48;
+  // MaffsNext's control after a wrong answer, drawn as next-control.js draws it (its injected style, inline here), so a
+  // marked-wrong screen can be laid out before it exists.
+  var NEXT_STANDIN = '<div class="maffs-next-wrap" style="display:flex;justify-content:center;width:100%"><button type="button" class="maffs-next" tabindex="-1" disabled ' +
+    'style="position:relative;display:inline-flex;align-items:center;justify-content:center;gap:8px;margin:11px auto 2px;padding:11px 26px;min-height:44px;min-width:44px;' +
+    'box-sizing:border-box;font-family:inherit;font-size:15px;font-weight:700;line-height:1;border:2px solid currentColor;border-radius:10px;background:transparent;color:inherit">';
+  function setHost(sz) {
+    var c = $('qcard');
+    c.classList.toggle('host-big', !!sz);
+    if (sz) c.style.setProperty('--host', sz + 'px'); else c.style.removeProperty('--host');
+    c.dataset.host = sz ? String(sz) : 'mini';
+  }
+  function hostFold() {
+    var f = document.querySelector('.site-footer');
+    return window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  }
+  function hostEnd(el) { return el.getBoundingClientRect().bottom + window.scrollY; }
+  // How low the screen reaches: the options (asking) or Next (marked); with crowd, the card, crowd and all, too (only
+  // where it ended above the fold without the character: a crowd at its floor and past the fold stays at its floor
+  // either way). Infinity when there is no Next.
+  function hostLow(marked, crowd) {
+    var low = 0;
+    if (marked) { var nb = document.querySelector('#feedback .maffs-next, #nextBtn'); if (!nb) return Infinity; low = hostEnd(nb); }
+    else [].forEach.call(document.querySelectorAll('#opts .opt, #opts1 .opt'), function (b) { if (b.offsetParent) low = Math.max(low, hostEnd(b)); });
+    return crowd ? Math.max(low, hostEnd($('qcard'))) : low;
+  }
+  // The screen's rules: it reaches no lower than limit (the fold); no sideways scroll; the character inside its room,
+  // the sum on as many lines as without it.
+  function hostRoom(marked, sumH, crowd, limit) {
+    // Sideways against the layout width (clientWidth): a phone zooms out to show what overflows, so innerWidth grows too.
+    if (hostLow(marked, crowd) > limit + 0.5 || document.documentElement.scrollWidth > document.documentElement.clientWidth) return false;
+    if (!$('qcard').classList.contains('host-big')) return true;
+    var w = $('pic').querySelector('.arr-wrap');
+    if (w) {
+      var pr = $('pic').getBoundingClientRect();
+      return [w, $('arr'), $('sargeWide')].every(function (e) { var r = e.getBoundingClientRect(); return r.left >= pr.left - 0.5 && r.right <= pr.right + 0.5; });
+    }
+    return $('sum').getBoundingClientRect().height <= sumH + 0.5 && $('sum').scrollWidth <= $('sum').clientWidth + 1;
+  }
+  // The largest size up to cap that fits the screen now laid out (top-row character, as before), or 0 when even 48 px
+  // does not. turning: Stage 3's array marked but not yet turned round (780 ms, none with reduced motion), where the
+  // character may not push Next lower than the fold or than it already is without it.
+  function hostMax(marked, cap, turning) {
+    var sumH = $('sum').getBoundingClientRect().height, lo = HOST_MIN - 1, hi = cap + 1;
+    var crowd = !!$('crowd').querySelector('.th') && hostEnd($('qcard')) <= hostFold() + 0.5;
+    var limit = turning ? Math.max(hostFold(), hostLow(marked, crowd)) : hostFold();
+    if (cap < HOST_MIN || !hostRoom(marked, sumH, crowd, limit)) return 0;
+    setHost(cap);
+    if (hostRoom(marked, sumH, crowd, limit)) lo = cap;
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; setHost(mid); if (hostRoom(marked, sumH, crowd, limit)) lo = mid; else hi = mid; }
+    setHost(0);
+    return lo >= HOST_MIN ? lo : 0;
+  }
+  function snap(el) { return { el: el, html: el.innerHTML, attrs: [].map.call(el.attributes, function (a) { return [a.name, a.value]; }) }; }
+  function unsnap(s) {
+    while (s.el.attributes.length) s.el.removeAttribute(s.el.attributes[0].name);
+    s.attrs.forEach(function (a) { s.el.setAttribute(a[0], a[1]); });
+    s.el.innerHTML = s.html;
+  }
+  // The right-answer line that takes the most height at this width and reading mode, so the size holds whichever line
+  // is said (found once for each).
+  var tallest = {};
+  function tallestRight() {
+    var key = $('say').parentNode.clientWidth + ' ' + document.body.className, top = -1;
+    if (!(key in tallest)) L.right.forEach(function (t) { setSay(t); var h = $('say').getBoundingClientRect().height; if (h > top) { top = h; tallest[key] = t; } });
+    return tallest[key];
+  }
+  function hostFit() {
+    var asking = state === 'rows' || state === 'cols' || state === 'ask', marked = state === 'done' || state === 'wrong';
+    if (!Q || !(Q.type === 'array' || factOf(Q)) || !(asking || marked) || !$('game').classList.contains('active')) { setHost(0); return; }
+    // Marked already (a resize or Aa): the screen on show is the one to fit, once Stage 3's array has turned.
+    if (marked) {
+      if (Q.type === 'array' && $('pic').dataset.turned !== '1') return;
+      setHost(0); refit();
+      setHost(hostMax(true, HOST_MAX, false));
+      return;
+    }
+    setHost(0); fitCrowd();
+    var best = HOST_MAX, cn = crowdN, o = $('opts'), o1 = $('opts1'), oh = o.hidden, o1h = o1.hidden, oc = o.className, stand = [];
+    var ids = ['prompt', 'say', 'feedback', 'pic', 'crowd'], drawn = ids.map(function (id) { return snap($(id)); }), asked;
+    // Each screen is tried only up to the size the screens before it allow; once none is left, nothing more to try.
+    function fits(m, turning) { if (!best) return; fitCrowd(); if (m && factOf(Q)) factPic(); best = hostMax(m, best, turning); }
+    function mark(right) {
+      setPrompt('');
+      if (qi > PER) { crowdN = cn + (right ? 1 : 0); drawCrowd(); if (!right) faint(); }
+      $('feedback').innerHTML = fbHtml(right);
+      if (!right) $('feedback').querySelector('.fb-next').innerHTML = NEXT_STANDIN + (qi > PER ? 'See results →' : 'Next →') + '</button></div>';
+      if (!right) setSay(L.wrong[wrongKey(Q)]);
+      else if (Q.type === 'array') setSay(L.sarge);
+      else setSay(tallestRight());
+    }
+    try {
+      fits(false);
+      if (Q.type === 'array') {
+        if (state === 'rows') { labelArray('rows'); setPrompt(L.cols_q); fits(false); }
+        if (state !== 'ask') {
+          labelArray('cols'); o1.hidden = true; setPrompt(L.total);
+          if (!o.querySelector('.opt')) {
+            o.className = 'choices maffs-options';
+            for (var i = 0; i < 4; i++) { var b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.tabIndex = -1; b.textContent = '000'; o.appendChild(b); stand.push(b); }
+          }
+          o.hidden = false;
+          foldNow(o);
+          fits(false);
+        }
+      }
+      asked = ids.map(function (id) { return snap($(id)); });
+      [true, false].forEach(function (right) {
+        if (!best) return;
+        mark(right);
+        fits(true, Q.type === 'array');
+        if (Q.type === 'array') { drawArray(Q.cols, Q.rows, true); fits(true, false); }
+        asked.forEach(unsnap);
+      });
+    } finally {
+      crowdN = cn;
+      drawn.forEach(unsnap);
+      stand.forEach(function (b) { b.parentNode.removeChild(b); });
+      o.hidden = oh; o1.hidden = o1h; o.className = oc;
+    }
+    setHost(best);
+  }
+  function roomChanged() { hostFit(); refit(); }
+
   // Whatever changes the room (a resize, Aa, a late font): the crowd first, without the picture, then the picture again.
   function refit() {
     if (factOf(Q) && (state === 'done' || state === 'wrong') && $('game').classList.contains('active')) { clearPic(); fitCrowd(); factPic(); }
@@ -1147,7 +1303,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (fits(mid / 2)) lo = mid; else hi = mid; }
     c.style.setProperty('--ts', (lo / 2) + 'px');
   }
-  window.addEventListener('resize', refit);
+  window.addEventListener('resize', roomChanged);
+  // Aa (the body's class) and a late font change the room too; a late font re-sizes the character only while asking.
+  (function () {
+    var aa = document.body.classList.contains('accessible');
+    if (window.MutationObserver) new MutationObserver(function () {
+      var now = document.body.classList.contains('accessible');
+      if (now !== aa) { aa = now; roomChanged(); }
+    }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    if (document.fonts && document.fonts.addEventListener) document.fonts.addEventListener('loadingdone', function () {
+      if (state === 'rows' || state === 'cols' || state === 'ask') roomChanged();
+    });
+  })();
   if (window.ResizeObserver) (function () {
     var ro = new ResizeObserver(refit);
     for (var el = $('qcard').firstElementChild; el && el.id !== 'crowd'; el = el.nextElementSibling) ro.observe(el);
@@ -1174,6 +1341,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }, 2600 + Math.floor(Math.random() * 2200));
   }
 
+  // Two options to a row or one (MaffsFold, fold.js) decided as the options are drawn, not a frame later, so the room
+  // the character beside the question is sized for is the room the student sees (SOME-THINGIES-HOST).
+  function foldNow(box) { if (window.MaffsFold) MaffsFold.decide(box); }
   function optButton(text, val, html, onClick) {
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'opt';
@@ -1190,6 +1360,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     box.innerHTML = '';
     MaffsOptions.shuffle([Q.groups].concat(Q.groups_decoys)).forEach(function (o) { box.appendChild(optButton(String(o), String(o), null, onCount)); });
     box.hidden = false;
+    foldNow(box);
     MaffsLock.fresh(box);
   }
   function onCount(e) {
@@ -1215,6 +1386,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     box.innerHTML = '';
     MaffsOptions.shuffle([v, v - 1, v + 1]).forEach(function (o) { box.appendChild(optButton(String(o), String(o), null, onStep)); });
     box.hidden = false;
+    foldNow(box);
     MaffsLock.fresh(box);
   }
   function onStep(e) {
@@ -1240,6 +1412,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       box.appendChild(sums ? optButton(null, plusVal(o), tex(plusTex(o)), onOption) : optButton(String(o), String(o), null, onOption));
     });
     box.hidden = false;
+    foldNow(box);
     MaffsLock.fresh(box);
   }
   function keyOf(q) { return q.type === 'groups-to-sum' ? plusVal(q.answer_sum) : String(q.answer); }
@@ -1262,7 +1435,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     runOver = !right && qi > PER;
     // The scene reacts (decoration: the score above is already set). Stage 2's groups-to-sum shows its conga line now.
     if (Q.type === 'groups-to-sum') conga(Q.groups, Q.each);
-    ['pic', 'sargeMini'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });
+    ['pic', 'sargeMini', 'host'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });
     if (right && qi > PER) { crowdN++; drawCrowd(); }
     if (runOver) faint();
     $('hudScore').textContent = String(score);
@@ -1279,11 +1452,8 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     else { sayKey = 'wrong.' + wrongKey(Q); sayText = L.wrong[wrongKey(Q)]; }
     setSay(sayText, sayKey);
     lastLine = sayText;
-    var w = working(Q);
     var fb = $('feedback');
-    fb.innerHTML = '<div class="fb ' + (right ? 'right' : 'wrong') + '" data-why="' + (right ? 'right' : 'wrong') + '">' +
-      '<div class="fb-line work" id="learn" data-learn="' + esc(w[0]) + '">' + tex(w[1]) + '</div>' +
-      '<div class="fb-next">' + (right ? '<button class="btn solid" id="nextBtn" type="button">Next →</button>' : '') + '</div></div>';
+    fb.innerHTML = fbHtml(right);
     if (Q.type === 'array') turnArray();
     if (right) {
       MaffsLock.fresh(fb);
@@ -1469,8 +1639,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       pick: function (v) { return state === 'ask' && click($('opts'), '[data-val="' + v + '"]'); },
       end: function () { var b = $('endBtn'); if (!b.hidden) b.click(); return !b.hidden; },
       // The crowd at n thingies, past question 10 (a verifier's: a crowd of thousands without playing thousands of
-      // questions; decoration only, the score and the counts are untouched). Returns the crowd's number.
-      crowd: function (n) { if (qi > PER && n >= 0) { crowdN = Math.floor(n); drawCrowd(); refit(); } return crowdN; },
+      // questions; decoration only, the score and the counts are untouched). The character beside the question is sized
+      // again for it, as when a question is drawn with that crowd. Returns the crowd's number.
+      crowd: function (n) { if (qi > PER && n >= 0) { crowdN = Math.floor(n); drawCrowd(); hostFit(); refit(); } return crowdN; },
       // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy. line
       // (a verifier's, PRIMARY-FIT-SWEEP): the index in LINES.right of the line a right answer says, in place of a random one.
       answer: function (right, line) {
