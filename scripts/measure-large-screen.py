@@ -13,7 +13,8 @@ one. Rule d of the layer (schools/assets/large-screen.js) keeps window height / 
 
 HOW IT IS MEASURED. With the layer's script not served (so nothing is zoomed), in Chromium with the real fonts, each
 page is played to its results screen by scripts/check-large-screen.py's walk (the game's own lock-hint, wrong answers
-three times in four), once for each of SEEDS (each seed plays different questions) at each window in a small grid:
+every time), once for each of SEEDS (each seed plays different questions), each level the roster lists (?level=)
+and each stage or mode the route names ("starts"), at each window in a small grid:
 
   width   1200, the effective width the layer never goes below (rule b), so the narrowest and tallest layout a
           zoomed page is ever drawn at; and the first px of each of the page's own width regimes above 1200.
@@ -23,8 +24,8 @@ three times in four), once for each of SEEDS (each seed plays different question
           its lowest height. (Content centred in a taller window ends lower on the page without needing more room;
           measuring at the regime's floor keeps that out of the number.)
 
-The need is the largest reading over the grid. What it cannot see: a question no seed served, and a level or mode
-other than the one the lock-hint starts. The check plays one more session per page, on a seed this never uses.
+The need is the largest reading over the grid. What it cannot see: a question no seed served, and a stage or mode
+that neither the page's lock-hint nor ROUTES' "starts" names. The check plays one more session per page, on a seed this never uses.
 """
 import argparse
 import asyncio
@@ -40,6 +41,7 @@ cl = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(cl)
 
 SEEDS = [1, 2, 3]
+LEVELS = cl.mpf().bc.roster_levels()[0]         # {slug: [level key, ...]}: every level the roster lists is played (?level=)
 WIDTH, FLOOR, TOP, WIDE = 1200, 600, 1400, 2560
 ABOUT = ("Written by scripts/measure-large-screen.py; never edit by hand. need: the height in CSS px each page's answer "
          "controls and Next need (schools/assets/large-screen.js, rule d).")
@@ -64,14 +66,16 @@ async def measure(browser, base, rel, sem):
     counts = {"question": 0, "answered": 0, "wrong": 0, "sessions": 0}
     notes = []
     route = cl.route_for(BASE, rel)
-    how = "ROUTES in check-large-screen.py" if rel in cl.ROUTES else ("the page's lock-hint" if route.get("answer") else "the generic driver")
-    for w in widths:
-        for h in heights:
-            for seed in SEEDS:
+    how = "ROUTES in check-large-screen.py" if cl.ROUTES.get(rel, {}).get("answer") else ("the page's lock-hint" if route.get("answer") else "the generic driver")
+    levels = LEVELS.get(rel.split("/")[-2]) or [None]
+    starts = route.get("starts") or [None]
+    grid = [(w, h, seed, level, start) for w in widths for h in heights for seed in SEEDS for level in levels for start in starts]
+
+    async def one(w, h, seed, level, start):
                 async with sem:
-                    ctx, page = await cl.open_page(browser, base, rel, (w, h), seed, layer=False)
+                    ctx, page = await cl.open_page(browser, base, rel, (w, h), seed, layer=False, level=level)
                     try:
-                        async def on(kind, r, info, w=w, h=h, seed=seed):
+                        async def on(kind, r, info):
                             if kind not in ("question", "answered") or r["bottom"] is None:
                                 return
                             counts[kind] += 1
@@ -80,19 +84,21 @@ async def measure(browser, base, rel, sem):
                             need = r["bottom"] + r["inset"]
                             if need > best["need"]:
                                 best.update(need=need, what="the answer controls" if kind == "question" else "Next after an answer",
-                                            question=info.get("q"), seed=seed, window=[w, h])
-                        note = await cl.walk(page, BASE, rel, on)
+                                            question=info.get("q"), seed=seed, window=[w, h], level=level, start=start)
+                        note = await cl.walk(page, BASE, rel, on, start=start)
                     finally:
                         await ctx.close()
                 counts["sessions"] += 1
                 if note:
-                    notes.append("%dx%d seed %d: %s" % (w, h, seed, note))
+                    notes.append("%dx%d seed %d level %s start %s: %s" % (w, h, seed, level, start, note))
+    await asyncio.gather(*(one(*g) for g in grid))
     entry = {
         "need": int(math.ceil(best["need"] - 1e-6)),
         "thresholds": facts["thresholds"],
-        "measured": {"how": how, "widths": widths, "heights": heights, "seeds": SEEDS, "sessions": counts["sessions"],
+        "measured": {"how": how, "widths": widths, "heights": heights, "seeds": SEEDS, "levels": levels, "starts": starts,
+                     "sessions": counts["sessions"],
                      "questions": counts["question"], "answers": counts["answered"], "wrong_answers": counts["wrong"],
-                     "tallest": {k: best[k] for k in ("what", "question", "seed", "window") if k in best}},
+                     "tallest": {k: best[k] for k in ("what", "question", "seed", "window", "level", "start") if k in best}},
     }
     return rel, entry, notes
 
@@ -126,9 +132,9 @@ def main():
     bad = False
     for rel, entry, notes in got:
         m = entry["measured"]
-        print("%s: need %d px (%s, question %s, seed %s, at %s); %d sessions, %d questions, %d answers (%d wrong); heights %s"
+        print("%s: need %d px (%s, question %s, seed %s, at %s, level %s, start %s); %d sessions, %d questions, %d answers (%d wrong); heights %s"
               % (rel, entry["need"], m["tallest"].get("what"), m["tallest"].get("question"), m["tallest"].get("seed"),
-                 "x".join(map(str, m["tallest"].get("window", []))), m["sessions"], m["questions"], m["answers"], m["wrong_answers"], m["heights"]))
+                 "x".join(map(str, m["tallest"].get("window", []))), m["tallest"].get("level"), m["tallest"].get("start"), m["sessions"], m["questions"], m["answers"], m["wrong_answers"], m["heights"]))
         for n in notes:
             print("  NOT MEASURED TO THE END: " + n)
             bad = True

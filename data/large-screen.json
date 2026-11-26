@@ -1,0 +1,385 @@
+{
+ "about": "Written by scripts/measure-large-screen.py; never edit by hand. need: the height in CSS px each page's answer controls and Next need (schools/assets/large-screen.js, rule d).",
+ "pages": {
+  "games/maffscards/index.html": {
+   "need": 535,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     620.0
+    ],
+    [
+     "width",
+     "ge",
+     640.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "ROUTES in check-large-screen.py",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600,
+     621
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 6,
+    "questions": 106,
+    "answers": 106,
+    "wrong_answers": 0,
+    "tallest": {
+     "what": "the answer controls",
+     "question": 16,
+     "seed": 1,
+     "window": [
+      1200,
+      621
+     ]
+    }
+   }
+  },
+  "games/factor-race/index.html": {
+   "need": 562,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     480.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600,
+     601
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 6,
+    "questions": 60,
+    "answers": 60,
+    "wrong_answers": 60,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 1,
+     "seed": 1,
+     "window": [
+      1200,
+      600
+     ]
+    }
+   }
+  },
+  "games/surd-simplifier/index.html": {
+   "need": 816,
+   "thresholds": [
+    [
+     "height",
+     "ge",
+     860.0
+    ],
+    [
+     "height",
+     "ge",
+     980.0
+    ],
+    [
+     "width",
+     "ge",
+     320.0
+    ],
+    [
+     "width",
+     "ge",
+     760.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     759.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600,
+     860,
+     980
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 9,
+    "questions": 180,
+    "answers": 180,
+    "wrong_answers": 180,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 19,
+     "seed": 1,
+     "window": [
+      1200,
+      860
+     ]
+    }
+   }
+  },
+  "games/negative-number-line/index.html": {
+   "need": 609,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     480.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 3,
+    "questions": 30,
+    "answers": 29,
+    "wrong_answers": 29,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 3,
+     "seed": 1,
+     "window": [
+      1200,
+      600
+     ]
+    }
+   }
+  },
+  "games/bearing-blitz/index.html": {
+   "need": 715,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 3,
+    "questions": 9,
+    "answers": 9,
+    "wrong_answers": 9,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 1,
+     "seed": 1,
+     "window": [
+      1200,
+      600
+     ]
+    }
+   }
+  },
+  "games/core-maths-paper1/index.html": {
+   "need": 1102,
+   "thresholds": [
+    [
+     "width",
+     "le",
+     360.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     500.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 3,
+    "questions": 108,
+    "answers": 108,
+    "wrong_answers": 108,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 9,
+     "seed": 1,
+     "window": [
+      1200,
+      600
+     ]
+    }
+   }
+  },
+  "games/its-just-base-60-bruv/index.html": {
+   "need": 541,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     600.0
+    ],
+    [
+     "height",
+     "le",
+     620.0
+    ],
+    [
+     "width",
+     "ge",
+     1024.0
+    ],
+    [
+     "width",
+     "le",
+     360.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1200
+    ],
+    "heights": [
+     600,
+     601,
+     621
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "sessions": 9,
+    "questions": 90,
+    "answers": 90,
+    "wrong_answers": 90,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 1,
+     "seed": 1,
+     "window": [
+      1200,
+      621
+     ]
+    }
+   }
+  }
+ }
+}

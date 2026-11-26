@@ -31,21 +31,27 @@ STATIC (unit "static"). Fails when:
      does not carry it, is not MIGRATED or does not exist;
   5. a size condition in a page's media queries is one this script cannot read (the layer would refuse to zoom).
 
-IN THE BROWSER (one unit per page and engine). At 1920x955 and 2560x1310 (real 1080p and 1440p browser windows) and
-at 1366x650 and 390x844 (both must stay unzoomed), a whole session is played with the game's own lock-hint (canon
-7.6.0; ROUTES below for a page with none), wrong answers on purpose, to the results screen:
-  - the page's zoom, on every screen, is the one THIS script works out from rules a-f: its own parse of the page's
-    media queries (never the layer's), the need from data/large-screen.json and the pointer scan;
-  - no screen scrolls sideways that does not scroll sideways without the layer at the same size;
+IN THE BROWSER. At 1920x955 and 2560x1310 (real 1080p and 1440p browser windows) and at 1366x650 and 390x844 (both
+must stay unzoomed), each page is played with the game's own lock-hint (canon 7.6.0; ROUTES below for what a hint
+does not say), a wrong answer every time, on a seed the measurement never used. Two kinds of unit:
+  "<slug> <engine>"        in Chromium, Firefox and WebKit, at all four sizes: the start screen, the first question
+                           and Next after a wrong answer;
+  "<slug> session WxH"     in Chromium, at each of the four sizes: a whole session to the results screen.
+(A whole session in every engine at every size is 84 sessions of up to 90 s, and one CI line has about 110 s, canon
+7.8.1; at zoom 1 the layer changes nothing on the page.) On every screen reached:
+  - the page's zoom is the one THIS script works out from rules a-f: its own parse of the page's media queries
+    (never the layer's), the need from data/large-screen.json and the pointer scan;
   - where the page is zoomed: the answer controls on every question, and Next after every answer, end above the
-    fold; every media query in the page's readable sheets answers as it does on an unzoomed window of the effective
-    size (the page loaded with the layer blocked at window / zoom, rounded down and rounded up: one of the two);
-    100vh still ends at the bottom of the screen; the layer's own account of the engine is "vh zoomed" or
-    "vh not zoomed";
-  - a POINTER_VERIFIED page passes its measured pointer test under zoom (POINTER_TESTS).
+    fold; no screen scrolls sideways unless the unzoomed page at the effective size does too; the layer's own
+    account of the engine is "vh zoomed" or "vh not zoomed";
+  - where the page is zoomed, before anything is pressed: every media query in the page's readable sheets answers
+    as it does on an unzoomed window of the effective size (the page loaded with the layer not served at
+    window / zoom, rounded down and rounded up: one of the two); and 100vh still ends at the bottom of the screen
+    (the body is no taller than the window unless it is on the unzoomed page too);
+  - a POINTER_VERIFIED page passes its measured pointer test under zoom (POINTER_TESTS), in every engine.
 The start and results screens are reported, not judged against the fold (start screens are report-only, canon 7.6.1).
 An engine whose zoom the layer refuses (state().by starts "engine") leaves the page unzoomed and working: that is
-reported loudly on every run, never failed, because rule 1 is then not broken, only unused.
+reported loudly on every run, never failed, because no rule is then broken, only unused.
 
 PLANTS (unit "plants"; each must FAIL; plant_common, so a plant that did not apply fails the run):
   rule c removed from the layer (a page zooms across one of its own height breakpoints);
@@ -92,7 +98,11 @@ OPT_OUT = {}
 
 # Pages that read the pointer's position and may be zoomed all the same: each has a measured test under zoom in
 # POINTER_TESTS, run by this check. A page that reads the pointer and is not here is held at zoom 1 (rule e).
-POINTER_VERIFIED = {}
+POINTER_VERIFIED = {
+    "games/bearing-blitz/index.html": "the needle's bearing is worked out from the pointer as a fraction of the canvas's own "
+                                      "box (clientX - rect.left over rect.width), so both are in screen px and zoom cancels; "
+                                      "measured by bearing_blitz_pointer: 8 clicks and a drag, each within 1 degree",
+}
 
 MIN_W, EFF_W, MAX_Z, MIN_Z, STEPS, EPS = 1500, 1200, 1.6, 1.1, 20, 1e-9
 ZOOM_SIZES = [(1920, 955), (2560, 1310)]
@@ -210,6 +220,8 @@ def page_facts(root, rel):
         s = ATTR_RE("src").search(attrs)
         if s:
             p = local_path(root, rel, s.group(1))
+            if p is not None and p.resolve() == (root / LAYER).resolve():
+                continue                               # the layer itself (its header names clientX)
             body = read(p) if p is not None and p.is_file() else ""
         if POINTER.search(body):
             pointer = True
@@ -349,7 +361,8 @@ def check_static(root, migrated=None):
 
 # ---------------------------------------------------------------------------------------------------- playing a page
 # How a page is played: the game's own maffs-lock-hint (canon 7.6.0: start, start_sel, ready, answer), with these
-# additions for a page that has none or is not a question game. Keys: start (JS), ready (JS expression), answer (JS
+# additions for a page that has none or is not a question game. Keys: start (JS), starts (a list of them, one per
+# stage or mode, for measure-large-screen.py to play each), ready (JS expression), answer (JS
 # using i: 0 right, >= 1 wrong), controls (selector of the answer controls), marked (JS expression: an answer has
 # been marked), next (selector of Next), cont (JS that carries on), done (JS expression: the results screen).
 ROUTES = {
@@ -363,6 +376,10 @@ ROUTES = {
         "next": "#nextBtn",
         "cont": "MC.ui.next()",
         "done": "MC.ui.state() === 'over'",
+    },
+    # Four stages, each its own mode: the lock-hint starts the first; the measurement plays all four ("starts").
+    "games/its-just-base-60-bruv/index.html": {
+        "starts": ["B60.ui.start('stage-1')", "B60.ui.start('stage-2')", "B60.ui.start('stage-3')", "B60.ui.start('stage-4')"],
     },
 }
 
@@ -465,9 +482,10 @@ VH_JS = r"""() => { const p = document.createElement('div');
   p.remove(); return r; }"""
 
 
-async def open_page(browser, base, rel, size, seed, layer=True, layer_body=None, html=None):
+async def open_page(browser, base, rel, size, seed, layer=True, layer_body=None, html=None, level=None):
     """A context and page for one play. layer False: the layer's script is not served (the unzoomed page).
-    layer_body: the layer's script replaced by this text (a plant). html: the page's own source replaced."""
+    layer_body: the layer's script replaced by this text (a plant). html: the page's own source replaced.
+    level: a roster level key for ?level= (None: the page's default)."""
     m, cs, bc = mpf(), mpf().cs, mpf().bc
     ctx = await browser.new_context(viewport={"width": size[0], "height": size[1]}, reduced_motion="reduce")
     await ctx.add_init_script(seed_js(seed))
@@ -497,7 +515,7 @@ async def open_page(browser, base, rel, size, seed, layer=True, layer_body=None,
         except Exception:
             pass
     await page.route("**/*", handle)
-    await page.goto(base + "/" + rel + "?cb=large-screen", wait_until="domcontentloaded", timeout=30000)
+    await page.goto(base + "/" + rel + "?cb=large-screen" + ("&level=" + level if level else ""), wait_until="domcontentloaded", timeout=30000)
     try:
         await asyncio.wait_for(page.evaluate("document.fonts.ready.then(() => 1)"), timeout=8)
     except Exception:
@@ -505,11 +523,13 @@ async def open_page(browser, base, rel, size, seed, layer=True, layer_body=None,
     return ctx, page
 
 
-async def walk(page, root, rel, on_screen, max_questions=MAX_QUESTIONS):
+async def walk(page, root, rel, on_screen, max_questions=MAX_QUESTIONS, start=None, stop_after=None):
     """Play one session to the results screen, calling on_screen(kind, reading, info) at each screen: 'start',
-    'question', 'answered' (info["correct"]), 'results'. Returns a note on how far it got ('' for the whole way)."""
-    m = mpf()
+    'question', 'answered' (info["correct"]), 'results'. Returns a note on how far it got ('' for the whole way).
+    start: this JS in place of the route's start. stop_after: stop, with '', once this many questions are answered."""
     route = route_for(root, rel)
+    if start:
+        route["start"] = start
 
     async def ev(js, arg=None):
         return await asyncio.wait_for(page.evaluate(js, arg), timeout=15)
@@ -661,6 +681,8 @@ async def walk(page, root, rel, on_screen, max_questions=MAX_QUESTIONS):
             await quiet()
             nxt = await find_next()
         await on_screen("answered", nxt, {"q": q + 1, "correct": correct})
+        if stop_after and q + 1 >= stop_after:
+            return ""
         if nxt["n"]:
             if route.get("cont"):
                 await ev("() => { %s }" % route["cont"])
@@ -679,7 +701,48 @@ async def walk(page, root, rel, on_screen, max_questions=MAX_QUESTIONS):
 
 # ---------------------------------------------------------------------------------------------------- pointer tests
 # A measured test under zoom for each POINTER_VERIFIED page: an async function (page) -> [failures].
-POINTER_TESTS = {}
+async def bearing_blitz_pointer(page):
+    """Real mouse presses on the compass at eight bearings, and a drag, at the page's zoom: the needle must read the
+    bearing pressed, within a degree. Where to press comes from Playwright's own box of the canvas (screen px), never
+    from the page's arithmetic."""
+    import math as _m
+    out = []
+    await page.click(".start-btn", timeout=5000)
+    await page.wait_for_function("gameActive === true", timeout=8000)
+    await page.evaluate(QUIET_JS, [250, 5000, True])
+    box = await page.locator("#compassCanvas").bounding_box()
+    cx, cy = await page.evaluate("[CX / 320, CY / 320]")
+
+    def at(deg, r=0.3):
+        a = _m.radians(deg)
+        return (box["x"] + (cx + r * _m.sin(a)) * box["width"], box["y"] + (cy - r * _m.cos(a)) * box["height"])
+
+    async def needle():
+        return await page.evaluate("currentAngle")
+
+    def off(got, want):
+        return min(abs(got - want), 360 - abs(got - want))
+    for deg in (0, 45, 90, 135, 180, 225, 270, 315):
+        x, y = at(deg)
+        await page.mouse.move(x, y)
+        await page.mouse.down()
+        await page.mouse.up()
+        got = await needle()
+        if off(got, deg) > 1:
+            out.append("a press at bearing %d set the needle to %s" % (deg, got))
+    x, y = at(20)
+    await page.mouse.move(x, y)
+    await page.mouse.down()
+    for deg in (60, 120, 200):
+        await page.mouse.move(*at(deg), steps=4)
+    got = await needle()
+    await page.mouse.up()
+    if off(got, 200) > 1:
+        out.append("a drag from bearing 20 to 200 left the needle at %s" % got)
+    return out
+
+
+POINTER_TESTS = {"games/bearing-blitz/index.html": bearing_blitz_pointer}
 
 
 # ---------------------------------------------------------------------------------------------------- the browser check
@@ -687,118 +750,149 @@ def near(a, b, tol=1.5):
     return a is not None and b is not None and abs(a - b) <= tol
 
 
-async def check_page(browser, base, root, rel, engine, shots=None, layer_body=None, sizes=None, html=None):
-    """(failures, report lines) for one page in one engine."""
-    fails, report = [], []
-    facts = page_facts(root, rel)
-    entry = load_data(root).get(rel) or {}
-    need = entry.get("need")
-    pointer = pointer_status(rel, facts)
-    opted = bool(OFF.search(read(root / rel) if html is None else html))
-    slug = rel.split("/")[-2]
-    for size in (sizes or ZOOM_SIZES + FLAT_SIZES):
-        W, H = size
-        tag = "%s %s %dx%d" % (slug, engine, W, H)
-        want, by = expected_zoom(W, H, facts, need, pointer, opted)
-        # The unzoomed page at the same size: which screens scroll sideways anyway.
-        base_side = {}
+class Judge:
+    """What one page at one size must show, screen by screen: the zoom this script works out, no sideways scroll the
+    unzoomed page does not have, and under zoom the answer controls and Next above the fold."""
 
-        async def flat(kind, r, info):
-            base_side[(kind, info.get("q"))] = r["sw"] > r["cw"] + 1
-        ctx, page = await open_page(browser, base, rel, size, CHECK_SEED, layer=False, html=html)
+    def __init__(self, root, rel, engine, size, html=None):
+        self.rel, self.engine, self.size = rel, engine, size
+        self.slug = rel.split("/")[-2]
+        self.tag = "%s %s %dx%d" % (self.slug, engine, size[0], size[1])
+        facts = page_facts(root, rel)
+        need = (load_data(root).get(rel) or {}).get("need")
+        opted = bool(OFF.search(read(root / rel) if html is None else html))
+        self.want, self.by = expected_zoom(size[0], size[1], facts, need, pointer_status(rel, facts), opted)
+        self.fails, self.report, self.kinds, self.sideways = [], [], set(), []
+        self.n, self.zoom, self.refused = 0, None, None
+
+    async def screen(self, kind, r, info, page=None, shots=None):
+        self.n += 1
+        self.kinds.add(kind)
+        where = "%s, %s%s" % (self.tag, kind, " %d" % info["q"] if info.get("q") else "")
+        if r["zoom"] is None:
+            self.fails.append("%s: the layer is not running (no MaffsLargeScreen)" % where)
+            return
+        refused = str(r["by"]).startswith("engine")
+        if refused:
+            self.refused = r["by"]
+        if not near(r["zoom"], self.want, 0.001) and not (refused and r["zoom"] == 1):
+            self.fails.append("%s: zoom %s (%s), this script's reading of the rule gives %s (%s)" % (where, r["zoom"], r["by"], self.want, self.by))
+        if self.zoom is None:
+            self.zoom = r["zoom"]
+        if r["zoom"] > 1:
+            if r["sw"] > r["cw"] + 1:
+                self.sideways.append((where, kind, info.get("q"), r["sw"], r["cw"]))
+            if r["units"] not in ("vh zoomed", "vh not zoomed"):
+                self.fails.append("%s: zoomed, and the layer's account of the engine is %r" % (where, r["units"]))
+            if kind in ("question", "answered") and r["n"] and r["bottom"] is not None and r["bottom"] > r["fold"] + 0.5:
+                self.fails.append("%s: %s at %d px, %d px under the fold (%d) at zoom %s"
+                                  % (where, "the answer controls end" if kind == "question" else "Next ends", r["bottom"], r["bottom"] - r["fold"], r["fold"], r["zoom"]))
+        if kind in ("start", "results") and r.get("lowest") is not None:
+            self.report.append("%s: the lowest button ends %d px %s the fold (zoom %s; reported, not judged)"
+                               % (where, abs(r["lowest"] - r["fold"]), "under" if r["lowest"] > r["fold"] else "above", r["zoom"]))
+        if shots and page is not None and (kind in ("start", "results") or info.get("q") == 1):
+            name = "%s-%dx%d-%s.jpg" % (self.slug, self.size[0], self.size[1], {"answered": "wrong-answer"}.get(kind, kind))
+            await page.evaluate("window.scrollTo(0, 0)")
+            await page.screenshot(path=os.path.join(shots, name), type="jpeg", quality=72)
+
+    def summary(self):
+        if self.refused:
+            self.report.append("%s: *** THE LAYER REFUSED THIS ENGINE'S ZOOM: %s. The page stays unzoomed here (the rule would give %s). ***"
+                               % (self.tag, self.refused, self.want))
+        self.report.append("%s: zoom %s, limited by %s; %d screens" % (self.tag, self.zoom, self.by, self.n))
+
+
+async def sideways_baseline(browser, base, root, j, html, stop_after):
+    """A zoomed screen scrolls sideways: a fault only if the unzoomed page at the effective size does not."""
+    eff = (int(j.size[0] / j.zoom), int(j.size[1] / j.zoom))
+    flat = set()
+
+    async def on(kind, r, info):
+        if r["sw"] > r["cw"] + 1:
+            flat.add((kind, info.get("q")))
+    ctx, page = await open_page(browser, base, j.rel, eff, CHECK_SEED, layer=False, html=html)
+    try:
+        await walk(page, root, j.rel, on, stop_after=stop_after)
+    finally:
+        await ctx.close()
+    for where, kind, q, sw, cw in j.sideways:
+        if (kind, q) not in flat:
+            j.fails.append("%s: scrolls sideways (%d px wide in a %d px window) and the unzoomed page at %dx%d does not" % (where, sw, cw, eff[0], eff[1]))
+
+
+async def zoomed_facts(browser, base, root, j, page, html):
+    """On a zoomed page, before anything is pressed: every media query answers as on the unzoomed page at the
+    effective size (rule c, seen from outside), and 100vh still ends at the bottom of the screen."""
+    W, H = j.size
+    got = await page.evaluate(MEDIA_JS)
+    vh = await page.evaluate(VH_JS)
+    answers, flat_vh = [], None
+    for rnd in (math.floor, math.ceil):
+        eff = (int(rnd(W / j.zoom)), int(rnd(H / j.zoom)))
+        c2, p2 = await open_page(browser, base, j.rel, eff, CHECK_SEED, layer=False, html=html)
         try:
-            flat_note = await walk(page, root, rel, flat)
+            answers.append(dict(await p2.evaluate(MEDIA_JS)))
+            if flat_vh is None:
+                flat_vh = await p2.evaluate(VH_JS)
         finally:
-            await ctx.close()
+            await c2.close()
+    for text, matches in got:
+        if all(a.get(text) is not None and a.get(text) != matches for a in answers):
+            j.fails.append('%s: "@media %s" %s on the zoomed page and %s on an unzoomed %dx%d window (zoom %s)'
+                           % (j.tag, text, "matches" if matches else "does not match", "does not" if matches else "does",
+                              round(W / j.zoom), round(H / j.zoom), j.zoom))
+    if vh["body"] > vh["ih"] + 2 and flat_vh["body"] <= flat_vh["ih"] + 2:
+        j.fails.append("%s: the start screen's body is %d px tall on a %d px window at zoom %s, and fits the window unzoomed at the "
+                       "effective size (100vh is not divided back)" % (j.tag, vh["body"], vh["ih"], j.zoom))
 
-        seen = {"n": 0, "zoom": None, "engine": None, "kinds": set()}
 
-        async def judge(kind, r, info):
-            seen["n"] += 1
-            seen["kinds"].add(kind)
-            where = "%s, %s%s" % (tag, kind, " %d" % info["q"] if info.get("q") else "")
-            if r["zoom"] is None:
-                fails.append("%s: the layer is not running (no MaffsLargeScreen)" % where)
-                return
-            refused = str(r["by"]).startswith("engine")
-            if refused:
-                seen["engine"] = r["by"]
-            if not near(r["zoom"], want, 0.001) and not (refused and r["zoom"] == 1):
-                fails.append("%s: zoom %s (%s), this script's reading of the rule gives %s (%s)" % (where, r["zoom"], r["by"], want, by))
-            if seen["zoom"] is None:
-                seen["zoom"] = r["zoom"]
-            if r["sw"] > r["cw"] + 1 and not base_side.get((kind, info.get("q"))):
-                fails.append("%s: scrolls sideways (%d px wide in a %d px window) and does not without the layer" % (where, r["sw"], r["cw"]))
-            if r["zoom"] and r["zoom"] > 1:
-                if r["units"] not in ("vh zoomed", "vh not zoomed"):
-                    fails.append("%s: zoomed, and the layer's account of the engine is %r" % (where, r["units"]))
-                if kind in ("question", "answered") and r["n"] and r["bottom"] is not None and r["bottom"] > r["fold"] + 0.5:
-                    fails.append("%s: %s at %d px, %d px under the fold (%d) at zoom %s"
-                                 % (where, "the answer controls end" if kind == "question" else "Next ends", r["bottom"], r["bottom"] - r["fold"], r["fold"], r["zoom"]))
-            if kind in ("start", "results") and r.get("lowest") is not None:
-                report.append("%s: the lowest button ends %d px %s the fold (zoom %s; reported, not judged)"
-                              % (where, abs(r["lowest"] - r["fold"]), "under" if r["lowest"] > r["fold"] else "above", r["zoom"]))
-            if shots and size in SHOT_SIZES and engine == "chromium" and (kind in ("start", "results") or (info.get("q") == 1)):
-                name = "%s-%dx%d-%s.jpg" % (slug, W, H, {"answered": "wrong-answer"}.get(kind, kind))
-                await page.evaluate("window.scrollTo(0, 0)")
-                await page.screenshot(path=os.path.join(shots, name), type="jpeg", quality=72)
+async def check_page(browser, base, root, rel, engine, size, whole, shots=None, layer_body=None, html=None):
+    """(failures, report lines) for one page at one size in one engine. whole: a session to the results screen;
+    otherwise the start screen, the first question and Next after a wrong answer."""
+    j = Judge(root, rel, engine, size, html)
+    stop_after = None if whole else 1
 
-        ctx, page = await open_page(browser, base, rel, size, CHECK_SEED, layer_body=layer_body, html=html)
+    async def on(kind, r, info):
+        await j.screen(kind, r, info, page, shots if (size in SHOT_SIZES and engine == "chromium") else None)
+    ctx, page = await open_page(browser, base, rel, size, CHECK_SEED, layer_body=layer_body, html=html)
+    try:
+        first = await page.evaluate(SCREEN_JS, None)
+        j.zoom = first["zoom"]
+        if first["zoom"] and first["zoom"] > 1:
+            await zoomed_facts(browser, base, root, j, page, html)
+        note = await walk(page, root, rel, on, stop_after=stop_after)
+        want = {"start", "question", "answered"} | ({"results"} if whole else set())
+        if note:
+            j.fails.append("%s: the session stopped: %s" % (j.tag, note))
+        elif not want <= j.kinds:
+            j.fails.append("%s: the session did not reach %s" % (j.tag, ", ".join(sorted(want - j.kinds))))
+    finally:
+        await ctx.close()
+    if j.sideways:
+        await sideways_baseline(browser, base, root, j, html, stop_after)
+    if rel in POINTER_VERIFIED and j.zoom and j.zoom > 1 and rel in POINTER_TESTS and not whole:
+        c3, p3 = await open_page(browser, base, rel, size, CHECK_SEED, layer_body=layer_body, html=html)
         try:
-            first = await page.evaluate(SCREEN_JS, None)
-            if first["zoom"] and first["zoom"] > 1:
-                # Every media query answers as on the unzoomed page at the effective size (rule c, seen from outside).
-                got = await page.evaluate(MEDIA_JS)
-                answers = []
-                for rnd in (math.floor, math.ceil):
-                    eff = (int(rnd(W / first["zoom"])), int(rnd(H / first["zoom"])))
-                    c2, p2 = await open_page(browser, base, rel, eff, CHECK_SEED, layer=False, html=html)
-                    try:
-                        answers.append(dict(await p2.evaluate(MEDIA_JS)))
-                    finally:
-                        await c2.close()
-                for text, matches in got:
-                    if all(a.get(text) is not None and a.get(text) != matches for a in answers):
-                        fails.append('%s: "@media %s" %s on the zoomed page and %s on an unzoomed %dx%d window (zoom %s)'
-                                     % (tag, text, "matches" if matches else "does not match", "does not" if matches else "does",
-                                        round(W / first["zoom"]), round(H / first["zoom"]), first["zoom"]))
-                vh = await page.evaluate(VH_JS)
-                if vh["min"].endswith("px") and float(vh["min"][:-2]) > 0 and vh["body"] > vh["ih"] + 2 and vh["sh"] > vh["ih"] + 2:
-                    # the body's min-height reaches past the screen only if the page's content does too: compare unzoomed
-                    c2, p2 = await open_page(browser, base, rel, (int(W / first["zoom"]), int(H / first["zoom"])), CHECK_SEED, layer=False, html=html)
-                    try:
-                        flat_vh = await p2.evaluate(VH_JS)
-                    finally:
-                        await c2.close()
-                    if flat_vh["body"] <= flat_vh["ih"] + 2:
-                        fails.append("%s: the start screen's body is %d px tall on a %d px window at zoom %s, and fits the window unzoomed "
-                                     "at the effective size (100vh not divided back)" % (tag, vh["body"], vh["ih"], first["zoom"]))
-            note = await walk(page, root, rel, judge)
-            if note:
-                fails.append("%s: the session stopped: %s" % (tag, note))
-            elif not {"start", "question", "answered", "results"} <= seen["kinds"]:
-                fails.append("%s: the session did not reach %s" % (tag, ", ".join(sorted({"start", "question", "answered", "results"} - seen["kinds"]))))
-            if rel in POINTER_VERIFIED and seen["zoom"] and seen["zoom"] > 1 and rel in POINTER_TESTS:
-                c3, p3 = await open_page(browser, base, rel, size, CHECK_SEED, layer_body=layer_body, html=html)
-                try:
-                    fails.extend("%s: pointer test: %s" % (tag, f) for f in await POINTER_TESTS[rel](p3))
-                finally:
-                    await c3.close()
+            bad = await POINTER_TESTS[rel](p3)
+            j.fails.extend("%s: pointer test: %s" % (j.tag, f) for f in bad)
+            j.report.append("%s: pointer test %s at zoom %s" % (j.tag, "FAILED" if bad else "passed", j.zoom))
         finally:
-            await ctx.close()
-        if seen["engine"]:
-            report.append("%s: *** THE LAYER REFUSED THIS ENGINE'S ZOOM: %s. The page stays unzoomed here (rule would give %s). ***"
-                          % (tag, seen["engine"], want))
-        report.append("%s: zoom %s, limited by %s; %d screens played%s"
-                      % (tag, seen["zoom"], by, seen["n"], "" if not flat_note else " (without the layer: %s)" % flat_note))
-    return fails, report
+            await c3.close()
+    j.summary()
+    return j.fails, j.report
 
 
+# The browser units. "<slug> <engine>": the page at all four sizes, start screen, first question and Next after a
+# wrong answer (in every engine: what zoom is, and that the layer's rule and the engine agree). "<slug> session WxH":
+# in Chromium, a whole session to the results screen at that size. A whole session in every engine at every size
+# would be 84 sessions of up to 90 s; one CI line may take about 110 s (canon 7.8.1).
 def unit_names(engines):
-    return ["%s %s" % (rel.split("/")[-2], e) for rel in MIGRATED for e in engines]
+    out = ["%s %s" % (rel.split("/")[-2], e) for rel in MIGRATED for e in engines]
+    out += ["%s session %dx%d" % (rel.split("/")[-2], w, h) for rel in MIGRATED for w, h in ZOOM_SIZES + FLAT_SIZES]
+    return out
 
 
-async def run_units(units, engines, shots=None):
+async def run_units(units, shots=None):
     from playwright.async_api import async_playwright
     bc = mpf().bc
     fails, report, missing = [], [], []
@@ -806,24 +900,34 @@ async def run_units(units, engines, shots=None):
     try:
         async with async_playwright() as pw:
             browsers = {}
-            for uid, shard_unit in units:
-                slug, engine = uid.rsplit(" ", 1)
-                rel = "games/%s/index.html" % slug
-                with shard_unit:
-                    if engine not in browsers:
-                        try:
-                            browsers[engine] = await getattr(pw, engine).launch()
-                        except Exception as e:
-                            browsers[engine] = None
-                            missing.append("%s: %s" % (engine, str(e).split("\n")[0][:120]))
-                    if browsers[engine] is None:
-                        continue
+
+            async def browser_for(engine):
+                if engine not in browsers:
                     try:
-                        f, r = await check_page(browsers[engine], base, BASE, rel, engine, shots=shots)
+                        browsers[engine] = await getattr(pw, engine).launch()
                     except Exception as e:  # noqa: BLE001
-                        f, r = ["%s %s: the check itself failed: %s" % (slug, engine, str(e).split("\n")[0][:200])], []
-                    fails.extend(f)
-                    report.extend(r)
+                        browsers[engine] = None
+                        missing.append("%s: %s" % (engine, str(e).split("\n")[0][:120]))
+                return browsers[engine]
+            for uid, shard_unit in units:
+                parts = uid.split(" ")
+                rel = "games/%s/index.html" % parts[0]
+                with shard_unit:
+                    if parts[1] == "session":
+                        w, h = (int(x) for x in parts[2].split("x"))
+                        jobs = [("chromium", (w, h), True)]
+                    else:
+                        jobs = [(parts[1], size, False) for size in ZOOM_SIZES + FLAT_SIZES]
+                    for engine, size, whole in jobs:
+                        b = await browser_for(engine)
+                        if b is None:
+                            continue
+                        try:
+                            f, r = await check_page(b, base, BASE, rel, engine, size, whole, shots=shots)
+                        except Exception as e:  # noqa: BLE001
+                            f, r = ["%s: the check itself failed: %s" % (uid, str(e).split("\n")[0][:200])], []
+                        fails.extend(f)
+                        report.extend(r)
             for b in browsers.values():
                 if b is not None:
                     await b.close()
@@ -942,7 +1046,7 @@ async def run_plants(engine="chromium"):
                     print("  %-78s *** NO PAGE LIMITED BY THIS RULE ***" % name)
                     continue
                 rel, size = where
-                f, _ = await check_page(browser, base, BASE, rel, engine, layer_body=body, sizes=[size])
+                f, _ = await check_page(browser, base, BASE, rel, engine, size, False, layer_body=body)
                 hit = [x for x in f if "this script's reading of the rule gives" in x]
                 print("  %-78s %s" % (name, "caught: " + hit[0][:110] if hit else "*** MISSED ***"))
                 if not hit:
@@ -950,7 +1054,7 @@ async def run_plants(engine="chromium"):
             # a MIGRATED page without the layer, in the browser: the tag removed from the served page
             rel = MIGRATED[1]
             html = pc.apply_plant(read(BASE / rel), TAG_RE.search(read(BASE / rel)).group(0), "", name="the tag removed from the served page")
-            f, _ = await check_page(browser, base, BASE, rel, engine, sizes=[ZOOM_SIZES[0]], html=html)
+            f, _ = await check_page(browser, base, BASE, rel, engine, ZOOM_SIZES[0], False, html=html)
             hit = [x for x in f if "the layer is not running" in x]
             name = "a MIGRATED page served without the tag (in the browser)"
             print("  %-78s %s" % (name, "caught: " + hit[0][:110] if hit else "*** MISSED ***"))
@@ -997,7 +1101,7 @@ def main():
     if browser_units:
         if args.shots:
             os.makedirs(args.shots, exist_ok=True)
-        f, report, missing = asyncio.run(run_units(browser_units, engines, shots=args.shots))
+        f, report, missing = asyncio.run(run_units(browser_units, shots=args.shots))
         fails.extend(f)
         for line in report:
             print("  " + line)
