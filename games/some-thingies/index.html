@@ -172,12 +172,14 @@ a.back-link:hover{color:var(--text)}
 .sarge-mini{display:none}
 .sarge-mini .th{width:22px;height:22px}
 @media (max-width:599px){.sarge-wide{display:none}.qcard.parade .sarge-mini{display:block}}
-/* Winner stays on, the crowd: from question 11 each right answer adds a thingy, wrapping into rows, 48 shown at most
-   ("+n" beyond). The run-ending wrong answer: they faint (reduced motion: they lie down at once). Decoration only. */
+/* Winner stays on, the crowd: from question 11 each right answer adds a thingy, wrapping into rows, every one drawn
+   (CROWD-FILL): 16 px until the crowd reaches the bottom of the screen, then all shrink together to fit (--ts, set by
+   fitCrowd(), never below 6 px; past that the rows carry on and the page scrolls). The run-ending wrong answer: they
+   faint (reduced motion: they lie down at once). Decoration only. */
 .crowd{display:flex;flex-wrap:wrap;justify-content:center;align-items:flex-end;gap:2px;padding-top:.3rem;border-top:1px dashed var(--border)}
 .crowd:empty{display:none}
-.crowd .th{width:16px;height:16px}
-.crowd .more,.crowd .cheer{font-size:.8rem;font-weight:700;color:var(--text);align-self:center;margin-left:.3rem}
+.crowd .th{width:var(--ts,16px);height:var(--ts,16px)}
+.crowd .cheer{font-size:.8rem;font-weight:700;color:var(--text);align-self:center;margin-left:.3rem}
 .crowd .cheer{flex-basis:100%;text-align:center;margin:0 0 .15rem}
 .crowd.faint .th .tb{transform:rotate(90deg) translateY(10%);transition:transform .5s ease-in}
 .crowd.faint .th .m-wait{display:none}.crowd.faint .th .m-puzzled{display:inline}
@@ -306,6 +308,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     <div class="results">
       <h2 id="resTitle">Stage done</h2>
       <p class="end-line" id="endLine"></p>
+      <p class="end-line" id="collected" hidden></p>
       <div class="final-score" id="resScore">0</div>
       <div class="final-of" id="resOf">out of 10</div>
       <div class="stats" id="resStats"></div>
@@ -341,13 +344,18 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       cols_q: "How many in each row?",
       label_rows: "{n} rows",
       label_cols: "{n} in each row",
-      overtime: "Ten done. From here, one slip ends it.",
+      overtime: "Ten done. How many thingies can you collect? One slip ends it.",
       overtime_end: "One slip. The thingies win this round.",
       // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite. (SOME-THINGIES-PERSONALITY: the stage names,
       // Sarge's line on a right answer in Stage 3, the crowd's cheer from question 11, and the faint.)
       stages: { 1: "The Picnic", 2: "The Conga Line", 3: "The Parade Ground", 4: "The Quiz Show" },
       sarge: "Sarge approves. Do not let it go to your head.",
       cheer: "A crowd is gathering.",
+      // Placeholders by Project Claude, 26 Nov 2026, for Jon to rewrite. (CROWD-FILL: the cheer by the crowd's size, the
+      // line for the largest number reached; cheer itself is question 11's, before the first thingy. The results line.)
+      cheers: { 1: "A crowd is gathering.", 10: "Word is spreading.", 20: "Someone's selling hot dogs.", 30: "The thingies have formed a fan club.", 50: "Stadium capacity reached. They've opened another stadium.", 75: "Thingies are queuing round the block. The block is concerned.", 100: "Every thingy on Earth is here. Some came from Mars." },
+      collected: "You collected {n} thingies.",
+      collected_one: "You collected 1 thingy.",
       faint: "*thud*",
       right: ["Correct.", "Counted and confirmed.", "The thingies agree.", "Exactly right.", "Spot on.", "Well grouped."],
       wrong: { groups: "Count one plate, then count the plates.", sum: "Count how many times the number is added.", pick: "The same number, added that many times.", array: "Count one row, then count the rows.", fact: "Use the table you know.", missing: "Which number, times this one, makes it?" },
@@ -365,12 +373,16 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       cols_q: "How many in each row?",
       label_rows: "{n} rows",
       label_cols: "{n} in each row",
-      overtime: "Keep going! One slip ends it.",
+      overtime: "How many thingies can you collect?",
       overtime_end: "What a run! Play again?",
       // Placeholders by Project Claude, 21 Nov 2026, for Jon to rewrite.
       stages: { 1: "The Picnic", 2: "The Conga Line", 3: "The Parade Ground", 4: "The Quiz Show" },
       sarge: "Sarge says: smart work, soldier!",
       cheer: "The crowd goes wild!",
+      // Placeholders by Project Claude, 26 Nov 2026, for Jon to rewrite. (CROWD-FILL, as above.)
+      cheers: { 1: "The crowd goes wild!", 10: "More thingies are coming!", 20: "The thingies are dancing!", 30: "A thingy party!", 50: "Fifty thingies! Wow!", 75: "The whole town is here!", 100: "Thingies from space!" },
+      collected: "You collected {n} thingies!",
+      collected_one: "You collected 1 thingy!",
       faint: "*thud*",
       right: ["Yes!", "Brilliant!", "You got it!", "Super counting!", "The thingies cheer!", "Spot on!"],
       wrong: { groups: "Count one plate first!", sum: "Count the numbers added!", pick: "Find the same number again!", array: "Count one row first!", fact: "Use your times table!", missing: "What times makes it?" },
@@ -390,7 +402,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     3: { about: 'Rows of thingies' },
     4: { about: 'Times table facts' }
   };
-  var MENU_NOTE = 'At least 10 questions, then keep going until a slip, or press End. A point for each one right.';
+  var MENU_NOTE = 'At least 10 questions, then see how many thingies you can collect: keep going until a slip, or press End. A point for each one right.';
 
   /* =====================================================================================================
      THE LOOK: read once from the link fragment, kept in this page only (never sent, never stored).
@@ -1033,6 +1045,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     }
     else if (t === 'fact') { setSum(Q.a + ' \\times ' + Q.b + ' = {?}', Q.a + 'x' + Q.b); ask(numOpts(Q)); }
     else { setSum('{?} \\times ' + Q.b + ' = ' + Q.product, '?x' + Q.b + '=' + Q.product); ask(numOpts(Q)); }
+    fitCrowd();
   }
   function numOpts(q) { return MaffsOptions.shuffle([q.answer].concat(q.decoys)); }
 
@@ -1049,18 +1062,48 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
   }
 
   // Winner stays on, the crowd (decoration only: nothing here reads or writes the score or the counts). From question 11
-  // it cheers; each right answer after question 10 adds a thingy, the next colour in order; 48 shown, "+n" beyond.
-  var CROWD_MAX = 48, crowdN = 0;
+  // it cheers; each right answer after question 10 adds a thingy, the next colour in order, and every one is drawn
+  // (CROWD-FILL, 26 Nov 2026: no cap, no "+n"). The cheer is the line for the largest size the crowd has reached.
+  var CROWD_FULL = 16, CROWD_FLOOR = 6, crowdN = 0;
+  function cheerLine() {
+    var line = L.cheer;
+    Object.keys(L.cheers).map(Number).sort(function (a, b) { return a - b; }).forEach(function (t) { if (crowdN >= t) line = L.cheers[t]; });
+    return line;
+  }
   function drawCrowd() {
     var c = $('crowd');
     c.classList.remove('faint');
-    if (qi <= PER) { c.innerHTML = ''; return; }
+    if (qi <= PER) { c.innerHTML = ''; c.style.removeProperty('--ts'); return; }
     var h = '<span class="cheer" id="crowdLine"></span>';
-    for (var i = 0; i < Math.min(crowdN, CROWD_MAX); i++) h += thingy((i % 10) + 1);
-    if (crowdN > CROWD_MAX) h += '<span class="more" id="crowdMore">+' + (crowdN - CROWD_MAX) + '</span>';
+    for (var i = 0; i < crowdN; i++) h += thingy((i % 10) + 1);
     c.innerHTML = h;
-    $('crowdLine').textContent = L.cheer;
+    $('crowdLine').textContent = cheerLine();
   }
+  // The crowd's size, measured (never a breakpoint): full size while the card, crowd and all, ends above the bottom of
+  // the screen (the first screen: the fold, less a fixed footer); once it would not, the largest size, in half pixels,
+  // at which it does, every thingy together; never below the floor, where the rows carry on and the page scrolls. The
+  // crowd is the card's last child, so nothing above it moves. Run once the card above it is drawn: at the end of each
+  // new question and of each marking (so on each new thingy), whenever anything above it changes height (a step, the
+  // array turning, Aa, a late font) and on resize.
+  function fitCrowd() {
+    var c = $('crowd');
+    if (!c.querySelector('.th')) return;
+    var f = document.querySelector('.site-footer');
+    var fold = window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+    function fits(sz) { c.style.setProperty('--ts', sz + 'px'); return $('qcard').getBoundingClientRect().bottom + window.scrollY <= fold + 0.5; }
+    // Half-pixel steps, searched from the size it has now (it seldom changes, and each try lays the whole crowd out):
+    // lo fits, or is the floor; hi does not fit (one step past full size stands for "nothing bigger").
+    var cur = parseFloat(c.style.getPropertyValue('--ts')) || CROWD_FULL, lo = CROWD_FLOOR * 2, hi = CROWD_FULL * 2 + 1;
+    if (fits(cur)) { lo = cur * 2; if (cur >= CROWD_FULL || !fits(cur + 0.5)) hi = lo + 1; }
+    else hi = cur * 2;
+    while (hi - lo > 1) { var mid = (lo + hi) >> 1; if (fits(mid / 2)) lo = mid; else hi = mid; }
+    c.style.setProperty('--ts', (lo / 2) + 'px');
+  }
+  window.addEventListener('resize', fitCrowd);
+  if (window.ResizeObserver) (function () {
+    var ro = new ResizeObserver(fitCrowd);
+    for (var el = $('qcard').firstElementChild; el && el.id !== 'crowd'; el = el.nextElementSibling) ro.observe(el);
+  })();
   // The run-ending wrong answer: the whole crowd faints (reduced motion: lies down at once).
   function faint() {
     if (!$('crowd').innerHTML) return;
@@ -1200,6 +1243,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {}
     } else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, label: runOver ? 'See results →' : 'Next →' });
     congaFit();
+    fitCrowd();
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next .btn, .fb-next button') || fb; }, { keep: $('pic') });
   }
   // Stage 3: after marking, the array turns round: r rows of c become c rows of r (reduced motion: at once).
@@ -1240,6 +1284,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, b, score);
     $('resTitle').textContent = MODE_INFO[modeOf(mode)].name + ' · ' + L.stages[stageOf(mode)] + ': done';
     $('endLine').textContent = runOver ? L.overtime_end : L.end;
+    // The crowd's count (CROWD-FILL): the thingies collected after question 10, when there are any.
+    $('collected').hidden = !crowdN;
+    $('collected').textContent = crowdN ? (crowdN === 1 ? L.collected_one : L.collected.replace('{n}', String(crowdN))) : '';
     $('resScore').textContent = String(score);
     $('resOf').textContent = answered + ' answered';
     $('resStats').textContent = '';
@@ -1372,6 +1419,9 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       step: function (v) { return (state === 'rows' || state === 'cols') && click($('opts1'), '[data-val="' + v + '"]'); },
       pick: function (v) { return state === 'ask' && click($('opts'), '[data-val="' + v + '"]'); },
       end: function () { var b = $('endBtn'); if (!b.hidden) b.click(); return !b.hidden; },
+      // The crowd at n thingies, past question 10 (a verifier's: a crowd of thousands without playing thousands of
+      // questions; decoration only, the score and the counts are untouched). Returns the crowd's number.
+      crowd: function (n) { if (qi > PER && n >= 0) { crowdN = Math.floor(n); drawCrowd(); fitCrowd(); } return crowdN; },
       // Answer the item on screen: right, or (after counting the lots right, and answering any steps right) a decoy. line
       // (a verifier's, PRIMARY-FIT-SWEEP): the index in LINES.right of the line a right answer says, in place of a random one.
       answer: function (right, line) {
