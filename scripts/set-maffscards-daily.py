@@ -9,17 +9,23 @@ games/maffscards/daily.json, which the workflow then commits to main; the page (
 the file and shows the result only on the file's own UK date.
 
     python scripts/set-maffscards-daily.py --date 2026-11-26 --result won --rounds 14 --line="..."
+    python scripts/set-maffscards-daily.py --date 26/11/2026 --result won --rounds 14      # the same day, typed the UK way
     python scripts/set-maffscards-daily.py --selftest      # planted bad inputs refused, good inputs written
     python scripts/set-maffscards-daily.py --check         # the committed daily.json is all nulls or a valid result
 
 REFUSED (nothing is written, exit 1):
-  date     not YYYY-MM-DD, not a real date, or neither today nor yesterday in the UK (Europe/London);
+  date     not YYYY-MM-DD or D/M/YYYY, not a real date, or neither today nor yesterday in the UK (Europe/London);
   result   not "won" or "lost" (any case);
   rounds   not a whole number, or outside 10 to 100 for a win, 10 to 200 for a loss.
 
 THE LINE is optional and is never a reason to refuse: it is written as null (so the page shows a line from its own
 pool) when it is empty, longer than 240 characters, holds "<" or ">", or holds contact details. Line breaks and runs
 of spaces become one space first.
+
+THE DATE may be typed as YYYY-MM-DD or, with slashes, day first as in the UK: 26/11/2026 or 6/1/2027 (contract
+DAILY-POLISH, 26 Nov 2026: the Run workflow form's first real run was refused for 26/11/2026). A slash date is
+turned into YYYY-MM-DD before every check, and the file always holds YYYY-MM-DD. Nothing else is read as a date: not
+dashes day first, not a two-digit year, not the year first with slashes.
 
 Contact details: the repository has no personal-details check to call (the list the lanes scan with is private and
 is kept outside this public repository on purpose), so the line is checked here for what can be recognised without
@@ -86,13 +92,16 @@ def clean_line(text):
 
 def validate(date, result, rounds, line, now):
     """The record to write and a note about the line. Raises Refused with the reason."""
-    date = (date or '').strip()
+    typed = date = (date or '').strip()
+    uk = re.fullmatch(r'([0-9]{1,2})/([0-9]{1,2})/([0-9]{4})', date)
+    if uk:                                          # day first: 26/11/2026 is 2026-11-26
+        date = '%s-%02d-%02d' % (uk.group(3), int(uk.group(2)), int(uk.group(1)))
     if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', date):
-        raise Refused('date %r is not YYYY-MM-DD' % date)
+        raise Refused('date %r is not YYYY-MM-DD or D/M/YYYY' % typed)
     try:
         day = dt.date.fromisoformat(date)
     except ValueError:
-        raise Refused('date %r is not a real date' % date)
+        raise Refused('date %r is not a real date' % typed)
     today = uk_date(now)
     if day not in (today, today - dt.timedelta(days=1)):
         raise Refused('date %s is neither today (%s) nor yesterday in the UK' % (date, today.isoformat()))
@@ -172,6 +181,10 @@ def selftest():
          {'date': '2026-11-26', 'result': 'won', 'rounds': 12, 'line': "Jon took {N} rounds. Marvin isn't speaking to him."}),
         (('2026-11-26', 'won', '12', 'Marvin recited the first 1,000 digits of pi. All 96 factors of nothing.'),
          {'date': '2026-11-26', 'result': 'won', 'rounds': 12, 'line': 'Marvin recited the first 1,000 digits of pi. All 96 factors of nothing.'}),
+        # typed the UK way, day first with slashes (DAILY-POLISH): written as YYYY-MM-DD
+        (('26/11/2026', 'won', '14', ''), {'date': '2026-11-26', 'result': 'won', 'rounds': 14, 'line': None}),
+        (('25/11/2026', 'lost', '31', ''), {'date': '2026-11-25', 'result': 'lost', 'rounds': 31, 'line': None}),
+        ((' 26/11/2026 ', 'won', '14', ''), {'date': '2026-11-26', 'result': 'won', 'rounds': 14, 'line': None}),
     ]
     for args, want in good:
         try:
@@ -188,6 +201,11 @@ def selftest():
         ('negative rounds', ('2026-11-26', 'won', '-14', '')), ('no rounds', ('2026-11-26', 'won', '', '')),
         ('a win in 9 rounds', ('2026-11-26', 'won', '9', '')), ('a win in 101 rounds', ('2026-11-26', 'won', '101', '')),
         ('a loss in 9 rounds', ('2026-11-26', 'lost', '9', '')), ('a loss in 201 rounds', ('2026-11-26', 'lost', '201', '')),
+        ('slashes, the year first', ('2026/26/11', 'won', '14', '')), ('slashes, the month first (no month 26)', ('11/26/2026', 'won', '14', '')),
+        ('slashes, a date that does not exist', ('31/11/2026', 'won', '14', '')), ('slashes, a two-digit year', ('26/11/26', 'won', '14', '')),
+        ('slashes, a date two days old', ('24/11/2026', 'won', '14', '')), ("slashes, tomorrow's date", ('27/11/2026', 'won', '14', '')),
+        ('slashes, more after the date', ('26/11/2026x', 'won', '14', '')), ('slashes and a dash', ('26/11-2026', 'won', '14', '')),
+        ('slashes, a three-digit day', ('026/11/2026', 'won', '14', '')), ('slashes, no day', ('/11/2026', 'won', '14', '')),
     ]
     for what, args in bad:
         try:
@@ -205,6 +223,14 @@ def selftest():
         except Refused:
             got = False
         expect('at 23:05 UTC on 1 June 2027, %s is %s' % (date, 'accepted' if want else 'refused'), got == want)
+    # single digits, day first: 6/1/2027 is 6 January 2027, never 1 June
+    january = dt.datetime(2027, 1, 6, 12, 0, tzinfo=utc)
+    for date, want in (('6/1/2027', '2027-01-06'), ('06/01/2027', '2027-01-06'), ('5/1/2027', '2027-01-05'), ('1/6/2027', None), ('4/1/2027', None)):
+        try:
+            got = validate(date, 'won', '14', '', now=january)[0]['date']
+        except Refused:
+            got = None
+        expect('on 6 January 2027, %s is %s' % (date, 'written as %s' % want if want else 'refused'), got == want)
     lines = [
         ('a tag', 'Marvin <b>lost</b>.'), ('a lone "<"', '9 < 10, Marvin.'), ('a lone ">"', '10 > 9, Marvin.'),
         ('241 characters', 'x' * 241), ('an e-mail address', 'Tell marvin@example.com he lost.'),
@@ -236,6 +262,11 @@ def selftest():
         got = json.load(open(path, encoding='utf-8'))
         expect('a good run exits 0 and writes the result', status == 0 and got == {'date': '2026-11-26', 'result': 'won', 'rounds': 14, 'line': 'Beat {N}, Marvin says.'})
         expect('the written file passes --check', check_file(path) == [])
+        with contextlib.redirect_stdout(quiet):
+            status = main(['--date', '25/11/2026', '--result', 'lost', '--rounds', '31', '--out', path, '--now', '2026-11-26T07:30:00+00:00'])
+        got = json.load(open(path, encoding='utf-8'))
+        expect('a run with --date 25/11/2026 writes "date": "2026-11-25"', status == 0 and got == {'date': '2026-11-25', 'result': 'lost', 'rounds': 31, 'line': None})
+        expect('that file passes --check', check_file(path) == [])
         raw = open(path, 'rb').read()
         expect('the written file is one line ending in a line feed', raw.endswith(b'\n') and raw.count(b'\n') == 1 and b'\r' not in raw)
         for what, body in (('not JSON', '{'), ('a missing key', '{"date": null, "result": null, "rounds": null}'),

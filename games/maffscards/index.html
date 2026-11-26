@@ -930,10 +930,13 @@ body.accessible .mc-row{min-height:34px;padding-top:.05rem;padding-bottom:.05rem
   }
   $('ddPlay').addEventListener('click', startDaily);
   // XMLHttpRequest, as cards.json below. Nothing here ever shows an error: no file, no result.
+  // The ?t= is a new address on every load (DAILY-POLISH, 26 Nov 2026): the maffscards-daily workflow rewrites daily.json
+  // during the day and GitHub Pages lets a browser keep a copy for 10 minutes, so without it a reload could show the
+  // file from before Jon's result. The server ignores the query string; nothing is sent but the device's clock time.
   var dailyReady = new Promise(function (resolve) {
     function done() { renderDaily(); resolve(); }
     var x = new XMLHttpRequest();
-    x.open('GET', 'daily.json');
+    x.open('GET', 'daily.json?t=' + Date.now());
     x.onload = function () { if (x.status === 200) { try { JON = JSON.parse(x.responseText); } catch (e) { JON = null; } } done(); };
     x.onerror = done;
     try { x.send(); } catch (e) { done(); }

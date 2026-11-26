@@ -19,7 +19,7 @@ on:
   workflow_dispatch:
     inputs:
       date:
-        description: "The day of the deal, YYYY-MM-DD (today or yesterday in the UK)"
+        description: "The day of the deal: 26/11/2026 or 2026-11-26 (today or yesterday in the UK)"
         required: true
         type: string
       result:

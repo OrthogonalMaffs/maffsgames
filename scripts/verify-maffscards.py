@@ -100,7 +100,9 @@ cards.json, never from the page:
             240 characters shown and at 241 replaced by the pool's; every branch of the results line (you won against
             Jon's more, the same and fewer rounds, Jon lost, Jon not played or stale; you lost against each). Then the
             file itself, fetched beside the page: two loads on one day show the same line, and a stale, missing,
-            unreadable or failing file reads as not played with no error on screen.
+            unreadable or failing file reads as not played with no error on screen. DAILY-POLISH (26 Nov 2026): each of
+            those loads asks for daily.json once, as daily.json?t=<digits>, and no two loads ask with the same query
+            string (the requests are read from the browser, not from the page), so a reload never shows a cached file.
   dailyfit  at 320x568 and 375x667, normal and Aa: the panel with a 240-character line and the rounds, with 240
             characters and no space, and not played: nothing off the screen, no sideways scroll, the button at least
             44 px, no text under 12 px, and the panel (with a line of words) no taller than the screen above the
@@ -138,7 +140,7 @@ DAILY-FIT: Play today's deal back below Jon's line; the art's shrink switched of
 committed daily.json.
 For today's deal (their own unit, dailyplants): the day's code from Math.random; a pool line changed by one word; W8's 252
 changed to 250 in this script's facts table; a stale-date daily.json shown as today's; a 241-character line shown; a daily
-game submitted to the leaderboard.
+game submitted to the leaderboard; daily.json asked for with no query string (DAILY-POLISH).
 
     python -X utf8 scripts/verify-maffscards.py [--selftest] [--only UNIT ...] [--shard I/K] [--list-units]
 
@@ -393,10 +395,10 @@ NOT_PLAYED_FILE = (200, json.dumps({'date': None, 'result': None, 'rounds': None
 PIN_DAILY = True
 
 
-def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify', daily=None, tz=None, live=None):
+def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?cb=verify', daily=None, tz=None, live=None, seen=None):
     """daily: (status, body) to answer games/maffscards/daily.json with; None: the pinned not-played file (never the
     committed one). live: a (status, body) standing in for the committed file, under the pin, for the check that the
-    pin holds. tz: the device's time zone."""
+    pin holds. tz: the device's time zone. seen: a list that gets the address of every request the browser makes."""
     touch = size[0] <= 600
     ctx = br.new_context(viewport={'width': size[0], 'height': size[1]}, has_touch=touch, is_mobile=touch,
                          reduced_motion='reduce' if still else 'no-preference', **({'timezone_id': tz} if tz else {}))
@@ -421,6 +423,8 @@ def open_page(br, base, html, size, aa=False, still=True, fonts=False, query='?c
     page = ctx.new_page()
     errors = []
     page.on('pageerror', lambda e: errors.append(str(e)))
+    if seen is not None:
+        page.on('request', lambda r: seen.append(r.url))
     page.goto(base + '/games/%s/%s' % (SLUG, query), wait_until='load', timeout=30000)
     page.wait_for_function('!!window.MC && MC.loaded()', timeout=15000)
     page.evaluate("""() => { window.__ev = []; window.__sub = [];
@@ -1934,10 +1938,17 @@ def check_daily_ui(br, base, html, out, info):
              ('an empty file', (200, ''), None, NOT_PLAYED),
              ('a server error', (500, body), None, NOT_PLAYED),
              ("open_page's pinned file, all nulls", None, None, NOT_PLAYED)]
+    asked = []                      # DAILY-POLISH: the query string each load asked for daily.json with
     for what, daily, tz, status in files:
         # Under every one, a stand-in for the committed file that looks like today's result: it must never reach the page.
-        ctx, page, errs = open_page(br, base, html, (390, 844), daily=daily, tz=tz, live=(200, json.dumps({'date': day, 'result': 'lost', 'rounds': 19, 'line': 'THE COMMITTED FILE'})))
+        seen = []
+        ctx, page, errs = open_page(br, base, html, (390, 844), daily=daily, tz=tz, live=(200, json.dumps({'date': day, 'result': 'lost', 'rounds': 19, 'line': 'THE COMMITTED FILE'})), seen=seen)
         page.evaluate('MC.daily.ready')
+        reqs = [u.split('/games/%s/' % SLUG, 1)[1] for u in seen if re.search(r'/games/%s/daily\.json' % SLUG, u)]
+        if len(reqs) != 1 or not re.fullmatch(r'daily\.json\?t=[0-9]+', reqs[0]):
+            out.append('daily request, %s: the page asked for %r, expected daily.json?t=<digits> once, so that a reload never shows a cached file' % (what, reqs))
+        else:
+            asked.append(reqs[0])
         got = page.evaluate('d => { MC.daily.setToday(d); return (%s)(); }' % STATUS_JS, day)
         if got['status'] == 'THE COMMITTED FILE':
             out.append('daily status, %s: the page read the committed daily.json, not the file this script pins' % what)
@@ -1947,6 +1958,8 @@ def check_daily_ui(br, base, html, out, info):
             out.append('daily status, %s: a start button is disabled' % what)
         out.extend('page error (daily status, %s): %s' % (what, e) for e in errs if 'production host' not in e)
         ctx.close()
+    if len(asked) == len(files) and len(set(asked)) != len(asked):
+        out.append('daily request: %d loads asked for daily.json with only %d different query strings: %r' % (len(asked), len(set(asked)), asked))
     info['dailyui'] = (len(idle), 24 + len(cases), len(branches), len(files))
 
 
@@ -2166,6 +2179,9 @@ DAILY_PLANTS = [
      ['dailyui'], r'^daily status, won with a 241-character line \(the pool line shown\): '),
     ('a daily game submitted to the leaderboard', [("challenge: ch ? ch.code : null, seed:", "challenge: ch && !daily ? ch.code : null, seed:")],
      ['daily'], r'^daily board: a won daily game submitted '),
+    # DAILY-POLISH
+    ('daily.json asked for with no query string', [("x.open('GET', 'daily.json?t=' + Date.now());", "x.open('GET', 'daily.json');")],
+     ['dailyui'], r"^daily request, the file for today, first load: the page asked for \['daily\.json'\], expected daily\.json\?t=<digits> once"),
 ]
 
 
@@ -2216,7 +2232,7 @@ def print_golden(html):
 # The work units, in run order (contract VERIFIER-SPLIT, 25 Nov 2026): CI runs them as SHARD parts (scripts/ci_shards.py),
 # each unit in exactly one part; the planted faults are the last unit, "selftest". A local run with no --shard runs them all.
 UNITS = ['data', 'balance', 'rules', 'marvin', 'sim', 'play', 'challenge', 'fit', 'art', 'pool', 'daily', 'dailyui', 'dailyfit']
-PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first twenty, and today's deal's six
+PLANT_UNITS = ['selftest', 'dailyplants']       # the planted faults: the first twenty, and today's deal's seven
 
 
 def merge_info(info, part):
@@ -2295,7 +2311,7 @@ def main():
         print('%s: today\'s deal: the code for %d days equal to this script\'s own rule, all different, all main / ten / hard; the UK date right at %d instants across both clock changes; two loads the same; off the leaderboard; mode daily'
               % ((SLUG,) + info['daily']))
     if 'dailyui' in info:
-        print('%s: today\'s deal: %d not-played records, %d won and lost panels, %d results lines and %d files as fetched, each as the contract words it' % ((SLUG,) + info['dailyui']))
+        print('%s: today\'s deal: %d not-played records, %d won and lost panels, %d results lines and %d files as fetched, each as the contract words it; each of those loads asked for daily.json?t= with its own query string' % ((SLUG,) + info['dailyui']))
     for f in info.get('dailyfit', []):
         print('%s: today\'s deal fit %s' % (SLUG, f))
     ok = True
