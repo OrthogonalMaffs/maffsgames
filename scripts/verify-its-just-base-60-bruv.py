@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; every item's wrong-answer picture (hour bar, day strip, counting on, clock faces) with every number recomputed, its size, and gone on short screens; the cuckoo's states, right-answer lines and results bands; the cuckoo's place and size, 80-160 px above the question where every screen fits, in the stage row otherwise, judged against room measured here, unchanged at marking, every item's screens above the fold at 320x568, 375x667, 1366x768 and 1920x955, normal and Aa; the bird right out of the house through a right answer's hold, drooping on a wrong one, still under reduced motion; fault-injection self-test) | | 1
+# ci-shards: It's Just Base 60, Bruv (the 192-item bank held to the contract's SHA-256 and counts; every answer, decoy and working line recomputed from the item's own fields, without the generator; every decoy's error allowed for its item type (ERR_TYPES) and no two options equal in value; one LINES line per error key, none unused; every stage played to the end, right and wrong marked, each wrong option showing its own line; every item's wrong-answer screen above the fold at 375x667, 390x844, 1280x720 and 1366x768; the start picture's tag, file size and that it shows on the start screen only; every item's wrong-answer picture (hour bar, day strip, counting on, clock faces) with every number recomputed, its size, and gone on short screens; the cuckoo's states, right-answer lines and results bands; the cuckoo's place and size, 80-160 px above the question where every screen fits, in the stage row otherwise, judged against room measured here, unchanged at marking, every item's screens above the fold at 320x568, 375x667, 1366x768 and 1920x955, normal and Aa; the bird right out of the house through a right answer's hold, drooping on a wrong one, still under reduced motion, and on a perch joined to the doorway whenever it is out; fault-injection self-test) | | 1
 # ci-deps: games/its-just-base-60-bruv/ tools/its-just-base-60-bruv/
 r"""Independent verification for It's Just Base 60, Bruv (games/its-just-base-60-bruv/), contract BASE-60 (Amendment 1),
 24 Nov 2026. SR-30: checked from its first PR.
@@ -61,7 +61,9 @@ arithmetic on whole minutes and exact fractions:
   Bird     at 1920 x 955 and 320 x 568: a right answer's animation paused and read at 300, 600, 900, 1200 and 1450 ms, the
            bird showing and its box wholly left of the roof's corner (out of the house) at each, gone at the end; a wrong
            answer leaves it out and drooping (rotated); under prefers-reduced-motion, both states show at once with no
-           animation or transition running.
+           animation or transition running. The perch (BASE-60-TIDY): at each of those moments of the hold, in the wrong
+           state and in both reduced-motion states, the perch shows and its box touches the door's box and the bird's
+           (to within 1 unit of the clock's drawing, 1/40 of its width).
 
 Work units: "bank" (no browser), "play 375x667", "why 1280x720", "why 375x667", "art 375x667", "pic 375x667", "pic 320x700",
 "pic 320x568", "cuckoo 1280x720", "fit <W>x<H>" (four), "ck <W>x<H> <normal|Aa> stage-<n>" (32: four sizes, two modes, four stages), "bird 1920x955", "bird 320x568"
@@ -994,15 +996,38 @@ def check_ck(page, items, size, aa, out, info, stage):
 # The bird, read from the drawing as it moves: its box against the house's (the roof's left corner is the house's left edge).
 BIRD_JS = r"""(t) => {
   const ck = document.getElementById('cuckoo'), bird = ck.querySelector('.ck-bird'), roof = ck.querySelector('polygon');
-  const anims = bird.getAnimations().concat(ck.querySelector('.ck-door').getAnimations());
+  const perch = ck.querySelector('.ck-perch'), door = ck.querySelector('.ck-door');
+  const anims = bird.getAnimations().concat(door.getAnimations()).concat(perch ? perch.getAnimations() : []);
   const a = bird.getAnimations().find(x => x.animationName);
   if (a && t !== null) { a.pause(); a.currentTime = t; }
+  const pa = perch && perch.getAnimations().find(x => x.animationName);
+  if (pa && t !== null) { pa.pause(); pa.currentTime = t; }
   const r = bird.getBoundingClientRect(), h = roof.getBoundingClientRect(), cs = getComputedStyle(bird);
-  return { state: ck.getAttribute('data-state'), n: anims.length, dur: a ? a.effect.getComputedTiming().duration : null,
+  // The perch: showing, and its box within 1 drawing unit of the door's box and of the bird's.
+  const unit = ck.getBoundingClientRect().width / 40;
+  const near = (p, q) => Math.max(p.left - q.right, q.left - p.right, p.top - q.bottom, q.top - p.bottom);
+  let pch = { there: false };
+  if (perch) {
+    const p = perch.getBoundingClientRect(), d = door.getBoundingClientRect();
+    pch = { there: true, op: Number(getComputedStyle(perch).opacity), len: p.width / unit,
+            door: near(p, d) / unit, bird: near(p, r) / unit };
+    pch.ok = pch.op >= 0.99 && pch.len > 1 && pch.door <= 1 && pch.bird <= 1;
+  }
+  return { state: ck.getAttribute('data-state'), n: anims.length, dur: a ? a.effect.getComputedTiming().duration : null, perch: pch,
            out: r.right < h.left, gap: h.left - r.right, op: Number(cs.opacity), tf: cs.transform,
            w: ck.getBoundingClientRect().width / (parseFloat(getComputedStyle(document.documentElement).zoom) || 1) };
 }"""
 HOLD = [300, 600, 900, 1200, 1450]   # ms into the right answer's animation: the bird must be out, and showing, at each
+
+
+def perch_says(tag, when, r, out):
+    """The bird is out: it must be on its perch, and the perch must reach the doorway (BASE-60-TIDY)."""
+    p = r['perch']
+    if not p['there']:
+        out.append('%s: %s the perch does not join the doorway to the bird (there is no perch)' % (tag, when))
+    elif not p['ok']:
+        out.append('%s: %s the perch does not join the doorway to the bird (opacity %.2f, %.1f units long, %.1f units from the door, '
+                   '%.1f from the bird; 1 allowed)' % (tag, when, p['op'], p['len'], p['door'], p['bird']))
 
 
 def shown(page, m):
@@ -1028,6 +1053,7 @@ def check_bird(page, size, out, info):
             r = page.evaluate(BIRD_JS, t)
             if not r['out'] or r['op'] < 0.99:
                 out.append('%s: %d ms into a right answer the bird does not leave the house (%.1f px clear of the roof, opacity %.2f)' % (tag, t, r['gap'], r['op']))
+            perch_says(tag, '%d ms into a right answer' % t, r, out)
         end = page.evaluate(BIRD_JS, first['dur'])
         if end['op'] > 0.01:
             out.append('%s: the bird has not gone back at the end of a right answer (opacity %.2f)' % (tag, end['op']))
@@ -1038,6 +1064,7 @@ def check_bird(page, size, out, info):
     r = page.evaluate(BIRD_JS, None)
     if r['state'] != 'wrong' or not r['out'] or r['op'] < 0.99 or 'matrix' not in r['tf'] or abs(float(r['tf'].split('(')[1].split(',')[1])) < 0.3:
         out.append('%s: a wrong answer does not leave the bird out and drooping (%s)' % (tag, r))
+    perch_says(tag, 'after a wrong answer', r, out)
     # Reduced motion: each state as it stands, nothing moving.
     page.emulate_media(reduced_motion='reduce')
     page.evaluate("document.getElementById('menuBtn').click()")
@@ -1047,6 +1074,7 @@ def check_bird(page, size, out, info):
         r = page.evaluate(BIRD_JS, None)
         if r['n'] or r['state'] != st or not r['out'] or r['op'] < 0.99:
             out.append('%s, reduced motion, %s answer: %d animation(s) running, the bird %s (it should stand out of the house, still)' % (tag, st, r['n'], r))
+        perch_says(tag, 'under reduced motion, after a %s answer,' % st, r, out)
         page.evaluate("document.getElementById('menuBtn').click()")
     page.emulate_media(reduced_motion='no-preference')
     info.setdefault('bird', []).append((size, first['w']))
@@ -1181,6 +1209,12 @@ PLANTS = [
      'ck 1920x955 normal stage-1', r'the clock is 80 px with \d+ px unused under its tallest screen'),
     ('reduced motion ignored', [('@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}', '')],
      'bird 1920x955', r'reduced motion, right answer: [1-9]\d* animation'),
+    # BASE-60-TIDY (26 Nov 2026): the bird must be on a perch joined to the doorway whenever it is out.
+    ('the perch removed', [('<g class="ck-perch"><rect x="7" y="18.7" width="29" height="1.3" fill="var(--text)"/><rect x="7.3" y="19" width="28.4" height=".7" fill="var(--brass-dim)"/></g>\n', '')],
+     'bird 1920x955', r'the perch does not join the doorway to the bird \(there is no perch\)'),
+    ('the perch left behind at the door', [('<g class="ck-perch"><rect x="7" y="18.7" width="29"', '<g class="ck-perch"><rect x="32" y="18.7" width="4"'),
+                                           ('<rect x="7.3" y="19" width="28.4"', '<rect x="32.3" y="19" width="3.4"')],
+     'bird 320x568', r'ms into a right answer the perch does not join the doorway to the bird \(opacity'),
 ]
 
 
@@ -1245,7 +1279,7 @@ def main():
     for tag, n in sorted(info.get('known', {}).items()):
         print('%s: %d item(s) at %s below the fold as on main (KNOWN_AA_OVER), the clock in the stage row, none lower than main' % (SLUG, n, tag))
     for size, w in info.get('bird', []):
-        print('%s: the bird at %dx%d (clock %g px): right out of the house from %d to %d ms of a right answer, back after; drooping on a wrong one; still under reduced motion' % (SLUG, size[0], size[1], w, HOLD[0], HOLD[-1]))
+        print('%s: the bird at %dx%d (clock %g px): right out of the house from %d to %d ms of a right answer, back after; drooping on a wrong one; still under reduced motion; on its perch, joined to the doorway, at every one of those' % (SLUG, size[0], size[1], w, HOLD[0], HOLD[-1]))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong marked, each wrong option\'s own line)' % (SLUG, info['played']))
     for size, n, worst in info.get('fit', []):
