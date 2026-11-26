@@ -104,7 +104,7 @@ POINTER_VERIFIED = {
                                       "measured by bearing_blitz_pointer: 8 clicks and a drag, each within 1 degree",
 }
 
-MIN_W, EFF_W, MAX_Z, MIN_Z, STEPS, EPS = 1500, 1200, 1.6, 1.1, 20, 1e-9
+MIN_W, EFF_W, EFF_H, MAX_Z, MIN_Z, STEPS, EPS = 1500, 1280, 720, 1.6, 1.1, 20, 1e-9
 ZOOM_SIZES = [(1920, 955), (2560, 1310)]
 FLAT_SIZES = [(1366, 650), (390, 844)]
 SHOT_SIZES = [(1920, 955), (1366, 650)]
@@ -250,6 +250,7 @@ def expected_zoom(W, H, facts, need, pointer, opted_out=False):
         return 1.0, "c: " + facts["problems"][0]
     best = (steps(MAX_Z, False), "f: upper limit %s" % MAX_Z)
     caps = [(steps(W / EFF_W, False), "b: effective width %d" % EFF_W),
+            (steps(H / EFF_H, False), "b: effective height %d" % EFF_H),
             (steps(H / need, False), "d: height need %d" % need)]
     for dim, kind, t in facts["thresholds"]:
         v = W if dim == "width" else H

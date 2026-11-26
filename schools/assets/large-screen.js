@@ -15,13 +15,15 @@
  * The zoom is the largest z, rounded DOWN to a step of 0.05, that meets every rule; under 1.1 there is no zoom.
  *
  *   a. Only on big screens: no zoom when the window is under 1500 px wide.
- *   b. Effective width: window width / z >= 1200.
+ *   b. The laptop floor (Jon, 26 Nov 2026, Amendment 1): the effective window (window / z) is never smaller than
+ *      1280 x 720, the smallest laptop size every game is already verified at. So whatever holds on a 1280 x 720
+ *      laptop (answer controls and Next above the fold, a start screen a game fits to the window) holds zoomed.
  *   c. Never across the page's own breakpoints. Media queries read the real window while a zoomed page is laid out in
  *      window / z px, so for every width and height threshold T in the page's readable stylesheets, window / z stays
  *      on the same side of T as the window itself: every media query then answers as it would on an unzoomed
  *      window of the effective size. Cross-origin sheets (KaTeX, Google Fonts) cannot be read and are skipped; a
  *      same-origin sheet that cannot be read, or a size condition this cannot parse, means no zoom.
- *   d. Height budget: window height / z >= data-need, so the answer controls and Next stay above the fold.
+ *   d. Height budget: window height / z >= data-need, for a game whose answer controls and Next need more than 720.
  *   e. Pointer safety: under zoom a pointer's clientX is in screen px while style.left is in zoomed px, so a page
  *      that positions things from the pointer is zoomed only when data-pointer is "verified". No tag value, or
  *      "held", means no zoom; so does a page marked "none" whose inline script turns out to read the pointer.
@@ -42,7 +44,7 @@
  */
 (function () {
   'use strict';
-  var MIN_W = 1500, EFF_W = 1200, MAX_Z = 1.6, MIN_Z = 1.1, STEPS = 20, EPS = 1e-9;
+  var MIN_W = 1500, EFF_W = 1280, EFF_H = 720, MAX_Z = 1.6, MIN_Z = 1.1, STEPS = 20, EPS = 1e-9;
   var doc = document, root = doc.documentElement;
   var tag = doc.currentScript;
   var need = tag ? parseFloat(tag.getAttribute('data-need')) : NaN;
@@ -133,6 +135,7 @@
     var best = { k: steps(MAX_Z, false), by: 'f: upper limit ' + MAX_Z };
     function cap(k, by) { if (k < best.k) best = { k: k, by: by }; }
     cap(steps(W / EFF_W, false), 'b: effective width ' + EFF_W);
+    cap(steps(H / EFF_H, false), 'b: effective height ' + EFF_H);
     cap(steps(H / need, false), 'd: height need ' + need);
     th.list.forEach(function (x) {
       var v = x.dim === 'width' ? W : H;

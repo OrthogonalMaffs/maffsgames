@@ -16,9 +16,11 @@ page is played to its results screen by scripts/check-large-screen.py's walk (th
 every time), once for each of SEEDS (each seed plays different questions), each level the roster lists (?level=)
 and each stage or mode the route names ("starts"), at each window in a small grid:
 
-  width   1200, the effective width the layer never goes below (rule b), so the narrowest and tallest layout a
-          zoomed page is ever drawn at; and the first px of each of the page's own width regimes above 1200.
-  height  the first px of each of the page's own height regimes from FLOOR to TOP: 600 itself, then T for every
+  width   1280, the effective width the layer never goes below (rule b, the laptop floor), so the narrowest and
+          tallest layout a zoomed page is ever drawn at; and the first px of each of the page's own width regimes
+          above 1280.
+  height  the first px of each of the page's own height regimes from FLOOR to TOP: 720 itself (rule b's floor: a
+          zoomed page is never drawn shorter), then T for every
           min-height:T (or height < T) and T + 1 for every max-height:T (or height > T) in between. Rule c keeps a
           zoomed page in the height regime of its real window, so each regime is measured where it is tightest: at
           its lowest height. (Content centred in a taller window ends lower on the page without needing more room;
@@ -42,7 +44,7 @@ _spec.loader.exec_module(cl)
 
 SEEDS = [1, 2, 3]
 LEVELS = cl.mpf().bc.roster_levels()[0]         # {slug: [level key, ...]}: every level the roster lists is played (?level=)
-WIDTH, FLOOR, TOP, WIDE = 1200, 600, 1400, 2560
+WIDTH, FLOOR, TOP, WIDE = cl.EFF_W, cl.EFF_H, 1400, 2560
 ABOUT = ("Written by scripts/measure-large-screen.py; never edit by hand. need: the height in CSS px each page's answer "
          "controls and Next need (schools/assets/large-screen.js, rule d).")
 

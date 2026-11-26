@@ -1304,7 +1304,9 @@ ART_STATE_JS = r"""() => {
   const bottoms = () => { const o = {}; els.forEach(([n, e]) => { o[n] = e.getBoundingClientRect().bottom + scrollY; }); return o; };
   const card = art.querySelector('.art-card.c');
   const was = art.style.getPropertyValue('--as');
-  const scale = art.getBoundingClientRect().height / fullH, cardScale = card.offsetWidth / fullW;
+  // In CSS px: under the large-screen layer's zoom a rect is in screen px, z times larger (LARGE-SCREEN-LAYER, Amendment 1).
+  const z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
+  const scale = art.getBoundingClientRect().height / z / fullH, cardScale = card.offsetWidth / fullW;
   const o = { fold: fold, scale: scale, cardScale: cardScale, shown: art.getClientRects().length > 0 && getComputedStyle(art).visibility === 'visible' && +getComputedStyle(art).opacity > 0,
               cardsShown: [...art.querySelectorAll('.art-card')].every(c => c.offsetWidth > 0 && c.offsetHeight > 0 && c.getBoundingClientRect().top < art.getBoundingClientRect().bottom),
               status: document.getElementById('ddStatus').textContent, rounds: document.getElementById('ddRounds').hidden ? null : document.getElementById('ddRounds').textContent,
