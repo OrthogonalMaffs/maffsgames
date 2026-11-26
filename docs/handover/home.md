@@ -16,6 +16,22 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-26 (home): BASE-60-LIST (It's Just Base 60, Bruv is listed: portal, /essentials/, sitemap, spec map, hub, /updates/)
+
+Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-list`. The contract is at `docs/handover/contracts/2026-11-26-base-60-list.md` (verbatim). The first commit closed out CANON-PRIORITY.
+
+- **Approval (Jon, 26 Nov 2026, 13:36):** "Base 60 looks fine, happy to list that, although I will check the lines".
+- **Portal:** a card in KS3 and in GCSE, each a copy of Take a Walk's (New badge dated 2026-11-26, levels ks3 gcse, topic number, the keywords of `data/games.json`), placed last in its section: both sections are in listing order, newest last.
+- **/essentials/:** one card in Number, after Unit Converter (the same reference, N13), "One level", `data-calc="non-calc"`. `scripts/check-resit-page.py`'s SUITE gains the slug in the same place, as that check's own rule requires (the suite and the page change together).
+- **Spec map:** added to the N13 row. N13 is the DfE's "standard units of mass, length, time, money"; the row's own wording, "Unit conversions: length, area, volume", does not name time and is left as it is. For Project Claude: reword the row, or rule otherwise.
+- **Hub:** a row with stage-1..stage-4, after How Many Parts?. The NOT_ON_HUB entry is gone; no override entry is needed (the check reads the four keys from the page).
+- **Sitemap, /updates/, the roster** (row 116 in Resit Fluency Strand, 8 games; Unlisted, 8; "Look signed off by Jon, 2026-11-26."), and the two notes in `audit-register.py` and `check-theme.py`.
+- **`docs/todo.md`:** BASE60-LIST rewritten to Jon's lines, its old row word for word in `docs/history/todo-done.md`; new row BASE60-AA-FOLD, without figures (Project Claude's follow-up of 26 Nov, 17:15: #929 had not merged, so the row points to the verifier's known list).
+- **Not touched:** the game page, its verifier, `data/large-screen.json`, `data/games.json`.
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0 (one follow-up); usage n/a.
+
 ## 2026-11-26 (home): CANON-PRIORITY (Jon's new priority order in canon §0.2; SR-35, playability beats personality on a phone; three backlog changes)
 
 Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`, PR #928. The contract is at `docs/history/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
