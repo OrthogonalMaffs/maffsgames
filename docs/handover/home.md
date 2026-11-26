@@ -16,9 +16,22 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-26 (home): CANON-PRIORITY (Jon's new priority order in canon §0.2; SR-35, playability beats personality on a phone; three backlog changes)
+
+Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`. The contract is at `docs/handover/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
+
+- **Jon's rulings (26 Nov 2026, 13:40-14:14):** his own classes come second, after correctness; resit and grade 1–3 students are the core audience, with primary served through SR-33; on a phone, playability beats personality; Holey Moley folds into I Dropped My Ice Cream; "d by dx? Why?" is wanted for an assessment in about the 3rd week of January.
+- **Canon §0.2:** seven priorities in place of six, in the contract's exact words. SR-33 now cites priorities 3 and 7. No other file cites a numbered §0.2 priority (searched canon, AGENTS.md, CLAUDE.md and `.claude/rules/`).
+- **Canon §0.3:** SR-35 after SR-33. SR-34 stays reserved (todo LARGE-SCREEN-LAYER).
+- **`docs/todo.md` §3:** new rows ICE-CREAM-GCSE and D-BY-DX; ICE-CREAM-LIST now waits for ICE-CREAM-GCSE.
+- **Holey Moley:** its line is removed from "Game ideas, not yet built". The list keeps no record of folded ideas, and ICE-CREAM-GCSE names it.
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:25; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-25 (home): DAILY-DEAL (MaffsCards gets "Today's deal": one deal a UK day, the same for everyone, with Jon's result on it)
 
-Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`. The contract is at `docs/handover/contracts/2026-11-25-daily-deal.md` (verbatim, as reissued by Amendment 1). No close-out rode on the first commit: MAFFSCARDS-CHALLENGE's is in #916, which stays open (Jon's ruling).
+Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`, PR #919. The contract is at `docs/history/contracts/2026-11-25-daily-deal.md` (verbatim, as reissued by Amendment 1). No close-out rode on the first commit: MAFFSCARDS-CHALLENGE's is in #916, which stays open (Jon's ruling).
 
 - **Jon's rulings (25 Nov 2026, 19:16-20:05):** a daily deal with his own result on it, set from a Google Sheet; a new Creator sheet with its own script; a Sheet line over 240 characters is skipped for a pool line; "Today's deal" at the top of the menu.
 - **The deal:** the UK date (Intl, Europe/London) goes through the page's mix32 to a seed; the day's code is that seed at main / ten / hard, played through `deal(ch)` as a challenge. Normal and challenge play are unchanged (the recorded normal games still match).
@@ -37,7 +50,8 @@ Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`.
 - **Amendment 1 (Project Claude, 25 Nov, 22:20):** the first Gate (check-site 45704002404 on 21b142ec) failed on the clock-seed scan alone: today's UK date reaching the day's seed, which is the feature. The lane stopped, since `scripts/check-site.py` was outside the contract. The amendment allows one entry in `CLOCK_SEED_ALLOW` (`dayCode`), as Equatle and Free Daily Pizza have, and accepts the decisions listed below.
 - **Not run:** the workflow itself cannot run before it is on main, so the bot's push to main is unproven until Jon's first row (STOP IF 1 would apply then).
 - **Waiting on Jon after merge:** the runbook, from step 1; then his rewrite of the placeholder wording (`docs/todo.md` §6).
-- **Run IDs:** in the close-out, as usual.
+- **Gate on the PR head cf859e03:** check-site 45711640580 and phone-fit-full 45711640419, both green.
+- **Merged** on 25 Nov as 6db4954 (#919) via merge-pr.py, which ended "main 6db4954 run 45715844895: GREEN". Main on 6db4954: check-site 45715844895, phone-fit-full 45715845154 and the pages build 45715843761, all green.
 
 Record: agent Claude Code; wall 1:25 to the first Gate, which stopped it; review cycles 0; amendments 1; usage n/a.
 
