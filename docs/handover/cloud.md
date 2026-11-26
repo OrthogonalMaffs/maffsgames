@@ -66,7 +66,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-26 (cloud): DAILY-POLISH (a reload of MaffsCards always shows Jon's latest daily result; the daily workflow's form takes 26/11/2026; `docs/handover/contracts/2026-11-26-daily-polish.md`)
+## 2026-11-26 (cloud): LARGE-SCREEN-LAYER (the shared large-screen layer: each page's zoom chosen at run time from its own breakpoints, its measured height need and its pointer use; piloted on seven games; `docs/handover/contracts/2026-11-26-large-screen-layer.md`)
+
+Claude Code (cloud, lane 2), branch `claude/inspiring-knuth-b1nns9` from main 6d8b633. Shared tier: stops at Gate green for Project Claude's review and Jon's "merge". First commit: this contract and DAILY-POLISH's close-out (in its entry below).
+- **Next:** large-screen.js, the measuring script, the check and its plants, the seven pilot pages.
+
+## 2026-11-26 (cloud): DAILY-POLISH (a reload of MaffsCards always shows Jon's latest daily result; the daily workflow's form takes 26/11/2026; `docs/history/contracts/2026-11-26-daily-polish.md`)
 
 Claude Code (cloud, lane 2), branch `claude/inspiring-knuth-b1nns9` from main f060351. Medium tier, merge on green. First commit: this contract and DAILY-FIT's close-out (in its entry below).
 - **The page (games/maffscards/index.html):** daily.json is asked for as `daily.json?t=<Date.now()>`, a new address each load, so GitHub Pages' 10-minute browser cache never shows the file from before Jon's result. Nothing else in the load or the panel changed; cards.json's load is as it was.
@@ -74,7 +79,8 @@ Claude Code (cloud, lane 2), branch `claude/inspiring-knuth-b1nns9` from main f0
 - **The date (scripts/set-maffscards-daily.py):** `validate()` turns D/M/YYYY or DD/MM/YYYY with slashes (day first) into YYYY-MM-DD before every existing check; the file always holds YYYY-MM-DD; `check_file()` unchanged. Self-test 82 lines, PASS: the contract's good and refused dates, and more refused (a slash date two days old, tomorrow's, text after it, a slash with a dash, a three-digit day, no day; on 6 Jan 2027, 1/6/2027 refused and 6/1/2027 written as 2027-01-06). `--date 26/11/2026` wrote `"date": "2026-11-26"`. The refusal now reads "is not YYYY-MM-DD or D/M/YYYY" and quotes the date as typed.
 - **Workflow and doc:** the form's date label names both formats (`.github/workflows/maffscards-daily.yml`); `docs/apps-script-creator.md` section 9 says the same.
 - **Decided here (for Project Claude's review):** no /updates/ line (the contract names none; the panel's words and look are unchanged, only how soon a new result shows).
-- **Next:** the PR, its Gate, merge-pr.py, main's run.
+- **Merged, closed out (26 Nov, LARGE-SCREEN-LAYER's first commit):** [#924](https://github.com/OrthogonalMaffs/maffsgames/pull/924) as 3172ba9, route merge-pr.py (last line `main 3172ba9 run 45833870462: GREEN`). Main's runs on 3172ba9: check-site 45833870462, pages 45833868679, phone-fit-full 45833870257, each success (phone-fit-full read from GitHub after it finished). Contract moved to `docs/history/contracts/`.
+- **Open for Jon to confirm:** the `?t=` query string (the device's clock time in the address of one request to GitHub Pages) and no /updates/ line. LARGE-SCREEN-LAYER's contract says he accepted both; this session has not seen his words, so neither is recorded as his ruling.
 
 ## 2026-11-26 (cloud): DAILY-FIT (MaffsCards' Play today's deal button stays above the fold whether or not Jon's result shows; the verifier tests fixed daily states; `docs/history/contracts/2026-11-26-daily-fit.md`)
 
