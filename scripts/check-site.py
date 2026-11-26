@@ -3147,8 +3147,9 @@ def site_nav_report():
 # The class names the child look has been used with (contract CLASS-PAGE, Jon 21 Nov 2026). A real class's name never
 # enters a served file: it lives only in a link's fragment (#kids/<Name>, /class/#<Name>; schools/assets/kids-look.js).
 # The real names are never written in the repo: they come only from MAFFS_CLASS_NAMES (comma-separated) when it is set.
-# The documented example, "Example", is an invented name, not any real class's (contract CLASS-NAME-SCRUB, 26 Nov 2026);
-# it is always held, and may appear only in comments.
+# The documented example, "Example", is an invented name, not any real class's (contract CLASS-NAME-SCRUB, 26 Nov 2026).
+# It is not held (Jon's ruling (a), 26 Nov 2026): an invented example needs no ban, and it is an ordinary word on many
+# pages. Only the MAFFS_CLASS_NAMES names are held; hard-coded class links are refused whatever MAFFS_CLASS_NAMES says.
 CLASS_NAME_EXAMPLE = "Example"
 HARD_CODED_CLASS = re.compile(r'(?:#kids/|/class/#)[^\s"<>)\x27]*[^\W\d_]')
 CLASS_PAGE_FILES = ("class/index.html", "schools/assets/kids-look.js")
@@ -3163,7 +3164,7 @@ def strip_comments(text):
 
 def class_name_names():
     extra = [n.strip() for n in os.environ.get("MAFFS_CLASS_NAMES", "").split(",") if n.strip()]
-    return [CLASS_NAME_EXAMPLE] + [n for n in extra if n != CLASS_NAME_EXAMPLE]
+    return [n for n in extra if n != CLASS_NAME_EXAMPLE]
 
 
 def served_code():
@@ -3194,8 +3195,8 @@ def class_name_faults(texts=None, names=None):
         code = strip_comments(text)
         for n in names:
             if re.search(r"(?<![\w-])" + re.escape(n) + r"(?![\w-])", code):
-                out.append("%s: names a class (%s) outside a comment: a class name lives only in a link's fragment"
-                           % (rel, "the example" if n == CLASS_NAME_EXAMPLE else "from MAFFS_CLASS_NAMES"))
+                out.append("%s: names a class (from MAFFS_CLASS_NAMES) outside a comment: a class name lives only in a "
+                           "link's fragment" % rel)
         if rel in CLASS_PAGE_FILES:
             m = HARD_CODED_CLASS.search(code)
             if m:
@@ -3207,8 +3208,8 @@ def class_name_report():
     """For the site-wide part: print the class-name rule's result, return the faults."""
     names = class_name_names()
     f = class_name_faults(names=names)
-    print("  class names (contract CLASS-PAGE): %d name(s) held (%s); %s"
-          % (len(names), "the example" + (" and MAFFS_CLASS_NAMES" if len(names) > 1 else ", MAFFS_CLASS_NAMES not set"),
+    print("  class names (contract CLASS-PAGE): %d name(s) held (%s), and no hard-coded class link; %s"
+          % (len(names), "from MAFFS_CLASS_NAMES" if names else "MAFFS_CLASS_NAMES not set",
              "PASS" if not f else "%d fault(s)" % len(f)))
     for x in f:
         print("    FAIL  " + x)

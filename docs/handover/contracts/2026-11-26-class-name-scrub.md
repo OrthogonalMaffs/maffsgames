@@ -40,3 +40,5 @@ STOP IF:
 
 ---
 Amendment 1 (Project Claude relaying Jon, 26 Nov 2026, 14:59; saved with the first invented name replaced by [NAME1], because it is the name this amendment removes): [NAME1] is also a real class name at the same school (its classes are all tree names), so it must not be used. Replace the invented class name [NAME1] with "Example" everywhere you used it (greetings read "Welcome, Example Class!", "#kids/Example", "/class/#Example", CLASS_NAME_EXAMPLE = "Example", plant names, ci-timings.json keys), and never use a tree name. Then re-run both step 5 searches plus a case-insensitive search for [NAME1], all returning nothing, and re-run test-kids-look.py. Keep "D'Arcy". Amend on the same branch; report the commit.
+
+Amendment 2 (Jon, 26 Nov 2026, answering this lane's STOP on Amendment 1, which offered (a) keep "Example" and stop the class-name rule banning the invented example, its plant rebased on a MAFFS_CLASS_NAMES name, or (b) a made-up non-word): "you were correct to leave previous inventions, go with A"
