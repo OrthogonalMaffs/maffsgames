@@ -25,16 +25,16 @@ byte). This script never uses the page's numbers to check the page's numbers:
             groups decoys); every option's text blanked before the pick, so only dataset.val can mark it; right only for
             the answer (Stage 2 adding: and the right count); one line, from LINES (right, or the item type's wrong line),
             then the worked maths, built here from the item; Stage 3's array turned round to cols rows of rows.
-  Greeting  "#kids/Willow" and "#kids/Willow%20Class" -> "Welcome, Willow Class!"; "#KIDS" and "#kids" -> the kid look and
+  Greeting  "#kids/Example" and "#kids/Example%20Class" -> "Welcome, Example Class!"; "#KIDS" and "#kids" -> the kid look and
             its welcome; "#kids/<script>" -> the kid look, no class greeting, nothing injected; no hash or "#kidsx" ->
             the grown-up look.
   Read aloud against a mocked speechSynthesis: no speaker without a local voice; only a local voice passed to speak();
             nothing spoken before a tap; the question read in words from the item; never the greeting.
-  Play      every mode and stage in each look at 360 x 640 (the kid look from #kids/Willow): 10 different items of that
+  Play      every mode and stage in each look at 360 x 640 (the kid look from #kids/Example): 10 different items of that
             mode and stage, right and wrong, played to the end (the fold is Fit's, every item); one game_completed with
             the score, one board submission [slug, 'stage-N' or 'pro-stage-N', score, 10]; question_answered per item with
             its id; only game_started, question_answered and game_completed; no mfg() payload, localStorage or
-            sessionStorage value containing "kids", "Willow" or "#". The largest picture (50 thingies), the largest array
+            sessionStorage value containing "kids", "Example" or "#". The largest picture (50 thingies), the largest array
             (10 x 5 and 5 x 10) and the longest sum (6 terms) on screen at 360 x 640 with every option above the fold and
             no sideways scroll.
   Fit       every item above the fold (PRIMARY-FIT-SWEEP, scripts/fit_common.py): all 369 in each look at 360 x 640
@@ -597,8 +597,8 @@ GREETINGS = [
     ('#kidsx', 'grown', None),
     ('#kids', 'kids', None),
     ('#KIDS', 'kids', None),
-    ('#kids/Willow', 'kids', 'Welcome, Willow Class!'),
-    ('#kids/Willow%20Class', 'kids', 'Welcome, Willow Class!'),
+    ('#kids/Example', 'kids', 'Welcome, Example Class!'),
+    ('#kids/Example%20Class', 'kids', 'Welcome, Example Class!'),
     ('#kids/%3Cscript%3Ealert(1)%3C%2Fscript%3E', 'kids', None),
     ('#kids/<script>', 'kids', None),
 ]
@@ -682,7 +682,7 @@ FIT_STEPPER = r"""{
 def check_fit(pw, base, html, look, m, out, info):
     """Every item of mode-stage m in one look at 360 x 640, the speaker showing: every control at every step and Next after
     every feedback variant above the fold, the picture never wider than its card (fit_common.sweep)."""
-    frag = '#kids/Willow' if look == 'kids' else ''
+    frag = '#kids/Example' if look == 'kids' else ''
     br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', frag, PHONE)
     try:
         if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
@@ -704,7 +704,7 @@ def bad_in_storage(page):
     dump = page.evaluate("""() => { const o = {};
       for (const s of [localStorage, sessionStorage]) for (let i = 0; i < s.length; i++) o[s.key(i)] = s.getItem(s.key(i));
       return JSON.stringify(o); }""")
-    return [b for b in ('kids', 'Willow', '#') if b in dump]
+    return [b for b in ('kids', 'Example', '#') if b in dump]
 
 
 def play(page, look, m, out):
@@ -753,7 +753,7 @@ def play(page, look, m, out):
     if not set(names) <= EVENTS:
         out.append('%s: events %s (only %s)' % (tag, names, sorted(EVENTS)))
     blobtxt = json.dumps(ev)
-    for bad in ('kids', 'Willow', '#'):
+    for bad in ('kids', 'Example', '#'):
         if bad in blobtxt:
             out.append('%s: an mfg() payload contains %r' % (tag, bad))
     if bad_in_storage(page):
@@ -982,7 +982,7 @@ def crowd_judge(tag, c, want, look, out, seen, cheer=True):
 
 def check_crowd(pw, base, html, look, size, mode, out, info):
     tag = 'crowd %s %dx%d' % (look, size[0], size[1])
-    br, page, errs = open_page(pw, base, html, size, '#kids/Willow' if look == 'kids' else '')
+    br, page, errs = open_page(pw, base, html, size, '#kids/Example' if look == 'kids' else '')
     seen, cheered = set(), set()
     view = lambda: (page.evaluate(FRAMES_JS), page.evaluate(CROWD_FILL_JS))[1]
     results = lambda: page.evaluate("""() => { const e = document.getElementById('collected');
@@ -1268,7 +1268,7 @@ def check_facts(pw, base, html, look, size, aa, out, info):
     """SOME-THINGIES-FACTS: every Stage 4 item, Main and Pro, in one look at one size, normal or Aa, the speaker showing
     (fit_common.open_phone: the real fonts, a local voice), right (the longest LINES.right line) and wrong."""
     tag = 'facts %s %dx%d %s' % (look, size[0], size[1], aa)
-    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', '#kids/Willow' if look == 'kids' else '', size)
+    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', '#kids/Example' if look == 'kids' else '', size)
     try:
         if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
             out.append('%s: the page is not in the %s look' % (tag, look))
@@ -1354,7 +1354,7 @@ START_JS = r"""() => { const f = document.querySelector('.site-footer'); const f
 def check_scenes(pw, base, html, out, info):
     """The start screen's crowd at every phone-fit size, the conga line and Sarge (SOME-THINGIES-PERSONALITY)."""
     items = bank_of(html)
-    for look, frag in (('grown', ''), ('kids', '#kids/Willow')):
+    for look, frag in (('grown', ''), ('kids', '#kids/Example')):
         for size in FIT_SIZES + [PHONE]:
             tag = '%s %dx%d' % (look, size[0], size[1])
             br, page, errs = open_page(pw, base, html, size, frag)
@@ -1518,7 +1518,7 @@ LOCAL = {'name': 'Device US', 'lang': 'en-US', 'localService': True}
 
 def check_speech(pw, base, html, out, info):
     for cfg, shown in (([], False), ([REMOTE], False), ([REMOTE, LOCAL], True)):
-        br, page, errs = open_page(pw, base, html, PHONE, '#kids/Willow', init=SPEECH_MOCK % json.dumps(cfg))
+        br, page, errs = open_page(pw, base, html, PHONE, '#kids/Example', init=SPEECH_MOCK % json.dumps(cfg))
         try:
             page.evaluate("ST.ui.preview('m1-3x5')")
             hidden = page.evaluate("document.getElementById('speakBtn').hidden")
@@ -1539,7 +1539,7 @@ def check_speech(pw, base, html, out, info):
                     out.append('read aloud %s: spoke %s, expected %r' % (qid, [x['text'] for x in sp], want))
                 if any(not x['local'] for x in sp):
                     out.append('read aloud: a voice that is not local was passed to speak()')
-                if any('Willow' in x['text'] or 'Welcome' in x['text'] for x in sp):
+                if any('Example' in x['text'] or 'Welcome' in x['text'] for x in sp):
                     out.append('read aloud: the greeting was spoken')
             info['speech'] = True
         finally:
@@ -1607,7 +1607,7 @@ def check(html, out, units, shard=None):
                             out.append('greeting threw: %s' % str(e).splitlines()[0][:220])
                         continue
                     look = 'kids' if ' kids' in uid else 'grown'
-                    frag = '#kids/Willow' if look == 'kids' else ''
+                    frag = '#kids/Example' if look == 'kids' else ''
                     size = PHONE if uid.startswith('play') else (1280, 800)
                     br, page, errs = open_page(pw, base, html, size, frag)
                     try:
@@ -1657,7 +1657,7 @@ PLANTS = [
     ('the fragment sent in an mfg() call',
      edit("ev('game_started', { game_slug: SLUG, level: level, mode: evMode(mode) });",
           "ev('game_started', { game_slug: SLUG, level: level, mode: evMode(mode), cls: CLASS_NAME || '' });"),
-     'play kids %dx%d' % PHONE, r"an mfg\(\) payload contains 'Willow'"),
+     'play kids %dx%d' % PHONE, r"an mfg\(\) payload contains 'Example'"),
     ('an option marked by its text',
      edit('var b = e.currentTarget, val = b.dataset.val, key = keyOf(Q);', 'var b = e.currentTarget, val = b.textContent, key = keyOf(Q);'),
      'marking grown', r'option \S+ marked wrong, expected done'),

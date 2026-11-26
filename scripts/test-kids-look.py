@@ -11,7 +11,7 @@ Image are spies. What it proves:
   (a) read(hash): "#kids" in any case is the child look with no name; "#kids/<name>" names the class when the name,
       decoded and trimmed, is 1 to 20 letters, spaces, hyphens or apostrophes (' or ’) with at least one letter; any
       other name (a digit, a tag, a slash, 21 letters, no letter, a malformed escape) gives no name but still the child
-      look; anything else ("", "#", "#kidsx", "#Willow") is not the child look;
+      look; anything else ("", "#", "#kidsx", "#Example") is not the child look;
   (b) read(hash, 'bare'), the class page's: "#<name>" alone names the class by the same rule; "#kids" and
       "#kids/<name>" read as in (a);
   (c) greeting(): {name} filled in, and a name ending "class" (any case) not given a second "Class";
@@ -23,8 +23,8 @@ scripts/apply-class-page.py writes from data/games.json ("kids": true), and chec
 
 Planted faults, each a one-line change that must make a check fail: names up to 30 characters (a), the second-Class
 rule dropped (c), the bare mode ignored (b), the name written to localStorage (e), the name sent with fetch (e); and for
-the page and the privacy rule: a card removed from the page, "Willow" in a served script's string, a hard-coded
-#kids/<name> link in the class page, a name from MAFFS_CLASS_NAMES in a page. "Willow" in a comment is not a fault.
+the page and the privacy rule: a card removed from the page, "Example" in a served script's string, a hard-coded
+#kids/<name> link in the class page, a name from MAFFS_CLASS_NAMES in a page. "Example" in a comment is not a fault.
 """
 import importlib.util
 import json
@@ -99,32 +99,32 @@ def named(n):
 TWENTY = "Abcdefghijklmnopqrst"
 CASES = {
     "read": [
-        ["", None, NO], ["#", None, NO], ["#kidsx", None, NO], ["#Willow", None, NO], ["#kid", None, NO],
+        ["", None, NO], ["#", None, NO], ["#kidsx", None, NO], ["#Example", None, NO], ["#kid", None, NO],
         ["#kids", None, KIDS], ["#KIDS", None, KIDS], ["kids", None, KIDS],
-        ["#kids/Willow", None, named("Willow")], ["#Kids/Willow", None, named("Willow")],
-        ["#kids/Willow%20Class", None, named("Willow Class")], ["#kids/%20Willow%20", None, named("Willow")],
+        ["#kids/Example", None, named("Example")], ["#Kids/Example", None, named("Example")],
+        ["#kids/Example%20Class", None, named("Example Class")], ["#kids/%20Example%20", None, named("Example")],
         ["#kids/D'Arcy", None, named("D'Arcy")], ["#kids/St%E2%80%99s", None, named("St’s")],
         ["#kids/Anne-Marie", None, named("Anne-Marie")], ["#kids/Zo%C3%AB", None, named("Zoë")],
         ["#kids/" + TWENTY, None, named(TWENTY)],
         ["#kids/", None, KIDS], ["#kids/%20%20", None, KIDS], ["#kids/Year%206", None, KIDS],
         ["#kids/<script>", None, KIDS], ["#kids/%3Cscript%3Ealert(1)%3C%2Fscript%3E", None, KIDS],
-        ["#kids/Willow/Class", None, KIDS], ["#kids/" + TWENTY + "u", None, KIDS], ["#kids/---", None, KIDS],
-        ["#kids/'", None, KIDS], ["#kids/%E0%A4%A", None, KIDS], ["#kids/Willow.", None, KIDS],
-        ["#Willow", "bare", named("Willow")], ["#Willow%20Class", "bare", named("Willow Class")],
-        ["#kids", "bare", KIDS], ["#kids/Willow", "bare", named("Willow")], ["#Year6", "bare", KIDS],
+        ["#kids/Example/Class", None, KIDS], ["#kids/" + TWENTY + "u", None, KIDS], ["#kids/---", None, KIDS],
+        ["#kids/'", None, KIDS], ["#kids/%E0%A4%A", None, KIDS], ["#kids/Example.", None, KIDS],
+        ["#Example", "bare", named("Example")], ["#Example%20Class", "bare", named("Example Class")],
+        ["#kids", "bare", KIDS], ["#kids/Example", "bare", named("Example")], ["#Year6", "bare", KIDS],
         ["#%3Cb%3E", "bare", KIDS], ["#%E0%A4%A", "bare", KIDS], ["", "bare", NO], ["#", "bare", NO],
     ],
     "greeting": [
-        ["Welcome, {name} Class!", "Willow", "Welcome, Willow Class!"],
-        ["Welcome, {name} Class!", "Willow Class", "Welcome, Willow Class!"],
-        ["Welcome, {name} Class!", "Willow class", "Welcome, Willow class!"],
-        ["Welcome, {name} Class!", "WILLOW CLASS", "Welcome, WILLOW CLASS!"],
+        ["Welcome, {name} Class!", "Example", "Welcome, Example Class!"],
+        ["Welcome, {name} Class!", "Example Class", "Welcome, Example Class!"],
+        ["Welcome, {name} Class!", "Example class", "Welcome, Example class!"],
+        ["Welcome, {name} Class!", "EXAMPLE CLASS", "Welcome, EXAMPLE CLASS!"],
         ["Welcome, {name} Class!", "Classy", "Welcome, Classy Class!"],
         ["Welcome, {name} Class!", "D'Arcy", "Welcome, D'Arcy Class!"],
     ],
     "links": [
-        [None, "#kids", ""], ["Willow", "#kids/Willow", "#Willow"],
-        ["Willow Class", "#kids/Willow%20Class", "#Willow%20Class"], ["St’s", "#kids/St%E2%80%99s", "#St%E2%80%99s"],
+        [None, "#kids", ""], ["Example", "#kids/Example", "#Example"],
+        ["Example Class", "#kids/Example%20Class", "#Example%20Class"], ["St’s", "#kids/St%E2%80%99s", "#St%E2%80%99s"],
         ["D'Arcy", "#kids/D'Arcy", "#D'Arcy"], ["Zoë", "#kids/Zo%C3%AB", "#Zo%C3%AB"],
     ],
 }
@@ -184,13 +184,13 @@ def page_and_privacy():
     first_card = block[block.index('<a class="card"'):block.index('</a>') + len('</a>\n')]
     results.append(("a card removed from the class page", bool(ap.faults(pc.apply_plant(page, first_card, "", name="a card")))))
     kl = open(SRC, encoding="utf-8").read()
-    planted = pc.apply_plant(kl, "  'use strict';\n", "  'use strict';\n  var EXAMPLE = 'Willow';\n", name="Willow in a string")
-    results.append(('"Willow" in a served script\'s string', bool(cs.class_name_faults({"schools/assets/kids-look.js": planted}, ["Willow"]))))
-    results.append(('"Willow" in a comment held as no fault', not cs.class_name_faults({"schools/assets/kids-look.js": kl}, ["Willow"])))
+    planted = pc.apply_plant(kl, "  'use strict';\n", "  'use strict';\n  var EXAMPLE = 'Example';\n", name="Example in a string")
+    results.append(('"Example" in a served script\'s string', bool(cs.class_name_faults({"schools/assets/kids-look.js": planted}, ["Example"]))))
+    results.append(('"Example" in a comment held as no fault', not cs.class_name_faults({"schools/assets/kids-look.js": kl}, ["Example"])))
     planted = pc.apply_plant(page, "var TEMPLATE = ", "var LINK = '#kids/Oak'; var TEMPLATE = ", name="a hard-coded link")
-    results.append(("a hard-coded #kids/<name> link in the class page", bool(cs.class_name_faults({"class/index.html": planted}, ["Willow"]))))
+    results.append(("a hard-coded #kids/<name> link in the class page", bool(cs.class_name_faults({"class/index.html": planted}, ["Example"]))))
     planted = pc.apply_plant(page, "<h1>Pick a game!</h1>", "<h1>Pick a game, Oakwood!</h1>", name="an env name")
-    results.append(("a MAFFS_CLASS_NAMES name in a page", bool(cs.class_name_faults({"class/index.html": planted}, ["Willow", "Oakwood"]))))
+    results.append(("a MAFFS_CLASS_NAMES name in a page", bool(cs.class_name_faults({"class/index.html": planted}, ["Example", "Oakwood"]))))
     return real, results
 
 

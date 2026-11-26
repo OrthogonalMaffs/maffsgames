@@ -9,9 +9,9 @@
                                       gives { kids: true, name } when the name keeps the rule below, else name null;
                                       anything else { kids: false, name: null }.
      MaffsKids.read(hash, 'bare')     the class page's own fragment: as above, and also "#<name>" alone is the class
-                                      name (the documented example is #Willow). An invalid name gives name null.
+                                      name (the documented example is #Example). An invalid name gives name null.
      MaffsKids.greeting(template, name)   the template with {name} filled in; a name that already ends with "class" is
-                                      not given a second "Class" ("Willow Class" -> "Welcome, Willow Class!").
+                                      not given a second "Class" ("Example Class" -> "Welcome, Example Class!").
      MaffsKids.gameLink(name)         the fragment a game link carries: "#kids/<name>" (encoded), or "#kids" with no name.
      MaffsKids.classLink(name)        the fragment back to the class page: "#<name>" (encoded), or "" with no name.
 

@@ -13,7 +13,7 @@ CLASS CHECK: A class in shared infrastructure: the privacy check's own example i
 
 EXACT CHANGE:
 0. First commit: the close-out above. Save this contract verbatim as docs/handover/contracts/2026-11-26-class-name-scrub.md (it contains neither name).
-1. Choose one invented example class name (a common UK class name, e.g. "Willow"; your choice, named in the report) and replace CLASS with it in every file on main, docs/history/ included, preserving meaning (the greeting "Welcome, <invented> Class!", "#kids/<invented>", "/class/#<invented>", plant names).
+1. Choose one invented example class name (a common UK class name, e.g. "[a tree name, removed by the implementer under Amendment 1]"; your choice, named in the report) and replace CLASS with it in every file on main, docs/history/ included, preserving meaning (the greeting "Welcome, <invented> Class!", "#kids/<invented>", "/class/#<invented>", plant names).
 2. scripts/check-site.py: CLASS_NAME_EXAMPLE becomes the invented name; its comment (:3145-3150) says the example is invented, and that real names come only from MAFFS_CLASS_NAMES, which is never written in the repo.
 3. Replace TEACHER: in docs/todo.md, docs/handover/home.md and docs/history/ files with "the class teacher"; in scripts/test-kids-look.py:106 the apostrophe test case uses an invented surname with an apostrophe (e.g. "D'Arcy"; your choice) so the apostrophe case is still tested.
 4. scripts/ci-timings.json: let the bot's repack regenerate the plant names; hand-edit only the renamed keys and only if a check requires it.
@@ -37,3 +37,6 @@ STOP IF:
 - A check's plant stops failing after the rename.
 - main is red when you come to merge: report it; do not use --override.
 - merge-pr.py cannot reach GitHub or refuses: report its output; do not merge another way.
+
+---
+Amendment 1 (Project Claude relaying Jon, 26 Nov 2026, 14:59; saved with the first invented name replaced by [NAME1], because it is the name this amendment removes): [NAME1] is also a real class name at the same school (its classes are all tree names), so it must not be used. Replace the invented class name [NAME1] with "Example" everywhere you used it (greetings read "Welcome, Example Class!", "#kids/Example", "/class/#Example", CLASS_NAME_EXAMPLE = "Example", plant names, ci-timings.json keys), and never use a tree name. Then re-run both step 5 searches plus a case-insensitive search for [NAME1], all returning nothing, and re-run test-kids-look.py. Keep "D'Arcy". Amend on the same branch; report the commit.

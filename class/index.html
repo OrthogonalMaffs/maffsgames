@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" href="/schools/assets/favicon.svg">
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <!-- The class page (contract CLASS-PAGE, Jon 21 Nov 2026; canon §7.5). One link a teacher keeps: /class/#<Name> greets the
-     class and passes #kids/<Name> to every game with a child look (the documented example is /class/#Willow). The name
+     class and passes #kids/<Name> to every game with a child look (the documented example is /class/#Example). The name
      lives only in the link: MaffsKids (schools/assets/kids-look.js) reads it, it is written with textContent only, and
      the page never stores or sends it (analytics.js's GA4 page view leaves the fragment out, GA4's default; no event). Hidden: no menu link, no search entry, no sitemap entry, noindex.
      The cards are written from data/games.json ("kids": true) by scripts/apply-class-page.py. -->
@@ -87,7 +87,7 @@ h1{font-size:2.5rem;font-weight:800;line-height:1.1;letter-spacing:-.01em;text-s
 <script>
 (function () {
   'use strict';
-  // The class name from this page's own fragment (#<Name>; the documented example is #Willow), read by MaffsKids and
+  // The class name from this page's own fragment (#<Name>; the documented example is #Example), read by MaffsKids and
   // written with textContent only. The cards carry #kids/<Name>, or #kids with no valid name. The name is never kept or sent.
   var TEMPLATE = 'Welcome, {name} Class!';
   function render() {

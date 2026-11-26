@@ -3147,9 +3147,9 @@ def site_nav_report():
 # The class names the child look has been used with (contract CLASS-PAGE, Jon 21 Nov 2026). A real class's name never
 # enters a served file: it lives only in a link's fragment (#kids/<Name>, /class/#<Name>; schools/assets/kids-look.js).
 # The real names are never written in the repo: they come only from MAFFS_CLASS_NAMES (comma-separated) when it is set.
-# The documented example, "Willow", is an invented name, not any real class's (contract CLASS-NAME-SCRUB, 26 Nov 2026);
+# The documented example, "Example", is an invented name, not any real class's (contract CLASS-NAME-SCRUB, 26 Nov 2026);
 # it is always held, and may appear only in comments.
-CLASS_NAME_EXAMPLE = "Willow"
+CLASS_NAME_EXAMPLE = "Example"
 HARD_CODED_CLASS = re.compile(r'(?:#kids/|/class/#)[^\s"<>)\x27]*[^\W\d_]')
 CLASS_PAGE_FILES = ("class/index.html", "schools/assets/kids-look.js")
 
