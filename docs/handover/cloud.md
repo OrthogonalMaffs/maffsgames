@@ -69,7 +69,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 ## 2026-11-26 (cloud): DAILY-POLISH (a reload of MaffsCards always shows Jon's latest daily result; the daily workflow's form takes 26/11/2026; `docs/handover/contracts/2026-11-26-daily-polish.md`)
 
 Claude Code (cloud, lane 2), branch `claude/inspiring-knuth-b1nns9` from main f060351. Medium tier, merge on green. First commit: this contract and DAILY-FIT's close-out (in its entry below).
-- **Next:** the page's request, the verifier's unit and plant, the date validator, the workflow label, the phone-fallback doc; then the PR, its Gate, merge-pr.py, main's run.
+- **The page (games/maffscards/index.html):** daily.json is asked for as `daily.json?t=<Date.now()>`, a new address each load, so GitHub Pages' 10-minute browser cache never shows the file from before Jon's result. Nothing else in the load or the panel changed; cards.json's load is as it was.
+- **Verifier (scripts/verify-maffscards.py):** in `dailyui`, each of the nine fetched-file loads must ask for daily.json exactly once, as `daily.json?t=<digits>`, and no two loads with the same query string; the requests are read from the browser (`open_page`'s new `seen` list), not from the page. One plant in `dailyplants` (the query string removed): caught. Run here: `--only dailyui` PASS; the seven `dailyplants` all caught.
+- **The date (scripts/set-maffscards-daily.py):** `validate()` turns D/M/YYYY or DD/MM/YYYY with slashes (day first) into YYYY-MM-DD before every existing check; the file always holds YYYY-MM-DD; `check_file()` unchanged. Self-test 82 lines, PASS: the contract's good and refused dates, and more refused (a slash date two days old, tomorrow's, text after it, a slash with a dash, a three-digit day, no day; on 6 Jan 2027, 1/6/2027 refused and 6/1/2027 written as 2027-01-06). `--date 26/11/2026` wrote `"date": "2026-11-26"`. The refusal now reads "is not YYYY-MM-DD or D/M/YYYY" and quotes the date as typed.
+- **Workflow and doc:** the form's date label names both formats (`.github/workflows/maffscards-daily.yml`); `docs/apps-script-creator.md` section 9 says the same.
+- **Decided here (for Project Claude's review):** no /updates/ line (the contract names none; the panel's words and look are unchanged, only how soon a new result shows).
+- **Next:** the PR, its Gate, merge-pr.py, main's run.
 
 ## 2026-11-26 (cloud): DAILY-FIT (MaffsCards' Play today's deal button stays above the fold whether or not Jon's result shows; the verifier tests fixed daily states; `docs/history/contracts/2026-11-26-daily-fit.md`)
 

@@ -102,7 +102,7 @@ Do these steps after the DAILY-DEAL pull request is merged: the token test in st
 
 1. Open <https://github.com/OrthogonalMaffs/maffsgames/actions/workflows/maffscards-daily.yml> (signed in).
 2. Tap **Run workflow**.
-3. Fill in the same four fields: the date as `2026-11-26`, `won` or `lost`, the rounds, and the line (or leave it empty).
+3. Fill in the same four fields: the date as `26/11/2026` or `2026-11-26`, `won` or `lost`, the rounds, and the line (or leave it empty).
 4. Tap the green **Run workflow** button. A green tick a minute later means the result is on its way to the game;
    a red cross means it was refused, and the run's summary says why.
 
