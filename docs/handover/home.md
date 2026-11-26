@@ -18,14 +18,15 @@
 
 ## 2026-11-26 (home): CANON-PRIORITY (Jon's new priority order in canon §0.2; SR-35, playability beats personality on a phone; three backlog changes)
 
-Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`. The contract is at `docs/handover/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
+Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`, PR #928. The contract is at `docs/history/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
 
 - **Jon's rulings (26 Nov 2026, 13:40-14:14):** his own classes come second, after correctness; resit and grade 1–3 students are the core audience, with primary served through SR-33; on a phone, playability beats personality; Holey Moley folds into I Dropped My Ice Cream; "d by dx? Why?" is wanted for an assessment in about the 3rd week of January.
 - **Canon §0.2:** seven priorities in place of six, in the contract's exact words. SR-33 now cites priorities 3 and 7. No other file cites a numbered §0.2 priority (searched canon, AGENTS.md, CLAUDE.md and `.claude/rules/`).
 - **Canon §0.3:** SR-35 after SR-33. SR-34 stays reserved (todo LARGE-SCREEN-LAYER).
 - **`docs/todo.md` §3:** new rows ICE-CREAM-GCSE and D-BY-DX; ICE-CREAM-LIST now waits for ICE-CREAM-GCSE.
 - **Holey Moley:** its line is removed from "Game ideas, not yet built". The list keeps no record of folded ideas, and ICE-CREAM-GCSE names it.
-- **Run IDs:** in the close-out, as usual.
+- **First Gate on the PR head 18526de8, a flake:** check-site 45855085400 failed only on the PR budget (`verify-maffscards.py` part 1 at 201 s against 189 s; the close-out's contract move selects that verifier) and passed on Jon's full rerun; phone-fit-full 45855085259 green. merge-pr.py had refused on the first result.
+- **Merged** on 26 Nov as a55da6b (#928) via merge-pr.py, which ended "main a55da6b run 45861149266: GREEN". Main on a55da6b: check-site 45861149266, phone-fit-full 45861149106 and the pages build 45861148815, all green (read back from the API).
 
 Record: agent Claude Code; wall 0:25; review cycles 0; amendments 0; usage n/a.
 
