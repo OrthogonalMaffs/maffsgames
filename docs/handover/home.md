@@ -16,16 +16,33 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-26 (home): BASE-60-LIST (It's Just Base 60, Bruv is listed: portal, /essentials/, sitemap, spec map, hub, /updates/)
+
+Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-list`. The contract is at `docs/handover/contracts/2026-11-26-base-60-list.md` (verbatim). The first commit closed out CANON-PRIORITY.
+
+- **Approval (Jon, 26 Nov 2026, 13:36):** "Base 60 looks fine, happy to list that, although I will check the lines".
+- **Portal:** a card in KS3 and in GCSE, each a copy of Take a Walk's (New badge dated 2026-11-26, levels ks3 gcse, topic number, the keywords of `data/games.json`), placed last in its section: both sections are in listing order, newest last.
+- **/essentials/:** one card in Number, after Unit Converter (the same reference, N13), "One level", `data-calc="non-calc"`. `scripts/check-resit-page.py`'s SUITE gains the slug in the same place, as that check's own rule requires (the suite and the page change together).
+- **Spec map:** added to the N13 row. N13 is the DfE's "standard units of mass, length, time, money"; the row's own wording, "Unit conversions: length, area, volume", does not name time and is left as it is. For Project Claude: reword the row, or rule otherwise.
+- **Hub:** a row with stage-1..stage-4, after How Many Parts?. The NOT_ON_HUB entry is gone; no override entry is needed (the check reads the four keys from the page).
+- **Sitemap, /updates/, the roster** (row 116 in Resit Fluency Strand, 8 games; Unlisted, 8; "Look signed off by Jon, 2026-11-26."), and the two notes in `audit-register.py` and `check-theme.py`.
+- **`docs/todo.md`:** BASE60-LIST rewritten to Jon's lines, its old row word for word in `docs/history/todo-done.md`; new row BASE60-AA-FOLD, without figures (Project Claude's follow-up of 26 Nov, 17:15: #929 had not merged, so the row points to the verifier's known list).
+- **Not touched:** the game page, its verifier, `data/large-screen.json`, `data/games.json`.
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0 (one follow-up); usage n/a.
+
 ## 2026-11-26 (home): CANON-PRIORITY (Jon's new priority order in canon §0.2; SR-35, playability beats personality on a phone; three backlog changes)
 
-Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`. The contract is at `docs/handover/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
+Claude Code (home lane), worktree `~/mg-canon-priority`, branch `claude/canon-priority`, PR #928. The contract is at `docs/history/contracts/2026-11-26-canon-priority.md` (verbatim). The first commit closed out DAILY-DEAL. Docs only.
 
 - **Jon's rulings (26 Nov 2026, 13:40-14:14):** his own classes come second, after correctness; resit and grade 1–3 students are the core audience, with primary served through SR-33; on a phone, playability beats personality; Holey Moley folds into I Dropped My Ice Cream; "d by dx? Why?" is wanted for an assessment in about the 3rd week of January.
 - **Canon §0.2:** seven priorities in place of six, in the contract's exact words. SR-33 now cites priorities 3 and 7. No other file cites a numbered §0.2 priority (searched canon, AGENTS.md, CLAUDE.md and `.claude/rules/`).
 - **Canon §0.3:** SR-35 after SR-33. SR-34 stays reserved (todo LARGE-SCREEN-LAYER).
 - **`docs/todo.md` §3:** new rows ICE-CREAM-GCSE and D-BY-DX; ICE-CREAM-LIST now waits for ICE-CREAM-GCSE.
 - **Holey Moley:** its line is removed from "Game ideas, not yet built". The list keeps no record of folded ideas, and ICE-CREAM-GCSE names it.
-- **Run IDs:** in the close-out, as usual.
+- **First Gate on the PR head 18526de8, a flake:** check-site 45855085400 failed only on the PR budget (`verify-maffscards.py` part 1 at 201 s against 189 s; the close-out's contract move selects that verifier) and passed on Jon's full rerun; phone-fit-full 45855085259 green. merge-pr.py had refused on the first result.
+- **Merged** on 26 Nov as a55da6b (#928) via merge-pr.py, which ended "main a55da6b run 45861149266: GREEN". Main on a55da6b: check-site 45861149266, phone-fit-full 45861149106 and the pages build 45861148815, all green (read back from the API).
 
 Record: agent Claude Code; wall 0:25; review cycles 0; amendments 0; usage n/a.
 

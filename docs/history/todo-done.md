@@ -3,6 +3,14 @@
 Moved out of `docs/todo.md` on 10 Oct 2026 (contract TODO-SLIM) without rewording. Item numbers are
 unchanged, so a citation such as §1.10 resolves here. Newest moves at the top of each part.
 
+## Moved by BASE-60-LIST, 26 Nov 2026
+
+The row as it stood in `docs/todo.md` on main 42270b2, word for word; the game was listed on 26 Nov 2026 and the row now holds only Jon's lines.
+
+### BASE60-LIST
+
+| BASE60-LIST | **It's Just Base 60, Bruv (`its-just-base-60-bruv`), merged unlisted** (contract BASE-60, 24 Nov 2026). **Jon:** plays all four stages (`/games/its-just-base-60-bruv/`), trims LINES and the "Why 60?" panel, and rules on listing (the Essentials page, the roster's Resit Fluency Strand, the hub and an /updates/ line come with listing). 'Why 60?' starts closed (Jon, 24 Nov 2026, 16:28; GAME-TITLE-IN-PLAY). Start picture and walnut accent in (BASE-60-LOOK, 24 Nov 2026). Play screen: cuckoo and stage pictures (BASE-60-PLAY, 24 Nov 2026); Jon to trim CUCKOO lines after playing. | Jon; home lane (listing) |
+
 ## Moved by TODO-TRIM, 19 Nov 2026
 
 Contract TODO-TRIM (`docs/history/contracts/2026-11-19-todo-trim.md` once merged). Each block below is the text as it stood in `docs/todo.md` on main 527f8b8, word for word; where a row stayed open, `docs/todo.md` now holds its remainder under the same ID.
