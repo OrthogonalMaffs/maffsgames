@@ -36,7 +36,7 @@ EXACT CHANGE:
 2. Looks and the class greeting (the link fragment).
    - Parse location.hash once, at start, inside try/catch:
      - "#kids" (any letter case) → kid look, no class greeting.
-     - "#kids/<name>" → kid look and a class greeting. The name: decodeURIComponent, trimmed. Letters, spaces, hyphens and apostrophes only, 1 to 20 characters; anything else → kid look, no greeting. If it already ends with "class" (any case), "Class" is not added again. "#kids/Maple" → "Welcome, Maple Class!"; "#kids/Maple%20Class" → the same.
+     - "#kids/<name>" → kid look and a class greeting. The name: decodeURIComponent, trimmed. Letters, spaces, hyphens and apostrophes only, 1 to 20 characters; anything else → kid look, no greeting. If it already ends with "class" (any case), "Class" is not added again. "#kids/Willow" → "Welcome, Willow Class!"; "#kids/Willow%20Class" → the same.
      - Anything else, or no hash → grown-up look, no greeting.
    - Shown with textContent only, never innerHTML.
    - The look is a class on <body> (look-kids). The kid look is brighter and rounder, with bigger disguises. It has the same layout, items, marking and boards as the grown-up look.
@@ -87,7 +87,7 @@ EXACT CHANGE:
    - No noindex: new unlisted games carry none (as #810 and #820), and the kid look is a fragment, which search engines don't index separately.
    - /updates/: no line while unlisted.
    - docs/todo.md, two short rows:
-     - SUMS-IN-DISGUISE-LIST: Jon plays all five stages in both looks (/games/sums-in-disguise/ and /games/sums-in-disguise/#kids/Maple), rewrites LINES, then rules on listing with an /essentials/ card.
+     - SUMS-IN-DISGUISE-LIST: Jon plays all five stages in both looks (/games/sums-in-disguise/ and /games/sums-in-disguise/#kids/Willow), rewrites LINES, then rules on listing with an /essentials/ card.
      - NUMBER-BONDS: a number bonds to 10 and 20 fluency game, "needs building soon" (Jon, 18 Nov 2026); spec from Project Claude.
      todo.md is 152,745 bytes against TODO_LIMIT 153,600. If the rows would cross the cap, move closed rows to docs/history/todo-done.md verbatim, oldest first, until they fit. Never move an open row.
    - docs/handover/cloud.md.
@@ -122,8 +122,8 @@ EXACT CHANGE:
      - each decoy shows its own aha line, then the learning line with the item's numbers;
      - the 67 shows after marking on exactly the firing items;
      - one board submission per run, on stage-N;
-     - the greeting reads "Welcome, Maple Class!" for #kids/Maple, nothing for #kids/<script>, and the grown-up look for no hash;
-     - no mfg() payload contains "kids", "Maple" or "#".
+     - the greeting reads "Welcome, Willow Class!" for #kids/Willow, nothing for #kids/<script>, and the grown-up look for no hash;
+     - no mfg() payload contains "kids", "Willow" or "#".
    - Plants that must fail:
      - an answer 1 out;
      - a decoy equal to the answer;
@@ -133,7 +133,7 @@ EXACT CHANGE:
      - an option marked by its rendered text;
      - the 67 shown before marking;
      - the class name written with innerHTML;
-     - "Maple" in an mfg() payload.
+     - "Willow" in an mfg() payload.
 
 8. Merge with scripts/merge-pr.py when the Gate is green, and phone-fit-full is green when dispatched on the branch. That is the only merge route.
 
@@ -316,7 +316,7 @@ DO NOT TOUCH:
 
 SUCCESS CONDITION:
 - /games/sums-in-disguise/ plays all five stages in the grown-up look.
-- /games/sums-in-disguise/#kids/Maple plays them in the kid look, greeting "Welcome, Maple Class!".
+- /games/sums-in-disguise/#kids/Willow plays them in the kid look, greeting "Welcome, Willow Class!".
 - Every answer is marked by dataset.val. Each decoy shows its own aha line and then the learning line.
 - The 67 shows after marking, on exactly the items step 5 counts.
 - verify-sums-in-disguise.py passes with every plant failing.

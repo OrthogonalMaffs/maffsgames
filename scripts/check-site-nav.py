@@ -26,11 +26,11 @@ IN CHROMIUM (--check), served by serve-stubbed.py with the network cut:
   - Angle Ace opened from /op/: every a.back-link goes to /op/ and reads "← Back to OP for Secondary"; reloaded, and
     with ?level= changed, the same; opened with no referrer, and from another game, every link exactly as written;
   - Free Daily Pizza (stage-exit) opened from /essentials/: its row link and its HUD home link both go to /essentials/;
-  - the class page (contract CLASS-PAGE, Jon 21 Nov 2026): /class/#Maple greets "Welcome, Maple Class!" (text only) and
-    every card links /games/<slug>/#kids/Maple; /class/ shows the teachers' line and links #kids; an invalid name
+  - the class page (contract CLASS-PAGE, Jon 21 Nov 2026): /class/#Willow greets "Welcome, Willow Class!" (text only) and
+    every card links /games/<slug>/#kids/Willow; /class/ shows the teachers' line and links #kids; an invalid name
     (#Year6) shows no greeting and links #kids. Each child-look game (scripts/apply-class-page.py's list), opened by
-    clicking its card on /class/#Maple, carries #kids/Maple, and its back links and stage-exit HUD home link go to
-    /class/#Maple (MaffsNav.backLabel "← Back to the class page"; stage-exit's row link its short form, "← the class
+    clicking its card on /class/#Willow, carries #kids/Willow, and its back links and stage-exit HUD home link go to
+    /class/#Willow (MaffsNav.backLabel "← Back to the class page"; stage-exit's row link its short form, "← the class
     page"), reloaded too. A site-nav.js that drops the fragment is caught;
   - the logo: shown at 1920x1080 on Angle Ace, links to "/", is named "MaffsGames home", and nothing painted comes
     within its clear space at any scroll position (hit-tested with elementsFromPoint, not site-nav.js's own measure);
@@ -120,7 +120,7 @@ TITLE_GOES = 'games/scale-factor-scaling/index.html'   # But It's Only Half the 
 TITLE_GOES_DARK = 'games/dimension-checker/index.html'  # the same on a dark page (the check holds its background to dark)
 NO_BACK_LINK_GAME = 'games/suvat/index.html'           # a roster game with no a.back-link: it loads site-nav.js by its roster row
 PHONE = (360, 640)                             # the small phone every hub label must fit on one line at
-CLASS_PAGE = '/class/'                         # the class page (contract CLASS-PAGE): the documented example is #Maple
+CLASS_PAGE = '/class/'                         # the class page (contract CLASS-PAGE): the documented example is #Willow
 # The child-look games the class page lists, named here so scripts/ci-deps.py selects this check for each; held equal to
 # scripts/apply-class-page.py's list (data/games.json's "kids": true), so a new child-look game is added here too.
 CLASS_GAMES = ('games/sums-in-disguise/index.html', 'games/some-thingies/index.html')
@@ -519,7 +519,7 @@ def browser_faults(swap=None, only=None, js_swap=None):
                 games = [s for s, _ in apply.kids_games()]
                 if ['games/%s/index.html' % s for s in games] != list(CLASS_GAMES):
                     faults.append('class page: CLASS_GAMES %s differs from the child-look games in data/games.json, %s' % (list(CLASS_GAMES), games))
-                for frag, greet, teacher, suffix in (('#Maple', 'Welcome, Maple Class!', False, '#kids/Maple'),
+                for frag, greet, teacher, suffix in (('#Willow', 'Welcome, Willow Class!', False, '#kids/Willow'),
                                                      ('', '', True, '#kids'), ('#Year6', '', False, '#kids')):
                     ctx = context(viewport={'width': 1280, 'height': 800})
                     page = ctx.new_page()
@@ -538,25 +538,25 @@ def browser_faults(swap=None, only=None, js_swap=None):
                 for slug in games:
                     ctx = context(viewport={'width': 1280, 'height': 800})
                     page = ctx.new_page()
-                    page.goto(base + CLASS_PAGE + '#Maple', wait_until='load')
+                    page.goto(base + CLASS_PAGE + '#Willow', wait_until='load')
                     page.wait_for_timeout(150)
                     with page.expect_navigation(wait_until='load'):
                         page.click('a.card[data-game="/games/%s/"]' % slug)
                     page.wait_for_timeout(150)
                     for when in ('opened', 'reloaded'):
                         got = page.evaluate(CLASS_BACK_JS)
-                        where = '%s opened from /class/#Maple, %s' % (slug, when)
-                        if got['hash'] != '#kids/Maple':
-                            faults.append('%s: its address carries %r, not #kids/Maple' % (where, got['hash']))
+                        where = '%s opened from /class/#Willow, %s' % (slug, when)
+                        if got['hash'] != '#kids/Willow':
+                            faults.append('%s: its address carries %r, not #kids/Willow' % (where, got['hash']))
                         # A header link reads "← Back to the class page"; stage-exit's row keeps its short form (STAGE-EXIT-LABEL).
                         if got['label'] != '← Back to the class page':
                             faults.append('%s: MaffsNav.backLabel is %r, not "← Back to the class page"' % (where, got['label']))
-                        if not got['back'] or any(h != '/class/#Maple' or x != ('← the class page' if row else '← Back to the class page')
+                        if not got['back'] or any(h != '/class/#Willow' or x != ('← the class page' if row else '← Back to the class page')
                                                   for h, x, row in got['back']):
-                            faults.append('%s: back links %s, not /class/#Maple reading "← Back to the class page" (the stage-exit '
+                            faults.append('%s: back links %s, not /class/#Willow reading "← Back to the class page" (the stage-exit '
                                           'row: "← the class page")' % (where, got['back']))
-                        if any(h != '/class/#Maple' for h in got['home']):
-                            faults.append('%s: stage-exit HUD home links %s, not /class/#Maple' % (where, got['home']))
+                        if any(h != '/class/#Willow' for h in got['home']):
+                            faults.append('%s: stage-exit HUD home links %s, not /class/#Willow' % (where, got['home']))
                         if when == 'opened':
                             page.reload(wait_until='load')
                             page.wait_for_timeout(150)
@@ -846,7 +846,7 @@ def selftest():
     fails += [] if hit else ['back links not relinked passed']
     dropped = js.replace('      nav.backHref = hub + classFragment(hub);\n', '      nav.backHref = hub;\n', 1)
     got = browser_faults(only={'class'}, js_swap={'/schools/assets/site-nav.js': dropped}) if dropped != js else []
-    hit = [f for f in got if 'opened from /class/#Maple' in f and 'not /class/#Maple' in f]
+    hit = [f for f in got if 'opened from /class/#Willow' in f and 'not /class/#Willow' in f]
     print('  self-test the class name dropped on the way back %s' % ('caught: ' + hit[0][:100] if hit else '*** MISSED *** %s' % got[:1]))
     fails += [] if hit else ['the class name dropped on the way back passed']
     long_label = 'A' * 60

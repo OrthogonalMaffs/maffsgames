@@ -30,7 +30,7 @@ DO NOT TOUCH:
 - No draft PR.
 
 SUCCESS CONDITION:
-- The start screen of /games/sums-in-disguise/ and of /games/sums-in-disguise/#kids/Maple shows the picture under the title.
+- The start screen of /games/sums-in-disguise/ and of /games/sums-in-disguise/#kids/Willow shows the picture under the title.
 - verify-sums-in-disguise.py passes, with the new plant failing.
 - check-site, phone-fit (dispatched on the branch), check-theme and check-start-mount all pass.
 - Merged by merge-pr.py, with its last line, the merge commit and main's check-site and phone-fit-full run IDs reported.
