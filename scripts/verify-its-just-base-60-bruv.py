@@ -836,6 +836,12 @@ CK_MIN, CK_MAX, CK_ROW = 80, 160, 40   # the contract's range above the question
 CK_SPARE = 5    # the page keeps 4 px spare under its tallest screen; a forced clock inside that is not counted as room
 CK_SLACK = 14   # a clock above the question but under CK_MAX leaves at most this much room unused on its tallest screen (px)
 
+# Jon's ruling (26 Nov 2026, via Project Claude): canon §7.6.1 treats Next below the fold after a wrong answer on a phone as
+# reported, not a gate. In Aa at 320x568 and 375x667 these items already end below the fold on main (dd74964), with the
+# clock in the stage row as it was: {size: {item id: px below the fold on main, its lowest screen}}. Measured from main's
+# page by this script's own ck_item(). Shrink-only: an item that fits is taken off; one that ends lower than this fails.
+KNOWN_AA_OVER = {}
+
 # One screen of an item: the clock's box and place, then (with `val`) the option pressed and the screen after marking.
 # `force` puts the clock above the question at that width before anything is pressed, by moving the element itself, so the
 # room is judged here, never by the page's own fitting code.
@@ -849,8 +855,8 @@ CK_JS = r"""async ([id, val, force]) => {
   const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
   const low = (els) => { let m = null; for (const e of els) { if (!e.getClientRects().length) continue; const b = e.getBoundingClientRect(); if (b.height) m = Math.max(m === null ? -1e9 : m, b.bottom + scrollY); } return m; };
   const box = () => { const r = ck.getBoundingClientRect(), a = document.getElementById('ask').getBoundingClientRect(), c = document.getElementById('qcard').getBoundingClientRect();
-    return { w: Math.round(r.width * 10) / 10, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.id === 'stageRow' ? 'row' : String(ck.parentElement.id)),
-             row: getComputedStyle(document.getElementById('stageRow')).display !== 'none',
+    return { w: Math.round(r.width * 10) / 10, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.classList.contains('stage-row') ? 'row' : String(ck.parentElement.className)),
+             row: getComputedStyle(document.querySelector('.stage-row')).display !== 'none',
              above: r.bottom <= a.top + 0.5, centre: Math.abs((r.left + r.right) / 2 - (c.left + c.right) / 2) }; };
   const before = box(), opts = [...document.querySelectorAll('#opts .opt')];
   const out = { fold, before, n: opts.length, opts: low(opts), wide: document.documentElement.scrollWidth > innerWidth };
@@ -890,6 +896,7 @@ def check_ck(page, items, size, aa, out, info, stage):
         fold = screens[0]['fold']
         tag = '%s at %s' % (q['id'], tag0)
         b = screens[0]['before']
+        lost = []   # this item's fold failures: judged after the loop against the known list
         for v, r in zip(vals, screens):
             t = '%s, %s' % (tag, 'right' if v == q['answer'] else 'choosing %r' % v)
             if r.get('missing'):
@@ -897,22 +904,43 @@ def check_ck(page, items, size, aa, out, info, stage):
                 continue
             if r['wide']:
                 out.append('%s: the page scrolls sideways' % t)
-            if r['opts'] is None or r['opts'] > fold or r['n'] != len(vals):
-                out.append('%s: the options end at %s px, below the fold at %d px, while asking' % (t, r['opts'], fold))
+            if r['opts'] is None or r['n'] != len(vals):
+                out.append('%s: %d of the %d options on screen while asking' % (t, r['n'], len(vals)))
+            elif r['opts'] > fold:
+                lost.append('%s: the options end at %s px, below the fold at %d px, while asking' % (t, r['opts'], fold))
             if r['before']['w'] != b['w'] or r['before']['place'] != b['place']:
                 out.append('%s: the clock is %s px (%s) on one drawing of the question and %s px (%s) on another' % (t, b['w'], b['place'], r['before']['w'], r['before']['place']))
             a = r['after']
             if a['w'] != r['before']['w'] or a['place'] != r['before']['place']:
                 out.append('%s: the clock is %s px (%s) before marking and %s px (%s) after' % (t, r['before']['w'], r['before']['place'], a['w'], a['place']))
             if v == q['answer']:
-                if r['head'] is None or r['head'] > fold:
-                    out.append('%s: the right answer\'s feedback ends at %s px, below the fold at %d px' % (t, r['head'], fold))
-            elif r['next'] is None or r['next'] > fold:
-                out.append('%s: Next ends at %s px, below the fold at %d px' % (t, r['next'], fold))
+                if r['head'] is None:
+                    out.append('%s: no right-answer feedback on screen' % t)
+                elif r['head'] > fold:
+                    lost.append('%s: the right answer\'s feedback ends at %s px, below the fold at %d px' % (t, r['head'], fold))
+            elif r['next'] is None:
+                out.append('%s: no Next on screen after a wrong answer' % t)
+            elif r['next'] > fold:
+                lost.append('%s: Next ends at %s px, below the fold at %d px' % (t, r['next'], fold))
             if r.get('cover'):
                 out.append('%s: the bird, out of the house, covers the stage label' % t)
             if r['optsAfter'] is not None and r['optsAfter'] > fold:
-                out.append('%s: an option shown after marking ends at %d px, below the fold at %d px' % (t, r['optsAfter'], fold))
+                lost.append('%s: an option shown after marking ends at %d px, below the fold at %d px' % (t, r['optsAfter'], fold))
+        # The fold. Every screen above it, except an item main already loses it on in Aa on a phone (KNOWN_AA_OVER, Jon's
+        # ruling of 26 Nov 2026): there the clock stays in the stage row and no screen ends lower than on main.
+        known = KNOWN_AA_OVER.get('%dx%d' % size, {}) if aa else {}
+        over = lowest - fold
+        if q['id'] in known:
+            if not lost:
+                out.append('%s: on KNOWN_AA_OVER (%d px below the fold on main) but every screen now fits: take it off the list' % (tag, known[q['id']]))
+            else:
+                if b['place'] != 'row':
+                    out.append('%s: main already loses the fold here, but the clock is %s px above the question, not in the stage row' % (tag, b['w']))
+                if over > known[q['id']] + 1:
+                    out.append('%s: its lowest screen ends %.0f px below the fold, lower than main\'s %d px (%s)' % (tag, over, known[q['id']], lost[0]))
+                info.setdefault('known', Counter())['%s' % tag0] += 1
+        else:
+            out.extend(lost)
         # The place and size, judged against the room this script measures itself.
         if b['place'] == 'top':
             if not (CK_MIN <= b['w'] <= CK_MAX):
@@ -1170,6 +1198,8 @@ def main():
         print('%s: the cuckoo: %d different lines in a run of %d right answers, its states, RIGHT_MS, and the results line for %d scores in their bands' % (SLUG, info['cuckoo_lines'], PER, info['bands']))
     for tag, n, sizes in info.get('ck', []):
         print('%s: the clock at %s on %d items, every screen above the fold: %s' % (SLUG, tag, n, ', '.join('%s %g px x%d' % (p, w, k) for (p, w), k in sorted(sizes.items()))))
+    for tag, n in sorted(info.get('known', {}).items()):
+        print('%s: %d item(s) at %s below the fold as on main (KNOWN_AA_OVER), the clock in the stage row, none lower than main' % (SLUG, n, tag))
     for size, w in info.get('bird', []):
         print('%s: the bird at %dx%d (clock %g px): right out of the house from %d to %d ms of a right answer, back after; drooping on a wrong one; still under reduced motion' % (SLUG, size[0], size[1], w, HOLD[0], HOLD[-1]))
     if 'played' in info:
