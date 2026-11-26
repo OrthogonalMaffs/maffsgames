@@ -16,9 +16,24 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-26 (home): BASE-60-TIDY (Base 60's cuckoo rides out on a perch joined to its clock; the page's stale comment; spec-map row N13 names time)
+
+Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`. The contract is at `docs/handover/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
+
+- **Jon (26 Nov 2026, 19:51):** "the cuckoo clock looks much better alhough the cuckoo is not attached to the clock when it pays a visit".
+- **The perch:** a thin level arm (`.ck-perch`, cream with a dark edge, as the bird is drawn) from inside the doorway (x 36 of the drawing) to under the bird's body (x 7). It grows out of the doorway and back with the bird, on the same times and easing, and is hidden at no length when the bird is in. The bird's own movement, timings and shape are unchanged; it bows and droops on the arm, which stays level.
+- **Decided here:** the arm extends from the doorway; it does not slide as a fixed-length piece. A fixed-length arm sliding with the bird would stick out of the far side of the house while the bird is in, and past the drawing's edge. Measured every 20 ms of a right answer and through a wrong answer's transition at 1366x768, 320x568 and 1920x955: the bird is on the arm whenever it shows.
+- **The drawing's box does not grow** (the arm lies inside the bird's reach), so the clock's size, the fold figures and `data/large-screen.json` are untouched.
+- **Verifier:** the bird units also hold the perch showing and within 1 drawing unit of the door's box and the bird's at each sampled moment of the hold, after a wrong answer and in both reduced-motion states. Two plants: the perch removed, and the perch left behind at the door. Run locally: both bird units pass, both plants and the two older bird plants caught.
+- **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, PR 930)." ("PR 930", not "#930": the first Gate, check-site 45887805820, failed only on the Theme check, which read "#930" in the page as a hex colour outside :root); row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
+- **Screenshot** (the bird out on its perch at 1366x768): in the report to Jon; no image is committed.
+- **Run IDs:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:40; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-26 (home): BASE-60-LIST (It's Just Base 60, Bruv is listed: portal, /essentials/, sitemap, spec map, hub, /updates/)
 
-Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-list`. The contract is at `docs/handover/contracts/2026-11-26-base-60-list.md` (verbatim). The first commit closed out CANON-PRIORITY.
+Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-list`, PR #930. The contract is at `docs/history/contracts/2026-11-26-base-60-list.md` (verbatim). The first commit closed out CANON-PRIORITY.
 
 - **Approval (Jon, 26 Nov 2026, 13:36):** "Base 60 looks fine, happy to list that, although I will check the lines".
 - **Portal:** a card in KS3 and in GCSE, each a copy of Take a Walk's (New badge dated 2026-11-26, levels ks3 gcse, topic number, the keywords of `data/games.json`), placed last in its section: both sections are in listing order, newest last.
@@ -28,7 +43,9 @@ Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-li
 - **Sitemap, /updates/, the roster** (row 116 in Resit Fluency Strand, 8 games; Unlisted, 8; "Look signed off by Jon, 2026-11-26."), and the two notes in `audit-register.py` and `check-theme.py`.
 - **`docs/todo.md`:** BASE60-LIST rewritten to Jon's lines, its old row word for word in `docs/history/todo-done.md`; new row BASE60-AA-FOLD, without figures (Project Claude's follow-up of 26 Nov, 17:15: #929 had not merged, so the row points to the verifier's known list).
 - **Not touched:** the game page, its verifier, `data/large-screen.json`, `data/games.json`.
-- **Run IDs:** in the close-out, as usual.
+- **Gate on the PR head 8cd19935:** check-site 45866316754 and phone-fit-full 45866316762, both green.
+- **Merged** on 26 Nov as e367eb4 (#930, squash) via merge-pr.py, which ended "main e367eb4 run 45871430050: GREEN". Main on e367eb4: check-site 45871430050, the pages build 45871429603 and phone-fit-full 45871430115, all green (read back from the API).
+- **MERGE TIMING slip (this lane's):** #927 (LARGE-SCREEN-LAYER) merged at 17:35 while merge-pr.py waited, left unattended. The contract said to merge main in and re-run the Gate first; it merged on the Gate from before #927 landed. Main's run on the combined state is green.
 
 Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0 (one follow-up); usage n/a.
 
