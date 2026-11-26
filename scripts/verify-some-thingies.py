@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 4's thingy in glasses reacting beside every question and each fact drawn as plates only after marking, a plates of b, shrunk or dropped so Next stays above the fold and the crowd keeps its size (SOME-THINGIES-FACTS: all 192 items at 320x568, 375x667 and 1280x720, both looks, normal and Aa); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -89,8 +89,32 @@ CROWD-FILL (Jon, 25-26 Nov 2026), at 1280 x 720, 1904 x 864 and 375 x 667, in ea
             and size the crowd of 120 (the median of five) is printed (and fails over 500 ms: the contract's stop is
             50 ms).
 
+SOME-THINGIES-FACTS (Jon, 26 Nov 2026), Stage 4, at 320 x 568, 375 x 667 and 1280 x 720, in each look, normal and Aa
+(the page's own Aa button), the speaker showing and the real fonts (fit_common.open_phone):
+  Beside    on all 192 Stage 4 items (Main and Pro), right (the longest LINES.right line) and wrong: #sargeMini holds
+            exactly one thingy, colour 6 in glasses (two lenses drawn), a medal exactly in Pro, no text, on the first
+            screen; before marking and on the next question it carries neither reaction and its waiting mouth shows;
+            after a right answer react-right and the smile, after a wrong one react-wrong and the puzzled mouth.
+  Picture   none before marking or on the next question. After marking, where it shows: the plates and the thingies
+            on each counted from the DOM against this script's own (a x b: a plates of b; ? x b = product: product / b
+            plates of b), each plate one colour in the fixed order, every thingy one size from 10 to 18 px and inside
+            its plate, the picture between the options and the working, never wider than its card, carrying the
+            reaction; shrunk only as far as the room needs (one pixel more, set here, must not fit). Where it does
+            not show: a stand-in the size of the picture at 10 px (built here from the CSS's proportions) put in its
+            place must push Next past the fold, so it is dropped only where it could not fit.
+  Fold      Next above the fold (the screen less the fixed footer) on every item, right and wrong; no sideways scroll.
+            The counts of items showing and dropping the picture are printed per look, size and mode of reading.
+  Crowd     past question 10 (as question 12, by ST.ui.preview and ST.ui.crowd): each mode's smallest fact and its
+            largest (a x b, and the missing number) with 60 in the crowd, the largest also with 1 and with a crowd
+            big enough to have shrunk to fit (which must be seen). After marking the crowd is the size CROWD-FILL
+            gives the card with the picture taken out (16 px and fitting, or the largest half pixel that fits,
+            checked here), so the picture did not change it; and where the picture shows, the card, crowd and all,
+            still ends above the fold: the picture fits the room the crowd leaves. Whether the crowd is the same size
+            before and after marking is counted and printed: the marking's own feedback (and a right answer's new
+            thingy) can resize a crowd that already fills the screen, as it did before this contract.
+
 Work units: "bank" (no browser), "scenes", "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
-"play kids 360x640", "winner 360x640", "crowd <look> <W>x<H>" (one per look and CROWD-FILL size), "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
+"play kids 360x640", "winner 360x640", "crowd <look> <W>x<H>" (one per look and CROWD-FILL size), "facts <look> <W>x<H> <normal|Aa>" (one per look, SOME-THINGIES-FACTS size and reading mode), "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
     python scripts/verify-some-thingies.py --selftest   # the planted faults only
@@ -134,6 +158,11 @@ CHEERS = {
     'kids': {0: 'The crowd goes wild!', 1: 'The crowd goes wild!', 10: 'More thingies are coming!', 20: 'The thingies are dancing!',
              30: 'A thingy party!', 50: 'Fifty thingies! Wow!', 75: 'The whole town is here!', 100: 'Thingies from space!'},
 }
+# SOME-THINGIES-FACTS: the contract's sizes, each in both looks, normal and Aa; the crowd its past-question-10 cases
+# use to fill the screen.
+FACT_SIZES = [(320, 568), (375, 667), (1280, 720)]
+FACT_UNITS = ['facts %s %dx%d %s' % (look, sz[0], sz[1], aa) for look in ('grown', 'kids') for sz in FACT_SIZES for aa in ('normal', 'Aa')]
+FACT_CROWD_BIG = {False: 500, True: 1300}   # by the screen: a phone, a wide screen
 TAGLINE = 'how many thingies can you collect'
 MENU_NOTE = 'At least 10 questions, then see how many thingies you can collect: keep going until a slip, or press End. A point for each one right.'
 
@@ -1075,6 +1104,241 @@ def check_crowd(pw, base, html, look, size, mode, out, info):
     info['crowd'] = info.get('crowd', 0) + 1
 
 
+# SOME-THINGIES-FACTS. A list of plays in one call (as fit_common's sweep: a round trip a play would cost more than the
+# plays). Each play is one Stage 4 item, played once: previewed as question `at` (past question 10 with `crowd` in the
+# crowd), read before marking, answered (right with the given LINES.right line, or the first decoy), read again, then
+# Next and read a third time. Everything is read from the DOM. g and n are this script's own plates and thingies a
+# plate (never the page's). Where the page shows no picture, a stand-in the size of the picture at the 10 px floor
+# (the plates' boxes, from the CSS: thingies 10 px, gaps a ninth, padding 1/4.5 and 1/3.6, a 2 px border, a third
+# between plates) is put where the picture goes, to see whether it really would not fit. The crowd is judged with the
+# picture hidden: the size CROWD-FILL gives the card without it. Two frames are waited after the marking of every play
+# past question 10 and of one play in 20 before it, so what the page changes after the marking itself (its
+# ResizeObserver) is read too; the other plays are read at once, as the student first sees them.
+FACT_JS = r"""async (plays) => { const all = []; let count = 0;
+ for (const [id, right, line, at, crowd, g, n] of plays) { all.push(await (async () => {
+  const $ = (i) => document.getElementById(i);
+  const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const f = document.querySelector('.site-footer');
+  const fold = () => innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  const card = $('qcard'), p = $('pic'), c = $('crowd');
+  const end = () => card.getBoundingClientRect().bottom + scrollY;
+  const mini = () => { const m = $('sargeMini'), ths = [...m.querySelectorAll('svg')], t = ths[0] || null, r = t ? t.getBoundingClientRect() : null;
+    const on = (sel) => !!t && !!t.querySelector(sel) && getComputedStyle(t.querySelector(sel)).display !== 'none';
+    return { n: ths.length, acc: t ? (t.dataset.acc || null) : null, k: t ? +(((t.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1] || 0) : 0,
+             lenses: t ? t.querySelectorAll('.a-lens').length : 0, medal: !!(t && t.querySelector('.medal')), text: m.textContent.trim(),
+             vis: !!r && r.width >= 16 && r.height >= 16 && getComputedStyle(m).display !== 'none' && getComputedStyle(m).visibility !== 'hidden' && r.top >= 0 && r.bottom + scrollY <= fold() && r.left >= 0 && r.right <= innerWidth,
+             right: m.classList.contains('react-right'), wrong: m.classList.contains('react-wrong'), happy: on('.m-happy'), puzzled: on('.m-puzzled'), wait: on('.m-wait') }; };
+  const pic = () => { const pls = [...p.querySelectorAll('.plate')], ths = [...p.querySelectorAll('svg.th')];
+    const ws = ths.map(t => t.getBoundingClientRect().width), hs = ths.map(t => t.getBoundingClientRect().height);
+    const pr = p.getBoundingClientRect(), cr = card.getBoundingClientRect();
+    const ks = pls.map(x => [...new Set([...x.querySelectorAll('svg.th')].map(t => ((t.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1]))].join(','));
+    const inside = pls.every(x => { const b = x.getBoundingClientRect(); return [...x.querySelectorAll('svg.th')].every(t => { const r = t.getBoundingClientRect(); return r.left >= b.left - 0.5 && r.right <= b.right + 0.5 && r.top >= b.top - 0.5 && r.bottom <= b.bottom + 0.5; }); });
+    return { plates: pls.map(x => x.querySelectorAll('svg.th').length), thingies: ths.length, kids: p.children.length, text: p.textContent.trim(), ks: ks, inside: inside,
+             wmin: ws.length ? Math.min(...ws) : 0, wmax: ws.length ? Math.max(...ws) : 0, hmin: hs.length ? Math.min(...hs) : 0, hmax: hs.length ? Math.max(...hs) : 0,
+             wider: ths.length ? (pr.left < cr.left - 0.5 || pr.right > cr.right + 0.5) : false, top: pr.top + scrollY, bottom: pr.bottom + scrollY,
+             right: p.classList.contains('react-right'), wrong: p.classList.contains('react-wrong') }; };
+  const crowdNow = () => { const ths = [...c.querySelectorAll('svg.th')], ws = ths.map(t => t.getBoundingClientRect().width);
+    return { n: ths.length, w: ws.length ? Math.min(...ws) : 0, wmax: ws.length ? Math.max(...ws) : 0, end: end(), fold: fold() }; };
+  ST.ui.preview(id, at);
+  if (at > 10) ST.ui.crowd(crowd);
+  const q = ST.ui.question();
+  const o = { id: q ? q.id : null, qi: ST.ui.qi(), quiz: card.classList.contains('quiz'), before: { mini: mini(), pic: pic(), crowd: crowdNow(), state: ST.ui.state() } };
+  if (right) ST.ui.answer(true, line); else ST.ui.answer(false);
+  if (at > 10 || count++ % 20 === 0) await frames();
+  const nb = document.querySelector('#feedback .maffs-next, #nextBtn');
+  const sayEl = $('say'), fbEl = $('feedback');
+  o.after = { mini: mini(), pic: pic(), crowd: crowdNow(), state: ST.ui.state(), next: nb ? nb.getBoundingClientRect().bottom + scrollY : null, fold: fold(),
+              sideways: document.documentElement.scrollWidth - innerWidth, fact: p.dataset.fact || null,
+              optsEnd: $('opts').getBoundingClientRect().bottom + scrollY, fbTop: fbEl.getBoundingClientRect().top + scrollY };
+  const hasCrowd = o.after.crowd.n > 0;
+  const over = () => !nb || nb.getBoundingClientRect().bottom + scrollY > fold() + 0.5 || (hasCrowd && end() > fold() + 0.5);
+  if (o.after.pic.plates.length) {
+    // Shrunk: one pixel more must not fit.
+    if (o.after.pic.wmin < 17.99) { const was = p.style.getPropertyValue('--ps'); p.style.setProperty('--ps', (Math.round(o.after.pic.wmin) + 1) + 'px'); o.after.biggerFits = !over(); p.style.setProperty('--ps', was); }
+  } else {
+    const cols = n <= 5 ? n : Math.ceil(n / 2), rows = n <= 5 ? 1 : 2, s = 10;
+    const box = document.createElement('div');
+    box.style.cssText = 'display:flex;flex-wrap:wrap;justify-content:center;align-items:center;max-width:100%;order:1;gap:' + (s / 3) + 'px';
+    for (let i = 0; i < g; i++) { const d = document.createElement('div'); d.style.cssText = 'flex:none;box-sizing:border-box;width:' + (cols * s + (cols - 1) * s / 9 + 2 * s / 3.6 + 4) + 'px;height:' + (rows * s + (rows - 1) * s / 9 + 2 * s / 4.5 + 4) + 'px'; box.appendChild(d); }
+    card.insertBefore(box, p);
+    o.after.floorFits = !over();
+    box.remove();
+  }
+  // The crowd, with the picture hidden: full size and fitting, or the largest half pixel that fits, or the floor.
+  if (hasCrowd) { const d = p.style.display; p.style.display = 'none';
+    const cw = o.after.crowd.w, was = c.style.getPropertyValue('--ts');
+    o.after.bare = { fits: end() <= fold() + 0.5 };
+    if (cw < 15.99) { c.style.setProperty('--ts', (cw + 0.5) + 'px'); o.after.bare.biggerFits = end() <= fold() + 0.5; c.style.setProperty('--ts', was); }
+    p.style.display = d; }
+  ST.ui.next();
+  o.then = { mini: mini(), pic: pic(), state: ST.ui.state() };
+  return o; })()); }
+ return all; }"""
+
+
+def fact_plates(q):
+    """This script's own picture for a Stage 4 item: (plates, thingies a plate). a x b is a plates of b; ? x b = product
+    is product / b plates of b."""
+    return (q['a'], q['b']) if q['type'] == 'fact' else (q['product'] // q['b'], q['b'])
+
+
+def fact_judge(tag, q, right, at, crowd, o, pro, out):
+    """One Stage 4 play against the contract. Returns 'shown' or 'dropped' (None when the play itself went wrong)."""
+    g, n = fact_plates(q)
+    if o['id'] != q['id'] or o['qi'] != at or o['before']['state'] != 'ask' or o['after']['state'] != ('done' if right else 'wrong'):
+        out.append('%s: the play went wrong (item %s, question %s, states %s then %s)' % (tag, o['id'], o['qi'], o['before']['state'], o['after']['state']))
+        return None
+    # The thingy beside the question.
+    # (Past question 10 a wrong answer ends the run: Next goes to the results, so there is no next question to read.)
+    ended = at > PER and not right
+    b, a, t = o['before']['mini'], o['after']['mini'], o['then']['mini']
+    for when, m in (('before marking', b), ('after marking', a)) + (() if ended else (('on the next question', t),)):
+        if m['n'] != 1 or m['acc'] != 'glasses' or m['k'] != 6 or m['lenses'] != 2 or m['text']:
+            out.append('%s: %s the thingy beside the question is %d thingies (accessory %s, colour %s, %d lenses, text %r), expected one in glasses and no text'
+                       % (tag, when, m['n'], m['acc'], m['k'], m['lenses'], m['text']))
+            return None
+        if m['medal'] != pro:
+            out.append('%s: %s the thingy beside the question %s a medal in %s mode' % (tag, when, 'wears' if m['medal'] else 'has no', 'pro' if pro else 'main'))
+            return None
+        if not m['vis']:
+            out.append('%s: %s the thingy beside the question is not on screen (hidden, under 16 px or off the first screen)' % (tag, when))
+            return None
+    for when, m in (('before marking', b),) + (() if ended else (('on the next question', t),)):
+        if m['right'] or m['wrong'] or m['happy'] or m['puzzled'] or not m['wait']:
+            out.append('%s: %s the thingy beside the question already reacts (react-right %s, react-wrong %s)' % (tag, when, m['right'], m['wrong']))
+    how = 'right' if right else 'wrong'
+    if a['right'] != right or a['wrong'] == right or a['happy'] != right or a['puzzled'] == right or a['wait']:
+        out.append('%s: the thingy beside the question does not react after a %s answer (react-right %s, react-wrong %s; smiling %s, puzzled %s)'
+                   % (tag, how, a['right'], a['wrong'], a['happy'], a['puzzled']))
+    # The picture: none before marking or on the next question; after marking, g plates of n, or none.
+    for when, pc_ in (('before marking', o['before']['pic']),) + (() if ended else (('on the next question', o['then']['pic']),)):
+        if pc_['thingies'] or pc_['kids'] or pc_['text']:
+            out.append('%s: a picture %s (%d plates, %d thingies): it gives the answer away' % (tag, when, len(pc_['plates']), pc_['thingies']))
+    pic_, res = o['after']['pic'], 'dropped'
+    if pic_['plates'] or pic_['thingies'] or pic_['kids']:
+        res = 'shown'
+        if pic_['plates'] != [n] * g or pic_['thingies'] != g * n or pic_['kids'] != g or pic_['text']:
+            out.append('%s: after marking the picture draws %d plates of %s (%d thingies), expected %d plates of %d'
+                       % (tag, len(pic_['plates']), sorted(set(pic_['plates'])) or 0, pic_['thingies'], g, n))
+        elif pic_['ks'] != [str((i % 10) + 1) for i in range(g)]:
+            out.append('%s: the plates are not one colour each in the fixed order (%s)' % (tag, pic_['ks']))
+        elif pic_['wmax'] - pic_['wmin'] > 0.01 or pic_['hmax'] - pic_['hmin'] > 0.01 or abs(pic_['wmin'] - pic_['hmin']) > 0.01:
+            out.append('%s: the picture\'s thingies are not one size (%.1f to %.1f px wide, %.1f to %.1f px tall)' % (tag, pic_['wmin'], pic_['wmax'], pic_['hmin'], pic_['hmax']))
+        elif pic_['wmin'] < 10 - 0.01 or pic_['wmax'] > 18.01:
+            out.append('%s: the picture\'s thingies are %.1f px, outside 10 to 18 px' % (tag, pic_['wmin']))
+        elif not pic_['inside']:
+            out.append('%s: a thingy is drawn outside its plate at %.0f px' % (tag, pic_['wmin']))
+        elif pic_['wider']:
+            out.append('%s: the picture is wider than its card' % tag)
+        elif o['after'].get('biggerFits'):
+            out.append('%s: the picture is %.0f px though %.0f px fits: shrunk further than the room needs' % (tag, pic_['wmin'], pic_['wmin'] + 1))
+        elif pic_['right'] != right or pic_['wrong'] == right:
+            out.append('%s: the picture does not carry the %s reaction' % (tag, how))
+        elif pic_['top'] < o['after']['optsEnd'] - 0.5 or pic_['bottom'] > o['after']['fbTop'] + 0.5:
+            out.append('%s: the picture is not between the options and the working' % tag)
+    elif o['after'].get('floorFits'):
+        out.append('%s: no picture after marking, though %d plates of %d at 10 px would leave Next above the fold' % (tag, g, n))
+    elif o['after']['fact'] != 'off':
+        out.append('%s: no picture after marking and #pic does not say so (data-fact %r)' % (tag, o['after']['fact']))
+    # Next, and the page's width.
+    if o['after']['next'] is None:
+        out.append('%s: no Next after marking' % tag)
+    elif o['after']['next'] > o['after']['fold'] + 0.5:
+        out.append('%s: Next ends at %.0f px, below the fold at %.0f px (picture %s%s)' % (tag, o['after']['next'], o['after']['fold'], res, (' at %.0f px' % pic_['wmin']) if res == 'shown' else ''))
+    if o['after']['sideways'] > 0:
+        out.append('%s: the page scrolls sideways by %d px after marking' % (tag, o['after']['sideways']))
+    # The crowd: the size CROWD-FILL gives the card without the picture, and the picture inside the room it leaves.
+    cr = o['after']['crowd']
+    if at > 10 and cr['n']:
+        bare = o['after']['bare']
+        if cr['wmax'] - cr['w'] > 0.01:
+            out.append('%s: the crowd of %d is not one size' % (tag, cr['n']))
+        elif cr['w'] > 15.99 and not bare['fits']:
+            out.append('%s: the crowd of %d is 16 px and, with the picture taken out, ends past the fold: it should have shrunk' % (tag, cr['n']))
+        elif cr['w'] <= 15.99 and bare.get('biggerFits'):
+            out.append('%s: the crowd of %d is %.1f px though %.1f px fits with the picture taken out: the picture changed the crowd\'s size' % (tag, cr['n'], cr['w'], cr['w'] + 0.5))
+        elif cr['w'] <= 15.99 and cr['w'] > 6.01 and not bare['fits']:
+            out.append('%s: the crowd of %d at %.1f px ends past the fold with the picture taken out' % (tag, cr['n'], cr['w']))
+        elif res == 'shown' and cr['end'] > cr['fold'] + 0.5:
+            out.append('%s: with the picture the card ends at %.0f px, past the fold at %.0f px: the picture does not fit the room the crowd of %d leaves' % (tag, cr['end'], cr['fold'], cr['n']))
+    return res
+
+
+def check_facts(pw, base, html, look, size, aa, out, info):
+    """SOME-THINGIES-FACTS: every Stage 4 item, Main and Pro, in one look at one size, normal or Aa, the speaker showing
+    (fit_common.open_phone: the real fonts, a local voice), right (the longest LINES.right line) and wrong."""
+    tag = 'facts %s %dx%d %s' % (look, size[0], size[1], aa)
+    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', '#kids/Maple' if look == 'kids' else '', size)
+    try:
+        if page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
+            out.append('%s: the page is not in the %s look' % (tag, look))
+        if aa == 'Aa':
+            page.evaluate("document.getElementById('a11yToggle').click()")
+        if page.evaluate("document.body.classList.contains('accessible')") != (aa == 'Aa'):
+            out.append('%s: the page is not in %s mode' % (tag, aa))
+        page.evaluate('document.fonts.ready.then(() => 1)')
+        lines = page.evaluate('ST.lines()')[look]['right']
+        longest = max(range(len(lines)), key=lambda i: len(lines[i]))
+        items = [q for q in page.evaluate('ST.bank()') if q['stage'] == 4]
+        if len(items) != 192 or {q['type'] for q in items} != {'fact', 'missing'}:
+            out.append('%s: %d Stage 4 items of types %s, expected 192 facts and missing numbers' % (tag, len(items), sorted({q['type'] for q in items})))
+        n0, both, dropped, smallest = len(out), 0, [], 18.0
+        # Past question 10 first: each mode's smallest fact and its largest (a x b, and the missing number) with 60 in
+        # the crowd, the largest also with 1 and, after a wrong answer (the crowd stays as it was), with a crowd big
+        # enough to have shrunk to fit, which must be seen. Each half of the unit stops once it has four findings.
+        seen = Counter()
+        for md in ('main', 'pro'):
+            mine = sorted((q for q in items if q['mode'] == md), key=lambda q: (fact_plates(q)[0] * fact_plates(q)[1], q['id']))
+            big = [x for x in mine if fact_plates(x)[0] * fact_plates(x)[1] == fact_plates(mine[-1])[0] * fact_plates(mine[-1])[1]]
+            top = [x for x in big if x['type'] == 'fact'][0]
+            cases = [(q, 60, r) for q in (mine[0], top, [x for x in big if x['type'] == 'missing'][0]) for r in (True, False)]
+            cases += [(top, 1, True), (top, 1, False), (top, FACT_CROWD_BIG[size[0] > 600], False)]
+            for q, crowd, right in cases:
+                if len(out) - n0 > 3:
+                    break
+                g, n = fact_plates(q)
+                o = page.evaluate(FACT_JS, [[q['id'], right, longest, 12, crowd, g, n]])[0]
+                t2 = '%s %s as question 12, %d in the crowd (%s)' % (tag, q['id'], crowd, 'right' if right else 'wrong')
+                if o['before']['crowd']['n'] != crowd or o['after']['crowd']['n'] != crowd + (1 if right else 0):
+                    out.append('%s: the crowd holds %d then %d' % (t2, o['before']['crowd']['n'], o['after']['crowd']['n']))
+                    continue
+                res = fact_judge(t2, q, right, 12, crowd, o, md == 'pro', out)
+                seen['picture %s' % res] += 1
+                seen['crowd ' + ('the same size before and after marking' if abs(o['before']['crowd']['w'] - o['after']['crowd']['w']) < 0.01 else 'resized by the marking itself')] += 1
+                if o['after']['crowd']['w'] < 15.99:
+                    seen['crowd shrunk to fit'] += 1
+        if len(out) == n0 and not seen['crowd shrunk to fit']:
+            out.append('%s: no crowd was seen shrunk to fit (%d thingies): the picture was never tried against a full screen' % (tag, FACT_CROWD_BIG[size[0] > 600]))
+        info.setdefault('facts crowd', []).append((tag, dict(seen)))
+        # Every Stage 4 item as question 1, right and wrong.
+        plays = [[q['id'], right, longest, 1, 0] + list(fact_plates(q)) for q in items for right in (True, False)]
+        played, n1 = [], len(out)
+        for i in range(0, len(plays), 64):
+            if len(out) - n1 > 3:
+                break
+            played += page.evaluate(FACT_JS, plays[i:i + 64])
+            for k in range(i // 2, len(played) // 2):
+                q, got = items[k], []
+                for right in (True, False):
+                    o = played[2 * k + (0 if right else 1)]
+                    if not o['quiz']:
+                        out.append('%s %s: the card is not in its Stage 4 scene' % (tag, q['id']))
+                    got.append(fact_judge('%s %s (%s)' % (tag, q['id'], 'right' if right else 'wrong'), q, right, 1, 0, o, q['mode'] == 'pro', out))
+                    if got[-1] == 'shown':
+                        smallest = min(smallest, o['after']['pic']['wmin'])
+                if got == ['shown', 'shown']:
+                    both += 1
+                elif 'dropped' in got:
+                    dropped.append(q['id'])
+        if len(played) == len(plays):
+            info.setdefault('facts', []).append((tag, both, len(dropped), len(items), smallest, ', '.join(dropped)))
+        still(page, tag, out)
+    except Exception as e:  # noqa: BLE001
+        out.append('%s threw: %s' % (tag, str(e).splitlines()[0][:220]))
+    out.extend('page error (%s): %s' % (tag, e) for e in errs if 'production host' not in e)
+    br.close()
+
+
 CONGA_JS = r"""() => { const line = document.getElementById('conga');
   if (!line) return null;
   return [...line.querySelectorAll('.cgroup')].map(g => { const r = g.getBoundingClientRect();
@@ -1324,6 +1588,10 @@ def check(html, out, units, shard=None):
                         sz = tuple(int(x) for x in wh.split('x'))
                         check_crowd(pw, base, html, look, sz, dict(CROWD_SIZES)[sz], out, info)
                         continue
+                    if uid.startswith('facts '):
+                        _, look, wh, aa = uid.split(' ')
+                        check_facts(pw, base, html, look, tuple(int(x) for x in wh.split('x')), aa, out, info)
+                        continue
                     if uid.startswith('fit '):
                         _, look, m = uid.split(' ')
                         try:
@@ -1436,6 +1704,23 @@ PLANTS = [
     ('a thingy not counter-rotated',
      edit(".arr.turning .th{transform:rotate(-90deg)}", ""),
      TURN, r'a thingy is not upright mid-turn'),
+    # SOME-THINGIES-FACTS: the contract's four, and the picture taking the crowd's room.
+    ('the fact pictured before it is marked',
+     edit("else if (t === 'fact') { setSum(", "else if (t === 'fact') { plates(Q.a, Q.b); setSum("),
+     'facts grown 375x667 normal', r'a picture before marking \(\d+ plates, \d+ thingies\)'),
+    ('b plates of a in place of a plates of b',
+     edit("q.type === 'fact' ? [q.a, q.b] :", "q.type === 'fact' ? [q.b, q.a] :"),
+     'facts kids 375x667 normal', r'after marking the picture draws \d+ plates of \[\d+\] \(\d+ thingies\), expected \d+ plates of \d+'),
+    ('the picture never shrunk or dropped',
+     edit("p.style.setProperty('--ps', sz + 'px'); if (!over()) return; }", "p.style.setProperty('--ps', sz + 'px'); return; }"),
+     'facts grown 320x568 normal', r'Next ends at \d+ px, below the fold at \d+ px \(picture shown at 18 px\)'),
+    ('the thingy beside the question left without its reaction',
+     edit("['pic', 'sargeMini'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });",
+          "['pic'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });"),
+     'facts kids 1280x720 Aa', r'the thingy beside the question does not react after a right answer'),
+    ('the picture drawn without looking at the crowd',
+     edit("    var crowd = !!$('crowd').querySelector('.th');\n    function over() {", "    var crowd = false;\n    function over() {"),
+     'facts grown 375x667 Aa', r'the picture does not fit the room the crowd of \d+ leaves'),
     # PRIMARY-FIT-SWEEP: the fold, on one item and one feedback variant only (a sample would miss it most runs).
     ('Next below the fold after one right-answer line only (right.4, m1-3x2)',
      edit("    if (Q.type === 'array') turnArray();\n",
@@ -1478,6 +1763,7 @@ def main():
     shard = bc.Shard(__file__, args)
     units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES, TURN]
     units += CROWD_UNITS
+    units += FACT_UNITS
     units += ['fit %s %s' % (look, m) for look in ('grown', 'kids') for m in MODES]
     if args.selftest:
         units = []
@@ -1505,6 +1791,11 @@ def main():
     if 'crowd' in info:
         print('%s: the crowd at %d size-and-look pairs: every thingy drawn through 135 right answers and to the floor, 16 px until the screen is full, then the largest size that fits, never under 6 px, nothing above it moved; the cheer by its size; the count on the results screen; the crowd of 120 drawn and sized in %s ms'
               % (SLUG, info['crowd'], ', '.join('%.1f' % m for m in info.get('crowd ms', []))))
+    for tag, both, drop, n, smallest, which in info.get('facts', []):
+        print('%s: %s: of %d Stage 4 items, %d show the fact as plates after a right and after a wrong answer, %d drop it%s; the smallest picture %.0f px; Next above the fold on every one; the thingy in glasses beside each, reacting'
+              % (SLUG, tag, n, both, drop, (' (%s)' % which) if which else '', smallest))
+    for tag, seen in info.get('facts crowd', []):
+        print('%s: %s, past question 10: %s' % (SLUG, tag, ', '.join('%s %d' % kv for kv in sorted(seen.items()))))
     if 'fit' in info:
         print('%s: every item above the fold at %dx%d, speaker showing: %d item views, %d feedback variants, %d controls measured (the looks and stages in this shard)'
               % (SLUG, PHONE[0], PHONE[1], info['fit']['items'], info['fit']['variants'], info['fit']['measures']))
