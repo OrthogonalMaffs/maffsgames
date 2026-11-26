@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 4's thingy in glasses reacting beside every question and each fact drawn as plates only after marking, a plates of b, shrunk or dropped so Next stays above the fold and the crowd keeps its size (SOME-THINGIES-FACTS: all 192 items at 320x568, 375x667 and 1280x720, both looks, normal and Aa); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
+# ci-shards: Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 4's thingy in glasses reacting beside every question and each fact drawn as plates only after marking, a plates of b, shrunk or dropped so Next stays above the fold and the crowd keeps its size (SOME-THINGIES-FACTS: all 192 items at 320x568, 375x667 and 1280x720, both looks, normal and Aa); the character beside the question, Sarge and the thingy in glasses, one measured size from 48 to 96 px beside the question where the room allows, else the top row at 22 px, the same before and after marking, never costing the fold, the fact picture or the crowd, the largest that fits (SOME-THINGIES-HOST: every Stage 3 and 4 item at 320x568, 375x667, 1366x768 and 1920x955, both looks, normal and Aa); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test) | | 1
 # ci-deps: games/some-thingies/ tools/some-thingies/
 r"""Independent verification for Some Thingies (games/some-thingies/), contract SOME-THINGIES, 21 Nov 2026.
 SR-30: checked from its first PR.
@@ -66,8 +66,8 @@ SOME-THINGIES-PERSONALITY (Jon, 21 Nov 2026):
   Scenes    the start screen's crowd (12-16 thingies) keeps the first Start button above the fold at every phone-fit size,
             both looks; the conga line (no line before a groups-to-sum item is marked) is g groups of n, one colour each
             in order, one group per line at 360 px and at 320 px (or stepped aside after marking at 320 x 568), with Next
-            above the fold; Sarge in the top row on a phone and beside the array on a wide screen, Next above the fold for
-            every array, his line on a right answer.
+            above the fold; Sarge beside the array where the card gives him a size, else in the top row (SOME-THINGIES-HOST),
+            Next above the fold for every array, his line on a right answer.
   Crowd     none in questions 1-10; from 11 the cheer and one more thingy per right answer, in colour order, every one
             drawn; the score always the game's; the run-ending wrong answer makes it faint, with the faint line.
 
@@ -113,8 +113,28 @@ SOME-THINGIES-FACTS (Jon, 26 Nov 2026), Stage 4, at 320 x 568, 375 x 667 and 128
             before and after marking is counted and printed: the marking's own feedback (and a right answer's new
             thingy) can resize a crowd that already fills the screen, as it did before this contract.
 
+SOME-THINGIES-HOST (Jon, 26 Nov 2026; SR-35), Stages 3 and 4, Main and Pro, at 320 x 568, 375 x 667, 1366 x 768 and
+1920 x 955, in each look, normal and Aa (fit_common.open_phone: the speaker showing, the real fonts):
+  Size      every item as question 1, right (the LINES.right line that takes the most height, measured here) and wrong,
+            played three times: as the page sizes the character, forced into the top row (as before this contract) and
+            forced one pixel bigger (48 px where the page chose the top row). On every screen (each step asked, after
+            marking) one character shows: in the top row alone at 22 px (card data-host "mini"), or at the card's size
+            from 48 to 96 px, Sarge beside the array and inside the picture's width, the thingy in glasses beside the sum
+            line, left of it, the sum not wider than its room; the drawn size the card's (one size for both characters);
+            the same size on every screen, before and after marking, right and wrong.
+  Fold      the options on every asking screen and Next after marking above the fold, no sideways scroll (against the
+            layout width: a phone zooms out to show an overflow); where it fails in the top row too, main loses the fold:
+            the item must be on HOST_KNOWN (CI's figures) and the character in the top row; an entry whose fold now holds
+            is stale. Stage 3's array marked but not yet turned (built here from the array as it stood: reduced motion
+            turns it at once): the character may not push Next lower than the fold or than it is in the top row.
+  Room      the character changes nothing the top row leaves: the fact picture shown or dropped alike and at the same
+            size, the sum as high. The largest that fits: one pixel more must break one of these rules on the item.
+  Crowd     past question 10 (as question 12), sampled as SOME-THINGIES-FACTS samples (each mode's smallest and largest
+            item of each stage with 60 in the crowd, the largest also with 1 and with a crowd big enough to shrink,
+            which must be seen): the crowd the same size before and after marking as in the top row, the fold held.
+
 Work units: "bank" (no browser), "scenes", "marking grown", "marking kids", "greeting", "read aloud", "play grown 360x640",
-"play kids 360x640", "winner 360x640", "crowd <look> <W>x<H>" (one per look and CROWD-FILL size), "facts <look> <W>x<H> <normal|Aa>" (one per look, SOME-THINGIES-FACTS size and reading mode), "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
+"play kids 360x640", "winner 360x640", "crowd <look> <W>x<H>" (one per look and CROWD-FILL size), "facts <look> <W>x<H> <normal|Aa>" (one per look, SOME-THINGIES-FACTS size and reading mode), "host <look> <W>x<H> <normal|Aa>" (one per look, SOME-THINGIES-HOST size and reading mode), "fit <look> <mode>-<stage>" (one per look, mode and stage), and "plant: <what>" (one per planted fault).
 
     python scripts/verify-some-thingies.py              # every unit, then the self-test
     python scripts/verify-some-thingies.py --selftest   # the planted faults only
@@ -163,6 +183,135 @@ CHEERS = {
 FACT_SIZES = [(320, 568), (375, 667), (1280, 720)]
 FACT_UNITS = ['facts %s %dx%d %s' % (look, sz[0], sz[1], aa) for look in ('grown', 'kids') for sz in FACT_SIZES for aa in ('normal', 'Aa')]
 FACT_CROWD_BIG = {False: 500, True: 1300}   # by the screen: a phone, a wide screen
+# SOME-THINGIES-HOST: the contract's sizes, each in both looks, normal and Aa; the character's sizes (the page's own).
+HOST_SIZES = [(320, 568), (375, 667), (1366, 768), (1920, 955)]
+HOST_UNITS = ['host %s %dx%d %s' % (look, sz[0], sz[1], aa) for look in ('grown', 'kids') for sz in HOST_SIZES for aa in ('normal', 'Aa')]
+HOST_MIN, HOST_MAX = 48, 96
+# Items where main already loses the fold (options or Next under it, right and wrong both played): the character stays in
+# the top row there. CI's own figures (the container's fallback fonts differ): (unit, item) -> what main loses, where.
+# Gate runs 45877385081 (375x667) and 45883950657 (320x568), CI's figures.
+HOST_KNOWN = {
+    ('host grown 320x568 Aa', 'm3-10r5c'): 'right: Next 538 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r10c'): 'right: Next 565 px / fold 528 px; wrong: Next 550 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r6c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r7c'): 'right: Next 537 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r8c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-2r9c'): 'right: Next 550 px / fold 528 px; wrong: Next 535 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-3r10c'): 'right: Next 565 px / fold 528 px; wrong: Next 550 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-3r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-4r10c'): 'right: Next 565 px / fold 528 px; wrong: Next 550 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-4r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r10c'): 'right: Next 565 px / fold 528 px; wrong: Next 550 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r6c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r7c'): 'right: Next 537 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r8c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-5r9c'): 'right: Next 550 px / fold 528 px; wrong: Next 535 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-6r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-7r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-8r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'm3-9r5c'): 'right: Next 545 px / fold 528 px; wrong: Next 530 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-10r3c'): 'right: the options on asking screen 3 541 px / fold 528 px; wrong: the options on asking screen 3 541 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-10r4c'): 'right: the options on asking screen 3 541 px / fold 528 px; Next 538 px / fold 528 px; wrong: the options on asking screen 3 541 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-2r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-2r8c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r10c'): 'right: Next 592 px / fold 528 px; wrong: Next 577 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r5c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r6c'): 'right: Next 570 px / fold 528 px; wrong: Next 554 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r7c'): 'right: Next 564 px / fold 528 px; wrong: Next 549 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r8c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-3r9c'): 'right: Next 577 px / fold 528 px; wrong: Next 562 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r10c'): 'right: Next 592 px / fold 528 px; wrong: Next 577 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r5c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r6c'): 'right: Next 570 px / fold 528 px; wrong: Next 554 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r7c'): 'right: Next 564 px / fold 528 px; wrong: Next 549 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r8c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-4r9c'): 'right: Next 577 px / fold 528 px; wrong: Next 562 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-5r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-5r8c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-6r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-6r8c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-7r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-8r4c'): 'right: Next 543 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-8r5c'): 'right: Next 572 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-8r6c'): 'right: Next 570 px / fold 528 px; wrong: Next 554 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-9r3c'): 'right: the options on asking screen 3 540 px / fold 528 px; wrong: the options on asking screen 3 540 px / fold 528 px',
+    ('host grown 320x568 Aa', 'p3-9r4c'): 'right: the options on asking screen 3 540 px / fold 528 px; Next 543 px / fold 528 px; wrong: the options on asking screen 3 540 px / fold 528 px',
+    ('host grown 375x667 Aa', 'm3-2r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-2r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-3r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-4r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-5r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'm3-5r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-3r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-3r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-4r10c'): 'wrong: Next 629 px / fold 627 px',
+    ('host grown 375x667 Aa', 'p3-4r9c'): 'wrong: Next 629 px / fold 627 px',
+    ('host kids 320x568 Aa', 'm3-10r5c'): 'wrong: Next 531 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r10c'): 'right: Next 553 px / fold 528 px; wrong: Next 558 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r6c'): 'right: Next 530 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r7c'): 'wrong: Next 530 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r8c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-2r9c'): 'right: Next 537 px / fold 528 px; wrong: Next 543 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-3r10c'): 'right: Next 553 px / fold 528 px; wrong: Next 558 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-3r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-4r10c'): 'right: Next 553 px / fold 528 px; wrong: Next 558 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-4r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r10c'): 'right: Next 553 px / fold 528 px; wrong: Next 558 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r6c'): 'right: Next 530 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r7c'): 'wrong: Next 530 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r8c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-5r9c'): 'right: Next 537 px / fold 528 px; wrong: Next 543 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-6r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-7r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-8r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'm3-9r5c'): 'right: Next 532 px / fold 528 px; wrong: Next 538 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-10r3c'): 'right: the options on asking screen 3 547 px / fold 528 px; wrong: the options on asking screen 3 547 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-10r4c'): 'right: the options on asking screen 3 547 px / fold 528 px; wrong: the options on asking screen 3 547 px / fold 528 px; Next 531 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-2r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-2r8c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r10c'): 'right: Next 580 px / fold 528 px; wrong: Next 585 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r5c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r6c'): 'right: Next 557 px / fold 528 px; wrong: Next 563 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r7c'): 'right: Next 552 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r8c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-3r9c'): 'right: Next 564 px / fold 528 px; wrong: Next 570 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r10c'): 'right: Next 580 px / fold 528 px; wrong: Next 585 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r5c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r6c'): 'right: Next 557 px / fold 528 px; wrong: Next 563 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r7c'): 'right: Next 552 px / fold 528 px; wrong: Next 557 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r8c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-4r9c'): 'right: Next 564 px / fold 528 px; wrong: Next 570 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-5r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-5r8c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-6r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-6r8c'): 'right: Next 559 px / fold 528 px; wrong: Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-7r4c'): 'right: Next 531 px / fold 528 px; wrong: Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-8r2c'): 'right: the options on asking screen 3 529 px / fold 528 px; wrong: the options on asking screen 3 529 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-8r3c'): 'right: the options on asking screen 3 529 px / fold 528 px; wrong: the options on asking screen 3 529 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-8r4c'): 'right: the options on asking screen 3 529 px / fold 528 px; Next 531 px / fold 528 px; wrong: the options on asking screen 3 529 px / fold 528 px; Next 536 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-8r5c'): 'right: the options on asking screen 3 529 px / fold 528 px; Next 559 px / fold 528 px; wrong: the options on asking screen 3 529 px / fold 528 px; Next 565 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-8r6c'): 'right: the options on asking screen 3 529 px / fold 528 px; Next 557 px / fold 528 px; wrong: the options on asking screen 3 529 px / fold 528 px; Next 563 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-9r3c'): 'right: the options on asking screen 3 546 px / fold 528 px; wrong: the options on asking screen 3 546 px / fold 528 px',
+    ('host kids 320x568 Aa', 'p3-9r4c'): 'right: the options on asking screen 3 546 px / fold 528 px; Next 531 px / fold 528 px; wrong: the options on asking screen 3 546 px / fold 528 px; Next 536 px / fold 528 px',
+    ('host kids 375x667 Aa', 'm3-2r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-2r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-3r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-4r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-5r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'm3-5r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-3r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-3r9c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-4r10c'): 'right: Next 632 px / fold 627 px',
+    ('host kids 375x667 Aa', 'p3-4r9c'): 'right: Next 632 px / fold 627 px',
+}
 TAGLINE = 'how many thingies can you collect'
 MENU_NOTE = 'At least 10 questions, then see how many thingies you can collect: keep going until a slip, or press End. A point for each one right.'
 
@@ -1073,8 +1222,10 @@ def check_crowd(pw, base, html, look, size, mode, out, info):
             # A shorter window shrinks it (resize); the first size brings it back; back at 125 it is 16 px again.
             page.evaluate('ST.ui.crowd(300)')
             a = view()
-            # Short enough that the crowd as it is ends 40 px past the new fold (or 200 px shorter, if that is shorter).
-            page.set_viewport_size({'width': size[0], 'height': int(min(size[1] - 200, size[1] - (a['fold'] - a['end']) - 40))})
+            # Short enough that the crowd as it is ends 40 px past the new fold (or 200 px shorter, if that is shorter),
+            # and HOST_MAX px more: the character beside the question gives way first (SOME-THINGIES-HOST), which can
+            # free up to that much before the crowd has to shrink.
+            page.set_viewport_size({'width': size[0], 'height': int(min(size[1] - 200, size[1] - (a['fold'] - a['end']) - 40 - HOST_MAX))})
             b = view()
             ok = crowd_judge('%s at 300, the window shorter' % tag, b, 300, look, out, seen)
             if ok and not b['w'] < a['w']:
@@ -1122,7 +1273,8 @@ FACT_JS = r"""async (plays) => { const all = []; let count = 0;
   const fold = () => innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
   const card = $('qcard'), p = $('pic'), c = $('crowd');
   const end = () => card.getBoundingClientRect().bottom + scrollY;
-  const mini = () => { const m = $('sargeMini'), ths = [...m.querySelectorAll('svg')], t = ths[0] || null, r = t ? t.getBoundingClientRect() : null;
+  // The character beside the question: the quiz-show host where the card is .host-big (SOME-THINGIES-HOST), else the top row's.
+  const mini = () => { const m = card.classList.contains('host-big') ? $('host') : $('sargeMini'), ths = [...m.querySelectorAll('svg')], t = ths[0] || null, r = t ? t.getBoundingClientRect() : null;
     const on = (sel) => !!t && !!t.querySelector(sel) && getComputedStyle(t.querySelector(sel)).display !== 'none';
     return { n: ths.length, acc: t ? (t.dataset.acc || null) : null, k: t ? +(((t.getAttribute('class') || '').match(/\bk(\d+)\b/) || [])[1] || 0) : 0,
              lenses: t ? t.querySelectorAll('.a-lens').length : 0, medal: !!(t && t.querySelector('.medal')), text: m.textContent.trim(),
@@ -1339,13 +1491,269 @@ def check_facts(pw, base, html, look, size, aa, out, info):
     br.close()
 
 
+HOST_JS = r"""async (plays) => { const all = []; let count = 0;
+ for (const [id, at, right, line, crowd, force] of plays) { all.push(await (async () => {
+  const $ = (i) => document.getElementById(i);
+  const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+  const f = document.querySelector('.site-footer');
+  const fold = () => innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  const card = $('qcard'), p = $('pic'), c = $('crowd');
+  const end = (e) => e.getBoundingClientRect().bottom + scrollY;
+  const box = (e) => { const r = e.getBoundingClientRect(); return { l: r.left, r: r.right, t: r.top + scrollY, b: r.bottom + scrollY, w: r.width, h: r.height }; };
+  // The character: which of the three places shows it, its drawn box, and where the question is.
+  const who = () => { const els = { mini: $('sargeMini'), host: $('host'), wide: $('sargeWide') }, shown = [];
+    for (const k of Object.keys(els)) { const e = els[k], t = e && e.querySelector('svg');
+      if (t && getComputedStyle(e).display !== 'none' && t.getBoundingClientRect().width > 0) shown.push(k); }
+    const k = shown[0], t = k ? els[k].querySelector('svg') : null, arr = $('arr'), w = p.querySelector('.arr-wrap');
+    return { data: card.dataset.host || null, shown: shown, box: t ? box(t) : null, sarge: !!(t && t.classList.contains('sarge')),
+             card: box(card), qhead: box(card.querySelector('.qhead')), sum: $('sum').textContent.trim() ? box($('sum')) : null,
+             arr: arr ? box(arr) : null, wrap: w ? box(w) : null, pic: box(p), sumOver: $('sum').scrollWidth > $('sum').clientWidth + 1 }; };
+  const optsLow = () => Math.max(0, ...[...document.querySelectorAll('#opts .opt, #opts1 .opt')].filter(b => b.offsetParent).map(end));
+  const crowdNow = () => { const ths = [...c.querySelectorAll('svg.th')], ws = ths.map(t => t.getBoundingClientRect().width);
+    return { n: ths.length, w: ws.length ? Math.min(...ws) : 0, wmax: ws.length ? Math.max(...ws) : 0 }; };
+  const picNow = () => { const ths = [...p.querySelectorAll('.plate svg.th')];
+    return { fact: p.dataset.fact || null, n: ths.length, w: ths.length ? ths[0].getBoundingClientRect().width : 0 }; };
+  ST.ui.preview(id, at);
+  if (at > 10) ST.ui.crowd(crowd);
+  // A size forced here (0: the top row), after the page has chosen its own, to judge the page's choice against.
+  if (force !== null) { card.classList.toggle('host-big', force > 0); if (force > 0) card.style.setProperty('--host', force + 'px'); card.dataset.host = force > 0 ? String(force) : 'mini'; }
+  const q = ST.ui.question(), o = { id: q ? q.id : null, qi: ST.ui.qi(), fold: fold(), asks: [], sumH: $('sum').getBoundingClientRect().height };
+  o.before = who(); o.crowdBefore = crowdNow();
+  while (ST.ui.state() === 'rows' || ST.ui.state() === 'cols') { o.asks.push({ low: optsLow(), who: who() }); ST.ui.step(String(ST.ui.state() === 'rows' ? q.rows : q.cols)); }
+  o.asks.push({ low: optsLow(), who: who() });
+  // Stage 3: the array as it stands before it turns round, to show it again with the feedback (reduced motion turns it
+  // at once, so the 780 ms a student sees it marked but not yet turned is built here).
+  const was = p.querySelector('.arr-wrap') ? p.querySelector('.arr-wrap').cloneNode(true) : null;
+  if (right) ST.ui.answer(true, line); else ST.ui.answer(false);
+  if (at > 10 || count++ % 20 === 0) await frames();
+  const nb = document.querySelector('#feedback .maffs-next, #nextBtn');
+  o.after = who(); o.state = ST.ui.state(); o.next = nb ? end(nb) : null;
+  // Sideways against the layout width: a phone zooms out to show what overflows, so innerWidth grows with it.
+  o.sideways = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+  o.crowd = crowdNow(); o.pic = picNow(); o.sumAfter = $('sum').getBoundingClientRect().height;
+  if (was && nb) { const turned = [...p.childNodes]; p.replaceChildren(was); o.turning = end(nb); p.replaceChildren(...turned); }
+  return o; })()); }
+ return all; }"""
+TALLEST_JS = r"""() => { const s = document.getElementById('say'), was = s.textContent, L = ST.lines()[ST.LOOK]['right'];
+  let best = 0, top = -1; L.forEach((t, i) => { s.textContent = t; const h = s.getBoundingClientRect().height; if (h > top) { top = h; best = i; } });
+  s.textContent = was; return best; }"""
+
+
+def host_box(tag, o, when, w, q, out):
+    """The character's size and place on one screen (SOME-THINGIES-HOST). Returns its size (0 for the top row) or None."""
+    s3 = q['type'] == 'array'
+    if w['data'] == 'mini':
+        if w['shown'] != ['mini'] or not w['box'] or abs(w['box']['w'] - 22) > 0.5 or abs(w['box']['h'] - 22) > 0.5:
+            out.append('%s %s: in the top row the character shows as %s (%s px), expected the top row\'s alone at 22 px'
+                       % (tag, when, w['shown'], '%.1f' % w['box']['w'] if w['box'] else '-'))
+            return None
+        b, h = w['box'], w['qhead']
+        if b['t'] < h['t'] - 0.5 or b['b'] > h['b'] + 0.5:
+            out.append('%s %s: the character is not in the card\'s top row' % (tag, when))
+        return 0
+    try:
+        sz = int(w['data'])
+    except (TypeError, ValueError):
+        out.append('%s %s: the card gives the character no size (data-host %r)' % (tag, when, w['data']))
+        return None
+    want = 'wide' if s3 else 'host'
+    if not HOST_MIN <= sz <= HOST_MAX:
+        out.append('%s %s: the character is given %d px, outside %d to %d' % (tag, when, sz, HOST_MIN, HOST_MAX))
+    if w['shown'] != [want]:
+        out.append('%s %s: at %d px the character shows as %s, expected %s alone' % (tag, when, sz, w['shown'], 'Sarge beside the array' if s3 else 'the host beside the sum'))
+        return None
+    b = w['box']
+    if abs(b['w'] - sz) > 0.5 or abs(b['h'] - sz) > 0.5:
+        out.append('%s %s: %s is drawn at %.0f px, not the %d px the card gives (one size for both characters)'
+                   % (tag, when, 'Sarge' if s3 else 'the thingy in glasses', b['w'], sz))
+    c = w['card']
+    if b['l'] < c['l'] - 0.5 or b['r'] > c['r'] + 0.5:
+        out.append('%s %s: the character is drawn outside the card' % (tag, when))
+    if s3:
+        a, wr, pc_ = w['arr'], w['wrap'], w['pic']
+        if not a or b['l'] < a['r'] - 0.5 or b['t'] < wr['t'] - 0.5 or b['b'] > wr['b'] + 0.5:
+            out.append('%s %s: Sarge is not beside the array' % (tag, when))
+        elif any(x['l'] < pc_['l'] - 0.5 or x['r'] > pc_['r'] + 0.5 for x in (wr, a, b)):
+            out.append('%s %s: the array and Sarge are wider than their room (the picture\'s width)' % (tag, when))
+    else:
+        m = w['sum']
+        if not m or b['r'] > m['l'] + 0.5 or not b['t'] - 0.5 <= (m['t'] + m['b']) / 2 <= b['b'] + 0.5:
+            out.append('%s %s: the thingy in glasses is not beside the sum line' % (tag, when))
+        elif w['sumOver']:
+            out.append('%s %s: beside the thingy in glasses the sum is wider than its room' % (tag, when))
+    return sz
+
+
+def host_play(tag, q, o, out, m=None):
+    """One play's screens: (size, the fold's findings as (screen, end, fold)). Size None when the play went wrong. m: the
+    same play with the character in the top row, against which Stage 3's marked array before it turns is judged: the
+    character may not push Next lower there than the fold or than it is without it (a screen today's measurements, under
+    reduced motion, never see)."""
+    if o['id'] != q['id']:
+        out.append('%s: the play went wrong (item %s)' % (tag, o['id']))
+        return None, []
+    sizes, lost = [], []
+    for k, a in enumerate(o['asks']):
+        sizes.append(host_box(tag, o, 'asking (screen %d)' % (k + 1), a['who'], q, out))
+        if a['low'] > o['fold'] + 0.5:
+            lost.append(('the options on asking screen %d' % (k + 1), a['low']))
+    sizes.append(host_box(tag, o, 'after marking', o['after'], q, out))
+    if o['next'] is None:
+        out.append('%s: no Next after marking' % tag)
+    elif o['next'] > o['fold'] + 0.5:
+        lost.append(('Next', o['next']))
+    if o['sideways'] > 0:
+        lost.append(('the page (sideways by %d px)' % o['sideways'], o['fold'] + o['sideways']))
+    if m is not None and o.get('turning') is not None and m.get('turning') is not None and o['turning'] > max(o['fold'], m['turning']) + 0.5:
+        lost.append(('Next before the array turns round (%.0f px in the top row)' % m['turning'], o['turning']))
+    if None in sizes:
+        return None, lost
+    if len(set(sizes)) != 1:
+        out.append('%s: the character\'s size changed at marking: %s px before, %s px after' % (tag, sizes[0] or 22, sizes[-1] or 22))
+        return None, lost
+    return sizes[0], lost
+
+
+def host_same(o, m):
+    """Whether the play o kept everything the play m (the top row, as before this contract) gave: the fact picture, the
+    crowd, the sum on as many lines."""
+    return (o['pic']['fact'] == m['pic']['fact'] and o['pic']['n'] == m['pic']['n'] and abs(o['pic']['w'] - m['pic']['w']) < 0.01
+            and abs(o['crowd']['w'] - m['crowd']['w']) < 0.01 and abs(o['crowdBefore']['w'] - m['crowdBefore']['w']) < 0.01
+            and abs(o['sumH'] - m['sumH']) < 0.5)
+
+
+def check_host(pw, base, html, look, size, aa, out, info):
+    """SOME-THINGIES-HOST: every Stage 3 and Stage 4 item, Main and Pro, in one look at one size, normal or Aa (the speaker
+    showing, the real fonts: fit_common.open_phone), right (the tallest LINES.right line here) and wrong, three times:
+    as the page sizes the character, with it forced into the top row (as before this contract) and forced one pixel
+    bigger (48 px where the page chose the top row)."""
+    tag = 'host %s %dx%d %s' % (look, size[0], size[1], aa)
+    br, page, errs = fc.open_phone(pw, base, html, SLUG, '!!window.ST && !!ST.ui', '#kids/Example' if look == 'kids' else '', size)
+    n0 = len(out)
+    try:
+        if aa == 'Aa':
+            page.evaluate("document.getElementById('a11yToggle').click()")
+        if page.evaluate("document.body.classList.contains('accessible')") != (aa == 'Aa') or page.evaluate("document.body.classList.contains('look-kids')") != (look == 'kids'):
+            out.append('%s: the page is not in the %s look, %s' % (tag, look, aa))
+        page.evaluate('document.fonts.ready.then(() => 1)')
+        items = [q for q in page.evaluate('ST.bank()') if q['stage'] in (3, 4)]
+        page.evaluate('(id) => ST.ui.preview(id, 1)', [q['id'] for q in items if q['stage'] == 4][0])
+        line = page.evaluate(TALLEST_JS)
+        sizes, known, lost_main = Counter(), set(), []
+
+        def play(batch):
+            got = []
+            for i in range(0, len(batch), 48):
+                got += page.evaluate(HOST_JS, batch[i:i + 48])
+            return got
+        # Every item as question 1, right and wrong: as the page sizes it, and in the top row.
+        plays = [[q['id'], 1, right, line, 0, force] for q in items for right in (True, False) for force in (None, 0)]
+        got = play(plays)
+        chosen = {}
+        def hard():
+            # Findings so far, less the known-list ones (every one of those is wanted, to copy into HOST_KNOWN).
+            return sum(1 for f in out[n0:] if 'put it on HOST_KNOWN' not in f)
+        for k, q in enumerate(items):
+            if hard() > 12:
+                break
+            res = []
+            for j, right in enumerate((True, False)):
+                o, m = got[4 * k + 2 * j], got[4 * k + 2 * j + 1]
+                t2 = '%s %s (%s)' % (tag, q['id'], 'right' if right else 'wrong')
+                sz, lost = host_play(t2, q, o, out, m)
+                _, lost_m = host_play(t2 + ' in the top row', q, m, [])
+                if sz is None:
+                    continue
+                res.append(sz)
+                if lost and lost_m:
+                    # Main loses the fold here too: it must be on the known list, and the character stays in the top row.
+                    key = (tag, q['id'])
+                    known.add(key)
+                    lost_main.append('%s: %s' % (t2, '; '.join('%s ends at %.0f px, the fold at %.0f px' % (w, e, o['fold']) for w, e in lost_m)))
+                    if key not in HOST_KNOWN:
+                        out.append('%s: main loses the fold here too (%s): put it on HOST_KNOWN with these figures, or fix it'
+                                   % (t2, '; '.join('%s ends at %.0f px, the fold at %.0f px' % (w, e, o['fold']) for w, e in lost_m)))
+                    if sz:
+                        out.append('%s: main loses the fold here, but the character is at %d px, not in the top row' % (t2, sz))
+                elif lost:
+                    out.append('%s: with the character at %s px, %s ends at %.0f px, below the fold at %.0f px (it fits there in the top row)'
+                               % (t2, sz or 22, lost[0][0], lost[0][1], o['fold']))
+                elif not host_same(o, m):
+                    out.append('%s: the character at %d px changed what the top row leaves (picture %s at %.1f px, crowd %.1f px, sum %.0f px high; in the top row %s at %.1f px, %.1f px, %.0f px)'
+                               % (t2, sz, o['pic']['fact'], o['pic']['w'], o['crowd']['w'], o['sumH'], m['pic']['fact'], m['pic']['w'], m['crowd']['w'], m['sumH']))
+            if len(set(res)) > 1:
+                out.append('%s %s: the character is %s px when answered right and %s px when answered wrong: the size must not depend on the answer'
+                           % (tag, q['id'], res[0] or 22, res[1] or 22))
+            elif res:
+                chosen[q['id']] = res[0]
+                sizes[(q['stage'], res[0])] += 1
+        # The largest that fits: one pixel more (48 px for the top row) must cost the fold, the picture, the crowd or
+        # the sum's line, or not fit its room, on one of the item's screens.
+        plays = [[q['id'], 1, right, line, 0, chosen[q['id']] + 1 if chosen[q['id']] else HOST_MIN]
+                 for q in items if q['id'] in chosen and chosen[q['id']] < HOST_MAX for right in (True, False)]
+        bigger = play(plays)
+        ix = {(p[0], p[2]): b for p, b in zip(plays, bigger)}
+        for q in items:
+            if q['id'] not in chosen or chosen[q['id']] >= HOST_MAX or hard() > 12:
+                continue
+            ok, fb = True, HOST_MIN if not chosen[q['id']] else chosen[q['id']] + 1
+            for j, right in enumerate((True, False)):
+                b, m = ix[(q['id'], right)], got[4 * items.index(q) + 2 * j + 1]
+                sink = []
+                sz, lost = host_play('', q, b, sink, m)
+                ok = ok and not sink and not lost and host_same(b, m)
+            if ok:
+                out.append('%s %s: the character is %s though %d px fits every screen of it' % (tag, q['id'], ('%d px' % chosen[q['id']]) if chosen[q['id']] else 'in the top row', fb))
+        for key in HOST_KNOWN:
+            if key[0] == tag and key not in known:
+                out.append('%s %s: on HOST_KNOWN, but main\'s fold holds here now: take it off the list (stale)' % key)
+        # Past question 10 (as question 12), sampled as SOME-THINGIES-FACTS samples: each mode's smallest and largest
+        # item of each stage with 60 in the crowd, the largest also with 1 and with a crowd big enough to shrink: the
+        # crowd the same size before and after marking as with the character in the top row, and the fold held.
+        seen, plays = Counter(), []
+        for md in ('main', 'pro'):
+            for st in (3, 4):
+                key = (lambda x: x['rows'] * x['cols']) if st == 3 else (lambda x: fact_plates(x)[0] * fact_plates(x)[1])
+                mine = sorted((x for x in items if x['mode'] == md and x['stage'] == st), key=lambda x: (key(x), x['id']))
+                for q, crowd, right in [(mine[0], 60, True), (mine[0], 60, False), (mine[-1], 60, True), (mine[-1], 60, False),
+                                        (mine[-1], 1, True), (mine[-1], 1, False), (mine[-1], FACT_CROWD_BIG[size[0] > 600], False)]:
+                    plays += [[q['id'], 12, right, line, crowd, None], [q['id'], 12, right, line, crowd, 0]]
+        crowd_got = play(plays)
+        for k in range(0, len(plays), 2):
+            o, m = crowd_got[k], crowd_got[k + 1]
+            q = [x for x in items if x['id'] == plays[k][0]][0]
+            t2 = '%s %s as question 12, %d in the crowd (%s)' % (tag, q['id'], plays[k][4], 'right' if plays[k][2] else 'wrong')
+            sz, lost = host_play(t2, q, o, out, m)
+            _, lost_m = host_play(t2, q, m, [])
+            if sz is None:
+                continue
+            seen['%s px' % sz if sz else 'top row'] += 1
+            if lost and not lost_m:
+                out.append('%s: with the character at %s px, %s ends at %.0f px, below the fold at %.0f px (it fits there in the top row)'
+                           % (t2, sz or 22, lost[0][0], lost[0][1], o['fold']))
+            if abs(o['crowdBefore']['w'] - m['crowdBefore']['w']) > 0.01 or abs(o['crowd']['w'] - m['crowd']['w']) > 0.01:
+                out.append('%s: the crowd is %.1f then %.1f px with the character at %s px, %.1f then %.1f px without it'
+                           % (t2, o['crowdBefore']['w'], o['crowd']['w'], sz or 22, m['crowdBefore']['w'], m['crowd']['w']))
+            if o['crowd']['w'] < 15.99:
+                seen['crowd shrunk to fit'] += 1
+        if len(out) == n0 and not seen['crowd shrunk to fit']:
+            out.append('%s: no crowd was seen shrunk to fit: the character was never tried against a full screen' % tag)
+        info.setdefault('host', []).append((tag, dict(sizes), dict(seen), lost_main))
+        still(page, tag, out)
+    except Exception as e:  # noqa: BLE001
+        out.append('%s threw: %s' % (tag, str(e).splitlines()[0][:220]))
+    out.extend('page error (%s): %s' % (tag, e) for e in errs if 'production host' not in e)
+    br.close()
+
+
 CONGA_JS = r"""() => { const line = document.getElementById('conga');
   if (!line) return null;
   return [...line.querySelectorAll('.cgroup')].map(g => { const r = g.getBoundingClientRect();
     return { top: Math.round(r.top), n: g.querySelectorAll('svg.th').length,
              ks: [...new Set([...g.querySelectorAll('svg.th')].map(t => +((t.getAttribute('class').match(/\bk(\d+)\b/) || [])[1])))] }; }); }"""
 SARGE_JS = r"""() => { const vis = (e) => !!e && e.getBoundingClientRect().width > 0 && getComputedStyle(e).display !== 'none';
-  return { mini: vis(document.querySelector('#sargeMini svg.sarge')), wide: vis(document.querySelector('#sargeWide svg.sarge')) }; }"""
+  return { mini: vis(document.querySelector('#sargeMini svg.sarge')), wide: vis(document.querySelector('#sargeWide svg.sarge')),
+           host: document.getElementById('qcard').dataset.host }; }"""
 START_JS = r"""() => { const f = document.querySelector('.site-footer'); const fold = innerHeight - (getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
   const b = document.querySelector('#stageList .stage-btn'); return { bottom: b.getBoundingClientRect().bottom + scrollY, fold: fold,
   crowd: document.querySelectorAll('#crowdStart svg.th').length, sw: document.documentElement.scrollWidth > innerWidth }; }"""
@@ -1395,16 +1803,18 @@ def check_scenes(pw, base, html, out, info):
                     if phone and size[0] <= 360 and len({g['top'] for g in cg}) != len(cg):
                         out.append('%s %s: the conga line puts %d groups on %d lines (one group per line on a phone)' % (tag, i, len(cg), len({g['top'] for g in cg})))
                     check_thingies(page, '#pic', q['mode'] == 'pro', '%s %s conga' % (tag, i), out)
-                # Stage 3, the parade ground: Sarge beside the array on a wide screen, in the top row on a phone; Next
-                # after marking above the fold for every array, as question 1 (labels on) and as question 8.
+                # Stage 3, the parade ground: Sarge beside the array where the card gives him a size (SOME-THINGIES-HOST),
+                # else in the top row; Next after marking above the fold for every array, as question 1 (labels on) and
+                # as question 8.
                 for q in items:
                     if q['type'] != 'array':
                         continue
                     for at in (1, 8):
                         page.evaluate('([id, at]) => ST.ui.preview(id, at)', [q['id'], at])
                         sg = page.evaluate(SARGE_JS)
-                        if sg != {'mini': phone, 'wide': not phone}:
-                            out.append('%s %s: Sarge %s, expected %s' % (tag, q['id'], sg, 'in the top row' if phone else 'beside the array'))
+                        big = sg.pop('host') != 'mini'
+                        if sg != {'mini': not big, 'wide': big}:
+                            out.append('%s %s: Sarge %s, expected %s' % (tag, q['id'], sg, 'beside the array' if big else 'in the top row'))
                         page.evaluate('(r) => ST.ui.answer(r)', at == 1)
                         fc.fit(page, '#feedback .maffs-next, #nextBtn', '%s %s as question %d (Next, with Sarge)' % (tag, q['id'], at), out, pic=PIC)
                         if at == 1 and page.evaluate("document.getElementById('say').textContent") != page.evaluate('ST.lines()')[look]['sarge']:
@@ -1588,6 +1998,10 @@ def check(html, out, units, shard=None):
                         sz = tuple(int(x) for x in wh.split('x'))
                         check_crowd(pw, base, html, look, sz, dict(CROWD_SIZES)[sz], out, info)
                         continue
+                    if uid.startswith('host '):
+                        _, look, wh, aa = uid.split(' ')
+                        check_host(pw, base, html, look, tuple(int(x) for x in wh.split('x')), aa, out, info)
+                        continue
                     if uid.startswith('facts '):
                         _, look, wh, aa = uid.split(' ')
                         check_facts(pw, base, html, look, tuple(int(x) for x in wh.split('x')), aa, out, info)
@@ -1715,12 +2129,23 @@ PLANTS = [
      edit("p.style.setProperty('--ps', sz + 'px'); if (!over()) return; }", "p.style.setProperty('--ps', sz + 'px'); return; }"),
      'facts grown 320x568 normal', r'Next ends at \d+ px, below the fold at \d+ px \(picture shown at 18 px\)'),
     ('the thingy beside the question left without its reaction',
-     edit("['pic', 'sargeMini'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });",
+     edit("['pic', 'sargeMini', 'host'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });",
           "['pic'].forEach(function (id) { $(id).classList.add(right ? 'react-right' : 'react-wrong'); });"),
      'facts kids 1280x720 Aa', r'the thingy beside the question does not react after a right answer'),
     ('the picture drawn without looking at the crowd',
      edit("    var crowd = !!$('crowd').querySelector('.th');\n    function over() {", "    var crowd = false;\n    function over() {"),
      'facts grown 375x667 Aa', r'the picture does not fit the room the crowd of \d+ leaves'),
+    # SOME-THINGIES-HOST's three.
+    ('the character fixed at 96 px whatever the room',
+     edit("    setHost(best);\n  }\n  function roomChanged()", "    setHost(HOST_MAX);\n  }\n  function roomChanged()"),
+     'host grown 320x568 normal', r'with the character at 96 px, .* below the fold at \d+ px \(it fits there in the top row\)|the array and Sarge are wider than their room'),
+    ('the character\'s size changing at marking',
+     edit("    fitCrowd();\n    factPic();\n    if (window.MaffsScroll)",
+          "    fitCrowd();\n    factPic();\n    if ($('qcard').classList.contains('host-big')) setHost(HOST_MIN);\n    if (window.MaffsScroll)"),
+     'host grown 1920x955 normal', r"the character's size changed at marking: 96 px before, 48 px after"),
+    ('Sarge left at 30 px while the thingy in glasses grows',
+     edit(".host .th,.sarge-wide .th{width:var(--host);height:var(--host)}", ".host .th{width:var(--host);height:var(--host)}.sarge-wide .th{width:30px;height:30px}"),
+     'host kids 1366x768 normal', r'Sarge is drawn at 30 px, not the \d+ px the card gives'),
     # PRIMARY-FIT-SWEEP: the fold, on one item and one feedback variant only (a sample would miss it most runs).
     ('Next below the fold after one right-answer line only (right.4, m1-3x2)',
      edit("    if (Q.type === 'array') turnArray();\n",
@@ -1764,6 +2189,7 @@ def main():
     units = ['bank', 'marking grown', 'marking kids', 'greeting', 'read aloud', 'play grown %dx%d' % PHONE, 'play kids %dx%d' % PHONE, WINNER, SCENES, TURN]
     units += CROWD_UNITS
     units += FACT_UNITS
+    units += HOST_UNITS
     units += ['fit %s %s' % (look, m) for look in ('grown', 'kids') for m in MODES]
     if args.selftest:
         units = []
@@ -1794,6 +2220,10 @@ def main():
     for tag, both, drop, n, smallest, which in info.get('facts', []):
         print('%s: %s: of %d Stage 4 items, %d show the fact as plates after a right and after a wrong answer, %d drop it%s; the smallest picture %.0f px; Next above the fold on every one; the thingy in glasses beside each, reacting'
               % (SLUG, tag, n, both, drop, (' (%s)' % which) if which else '', smallest))
+    for tag, sizes, seen, lost in info.get('host', []):
+        print('%s: %s: the character beside the question, by stage and size (0 = the top row): %s; past question 10: %s%s'
+              % (SLUG, tag, ', '.join('Stage %d %s %d' % (k[0], ('%d px' % k[1]) if k[1] else 'top row', v) for k, v in sorted(sizes.items())),
+                 ', '.join('%s %d' % kv for kv in sorted(seen.items())), ('; main loses the fold: ' + ' | '.join(lost)) if lost else ''))
     for tag, seen in info.get('facts crowd', []):
         print('%s: %s, past question 10: %s' % (SLUG, tag, ', '.join('%s %d' % kv for kv in sorted(seen.items()))))
     if 'fit' in info:
