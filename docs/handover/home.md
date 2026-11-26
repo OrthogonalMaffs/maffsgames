@@ -25,7 +25,7 @@ Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-ti
 - **Decided here:** the arm extends from the doorway; it does not slide as a fixed-length piece. A fixed-length arm sliding with the bird would stick out of the far side of the house while the bird is in, and past the drawing's edge. Measured every 20 ms of a right answer and through a wrong answer's transition at 1366x768, 320x568 and 1920x955: the bird is on the arm whenever it shows.
 - **The drawing's box does not grow** (the arm lies inside the bird's reach), so the clock's size, the fold figures and `data/large-screen.json` are untouched.
 - **Verifier:** the bird units also hold the perch showing and within 1 drawing unit of the door's box and the bird's at each sampled moment of the hold, after a wrong answer and in both reduced-motion states. Two plants: the perch removed, and the perch left behind at the door. Run locally: both bird units pass, both plants and the two older bird plants caught.
-- **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, #930)."; row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
+- **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, PR 930)." ("PR 930", not "#930": the first Gate, check-site 45887805820, failed only on the Theme check, which read "#930" in the page as a hex colour outside :root); row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
 - **Screenshot** (the bird out on its perch at 1366x768): in the report to Jon; no image is committed.
 - **Run IDs:** in the close-out, as usual.
 
