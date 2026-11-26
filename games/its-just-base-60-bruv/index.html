@@ -743,7 +743,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     var fold = foldLine() - CK.SPARE, size = 0, low = reach(CK.MIN);
     // The room is in screen px; the clock's width is in the page's own px. Under the large-screen layer's zoom
     // (schools/assets/large-screen.js: zoom on <html>, boxes measured in screen px) one page px is z screen px.
-    var card = $('qcard'), z = card.offsetWidth ? card.getBoundingClientRect().width / card.offsetWidth : 1;
+    var card = $('qcard'), z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
     if (low <= fold) {
       // A taller clock moves everything under it down by its own extra height, so the room left at CK.MIN gives the size.
       size = Math.min(CK.MAX, card.clientWidth - 24, Math.floor(CK.MIN + (fold - low) / (CK.H * z)));

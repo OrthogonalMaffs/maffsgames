@@ -881,7 +881,7 @@ CK_JS = r"""async ([id, val, force]) => {
   const fold = innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
   const low = (els) => { let m = null; for (const e of els) { if (!e.getClientRects().length) continue; const b = e.getBoundingClientRect(); if (b.height) m = Math.max(m === null ? -1e9 : m, b.bottom + scrollY); } return m; };
   // The clock's width in the page's own px: under the large-screen layer's zoom boxes are in screen px (z per page px).
-  const card = document.getElementById('qcard'), z = card.getBoundingClientRect().width / card.offsetWidth;
+  const card = document.getElementById('qcard'), z = parseFloat(getComputedStyle(document.documentElement).zoom) || 1;
   const box = () => { const r = ck.getBoundingClientRect(), a = document.getElementById('ask').getBoundingClientRect(), c = card.getBoundingClientRect();
     return { w: Math.round(r.width / z * 10) / 10, z: Math.round(z * 100) / 100, place: ck.parentElement.id === 'ckTop' ? 'top' : (ck.parentElement.classList.contains('stage-row') ? 'row' : String(ck.parentElement.className)),
              row: getComputedStyle(document.querySelector('.stage-row')).display !== 'none',
@@ -999,7 +999,8 @@ BIRD_JS = r"""(t) => {
   if (a && t !== null) { a.pause(); a.currentTime = t; }
   const r = bird.getBoundingClientRect(), h = roof.getBoundingClientRect(), cs = getComputedStyle(bird);
   return { state: ck.getAttribute('data-state'), n: anims.length, dur: a ? a.effect.getComputedTiming().duration : null,
-           out: r.right < h.left, gap: h.left - r.right, op: Number(cs.opacity), tf: cs.transform, w: ck.getBoundingClientRect().width };
+           out: r.right < h.left, gap: h.left - r.right, op: Number(cs.opacity), tf: cs.transform,
+           w: ck.getBoundingClientRect().width / (parseFloat(getComputedStyle(document.documentElement).zoom) || 1) };
 }"""
 HOLD = [300, 600, 900, 1200, 1450]   # ms into the right answer's animation: the bird must be out, and showing, at each
 
@@ -1176,7 +1177,7 @@ PLANTS = [
      'ck 1920x955 normal stage-1', r'the clock is 160 px \(top\) before marking and 80 px \(top\) after'),
     ('the bird not leaving the house on a right answer', [('.ck-bird{--out:-24px;', '.ck-bird{--out:-11px;')],
      'bird 1920x955', r'ms into a right answer the bird does not leave the house'),
-    ('the clock left at its smallest where there is room', [('Math.floor(CK.MIN + (fold - low) / CK.H)', 'CK.MIN')],
+    ('the clock left at its smallest where there is room', [('Math.floor(CK.MIN + (fold - low) / (CK.H * z))', 'CK.MIN')],
      'ck 1920x955 normal stage-1', r'the clock is 80 px with \d+ px unused under its tallest screen'),
     ('reduced motion ignored', [('@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}', '')],
      'bird 1920x955', r'reduced motion, right answer: [1-9]\d* animation'),
