@@ -66,7 +66,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
-## 2026-11-26 (cloud): DAILY-FIT (MaffsCards' Play today's deal button stays above the fold whether or not Jon's result shows; the verifier tests fixed daily states; `docs/handover/contracts/2026-11-26-daily-fit.md`)
+## 2026-11-26 (cloud): DAILY-POLISH (a reload of MaffsCards always shows Jon's latest daily result; the daily workflow's form takes 26/11/2026; `docs/handover/contracts/2026-11-26-daily-polish.md`)
+
+Claude Code (cloud, lane 2), branch `claude/inspiring-knuth-b1nns9` from main f060351. Medium tier, merge on green. First commit: this contract and DAILY-FIT's close-out (in its entry below).
+- **Next:** the page's request, the verifier's unit and plant, the date validator, the workflow label, the phone-fallback doc; then the PR, its Gate, merge-pr.py, main's run.
+
+## 2026-11-26 (cloud): DAILY-FIT (MaffsCards' Play today's deal button stays above the fold whether or not Jon's result shows; the verifier tests fixed daily states; `docs/history/contracts/2026-11-26-daily-fit.md`)
 
 Claude Code (cloud, lane 2), branch `claude/kind-cray-f7yzoa` from main d70d809. Medium tier; merge on green with Jon's one override of main's red (26 Nov, 12:12; text in the contract's step 5). First commit: this contract and CROWD-FILL's close-out (in its entry below).
 - **Stopped on STOP IF 1, then Amendment 1 (Jon, 26 Nov, in session; appended to the contract):** Play today's deal cannot be above the fold at 320x568 (normal and Aa) or 375x667 Aa even with the art at 40% (it is under the fold there on main with no result: the rules paragraphs take the room). Jon: strict where it fits (375x667; 1280x720 and 1920x1080, normal and Aa); elsewhere never lower than on a no-result day, the art full size.
@@ -75,7 +80,8 @@ Claude Code (cloud, lane 2), branch `claude/kind-cray-f7yzoa` from main d70d809.
 - **REPORTED for Jon (a line pushes these under the fold; not failed):** 1920x1080 Aa only: with the longest pool lost line, Deal the cards (67 px under); with a 240-character line, Easy and Hard (76 px) and Deal the cards (145 px). At the other sizes no start control below the Play button is above the fold on a no-result day either.
 - **Verifier (scripts/verify-maffscards.py):** `open_page` pins a not-played daily.json for every unit (`NOT_PLAYED_FILE`); `dailyui` runs each fetched-file case over a stand-in for the committed file and fails if the page shows it; the art unit runs 4 sizes x normal and Aa x 3 states (docstring, art and pinned); three plants.
 - **For Project Claude:** the phone-fit workflow still loads the committed daily.json (not in this contract); the small-phone position of the Play button is Jon's separate decision (no todo row: this lane does not edit docs/todo.md without a contract naming it).
-- **Next:** the PR, its Gate, merge-pr.py with Jon's override, main's run, the live page.
+- **Merged, closed out (26 Nov, DAILY-POLISH's first commit):** [#923](https://github.com/OrthogonalMaffs/maffsgames/pull/923) as 78131de, route merge-pr.py with Jon's one override of main's red (contract step 5). Main's runs on 78131de: check-site 45822511682, phone-fit-full 45822511577, pages 45822510009, each success (read from GitHub by this session). Contract moved to `docs/history/contracts/`.
+- **Closed by Jon (26 Nov, 13:26; contract DAILY-POLISH):** the Play today's deal button below the fold at 320x568 and in phone Aa is accepted (a scroll); no change.
 
 ## 2026-11-26 (cloud): CROWD-FILL (Some Thingies' winner crowd shows every thingy earned, fills the screen, then shrinks to fit; the cheer escalates; `docs/history/contracts/2026-11-26-crowd-fill.md`)
 
