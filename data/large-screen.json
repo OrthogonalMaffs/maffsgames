@@ -33,11 +33,10 @@
    "measured": {
     "how": "ROUTES in check-large-screen.py",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600,
-     621
+     720
     ],
     "seeds": [
      1,
@@ -50,17 +49,17 @@
     "starts": [
      null
     ],
-    "sessions": 6,
-    "questions": 106,
-    "answers": 106,
+    "sessions": 3,
+    "questions": 53,
+    "answers": 53,
     "wrong_answers": 0,
     "tallest": {
      "what": "the answer controls",
-     "question": 16,
-     "seed": 1,
+     "question": 8,
+     "seed": 3,
      "window": [
-      1200,
-      621
+      1280,
+      720
      ],
      "level": "ks3",
      "start": null
@@ -94,11 +93,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600,
-     601
+     720
     ],
     "seeds": [
      1,
@@ -112,17 +110,17 @@
     "starts": [
      null
     ],
-    "sessions": 12,
-    "questions": 120,
-    "answers": 120,
-    "wrong_answers": 120,
+    "sessions": 6,
+    "questions": 60,
+    "answers": 60,
+    "wrong_answers": 60,
     "tallest": {
      "what": "Next after an answer",
      "question": 1,
      "seed": 1,
      "window": [
-      1200,
-      600
+      1280,
+      720
      ],
      "level": "year6",
      "start": null
@@ -171,10 +169,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600,
+     720,
      860,
      980
     ],
@@ -199,7 +197,7 @@
      "question": 19,
      "seed": 1,
      "window": [
-      1200,
+      1280,
       860
      ],
      "level": "gcse",
@@ -224,10 +222,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600
+     720
     ],
     "seeds": [
      1,
@@ -249,8 +247,8 @@
      "question": 3,
      "seed": 1,
      "window": [
-      1200,
-      600
+      1280,
+      720
      ],
      "level": "year6",
      "start": null
@@ -269,10 +267,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600
+     720
     ],
     "seeds": [
      1,
@@ -294,8 +292,8 @@
      "question": 1,
      "seed": 1,
      "window": [
-      1200,
-      600
+      1280,
+      720
      ],
      "level": "gcse",
      "start": null
@@ -329,10 +327,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600
+     720
     ],
     "seeds": [
      1,
@@ -354,8 +352,8 @@
      "question": 3,
      "seed": 2,
      "window": [
-      1200,
-      600
+      1280,
+      720
      ],
      "level": "core",
      "start": null
@@ -363,7 +361,7 @@
    }
   },
   "games/its-just-base-60-bruv/index.html": {
-   "need": 586,
+   "need": 589,
    "thresholds": [
     [
      "height",
@@ -404,12 +402,10 @@
    "measured": {
     "how": "the page's lock-hint",
     "widths": [
-     1200
+     1280
     ],
     "heights": [
-     600,
-     601,
-     621
+     720
     ],
     "seeds": [
      1,
@@ -426,17 +422,17 @@
      "B60.ui.start('stage-3')",
      "B60.ui.start('stage-4')"
     ],
-    "sessions": 72,
-    "questions": 720,
-    "answers": 720,
-    "wrong_answers": 720,
+    "sessions": 24,
+    "questions": 240,
+    "answers": 240,
+    "wrong_answers": 240,
     "tallest": {
      "what": "Next after an answer",
      "question": 7,
      "seed": 1,
      "window": [
-      1200,
-      621
+      1280,
+      720
      ],
      "level": "ks3",
      "start": "B60.ui.start('stage-3')"
