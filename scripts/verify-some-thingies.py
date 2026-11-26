@@ -1527,8 +1527,11 @@ def check_host(pw, base, html, look, size, aa, out, info):
         plays = [[q['id'], 1, right, line, 0, force] for q in items for right in (True, False) for force in (None, 0)]
         got = play(plays)
         chosen = {}
+        def hard():
+            # Findings so far, less the known-list ones (every one of those is wanted, to copy into HOST_KNOWN).
+            return sum(1 for f in out[n0:] if 'put it on HOST_KNOWN' not in f)
         for k, q in enumerate(items):
-            if len(out) - n0 > 12:
+            if hard() > 12:
                 break
             res = []
             for j, right in enumerate((True, False)):
@@ -1568,7 +1571,7 @@ def check_host(pw, base, html, look, size, aa, out, info):
         bigger = play(plays)
         ix = {(p[0], p[2]): b for p, b in zip(plays, bigger)}
         for q in items:
-            if q['id'] not in chosen or chosen[q['id']] >= HOST_MAX or len(out) - n0 > 12:
+            if q['id'] not in chosen or chosen[q['id']] >= HOST_MAX or hard() > 12:
                 continue
             ok, fb = True, HOST_MIN if not chosen[q['id']] else chosen[q['id']] + 1
             for j, right in enumerate((True, False)):
