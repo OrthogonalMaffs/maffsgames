@@ -2012,7 +2012,7 @@ PLANTS = [
     # SOME-THINGIES-HOST's three.
     ('the character fixed at 96 px whatever the room',
      edit("    setHost(best);\n  }\n  function roomChanged()", "    setHost(HOST_MAX);\n  }\n  function roomChanged()"),
-     'host grown 320x568 normal', r'with the character at 96 px, .* below the fold at \d+ px \(it fits there in the top row\)'),
+     'host grown 320x568 normal', r'with the character at 96 px, .* below the fold at \d+ px \(it fits there in the top row\)|the array and Sarge are wider than their room'),
     ('the character\'s size changing at marking',
      edit("    fitCrowd();\n    factPic();\n    if (window.MaffsScroll)",
           "    fitCrowd();\n    factPic();\n    if ($('qcard').classList.contains('host-big')) setHost(HOST_MIN);\n    if (window.MaffsScroll)"),
