@@ -44,6 +44,12 @@
      2,
      3
     ],
+    "levels": [
+     "ks3"
+    ],
+    "starts": [
+     null
+    ],
     "sessions": 6,
     "questions": 106,
     "answers": 106,
@@ -55,7 +61,9 @@
      "window": [
       1200,
       621
-     ]
+     ],
+     "level": "ks3",
+     "start": null
     }
    }
   },
@@ -97,10 +105,17 @@
      2,
      3
     ],
-    "sessions": 6,
-    "questions": 60,
-    "answers": 60,
-    "wrong_answers": 60,
+    "levels": [
+     "year6",
+     "ks3"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 12,
+    "questions": 120,
+    "answers": 120,
+    "wrong_answers": 120,
     "tallest": {
      "what": "Next after an answer",
      "question": 1,
@@ -108,7 +123,9 @@
      "window": [
       1200,
       600
-     ]
+     ],
+     "level": "year6",
+     "start": null
     }
    }
   },
@@ -166,10 +183,17 @@
      2,
      3
     ],
-    "sessions": 9,
-    "questions": 180,
-    "answers": 180,
-    "wrong_answers": 180,
+    "levels": [
+     "gcse",
+     "alevel"
+    ],
+    "starts": [
+     null
+    ],
+    "sessions": 18,
+    "questions": 360,
+    "answers": 360,
+    "wrong_answers": 360,
     "tallest": {
      "what": "Next after an answer",
      "question": 19,
@@ -177,7 +201,9 @@
      "window": [
       1200,
       860
-     ]
+     ],
+     "level": "gcse",
+     "start": null
     }
    }
   },
@@ -208,6 +234,12 @@
      2,
      3
     ],
+    "levels": [
+     "year6"
+    ],
+    "starts": [
+     null
+    ],
     "sessions": 3,
     "questions": 30,
     "answers": 29,
@@ -219,7 +251,9 @@
      "window": [
       1200,
       600
-     ]
+     ],
+     "level": "year6",
+     "start": null
     }
    }
   },
@@ -245,6 +279,12 @@
      2,
      3
     ],
+    "levels": [
+     "gcse"
+    ],
+    "starts": [
+     null
+    ],
     "sessions": 3,
     "questions": 9,
     "answers": 9,
@@ -256,7 +296,9 @@
      "window": [
       1200,
       600
-     ]
+     ],
+     "level": "gcse",
+     "start": null
     }
    }
   },
@@ -297,23 +339,31 @@
      2,
      3
     ],
+    "levels": [
+     "core"
+    ],
+    "starts": [
+     null
+    ],
     "sessions": 3,
     "questions": 108,
     "answers": 108,
     "wrong_answers": 108,
     "tallest": {
      "what": "Next after an answer",
-     "question": 9,
-     "seed": 1,
+     "question": 3,
+     "seed": 2,
      "window": [
       1200,
       600
-     ]
+     ],
+     "level": "core",
+     "start": null
     }
    }
   },
   "games/its-just-base-60-bruv/index.html": {
-   "need": 541,
+   "need": 586,
    "thresholds": [
     [
      "height",
@@ -366,18 +416,30 @@
      2,
      3
     ],
-    "sessions": 9,
-    "questions": 90,
-    "answers": 90,
-    "wrong_answers": 90,
+    "levels": [
+     "ks3",
+     "gcse"
+    ],
+    "starts": [
+     "B60.ui.start('stage-1')",
+     "B60.ui.start('stage-2')",
+     "B60.ui.start('stage-3')",
+     "B60.ui.start('stage-4')"
+    ],
+    "sessions": 72,
+    "questions": 720,
+    "answers": 720,
+    "wrong_answers": 720,
     "tallest": {
      "what": "Next after an answer",
-     "question": 1,
+     "question": 7,
      "seed": 1,
      "window": [
       1200,
       621
-     ]
+     ],
+     "level": "ks3",
+     "start": "B60.ui.start('stage-3')"
     }
    }
   }
