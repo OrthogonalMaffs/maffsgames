@@ -69,7 +69,9 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 ## 2026-11-26 (cloud): DAILY-FIT (MaffsCards' Play today's deal button stays above the fold whether or not Jon's result shows; the verifier tests fixed daily states; `docs/handover/contracts/2026-11-26-daily-fit.md`)
 
 Claude Code (cloud, lane 2), branch `claude/kind-cray-f7yzoa` from main d70d809. Medium tier; merge on green with Jon's one override of main's red (26 Nov, 12:12; text in the contract's step 5). First commit: this contract and CROWD-FILL's close-out (in its entry below).
-- **Next:** the panel's order, the art's measured scale, the verifier's fixtures, states and plants, /updates/, the PR.
+- **Done on the branch (page only, no PR yet):** the panel's order (the Play button above Jon's line) and the art's measured scale (`fitArt()`, `--as`, floor 0.4).
+- **STOPPED (STOP IF 1), 26 Nov:** Play today's deal cannot be above the fold at three of the eight size-and-font pairs, even with the art at its floor, in every state (after the reorder its place no longer depends on Jon's line). Its bottom edge, art at 40%, against the screen's height: 320x568 at 657 px (89 px short); 320x568 Aa at 997 px (429 short); 375x667 Aa at 882 px (215 short). Against the screen less the fixed 40 px footer, 40 px more each. It fits at 375x667 (627 px, art at 96%), 1280x720 and 1920x1080, normal and Aa. On main, with no result, it is already under the fold there (726, 1079 and 964 px): the two rules paragraphs above the panel take the room, and the art has only 38 px to give on a phone. Waiting for an amendment.
+- **Next, once amended:** the verifier's fixture, states and plants, /updates/, the PR.
 
 ## 2026-11-26 (cloud): CROWD-FILL (Some Thingies' winner crowd shows every thingy earned, fills the screen, then shrinks to fit; the cheer escalates; `docs/history/contracts/2026-11-26-crowd-fill.md`)
 
