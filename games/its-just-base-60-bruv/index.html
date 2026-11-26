@@ -728,9 +728,10 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
       if (v === Q.answer) continue;
       mark(v);
       fb.innerHTML = wrongHtml(errOf(v));
-      // Next's footprint: MaffsNext's 44 px control with its 11 px and 2 px margins (next-control.js).
-      fb.querySelector('.fb-next').innerHTML = '<div class="maffs-next-wrap" style="display:flex"><div style="height:44px;width:44px;margin:11px auto 2px"></div></div>';
-      at('.opt'); at('.fb-next');
+      // Next's footprint: MaffsNext's 44 px control with its 11 px and 2 px margins (next-control.js); its own bottom edge
+      // is what must clear the fold, as the real Next's is.
+      fb.querySelector('.fb-next').innerHTML = '<div class="maffs-next-wrap" style="display:flex"><div class="ck-next" style="height:44px;width:44px;margin:11px auto 2px"></div></div>';
+      at('.opt'); at('.ck-next');
     }
     c.parentNode.removeChild(c);
     return low;

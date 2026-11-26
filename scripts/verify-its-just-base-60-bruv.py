@@ -995,9 +995,20 @@ BIRD_JS = r"""(t) => {
 HOLD = [300, 600, 900, 1200, 1450]   # ms into the right answer's animation: the bird must be out, and showing, at each
 
 
+def shown(page, m):
+    """An item of stage m on screen alone, with the clock showing (on a short phone a clock left in the hidden stage row
+    has no box to read). Fails the unit if no item of the stage shows it."""
+    n = int(m[-1])
+    for qid in page.evaluate('(n) => B60.bank().filter(q => q.stage === n).map(q => q.id)', n):
+        page.evaluate('(id) => B60.ui.preview(id)', qid)
+        if page.evaluate("document.getElementById('cuckoo').getBoundingClientRect().width") > 0:
+            return qid
+    raise ValueError('no item of %s shows the clock' % m)
+
+
 def check_bird(page, size, out, info):
     tag = 'the bird at %dx%d' % size
-    page.evaluate("(m) => B60.ui.start(m)", 'stage-1')
+    shown(page, 'stage-1')
     page.evaluate('B60.ui.answer(true)')
     first = page.evaluate(BIRD_JS, None)
     if first['dur'] is None or first['dur'] < HOLD[-1] + 200:
@@ -1011,7 +1022,7 @@ def check_bird(page, size, out, info):
         if end['op'] > 0.01:
             out.append('%s: the bird has not gone back at the end of a right answer (opacity %.2f)' % (tag, end['op']))
     page.evaluate("document.getElementById('menuBtn').click()")
-    page.evaluate("(m) => B60.ui.start(m)", 'stage-2')
+    shown(page, 'stage-2')
     page.evaluate('B60.ui.answer(false)')
     page.wait_for_timeout(600)
     r = page.evaluate(BIRD_JS, None)
@@ -1021,7 +1032,7 @@ def check_bird(page, size, out, info):
     page.emulate_media(reduced_motion='reduce')
     page.evaluate("document.getElementById('menuBtn').click()")
     for m, right, st in (('stage-3', True, 'right'), ('stage-4', False, 'wrong')):
-        page.evaluate("(m) => B60.ui.start(m)", m)
+        shown(page, m)
         page.evaluate('(r) => B60.ui.answer(r)', right)
         r = page.evaluate(BIRD_JS, None)
         if r['n'] or r['state'] != st or not r['out'] or r['op'] < 0.99:
