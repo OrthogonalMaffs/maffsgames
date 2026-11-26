@@ -141,10 +141,11 @@ a.back-link:hover{color:var(--text)}
   .qcard.fb-open .stage-label{display:none}
 }
 /* A short screen (640 px tall or less, a 320 x 568 phone): the feedback sits closer together and the two marked options,
-   locked by then, are 44 px tall. The same text at the same size. */
+   locked by then, are 44 px tall. The same text at the same size. The HUD row stays 44 px tall, the height of the two
+   exit controls in it (stage-exit.js), so they never reach past it. */
 @media (max-height:640px){
-  body.playing .container{padding-top:0}
-  .hud{margin-bottom:.1rem;padding-top:.1rem;padding-bottom:.1rem}
+  body.playing .container{padding-top:.2rem}
+  .hud{margin-bottom:.1rem;padding-top:0;padding-bottom:0;min-height:44px}
   body:not(.accessible) .qcard.fb-open .ask{line-height:1.3}
   body:not(.accessible) .qcard.fb-open .fb-err{line-height:1.2}
   body:not(.accessible) .qcard.fb-open .worked{line-height:1.28}
@@ -154,6 +155,9 @@ a.back-link:hover{color:var(--text)}
   .qcard.fb-open .fb{padding:.2rem .5rem;gap:.1rem}
   .qcard.fb-open .fb-next .maffs-next{margin-top:4px;margin-bottom:0}
 }
+/* Canon §7.6.1's fixed rule for a short screen (600 px tall or less): what still cannot fit moves below Next. Here that is
+   the table's rows, on a 320 x 568 phone. The visual order only: the reading order stays line, answer, working, rows, Next. */
+@media (max-height:600px){.fb-rows{order:1}}
 @media (min-width:1024px){
   .ask{font-size:clamp(1.08rem,2.6vh,1.4rem)}
 }

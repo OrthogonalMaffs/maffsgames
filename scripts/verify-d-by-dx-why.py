@@ -39,7 +39,8 @@ never runs or imports that generator. It reads the bank from the page and works 
            working, the table rows and Next all end above the fold (the viewport less the 40 px footer, in page
            coordinates), the prompt and the two marked options are on screen above it, the line shown is that option's,
            and the page does not scroll sideways. The same at 320 x 568 in normal mode (canon §7.6.1's smallest phone;
-           Aa there is canon's recorded exception).
+           Aa there is canon's recorded exception), except that the table rows, which the page moves below Next on a
+           screen 600 px tall or less (canon §7.6.1's fixed rule), need only be on the page.
 
 Work units: "bank" (no browser), "katex 1280x720", "play 375x667", "play 1280x720",
 "fit <W>x<H> <normal|Aa> <table|pro>" (18: the four sizes in both modes, and 320 x 568 normal) and "plant: <what>" (one
@@ -712,6 +713,8 @@ def check_fit(page, items, size, aa, pro, lines, out, info):
             for name, b in r['parts'].items():
                 if b is None:
                     out.append('%s: %s is not on screen' % (tag, name))
+                elif name == 'the table rows' and size[1] <= 600:
+                    pass   # canon §7.6.1's fixed rule: on a screen 600 px tall or less the rows sit below Next (there, not gated)
                 elif b[0] < 0 or b[1] > r['fold']:
                     out.append('%s: %s ends at %d px, below the fold at %d px' % (tag, name, b[1], r['fold']))
             if len(r['marked']) != 2 or any(b is None or b[0] < 0 or b[1] > r['fold'] for b in r['marked']):
