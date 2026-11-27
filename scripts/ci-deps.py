@@ -22,7 +22,11 @@ A verifier's dependencies, derived from its source and the pages it tests:
     the check reads site-wide, not what the verifier tests (CONTENT-SAFETY-COVERAGE, #792, 15 Nov 2026: verify-correlation-
     or-coincidence.py loads check-content-safety.py, which loads check-publish-scope.py, whose literals made a docs-only
     change select it);
-  - every repo path its string literals name (a file, or a folder as a prefix);
+  - every repo path its string literals name (a file, or a folder as a prefix), except a module whose header (its
+    leading "#" lines) holds the line "# ci-deps-literals: none": it gives its file and the files of the modules it
+    loads, never their literals, whatever loads it (PINNED-LIVE-DATA, 27 Nov 2026: serve-stubbed.py's table names the
+    bot-written files it pins or never serves, and following it made both handovers phone-fit inputs). The line is
+    not a "# ci-deps:" header and never read as one;
   - each game it names (a literal equal to a games/ folder name, or containing games/<slug>/): that whole
     folder, plus every local file the game's page loads (src/href and quoted asset paths), followed through
     the shared JS and CSS it loads in turn;
@@ -159,14 +163,30 @@ def site_check(script):
     return os.path.basename(script).startswith("check-") and script not in _VERIFIERS
 
 
-def script_deps(script, seen=None, origin=OWN, files_only=False):
+LITERALS_NONE = re.compile(r"^# ci-deps-literals: none(?:\s.*)?$")
+
+
+def declares_no_literals(text):
+    """True when the module's header (its leading "#" lines, the shebang included) holds "# ci-deps-literals: none"."""
+    for line in text.splitlines():
+        if not line.startswith("#"):
+            return False
+        if LITERALS_NONE.match(line):
+            return True
+    return False
+
+
+def script_deps(script, seen=None, origin=OWN, files_only=False, no_literals=declares_no_literals):
     """(paths, [(text, is_join, origin)]) for a script and, recursively, the local modules it imports. files_only:
-    below a site-wide check, a module gives its file, never its literals (see the docstring)."""
+    below a site-wide check, or in a module that declares "# ci-deps-literals: none" (no_literals reads that from its
+    text), a module gives its file, never its literals (see the docstring)."""
     seen = set() if seen is None else seen
     if (script, files_only) in seen or not exists(script):
         return set(), []
     seen.add((script, files_only))
-    tree = ast.parse(open(os.path.join(ROOT, script), encoding="utf-8").read())
+    text = open(os.path.join(ROOT, script), encoding="utf-8").read()
+    tree = ast.parse(text)
+    files_only = files_only or no_literals(text)
     paths = {script}
     own = py_literals(tree)
     lits = [] if files_only else [(t, j, origin) for t, j in own]
@@ -182,7 +202,7 @@ def script_deps(script, seen=None, origin=OWN, files_only=False):
     for m in mods:
         if exists("scripts/%s.py" % m) and not m.startswith("ci-"):     # CI's own modules: see the docstring
             sub = "scripts/%s.py" % m
-            p, l = script_deps(sub, seen, LIB, files_only or site_check(sub))
+            p, l = script_deps(sub, seen, LIB, files_only or site_check(sub), no_literals)
             paths |= p
             lits += l
     return paths, lits
@@ -702,9 +722,46 @@ def selftest():
         check("measured_pages(%s) is %s" % (", ".join(paths), want or "none"), got == want, ", ".join(got))
     check("class/index.html is not shared", not is_shared("class/index.html"), "")
     state_proofs(check)
+    literals_proofs(check)
     check("schools/assets/theme.css is shared (measured_pages leaves it to is_shared)", is_shared("schools/assets/theme.css"), "")
     print("selftest: %s" % ("FAILED: " + ", ".join(fails) if fails else "PASS"))
     return 1 if fails else 0
+
+
+def literals_proofs(check, no_literals=declares_no_literals):
+    """PINNED-LIVE-DATA (27 Nov 2026): "# ci-deps-literals: none". serve-stubbed.py (loaded by the phone-fit checker through
+    bank_common.py) gives its file but never its table's paths; a module without the line keeps its literals. The
+    plants pass another reader of the line as no_literals."""
+    stub = "scripts/serve-stubbed.py"
+    stub_text = open(os.path.join(ROOT, stub), encoding="utf-8").read()
+    check("serve-stubbed.py declares # ci-deps-literals: none", declares_no_literals(stub_text), "")
+    check("the line is not read as a # ci-deps: header", not ci_groups().DEPS.search("# ci-deps-literals: none\n"), "")
+    check("the line counts only in the header", not declares_no_literals("import os\n# ci-deps-literals: none\n"), "")
+    paths, lits = script_deps(PHONE_FIT_CHECKER, no_literals=no_literals)
+    named = literal_paths(lits)
+    check("serve-stubbed.py stays a dependency of the phone-fit checker", stub in paths, "")
+    table = ("games/maffscards/daily.json", "schools/assets/ugh-stats.json", "docs/audits/REGISTER.md",
+             "docs/handover/home.md", "docs/handover/cloud.md", "docs/history/handover-home-archive.md",
+             "docs/history/handover-cloud-archive.md")
+    leaked = [t for t in table if t in named]
+    check("no path in serve-stubbed.py's table is a phone-fit checker input", not leaked, ", ".join(leaked))
+    _, blits = script_deps("scripts/bank_common.py", no_literals=no_literals)
+    kept = literal_paths(blits)
+    check("bank_common.py, which does not declare it, keeps its literals", bool(kept), "%d paths" % len(kept))
+    if no_literals is declares_no_literals:
+        # is_shared on the table's paths is what it is on main (b8ab511): shared ones for their own reasons, the rest not.
+        for p, want in (("games/maffscards/daily.json", False), ("schools/assets/ugh-stats.json", False),
+                        ("docs/audits/REGISTER.md", False), ("docs/handover/home.md", False),
+                        ("docs/history/handover-home-archive.md", False), ("docs/history/handover-cloud-archive.md", False),
+                        ("schools/assets/answer-counts.json", True), ("scripts/ci-timings.json", True),
+                        ("scripts/ci-pack.json", True), ("scripts/ci-timings-regions.json", True),
+                        ("scripts/ci-warn-list.json", True), (stub, True)):
+            check("is_shared(%s) is %s" % (p, want), is_shared(p) == want, "")
+        for label, reader in (("the declaration ignored", lambda text: False),
+                              ("the declaration honoured on a module that does not carry it", lambda text: True)):
+            missed = []
+            literals_proofs(lambda name, ok, detail: missed.append(name) if not ok else None, reader)
+            check("plant: %s is caught" % label, bool(missed), "; ".join(missed))
 
 
 def state_proofs(check):

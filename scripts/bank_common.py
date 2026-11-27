@@ -127,8 +127,11 @@ def free_port():
         s.close()
 
 
-def start_stub_server(port=0, timeout=15.0, attempts=3):
+def start_stub_server(port=0, timeout=15.0, attempts=3, committed=False):
     """Start serve-stubbed.py; return (Popen, base_url) once it answers.
+
+    committed=True starts it with --committed: the bot-written files it otherwise pins (its BOT_WRITTEN,
+    contract PINNED-LIVE-DATA) are served as committed. Only a check that must read those files uses it.
 
     port=0 (the default, and what every CI caller uses) picks a free port for this
     run. The port is released between choosing it and the server binding it, so
@@ -137,17 +140,17 @@ def start_stub_server(port=0, timeout=15.0, attempts=3):
     A nonzero port is tried once, exactly as given.
     """
     if port:
-        return _start_stub_server_on(port, timeout)
+        return _start_stub_server_on(port, timeout, committed)
     last = None
     for _ in range(attempts):
         try:
-            return _start_stub_server_on(free_port(), timeout)
+            return _start_stub_server_on(free_port(), timeout, committed)
         except StubServerError as exc:
             last = exc
     raise last
 
 
-def _start_stub_server_on(port, timeout):
+def _start_stub_server_on(port, timeout, committed=False):
     """Start serve-stubbed.py on `port`; return (Popen, base_url) once it answers.
 
     Raises StubServerError, naming the cause, if the port is not free, if the
@@ -168,7 +171,7 @@ def _start_stub_server_on(port, timeout):
         probe.close()
 
     proc = subprocess.Popen(
-        [sys.executable, os.path.join(ROOT, "scripts", "serve-stubbed.py"), str(port)],
+        [sys.executable, os.path.join(ROOT, "scripts", "serve-stubbed.py"), str(port)] + (["--committed"] if committed else []),
         stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, cwd=ROOT)
     base = "http://127.0.0.1:%d" % port
     deadline = time.time() + timeout
