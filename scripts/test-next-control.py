@@ -197,9 +197,9 @@ def no_page_fallback(check):
         for d in PAGE_DIRS:
             os.makedirs(os.path.join(tmp, d))
         os.makedirs(os.path.join(tmp, "games", "planted"))
-        with open(os.path.join(tmp, "index.html"), "w", encoding="utf-8") as f:
+        with open(os.path.join(tmp, "index.html"), "w", encoding="utf-8", newline="") as f:
             f.write("<p>home</p>\n")
-        with open(os.path.join(tmp, "games", "planted", "index.html"), "w", encoding="utf-8") as f:
+        with open(os.path.join(tmp, "games", "planted", "index.html"), "w", encoding="utf-8", newline="") as f:
             f.write("<script>\nMaffsNext.wrong({ mount: m, onAdvance: next, fallbackMs: 20000 });\n</script>\n")
         clean = pages_naming_fallback(tmp) == ["games/planted/index.html:2"]
         check("plant caught: a page passing fallbackMs: 20000", clean, "found at games/planted/index.html:2" if clean else "NOT found")
