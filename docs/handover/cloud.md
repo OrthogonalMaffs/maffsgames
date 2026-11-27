@@ -66,6 +66,16 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-27 (cloud): D-BY-DX-SIGN-LINE (d by dx? Why?'s placeholder sign_lost line reworded so it holds on s2-06, where the number in front is negative; `docs/handover/contracts/2026-11-27-d-by-dx-sign-line.md`)
+
+Claude Code (cloud), branch `claude/funny-hamilton-900869` restarted from main 99a8e30. Medium tier (merge on green). One commit: the close-out below, the contract verbatim and the line.
+- **Close-out, D-BY-DX-BUILD:** [#933](https://github.com/OrthogonalMaffs/maffsgames/pull/933) squash-merged as 024e9ae by merge-pr.py on a green Gate at 41029c4 (check-site 45909502642, phone-fit-full 45909502704). Main's runs on 024e9ae: check-site 45911763308, phone-fit-full 45911763285, pages 45911762690, each success. merge-pr.py's last line: not captured; main's result read from GitHub Actions (that session's first watch hit a 10-minute limit and the script refuses to re-watch a merged PR). Contract moved to `docs/history/contracts/`. end-task.py not run (it refuses in cloud sessions).
+- **The line:** `LINES.sign_lost` in `games/d-by-dx-why/index.html` is now "The power is negative, so its minus comes down with it: 3 × -2 = -6, but -2 × -3 = +6." (× is U+00D7, the minuses ASCII hyphens). Nothing else in the page, the bank or the verifier changed; the bank's SHA-256 is a8ecdc05...428a14e.
+- **For Jon:** every sign_lost line you write must hold for a negative number in front too: on s2-06 (-2/t^3) the answer is +6t^-4 and the wrong option is the one with the minus.
+- **Next:** the Gate; merge on green; main's runs recorded by the next cloud task's close-out.
+
+Record: agent Claude Code; wall n/a until hand-off; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-26 (cloud): D-BY-DX-BUILD ("d by dx? Why?", Jon's Level 3 differentiation game, five stages from a fixed 60-item bank, a Pro switch that hides the derivative table; merges unlisted; `docs/handover/contracts/2026-11-26-d-by-dx-build.md`)
 
 Claude Code (cloud), branch `claude/funny-hamilton-900869` from main 60fb649. Medium tier (merge on green). The first commit is the two close-outs below and the contract, verbatim.
