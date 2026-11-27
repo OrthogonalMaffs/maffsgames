@@ -440,7 +440,7 @@
    }
   },
   "games/d-by-dx-why/index.html": {
-   "need": 607,
+   "need": 617,
    "thresholds": [
     [
      "height",
@@ -532,14 +532,14 @@
     "wrong_answers": 240,
     "tallest": {
      "what": "Next after an answer",
-     "question": 3,
+     "question": 7,
      "seed": 1,
      "window": [
       1280,
       720
      ],
      "level": "level3",
-     "start": "DDX.ui.start('stage-2')"
+     "start": "DDX.ui.start('pro-stage-2')"
     }
    }
   }

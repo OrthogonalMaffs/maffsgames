@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-# ci-shards: d by dx? Why? (the 60-item bank held to the contract's SHA-256 and counts; every question differentiated in sympy from its own terms; every decoy recomputed from its error key, allowed for its stage (ERR_STAGES) and no two options equal in value; every TeX string, prompt and board line of working re-rendered from its terms, every TeX string read back to its value and every working line equal in sympy to the function or its derivative; every item's two curves finite, inside its window and within 4 times each other's height; the start screen's three pairs each a function and its derivative, none a question in the game; one LINES line per error key; every stage played to the end with the table and in Pro; a right answer and a wrong one each draw the gradient function and wait for Next; the drawn curves read back from the page to f and f' within 1 px, never a decoy; the start screen's two pens at the same x, paused in a hidden tab, still with reduced motion; every item's asking, right and wrong screens above the fold at 375x667, 390x844, 1280x720 and 1366x768, normal and Aa, and at 320x568 normal, with the table and in Pro; the start screen at four sizes; fault-injection self-test) | | 4
+# ci-shards: d by dx? Why? (the 60-item bank held to the contract's SHA-256 and counts; every question differentiated in sympy from its own terms; every decoy recomputed from its error key, allowed for its stage (ERR_STAGES) and no two options equal in value; every TeX string, prompt and board line of working re-rendered from its terms, every TeX string read back to its value and every working line equal in sympy to the function or its derivative; every item's two curves finite, inside its window and within 4 times each other's height; the start screen's three pairs each a function and its derivative, none a question in the game; one LINES line per error key; every stage played to the end with the table and in Pro; a right answer and a wrong one each draw the gradient function and wait for Next; the drawn curves read back from the page to f and f' within 1 px, never a decoy; the start screen's two pens at the same x, paused in a hidden tab, still with reduced motion; every item's asking, right and wrong screens above the fold at 375x667, 390x844, 1280x720, 1366x768, 1920x1080 and 2560x1440, normal and Aa, and at 320x568 normal, with the table and in Pro; from 1280 px two columns, the graph's box at least 1.6 times its old area and the table under it; the table's body never able to scroll; every sum in descending powers and no label naming the table's letter; the working's lines at least half an em apart; the start screen at four sizes; fault-injection self-test) | | 4
 # ci-deps: games/d-by-dx-why/ tools/d-by-dx-why/ schools/assets/plot.js
 r"""Independent verification for d by dx? Why? (games/d-by-dx-why/), contracts D-BY-DX-BUILD (26 Nov 2026) and
-D-BY-DX-GRAPH (27 Nov 2026). SR-30: checked from its first PR.
+D-BY-DX-GRAPH and D-BY-DX-POLISH (27 Nov 2026). SR-30: checked from its first PR.
 
 WHAT THIS DOES NOT TRUST
 -------------------------------------------------------------------------------
@@ -22,8 +22,12 @@ page, and works everything out again:
            Every TeX string is also READ BACK by this script's own small TeX reader into sympy and must equal the
            value of its terms, so what the student sees means what the terms say. Every decoy's err key is one
            ERR_STAGES allows for the item's stage. "rows" is the table row or rows the item's stage and kind need.
+           A function's argument is always in brackets (Jon, 27 Nov 2026): this script's formatter writes \sin(4x),
+           \cos(3t), \ln(2t) and a fraction over \ln(2t), and its reader refuses one without them. Every Stage 5 sum
+           (the question, the answer, each decoy) is in descending powers.
   Working  every board line (label, left side, right side) is rebuilt from the item's own numbers and must equal the
-           bank's. Then each line's right side is read back into sympy and must EQUAL its side: the question's
+           bank's; a label names the question's own number ("4 out front"), never the table's letter, and a Stage 5
+           line is in descending powers. Then each line's right side is read back into sympy and must EQUAL its side: the question's
            function where the left side is f(..) or the dependent letter, its derivative where it is f'(..) or the
            stacked d../d.., and the same on every line that carries on from one. The last line is the answer.
   Graph    for every item, on its own window: both curves finite and inside its y-range at 401 samples, and neither
@@ -64,7 +68,9 @@ page, and works everything out again:
            when the tab shows again. The third pair is followed by the first. With prefers-reduced-motion ("still
            1280x720"): the first pair finished and still, its labels and equations there, no pens, no second pair; and
            a gradient function is drawn at once.
-  Fit      at 375 x 667, 390 x 844, 1280 x 720 and 1366 x 768, normal and Aa (the Aa button pressed, its fonts loaded),
+  Fit      at 375 x 667, 390 x 844, 1280 x 720, 1366 x 768, 1920 x 1080 and 2560 x 1440 (the last two with the
+           large-screen zoom the page gives itself: a rectangle is then in the screen's px, and the fold is the window
+           less the zoomed footer), normal and Aa (the Aa button pressed, its fonts loaded),
            with the table and in Pro, for every item: the asking screen (the prompt on screen, the last option ending
            above the fold: the viewport less the 40 px footer, in page coordinates); the right-answer screen ("Right:",
            the marked answer and Next above the fold); and, for each of its three wrong options, the line, the
@@ -75,13 +81,21 @@ page, and works everything out again:
            maths is at least 1.35 times the body's size. The same at 320 x 568 in normal mode (canon §7.6.1's smallest
            phone; Aa there is canon's recorded exception), except that the table rows, which the page moves below Next
            on a screen 600 px tall or less (canon §7.6.1's fixed rule), need only be on the page.
-  Start    "start <W>x<H> <normal|Aa>" at 320 x 568, 375 x 667, 1280 x 720 and 1920 x 1080: the picture is on the page,
+           D-BY-DX-POLISH adds, at every size: the table's body cannot scroll inside its box (its overflow is visible
+           both ways and its content no larger than it; on a narrow screen the fold-out is opened to measure it); no
+           option is wider than its button and no line of working runs past the feedback's box; and after each wrong
+           option, consecutive lines of the working are at least 0.5 em apart, from the bottom of one line's KaTeX
+           box to the top of the next (each line's box read from KaTeX's own struts; the em is the working's). From
+           1280 px: the question's card on the left and the graph beside it; the graph's box filling its panel and
+           at least 1.6 times the 324 x 230 px it had at 1280 x 720 (area in the page's own px, so the zoom is not
+           counted); with the table, the table under the graph in the same column; in Pro, no table.
+  Start   "start <W>x<H> <normal|Aa>" at 320 x 568, 375 x 667, 1280 x 720 and 1920 x 1080: the picture is on the page,
            between 40% and the whole of its column wide; no start control (the Pro switch, the five stage buttons) that
            ends above the fold without the picture ends below it with the picture; at the two wide sizes every one of
            them ends above the fold; no sideways scroll.
 
 Work units: "bank" (no browser), "katex 1280x720", "play <W>x<H>" (2), "waits 375x667", "graph <W>x<H>" (2),
-"pens 1280x720", "still 1280x720", "fit <W>x<H> <normal|Aa> <table|pro>" (18), "start <W>x<H> <normal|Aa>" (8) and
+"pens 1280x720", "still 1280x720", "fit <W>x<H> <normal|Aa> <table|pro>" (26), "start <W>x<H> <normal|Aa>" (8) and
 "plant: <what>" (one per planted fault).
 
     python scripts/verify-d-by-dx-why.py              # every unit, then the self-test
@@ -109,13 +123,13 @@ import plant_common as pc  # noqa: E402
 SLUG = 'd-by-dx-why'
 GAME = os.path.join(ROOT, 'games', SLUG, 'index.html')
 GENERATOR = os.path.join(ROOT, 'tools', SLUG, 'bank.py')
-SHA256 = 'c6c0c8dce9658c16d4d37fa6094320a3cdeb84685203fa0d3f8e6d5d9bb7c960'   # contract D-BY-DX-GRAPH
+SHA256 = 'f9ddc279ecce5c136c0dc5311b170aab6bcd3bf7274f43937bcbc20b7a8ec927'   # contract D-BY-DX-POLISH
 STAGE_NAMES = ['Power terms', 'Rewrite first', 'Sin and cos', 'e and ln', 'Sums of terms']
 MODES = ['stage-%d' % n for n in range(1, 6)] + ['pro-stage-%d' % n for n in range(1, 6)]
 PER = 8
 PER_STAGE = 12
 FOOTER = 40
-SIZES = [(375, 667), (390, 844), (1280, 720), (1366, 768)]
+SIZES = [(375, 667), (390, 844), (1280, 720), (1366, 768), (1920, 1080), (2560, 1440)]   # the last two under the large-screen zoom
 SMALL = (320, 568)   # canon §7.6.1's smallest phone: normal mode only (Aa at 320 x 568 is the recorded exception)
 PLAY_SIZES = [(375, 667), (1280, 720)]
 START_SIZES = [(320, 568), (375, 667), (1280, 720), (1920, 1080)]
@@ -128,8 +142,14 @@ SAMPLES = 400
 DRAW_S, HOLD_S = 4.0, 3.0   # the start screen: about 4 s drawing a pair, about 3 s left to settle
 # The table, as the contract gives it: [key, y, dy/dx], in this order, and the two headings.
 TABLE_HEAD = [r"\(y\) or \(f(x)\)", r"\(\dfrac{dy}{dx}\) or \(f'(x)\)"]
-TABLE = [['x', r'\(x\)', r'\(1\)'], ['axn', r'\(ax^{n}\)', r'\(anx^{n-1}\)'], ['sin', r'\(\sin ax\)', r'\(a\cos ax\)'],
-         ['cos', r'\(\cos ax\)', r'\(-a\sin ax\)'], ['exp', r'\(e^{ax}\)', r'\(ae^{ax}\)'], ['ln', r'\(\ln ax\)', r'\(\frac{1}{x}\)']]
+TABLE = [['x', r'\(x\)', r'\(1\)'], ['axn', r'\(ax^{n}\)', r'\(anx^{n-1}\)'], ['sin', r'\(\sin(ax)\)', r'\(a\cos(ax)\)'],
+         ['cos', r'\(\cos(ax)\)', r'\(-a\sin(ax)\)'], ['exp', r'\(e^{ax}\)', r'\(ae^{ax}\)'], ['ln', r'\(\ln(ax)\)', r'\(\frac{1}{x}\)']]
+# D-BY-DX-POLISH. The graph's box at 1280 x 720 before it, three columns: 324 x 230 px, measured on main 9e05404.
+# From 1280 px the box is at least GRAPH_GROWTH times that area, in the page's own px (the screen's, less the zoom).
+GRAPH_BEFORE = 324 * 230
+GRAPH_GROWTH = 1.6
+TWO_COL = 1280       # from here: the question on the left, the graph filling the right column, the table under it
+CLEAR_EM = 0.5       # consecutive lines of working: at least this far apart, KaTeX box to KaTeX box, in the working's em
 
 
 # ---------------------------------------------------------------- the page's bank and lines, read from its source
@@ -235,14 +255,14 @@ def body(t, v, back=False):
             s = '\\dfrac{%d}{%s%s}' % (size.numerator, '' if size.denominator == 1 else str(size.denominator), power)
     elif kind == 'pow':
         s = front + (v if a[1] == 1 else '%s^{%s}' % (v, ftex(a[1])))
-    elif kind == 'sin':
-        s = front + '\\sin ' + inside(a[1])
+    elif kind == 'sin':                                  # a function's argument is always in brackets (Jon, 27 Nov 2026)
+        s = front + '\\sin(%s)' % inside(a[1])
     elif kind == 'cos':
-        s = front + '\\cos ' + inside(a[1])
+        s = front + '\\cos(%s)' % inside(a[1])
     elif kind == 'exp':
         s = front + 'e^{%s}' % inside(a[1])
     elif kind == 'ln':
-        s = front + '\\ln ' + inside(a[1])
+        s = front + '\\ln(%s)' % inside(a[1])
     elif kind == 'xexp':
         s = front + v + 'e^{%s-1}' % inside(a[1])
     elif kind == 'over':
@@ -250,7 +270,7 @@ def body(t, v, back=False):
     elif kind == 'overpow':
         s = '\\dfrac{%s}{%s%s}' % (ftex(size), ftex(a[1]), v if a[2] == 1 else '%s^{%s}' % (v, ftex(a[2])))
     elif kind == 'recipln':
-        s = '\\dfrac{%s}{\\ln %s}' % (ftex(size), inside(a[1]))
+        s = '\\dfrac{%s}{\\ln(%s)}' % (ftex(size), inside(a[1]))
     else:
         raise ValueError('a term kind this script does not know: %r' % kind)
     return c < 0, s
@@ -333,29 +353,55 @@ def working_of(q, ans_tex):
     elif st == 3:
         c, a = nums
         angle = v if a == 1 else ftex(a) + v
+        # The label names the question's own number, never the table's letter (Jon, 27 Nov 2026): "4 out front".
         if terms[0][0] == 'sin':
-            w = [('a out front, and in the angle', 'd', '%s\\cos %s' % (ftex(a), angle) if c == 1 else '%s \\times %s\\cos %s' % (ftex(c), ftex(a), angle))]
+            w = [('%s out front, and in the angle' % ftex(a), 'd', '%s\\cos(%s)' % (ftex(a), angle) if c == 1 else '%s \\times %s\\cos(%s)' % (ftex(c), ftex(a), angle))]
         else:
-            w = [('a out front; cos gives a minus', 'd', '-%s\\sin %s' % (ftex(a), angle) if c == 1 else '%s \\times (%s)\\sin %s' % (ftex(c), ftex(-a), angle))]
+            w = [('%s out front; cos gives a minus' % ftex(a), 'd', '-%s\\sin(%s)' % (ftex(a), angle) if c == 1 else '%s \\times (%s)\\sin(%s)' % (ftex(c), ftex(-a), angle))]
         if c != 1:
             w.append(('tidy up', '', ans_tex))
     elif st == 4:
         c, a = nums
         if terms[0][0] == 'exp':
             e = 'e^{%s}' % (v if a == 1 else ftex(a) + v)
-            w = [('a comes down; the power stays', 'd', ftex(a) + e if c == 1 else '%s \\times %s%s' % (ftex(c), ftex(a), e))]
+            w = [('%s comes down; the power stays' % ftex(a), 'd', ftex(a) + e if c == 1 else '%s \\times %s%s' % (ftex(c), ftex(a), e))]
         else:
-            w = [('ln: the a cancels', 'd', '\\dfrac{1}{%s}' % v if c == 1 else '%s \\times \\dfrac{1}{%s}' % (ftex(c), v))]
+            w = [('ln: the %s cancels' % ftex(a), 'd', '\\dfrac{1}{%s}' % v if c == 1 else '%s \\times \\dfrac{1}{%s}' % (ftex(c), v))]
         if c != 1:
             w.append(('tidy up', '', ans_tex))
     else:
-        p = Fraction(terms[0][1])
-        c, n = Fraction(terms[1][1]), Fraction(terms[1][2])
+        # A sum, in descending powers: c v^n, then p v, then the number (if there is one).
+        c, n = Fraction(terms[0][1]), Fraction(terms[0][2])
+        p = Fraction(terms[1][1])
         const = len(terms) == 3
         w = [('each term on its own' + ('; a number alone goes to 0' if const else ''), 'd',
-              '%s + %s' % (ftex(p), power_down(c, n, v)) + (' + 0' if const else '')),
+              '%s + %s' % (power_down(c, n, v), ftex(p)) + (' + 0' if const else '')),
              ('tidy up', '', ans_tex)]
     return w
+
+
+# A label that names the table's letter where the question's number belongs (the four labels of D-BY-DX-GRAPH).
+LETTER_LABEL = re.compile(r'^a out front|^a comes down|^ln: the a cancels')
+
+
+def powers(terms):
+    """The power of the letter in each term of a sum of powers and numbers, in the order written (a number is power 0);
+    None if a term is neither."""
+    out = []
+    for t in terms:
+        if t[0] == 'pow':
+            out.append(Fraction(t[2]))
+        elif t[0] == 'const':
+            out.append(Fraction(0))
+        else:
+            return None
+    return out
+
+
+def descending(terms):
+    """A sum's terms are written in descending powers: no term has a higher power than the one before it."""
+    p = powers(terms)
+    return p is not None and all(a >= b for a, b in zip(p, p[1:]))
 
 
 def lhs_of(q, side):
@@ -437,7 +483,7 @@ def fvalue(terms, x):
 class TexReader:
     """This script's own reader of the bank's TeX, into sympy: enough of TeX for a line of this game and no more.
     Numbers, the item's letter, e, + and -, juxtaposition and \\times, ^ with a group or one character, brackets,
-    \\frac and \\dfrac, \\sqrt with or without an index, and \\sin, \\cos, \\ln of a multiple of the letter."""
+    \\frac and \\dfrac, \\sqrt with or without an index, and \\sin, \\cos, \\ln of a bracketed argument."""
     TOKEN = re.compile(r'\\[a-zA-Z]+|\\,|\d+|[a-zA-Z]|[{}()\[\]^+\-]|\s+|.')
 
     def __init__(self, tex, v):
@@ -524,11 +570,11 @@ class TexReader:
             self.take(')')
             return e
         if t in ('\\sin', '\\cos', '\\ln'):
-            mult = sp.Integer(1)
-            if self.peek() is not None and (self.peek().isdigit() or self.peek() in ('\\frac', '\\dfrac')):
-                mult = self.atom()
-            self.take(self.v.name)
-            return {'\\sin': sp.sin, '\\cos': sp.cos, '\\ln': sp.log}[t](mult * self.v)
+            # The argument is always in brackets (Jon, 27 Nov 2026): "\sin 4x" is TeX this reader refuses.
+            self.take('(')
+            arg = self.sum()
+            self.take(')')
+            return {'\\sin': sp.sin, '\\cos': sp.cos, '\\ln': sp.log}[t](arg)
         raise ValueError('TeX this script cannot read: %r (at %r)' % (self.tex, t))
 
 
@@ -551,8 +597,8 @@ def shape(q):
         return kinds[0]
     if st == 4 and kinds in (['exp'], ['ln']) and n[0][1] > 1:
         return kinds[0]
-    if st == 5 and kinds in (['pow', 'pow'], ['pow', 'pow', 'const']) and n[0][1] == 1 and n[1][1].denominator == 1 and n[1][1] >= 2:
-        return 'sum'
+    if st == 5 and kinds in (['pow', 'pow'], ['pow', 'pow', 'const']) and n[1][1] == 1 and n[0][1].denominator == 1 and n[0][1] >= 2:
+        return 'sum'                                         # in descending powers: the power term, the linear term, the number
     return None
 
 
@@ -598,11 +644,11 @@ def slip(q, kind, err, v):
     if kind == 'ln':
         return {'a_kept': c * k / v, 'a_divided': c / (k * v), 'ln_flipped': c / sp.log(k * v)}.get(err)
     if kind == 'sum':
-        b, n = R(t[1][1]), R(t[1][2])
-        right = c + b * n * v ** (n - 1)
-        got = {'kept_variable': c * v + b * n * v ** (n - 1),
-               'power_kept': c + b * n * v ** n,
-               'coeff_lost': c + n * v ** (n - 1)}
+        b, n, p = c, k, R(t[1][1])                               # b v^n + p v (+ a number)
+        right = b * n * v ** (n - 1) + p
+        got = {'kept_variable': b * n * v ** (n - 1) + p * v,
+               'power_kept': b * n * v ** n + p,
+               'coeff_lost': n * v ** (n - 1) + p}
         if len(t) == 3:
             got['constant_kept'] = right + R(t[2][1])
         return got.get(err)
@@ -671,6 +717,11 @@ def check_bank(html, out, info):
                 continue
             if q['dep'] != dep_of(q, seq[st]):
                 out.append('%s: dependent letter %r, should be %r' % (iid, q.get('dep'), dep_of(q, seq[st])))
+            if st == 5:
+                # Every sum in descending powers (Jon, 27 Nov 2026): the question, the answer and each decoy.
+                for what, terms in [('question', q['q']), ('answer', q['answer']['terms'])] + [('decoy ' + d['err'], d['terms']) for d in q['decoys']]:
+                    if not descending(terms):
+                        out.append('%s: the %s\'s terms %s are not in descending powers' % (iid, what, terms))
             kind = shape(q)
             if kind is None:
                 out.append('%s: its terms %s are not a stage %d question' % (iid, q['q'], st))
@@ -725,6 +776,9 @@ def check_bank(html, out, info):
             work = [{'why': w, 'lhs': lhs_of(q, side), 'rhs': rhs} for w, side, rhs in working_of(q, ans_tex)]
             if q['working'] != work:
                 out.append('%s: working %r, rebuilt %r' % (iid, q['working'], work))
+            for n, w in enumerate(q['working'], 1):
+                if LETTER_LABEL.search(w['why']):
+                    out.append('%s: the label of working line %d, %r, names the table\'s letter, not the question\'s number' % (iid, n, w['why']))
             side = None
             for n, w in enumerate(q['working'], 1):
                 if w['lhs']:
@@ -1354,30 +1408,57 @@ FIT_JS = r"""async ([id, val, pro, ask]) => {
   DDX.ui.preview(id, pro);
   const frame = () => new Promise(r => requestAnimationFrame(() => r()));
   await frame();
+  // Under the large-screen zoom a rectangle is in the screen's px and a computed length in the page's own: zoom joins them.
+  const zoom = (window.MaffsLargeScreen && MaffsLargeScreen.state().zoom) || 1;
   const box = (el) => { if (!el) return null; const y = window.scrollY, r = el.getBoundingClientRect(); return r.width && r.height ? [Math.round(r.top + y), Math.round(r.bottom + y)] : null; };
+  const rect = (el) => { if (!el) return null; const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom, width: r.width, height: r.height }; };
   const px = (el, k) => parseFloat(getComputedStyle(el)[k]);
   const all = [...document.querySelectorAll('#opts .opt')];
   const b = all.find(x => x.dataset.val === val);
   if (!b) return null;
-  const host = document.getElementById('dgraph');
+  const host = document.getElementById('dgraph'), tab = document.getElementById('dtable');
   let asking = null;
   if (ask) {
     await frame();
     const k = all[0].querySelector('.katex');
+    // The table's body, open (on a narrow screen it is opened to be measured, then closed again): can it scroll?
+    let table = null;
+    if (tab) {
+      const was = tab.open;
+      if (!was) { tab.open = true; await frame(); }
+      const tb = tab.querySelector('.maffs-ref-body'), cs = getComputedStyle(tb);
+      table = { sh: tb.scrollHeight, ch: tb.clientHeight, sw: tb.scrollWidth, cw: tb.clientWidth, ox: cs.overflowX, oy: cs.overflowY };
+      if (!was) { tab.open = false; await frame(); }
+    }
     asking = { prompt: box(document.getElementById('ask')), opts: all.map(box), graph: box(host), graphOpen: !!(host && host.open),
-               maths: k ? px(k, 'fontSize') / px(document.body, 'fontSize') : 0,
+               maths: k ? px(k, 'fontSize') / px(document.body, 'fontSize') : 0, table,
+               cols: { q: rect(document.getElementById('qcard')), g: rect(host), box: rect(document.getElementById('graphBox')), t: rect(tab) },
+               clipped: all.filter(o => { const m = o.querySelector('.katex'); return o.scrollWidth > o.clientWidth + 1 || (m && m.getBoundingClientRect().right > o.getBoundingClientRect().right + 0.5); }).map(o => o.dataset.val),
                wide: document.documentElement.scrollWidth, view: document.documentElement.clientWidth };
   }
   b.click();
   await frame(); await frame();
   const fb = document.querySelector('#feedback .fb');
+  // The working's lines, each as its KaTeX box: from the top of its tallest strut to the bottom of its deepest (KaTeX
+  // gives every piece of maths a strut of exactly its height and depth). gaps: line to next line, in the working's em.
+  const worked = fb && fb.querySelector('.worked');
+  let gaps = null, spill = 0;
+  if (worked) {
+    const em = px(worked, 'fontSize') * zoom;
+    const bx = [...worked.querySelectorAll('.w-line')].map(l => { let t = null, u = null;
+      l.querySelectorAll('.katex-html .strut').forEach(s => { const r = s.getBoundingClientRect(); t = t === null ? r.top : Math.min(t, r.top); u = u === null ? r.bottom : Math.max(u, r.bottom); });
+      return [t, u]; });
+    gaps = bx.slice(1).map((x, i) => (x[0] === null || bx[i][1] === null) ? null : (x[0] - bx[i][1]) / em);
+    const edge = fb.getBoundingClientRect().right;
+    spill = [...worked.querySelectorAll('.w-rhs .katex')].filter(m => m.getBoundingClientRect().right > edge + 0.5).length;
+  }
   const marked = [...document.querySelectorAll('#opts .opt.is-wrong, #opts .opt.is-right')].map(box);
   const left = (el) => Math.round(el.getBoundingClientRect().left * 10) / 10;
   const lines = fb ? [...fb.querySelectorAll('.w-line')].map(l => { const w = l.querySelector('.w-why').getBoundingClientRect(), r = l.querySelector('.w-rhs').getBoundingClientRect();
     return { eq: left(l.querySelector('.w-rhs')), whyRight: w.right, whyBottom: w.bottom, whyTop: w.top, rhsLeft: r.left, rhsTop: r.top, rhsBottom: r.bottom }; }) : [];
-  const out = { fold: window.innerHeight - 40, wide: document.documentElement.scrollWidth, view: document.documentElement.clientWidth,
+  const out = { fold: Math.round(window.innerHeight - 40 * zoom), wide: document.documentElement.scrollWidth, view: document.documentElement.clientWidth,
            why: fb ? fb.dataset.why : null, err: fb ? fb.dataset.err || null : null, errText: fb && fb.querySelector('.fb-err') ? fb.querySelector('.fb-err').textContent : null,
-           table: !!document.getElementById('dtable'), asking, lines,
+           table: !!document.getElementById('dtable'), asking, lines, zoom, gaps, spill,
            graph: box(host), graphOpen: !!(host && host.open),
            parts: { 'the prompt': box(document.getElementById('ask')), 'the "Right" line': box(fb && fb.querySelector('.fb-head')), 'the line': box(fb && fb.querySelector('.fb-err')),
                     'the working': box(fb && fb.querySelector('.worked')),
@@ -1395,8 +1476,33 @@ FIT_JS = r"""async ([id, val, pro, ask]) => {
 }"""
 
 
+def check_columns(tag, a, zoom, pro, out):
+    """From 1280 px: the question on the left; on the right the graph, filling its column, at least GRAPH_GROWTH times
+    the area it had; under it, in the same column, the table (in Pro there is none, and the graph has the column).
+    Returns the box's area over what it was."""
+    c = a['cols']
+    q, g, bx, t = c['q'], c['g'], c['box'], c['t']
+    if not q or not g or not bx:
+        out.append('%s: the question\'s card, the graph\'s panel or its box is not on screen' % tag)
+        return None
+    grew = bx['width'] * bx['height'] / zoom ** 2 / GRAPH_BEFORE
+    if grew < GRAPH_GROWTH:
+        out.append('%s: the graph\'s box is %.0f x %.0f px, %.2f times the area it had (324 x 230 px); at least %g times' % (
+            tag, bx['width'] / zoom, bx['height'] / zoom, grew, GRAPH_GROWTH))
+    if not (q['right'] <= g['left'] and abs(q['top'] - g['top']) <= 1.5):
+        out.append('%s: the question is not on the left with the graph beside it (the card ends at %.0f px, the graph starts at %.0f px)' % (tag, q['right'], g['left']))
+    if bx['width'] < g['width'] - 40 * zoom:                # the panel's own padding and border: 36 px
+        out.append('%s: the graph does not fill its column (%.0f px wide in a panel of %.0f px)' % (tag, bx['width'], g['width']))
+    if not pro:
+        if not t or abs(t['left'] - g['left']) > 1.5 or abs(t['width'] - g['width']) > 1.5 or t['top'] < g['bottom']:
+            out.append('%s: the table is not under the graph in the same column (graph %s, table %s)' % (
+                tag, [round(g[k]) for k in ('left', 'top', 'right', 'bottom')], t and [round(t[k]) for k in ('left', 'top', 'right', 'bottom')]))
+    return grew
+
+
 def check_fit(page, items, size, aa, pro, lines, out, info):
     worst, n = None, 0
+    tight, grew = None, None
     mode = '%s, %s' % ('Aa' if aa else 'normal', 'Pro' if pro else 'with the table')
     wide = size[0] >= WIDE
     for q in items:
@@ -1424,6 +1530,16 @@ def check_fit(page, items, size, aa, pro, lines, out, info):
                     out.append('%s: the options\' maths is %.2f times the body\'s size (at least 1.35)' % (atag, a['maths']))
                 if a['graph'] is None or a['graphOpen'] != wide or (wide and (a['graph'][0] < 0 or a['graph'][1] > fold)):
                     out.append('%s: the graph is %s at %s (from 1024 px: open, on screen above the fold at %d px; narrower: a closed button)' % (atag, 'open' if a['graphOpen'] else 'closed', a['graph'], fold))
+                t = a['table']
+                if t is not None and (t['ox'] != 'visible' or t['oy'] != 'visible' or t['sh'] > t['ch'] or t['sw'] > t['cw']):
+                    out.append('%s: the table\'s body can scroll inside its box (overflow %s across and %s down; %d px of table in %d px across, %d in %d down)' % (
+                        atag, t['ox'], t['oy'], t['sw'], t['cw'], t['sh'], t['ch']))
+                if a['clipped']:
+                    out.append('%s: an option is wider than its button: %s' % (atag, a['clipped']))
+                if size[0] >= TWO_COL:
+                    g = check_columns(atag, a, r['zoom'], pro, out)
+                    if g is not None and (grew is None or g < grew):
+                        grew = g
             if (r['why'] != 'right') if right else (r['err'] != d['err'] or r['errText'] != lines.get(d['err'])):
                 out.append('%s: shows %s' % (tag, 'no "Right" (%s)' % r['why'] if right else 'the line %r, not the LINES line for %s' % (r['errText'], d['err'])))
             for name, b in r['parts'].items():
@@ -1447,6 +1563,18 @@ def check_fit(page, items, size, aa, pro, lines, out, info):
                     above = ln['whyBottom'] <= ln['rhsTop'] + 0.5
                     if not (beside if wide else above):
                         out.append('%s: the label of working line %d is not %s its line' % (tag, i, 'beside' if wide else 'above'))
+                # Room between the lines (Jon, 27 Nov 2026): KaTeX box to KaTeX box, never under half an em.
+                gaps = r['gaps']
+                if gaps is None or len(gaps) != len(q['working']) - 1 or any(x is None for x in gaps):
+                    out.append('%s: the working\'s lines cannot be measured (%s)' % (tag, gaps))
+                else:
+                    for i, x in enumerate(gaps, 1):
+                        if x < CLEAR_EM - 0.005:
+                            out.append('%s: working lines %d and %d are %.2f em apart (at least %g em between their KaTeX boxes)' % (tag, i, i + 1, x, CLEAR_EM))
+                        if tight is None or x < tight[0]:
+                            tight = (x, q['id'])
+                if r['spill']:
+                    out.append('%s: %d line(s) of the working run past the feedback\'s box' % (tag, r['spill']))
             if wide and (r['graph'] is None or not r['graphOpen'] or r['graph'][0] < 0 or r['graph'][1] > fold):
                 out.append('%s: the graph is not open on screen above the fold (%s)' % (tag, r['graph']))
             if not wide and (r['graphOpen'] or r['graph'] is None or r['nextOpen'] != r['parts']['Next']):
@@ -1455,7 +1583,7 @@ def check_fit(page, items, size, aa, pro, lines, out, info):
             nb = r['parts'].get('Next')
             if nb and (worst is None or fold - nb[1] < worst[0]):
                 worst = (fold - nb[1], q['id'], 'right' if right else d['err'])
-    info.setdefault('fit', []).append((size, mode, n, worst))
+    info.setdefault('fit', []).append((size, mode, n, worst, tight, grew))
 
 
 def fit_units():
@@ -1571,7 +1699,7 @@ def check(html, out, units, shard=None, sample=None):
 PLANT_SAMPLE = 8
 
 # Each plant: (what, [(old, new)], the unit it needs, the pattern its finding must match). The eight of D-BY-DX-BUILD,
-# then the five of D-BY-DX-GRAPH.
+# the five of D-BY-DX-GRAPH, then the five of D-BY-DX-POLISH.
 DRAW = "plot.add('d', curve(Q.answer.terms), {"
 PLANTS = [
     ('a wrong answer', [('"answer":{"tex":"20x^{3}","terms":[["pow","20","3"]]}', '"answer":{"tex":"21x^{3}","terms":[["pow","21","3"]]}')],
@@ -1605,6 +1733,19 @@ PLANTS = [
      [(DRAW, "plot.add('d', (function () { var a = (Q.graph.x[0] + Q.graph.x[1]) / 2, m = value(Q.answer.terms, a), c = value(Q.q, a); "
              "return function (x) { return c + m * (x - a); }; })(), {")],
      'graph 1280x720', r"the gradient function's curve is not the answer's"),
+    # D-BY-DX-POLISH's four, and the room round a stacked fraction.
+    ('overflow-x: auto restored on the table\'s body', [('.dtable .dt{width:100%}', '.dtable .dt{width:100%}.dtable .maffs-ref-body{overflow-x:auto}')],
+     'fit 1920x1080 normal table', r"the table's body can scroll inside its box \(overflow auto across and auto down"),
+    ('row-gap 0 restored on the working', [('column-gap:.7rem;row-gap:.3rem;', 'column-gap:.7rem;row-gap:0;')],
+     'fit 1280x720 normal table', r'working lines 1 and 2 are 0\.\d\d em apart \(at least 0\.5 em'),
+    ('a label that says "a out front"',
+     [('{"why":"4 out front, and in the angle","lhs":"\\\\dfrac{dy}{dx}","rhs":"4\\\\cos(4x)"}', '{"why":"a out front, and in the angle","lhs":"\\\\dfrac{dy}{dx}","rhs":"4\\\\cos(4x)"}')],
+     'bank', r"s3-01: the label of working line 1, 'a out front, and in the angle', names the table's letter"),
+    ('a Stage 5 question with its linear term first',
+     [('"q":[["pow","2","3"],["pow","5","1"]],"qtex":"2t^{3}+5t"', '"q":[["pow","5","1"],["pow","2","3"]],"qtex":"2t^{3}+5t"')],
+     'bank', r"s5-01: the question's terms .* are not in descending powers"),
+    ('the room round a stacked fraction taken away', [('.w-line:has(.mfrac)>span{padding-block:.18em}', '.w-line:has(.mfrac)>span{padding-block:0}')],
+     'fit 1280x720 normal table', r'working lines 1 and 2 are 0\.\d\d em apart \(at least 0\.5 em'),
 ]
 
 
@@ -1665,8 +1806,11 @@ def main():
         print('%s: the start screen\'s pens read %d times while drawing, at the same x each time; drawn in %.1f s, left %.1f s; hidden tab, third pair and the loop checked' % ((SLUG,) + info['pens']))
     if 'still' in info:
         print('%s: with reduced motion the first pair is finished and still, and a gradient function is drawn at once' % SLUG)
-    for size, mode, n, worst in info.get('fit', []):
-        print('%s: %d asking, right and wrong screens at %dx%d (%s); the least room under Next: %s' % (SLUG, n, size[0], size[1], mode, ('%d px (%s, %s)' % worst) if worst else 'none measured'))
+    for size, mode, n, worst, tight, grew in info.get('fit', []):
+        print('%s: %d asking, right and wrong screens at %dx%d (%s); the least room under Next: %s; the working\'s closest lines: %s%s' % (
+            SLUG, n, size[0], size[1], mode, ('%d px (%s, %s)' % worst) if worst else 'none measured',
+            ('%.2f em (%s)' % tight) if tight else 'none measured',
+            ('; the graph\'s box at least %.2f times the area it had' % grew) if grew is not None else ''))
     for size, mode, art, last, fold in info.get('start', []):
         print('%s: the start screen at %dx%d (%s): the picture %.0f px wide from %d to %d px; Stage 5\'s button ends at %d px, the fold is at %d px' % (SLUG, size[0], size[1], mode, art[2], art[0], art[1], last, fold))
     ok = selftest(html, [p for p in PLANTS if 'plant: ' + p[0] in mine], shard)
