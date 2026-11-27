@@ -357,7 +357,7 @@
    "tier": "content"
   },
   "verify-equation-builder.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (3 needed)",
    "label": "Equation Builder (every question's tile arrangements classified by SymPy, in twelve slices; the whole-question checks; the tile order in Chromium; self-test)",
    "parts": 3,
    "tier": "content"
@@ -465,7 +465,7 @@
    "tier": "content"
   },
   "verify-some-thingies.py": {
-   "how": "chosen from 88 timed unit(s)",
+   "how": "kept from the pack (16 needed)",
    "label": "Some Thingies (the thingies' accessories by colour, a medal in pro, nothing moving under reduced motion; the start screen's crowd, the conga line and Sarge never pushing Start or Next below the fold; the winner crowd growing and never scoring, every thingy drawn (CROWD-FILL: 16 px until the screen is full, then shrinking to fit, never under 6 px, nothing above it moving, the cheer by its size, the count on the results screen; at 1280x720, 1904x864 and 375x667 in both looks); Stage 4's thingy in glasses reacting beside every question and each fact drawn as plates only after marking, a plates of b, shrunk or dropped so Next stays above the fold and the crowd keeps its size (SOME-THINGIES-FACTS: all 192 items at 320x568, 375x667 and 1280x720, both looks, normal and Aa); the character beside the question, Sarge and the thingy in glasses, one measured size from 48 to 96 px beside the question where the room allows, else the top row at 22 px, the same before and after marking, never costing the fold, the fact picture or the crowd, the largest that fits (SOME-THINGIES-HOST: every Stage 3 and 4 item at 320x568, 375x667, 1366x768 and 1920x955, both looks, normal and Aa); Stage 3 drawn as thingies coloured by column with gaps after the 5th, fitting 360 px; the scaffold fading 3, 2, 1 steps, never scoring; winner stays on: at least 10, then to the first wrong or End; the bank's SHA-256 and counts against the contract's and the generator's; all 369 items recomputed: groups x each, the sum's terms, rows x cols, a x b, product / b; every decoy distinct and never the answer, no decoy sum with the answer's total, no groups decoy equal to the groups; the fragment never sent or stored; in both looks every item on screen with its picture counted, every option marked by dataset.val alone, right and wrong, one LINES string then the worked maths; the array turned round after marking; the greeting for each fragment; read aloud on local voices only against a mocked speechSynthesis; every item of every mode and stage above the fold at 360x640 in both looks, speaker showing, as question 1 and 11 (arrays also 5 and 8): every control at every step, then Next after every right-answer line and every decoy (fit_common's sweep, nothing sampled); every mode and stage played in both looks at 360x640, the largest picture, array and sum fitting 360 px; one board submission on stage-N or pro-stage-N, no payload naming the look; fault-injection self-test)",
    "parts": 16,
    "tier": "content"
