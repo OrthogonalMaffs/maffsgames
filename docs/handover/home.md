@@ -18,7 +18,7 @@
 
 ## 2026-11-27 (home): D-BY-DX-POLISH (d by dx? Why?: two columns from 1280 px with a larger graph and the table under it; a table that cannot scroll; room round the working's stacked fractions; a regenerated bank with bracketed arguments, numbered labels and Stage 5 in descending powers)
 
-Claude Code (home lane), worktree `~/mg-d-by-dx-polish`, branch `claude/d-by-dx-polish`. The contract is at `docs/handover/contracts/2026-11-27-d-by-dx-polish.md` (verbatim). The first commit closed out D-BY-DX-GRAPH.
+Claude Code (home lane), worktree `~/mg-d-by-dx-polish`, branch `claude/d-by-dx-polish`. PR #941. The contract is at `docs/handover/contracts/2026-11-27-d-by-dx-polish.md` (verbatim). The first commit closed out D-BY-DX-GRAPH.
 
 - **The bank:** `tools/d-by-dx-why/bank.py` is the contract's, verbatim; it prints total 60 and sha256 f9ddc279...8ec927, and its two checks pass. Embedded one item a line. The page's table rows are bracketed too: sin(ax), a cos(ax), cos(ax), -a sin(ax), ln(ax); e^(ax) is written as the power it is.
 - **The table's scroll, measured before changing (main 9e05404):** the body's own `overflow-x:auto` (the page's rule; `fold.css` sets none) computes overflow-y to auto, and under the large-screen zoom the body's content came out 1 px taller than its box at 115 of 990 window sizes tried in headless Chromium (1024 to 2560 px wide, five heights, normal and Aa): all in normal mode, at zooms 1.15 to 1.55, the narrowest 1504 px wide. Never at zoom 1, and not at 2560 x 1440 itself (zoom 1.6), so Jon's own two windows were not reproduced here; the cause was. The rule is gone, so no bar can be drawn at any size, and the table is as wide as its column; it fits every width without a smaller font (the narrowest: 264 px of column, Aa).
@@ -31,6 +31,9 @@ Claude Code (home lane), worktree `~/mg-d-by-dx-polish`, branch `claude/d-by-dx-
 - **Large screens:** the page's measured need is 617 px (607 before); `data/large-screen.json` and the page's tag updated; `check-large-screen.py` passes.
 - **Found, not changed (shared):** `schools/assets/site-nav.js` sizes the corner title from rectangles in the screen's px and applies it in the page's px, so under the zoom the title can be given more room than there is. On main it ends 4 px short of this page's HUD at 2560 x 1440; a page 40 px wider would sit under it.
 - **/updates/:** none (the game is unlisted). **`docs/todo.md`:** untouched.
+- **Run IDs and the merge:** in the next home contract's first commit, as usual (AGENTS.md, close-outs).
+
+Record: agent Claude Code; wall 1:25; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-27 (home): D-BY-DX-GRAPH (d by dx? Why? draws f with the question and the gradient function over it once answered, through a new shared plotter; a regenerated bank; Next after a right answer; the large-screen layer)
 
