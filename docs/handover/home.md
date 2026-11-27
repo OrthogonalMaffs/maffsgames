@@ -33,7 +33,7 @@ Claude Code (home lane), worktree `~/mg-d-by-dx-polish`, branch `claude/d-by-dx-
 - **/updates/:** none (the game is unlisted). **`docs/todo.md`:** untouched.
 - **Run IDs and the merge:** in the next home contract's first commit, as usual (AGENTS.md, close-outs).
 
-Record: agent Claude Code; wall 1:25; review cycles 0; amendments 0; usage n/a.
+Record: agent Claude Code; wall 0:35; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-27 (home): D-BY-DX-GRAPH (d by dx? Why? draws f with the question and the gradient function over it once answered, through a new shared plotter; a regenerated bank; Next after a right answer; the large-screen layer)
 
