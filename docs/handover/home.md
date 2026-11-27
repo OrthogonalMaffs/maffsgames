@@ -16,6 +16,22 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
+
+Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`. The contract is at `docs/handover/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
+
+- **Jon (27 Nov 2026, 17:57):** "merge script please".
+- **(a''), new, in `scripts/merge-pr.py`:** M is main's newest merge as (b') picks it (bot skip-marker commits passed over). If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or "identical"), it passes. Otherwise the Gate's run and the phone-fit run must each have been created after M's committer date, or the merge is refused, naming M and the run. The Gate's time is its workflow run's created_at, found by check suite; the Gate check's own started_at (the end of the run) is never read.
+- **Red, never waited on:** judged every poll with (a) and (a'), also while a run is still going; --wait does not wait on it and --override does not waive it.
+- **The record behind the fixtures:** #930's runs were created at 17:16:26Z on 26 Nov, #927 landed on main at 17:35:08Z, the Gate check started at 17:37:25Z and #930 merged at 17:52:57Z. Ids, shas and those times in the selftest are GitHub's.
+- **Selftest:** 17 new cases and 4 plants (the check removed; the Gate's started_at for its run's created_at; bot skip-marker commits counted as M; the ancestor test inverted), each caught. The 108 lines the selftest printed before are printed unchanged.
+- **Decided here, for review:** (1) a run created in the same second as M is refused (not after it); (2) under --override, which waives (b'), an unreadable M is refused by (a'') itself, so the override cannot pass an unjudged PR; (3) a Gate check that cannot be tied to a run, or an unreadable compare or commit, is refused, never guessed; (4) the selftest's fake API moves a phone-fit script on once per poll, not once per read, since two checks now read those runs in a poll.
+- **Not touched:** (a), (a'), (b), (b'), (c), the watch, --head, the retries, the merge PUT; every workflow; `serve-stubbed.py`, `bank_common.py`.
+- **AGENTS.md:** the stale-Gate rule gains "merge-pr.py enforces this (MERGE-GUARD, 27 Nov 2026)".
+- **Run IDs and the merge:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-26 (home): BASE-60-TIDY (Base 60's cuckoo rides out on a perch joined to its clock; the page's stale comment; spec-map row N13 names time)
 
 Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`, PR #932. The contract is at `docs/history/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
