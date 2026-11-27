@@ -8,8 +8,12 @@
  * reader never sees why they were wrong, too long and a fast one is held hostage.
  *
  * So we stop guessing. A correct answer keeps whatever brisk delay the game already
- * had. A wrong answer shows a "Next →" control and waits for the student, with a
- * generous fallback so a walked-away tab still finishes rather than hanging forever.
+ * had. A wrong answer shows a "Next →" control and waits for the student, with no
+ * timer: however long they take, the game stays where it is. Jon, 27 Nov 2026: "the
+ * student needs to press continue, it gives them a chance to check where they went
+ * wrong, and write down the correct method before moving on". A game left waiting
+ * costs nothing; a student cut off mid-method loses the lesson. (Until then the control
+ * advanced by itself after 20s, and seven pages each passed a day-long delay to stop it.)
  *
  * The pause is only worth anything if there is something on screen to read, so a game
  * must show its working/explanation on the wrong path BEFORE calling this. See
@@ -19,10 +23,10 @@
  * -------------------------------
  *   - A floor: for FLOOR_MS (3s, Jon's ruling of 29 Sep 2026) the control is visibly
  *     disabled and nothing a student does can advance, so the explanation is on screen
- *     for at least that long. The floor is separate from the fallback.
+ *     for at least that long.
  *   - Advance once: onAdvance runs at most once per wrong() call, however it is
  *     triggered — a click, Enter or Space on the focused control, the game's own key
- *     handler calling advance(), or the fallback. A game that also listens for Enter
+ *     handler calling advance(), or a test's fallbackMs. A game that also listens for Enter
  *     can no longer skip a question by advancing twice on one key press.
  *   - clear() cancels: removing a control also cancels its timers and listeners, so
  *     nothing it scheduled can fire after the game has moved on.
@@ -43,9 +47,10 @@
  *
  * Options:
  *   mount       element to append the control to (required)
- *   onAdvance   called once, on click or on fallback (required)
- *   fallbackMs  safety net, default 20000. Deliberately long: it is not the mechanism.
- *               It runs on its own clock and ignores the floor.
+ *   onAdvance   called once, when the student presses Next or the game calls advance() (required)
+ *   fallbackMs  FOR TEST HARNESSES ONLY: advance by itself after this many ms, on its own
+ *               clock, ignoring the floor. No default: without it there is no timer. No page
+ *               passes it (scripts/test-next-control.py scans the pages and fails on one).
  *   label       button text, default 'Next →'
  *   keep        the reason/feedback element (or a function returning it) whose top must stay
  *               on screen while Next is brought into view; default the control itself
@@ -58,7 +63,6 @@
 (function () {
   'use strict';
 
-  var FALLBACK_MS = 20000;
   var FLOOR_MS = 3000;
   var api;   // window.MaffsNext, assigned below
 
@@ -180,7 +184,7 @@
     btn.style.setProperty('--maffs-next-floor', floor + 'ms');   // the fill crosses in the floor's time
     var state = { btn: btn, ready: false, done: false, cancelled: false, fallback: null, floor: null, onClick: null };
 
-    // The single way out. `force` is the fallback, which runs on its own clock and
+    // The single way out. `force` is a test's fallbackMs, which runs on its own clock and
     // ignores the floor; everything a student or a game does waits for the floor.
     function go(force) {
       if (state.done || state.cancelled) return;
@@ -207,9 +211,11 @@
       try { btn.focus({ preventScroll: true }); } catch (e) { /* older browsers */ }
     }, floor);
 
-    // Safety net only. If the student walks away the run still completes.
-    state.fallback = setTimeout(function () { state.fallback = null; go(true); },
-      typeof opts.fallbackMs === 'number' ? opts.fallbackMs : FALLBACK_MS);
+    // No automatic advance (Jon, 27 Nov 2026): the control waits for the student. Only a test
+    // harness's own fallbackMs sets a timer.
+    if (typeof opts.fallbackMs === 'number') {
+      state.fallback = setTimeout(function () { state.fallback = null; go(true); }, opts.fallbackMs);
+    }
 
     // The reason and Next on screen (canon §7.6.1), settling as the page does.
     reveal(wrap, opts.keep, state);
@@ -227,6 +233,6 @@
     }
   }
 
-  api ={ wrong: wrong, clear: clear, FALLBACK_MS: FALLBACK_MS, FLOOR_MS: FLOOR_MS };
+  api ={ wrong: wrong, clear: clear, FLOOR_MS: FLOOR_MS };
   window.MaffsNext = api;
 })();

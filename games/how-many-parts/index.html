@@ -1250,7 +1250,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     boards: ['foundation-s1', 'foundation-s2', 'foundation-s3', 'foundation-s4', 'foundation-s5'] });
   var mode = 'stage1';     // Foundation's stage, picked on the start screen
   var CORRECT_DELAY = 1100;
-  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: a wrong answer's steps wait for Next
   var $ = function (id) { return document.getElementById(id); };
   function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -1618,7 +1617,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('qcard').classList.add('fb-open');
     document.body.classList.add('fb-open');
     explain($('feedback').querySelector('.explain'), q, null);
-    MaffsNext.wrong({ mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion, fallbackMs: NO_FALLBACK });
+    MaffsNext.wrong({ mount: $('feedback').querySelector('.fb-next'), onAdvance: nextQuestion });
     // The phone rule (canon 7.6.1): the line and Next above the fold. Where the bar would push Next below it (a
     // small phone, Aa mode), the bar is drawn after Next instead: visual order only, the reading order stays.
     var fb = $('feedback').querySelector('.fb'), nx = fb.querySelector('.fb-next button');

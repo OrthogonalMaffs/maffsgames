@@ -145,7 +145,7 @@ with a short Playwright script per game in the scratchpad. The pattern, used for
   the fold (`innerHeight` minus the 40px `.site-footer`);
 - answer wrongly through the game's own function, wait out its feedback, record the bottom of
   `.maffs-next` (or the game's Next), and **press it** before the next item — re-rendering without
-  pressing leaves a 20s fallback pending, which fires later and ends the session mid-loop;
+  pressing leaves the control pending (Next no longer advances by itself: NEXT-NO-FALLBACK, 27 Nov 2026);
 - for every wrong option, not just the first, where the screen depends on which was picked;
 - before (on the `main` worktree) and after, at 320×568, 375×667 and 390×844.
 
