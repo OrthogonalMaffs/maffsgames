@@ -70,7 +70,7 @@ WHAT IT ASSERTS (Jon's contract, docs/next-contract-just-pythag-it-bruv.md, poin
               keyboard); the start screen shows
               "Foundation" and "Calculator required"; the page is not noindex (listed 8 Oct 2026); a format answer is not
               marked and sends no event; the first three add errors show the worked example (with
-              the Next control's fallback timer off), the fourth and fifth the nudge; other wrong
+              its Next given no timer of the page's own), the fourth and fifth the nudge; other wrong
               answers show the worked solution; the four canon 1.3 events carry their parameters
               at level 'ks3'; one score is submitted, to 'ks3', for 20 questions.
   Phone       at 320x568, 375x667 and 390x844, every question shape (all 14 triangles of round 1 as
@@ -1122,8 +1122,8 @@ async def ui_playthrough(browser, out, seed=4242):
                         if frag not in fb:
                             out.append("UI q%d: the worked example does not show %r" % (i, frag))
                     fbk = (await page.evaluate("window.__next"))[-1]
-                    if fbk is None or fbk < 2 ** 31 - 1:
-                        out.append("UI q%d: the worked example's Next has a fallback timer (%r)" % (i, fbk))
+                    if fbk is not None:   # NEXT-NO-FALLBACK (27 Nov 2026): no page passes one; the helper has no default
+                        out.append("UI q%d: the worked example's Next is given a fallback timer (%r)" % (i, fbk))
                 if want == "nudge" and NUDGE not in fb:
                     out.append("UI q%d: the nudge is missing" % i)
                 if q["keyText"] not in fb or "opposite the right angle" not in fb:

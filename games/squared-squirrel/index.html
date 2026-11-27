@@ -807,7 +807,6 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4', 'stage-5'] });
   var mode = 'stage-1';
   var CORRECT_DELAY = 1100;
-  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: a wrong answer waits for Next
   var FOOTER_PX = 40;
   var $ = function (id) { return document.getElementById(id); };
   function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
@@ -1041,7 +1040,7 @@ body.accessible .katex{letter-spacing:normal;word-spacing:normal}
     $('feedback').innerHTML = h;
     $('qcard').classList.add('fb-open');
     var fb = $('feedback').querySelector('.fb');
-    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: nextQuestion, fallbackMs: NO_FALLBACK });
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: nextQuestion });
     window.scrollTo(0, 0);
     var nx = fb.querySelector('.fb-next button');
     if (nx && nx.getBoundingClientRect().bottom > window.innerHeight - FOOTER_PX) fb.classList.add('tight');

@@ -344,7 +344,6 @@
   var NAME_PREFIX = 'six-ps:';
   var SLUG = 'the-6-ps';
   var LEVEL = 'all';      // the page has no levels
-  var NO_FALLBACK = 2147483647;   // the longest delay setTimeout takes: a wrong answer's working waits for Next
   var FORMATS = ['number', 'money', 'fraction', 'ratio', 'coordinates', 'choice', 'number_unit', 'pair', 'standard_form'];
 
   function tenths(t) { return Math.round(t.marks * 10); }
@@ -1170,7 +1169,7 @@
       b.addEventListener('click', advance);
       $('qNext').appendChild(b);
     } else {
-      MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, fallbackMs: NO_FALLBACK, label: label });
+      MaffsNext.wrong({ mount: $('qNext'), onAdvance: advance, label: label });
     }
     // The verdict, and Next with it where it fits, are in view without a scroll of the student's own.
     // MaffsScroll scrolls again once the layout settles: working with fractions grows when the maths font arrives (#566, main run 40479208314).

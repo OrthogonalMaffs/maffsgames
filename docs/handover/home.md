@@ -16,9 +16,27 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-27 (home): NEXT-NO-FALLBACK (the shared Next control no longer advances by itself; canon §7.6 says so, and that a revealing right answer waits too)
+
+Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-no-fallback`. The contract is at `docs/handover/contracts/2026-11-27-next-no-fallback.md` (verbatim). The first commit closed out MERGE-GUARD.
+
+- **Jon (27 Nov 2026, 18:27):** "I'd remove the auto advance … the student needs to press continue, it gives them a chance to check where they went wrong, and write down the correct method before moving on".
+- **The helper (`schools/assets/next-control.js`):** no timer unless `fallbackMs` is passed; the 20 s default and the exported `FALLBACK_MS` are gone (nothing read the constant but canon). `fallbackMs` stays for test harnesses. The floor, the in-view scroll, advance-once, clear(), the 44 px target and the MaffsLock clearing are untouched.
+- **The seven pages:** the-6-ps, take-a-walk, squared-squirrel, just-pythag-it-bruv, how-many-parts, 52dle and distinctly-average no longer pass `fallbackMs` (the NO_FALLBACK constants and the day-long literal are gone). Nothing else in them changed.
+- **The guard, in `scripts/test-next-control.py` (the "Shared asset tests" job, which runs on every PR):** a static scan fails on any `.html` or `.js` under games/, escape-rooms/, the-6-ps/ or any page in the site root that names `fallbackMs` (plant: a page passing `fallbackMs: 20000`, caught); with no `fallbackMs` the control does not advance in 90 s on a fast clock (the page's setTimeout at 1/100) and Enter still advances once (plant: the 20 s default restored, caught). The existing fallback cases already passed `fallbackMs` themselves.
+- **One verifier changed, because it held a page's workaround:** `verify-just-pythag-it-bruv.py` required the worked example's Next to be given the day-long delay; it now requires that the page passes none.
+- **One check relied on the 20 s default, and now advances for itself:** `check-teacher-invite.py` plays factor-theorem to its results screen, and its step never pressed the shared Next (its harness cut every timer to 25 ms, so the fallback moved it on). The first Gate (check-site 46053172613) failed there. The step now presses Next; what the check tests, the teacher line on the results screen, is unchanged. The same Gate also failed Text writes (the new test's two planted files were written without newline=''; fixed) and one job on a Docker pull.
+- **Canon §7.6:** a wrong answer waits with no timer (Jon's reason); the new line on a right answer that reveals something new, in the contract's words; the three other mentions of the fallback in the section now say "a test's `fallbackMs`".
+- **Stale words fixed:** `check-answer-lock.py`'s docstring and `docs/sandbox-checks.md` spoke of the 20 s fallback. `scripts/check-site.py:2680` still does, in a comment; that file is the cloud lane's.
+- **A wrong answer advanced by a page's own timer (the contract's STOP IF list; none changed here):** trig-wars (a miss shows its tip for 2.8 s and passes the turn; exempt by Jon's ruling of 19 Nov) and higher-power (a wrong guess ends the run). correlation-or-coincidence falls back to 4 s only if next-control.js did not load. CI's pause check (WRONG-PAUSE-NEXT) holds every other judged game for 3 s; a scan of the pages for timers of 3 s or more found no other. Six games that check cannot judge are on its own list (WRONG_PAUSE_UNCHECKED).
+- **/updates/:** one line, 27 Nov.
+- **Run IDs and the merge:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
 
-Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`. The contract is at `docs/handover/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
+Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`, PR #935. The contract is at `docs/history/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
 
 - **Jon (27 Nov 2026, 17:57):** "merge script please".
 - **(a''), new, in `scripts/merge-pr.py`:** M is main's newest merge as (b') picks it (bot skip-marker commits passed over). If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or "identical"), it passes. Otherwise the Gate's run and the phone-fit run must each have been created after M's committer date, or the merge is refused, naming M and the run. The Gate's time is its workflow run's created_at, found by check suite; the Gate check's own started_at (the end of the run) is never read.
@@ -28,7 +46,9 @@ Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard
 - **Decided here, for review:** (1) a run created in the same second as M is refused (not after it); (2) under --override, which waives (b'), an unreadable M is refused by (a'') itself, so the override cannot pass an unjudged PR; (3) a Gate check that cannot be tied to a run, or an unreadable compare or commit, is refused, never guessed; (4) the selftest's fake API moves a phone-fit script on once per poll, not once per read, since two checks now read those runs in a poll.
 - **Not touched:** (a), (a'), (b), (b'), (c), the watch, --head, the retries, the merge PUT; every workflow; `serve-stubbed.py`, `bank_common.py`.
 - **AGENTS.md:** the stale-Gate rule gains "merge-pr.py enforces this (MERGE-GUARD, 27 Nov 2026)".
-- **Run IDs and the merge:** in the close-out, as usual.
+- **Gate on the PR head f038472f:** check-site 46046955243 and phone-fit-full 46046955221, both green.
+- **Merged** on Jon's "merge", 27 Nov at 18:30 UTC, as b6c0119 (#935, squash) via merge-pr.py, which ended "main b6c0119 run 46049988829: GREEN". Main on b6c0119: check-site 46049988829, phone-fit-full 46049988775 and the pages build 46049988366, each success.
+- **Departure, as the lane reported it:** the contract said main's current script judges this merge. merge-pr.py was run from the PR's worktree, so the new version judged its own merge; the new check passed (main's newest merge, #934, was in the branch) and every existing condition was applied unchanged.
 
 Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
 

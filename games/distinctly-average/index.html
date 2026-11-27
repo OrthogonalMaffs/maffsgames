@@ -1481,11 +1481,7 @@ function checkAnswer(selectedVal, btnEl) {
       document.getElementById('nextMount').insertAdjacentHTML('beforebegin',
         medianCardHTML(true, 'maffs-ref-fits') + medianCardHTML(false, 'maffs-ref-phone'));
     }
-    // Fallback deliberately extended (24h, safely under setTimeout's ~24.8-day
-    // ceiling) rather than the shared 20s default — canon §7.6 wants NO
-    // timeout on the wrong-answer path here; MaffsNext.wrong's own
-    // fallbackMs option makes that possible without editing the helper.
-    MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: loadQuestion, fallbackMs: 24 * 60 * 60 * 1000 });
+    MaffsNext.wrong({ mount: document.getElementById('nextMount'), onAdvance: loadQuestion });
   }
 }
 

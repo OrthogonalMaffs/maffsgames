@@ -39,8 +39,8 @@ the real clock), at its first roster level:
   3. at 390px on a touch screen, answer wrong and double-tap Next: nothing marked by the second tap. First, the
      pause (contract WRONG-PAUSE-NEXT, 19 Nov 2026, and Jon's ruling on its stop; canon 7.6): within PAUSE_S (3 s,
      real clock) of the wrong mark a control the student presses to go on is on screen, and the question does not
-     change by itself in that time (the auto-advance timers #838 found were 800-1000 ms; MaffsNext's 20 s fallback is
-     5 s at TIME_SCALE). The control: MaffsNext's; the shared retry pattern's .dismiss-btn (_addDismiss: "Try Again",
+     change by itself in that time (the auto-advance timers #838 found were 800-1000 ms; MaffsNext has not advanced by
+     itself since NEXT-NO-FALLBACK, 27 Nov 2026). The control: MaffsNext's; the shared retry pattern's .dismiss-btn (_addDismiss: "Try Again",
      added after 2000 ms; the question stays until it is pressed); or the game's own, where OWN_NEXT names it;
 
 The pause check's four lists (WRONG-PAUSE-NEXT; each entry carries its reason):

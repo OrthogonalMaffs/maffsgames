@@ -974,7 +974,6 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
   'use strict';
   var J = window.JPIB, SLUG = J.SLUG, LEVEL = J.LEVEL;
   var CORRECT_DELAY = 1100;
-  var NO_FALLBACK = 2147483647;      // the longest delay setTimeout takes: the worked example waits for Next
   var $ = function (id) { return document.getElementById(id); };
   function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
   function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -1180,7 +1179,6 @@ body.accessible p,body.accessible .prompt,body.accessible .fb-work{line-height:2
     $('qcard').classList.add('fb-open');
     document.body.classList.add('fb-open');
     var opts = { mount: $('feedback'), onAdvance: nextQuestion };
-    if (help === 'example') opts.fallbackMs = NO_FALLBACK;
     MaffsNext.wrong(opts);
     feedbackInView();
   }
