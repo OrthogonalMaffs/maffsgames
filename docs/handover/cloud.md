@@ -74,7 +74,7 @@ Claude Code (cloud), branch `claude/admiring-faraday-c7alrl` from main b8ab511. 
 - **Opt-out:** `--committed` / `MAFFS_STUB_COMMITTED=1` via `start_stub_server(committed=True)`; check-ugh-stats.py's one server takes it (its QUIZ unit too, accepted).
 - **Guard:** `serve-stubbed.py --selftest` (its own `# ci-line`), five plants caught.
 - **ci-deps (Amendment 1 step 4):** a module whose header holds `# ci-deps-literals: none` gives its file, never its literals; serve-stubbed.py declares it, so no table path is a phone-fit input. The stop report said ten paths newly shared: it was seven (daily.json, ugh-stats.json, REGISTER.md, both handovers and archives); answer-counts.json and the ci-*.json were already shared.
-- **Next:** the PR and the Gate; at green stop for Project Claude's review and Jon's "merge".
+- **Next:** [#936](https://github.com/OrthogonalMaffs/maffsgames/pull/936)'s Gate; at green stop for Project Claude's review and Jon's "merge".
 
 ## 2026-11-27 (cloud): D-BY-DX-SIGN-LINE (d by dx? Why?'s placeholder sign_lost line reworded so it holds on s2-06, where the number in front is negative; `docs/handover/contracts/2026-11-27-d-by-dx-sign-line.md`)
 
