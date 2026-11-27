@@ -260,7 +260,7 @@ student types is ever passed as `question_text`.** With neither field the event 
 | `filter_applied` | A level pill, topic pill or the New & updated toggle is clicked; or 1000 ms after the last search keystroke, and only if the trimmed query changed | level, topic, fresh, search_used, search_length, search_query, result_count, trigger |
 | `game_card_clicked` | A `.game-card` link is clicked, via one delegated listener | the same seven state parameters, plus game_slug and section |
 | `section_clicked` | A labelled element in a portal feature section is clicked (a link), or a labelled toggle is opened. Any page that loads `analytics.js`, via one delegated listener there. action: `open-link` (a link), `download` (a link with a download attribute, or any other element with data-mfg-download, e.g. a button whose handler builds the file in the browser; every one is labelled, scripts/check-download-labels.py, DOWNLOAD-COUNTS 20 Nov 2026 and UGH-STATS-BUTTON-DOWNLOADS 21 Nov 2026), `toggle-open` (a toggle opened) | section, item, position, action, plus game_slug, filter_type, filter_value |
-| `ticker_clicked` | A score in the score ticker is clicked (each score whose game has a portal card links to it; contract TICKER-LINKS, Jon, 7 Nov 2026), via one delegated listener on the ticker | game_slug (the score's game), detail: `high` \| `weekly` \| `plain` (its badge; the Sheet's `detail` column) |
+| `ticker_clicked` | A score in the score ticker is clicked (every score the ticker shows has a portal card and links to it; contract TICKER-LINKS, Jon, 7 Nov 2026; TICKER-LISTED, Jon, 27 Nov 2026), via one delegated listener on the ticker | game_slug (the score's game), detail: `high` \| `weekly` \| `plain` (its badge; the Sheet's `detail` column) |
 
 `trigger` is `level` \| `topic` \| `fresh` \| `search` \| `reset`. (`reset` is reserved — the
 portal has no reset control today.) `section` is the containing section's id, or its heading text
@@ -2340,7 +2340,7 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
 - Writes to:
   - `leaderboards/{slug}_{level}` — score, timestamp, optional 3-letter
     initials (voluntary, non-unique, no identity guarantee)
-  - `recent_scores` — feeds the ticker (which reads the latest 20); no longer
+  - `recent_scores` — feeds the ticker (which reads the latest 50 and shows the newest 20 from listed games, TICKER-LISTED); no longer
     auto-pruned by the client (30 Sep 2026: the database rules in
     `firebase/database.rules.json` refuse deletes; prune by hand, see
     `docs/firebase-rules-deploy.md`); each new

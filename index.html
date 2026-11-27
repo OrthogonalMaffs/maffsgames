@@ -3806,10 +3806,11 @@ loadFact();
   // Where a score opens (contract TICKER-LINKS), read from the portal's own game cards: the one place that says where a game lives
   // and which levels it is listed under. Built once, on the first render. A feed levelKey is a leaderboard key, a level or a board
   // (q20, stage-1, all, daily-...): it goes into ?level= only when one of the game's cards lists it, so a board never does.
-  // A slug with no card gets no link.
+  // A slug with no card is not on the portal, so its score is never shown at all (contract TICKER-LISTED, Jon, 27 Nov 2026):
+  // onPortal() is that test, and every score the ticker shows has a link.
   var cardLevels = null;
-  function tickerHref(slug, levelKey) {
-    var own = Object.prototype.hasOwnProperty;
+  var own = Object.prototype.hasOwnProperty;
+  function onPortal(slug) {
     if (!cardLevels) {
       cardLevels = {};
       document.querySelectorAll('a.game-card').forEach(function (c) {
@@ -3819,7 +3820,10 @@ loadFact();
         (c.getAttribute('data-levels') || '').split(/\s+/).forEach(function (l) { if (l && lv.indexOf(l) < 0) lv.push(l); });
       });
     }
-    if (!slug || !own.call(cardLevels, slug)) return '';
+    return !!slug && own.call(cardLevels, slug);
+  }
+  function tickerHref(slug, levelKey) {
+    if (!onPortal(slug)) return '';
     return 'games/' + slug + '/' + (levelKey && cardLevels[slug].indexOf(levelKey) >= 0 ? '?level=' + levelKey : '');
   }
 
@@ -3831,16 +3835,11 @@ loadFact();
   function buildTickerItem(s, dup) {
     var cls = s.highScore ? ' high-score' : s.weeklyBest ? ' weekly-best' : '';
     var levelStr = s.level && s.level !== '' ? ' <span class="time-ago">(' + esc(s.level) + ')</span>' : '';
-    var href = tickerHref(s.slug, s.levelKey);
-    var h;
-    if (href) {
-      var name = 'Play ' + s.game + (s.level ? ' (' + s.level + ')' : '') + ': ' +
-        (s.highScore ? 'high score ' : s.weeklyBest ? 'weekly best ' : 'score ') + s.score + (s.initials ? ' by ' + s.initials : '');
-      h = '<a class="score-ticker-item' + cls + '" href="' + href + '" data-slug="' + esc(s.slug) + '" data-detail="' +
-        (s.highScore ? 'high' : s.weeklyBest ? 'weekly' : 'plain') + '" aria-label="' + esc(name) + '"' + (dup ? ' tabindex="-1"' : '') + '>';
-    } else {
-      h = '<span class="score-ticker-item' + cls + '">';
-    }
+    var href = tickerHref(s.slug, s.levelKey);   // never empty: annotateAndRender() keeps only scores onPortal()
+    var name = 'Play ' + s.game + (s.level ? ' (' + s.level + ')' : '') + ': ' +
+      (s.highScore ? 'high score ' : s.weeklyBest ? 'weekly best ' : 'score ') + s.score + (s.initials ? ' by ' + s.initials : '');
+    var h = '<a class="score-ticker-item' + cls + '" href="' + href + '" data-slug="' + esc(s.slug) + '" data-detail="' +
+      (s.highScore ? 'high' : s.weeklyBest ? 'weekly' : 'plain') + '" aria-label="' + esc(name) + '"' + (dup ? ' tabindex="-1"' : '') + '>';
     if (s.highScore) h += '<span class="hs-badge">&#127942; HIGH SCORE</span> ';
     else if (s.weeklyBest) h += '<span class="hs-badge">&#11088; WEEKLY BEST</span> ';
     if (s.initials) h += '<span class="score-val">' + esc(s.initials) + '</span> &mdash; ';
@@ -3848,8 +3847,8 @@ loadFact();
     h += ' &mdash; <span class="score-val">' + esc(s.score) + '</span>';
     if (!s.highScore && s.best) h += ' <span class="best-target">&middot; best: ' + esc(s.best) + '</span>';
     h += ' <span class="time-ago">&middot; ' + timeAgo(s.timestamp) + '</span>';
-    if (href) h += ' <span class="play-cue">Play <span aria-hidden="true">&rarr;</span></span>';
-    h += (href ? '</a>' : '</span>') + '<span class="score-ticker-sep">|</span>';
+    h += ' <span class="play-cue">Play <span aria-hidden="true">&rarr;</span></span>';
+    h += '</a><span class="score-ticker-sep">|</span>';
     return h;
   }
 
@@ -3923,7 +3922,12 @@ loadFact();
     return out;
   }
 
-  function annotateAndRender(scores) {
+  // The feed is the latest TICKER_READ entries, newest first, from every game that submits, unlisted ones and games being tested
+  // included; the ticker shows the newest TICKER_SHOW of them whose game is on the portal (contract TICKER-LISTED).
+  var TICKER_READ = 50, TICKER_SHOW = 20;
+
+  function annotateAndRender(feed) {
+    var scores = feed.filter(function (s) { return s && onPortal(s.slug); }).slice(0, TICKER_SHOW);
     if (!scores.length) { buildTicker(scores); return; }
     var fallback = { allTimeBest: null, weekBest: null, direction: 'higher', rankable: false };
     var annotated = new Array(scores.length);
@@ -3940,7 +3944,7 @@ loadFact();
     });
   }
 
-  var live = window.MaffsLeaderboard && MaffsLeaderboard.watchRecent(20, annotateAndRender);
+  var live = window.MaffsLeaderboard && MaffsLeaderboard.watchRecent(TICKER_READ, annotateAndRender);
   if (!live) document.getElementById('scoreTicker').style.display = 'none';
 
   // One delegated listener for the score links, as the cards have one. Never preventDefault or delay: mfg() posts with keepalive.
