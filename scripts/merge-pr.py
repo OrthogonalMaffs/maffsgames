@@ -20,6 +20,22 @@ The guard, from the GitHub REST API through `gh api` (the credentials the lanes 
       waited for within --wait, then refused (a head pushed before that workflow change has none: merge main in, which
       AGENTS.md asks for anyway once main has gained checks). A run that measured nothing is a success like any other.
       --override never waives it.
+  (a'') the runs (a) and (a') judge tested main's newest merge (MERGE-GUARD, 27 Nov 2026). A pull_request run tests the PR
+      merged onto main as main stood when the run was triggered; a PR merged to main after that is untested with this
+      one. #930 merged so on 26 Nov: its Gate's run was created at 17:16:26Z, #927 (the large-screen layer) landed on
+      main at 17:35:08Z, and #930 merged at 17:52:57Z on that Gate. M is main's newest merge as (b') picks it, the bot's
+      skip-marker commits passed over. If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or
+      "identical"), main was merged in and this passes. Otherwise each judged run must have been created after M's
+      committer date (GitHub's squash merge writes the merge time there): for the Gate, the check-site.yml pull_request
+      run on the head whose check suite is the judged Gate check's (the run's created_at; the Gate check's own
+      started_at is the END of the run, the Gate being its last job, and is never used); for phone-fit, the judged
+      run's created_at. A run created at or before M's time is refused, naming M: merge main into the branch and let
+      the checks re-run (AGENTS.md:58). It is red, never "not finished": --wait does not wait on it (a stale run never
+      freshens), and it is judged while a run is still going. --override never waives it. A Gate check that cannot be
+      tied to its run, or a compare or commit that cannot be read, is refused, never guessed. If M itself cannot be
+      read, (b') refuses and this adds nothing (under --override, which waives (b'), it refuses itself). GitHub's
+      "require branches to be up to date" setting is not used: the bots commit to main with a skip marker several times
+      a day (daily.json, answer counts, CI timings, REGISTER, handover archives) and it would force a re-run after each.
   (b) main's check-site runs, counting only a push to main or a manual run on main (a pull request run or the
       Monday schedule is not "main's full run"): none is queued or in progress, and the newest completed one is
       a success, AND every job of that run has finished and none failed (a run can read "completed success" in the
@@ -40,7 +56,7 @@ The guard, from the GitHub REST API through `gh api` (the credentials the lanes 
 
 --override "<ruling>" waives (b) and only (b): it writes the ruling, with the run and any unfinished or red jobs it
 overrode, as a comment on the
-PR first, then merges. An empty ruling is refused. (a) is never waived. The merge is a squash pinned to the head
+PR first, then merges. An empty ruling is refused. (a), (a') and (a'') are never waived. The merge is a squash pinned to the head
 commit that (a) judged, so a later push cannot ride in on an earlier green. GitHub deletes the head branch itself
 (canon §7.8.2). On success it prints main's head and the run it judged. end-task.py runs after, unchanged.
 
@@ -76,6 +92,7 @@ rather than by a red Gate or red main:
       bounds the wait for it to finish. --watch-main has no grace.
 """
 import argparse
+import calendar
 import json
 import re
 import subprocess
@@ -313,6 +330,83 @@ def check_main(api, merge_of=newest_merge, jobs_of=run_jobs):
         r["id"], len(jobs), r["head_sha"][:7], r["updated_at"]), r
 
 
+def _when(stamp):
+    """GitHub's UTC time ("2026-11-26T17:35:08Z") in seconds, or None if it is not one."""
+    try:
+        return calendar.timegm(time.strptime(stamp, "%Y-%m-%dT%H:%M:%SZ"))
+    except (TypeError, ValueError):
+        return None
+
+
+def in_branch(api, base, head):
+    """True if commit `base` is `head` or an ancestor of it: compare base...head reads "ahead" or "identical"."""
+    if base == head:
+        return True
+    st = api("GET", "%s/compare/%s...%s?per_page=1" % (R, base, head)).get("status")
+    if st not in ("ahead", "identical", "behind", "diverged"):
+        raise Refused("compare %s...%s gave status %r" % (base[:7], head[:7], st))
+    return st in ("ahead", "identical")
+
+
+def gate_run_created(api, sha, gate):
+    """(run id, created_at) of the check-site.yml pull_request run on `sha` that the Gate check `gate` belongs to: the run
+    whose check_suite_id is the check's check suite. created_at is when the run was triggered, and so what main held in
+    the merge it tested. The Gate check's own started_at is the end of that run and is never used."""
+    suite = (gate.get("check_suite") or {}).get("id")
+    if suite is None:
+        raise Refused("the Gate check %s names no check suite" % gate.get("id"))
+    d = api("GET", "%s/actions/workflows/%s/runs?event=pull_request&head_sha=%s&per_page=100" % (R, WORKFLOW, sha))
+    own = [r for r in d.get("workflow_runs", [])
+           if r.get("check_suite_id") == suite and r.get("head_sha") == sha and r.get("event") == "pull_request"]
+    if not own:
+        raise Refused("no check-site pull_request run on head %s is in the Gate check's check suite %s" % (sha[:7], suite))
+    return own[0]["id"], own[0].get("created_at")
+
+
+def check_fresh(api, pr, waived=False, merge_of=newest_merge, inside=in_branch, gate_when=gate_run_created):
+    """(a'') -> (ok, why). The runs (a) and (a') judge tested main's newest merge M: M is in the PR's branch, or each run
+    was created after M's committer date. Red when it fails, never "not finished". A run that does not exist yet is
+    (a)'s or (a')'s to wait for; one that exists is judged whether or not it has finished. `waived`: (b) is waived by
+    --override, so an unreadable M, which (b') would refuse, is refused here. A Transient read is raised, not judged."""
+    sha = pr["head"]["sha"]
+    m, why = merge_of(api)
+    if m is None:
+        if waived:
+            return False, "the PR's runs cannot be judged against main's newest merge: %s (--override does not waive this)" % why
+        return True, "main's newest merge could not be read; (b') refuses"
+    try:
+        if inside(api, m, sha):
+            return True, "main's newest merge %s is in the branch" % m[:7]
+        c = api("GET", "%s/commits/%s" % (R, m)).get("commit") or {}
+        at = (c.get("committer") or {}).get("date")
+        if _when(at) is None:
+            raise Refused("its committer date reads %r" % (at,))
+        title = ((c.get("message") or "").split("\n") or [""])[0][:60]
+        judged = []   # (what, created_at) for each run that exists
+        checks = api("GET", "%s/commits/%s/check-runs?per_page=100" % (R, sha)).get("check_runs", [])
+        gates = sorted((x for x in checks if x["name"] == GATE), key=lambda x: x["id"])
+        if gates:   # the Gate check (a) judges: the newest
+            judged.append(("Gate", gate_when(api, sha, gates[-1])[1]))
+        d = api("GET", "%s/actions/workflows/%s/runs?event=pull_request&head_sha=%s&per_page=20" % (R, PHONE_FIT, sha))
+        runs = sorted((r for r in d.get("workflow_runs", []) if r.get("head_sha") == sha and r.get("event") == "pull_request"),
+                      key=lambda r: r["id"])
+        if runs:    # the run (a') judges: the newest
+            judged.append(("phone-fit run", runs[-1].get("created_at")))
+        for what, t in judged:
+            if _when(t) is None:
+                raise Refused("the %s on head %s has no readable start time (%r)" % (what, sha[:7], t))
+    except Transient:
+        raise
+    except Refused as e:
+        return False, ("cannot tell whether this PR's checks ran against main's newest merge %s: %s. Not guessed: merge main "
+                       "into the branch and let the checks re-run (AGENTS.md:58)" % (m[:7], e))
+    stale = [(what, t) for what, t in judged if _when(t) <= _when(at)]
+    if stale:
+        return False, ("main gained %s (%s) at %s after this PR's %s: merge main into the branch and let the checks re-run "
+                       "(AGENTS.md:58)" % (m[:7], title, at, " and ".join("%s started at %s" % x for x in stale)))
+    return True, "the PR's runs were created after main's newest merge %s" % m[:7]
+
+
 def no_local(ref):
     """The default for guard()'s `local`: no checkout to compare with."""
     return None
@@ -331,7 +425,7 @@ def git_local(ref):
 
 
 def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.sleep, log=print, clean=disarm,
-          head=None, local=no_local, clock=time.time, phone_check=check_phone_fit):
+          head=None, local=no_local, clock=time.time, phone_check=check_phone_fit, fresh_check=check_fresh):
     """Merge or raise Refused. Returns (merge_response, judged_run).
 
     MERGE-PR-ROBUST: `head` is the commit expected at the PR's head (--head, or `local(<the PR's head ref>)`, the
@@ -364,6 +458,7 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
             ok_a, why_a = check_gate(api, pr)
             ok_p, why_p = phone_check(api, pr)          # (a'), never waived
             ok_b, why_b, run = main_check(api) if override is None else (True, "waived by --override", None)
+            ok_f, why_f = fresh_check(api, pr, waived=override is not None)   # (a''), never waived, never waited on
         except Transient as e:
             what = "GitHub %s reading %s" % (e.status, e.what)
             if clock() >= deadline:
@@ -371,13 +466,13 @@ def guard(api, number, override=None, wait=0, main_check=check_main, sleep=time.
             log("waiting: " + what)
             sleep(POLL_S)
             continue
-        if ok_a and ok_p and ok_b:
+        if ok_a and ok_p and ok_b and ok_f:
             break
         # a thing that is merely unfinished may be waited for; a red one never is
         unfinished = ("not finished" in why_a or "no %r" % GATE in why_a or "not finished" in why_b)
         red = ((not ok_a and not unfinished) or (not ok_b and "not finished" not in why_b)
-               or (not ok_p and "not finished" not in why_p))
-        said = "; ".join(w for ok, w in ((ok_a, why_a), (ok_p, why_p), (ok_b, why_b)) if not ok)
+               or (not ok_p and "not finished" not in why_p) or not ok_f)
+        said = "; ".join(w for ok, w in ((ok_a, why_a), (ok_p, why_p), (ok_f, why_f), (ok_b, why_b)) if not ok)
         if red or clock() >= deadline:
             raise Refused(said)
         log("waiting: " + said)
@@ -533,8 +628,9 @@ def _job(name, status="completed", concl="success"):
     return {"name": name, "status": status, "conclusion": concl}
 
 
-def _commit(sha, msg, who="Vector52F"):
-    return {"sha": sha, "author": {"login": who}, "commit": {"author": {"name": who}, "message": msg}}
+def _commit(sha, msg, who="Vector52F", when=None):
+    return {"sha": sha, "author": {"login": who},
+            "commit": {"author": {"name": who}, "message": msg, "committer": {"date": when}}}
 
 
 # main's commits, newest first: the merge the GREEN runs were for ("a" * 40)
@@ -556,8 +652,13 @@ JOBS_RED = JOBS_OK + [_job("Content verifiers 4", concl="failure")]
 class Fake:
     def __init__(self, pr=PR_OPEN, gate=GATE_OK, runs=GREEN, script=None, jobs=None, jobs_script=None, jobs_error=False,
                  max_per_page=None, commits=None, commits_error=False, faults=None, pr_script=None, gates=None,
-                 pf=None):
+                 pf=None, compare=None, gate_runs=None):
         self.pr, self.gate, self.runs, self.calls = pr, gate, runs, []
+        # MERGE-GUARD (a''): compare is {base sha: status} for GET compare/<base>...<head>; a base not named reads
+        # "ahead" (main's newest merge is in the branch), so every fixture older than (a'') passes it unread.
+        # gate_runs: check-site.yml's pull_request runs on the head. A phone-fit script (pf) moves on once per poll
+        # (per read of the PR), since (a') and (a'') each read the runs in one poll.
+        self.compare, self.gate_runs, self._pf_now = compare or {}, gate_runs or [], None
         # pf (PHONE-FIT-CHANGED-GAMES): successive lists of phone-fit-full.yml runs, one per read (the last repeats);
         # None: one completed success pull_request run on whatever head is asked for.
         self.pf = list(pf) if pf is not None else None
@@ -596,6 +697,13 @@ class Fake:
                 self.jobs = self.jobs_script.pop(0) if len(self.jobs_script) > 1 else self.jobs_script[0]
             pages = self.jobs
             return {"total_count": sum(len(x) for x in pages), "jobs": pages[page - 1] if page <= len(pages) else []}
+        if method == "GET" and "/compare/" in path:
+            return {"status": self.compare.get(path.split("/compare/", 1)[1].split("...", 1)[0], "ahead")}
+        if method == "GET" and "/commits/" in path:   # one commit (a check-runs read was answered above)
+            for c in self.commits:
+                if c["sha"] == path.rsplit("/commits/", 1)[1]:
+                    return c
+            raise Refused("gh api GET %s failed: gh: Not Found (HTTP 404)" % path)
         if method == "GET" and "/commits?sha=main" in path:
             if self.commits_error:
                 raise Refused("gh api GET %s failed: HTTP 502" % path)
@@ -604,12 +712,16 @@ class Fake:
             sha = path.split("head_sha=", 1)[1].split("&", 1)[0]
             if self.pf is None:
                 return {"workflow_runs": [_pfrun(sha, "completed", "success")]}
-            runs = self.pf.pop(0) if len(self.pf) > 1 else self.pf[0]
-            return {"workflow_runs": [r for r in runs if r["head_sha"] == sha]}
+            if self._pf_now is None:
+                self._pf_now = self.pf.pop(0) if len(self.pf) > 1 else self.pf[0]
+            return {"workflow_runs": [r for r in self._pf_now if r["head_sha"] == sha]}
+        if method == "GET" and "/actions/workflows/%s/runs?event=pull_request" % WORKFLOW in path:
+            return {"workflow_runs": self.gate_runs}
         if method == "GET" and "/actions/workflows/" in path:
             runs = self.script.pop(0) if len(self.script) > 1 else (self.script[0] if self.script else self.runs)
             return {"workflow_runs": runs}
         if method == "GET" and "/pulls/" in path:
+            self._pf_now = None   # a new poll
             if self.pr_script:
                 return self.pr_script.pop(0) if len(self.pr_script) > 1 else self.pr_script[0]
             return self.pr
@@ -1200,6 +1312,171 @@ def robust_cases(retry=with_retry, sizes=JOBS_SIZES, use_head=True, grace=REGIST
     return out
 
 
+# ---- MERGE-GUARD (27 Nov 2026), (a''): the record of 26 Nov 2026. #930's head 8cd19935 had its check-site and phone-fit
+# runs created at 17:16:26Z. #927 (the large-screen layer) squash-merged to main as e72faba at 17:35:08Z. The Gate check on
+# 8cd19935 started at 17:37:25Z (the Gate is the run's last job) and #930 merged at 17:52:57Z, on a Gate that never held
+# #927. Ids, shas and those times are GitHub's; the other times below are set for each case. ----
+F_HEAD = "8cd19935f8aed622a802a80c9a86b99e7aee3ad5"
+F_M = "e72faba7f2df78c9f168359d3106b1aa45304f62"        # #927's squash commit
+F_M_AT = "2026-11-26T17:35:08Z"
+F_BEFORE, F_AFTER = "2026-11-26T17:16:26Z", "2026-11-26T17:40:00Z"   # a run created before M, and one after
+F_PREV = "a55da6b78947b7ab03623df1db102dd627c1d51f"     # #928's squash commit, the merge before
+F_SUITE = 124092601822
+F_PR = dict(PR_OPEN, head={"sha": F_HEAD, "ref": "claude/base-60-list"}, title="BASE-60-LIST", body="Listing.")
+F_TITLE = ("LARGE-SCREEN-LAYER: the shared large-screen layer, piloted on seven games (Shared tier: review, then Jon's "
+           "merge) (#927)")
+F_COMMITS = [_commit(F_M, F_TITLE + "\n\nThe layer.", when=F_M_AT),
+             _commit(F_PREV, "CANON-PRIORITY: Jon's own classes second in canon 0.2 (#928)", when="2026-11-26T16:41:53Z")]
+# main as it stood at 17:00Z: #928 the newest merge, the bot's timings commit (42270b2, 16:58:12Z) on top of it
+F_BOTS = [_commit("42270b2f" + "0" * 32, "Record CI timings and repack (run 45861149266) [skip ci]", BOT, "2026-11-26T16:58:12Z"),
+          F_COMMITS[1]]
+F_MAIN = [_run(45868985623, "push", "completed", "success", "2026-11-26T17:35:12Z", sha=F_M),
+          _run(45861149266, "push", "completed", "success", "2026-11-26T16:41:57Z", sha=F_PREV)]
+F_DIVERGED = {F_M: "diverged", F_PREV: "diverged", F_BOTS[0]["sha"]: "diverged"}   # main was not merged into the branch
+
+
+def _fgate(started="2026-11-26T17:37:25Z", status="completed", concl="success", suite=F_SUITE):
+    g = {"id": 140080085797, "name": GATE, "status": status, "conclusion": concl, "started_at": started,
+         "completed_at": "2026-11-26T17:37:28Z"}
+    if suite is not None:
+        g["check_suite"] = {"id": suite}
+    return {"check_runs": [g, {"id": 140080000001, "name": "Plan", "status": "completed", "conclusion": "success",
+                               "started_at": "2026-11-26T17:16:30Z", "check_suite": {"id": suite or 1}}]}
+
+
+def _ffake(gate_at, pf_at, commits=F_COMMITS, compare=F_DIVERGED, gate=None, runs=F_MAIN, tie=True, **kw):
+    """#930's PR with its check-site run created at `gate_at` and its phone-fit run at `pf_at`."""
+    gr = dict(_run(45866316754, "pull_request", "completed", "success", gate_at, "claude/base-60-list", F_HEAD),
+              check_suite_id=F_SUITE)
+    # another run on the same head, in another check suite and created late: never the judged Gate's run
+    other = dict(_run(45866999999, "pull_request", "completed", "success", "2026-11-26T17:50:00Z", "claude/base-60-list", F_HEAD),
+                 check_suite_id=124099999999)
+    pf = dict(_run(45866316762, "pull_request", "completed", "success", pf_at, "claude/base-60-list", F_HEAD),
+              check_suite_id=124092601837)
+    return Fake(pr=F_PR, gate=gate or _fgate(), runs=runs, commits=commits, compare=compare,
+                gate_runs=[other, gr] if tie else [other], pf=[[pf]], **kw)
+
+
+def fresh_cases(fresh=check_fresh):
+    """(a'') MERGE-GUARD -> list of (name, ok, detail, plants): `plants` names the planted faults the case must catch."""
+    out = []
+
+    def case(name, ok, detail, *plants):
+        out.append((name, bool(ok), detail, set(plants)))
+
+    def go(fake, wait=0, **kw):
+        c, logs = Clock(), []
+        try:
+            guard(fake, 930, wait=wait, sleep=c.sleep, clock=c, log=logs.append, fresh_check=fresh, **kw)
+            return None, c
+        except Refused as e:
+            return str(e), c
+
+    def read(fake, part):
+        return [x for x in fake.calls if part in x[1]]
+
+    said = ("main gained e72faba (LARGE-SCREEN-LAYER: the shared large-screen layer, piloted o) at 2026-11-26T17:35:08Z "
+            "after this PR's %s: merge main into the branch and let the checks re-run (AGENTS.md:58)")
+    gate_said = said % "Gate started at 2026-11-26T17:16:26Z"
+    pf_said = said % "phone-fit run started at 2026-11-26T17:16:26Z"
+
+    f = _ffake(F_BEFORE, F_BEFORE, compare={F_M: "ahead"}, tie=False)
+    err, c = go(f)
+    case("(a'') main's newest merge is an ancestor of the head (main merged in): passes on the compare alone, merges",
+         err is None and len(f.merged()) == 1 and len(read(f, "/compare/%s...%s" % (F_M, F_HEAD))) == 1,
+         err or "compare not read", "inverted")
+
+    f = _ffake(F_BEFORE, F_BEFORE, commits=[_commit(F_HEAD, "the head itself", when=F_AFTER)] + F_COMMITS, compare={},
+               runs=[_run(45869000000, "push", "completed", "success", F_AFTER, sha=F_HEAD)] + F_MAIN, tie=False)
+    err, c = go(f)
+    case("(a'') main's newest merge is the head commit itself: passes", err is None and len(f.merged()) == 1, err or "")
+
+    f = _ffake(F_AFTER, F_AFTER, gate=_fgate(started="2026-11-26T18:01:00Z"))
+    err, c = go(f)
+    case("(a'') not an ancestor, both runs created after the merge (the merge ref held it): merges",
+         err is None and len(f.merged()) == 1, err or "")
+
+    f = _ffake("2026-11-26T16:50:00Z", "2026-11-26T16:50:00Z", commits=F_BOTS, runs=F_MAIN[1:],
+               gate=_fgate(started="2026-11-26T17:11:00Z"))
+    err, c = go(f)
+    case("(a'') only bot skip-marker commits on main since the runs started (42270b2, 16:58:12Z): merges",
+         err is None and len(f.merged()) == 1, err or "", "bots")
+
+    f = _ffake(F_BEFORE, F_AFTER)
+    err, c = go(f)
+    case("(a'') not an ancestor, the Gate's run created before the merge, phone-fit after: refused, naming the merge and the Gate",
+         err == gate_said and not f.merged(), err or "MERGED", "removed", "started_at", "inverted")
+
+    f = _ffake(F_AFTER, F_BEFORE, gate=_fgate(started="2026-11-26T18:01:00Z"))
+    err, c = go(f)
+    case("(a'') the same with phone-fit created before the merge and the Gate after: refused, naming the phone-fit run",
+         err == pf_said and not f.merged(), err or "MERGED", "removed", "inverted")
+
+    f = _ffake(F_BEFORE, F_BEFORE)
+    err, c = go(f)
+    case("(a'') #930 as it stood (both runs from 17:16:26Z, #927 on main at 17:35:08Z, the Gate check started 17:37:25Z): refused",
+         err == said % "Gate started at 2026-11-26T17:16:26Z and phone-fit run started at 2026-11-26T17:16:26Z"
+         and not f.merged(), err or "MERGED", "removed", "started_at", "inverted")
+
+    f = _ffake(F_BEFORE, F_AFTER, runs=[_run(45869999999, "push", "completed", "failure", "2026-11-26T17:36:00Z", sha=F_M)])
+    err, c = go(f, override="Jon, 26 Nov 2026: merge it")
+    case("(a'') refused under --override, at once, with the same message: no comment, no merge",
+         err == gate_said and not f.merged() and not f.comments() and c.t == 0, err or "MERGED", "removed", "started_at", "inverted")
+
+    f = _ffake(F_BEFORE, F_AFTER)
+    err, c = go(f, wait=3600)
+    case("(a'') refused under --wait 3600 at once (red, never waited on: a stale run never freshens)",
+         err == gate_said and not f.merged() and c.t == 0 and c.slept == 0, err or "MERGED", "removed", "started_at", "inverted")
+
+    f = _ffake(F_BEFORE, F_AFTER, gate=_fgate(started=None, status="in_progress", concl=None))
+    err, c = go(f, wait=3600)
+    case("(a'') a Gate still running on a stale run is refused at once, not waited for and then refused",
+         err and gate_said in err and "not finished" in err and not f.merged() and c.t == 0, err or "MERGED", "removed", "inverted")
+
+    f = _ffake(F_M_AT, F_AFTER, gate=_fgate(started="2026-11-26T18:01:00Z"))
+    err, c = go(f)
+    case("(a'') a run created in the same second as the merge is not after it: refused",
+         err and "Gate started at 2026-11-26T17:35:08Z" in err and not f.merged(), err or "MERGED", "removed", "inverted")
+
+    f = _ffake(F_AFTER, F_AFTER, gate=_fgate(suite=None))
+    err, c = go(f)
+    case("(a'') not an ancestor and the Gate check names no check suite: refused, never guessed from the check's own times",
+         err and "names no check suite" in err and "cannot tell" in err and not f.merged(), err or "MERGED", "removed", "inverted")
+
+    f = _ffake(F_AFTER, F_AFTER, tie=False)
+    err, c = go(f)
+    case("(a'') not an ancestor and no check-site run in the Gate check's suite: refused (a later run in another suite is not it)",
+         err and "check suite 124092601822" in err and not f.merged(), err or "MERGED", "removed", "inverted")
+
+    f = _ffake(F_AFTER, F_AFTER, faults=[["GET", "/compare/", None, E404]])
+    err, c = go(f, wait=600)
+    case("(a'') a compare that cannot be read (404): refused at once, never assumed in the branch",
+         err and "HTTP 404" in err and "cannot tell" in err and not f.merged() and c.t == 0, err or "MERGED", "removed")
+
+    f = _ffake(F_BEFORE, F_BEFORE, commits_error=True)
+    err, c = go(f, override="Jon, 26 Nov 2026: merge it")
+    case("(a'') --override with main's commits unreadable: refused (the override waives (b'), never this)",
+         err and "could not be read" in err and "--override does not waive" in err and not f.merged() and not f.comments(),
+         err or "MERGED", "removed")
+
+    f = _ffake(F_BEFORE, F_BEFORE, commits_error=True)
+    err, c = go(f)
+    case("(a'') main's commits unreadable, no override: (b') refuses and (a'') adds nothing",
+         err and "could not be read" in err and "--override does not waive" not in err and not f.merged(), err or "MERGED")
+
+    f = _ffake(F_AFTER, F_AFTER, faults=[["GET", "/compare/", 4, E502]])
+    c, logs = Clock(), []
+    try:
+        guard(with_retry(f, sleep=c.sleep), 930, wait=600, sleep=c.sleep, clock=c, log=logs.append, fresh_check=fresh)
+        err = None
+    except Refused as e:
+        err = str(e)
+    case("(a'') a 502 on the compare that outlasts the retries is waited on within --wait (never red or green), then merges",
+         err is None and len(f.merged()) == 1 and any(l.startswith("waiting: GitHub HTTP 502 reading ") for l in logs),
+         err or repr(logs))
+    return out
+
+
 def watch_state_run_only(api, sha):
     """The planted fault: trusts the run's own status and conclusion and never reads its jobs, so a run that reads
     completed success while a job still runs is called green."""
@@ -1292,6 +1569,26 @@ def selftest():
     for key, label, kw in plants:
         must = [n for n, _, _, ps in want if key in ps]
         failed = {n for n, ok, _, _ in robust_cases(**kw) if not ok}
+        missed = [n for n in must if n not in failed]
+        print("  %s  planted fault (%s): %d of %d case(s) catch it%s" % (
+            "PASS" if not missed else "FAIL", label, len(must) - len(missed), len(must),
+            "" if not missed else "; NOT caught by " + str(missed)))
+        bad += bool(missed) or not must
+    # MERGE-GUARD (a''): the cases pass, and each planted fault is caught
+    for name, ok, detail, _ in fresh_cases():
+        print("  %s  %s%s" % ("PASS" if ok else "FAIL", name, "" if ok else "   -> " + detail))
+        bad += not ok
+    plants = (("removed", "(a'') removed (always fresh)", lambda api, pr, waived=False: (True, "mutant: always fresh")),
+              ("started_at", "the Gate check's own started_at in place of its run's created_at",
+               lambda api, pr, waived=False: check_fresh(api, pr, waived, gate_when=lambda a, s, g: (g["id"], g.get("started_at")))),
+              ("bots", "bot skip-marker commits counted as main's newest merge",
+               lambda api, pr, waived=False: check_fresh(api, pr, waived, merge_of=head_literally)),
+              ("inverted", "the ancestor test inverted",
+               lambda api, pr, waived=False: check_fresh(api, pr, waived, inside=lambda a, b, h: not in_branch(a, b, h))))
+    want = fresh_cases()
+    for key, label, planted in plants:
+        must = [n for n, _, _, ps in want if key in ps]
+        failed = {n for n, ok, _, _ in fresh_cases(fresh=planted) if not ok}
         missed = [n for n in must if n not in failed]
         print("  %s  planted fault (%s): %d of %d case(s) catch it%s" % (
             "PASS" if not missed else "FAIL", label, len(must) - len(missed), len(must),

@@ -16,9 +16,25 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
+
+Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`. The contract is at `docs/handover/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
+
+- **Jon (27 Nov 2026, 17:57):** "merge script please".
+- **(a''), new, in `scripts/merge-pr.py`:** M is main's newest merge as (b') picks it (bot skip-marker commits passed over). If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or "identical"), it passes. Otherwise the Gate's run and the phone-fit run must each have been created after M's committer date, or the merge is refused, naming M and the run. The Gate's time is its workflow run's created_at, found by check suite; the Gate check's own started_at (the end of the run) is never read.
+- **Red, never waited on:** judged every poll with (a) and (a'), also while a run is still going; --wait does not wait on it and --override does not waive it.
+- **The record behind the fixtures:** #930's runs were created at 17:16:26Z on 26 Nov, #927 landed on main at 17:35:08Z, the Gate check started at 17:37:25Z and #930 merged at 17:52:57Z. Ids, shas and those times in the selftest are GitHub's.
+- **Selftest:** 17 new cases and 4 plants (the check removed; the Gate's started_at for its run's created_at; bot skip-marker commits counted as M; the ancestor test inverted), each caught. The 108 lines the selftest printed before are printed unchanged.
+- **Decided here, for review:** (1) a run created in the same second as M is refused (not after it); (2) under --override, which waives (b'), an unreadable M is refused by (a'') itself, so the override cannot pass an unjudged PR; (3) a Gate check that cannot be tied to a run, or an unreadable compare or commit, is refused, never guessed; (4) the selftest's fake API moves a phone-fit script on once per poll, not once per read, since two checks now read those runs in a poll.
+- **Not touched:** (a), (a'), (b), (b'), (c), the watch, --head, the retries, the merge PUT; every workflow; `serve-stubbed.py`, `bank_common.py`.
+- **AGENTS.md:** the stale-Gate rule gains "merge-pr.py enforces this (MERGE-GUARD, 27 Nov 2026)".
+- **Run IDs and the merge:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-26 (home): BASE-60-TIDY (Base 60's cuckoo rides out on a perch joined to its clock; the page's stale comment; spec-map row N13 names time)
 
-Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`. The contract is at `docs/handover/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
+Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`, PR #932. The contract is at `docs/history/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
 
 - **Jon (26 Nov 2026, 19:51):** "the cuckoo clock looks much better alhough the cuckoo is not attached to the clock when it pays a visit".
 - **The perch:** a thin level arm (`.ck-perch`, cream with a dark edge, as the bird is drawn) from inside the doorway (x 36 of the drawing) to under the bird's body (x 7). It grows out of the doorway and back with the bird, on the same times and easing, and is hidden at no length when the bird is in. The bird's own movement, timings and shape are unchanged; it bows and droops on the arm, which stays level.
@@ -27,7 +43,8 @@ Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-ti
 - **Verifier:** the bird units also hold the perch showing and within 1 drawing unit of the door's box and the bird's at each sampled moment of the hold, after a wrong answer and in both reduced-motion states. Two plants: the perch removed, and the perch left behind at the door. Run locally: both bird units pass, both plants and the two older bird plants caught.
 - **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, PR 930)." ("PR 930", not "#930": the first Gate, check-site 45887805820, failed only on the Theme check, which read "#930" in the page as a hex colour outside :root); row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
 - **Screenshot** (the bird out on its perch at 1366x768): in the report to Jon; no image is committed.
-- **Run IDs:** in the close-out, as usual.
+- **Gate on the PR head d5417e8f:** check-site 45892119116 and phone-fit-full 45892119126, both green. Main was merged in twice while the PR waited (9f51bb8d, then eaf158af), and the Gate re-ran each time, as the contract's step 6 asked.
+- **Merged** on 26 Nov as 60fb649 (#932, squash) via merge-pr.py, which ended "main 60fb649 run 45894195608: GREEN" (the line as the lane reported it to Jon on 26 Nov; this file did not hold it). Main on 60fb649, read from GitHub Actions on 27 Nov: check-site 45894195608, phone-fit-full 45894195615 and the pages build 45894194832, all success.
 
 Record: agent Claude Code; wall 0:40; review cycles 0; amendments 0; usage n/a.
 
@@ -88,64 +105,4 @@ Claude Code (home lane), worktree `~/mg-daily-deal`, branch `claude/daily-deal`,
 - **Merged** on 25 Nov as 6db4954 (#919) via merge-pr.py, which ended "main 6db4954 run 45715844895: GREEN". Main on 6db4954: check-site 45715844895, phone-fit-full 45715845154 and the pages build 45715843761, all green.
 
 Record: agent Claude Code; wall 1:25 to the first Gate, which stopped it; review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-25 (home): MAFFSCARDS-CHALLENGE (MaffsCards gets "Challenge a friend": a code that gives two students the same deal and the same Marvin)
-
-Claude Code (home lane), worktree `~/mg-maffscards-challenge`, branch `claude/maffscards-challenge`, PR #913. The contract is at `docs/handover/contracts/2026-11-25-maffscards-challenge.md` (verbatim). The first commit closed out THREE-GAMES-LIST.
-
-- **Jon's rulings (25 Nov 2026):** "option 1 please" (a challenge code, not live two-player); challenge games are off the leaderboard; a 6-character code plus a link; both events carry a challenge flag, never the code; placeholder wording, which Jon rewrites after playing.
-- **The code:** 5 data characters (settings and a seed, base 31) and a check character. One wrong character, or two neighbours swapped, never reads as a code.
-- **Fairness:** a challenge deal has its own generator, and each of Marvin's choices a fresh one keyed by a 32-bit hash of (seed, his card, k). Nothing in a challenge game's play draws from rng; only Marvin's lines do.
-- **Menu:** a "Challenge a friend" section under the start button: make a code (with its link, Copy link and Play it), or type one. `?c=CODE` fills the box and sets the options; it never starts a game.
-- **Results:** one more line for a challenge game, nothing submitted, and "Play again" is a normal game at the same settings.
-- **Analytics:** game_started and game_completed carry `challenge: true` or `false`; game_completed's detail ends " · challenge" when true. No new event.
-- **Normal games:** unchanged. The verifier holds three seeded games recorded from main c788f401's page (deal, Marvin's choices, every round and line) and the new page plays them the same.
-- **Verifier:** a `challenge` unit (codes, keys, fairness at all 8 settings, leaderboard, menu, the recorded normal games) and a challenge fit check; six new plants, sixteen in all, each caught.
-- **Decided here:** in Aa on a phone a challenge game's results are set tighter, with the two buttons side by side, so the extra line keeps both above the fold at 320 x 568. A normal game's Aa results are as they were (its second button already ends 11 px under the fold; not this contract's).
-- **Privacy page:** its list of what is collected is by kind ("which game was played", "session completion and score data"), not by parameter, so the flag does not make it untrue. Not edited.
-- **Run IDs:** in the close-out, as usual.
-
-Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
-
-## 2026-11-24 (home): THREE-GAMES-LIST (MaffsCards, Sums in Disguise and Some Thingies are listed)
-
-Claude Code (home lane), worktree `~/mg-three-games-list`, branch `claude/three-games-list`. The contract is at `docs/history/contracts/2026-11-24-three-games-list.md` (verbatim, with Amendment 1). The first commit closed out TIER3-LOCK-FIX.
-
-- **Approval (verbatim):**
-  - Jon, 24 Nov 2026, 21:32: "lets release maffscards and the 2 primary games please."
-  - Jon, 24 Nov 2026, ~21:35, answering Project Claude: "No Essentials cards" (portal KS3 section only; the two primary games stay on /class/ as now).
-- **Portal:** three cards at the end of the KS3 section, New badges dated 2026-11-24. MaffsCards is `ks3`; the other two are `year6 ks3` and link `?level=year6`.
-- **Also listed on:** the sitemap, the leaderboard hub (4, 5 and 8 boards), /updates/, and for MaffsCards the spec map (GCSE N4). MaffsCards' noindex is gone.
-- **Roster:** #113, #114 and #115 are in KS3 Games (38), look signed off by Jon, 2026-11-24. Unlisted is 9.
-- **Amendment 1 (Jon, in session):** check-spec-mapping.py failed the two primary games, which the contract keeps off the spec map. Jon chose "EXCEPTIONS entry (Recommended)"; both are in that script's EXCEPTIONS.
-- **Coverage check:** it needed LEVEL_OVERRIDES entries for the two primary games' stage boards, as the contract allowed.
-- **Todo:** MAFFSCARDS-LIST moved whole; the other two rows keep Jon's LINES rewrites and the class teacher's questions.
-- **Screenshots:** the three cards at 1366 x 768 and 375 x 667, sent to Jon in session.
-- **Merged** on 24 Nov as ee09c84 (#905) via merge-pr.py, which ended "main ee09c84 run 45497440759: GREEN".
-- **PR head b8569cd:** check-site 45494570251 and phone-fit-full 45494570226, both success.
-- **Main on ee09c84:** check-site 45497440759 success, phone-fit-full 45497440773 success, pages build 45497440296 success.
-- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by MAFFSCARDS-CHALLENGE's first commit.
-
-Record: agent Claude Code; wall 0:40; review cycles 0; amendments 1; usage n/a.
-
-## 2026-11-24 (home): TIER3-LOCK-FIX (tier 3 plays the games the 300 ms answer lock made it skip)
-
-Claude Code (home lane), worktree `~/mg-tier3-lock-fix`, branch `claude/tier3-lock-fix`. The contract is at `docs/history/contracts/2026-11-24-tier3-lock-fix.md` (verbatim). The first commit closed out TIER3-COVERAGE-REPORT.
-
-- **Fix:** tier3()'s contexts add `bc.NO_LOCK_FRESH_INIT`. quadratic-factoriser left tier3_exceptions.
-- **Local, four shards as CI runs them, main 855fce7 then the branch:**
-  - runs passing 49 to 188 of 355, questions 556 to 1799, 0 FAIL both times, KaTeX check clean;
-  - games passing every run 10 to 52: the report's 39, plus estimation-golf, screening-room and spot-the-muppet;
-  - expectation-station is no longer UNSUPPORTED but WARNs once (a repeated tile, which the driver expects there);
-  - 64 games still have an UNSUPPORTED run.
-- **Wall time:** shards took 8:06 to 9:19 locally (3:22 to 6:35 before). The CI step timeout is 12 minutes: cloud to watch.
-- **Self-test:** new `--tier3-lock-selftest`: tier3() plays a planted lock page fully; with the init script emptied it is UNSUPPORTED after 1 question. CI does not run it until cloud adds it to the workflow.
-- **Decided for you:** the planted page shows its next question 460 ms after a mark, not at once as the contract says. Shown at once, it is tapped 500 ms later, outside the window, and the plant is not caught (tested).
-- **For Project Claude:** the tier3_exceptions entries for spot-the-muppet and expectation-station are now stale; not touched.
-- **Merged** on 24 Nov as 590efd7 (#904) via merge-pr.py, which ended "main 590efd7 run 45489207767: GREEN".
-- **PR head 87ccba6:** check-site 45486151268 and phone-fit-full 45486151312, both success.
-- **Main on 590efd7:** check-site 45489207767 success, phone-fit-full 45489207373 success, pages build 45489206130 success. CI's tier 3 counts match the local ones on all four shards (486 to 557 s a shard).
-- **Cleanup:** end-task cleaned up. The contract moved to `docs/history/contracts/`, closed out by THREE-GAMES-LIST's first commit.
-
-Record: agent Claude Code; wall 1:05; review cycles 0; amendments 0; usage n/a.
 
