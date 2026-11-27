@@ -3,6 +3,14 @@
 Moved out of `docs/todo.md` on 10 Oct 2026 (contract TODO-SLIM) without rewording. Item numbers are
 unchanged, so a citation such as §1.10 resolves here. Newest moves at the top of each part.
 
+## Moved by D-BY-DX-GRAPH, 27 Nov 2026
+
+The row as it stood in `docs/todo.md` on main e91a25a, word for word; the graph was built on 27 Nov 2026 and the row now says so, with what Jon and Project Claude still owe.
+
+### D-BY-DX
+
+| D-BY-DX | **"d by dx? Why?" (`d-by-dx-why`), Jon's Level 3 calculus game: Phase 1, differentiation, merged unlisted** (contract D-BY-DX-BUILD, 26 Nov 2026; EAL AME3-004, assessment 004C, probably the 3rd week of January 2027). **Jon:** plays all five stages in both modes, Pro off and on (`/games/d-by-dx-why/`); writes the LINES lines, the tagline and the look; rules on listing. **Phase 2, integration, needs Project Claude's spec:** integration of power terms, ∫5/x² (not an ln question) and e^(5x) (Jon, 17 Nov 2026). Rulings (Jon, 26 Nov 2026): one game, differentiation then integration; integration as reverse differentiation ("what do I need to differentiate to get this answer?"); every integration item has a check step differentiating the answer back, mandatory and not scored; a missing + C is a wrong answer. Built and played before the Christmas break (no building over Christmas). | Jon; Project Claude (Phase 2 spec), then a lane |
+
 ## Moved by BASE-60-LIST, 26 Nov 2026
 
 The row as it stood in `docs/todo.md` on main 42270b2, word for word; the game was listed on 26 Nov 2026 and the row now holds only Jon's lines.

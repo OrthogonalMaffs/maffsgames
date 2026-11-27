@@ -16,6 +16,10 @@ Loads the helper into a bare page in headless Chromium and checks what it promis
                advances once; MaffsNext exports no FALLBACK_MS. Plant: the 20 s default restored must FAIL
   no page      no page or script under games/, escape-rooms/, the-6-ps/ or the site root names fallbackMs
                (a static scan). Plant: a page passing fallbackMs: 20000 must FAIL
+  floorMs      (D-BY-DX-GRAPH, 27 Nov 2026) one control's own, shorter floor: with floorMs 600 the control is
+               disabled at 0.3 s and Enter does nothing, enabled and focused by 0.9 s, and Enter then advances
+               once; a floorMs above FLOOR_MS, a negative one and one that is not a number each leave the 3 s
+               floor (still disabled at 2 s). Plants, each must FAIL: the option ignored; a longer floor taken
   fallback     for test harnesses, which pass fallbackMs themselves: it never fires after a manual
                advance; on its own it fires exactly once, on its own clock, even inside the floor
   size         the control is at least 44px tall and wide
@@ -235,6 +239,45 @@ async def no_timer(browser, helper_js, check):
     await ctx.close()
 
 
+# Plants for the floorMs case: (name, old text, new text). Each planted helper must fail it.
+FLOOR_LINE = "    if (typeof opts.floorMs === 'number' && opts.floorMs >= 0 && opts.floorMs < floor) floor = opts.floorMs;\n"
+FLOOR_PLANTS = [
+    ("floorMs ignored", FLOOR_LINE, "\n"),
+    ("a floorMs longer than FLOOR_MS taken", FLOOR_LINE,
+     "    if (typeof opts.floorMs === 'number' && opts.floorMs >= 0) floor = opts.floorMs;\n"),
+]
+
+
+async def floor_per_call(browser, helper_js, check):
+    """floorMs: a shorter floor for one control, never a longer one; every other caller keeps FLOOR_MS."""
+    async def state(page):
+        return await page.evaluate("() => { const b = document.querySelector('.maffs-next'); "
+                                   "return {n: count, off: b ? b.disabled : null, f: document.activeElement === b}; }")
+    ctx = await browser.new_context(viewport={"width": 380, "height": 700})
+    page = await ctx.new_page()
+    await page.set_content(FIXTURE % helper_js)
+    await page.evaluate("start({floorMs: 600})")
+    await page.wait_for_timeout(300)
+    await page.keyboard.press("Enter")
+    await page.evaluate("ctl.advance()")
+    st = await state(page)
+    check("floorMs 600: held at 0.3 s", st["off"] is True and st["n"] == 0, str(st))
+    await page.wait_for_timeout(600)
+    st = await state(page)
+    check("floorMs 600: enabled and focused by 0.9 s", st["off"] is False and st["f"] and st["n"] == 0, str(st))
+    await page.keyboard.press("Enter")
+    check("floorMs 600: Enter then advances, once", await page.evaluate("count") == 1, "count=%d" % await page.evaluate("count"))
+    for what, opts in (("above FLOOR_MS (9000)", "{floorMs: 9000}"), ("negative (-1)", "{floorMs: -1}"), ("not a number ('600')", "{floorMs: '600'}")):
+        await page.evaluate("start(%s)" % opts)
+        await page.wait_for_timeout(2000)
+        held = (await state(page))["off"]
+        await page.wait_for_timeout(1300)
+        st = await state(page)
+        check("floorMs %s: the 3 s floor" % what, held is True and st["off"] is False and st["n"] == 0,
+              "disabled at 2 s: %s; at 3.3 s: %s" % (held, st))
+    await ctx.close()
+
+
 FIXTURE = """<!doctype html><html><head><meta charset="utf-8"></head>
 <body style="font:16px sans-serif"><div id="mount"></div><script>%s</script>
 <script>
@@ -364,6 +407,17 @@ async def run(helper_js, chromium):
             failed = [n for n, ok in got if not ok]
             check("plant caught: " + name, bool(failed), "fails: " + "; ".join(failed) if failed else "nothing failed")
         no_page_fallback(check)
+
+        # floorMs: one control's own, shorter floor
+        await floor_per_call(browser, helper_js, check)
+        for name, old, new in FLOOR_PLANTS:
+            if helper_js.count(old) != 1:
+                check("plant: " + name, False, "its text is not in the helper once")
+                continue
+            got = []
+            await floor_per_call(browser, helper_js.replace(old, new), lambda n, ok, d="": got.append((n, ok)))
+            failed = [n for n, ok in got if not ok]
+            check("plant caught: " + name, bool(failed), "fails: " + "; ".join(failed) if failed else "nothing failed")
 
         # fallback never fires after a manual advance
         ctx, page = await fresh()
