@@ -51,6 +51,10 @@
  *   fallbackMs  FOR TEST HARNESSES ONLY: advance by itself after this many ms, on its own
  *               clock, ignoring the floor. No default: without it there is no timer. No page
  *               passes it (scripts/test-next-control.py scans the pages and fails on one).
+ *   floorMs     a shorter floor for this one control, in ms: for a right answer that shows something new and
+ *               waits for Next (canon §7.6), where the wait is the reveal's own time, not the three seconds a
+ *               wrong answer's reason needs. Never a longer floor: a value above FLOOR_MS is ignored, and so
+ *               is anything that is not a number of 0 or more. No default: without it the floor is FLOOR_MS.
  *   label       button text, default 'Next →'
  *   keep        the reason/feedback element (or a function returning it) whose top must stay
  *               on screen while Next is brought into view; default the control itself
@@ -181,6 +185,8 @@
     mount.appendChild(wrap);
 
     var floor = floorMs();
+    // One control's own, shorter floor (floorMs): never longer than the floor in force.
+    if (typeof opts.floorMs === 'number' && opts.floorMs >= 0 && opts.floorMs < floor) floor = opts.floorMs;
     btn.style.setProperty('--maffs-next-floor', floor + 'ms');   // the fill crosses in the floor's time
     var state = { btn: btn, ready: false, done: false, cancelled: false, fallback: null, floor: null, onClick: null };
 
