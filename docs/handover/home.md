@@ -18,7 +18,7 @@
 
 ## 2026-11-27 (home): D-BY-DX-GRAPH (d by dx? Why? draws f with the question and the gradient function over it once answered, through a new shared plotter; a regenerated bank; Next after a right answer; the large-screen layer)
 
-Claude Code (home lane), worktree `~/mg-d-by-dx-graph`, branch `claude/d-by-dx-graph`. The contract is at `docs/handover/contracts/2026-11-27-d-by-dx-graph.md` (verbatim). The first commit closed out NEXT-NO-FALLBACK.
+Claude Code (home lane), worktree `~/mg-d-by-dx-graph`, branch `claude/d-by-dx-graph`. PR #938. The contract is at `docs/history/contracts/2026-11-27-d-by-dx-graph.md` (verbatim). The first commit closed out NEXT-NO-FALLBACK.
 
 - **Jon (27 Nov 2026, 18:11):** "draw the graph as part of the question, when you get the answer draw the gradient line on the same graph in a different colour, really hammer home that we are finding the gradient function".
 - **The plotter, `schools/assets/plot.js` (MaffsPlot), new:** SVG and KaTeX, no canvas, no pointer, no timer. The caller gives the window; axes through 0 or along the edge nearer 0; ticks at nice steps or multiples of pi/2; a value that is not finite breaks the line; a curve can draw in (0.6 s) and two can be drawn together by pens; it draws only while it is on screen and the tab is showing; reduced motion draws at once. Each path carries its window and box, so a check maps its points back to values. `scripts/test-plot.py` is its check (a `ci-line` of its own): 63 checks, 11 plants.
@@ -31,7 +31,9 @@ Claude Code (home lane), worktree `~/mg-d-by-dx-graph`, branch `claude/d-by-dx-g
 - **Decided here, for Jon and Project Claude:** (1) the stage buttons already ran past the fold on a phone, so the start picture sits under them there and beside them from 1024 px: it pushes no start control down. Above them it would be seen first, and would push Stage 3 below the fold at 375 x 667. (2) The two unused options now go during a wrong answer's feedback on every screen, not only phones: with four board lines, Next was 60 px below the fold at 1280 x 720 in Aa. (3) Below 1024 px the options stay 1.3rem (maths 1.57 times the body): larger put Next 2 px below the fold at 375 x 667 in Aa. (4) On a phone the gradient function draws in when the student opens the fold-out, since the plotter waits until it is on screen.
 - **Least room under Next, measured here:** 31 px (1280 x 720, Aa, with the table), 41 px (375 x 667, Aa), 43 px (320 x 568).
 - **`docs/todo.md`:** new row PLOT-MIGRATE; D-BY-DX says the graph is built and adds Jon's ruling on the start picture.
-- **/updates/:** none (the game is unlisted). **Run IDs and the merge:** in the close-out, as usual.
+- **/updates/:** none (the game is unlisted).
+- **Gate on the PR head a0752575** (main's #936 merged in before it): check-site 46068038708 and phone-fit-full 46068038653, both green.
+- **Merged** 27 Nov as 9e05404 (#938, squash) by merge-pr.py from the primary checkout, which ended "main 9e05404 run 46070280000: GREEN". Main on 9e05404: check-site 46070280000, phone-fit-full 46070279934 and the pages build 46070280046, each success.
 
 Record: agent Claude Code; wall 0:55; review cycles 0; amendments 0; usage n/a.
 
