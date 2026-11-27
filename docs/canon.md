@@ -1133,9 +1133,15 @@ interim fix and is retired — do not reintroduce a fixed wrong-answer timer.
 
 - **A correct answer advances briskly** on whatever short delay the game already uses. A student who
   got it right should not be held up.
-- **A wrong answer shows a `Next →` control and waits for the student.** They decide when they
-  have read it. A generous auto-advance fallback (`MaffsNext.FALLBACK_MS`, 20s) exists only so a
-  walked-away tab still finishes; it is a safety net, never the mechanism.
+- **A wrong answer shows a `Next →` control and waits for the student, with no timer.** They decide
+  when they have read it; however long they take, the game stays where it is. Jon, 27 Nov 2026: it
+  gives them time to check where they went wrong and write the correct method down before moving on.
+  (The 20s auto-advance fallback of 22 Sep 2026 is retired, contract NEXT-NO-FALLBACK. `fallbackMs`
+  stays in the helper for test harnesses only; no page passes it, and `scripts/test-next-control.py`
+  fails on one that does.)
+- **A right answer that reveals something new on screen (a drawn result, a graph, a worked line the
+  question did not show) waits for Next as a wrong answer does; a right answer that only confirms
+  keeps its brisk delay.** Jon, 27 Nov 2026, for d by dx? Why?'s gradient function.
 - **Any pause must have something on screen worth reading.** A pause with only "WRONG!" behind it is
   worse than no pause — it wastes the student's time and teaches nothing. Show the working, the
   step, or the misconception before handing over to the control.
@@ -1159,12 +1165,12 @@ MaffsNext.wrong() brings Next into view itself (MaffsScroll.reveal); pass keep: 
   disabled (dimmed, and a faint fill crosses it once; dimmed only under `prefers-reduced-motion`), and
   no click, Enter, Space or call to the returned `advance()` moves on. Jon's ruling of 29 Sep 2026: the
   explanation is on screen for at least that long, platform-wide (probability-pioneer's own 5s floor
-  predates it and is its own). The floor is separate from the 20s fallback and from any game's
-  `fallbackMs`, which run on their own clock.
+  predates it and is its own). The floor is separate from a test's `fallbackMs`, which runs on its
+  own clock.
 - **Advance once.** `onAdvance` runs at most once per `wrong()` call, however it is triggered: a click,
   Enter or Space on the focused control, a game's own key handler calling the returned `advance()`, or
-  the fallback. A game that handles Enter itself routes it through `advance()`.
-- **`clear()` cancels.** Removing a control cancels its fallback and floor timers and its listener, so
+  a test's `fallbackMs`. A game that handles Enter itself routes it through `advance()`.
+- **`clear()` cancels.** Removing a control cancels its floor timer (and a test's fallback) and its listener, so
   nothing it scheduled can fire after the game has moved on. A new `wrong()` on the same mount clears
   the old one first. (Found in phone-fit batch 1: the old `clear()` left the fallback running, so a game
   that advanced on Enter could skip a question 20 seconds later.)

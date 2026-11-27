@@ -1563,7 +1563,7 @@ var LADDERS = {
     $('hudScore').textContent = total;
     saveDaily();
     if (solved) { MaffsLock.fresh(fb); try { $('nextBtn').focus({ preventScroll: true }); } catch (e) {} }
-    else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, fallbackMs: 2147483647, label: last ? 'See results →' : 'Next →', keep: fb.firstChild });
+    else MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, label: last ? 'See results →' : 'Next →', keep: fb.firstChild });
     if (window.MaffsScroll) MaffsScroll.reveal(function () { return fb.querySelector('.fb-next button') || fb; }, { keep: fb.firstChild });
   }
   function advance() {

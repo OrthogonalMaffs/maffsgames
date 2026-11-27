@@ -10,9 +10,14 @@ Loads the helper into a bare page in headless Chromium and checks what it promis
                advance() do nothing; after it, Enter advances
   once         one Enter press advances exactly once, even when the game's own keydown
                handler also calls advance() (the batch 1 skip-a-question shape)
-  clear        clear() leaves no live timer: neither the floor nor the fallback fires
-  fallback     the fallback never fires after a manual advance; on its own it fires
-               exactly once, on its own clock, even inside the floor
+  clear        clear() leaves no live timer: neither the floor nor a fallback fires
+  no timer     (NEXT-NO-FALLBACK, 27 Nov 2026) with no fallbackMs the control never advances by itself:
+               90 s on a fast clock (the page's setTimeout at 1/100 of its length), then Enter still
+               advances once; MaffsNext exports no FALLBACK_MS. Plant: the 20 s default restored must FAIL
+  no page      no page or script under games/, escape-rooms/, the-6-ps/ or the site root names fallbackMs
+               (a static scan). Plant: a page passing fallbackMs: 20000 must FAIL
+  fallback     for test harnesses, which pass fallbackMs themselves: it never fires after a manual
+               advance; on its own it fires exactly once, on its own clock, even inside the floor
   size         the control is at least 44px tall and wide
   motion       with prefers-reduced-motion the floor's fill is not drawn
   in view      (NEXT-IN-VIEW) at 320x568, on pages served from games/x/: Next below the fold ends inside
@@ -29,6 +34,7 @@ import argparse
 import asyncio
 import os
 import sys
+import tempfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
@@ -162,6 +168,73 @@ async def in_view(browser, helper_js, scroll_js, check):
           "scrolled %d" % w["y"])
     await ctx.close()
 
+# NEXT-NO-FALLBACK (27 Nov 2026): no page gives the control a timer. Where a page or its script may sit.
+PAGE_DIRS = ("games", "escape-rooms", "the-6-ps")
+PAGE_EXT = (".html", ".js")
+
+
+def pages_naming_fallback(root):
+    """-> ["path:line", ...]: every line under games/, escape-rooms/, the-6-ps/ and in the site root's own pages that
+    names fallbackMs. The option is for test harnesses; a page that passes it brings back an advance by timer."""
+    files = [os.path.join(root, f) for f in sorted(os.listdir(root)) if f.endswith(".html")]
+    for d in PAGE_DIRS:
+        for base, _, names in sorted(os.walk(os.path.join(root, d))):
+            files += [os.path.join(base, n) for n in sorted(names) if n.endswith(PAGE_EXT)]
+    hits = []
+    for path in files:
+        with open(path, encoding="utf-8", errors="replace") as f:
+            for i, line in enumerate(f, 1):
+                if "fallbackMs" in line:
+                    hits.append("%s:%d" % (os.path.relpath(path, root).replace(os.sep, "/"), i))
+    return hits
+
+
+def no_page_fallback(check):
+    """The static scan, and its plant: a page that passes fallbackMs: 20000 must be found."""
+    hits = pages_naming_fallback(ROOT)
+    check("no page passes fallbackMs", not hits, ", ".join(hits[:6]) if hits else "games/, escape-rooms/, the-6-ps/, the site root")
+    with tempfile.TemporaryDirectory() as tmp:
+        for d in PAGE_DIRS:
+            os.makedirs(os.path.join(tmp, d))
+        os.makedirs(os.path.join(tmp, "games", "planted"))
+        with open(os.path.join(tmp, "index.html"), "w", encoding="utf-8") as f:
+            f.write("<p>home</p>\n")
+        with open(os.path.join(tmp, "games", "planted", "index.html"), "w", encoding="utf-8") as f:
+            f.write("<script>\nMaffsNext.wrong({ mount: m, onAdvance: next, fallbackMs: 20000 });\n</script>\n")
+        clean = pages_naming_fallback(tmp) == ["games/planted/index.html:2"]
+        check("plant caught: a page passing fallbackMs: 20000", clean, "found at games/planted/index.html:2" if clean else "NOT found")
+
+
+# The page's setTimeout at 1/100 of its length, set before the helper loads: 60 s of the control's time in 0.6 s.
+FAST_CLOCK = ("<script>(function(){var st=window.setTimeout;"
+              "window.setTimeout=function(f,ms){var a=[].slice.call(arguments,2);"
+              "return st.apply(window,[f,(ms||0)/100].concat(a));};})();</script>")
+# Plant: the default restored (the helper before NEXT-NO-FALLBACK). The no-timer case must FAIL on it.
+DEFAULT_PLANT = ("the 20 s default fallback restored",
+                 "    if (typeof opts.fallbackMs === 'number') {\n"
+                 "      state.fallback = setTimeout(function () { state.fallback = null; go(true); }, opts.fallbackMs);\n"
+                 "    }\n",
+                 "    state.fallback = setTimeout(function () { state.fallback = null; go(true); },\n"
+                 "      typeof opts.fallbackMs === 'number' ? opts.fallbackMs : 20000);\n")
+
+
+async def no_timer(browser, helper_js, check):
+    """NEXT-NO-FALLBACK: with no fallbackMs, nothing advances by itself. 90 s on the fast clock, then Enter does."""
+    ctx = await browser.new_context(viewport={"width": 380, "height": 700})
+    page = await ctx.new_page()
+    await page.set_content((FIXTURE % helper_js).replace('<div id="mount"></div>', '<div id="mount"></div>' + FAST_CLOCK, 1))
+    await page.evaluate("start()")
+    await page.wait_for_timeout(900)   # 90 s of the control's time: past the floor (3 s) and the old default (20 s)
+    st = await page.evaluate("() => { const b = document.querySelector('.maffs-next'); "
+                             "return {n: count, there: !!b, off: b ? b.disabled : null}; }")
+    check("no fallbackMs: no advance in 90 s", st["n"] == 0 and st["there"] and st["off"] is False,
+          "count=%s, control %s, disabled=%s" % (st["n"], "there" if st["there"] else "gone", st["off"]))
+    await page.keyboard.press("Enter")
+    check("... and Enter still advances, once", await page.evaluate("count") == 1,
+          "count=%d" % await page.evaluate("count"))
+    await ctx.close()
+
+
 FIXTURE = """<!doctype html><html><head><meta charset="utf-8"></head>
 <body style="font:16px sans-serif"><div id="mount"></div><script>%s</script>
 <script>
@@ -275,6 +348,22 @@ async def run(helper_js, chromium):
         check("a new wrong() cancels the old one", await page.evaluate("count") == 0,
               "count=%d" % await page.evaluate("count"))
         await ctx.close()
+
+        # NEXT-NO-FALLBACK: no timer by default, no page asks for one, and the constant is gone
+        await no_timer(browser, helper_js, check)
+        ctx, page = await fresh()
+        exported = await page.evaluate("'FALLBACK_MS' in MaffsNext")
+        check("MaffsNext exports no FALLBACK_MS", not exported, "exported" if exported else "")
+        await ctx.close()
+        name, old, new = DEFAULT_PLANT
+        if helper_js.count(old) != 1:
+            check("plant: " + name, False, "its text is not in the helper once")
+        else:
+            got = []
+            await no_timer(browser, helper_js.replace(old, new), lambda n, ok, d="": got.append((n, ok)))
+            failed = [n for n, ok in got if not ok]
+            check("plant caught: " + name, bool(failed), "fails: " + "; ".join(failed) if failed else "nothing failed")
+        no_page_fallback(check)
 
         # fallback never fires after a manual advance
         ctx, page = await fresh()
