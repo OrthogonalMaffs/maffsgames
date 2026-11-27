@@ -30,7 +30,8 @@ when-will-i-use-this/ that this script no longer writes is deleted.
 
 Shared, never copied: the look is parents/guide.css and the Aa toggle parents/guide.js (the existing mfg_accessible
 key); each head's title, description and og:/twitter: copies are written by scripts/check-meta.py's render() from
-data/games.json "pages", so apply-meta.py finds nothing to change; the footer is scripts/check-footer.py's CANONICAL.
+data/games.json "pages", so apply-meta.py finds nothing to change; the footer is scripts/check-footer.py's CANONICAL;
+the top bar is scripts/check-page-bar.py's bar_for(), and the site-nav.js tag scripts/check-site-nav.py's TAG.
 Maths in the wording (a run of numbers joined by + − × ÷ = or a spaced ratio colon) is set in KaTeX at display (canon
 §7.1.1); the stored wording is never changed. scripts/check-uses.py (CI) holds the pages to this script's output and
 recomputes every worked step.
@@ -117,6 +118,8 @@ def _load_module(name, rel):
 
 cm = _load_module("check_meta", "scripts/check-meta.py")
 cf = _load_module("check_footer", "scripts/check-footer.py")
+cpb = _load_module("check_page_bar", "scripts/check-page-bar.py")
+csn = _load_module("check_site_nav", "scripts/check-site-nav.py")
 
 
 def esc(s):
@@ -261,14 +264,15 @@ def head(values, katex):
             "<link rel=\"stylesheet\" href=\"/parents/guide.css\">\n"
             "<link rel=\"stylesheet\" href=\"/" + CSS + "\">\n"
             "<link rel=\"stylesheet\" href=\"/schools/assets/opendyslexic.css\">\n"
-            "<script defer src=\"/parents/guide.js\"></script>\n" + cf.STYLESHEET + "\n</head>\n")
+            "<script defer src=\"/parents/guide.js\"></script>\n" + cf.STYLESHEET + "\n" + cpb.STYLESHEET + "\n"
+            + csn.TAG + "\n</head>\n")
 
 
-def nav(back_href, back_text, wide=False):
-    back = '    <a href="%s" class="back">&larr; %s</a>\n' % (back_href, txt(back_text)) if back_href else ""
-    return ('<body>\n\n<nav class="nav">\n  <a href="/">MaffsGames</a>\n  <span class="nav-right">\n' + back +
-            '    <button class="a11y-btn" id="a11yBtn" type="button" aria-pressed="false" title="Dyslexia-friendly mode">Aa</button>\n'
-            '  </span>\n</nav>\n\n<main class="container%s">\n\n' % (" wide" if wide else ""))
+def nav(up, wide=False):
+    """The page bar, scripts/check-page-bar.py's bar_for() (a topic or route page's links up to the hub; the hub's has
+    no up link), and the page's <main>."""
+    rel = "%s/%s" % (SECTION, "topic/index.html" if up else "index.html")
+    return '<body>\n\n' + cpb.bar_for(rel) + '\n\n<main class="container%s">\n\n' % (" wide" if wide else "")
 
 
 def hero(badge, title, subtitle, colour=None):
@@ -352,7 +356,7 @@ def topic_page(root, d, t, routes, colours, values, live):
         body.append('<section>\n  <h2>Help at home</h2>\n  <p>For parents and carers: our guide to '
                     '<a href="/parents/%s/">%s</a>.</p>\n</section>\n\n' % (t["parentGuide"], txt(guide_name(root, t["parentGuide"]))))
     body.append(sources_html(scs))
-    return head(values, True) + nav("/%s/" % SECTION, "When will I use this?") + "".join(body) + tail()
+    return head(values, True) + nav(True) + "".join(body) + tail()
 
 
 def route_page(d, r, topics, routes, colours, values):
@@ -364,7 +368,7 @@ def route_page(d, r, topics, routes, colours, values):
             body.append('<h2 class="section-title"><a href="/%s/%s/">%s</a></h2>\n\n' % (SECTION, t["slug"], txt(t["title"])))
             body += [scenario_html(s, routes, "h3", colours) for s in group]
     body.append(sources_html([s for t in topics for s in scs if s["topic"] == t["slug"]]))
-    return head(values, True) + nav("/%s/" % SECTION, "When will I use this?") + "".join(body) + tail()
+    return head(values, True) + nav(True) + "".join(body) + tail()
 
 
 def hub_page(d, topics, used_routes, routes, colours, values):
@@ -396,7 +400,7 @@ def hub_page(d, topics, used_routes, routes, colours, values):
                     % (t["slug"], txt(t["title"]), txt(t["answer"])))
     body.append("</div>\n\n")
     # No back link: "MaffsGames" is the way home, and "Back to games" beside it scrolled 4 px at 320 in Aa.
-    return head(values, True) + nav(None, None, wide=True) + "".join(body) + tail(self_link=False)
+    return head(values, True) + nav(False, wide=True) + "".join(body) + tail(self_link=False)
 
 
 def build(root):

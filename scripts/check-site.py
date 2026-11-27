@@ -2677,8 +2677,9 @@ async def play_one(context, base, label, rel, query, live, timeout_ms, n_questio
             # whatever brisk delay the game already had and advances on its own.
             # A wrong one waits for the student: canon 7.6 games show the `Next`
             # control, and the older hand-rolled ones do the same with a button
-            # of their own. Press it, rather than sitting out a 20s fallback
-            # that is a safety net and not the mechanism.
+            # of their own. Press it: a wrong answer's Next waits for the
+            # student with no timer (NEXT-NO-FALLBACK, #937), so nothing moves
+            # the question on but the press.
             async def settle(stage, test):
                 waited, step = 0, 250
                 while waited < advance_ms:

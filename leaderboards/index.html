@@ -92,9 +92,6 @@
   .lb-offline{font-size:14px;color:var(--text-muted);background:var(--white);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:32px;}
   .gc-note{font-size:11.5px;color:#92660a;background:var(--gold-dim);border-radius:6px;padding:8px 10px;line-height:1.5;}
 
-  .back-link{display:inline-block;margin-top:8px;color:var(--teal);text-decoration:none;font-weight:600;font-size:14px;}
-  .back-link:hover{text-decoration:underline;}
-
   @media(max-width:768px){
     .header{padding:22px 20px;}
     .content{padding:24px 16px 48px;}
@@ -102,17 +99,20 @@
 </style>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
 <script src="/schools/assets/site-nav.js"></script>
+<link rel="stylesheet" href="/schools/assets/page-bar.css">
 </head>
 <body>
+<nav class="page-bar" aria-label="Site"><a class="page-bar-home" href="/">MaffsGames</a><span class="page-bar-links"><a class="back-link" href="/">&larr; <span class="page-bar-long">Back to </span>Games</a></span></nav>
+
 
 <div class="header">
   <div class="header-inner">
-    <div class="header-title">&#127942; Leaderboards</div>
+    <div class="header-title">Leaderboards</div>
     <div class="header-sub">Top scores from the last 7 days and all-time highs for every game, plus your own local score history. Anonymous — no accounts, no sign-up.</div>
     <div class="header-badges">
-      <span class="hbadge">91 scoring games</span>
+      <span class="hbadge" id="lbCount" hidden></span>
       <span class="hbadge">Rolling 7-day window</span>
-      <span class="hbadge">Your scores never leave this device</span>
+      <span class="hbadge">Your score history stays on this device</span>
     </div>
     <p id="teacherInvite" class="header-sub"></p>
   </div>
@@ -134,8 +134,6 @@
   <div class="lb-offline" id="lbOffline" hidden>Live leaderboards can't load on this network. Your Scores above are kept on this device and still work.</div>
 
   <div class="game-grid" id="gameGrid"></div>
-
-  <a href="../" class="back-link">&larr; Back to Games</a>
 
 </div>
 
@@ -174,7 +172,9 @@ var MIXED_UNRELIABLE = MaffsLeaderboard.MIXED_UNRELIABLE;
    call site hardcodes one (ground truth over roster intent). ENFORCED since
    30 Sep 2026: scripts/check-leaderboard-coverage.js fails CI if a game that
    calls submitScore() is missing here, or if a row's levels differ from the
-   keys the game submits under. Keys that are not roster tiers (q20, higher,
+   keys the game submits under; since 27 Nov 2026 (LEADERBOARD-PAGE) the rows are
+   exactly the games in the roster's listed sections that call submitScore():
+   an unlisted or withdrawn game is never here. Keys that are not roster tiers (q20, higher,
    alevel2, l4 ...) are declared in that script's LEVEL_OVERRIDES. Keep one
    row per line, in this shape, so the check can read it. */
 var GAMES = [
@@ -274,7 +274,6 @@ var GAMES = [
   ['normal-navigator','Normal Navigator',['alevel']],
   ['fermi-lab','Fermi Lab',['ks3','gcse','alevel','level4','core']],
   ['dimension-checker','Dimension Checker',['level4']],
-  ['regression-rumble','Regression Rumble (being rebuilt)',['core','alevel','level4']],
   ['factor-theorem','Factor Theorem',['alevel']],
   ['boolean-blitz','Boolean Blitz',['level4']],
   ['truth-will-set-you-free','The Truth Will Set You Free',['level4']],
@@ -285,6 +284,12 @@ var GAMES = [
   ['eigenvalue-extractor','Eigenvalue Extractor',['further']],
   ['eigenvector-engine','Eigenvector Engine',['further']]
 ].map(function(g){ return { slug:g[0], name:g[1], levels:g[2] }; });
+
+/* The count is the list's own length, never a typed number (contract LEADERBOARD-PAGE, 27 Nov 2026: the badge said
+   "91 scoring games" while the list held 106). scripts/check-leaderboard-coverage.js fails a number typed into it. */
+var countEl = document.getElementById('lbCount');
+countEl.textContent = GAMES.length + ' scoring games';
+countEl.hidden = false;
 
 /* ---- Helpers ---- */
 /* Every value read from Firebase (a board entry's initials, score and timestamp) goes through esc()
@@ -389,7 +394,7 @@ function renderCardBody(card, slug, level){
 
     var best = sorted[0];
     athEl.style.display = 'flex';
-    athEl.innerHTML = '<span class="ath-label">&#127942; All-time high</span><span class="ath-val">' + esc(best.score) + ' &middot; ' + esc(fmtDate(best.timestamp)) + '</span>';
+    athEl.innerHTML = '<span class="ath-label">All-time high</span><span class="ath-val">' + esc(best.score) + ' &middot; ' + esc(fmtDate(best.timestamp)) + '</span>';
 
     var cutoff = Date.now() - SEVEN_DAYS;
     var recent = entries.filter(function(e){ return e.timestamp >= cutoff; })
