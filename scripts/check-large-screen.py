@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ci-shards: Large-screen layer (schools/assets/large-screen.js: every MIGRATED page carries the layer's tag once, written from data/large-screen.json; each page's zoom at 1920x955, 2560x1310, 1366x650 and 390x844 equal to this script's own reading of rules a-f; a session played on each page at each size with the answer controls and Next above the fold, no sideways scroll and every media query answering as on the unzoomed page; planted faults caught) | | 12
-# ci-deps: schools/assets/large-screen.js data/large-screen.json scripts/apply-large-screen.py scripts/measure-large-screen.py scripts/measure-phone-fit.py scripts/check-site.py scripts/check-answer-lock.py scripts/plant_common.py games/maffscards/ games/factor-race/ games/surd-simplifier/ games/negative-number-line/ games/bearing-blitz/ games/core-maths-paper1/ games/its-just-base-60-bruv/
+# ci-deps: schools/assets/large-screen.js data/large-screen.json scripts/apply-large-screen.py scripts/measure-large-screen.py scripts/measure-phone-fit.py scripts/check-site.py scripts/check-answer-lock.py scripts/plant_common.py games/maffscards/ games/factor-race/ games/surd-simplifier/ games/negative-number-line/ games/bearing-blitz/ games/core-maths-paper1/ games/its-just-base-60-bruv/ games/d-by-dx-why/ schools/assets/plot.js
 """The large-screen layer: who loads it, what each page's zoom must be, and that a zoomed page still works
 (SR-34's goal; contract LARGE-SCREEN-LAYER, 26 Nov 2026).
 
@@ -81,7 +81,8 @@ LAYER = "schools/assets/large-screen.js"
 LAYER_URL = "/" + LAYER
 DATA = "data/large-screen.json"
 
-# Pages that load the layer: the pilot's seven (contract LARGE-SCREEN-LAYER). The rest join in the rollout (todo
+# Pages that load the layer: the pilot's seven (contract LARGE-SCREEN-LAYER), and d by dx? Why? (contract D-BY-DX-GRAPH,
+# 27 Nov 2026: Jon's "bigger answer boxes" on a 2560 px screen). The rest join in the rollout (todo
 # LARGE-SCREEN-ROLLOUT), through this list and apply-large-screen.py, never by hand.
 MIGRATED = [
     "games/maffscards/index.html",
@@ -91,6 +92,7 @@ MIGRATED = [
     "games/bearing-blitz/index.html",
     "games/core-maths-paper1/index.html",
     "games/its-just-base-60-bruv/index.html",
+    "games/d-by-dx-why/index.html",
 ]
 
 # Pages that carry <html data-large-screen="off">, each with its reason.
@@ -381,6 +383,10 @@ ROUTES = {
     # Four stages, each its own mode: the lock-hint starts the first; the measurement plays all four ("starts").
     "games/its-just-base-60-bruv/index.html": {
         "starts": ["B60.ui.start('stage-1')", "B60.ui.start('stage-2')", "B60.ui.start('stage-3')", "B60.ui.start('stage-4')"],
+    },
+    # Five stages, each with the table and in Pro (no table): the lock-hint starts the first; the measurement plays all ten.
+    "games/d-by-dx-why/index.html": {
+        "starts": ["DDX.ui.start('%sstage-%d')" % (p, n) for p in ("", "pro-") for n in range(1, 6)],
     },
 }
 

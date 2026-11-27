@@ -16,6 +16,25 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-27 (home): D-BY-DX-GRAPH (d by dx? Why? draws f with the question and the gradient function over it once answered, through a new shared plotter; a regenerated bank; Next after a right answer; the large-screen layer)
+
+Claude Code (home lane), worktree `~/mg-d-by-dx-graph`, branch `claude/d-by-dx-graph`. The contract is at `docs/handover/contracts/2026-11-27-d-by-dx-graph.md` (verbatim). The first commit closed out NEXT-NO-FALLBACK.
+
+- **Jon (27 Nov 2026, 18:11):** "draw the graph as part of the question, when you get the answer draw the gradient line on the same graph in a different colour, really hammer home that we are finding the gradient function".
+- **The plotter, `schools/assets/plot.js` (MaffsPlot), new:** SVG and KaTeX, no canvas, no pointer, no timer. The caller gives the window; axes through 0 or along the edge nearer 0; ticks at nice steps or multiples of pi/2; a value that is not finite breaks the line; a curve can draw in (0.6 s) and two can be drawn together by pens; it draws only while it is on screen and the tab is showing; reduced motion draws at once. Each path carries its window and box, so a check maps its points back to values. `scripts/test-plot.py` is its check (a `ci-line` of its own): 63 checks, 11 plants.
+- **The bank:** `tools/d-by-dx-why/bank.py` is the contract's, verbatim; it prints total 60 and sha256 c6c0c8dc...bb7c960, and its two checks pass. Embedded one item a line, with START_SHOW's three pairs beside it.
+- **The page:** the graph is a reference card: beside the question from 1024 px (question, graph, table side by side from 1280 px; the table under the graph from 1024 px), a closed "Graph" button on anything narrower, which reads "See the gradient function" once answered and closes on Next. f is the accent, the gradient function amber and the wider line. A right answer shows "Right:", draws the gradient function and waits on Next (floor 0.6 s). A wrong answer shows the line, the working (label, left side, "=" and the right side, the "=" in one column; labels above their lines below 1024 px), the table rows and Next; no "The answer is" line. `root_upside_down` is the contract's new line.
+- **`schools/assets/next-control.js`:** an optional `floorMs`, a shorter floor for one control and never a longer one; no existing caller passes it, so none changes. Its case and two plants are in `scripts/test-next-control.py`.
+- **The start screen:** the pens draw START_SHOW's pairs (4 s, then 3 s still, round again); the equations are written as they finish.
+- **Large screens:** the page is on `check-large-screen.py`'s MIGRATED with ten starts (five stages, with the table and in Pro); its measured need is 607 px. From 1024 px the options are 1.5rem with more padding.
+- **The verifier:** its own renderer and its own TeX reader; every working line equal in sympy to the function or its derivative; every curve read back from the page within 1 px (worst 0.03 px); the pens, the waits on a fast clock, the fit of the asking, right and wrong screens, the start screen at four sizes; 13 plants.
+- **Decided here, for Jon and Project Claude:** (1) the stage buttons already ran past the fold on a phone, so the start picture sits under them there and beside them from 1024 px: it pushes no start control down. Above them it would be seen first, and would push Stage 3 below the fold at 375 x 667. (2) The two unused options now go during a wrong answer's feedback on every screen, not only phones: with four board lines, Next was 60 px below the fold at 1280 x 720 in Aa. (3) Below 1024 px the options stay 1.3rem (maths 1.57 times the body): larger put Next 2 px below the fold at 375 x 667 in Aa. (4) On a phone the gradient function draws in when the student opens the fold-out, since the plotter waits until it is on screen.
+- **Least room under Next, measured here:** 31 px (1280 x 720, Aa, with the table), 41 px (375 x 667, Aa), 43 px (320 x 568).
+- **`docs/todo.md`:** new row PLOT-MIGRATE; D-BY-DX says the graph is built and adds Jon's ruling on the start picture.
+- **/updates/:** none (the game is unlisted). **Run IDs and the merge:** in the close-out, as usual.
+
+Record: agent Claude Code; wall 0:55; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-27 (home): NEXT-NO-FALLBACK (the shared Next control no longer advances by itself; canon §7.6 says so, and that a revealing right answer waits too)
 
 Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-no-fallback`. PR #937. The contract is at `docs/history/contracts/2026-11-27-next-no-fallback.md` (verbatim). The first commit closed out MERGE-GUARD.

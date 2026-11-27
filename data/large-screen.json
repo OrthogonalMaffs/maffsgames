@@ -438,6 +438,110 @@
      "start": "B60.ui.start('stage-3')"
     }
    }
+  },
+  "games/d-by-dx-why/index.html": {
+   "need": 607,
+   "thresholds": [
+    [
+     "height",
+     "le",
+     600.0
+    ],
+    [
+     "height",
+     "le",
+     620.0
+    ],
+    [
+     "height",
+     "le",
+     640.0
+    ],
+    [
+     "height",
+     "le",
+     660.0
+    ],
+    [
+     "width",
+     "ge",
+     1024.0
+    ],
+    [
+     "width",
+     "ge",
+     1280.0
+    ],
+    [
+     "width",
+     "le",
+     360.0
+    ],
+    [
+     "width",
+     "le",
+     420.0
+    ],
+    [
+     "width",
+     "le",
+     600.0
+    ],
+    [
+     "width",
+     "le",
+     809.0
+    ],
+    [
+     "width",
+     "le",
+     1023.0
+    ]
+   ],
+   "measured": {
+    "how": "the page's lock-hint",
+    "widths": [
+     1280
+    ],
+    "heights": [
+     720
+    ],
+    "seeds": [
+     1,
+     2,
+     3
+    ],
+    "levels": [
+     "level3"
+    ],
+    "starts": [
+     "DDX.ui.start('stage-1')",
+     "DDX.ui.start('stage-2')",
+     "DDX.ui.start('stage-3')",
+     "DDX.ui.start('stage-4')",
+     "DDX.ui.start('stage-5')",
+     "DDX.ui.start('pro-stage-1')",
+     "DDX.ui.start('pro-stage-2')",
+     "DDX.ui.start('pro-stage-3')",
+     "DDX.ui.start('pro-stage-4')",
+     "DDX.ui.start('pro-stage-5')"
+    ],
+    "sessions": 30,
+    "questions": 240,
+    "answers": 240,
+    "wrong_answers": 240,
+    "tallest": {
+     "what": "Next after an answer",
+     "question": 3,
+     "seed": 1,
+     "window": [
+      1280,
+      720
+     ],
+     "level": "level3",
+     "start": "DDX.ui.start('stage-2')"
+    }
+   }
   }
  }
 }
