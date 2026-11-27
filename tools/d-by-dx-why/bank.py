@@ -98,11 +98,11 @@ def term_tex(t, v, lead, back=False):
             return coef(c, lead, attach=False)
         return coef(c, lead) + (v if n == 1 else f"{v}^{{{frac_tex(n)}}}")
     if k in ("sin", "cos"):
-        return coef(c, lead) + rf"\{k} {ang(args[1], v)}"
+        return coef(c, lead) + rf"\{k}({ang(args[1], v)})"   # a function's argument always in brackets (Jon, 27 Nov 2026)
     if k == "exp":
         return coef(c, lead) + f"e^{{{ang(args[1], v)}}}"
     if k == "ln":
-        return coef(c, lead) + rf"\ln {ang(args[1], v)}"
+        return coef(c, lead) + rf"\ln({ang(args[1], v)})"
     if k == "xexp":
         return coef(c, lead) + f"{v}e^{{{ang(args[1], v)}-1}}"
     sign = "-" if c < 0 else ("" if lead else "+")
@@ -113,7 +113,7 @@ def term_tex(t, v, lead, back=False):
         d, m = args[1], args[2]
         return sign + r"\dfrac{%s}{%s%s}" % (frac_tex(abs(c)), frac_tex(d), v if m == 1 else f"{v}^{{{frac_tex(m)}}}")
     if k == "recipln":
-        return sign + r"\dfrac{%s}{\ln %s}" % (frac_tex(abs(c)), ang(args[1], v))
+        return sign + r"\dfrac{%s}{\ln(%s)}" % (frac_tex(abs(c)), ang(args[1], v))
     raise ValueError(k)
 
 
@@ -150,7 +150,8 @@ def prompt(form, v, q, y):
 # The working, board-style (Jon, 27 Nov 2026, 18:44): the maths as a teacher writes it on the board, one line per move,
 # each line following from the one before, with a short label in the margin naming the move. A step is
 # (label, side, rhs): side "f" puts the function on the left (f(t), or y, s, A), "d" its derivative (f'(t), or the
-# stacked dy/dt), "" nothing (a line that carries on with "="). rhs is bare TeX.
+# stacked dy/dt), "" nothing (a line that carries on with "="). rhs is bare TeX. A label names the question's own
+# number, never the table's letter: "4 out front", not "a out front" (Jon, 27 Nov 2026, 21:45).
 def lhs_of(side, form, v, y):
     if side == "f":
         return f"f({v})" if form == "fn" else y
@@ -295,9 +296,9 @@ def stage3():
         g, s = ("cos", 1) if f == "sin" else ("sin", -1)
         A = ang(a, v)
         if f == "sin":
-            first = ("a out front, and in the angle", "d", (rf"{a}\cos {A}" if c == 1 else rf"{c} \times {a}\cos {A}"))
+            first = (f"{a} out front, and in the angle", "d", (rf"{a}\cos({A})" if c == 1 else rf"{c} \times {a}\cos({A})"))
         else:
-            first = ("a out front; cos gives a minus", "d", (rf"-{a}\sin {A}" if c == 1 else rf"{c} \times ({-a})\sin {A}"))
+            first = (f"{a} out front; cos gives a minus", "d", (rf"-{a}\sin({A})" if c == 1 else rf"{c} \times ({-a})\sin({A})"))
         work = [first] + ([("tidy up", "", tex([T(g, s * c * a, a)], v))] if c != 1 else [])
         add(3, v, FORMS[i % 3], [T(f, c, a)], None, [T(g, s * c * a, a)],
             [("a_forgotten", [T(g, s * c, a)]), ("sign_slip", [T(g, -s * c * a, a)]),
@@ -307,13 +308,13 @@ def stage3():
 def stage4():
     for i, (v, c, a) in enumerate([("x", 1, 3), ("t", 2, 4), ("z", 5, 2), ("x", 3, 2), ("t", 1, 4), ("r", 4, 3)]):
         E = rf"e^{{{ang(a, v)}}}"
-        work = [("a comes down; the power stays", "d", (rf"{a}{E}" if c == 1 else rf"{c} \times {a}{E}"))] + \
+        work = [(f"{a} comes down; the power stays", "d", (rf"{a}{E}" if c == 1 else rf"{c} \times {a}{E}"))] + \
                ([("tidy up", "", tex([T("exp", c * a, a)], v))] if c != 1 else [])
         add(4, v, FORMS[i % 3], [T("exp", c, a)], None, [T("exp", c * a, a)],
             [("a_forgotten", [T("exp", c, a)]), ("integrated_instead", [T("exp", F(c, a), a)]),
              ("power_rule_used", [T("xexp", c * a, a)])], work, ["exp"])
     for i, (v, c, a) in enumerate([("x", 1, 4), ("t", 3, 2), ("x", 2, 5), ("r", 6, 3), ("t", 1, 9), ("z", 4, 7)]):
-        work = [("ln: the a cancels", "d", (rf"\dfrac{{1}}{{{v}}}" if c == 1 else rf"{c} \times \dfrac{{1}}{{{v}}}"))] + \
+        work = [(f"ln: the {a} cancels", "d", (rf"\dfrac{{1}}{{{v}}}" if c == 1 else rf"{c} \times \dfrac{{1}}{{{v}}}"))] + \
                ([("tidy up", "", tex([T("over", c, 1)], v))] if c != 1 else [])
         add(4, v, FORMS[(i + 1) % 3], [T("ln", c, a)], None, [T("over", c, 1)],
             [("a_kept", [T("over", c * a, 1)]), ("a_divided", [T("over", c, a)]), ("ln_flipped", [T("recipln", c, a)])],
@@ -321,15 +322,16 @@ def stage4():
 
 
 def stage5():
+    # Terms in descending powers, as anyone sane writes them (Jon, 27 Nov 2026, 21:47): q v^n, then p v, then the number.
     for i, (v, p, q, n, k) in enumerate([("t", 5, 2, 3, None), ("t", 4, 3, 2, None), ("x", 2, 5, 4, None),
                                          ("t", 7, 2, 5, None), ("r", 3, 4, 3, None), ("t", 6, 2, 4, None),
                                          ("t", 2, 3, 3, 9), ("x", 8, 2, 2, 4), ("t", 5, 6, 2, -3), ("t", 9, 1, 4, 7),
                                          ("z", 4, 5, 3, None), ("t", 3, 7, 2, -8)]):
-        qt = [T("pow", p, 1), T("pow", q, n)] + ([T("const", k)] if k is not None else [])
-        ans = [T("const", p), T("pow", q * n, n - 1)]
-        decoys = [("kept_variable", [T("pow", p, 1), T("pow", q * n, n - 1)]), ("power_kept", [T("const", p), T("pow", q * n, n)])]
-        decoys.append(("constant_kept", ans + [T("const", k)]) if k is not None else ("coeff_lost", [T("const", p), T("pow", n, n - 1)]))
-        first = rf"{p} + {power_down(q, n, v)}" + (" + 0" if k is not None else "")
+        qt = [T("pow", q, n), T("pow", p, 1)] + ([T("const", k)] if k is not None else [])
+        ans = [T("pow", q * n, n - 1), T("const", p)]
+        decoys = [("kept_variable", [T("pow", q * n, n - 1), T("pow", p, 1)]), ("power_kept", [T("pow", q * n, n), T("const", p)])]
+        decoys.append(("constant_kept", ans + [T("const", k)]) if k is not None else ("coeff_lost", [T("pow", n, n - 1), T("const", p)]))
+        first = rf"{power_down(q, n, v)} + {p}" + (" + 0" if k is not None else "")
         work = [("each term on its own" + ("; a number alone goes to 0" if k is not None else ""), "d", first),
                 ("tidy up", "", tex(ans, v))]
         add(5, v, FORMS[i % 3], qt, None, ans, decoys, work, ["x", "axn"])
