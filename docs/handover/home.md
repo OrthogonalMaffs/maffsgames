@@ -18,7 +18,7 @@
 
 ## 2026-11-26 (home): BASE-60-TIDY (Base 60's cuckoo rides out on a perch joined to its clock; the page's stale comment; spec-map row N13 names time)
 
-Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`. The contract is at `docs/handover/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
+Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`, PR #932. The contract is at `docs/history/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
 
 - **Jon (26 Nov 2026, 19:51):** "the cuckoo clock looks much better alhough the cuckoo is not attached to the clock when it pays a visit".
 - **The perch:** a thin level arm (`.ck-perch`, cream with a dark edge, as the bird is drawn) from inside the doorway (x 36 of the drawing) to under the bird's body (x 7). It grows out of the doorway and back with the bird, on the same times and easing, and is hidden at no length when the bird is in. The bird's own movement, timings and shape are unchanged; it bows and droops on the arm, which stays level.
@@ -27,7 +27,8 @@ Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-ti
 - **Verifier:** the bird units also hold the perch showing and within 1 drawing unit of the door's box and the bird's at each sampled moment of the hold, after a wrong answer and in both reduced-motion states. Two plants: the perch removed, and the perch left behind at the door. Run locally: both bird units pass, both plants and the two older bird plants caught.
 - **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, PR 930)." ("PR 930", not "#930": the first Gate, check-site 45887805820, failed only on the Theme check, which read "#930" in the page as a hex colour outside :root); row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
 - **Screenshot** (the bird out on its perch at 1366x768): in the report to Jon; no image is committed.
-- **Run IDs:** in the close-out, as usual.
+- **Gate on the PR head d5417e8f:** check-site 45892119116 and phone-fit-full 45892119126, both green. Main was merged in twice while the PR waited (9f51bb8d, then eaf158af), and the Gate re-ran each time, as the contract's step 6 asked.
+- **Merged** on 26 Nov as 60fb649 (#932, squash) via merge-pr.py, which ended "main 60fb649 run 45894195608: GREEN" (the line as the lane reported it to Jon on 26 Nov; this file did not hold it). Main on 60fb649, read from GitHub Actions on 27 Nov: check-site 45894195608, phone-fit-full 45894195615 and the pages build 45894194832, all success.
 
 Record: agent Claude Code; wall 0:40; review cycles 0; amendments 0; usage n/a.
 
