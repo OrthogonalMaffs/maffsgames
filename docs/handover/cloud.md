@@ -66,6 +66,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-27 (cloud): LEADERBOARD-PAGE (the hub lists exactly the listed scoring games with a computed count; one shared top bar on every non-game site page; true wording on the hub and the privacy page; `docs/handover/contracts/2026-11-27-leaderboard-page.md`)
+
+Claude Code (cloud), branch `claude/fervent-johnson-6mjf5x` from main 314e9ed. Medium tier (merge on green).
+- **Close-out, PINNED-LIVE-DATA:** [#936](https://github.com/OrthogonalMaffs/maffsgames/pull/936) squash-merged as 447b22b by merge-pr.py (main merged in twice, for #935 and #937, both clean; one allowed rerun of a Plan timeout on ca88d71); its last line "main 447b22b run 46063470902: GREEN". Main's runs on 447b22b, read from GitHub Actions in this session: check-site 46063470902 success, pages 46063470524 success, phone-fit-full 46063470889 success (each attempt 1). Both contract files moved to `docs/history/contracts/`.
+- **Next:** the hub check, the shared bar, the wording.
+
 ## 2026-11-27 (cloud): PINNED-LIVE-DATA (the stub server answers the files bots rewrite on main with fixed bodies, so no check's colour moves with Jon's play or the nightly counts; `docs/handover/contracts/2026-11-27-pinned-live-data.md`)
 
 Claude Code (cloud), branch `claude/admiring-faraday-c7alrl` from main b8ab511. Shared tier (stop at green for Project Claude's review and Jon's "merge").
