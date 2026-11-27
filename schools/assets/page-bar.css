@@ -1,0 +1,110 @@
+/* The page bar: the one top bar on every non-game site page, and the only CSS for it (contract LEADERBOARD-PAGE,
+   27 Nov 2026; canon §7.5, "Never hand-copy the top bar").
+
+   Every site page that is not a game or an escape room carries the same markup as the first child of <body>, written
+   by scripts/apply-page-bar.py and held to it in CI by scripts/check-page-bar.py, which also holds the canonical
+   markup. Never copy these rules into a page: the bar used to be hand-copied (eight variants of nav.nav, each styled in
+   its own page or section stylesheet, and none at all on five pages), as the footer once was.
+
+   The bar: the MaffsGames name, home; on the right an optional link up to the page's own section (the parents' guides,
+   "When will I use this?"), "← Back to Games" as an a.back-link (schools/assets/site-nav.js turns it into "← Back to
+   <hub>" when the page was opened from a hub), and the Aa button on the pages that have one.
+   - one line, exactly 48 px, in the flow (it scrolls away with the page; the footer is the fixed bar). Every link is
+     a tap target the full 48 px high;
+   - its own font, size and spacing, never the page's: a page's Aa mode, or a page's own a / a:hover / .back-link rules,
+     must not change its height or push it wider than the screen; the Aa button is 30 px tall inside it;
+   - below 480 px the section link shows its short label, and below 400 px, beside one, "← Back to Games" reads
+     "← Games";
+   - nothing in it can widen the page: the links shrink with an ellipsis before anything spills. */
+
+.page-bar {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  height: 48px;
+  margin: 0;
+  padding: 0 16px;
+  overflow: hidden;
+  background: #1a2744;
+  color: #fff;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 48px;
+  letter-spacing: normal;
+  word-spacing: normal;
+  text-align: left;
+  white-space: nowrap;
+}
+.page-bar a,
+.page-bar a:visited,
+.page-bar a:hover {
+  display: block;
+  height: 48px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: #fff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 48px;
+  letter-spacing: normal;
+  text-decoration: none;
+  background: none;
+}
+.page-bar a:hover { text-decoration: underline; }
+.page-bar a:focus-visible,
+.page-bar .a11y-btn:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
+.page-bar a.page-bar-home { flex: none; font-size: 16px; font-weight: 600; }
+.page-bar-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  height: 48px;
+}
+.page-bar a.page-bar-up,
+.page-bar a.back-link {
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  opacity: 0.85;
+}
+.page-bar a.page-bar-up:hover,
+.page-bar a.back-link:hover { opacity: 1; }
+.page-bar-short { display: none; }
+.page-bar .a11y-btn {
+  flex: none;
+  box-sizing: border-box;
+  height: 30px;
+  min-width: 36px;
+  margin: 0;
+  padding: 0 8px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: 6px;
+  background: transparent;
+  color: #fff;
+  font-family: 'Outfit', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+.page-bar .a11y-btn:hover { background: rgba(255, 255, 255, 0.12); }
+.page-bar .a11y-btn.active { background: #fff; color: #1a2744; border-color: #fff; }
+@media (max-width: 479px) {
+  .page-bar { gap: 10px; padding: 0 12px; }
+  .page-bar-links { gap: 12px; }
+  .page-bar-up .page-bar-long { display: none; }
+  .page-bar-up .page-bar-short { display: inline; }
+}
+@media (max-width: 399px) {
+  /* Beside a section link, "← Back to Games" reads "← Games" (it fits a 320 px phone with the Aa button). */
+  .page-bar-up ~ .back-link .page-bar-long { display: none; }
+}

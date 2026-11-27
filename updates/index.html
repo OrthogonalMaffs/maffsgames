@@ -41,17 +41,6 @@
     font-size: 1rem;
     overflow-wrap: anywhere;   /* "Whatisthereversetranslation?" must not push a 320px screen sideways */
   }
-  .nav {
-    background: var(--navy);
-    padding: 1rem 1.5rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-  }
-  .nav a { color: #fff; text-decoration: none; font-weight: 600; }
-  .nav .back { opacity: 0.8; font-size: 0.85rem; font-weight: 400; }
-  .nav .back:hover { opacity: 1; }
   .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.25rem 3rem; }
   h1 { color: var(--navy); font-size: 2rem; line-height: 1.2; margin-bottom: 1.5rem; }
   .month {
@@ -86,20 +75,18 @@
   .tagline blockquote { font-size: 1.15rem; font-style: italic; color: var(--navy); line-height: 1.5; }
   .tagline figcaption { font-size: 0.9rem; color: var(--muted); margin-top: 0.25rem; }
   @media (max-width: 480px) {
-    .nav { padding: 0.85rem 1rem; }
     .container { padding: 1.5rem 0.75rem 2.5rem; }
     .month { padding: 1.1rem 1rem 0.25rem; }
     h1 { font-size: 1.6rem; }
   }
 </style>
 <link rel="stylesheet" href="/schools/assets/site-footer.css">
+<link rel="stylesheet" href="/schools/assets/page-bar.css">
+<script src="/schools/assets/site-nav.js"></script>
 </head>
 <body>
 
-<nav class="nav">
-  <a href="/">MaffsGames</a>
-  <a href="/" class="back">&larr; Back to games</a>
-</nav>
+<nav class="page-bar" aria-label="Site"><a class="page-bar-home" href="/">MaffsGames</a><span class="page-bar-links"><a class="back-link" href="/">&larr; <span class="page-bar-long">Back to </span>Games</a></span></nav>
 
 <main class="container">
 
@@ -120,6 +107,7 @@
 
 <h3>New</h3>
 <ul>
+  <li><strong>27 Nov 2026:</strong> Every page that isn't a game now has the same bar across the top, with a way back to the games. The leaderboards page lists every game with a leaderboard, and its count of games is now always right.</li>
   <li><strong>27 Nov 2026:</strong> Every game now waits for you to press Next after a wrong answer, however long you take. Some used to move on by themselves after 20 seconds.</li>
   <li><strong>26 Nov 2026:</strong> <strong><a href="/games/some-thingies/">Some Thingies</a>:</strong> the quiz-show host and Sarge are bigger on screens with room.</li>
   <li><strong>26 Nov 2026:</strong> <strong><a href="/games/its-just-base-60-bruv/">It's Just Base 60, Bruv</a>:</strong> the cuckoo clock now sits above the question, up to four times bigger wherever the screen has room, and on a right answer the bird comes right out and bows.</li>

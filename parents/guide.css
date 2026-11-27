@@ -64,35 +64,6 @@ body {
   font-size: 1rem;
 }
 
-/* ---------------------------------------------------------------- nav */
-.nav {
-  background: var(--navy);
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-.nav a { color: #fff; text-decoration: none; font-weight: 600; font-size: 1rem; }
-.nav .nav-right { display: flex; align-items: center; gap: 1rem; }
-.nav .back { opacity: 0.8; font-size: 0.85rem; font-weight: 400; }
-.nav .back:hover { opacity: 1; }
-
-.a11y-btn {
-  font-family: 'Outfit', system-ui, sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  line-height: 1;
-  padding: 0.35rem 0.6rem;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  background: transparent;
-  color: #fff;
-  cursor: pointer;
-}
-.a11y-btn:hover { background: rgba(255, 255, 255, 0.12); }
-.a11y-btn.active { background: #fff; color: var(--navy); border-color: #fff; }
-
 .container { max-width: 720px; width: 100%; margin: 0 auto; padding: 2rem 1.5rem 3rem; }
 
 /* ------------------------------------------------------------- heading */

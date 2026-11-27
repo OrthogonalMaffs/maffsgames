@@ -18,6 +18,15 @@
  * chart-interrogator, binomial-blaster) submitting under level keys the
  * registry did not list.
  *
+ * The registry's rows are exactly the games in the roster's listed sections
+ * that call submitScore() (contract LEADERBOARD-PAGE, 27 Nov 2026): an unlisted
+ * or withdrawn game is never on the hub, and which games those are is read from
+ * the roster's "## Unlisted" and "## Withdrawn" sections, never kept here. The
+ * hub's count badge is the list's own length at run time; a number typed into
+ * the page ("91 scoring games" while the list held 106) fails. hubCheck() is the
+ * rule; its self-test plants a listed game dropped, a withdrawn game added, a
+ * typed count and a row whose boards differ from the page's, each caught.
+ *
  * It also checks that every level a game submits has a name. It loads
  * schools/assets/firebase-leaderboard.js (it runs without Firebase) and asks
  * MaffsLeaderboard.levelLabel(), the single source for naming a level, to name
@@ -70,8 +79,9 @@ const HELD = {
 const HELD_FLAG = 'LEADERBOARD_MODE_READY';
 
 // Games withdrawn behind a noindex holding page while they are rebuilt (canon §11.5): the URL
-// stays, the full game is kept as _withdrawn.html, and its boards and hub row are kept (the
-// row's name says "being rebuilt"). The declaration is checked, not trusted: index.html must be
+// stays, the full game is kept as _withdrawn.html, and its boards are kept; its hub row came off
+// (LEADERBOARD-PAGE, 27 Nov 2026: a withdrawn game is not listed, so it is not on the hub, and comes
+// back with its relisting). The declaration is checked, not trusted: index.html must be
 // a noindex page that submits nothing, _withdrawn.html must exist and still call submitScore(),
 // and a declared game that submits from index.html again is a stale declaration.
 const WITHDRAWN = {
@@ -154,31 +164,12 @@ if (gatedButUndeclared.length) {
 // Hub registry: every submitting game listed, with exactly the levels it submits.
 // ---------------------------------------------------------------------------
 
-// Games that submit but are deliberately not on the hub.
-const NOT_ON_HUB = {
-  'the-perfect-prank': 'unlisted escape-room prototype, never on the portal (canon §4)',
-  // Jon, 6 Oct 2026 (20:30): unlisted for the tranche 3-6 audits' faults (canon SR-20) until
-  // each game's verifier merges and its register entries are fixed; the hub row is restored, and this
-  // entry removed, in that PR.
-  'glorious-gantt': 'unlisted pending its tranche 4 audit fix; hub row restored at relisting',
-  // Jon, 15 Nov 2026 (10:29): unlisted pending its redesign (contract UNLIST-GRAPH-SKETCHER, todo
-  // GRAPH-SKETCHER-REDESIGN); the hub row is restored, and this entry removed, at relisting (canon SR-21).
-  'graph-sketcher': 'unlisted pending its redesign; hub row restored at relisting',
-  // New (contract HC-FACTOR, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'hc-factor': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract Y-SO-STEEP, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'y-so-steep': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract ITS-ON-SALE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'its-on-sale': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract AS-YOU-CAN-SEE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'as-you-can-see': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract POSSIBLY-MAYBE, 27 Oct 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'possibly-maybe': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract I-DROPPED-MY-ICE-CREAM, 18 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'i-dropped-my-ice-cream': 'new, unlisted until Jon has played and approved it; hub row added at listing',
-  // New (contract D-BY-DX-BUILD, 26 Nov 2026): merged unlisted for Jon to play; the hub row is added at listing.
-  'd-by-dx-why': 'new, unlisted until Jon has played and approved it; hub row added at listing'
-};
+// Games that submit but are not on the hub: every game outside the roster's listed sections (its Unlisted and
+// Withdrawn sections, and games with no roster row, such as the-perfect-prank, an escape-room prototype). DERIVED
+// from the roster by readListed() below, never hand-kept (LEADERBOARD-PAGE, 27 Nov 2026): until then this was a
+// second, hand-kept list of the unlisted games, and listing or relisting a game meant editing it too (canon SR-21).
+// It is filled in below, once the roster has been read.
+const NOT_ON_HUB = {};
 
 // The levels a game submits under are read from its source by submittedLevels() below
 // (string literals, and the values a level variable is assigned). Where the level is a
@@ -259,9 +250,23 @@ function readRoster() {
   return out;
 }
 
+// The slugs of every numbered roster row in a listed section: every "## " section but Unlisted and Withdrawn.
+function readListed(text) {
+  const listed = new Set();
+  let off = false;
+  for (const line of text.split('\n')) {
+    const h = /^##\s+(.*)$/.exec(line);
+    if (h) { off = /^(Unlisted|Withdrawn)\b/i.test(h[1].trim()); continue; }
+    if (off) continue;
+    const m = /^\|\s*\d+\s*\|[^|]*\|\s*`([a-z0-9-]+)`\s*\|/.exec(line);
+    if (m) listed.add(m[1]);
+  }
+  return listed;
+}
+
 // One registry row per line: ['slug','Name',['lvl',...]],  (the name may be "double-quoted").
-function readRegistry() {
-  const html = fs.readFileSync(HUB_PATH, 'utf8');
+function readRegistry(html) {
+  if (html === undefined) html = fs.readFileSync(HUB_PATH, 'utf8');
   const start = html.indexOf('var GAMES = [');
   if (start < 0) return null;
   const end = html.indexOf('\n]', start);   // the array closes with "].map(...)"
@@ -408,55 +413,108 @@ if (selftestProblems.length) {
   console.log('Selftest: the level rule reads a variable\'s assigned values; the planted hub (roster tiers for a year6/all game) is caught.');
 }
 
-const registry = readRegistry();
 const roster = readRoster();
-const hubProblems = [];
-const submittedBySlug = {};   // slug -> the levels it submits under, for the naming check
-if (!registry) {
-  hubProblems.push('could not find "var GAMES = [" in leaderboards/index.html');
-} else {
-  registry.bad.forEach(l => hubProblems.push('unreadable registry row: ' + l));
-  const submitting = new Set();
-  for (const slug of gameDirs) {
-    const indexPath = path.join(GAMES_DIR, slug, 'index.html');
-    if (!fs.existsSync(indexPath)) continue;
-    const html = fs.readFileSync(indexPath, 'utf8');
-    if (!html.includes('MaffsLeaderboard.submitScore(')) continue;
-    submitting.add(slug);
+const LISTED = readListed(fs.readFileSync(ROSTER_PATH, 'utf8'));
+const submittingPages = {};   // slug -> its page, for every game whose page calls submitScore()
+for (const slug of gameDirs) {
+  const indexPath = path.join(GAMES_DIR, slug, 'index.html');
+  if (!fs.existsSync(indexPath)) continue;
+  const html = fs.readFileSync(indexPath, 'utf8');
+  if (html.includes('MaffsLeaderboard.submitScore(')) submittingPages[slug] = html;
+}
+for (const slug of Object.keys(submittingPages)) {
+  if (!LISTED.has(slug)) NOT_ON_HUB[slug] = 'not in a listed section of the roster (unlisted, withdrawn or off the roster)';
+}
+
+// The hub rule (LEADERBOARD-PAGE): the registry's rows are exactly the listed games in `pages` (slug -> page, every
+// game that calls submitScore()), each with exactly the levels it submits; the count badge is computed, never typed.
+function hubCheck(hubHtml, listed, pages) {
+  const problems = [];
+  const submitted = {};   // slug -> the levels it submits under, for the naming check
+  const registry = readRegistry(hubHtml);
+  if (!registry) return { problems: ['could not find "var GAMES = [" in leaderboards/index.html'], submitted, registry };
+  registry.bad.forEach(l => problems.push('unreadable registry row: ' + l));
+  for (const slug of Object.keys(pages).sort()) {
+    const html = pages[slug];
     const derived = submittedLevels(slug, html, roster);
     let want = derived;
     if (LEVEL_OVERRIDES[slug]) {
       want = [...LEVEL_OVERRIDES[slug][0]].sort();
-      if (want.join() === derived.join()) hubProblems.push(`${slug}: LEVEL_OVERRIDES entry is stale (the default rule already gives ${derived.join(', ')})`);
+      if (want.join() === derived.join()) problems.push(`${slug}: LEVEL_OVERRIDES entry is stale (the default rule already gives ${derived.join(', ')})`);
     }
-    submittedBySlug[slug] = want;
+    submitted[slug] = want;
     if (TOURNAMENT_ONLY[slug]) {
       const bad = [...html.matchAll(/MaffsLeaderboard\.submitScore\(\s*[^,]+,\s*([^,]+),/g)]
         .map(x => x[1].replace(/\s+/g, '')).filter(a => a !== TOURNAMENT_ONLY[slug]);
-      if (bad.length) hubProblems.push(`${slug}: submits under ${bad.join(', ')}, but may submit only under ${TOURNAMENT_ONLY[slug]} (SR-22: tournament totals only)`);
+      if (bad.length) problems.push(`${slug}: submits under ${bad.join(', ')}, but may submit only under ${TOURNAMENT_ONLY[slug]} (SR-22: tournament totals only)`);
     }
-    if (NOT_ON_HUB[slug]) continue;
+    if (!listed.has(slug)) continue;
     const have = registry.levels[slug];
-    if (!have) { hubProblems.push(`${slug}: calls submitScore() but is not in the hub registry (submits under: ${want.join(', ')})`); continue; }
+    if (!have) { problems.push(`${slug}: a listed game that calls submitScore() but is not in the hub registry (submits under: ${want.join(', ')})`); continue; }
     const mismatch = registryMismatch(slug, have, want);
-    if (mismatch) hubProblems.push(mismatch);
+    if (mismatch) problems.push(mismatch);
   }
   for (const slug of Object.keys(registry.levels)) {
-    if (WITHDRAWN[slug]) {
-      if (!/being rebuilt/.test(registry.names[slug] || '')) hubProblems.push(`${slug}: WITHDRAWN, but its hub row does not say it is being rebuilt`);
+    if (!listed.has(slug)) {
+      problems.push(`${slug}: on the hub but not in a listed section of the roster (${WITHDRAWN[slug] ? 'withdrawn' : 'unlisted or off the roster'}): take its row off; it goes back on when the game is listed`);
       continue;
     }
-    if (!submitting.has(slug)) hubProblems.push(`${slug}: in the hub registry but no game of that name calls submitScore()`);
+    if (!pages[slug]) problems.push(`${slug}: in the hub registry but no game of that name calls submitScore()`);
   }
   for (const slug of Object.keys(LEVEL_OVERRIDES)) {
-    if (!submitting.has(slug)) hubProblems.push(`${slug}: LEVEL_OVERRIDES names a game that does not submit`);
+    if (!pages[slug]) problems.push(`${slug}: LEVEL_OVERRIDES names a game that does not submit`);
   }
   for (const slug of Object.keys(OFF_HUB_LEVEL_PATTERNS)) {
-    if (!submitting.has(slug)) hubProblems.push(`${slug}: OFF_HUB_LEVEL_PATTERNS names a game that does not submit`);
+    if (!pages[slug]) problems.push(`${slug}: OFF_HUB_LEVEL_PATTERNS names a game that does not submit`);
   }
-  for (const slug of Object.keys(NOT_ON_HUB)) {
-    if (registry.levels[slug]) hubProblems.push(`${slug}: declared NOT_ON_HUB but listed in the registry`);
+  // The count badge: an empty #lbCount in the markup, filled from GAMES.length by the page's script; no count typed.
+  const markup = hubHtml.replace(/<script\b[\s\S]*?<\/script>/gi, '');
+  const typed = /\b\d+\s+scoring\s+games\b/i.exec(markup);
+  if (typed) problems.push(`the hub's count is typed ("${typed[0]}"): it must be the list's own length, set at run time`);
+  if (!/<span\b[^>]*\bid="lbCount"[^>]*><\/span>/.test(hubHtml)) problems.push('the hub has no empty count badge (<span ... id="lbCount" ...></span>) for its script to fill');
+  if (!/countEl\.textContent\s*=\s*GAMES\.length\s*\+\s*' scoring games'/.test(hubHtml)) problems.push('the hub\'s count badge is not set from GAMES.length');
+  return { problems, submitted, registry };
+}
+
+// The hub rule's plants (LEADERBOARD-PAGE), on the real hub, roster and pages: each must be caught.
+function hubSelftest(hubHtml) {
+  const out = [];
+  const rowOf = slug => (hubHtml.match(new RegExp("^\\s*\\['" + slug + "',.*$", 'm')) || [null])[0];
+  const fr = rowOf('factor-race');
+  if (!fr) return ['hub selftest: no factor-race row to plant on'];
+  const plants = [
+    ['a listed game with a leaderboard removed from the hub', hubHtml.replace(fr + '\n', ''),
+      'factor-race: a listed game that calls submitScore() but is not in the hub registry'],
+    ['a withdrawn game added', hubHtml.replace(fr, fr + "\n  ['regression-rumble','Regression Rumble',['core','alevel','level4']],"),
+      'regression-rumble: on the hub but not in a listed section of the roster (withdrawn)'],
+    ['an unlisted game added', hubHtml.replace(fr, fr + "\n  ['hc-factor','The HC Factor',['stage-1','stage-2','stage-3','stage-4','stage-5']],"),
+      'hc-factor: on the hub but not in a listed section of the roster'],
+    ['a typed count in the badge', hubHtml.replace(/<span class="hbadge" id="lbCount" hidden><\/span>/, '<span class="hbadge" id="lbCount">105 scoring games</span>'),
+      "the hub's count is typed"],
+    ["a hub row whose boards differ from the page's", hubHtml.replace(fr, fr.replace(/\[[^\[\]]*\]\],?\s*$/, "['year6']],")),
+      'factor-race: hub registry lists [year6]'],
+  ];
+  if (hubCheck(hubHtml, LISTED, submittingPages).problems.length) out.push('hub selftest: the unplanted hub already fails');
+  for (const [name, planted, expect] of plants) {
+    if (planted === hubHtml) { out.push(`hub selftest: plant "${name}" changed nothing`); continue; }
+    const got = hubCheck(planted, LISTED, submittingPages).problems;
+    if (!got.some(p => p.includes(expect))) out.push(`hub selftest: plant "${name}" was not caught (got: ${got.join(' | ') || 'nothing'})`);
   }
+  return out;
+}
+
+const HUB_HTML = fs.readFileSync(HUB_PATH, 'utf8');
+const hub = hubCheck(HUB_HTML, LISTED, submittingPages);
+const registry = hub.registry;
+const hubProblems = hub.problems;
+const submittedBySlug = hub.submitted;
+const hubSelftestProblems = hubSelftest(HUB_HTML);
+if (hubSelftestProblems.length) {
+  console.log(`\nSelftest of the hub rule (hubCheck) failed in ${hubSelftestProblems.length} place(s):`);
+  hubSelftestProblems.forEach(p => console.log('  - ' + p));
+  failed = true;
+} else {
+  console.log('Selftest: the hub rule catches a listed game dropped, a withdrawn and an unlisted game added, a typed count, and a row whose boards differ.');
 }
 
 // ---------------------------------------------------------------------------
@@ -509,7 +567,7 @@ if (hubProblems.length) {
   console.log('or, if a game submits under keys that are not its roster tiers, declare them in LEVEL_OVERRIDES.');
   failed = true;
 } else {
-  console.log(`\nHub registry: ${Object.keys(registry.levels).length} games listed, each with exactly the levels it submits.`);
+  console.log(`\nHub registry: ${Object.keys(registry.levels).length} games listed: every listed game that submits, each with exactly the levels it submits (${Object.keys(NOT_ON_HUB).length} unlisted, withdrawn or off-roster games that submit are not on the hub). Its count badge is computed.`);
 }
 
 // ---------------------------------------------------------------------------

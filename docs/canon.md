@@ -1530,6 +1530,17 @@ stylesheet, run `apply-footer.py`, then `check-footer.py`. A new page needs only
 `<footer class="site-footer"></footer>` before `</body>`; a page gaining the bar for the first
 time needs `padding-bottom: 40px` (or equivalent) so the bar covers nothing.
 
+**Never hand-copy the top bar or its CSS into a page** (contract LEADERBOARD-PAGE, Jon 27 Nov 2026). Every
+site page that is not a game or an escape room carries one page bar, first in `<body>`: the MaffsGames name
+home, an optional link up to its section (the parents' guides, "When will I use this?"), "← Back to Games" as
+an `a.back-link` (site-nav.js sends it to the hub the page was opened from) and the Aa button where the page
+has one; 48 px, in the flow, styled only by `schools/assets/page-bar.css`. Its markup lives in
+`scripts/check-page-bar.py` (`bar_for()`, the sections, the opt-outs: the portal, which is home, and test
+fixtures), which holds every page to it in CI; `scripts/apply-page-bar.py` writes it, and
+`scripts/build-uses.py` writes it into the pages it generates. Until then eight hand-copied variants of
+`nav.nav` existed, and five pages (the leaderboard hub among them) had no way home at the top at all. Games
+are not on it: their bar is the SITE-BAR pilot's.
+
 ### 7.5.3 Name the maths, never the student (Jon, 7 Oct 2026; contracts ESSENTIALS and ESSENTIALS-WORDING, 8 Oct)
 
 **Student surfaces describe the maths, its difficulty and learning goals, never students by attainment or ability; only teacher surfaces may say resit or post-16.** A link
@@ -2405,6 +2416,13 @@ this specific defect. The "4 collisions" count is a floor, not a guaranteed tota
   Level 4 across `l4` and `level4`; checked in a browser, its Level 4 *button* crashes on Start, so it
   never submits `l4` at all — todo, leaderboard tidy.) **Fixed 30 Sep 2026**: both Level 4 routes
   now play and submit `level4`.
+- **The hub lists exactly the listed games that submit (LEADERBOARD-PAGE, 27 Nov 2026).** The same
+  check reads the roster: a game in its Unlisted or Withdrawn section, or with no roster row, is never on
+  the hub, and every listed game that calls `submitScore()` is; `NOT_ON_HUB` is derived from the roster,
+  no longer kept by hand. The hub's count badge is `GAMES.length`, set by the page; a typed count fails
+  (the badge said "91 scoring games" while the list held 106). The withdrawn `regression-rumble`'s row
+  came off (its boards are kept; it goes back on with its relisting). `constructions-lab` and
+  `given-that` load firebase-leaderboard.js but never submit, so they are not on it.
 - **A level is named in one place (30 Sep 2026): `MaffsLeaderboard.levelLabel(key)`** in
   `firebase-leaderboard.js`. It names every level key any game submits, old and new, from
   `LEVEL_NAMES`, plus `LEVEL_NAME_PATTERNS` for keys that are not a fixed list (`daily-YYYY-MM-DD` →
