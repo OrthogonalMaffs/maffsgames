@@ -19,7 +19,7 @@ render-testing exactly the bytes that would ship.
 WHAT IT PINS, AND WHY (contract PINNED-LIVE-DATA, 27 Nov 2026)
 --------------------------------------------------------------
 Jon's play and the bots' commits must never change a check's colour. Some files
-a page reads are rewritten on main by workflows with [skip ci] (Jon's daily
+a page reads are rewritten on main by workflows, commits that skip CI (Jon's daily
 MaffsCards result; the nightly answer counts), and pages read them with
 XMLHttpRequest, which the analytics stub does not touch. So a check rendering
 those pages through this server showed whatever the bot last wrote: Jon's
