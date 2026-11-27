@@ -2,6 +2,42 @@
 
 ## Moved 2026-11-27 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
+## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
+
+Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`, PR #935. The contract is at `docs/history/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
+
+- **Jon (27 Nov 2026, 17:57):** "merge script please".
+- **(a''), new, in `scripts/merge-pr.py`:** M is main's newest merge as (b') picks it (bot skip-marker commits passed over). If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or "identical"), it passes. Otherwise the Gate's run and the phone-fit run must each have been created after M's committer date, or the merge is refused, naming M and the run. The Gate's time is its workflow run's created_at, found by check suite; the Gate check's own started_at (the end of the run) is never read.
+- **Red, never waited on:** judged every poll with (a) and (a'), also while a run is still going; --wait does not wait on it and --override does not waive it.
+- **The record behind the fixtures:** #930's runs were created at 17:16:26Z on 26 Nov, #927 landed on main at 17:35:08Z, the Gate check started at 17:37:25Z and #930 merged at 17:52:57Z. Ids, shas and those times in the selftest are GitHub's.
+- **Selftest:** 17 new cases and 4 plants (the check removed; the Gate's started_at for its run's created_at; bot skip-marker commits counted as M; the ancestor test inverted), each caught. The 108 lines the selftest printed before are printed unchanged.
+- **Decided here, for review:** (1) a run created in the same second as M is refused (not after it); (2) under --override, which waives (b'), an unreadable M is refused by (a'') itself, so the override cannot pass an unjudged PR; (3) a Gate check that cannot be tied to a run, or an unreadable compare or commit, is refused, never guessed; (4) the selftest's fake API moves a phone-fit script on once per poll, not once per read, since two checks now read those runs in a poll.
+- **Not touched:** (a), (a'), (b), (b'), (c), the watch, --head, the retries, the merge PUT; every workflow; `serve-stubbed.py`, `bank_common.py`.
+- **AGENTS.md:** the stale-Gate rule gains "merge-pr.py enforces this (MERGE-GUARD, 27 Nov 2026)".
+- **Gate on the PR head f038472f:** check-site 46046955243 and phone-fit-full 46046955221, both green.
+- **Merged** on Jon's "merge", 27 Nov at 18:30 UTC, as b6c0119 (#935, squash) via merge-pr.py, which ended "main b6c0119 run 46049988829: GREEN". Main on b6c0119: check-site 46049988829, phone-fit-full 46049988775 and the pages build 46049988366, each success.
+- **Departure, as the lane reported it:** the contract said main's current script judges this merge. merge-pr.py was run from the PR's worktree, so the new version judged its own merge; the new check passed (main's newest merge, #934, was in the branch) and every existing condition was applied unchanged.
+
+Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
+
+## 2026-11-26 (home): BASE-60-TIDY (Base 60's cuckoo rides out on a perch joined to its clock; the page's stale comment; spec-map row N13 names time)
+
+Claude Code (home lane), worktree `~/mg-base-60-tidy`, branch `claude/base-60-tidy`, PR #932. The contract is at `docs/history/contracts/2026-11-26-base-60-tidy.md` (verbatim). The first commit closed out BASE-60-LIST.
+
+- **Jon (26 Nov 2026, 19:51):** "the cuckoo clock looks much better alhough the cuckoo is not attached to the clock when it pays a visit".
+- **The perch:** a thin level arm (`.ck-perch`, cream with a dark edge, as the bird is drawn) from inside the doorway (x 36 of the drawing) to under the bird's body (x 7). It grows out of the doorway and back with the bird, on the same times and easing, and is hidden at no length when the bird is in. The bird's own movement, timings and shape are unchanged; it bows and droops on the arm, which stays level.
+- **Decided here:** the arm extends from the doorway; it does not slide as a fixed-length piece. A fixed-length arm sliding with the bird would stick out of the far side of the house while the bird is in, and past the drawing's edge. Measured every 20 ms of a right answer and through a wrong answer's transition at 1366x768, 320x568 and 1920x955: the bird is on the arm whenever it shows.
+- **The drawing's box does not grow** (the arm lies inside the bird's reach), so the clock's size, the fold figures and `data/large-screen.json` are untouched.
+- **Verifier:** the bird units also hold the perch showing and within 1 drawing unit of the door's box and the bird's at each sampled moment of the hold, after a wrong answer and in both reduced-motion states. Two plants: the perch removed, and the perch left behind at the door. Run locally: both bird units pass, both plants and the two older bird plants caught.
+- **Page comment and spec map:** the UNLISTED comment is now "Listed 26 Nov 2026 (contract BASE-60-LIST, PR 930)." ("PR 930", not "#930": the first Gate, check-site 45887805820, failed only on the Theme check, which read "#930" in the page as a hex colour outside :root); row N13 reads "Standard units and conversions: length, area, volume, mass, time", its games unchanged.
+- **Screenshot** (the bird out on its perch at 1366x768): in the report to Jon; no image is committed.
+- **Gate on the PR head d5417e8f:** check-site 45892119116 and phone-fit-full 45892119126, both green. Main was merged in twice while the PR waited (9f51bb8d, then eaf158af), and the Gate re-ran each time, as the contract's step 6 asked.
+- **Merged** on 26 Nov as 60fb649 (#932, squash) via merge-pr.py, which ended "main 60fb649 run 45894195608: GREEN" (the line as the lane reported it to Jon on 26 Nov; this file did not hold it). Main on 60fb649, read from GitHub Actions on 27 Nov: check-site 45894195608, phone-fit-full 45894195615 and the pages build 45894194832, all success.
+
+Record: agent Claude Code; wall 0:40; review cycles 0; amendments 0; usage n/a.
+
+## Moved 2026-11-27 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
 ## 2026-11-26 (home): BASE-60-LIST (It's Just Base 60, Bruv is listed: portal, /essentials/, sitemap, spec map, hub, /updates/)
 
 Claude Code (home lane), worktree `~/mg-base-60-list`, branch `claude/base-60-list`, PR #930. The contract is at `docs/history/contracts/2026-11-26-base-60-list.md` (verbatim). The first commit closed out CANON-PRIORITY.
