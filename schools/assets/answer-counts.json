@@ -1,10 +1,10 @@
 {
- "as_of": "2026-11-26T15:46:32Z",
+ "as_of": "2026-11-27T01:08:45Z",
  "games": {
   "52dle": 25,
   "angle-ace": 60,
   "as-you-can-see": 1,
-  "bearing-blitz": 82,
+  "bearing-blitz": 85,
   "better-value": 40,
   "binomial-blaster": 6,
   "boolean-blitz": 23,
@@ -14,7 +14,7 @@
   "complex-converter": 24,
   "component-crusher": 1,
   "coordinate-geometry-dash": 15,
-  "core-maths-paper1": 176,
+  "core-maths-paper1": 187,
   "core-maths-paper2a": 13,
   "core-maths-paper2b": 147,
   "core-maths-paper2c": 4,
@@ -47,7 +47,7 @@
   "estimation-golf": 652,
   "expectation-station": 2,
   "expected-damage": 80,
-  "factor-race": 1983,
+  "factor-race": 1993,
   "factor-theorem": 9,
   "fermi-lab": 40,
   "force-resolver": 28,
@@ -69,7 +69,7 @@
   "index-laws": 494,
   "integration-duel": 87,
   "its-a-sine": 64,
-  "its-just-base-60-bruv": 26,
+  "its-just-base-60-bruv": 41,
   "its-on-sale": 10,
   "just-pythag-it-bruv": 57,
   "like-terms-collector": 3533,
@@ -98,7 +98,7 @@
   "shape-shifter": 55,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4407,
-  "some-thingies": 781,
+  "some-thingies": 980,
   "split-it": 1062,
   "spot-the-error": 71,
   "spot-the-muppet": 72,
@@ -127,5 +127,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 33765
+ "total": 34003
 }

@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-26T15:46:34Z",
+ "as_of": "2026-11-27T01:08:47Z",
  "countries": [
   {
    "country": "United Kingdom",
@@ -63,10 +63,6 @@
   }
  ],
  "daily": [
-  {
-   "date": "2026-10-27",
-   "starts": 33
-  },
   {
    "date": "2026-10-28",
    "starts": 122
@@ -182,33 +178,37 @@
   {
    "date": "2026-11-25",
    "starts": 101
+  },
+  {
+   "date": "2026-11-26",
+   "starts": 142
   }
  ],
  "hours": {
   "weekday": [
-   45,
+   44,
    99,
    "<10",
    "<10",
    "<10",
    "<10",
-   14,
-   35,
+   17,
+   36,
    112,
-   311,
-   147,
-   191,
-   222,
-   154,
-   158,
-   87,
-   84,
-   69,
-   79,
-   113,
+   328,
+   182,
+   224,
+   225,
+   159,
+   167,
+   90,
+   85,
    70,
-   67,
-   32,
+   83,
+   116,
+   69,
+   69,
+   34,
    11
   ],
   "weekend": [
@@ -241,35 +241,39 @@
  "levels": [
   {
    "level": "year6",
-   "starts": 260
+   "starts": 248
   },
   {
    "level": "gcse",
-   "starts": 220
+   "starts": 206
   },
   {
    "level": "ks3",
-   "starts": 81
-  },
-  {
-   "level": "all",
-   "starts": 37
+   "starts": 96
   },
   {
    "level": "core",
-   "starts": 28
+   "starts": 33
   },
   {
-   "level": "alevel",
-   "starts": 22
+   "level": "all",
+   "starts": 32
   },
   {
    "level": "level3",
-   "starts": 19
+   "starts": 29
+  },
+  {
+   "level": "alevel",
+   "starts": 27
   },
   {
    "level": "level4",
-   "starts": 12
+   "starts": 14
+  },
+  {
+   "level": "main-hard",
+   "starts": 14
   },
   {
    "level": "all48-easy",
@@ -285,10 +289,6 @@
   },
   {
    "level": "main-easy",
-   "starts": "<10"
-  },
-  {
-   "level": "main-hard",
    "starts": "<10"
   }
  ]
