@@ -286,9 +286,9 @@ def serve_test(table):
             full = os.path.join(tmp, *path.split("/"))
             os.makedirs(os.path.dirname(full), exist_ok=True)
             body = LIVE.get(path, {"marker": "on disk"}) if path.endswith(".json") else "on disk\n"
-            with open(full, "w", encoding="utf-8") as f:
+            with open(full, "w", encoding="utf-8", newline="") as f:
                 f.write(json.dumps(body) if path.endswith(".json") else body)
-        with open(os.path.join(tmp, "plain.txt"), "w", encoding="utf-8") as f:
+        with open(os.path.join(tmp, "plain.txt"), "w", encoding="utf-8", newline="") as f:
             f.write("plain")
         for committed in (False, True):
             handler = type("H", (Handler,), {"table": table, "committed": committed})
