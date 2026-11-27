@@ -18,7 +18,7 @@
 
 ## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
 
-Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`. The contract is at `docs/handover/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
+Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard`, PR #935. The contract is at `docs/history/contracts/2026-11-27-merge-guard.md` (verbatim). Shared tier: it stops at Gate green for Project Claude's review and Jon's "merge". The first commit closed out BASE-60-TIDY.
 
 - **Jon (27 Nov 2026, 17:57):** "merge script please".
 - **(a''), new, in `scripts/merge-pr.py`:** M is main's newest merge as (b') picks it (bot skip-marker commits passed over). If M is the PR's head or an ancestor of it (compare M...head reads "ahead" or "identical"), it passes. Otherwise the Gate's run and the phone-fit run must each have been created after M's committer date, or the merge is refused, naming M and the run. The Gate's time is its workflow run's created_at, found by check suite; the Gate check's own started_at (the end of the run) is never read.
@@ -28,7 +28,9 @@ Claude Code (home lane), worktree `~/mg-merge-guard`, branch `claude/merge-guard
 - **Decided here, for review:** (1) a run created in the same second as M is refused (not after it); (2) under --override, which waives (b'), an unreadable M is refused by (a'') itself, so the override cannot pass an unjudged PR; (3) a Gate check that cannot be tied to a run, or an unreadable compare or commit, is refused, never guessed; (4) the selftest's fake API moves a phone-fit script on once per poll, not once per read, since two checks now read those runs in a poll.
 - **Not touched:** (a), (a'), (b), (b'), (c), the watch, --head, the retries, the merge PUT; every workflow; `serve-stubbed.py`, `bank_common.py`.
 - **AGENTS.md:** the stale-Gate rule gains "merge-pr.py enforces this (MERGE-GUARD, 27 Nov 2026)".
-- **Run IDs and the merge:** in the close-out, as usual.
+- **Gate on the PR head f038472f:** check-site 46046955243 and phone-fit-full 46046955221, both green.
+- **Merged** on Jon's "merge", 27 Nov at 18:30 UTC, as b6c0119 (#935, squash) via merge-pr.py, which ended "main b6c0119 run 46049988829: GREEN". Main on b6c0119: check-site 46049988829, phone-fit-full 46049988775 and the pages build 46049988366, each success.
+- **Departure, as the lane reported it:** the contract said main's current script judges this merge. merge-pr.py was run from the PR's worktree, so the new version judged its own merge; the new check passed (main's newest merge, #934, was in the branch) and every existing condition was applied unchanged.
 
 Record: agent Claude Code; wall 0:50; review cycles 0; amendments 0; usage n/a.
 
