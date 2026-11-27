@@ -265,7 +265,9 @@ class Site:
 
     def __init__(self, width=375, height=667):
         from playwright.sync_api import sync_playwright
-        self.proc, self.base = bc.start_stub_server()
+        # The REAL unit reads the repo's own answer-counts.json and ugh-stats.json, which serve-stubbed.py otherwise pins
+        # (contract PINNED-LIVE-DATA): the opt-out. Every other unit plants its files with a route, which answers first.
+        self.proc, self.base = bc.start_stub_server(committed=True)
         self.pw = sync_playwright().start()
         self.browser = self.pw.chromium.launch()
         self.ctx = self.browser.new_context(viewport={"width": width, "height": height}, accept_downloads=True)
