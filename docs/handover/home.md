@@ -18,7 +18,7 @@
 
 ## 2026-11-27 (home): NEXT-NO-FALLBACK (the shared Next control no longer advances by itself; canon §7.6 says so, and that a revealing right answer waits too)
 
-Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-no-fallback`. The contract is at `docs/handover/contracts/2026-11-27-next-no-fallback.md` (verbatim). The first commit closed out MERGE-GUARD.
+Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-no-fallback`. PR #937. The contract is at `docs/history/contracts/2026-11-27-next-no-fallback.md` (verbatim). The first commit closed out MERGE-GUARD.
 
 - **Jon (27 Nov 2026, 18:27):** "I'd remove the auto advance … the student needs to press continue, it gives them a chance to check where they went wrong, and write down the correct method before moving on".
 - **The helper (`schools/assets/next-control.js`):** no timer unless `fallbackMs` is passed; the 20 s default and the exported `FALLBACK_MS` are gone (nothing read the constant but canon). `fallbackMs` stays for test harnesses. The floor, the in-view scroll, advance-once, clear(), the 44 px target and the MaffsLock clearing are untouched.
@@ -30,7 +30,8 @@ Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-n
 - **Stale words fixed:** `check-answer-lock.py`'s docstring and `docs/sandbox-checks.md` spoke of the 20 s fallback. `scripts/check-site.py:2680` still does, in a comment; that file is the cloud lane's.
 - **A wrong answer advanced by a page's own timer (the contract's STOP IF list; none changed here):** trig-wars (a miss shows its tip for 2.8 s and passes the turn; exempt by Jon's ruling of 19 Nov) and higher-power (a wrong guess ends the run). correlation-or-coincidence falls back to 4 s only if next-control.js did not load. CI's pause check (WRONG-PAUSE-NEXT) holds every other judged game for 3 s; a scan of the pages for timers of 3 s or more found no other. Six games that check cannot judge are on its own list (WRONG_PAUSE_UNCHECKED).
 - **/updates/:** one line, 27 Nov.
-- **Run IDs and the merge:** in the close-out, as usual.
+- **Gate on the PR head 1640c8e0:** check-site 46055742396 and phone-fit-full 46055742477, both green.
+- **Merged** 27 Nov at 19:38 UTC as e91a25a (#937, squash) via merge-pr.py, which ended "main e91a25a run 46058091551: GREEN". Main on e91a25a: check-site 46058091551, phone-fit-full 46058091615 and the pages build 46058090668, each success.
 
 Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0; usage n/a.
 
