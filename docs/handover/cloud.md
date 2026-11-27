@@ -66,6 +66,12 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-27 (cloud): PINNED-LIVE-DATA (the stub server answers the files bots rewrite on main with fixed bodies, so no check's colour moves with Jon's play or the nightly counts; `docs/handover/contracts/2026-11-27-pinned-live-data.md`)
+
+Claude Code (cloud), branch `claude/admiring-faraday-c7alrl` from main b8ab511. Shared tier (stop at green for Project Claude's review and Jon's "merge").
+- **Close-out, D-BY-DX-SIGN-LINE:** [#934](https://github.com/OrthogonalMaffs/maffsgames/pull/934) squash-merged as f6c0809 by merge-pr.py on a green Gate at 4730844 (check-site 46007737308, phone-fit-full 46007737275); merge-pr.py's last line "main f6c0809 run 46010247971: GREEN". Main's runs on f6c0809: check-site 46010247971, phone-fit-full 46010247561, pages 46010246665, each success (read back from GitHub Actions in this session). Contract moved to `docs/history/contracts/`.
+- **Next:** the pin, the opt-out and the guard (contract steps 1-4).
+
 ## 2026-11-27 (cloud): D-BY-DX-SIGN-LINE (d by dx? Why?'s placeholder sign_lost line reworded so it holds on s2-06, where the number in front is negative; `docs/handover/contracts/2026-11-27-d-by-dx-sign-line.md`)
 
 Claude Code (cloud), branch `claude/funny-hamilton-900869` restarted from main 99a8e30. Medium tier (merge on green). One commit: the close-out below, the contract verbatim and the line.
