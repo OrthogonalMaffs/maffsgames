@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
-# ci-line: Stub server pins (serve-stubbed.py answers every page-read file a workflow commits to main with a fixed body, never the bot's latest; every path a workflow stages with git add is classified in BOT_WRITTEN and every entry is still staged; the opt-out serves the committed file; four planted faults caught; contract PINNED-LIVE-DATA) | --selftest
+# ci-line: Stub server pins (serve-stubbed.py answers every page-read file a workflow commits to main with a fixed body, never the bot's latest; every path a workflow stages with git add is classified in BOT_WRITTEN and every entry is still staged; the opt-out serves the committed file; five planted faults caught; contract PINNED-LIVE-DATA) | --selftest
 # ci-deps: .github/workflows/ scripts/bank_common.py
+# ci-deps-literals: none (BOT_WRITTEN names the files this server pins or never serves: no verifier reads them through it)
 """Serve the site locally with analytics.js replaced by a no-op stub, and the files bots rewrite pinned.
 
 WHY THIS EXISTS
@@ -28,14 +29,27 @@ file went 7 days stale.
 
 BOT_WRITTEN below lists every path any .github/workflows/*.yml stages with
 `git add`. Each is either PINNED (this server answers that path, with or without
-a query string, with a fixed "shows nothing" body, whatever the file on disk
-says) or NOT PINNED with the reason. The guard (--check, and --selftest in CI)
+a query string, with a fixed body that is the same state on every run, whatever
+the file on disk says) or NOT PINNED with the reason. The answer counts pin to
+zero (no count line on a game or the homepage; /ugh-stats/ shows its zero line);
+ugh-stats.json pins to the smallest body ugh-stats.js accepts (one day, every
+count 0), an all-zero chart (Amendment 1: no valid body shows nothing). The guard (--check, and --selftest in CI)
 fails when a workflow stages a path the table does not list, or the table lists
 a path no workflow stages any more, so the next bot-written file cannot slip by.
 
 The owner checks still cover each file's shown states with their own Playwright
 routes, which answer before this server: verify-maffscards.py (daily.json),
-check-answer-count.py and check-ugh-stats.py (answer-counts.json).
+check-answer-count.py and check-ugh-stats.py (answer-counts.json), check-ugh-stats.py
+(ugh-stats.json).
+
+THE CI-DEPS DECLARATION
+-----------------------
+The header line "# ci-deps-literals: none" tells scripts/ci-deps.py to follow this
+file as a dependency but never its string literals: the paths in BOT_WRITTEN are
+what the server pins or never serves, not inputs of the verifiers that start it
+(measure-phone-fit.py among them, through bank_common.py). Without it both
+handovers would count as phone-fit inputs and nearly every PR would run the full
+phone-fit.
 
 THE OPT-OUT
 -----------
@@ -51,7 +65,7 @@ USAGE
     python scripts/serve-stubbed.py 9000             # or pick a port
     python scripts/serve-stubbed.py 9000 --committed # the committed bot-written files, unpinned
     python scripts/serve-stubbed.py --check          # the guard and the pins, on the repo's workflows
-    python scripts/serve-stubbed.py --selftest       # --check, then four planted faults must each fail
+    python scripts/serve-stubbed.py --selftest       # --check, then five planted faults must each fail
 
 Then open http://127.0.0.1:8765/ , or a game directly:
     http://127.0.0.1:8765/games/trig-wars/
@@ -103,15 +117,19 @@ def counts_nothing():
     return {"as_of": _now_iso(), "since": "2026-09-01", "total": 0, "games": {}}
 
 
+def stats_zero():
+    """schools/assets/ugh-stats.json: the smallest body ugh-stats.js accepts (SHAPE.stats needs a daily row and 24 hours a
+    side; levels and countries may be empty), every count 0, as_of now. /ugh-stats/charts/ draws an all-zero chart."""
+    now = _now_iso()
+    return {"as_of": now, "daily": [{"date": now[:10], "starts": 0}], "levels": [], "countries": [],
+            "hours": {"weekday": [0] * 24, "weekend": [0] * 24}}
+
+
 # Every repo path any workflow stages with `git add`. ("pinned", body) or ("not pinned", reason).
 BOT_WRITTEN = {
     "games/maffscards/daily.json": ("pinned", daily_not_played),
     "schools/assets/answer-counts.json": ("pinned", counts_nothing),
-    "schools/assets/ugh-stats.json": (
-        "not pinned",
-        "no valid body shows nothing: ugh-stats.js SHAPE.stats needs a daily row and 24 hours a side, and "
-        "/ugh-stats/charts/ draws them with a date; held for Jon (PINNED-LIVE-DATA STOP IF). Read only by the "
-        "/ugh-stats/ pages, whose owner check is check-ugh-stats.py"),
+    "schools/assets/ugh-stats.json": ("pinned", stats_zero),
     "docs/audits/REGISTER.md": ("not pinned", "never read by a page"),
     "docs/handover/home.md": ("not pinned", "never read by a page"),
     "docs/handover/cloud.md": ("not pinned", "never read by a page"),
@@ -214,31 +232,43 @@ def guard(table, workflows):
     return faults
 
 
-# Each pinned body must be its file's "shows nothing" state, valid for its reader.
+# Each pinned body must be its file's fixed state, valid for its reader.
 def _daily_ok(o):
     return o == daily_not_played()
 
 
-def _counts_ok(o):
-    if not isinstance(o, dict) or set(o) != {"as_of", "since", "total", "games"}:
-        return False
+def _fresh(o):
+    """as_of is the time of serving: answer-count.js and ugh-stats.js ignore a file over 7 days old, so a pin never is one."""
     try:
         t = dt.datetime.strptime(o["as_of"], "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=dt.timezone.utc)
-    except (TypeError, ValueError):
+    except (KeyError, TypeError, ValueError):
         return False
-    age = (dt.datetime.now(dt.timezone.utc) - t).total_seconds()
-    # The time of serving: answer-count.js ignores a file over 7 days old, so a pin must never be one.
-    return -60 <= age <= 300 and o["since"] == "2026-09-01" and o["total"] == 0 and o["games"] == {}
+    return -60 <= (dt.datetime.now(dt.timezone.utc) - t).total_seconds() <= 300
 
 
-BODY_OK = {"games/maffscards/daily.json": _daily_ok, "schools/assets/answer-counts.json": _counts_ok}
+def _counts_ok(o):
+    return (isinstance(o, dict) and set(o) == {"as_of", "since", "total", "games"} and _fresh(o)
+            and o["since"] == "2026-09-01" and o["total"] == 0 and o["games"] == {})
+
+
+def _stats_ok(o):
+    return (isinstance(o, dict) and set(o) == {"as_of", "daily", "levels", "countries", "hours"} and _fresh(o)
+            and o["daily"] == [{"date": o["as_of"][:10], "starts": 0}] and o["levels"] == [] and o["countries"] == []
+            and o["hours"] == {"weekday": [0] * 24, "weekend": [0] * 24})
+
+
+BODY_OK = {"games/maffscards/daily.json": _daily_ok, "schools/assets/answer-counts.json": _counts_ok,
+           "schools/assets/ugh-stats.json": _stats_ok}
 
 # What a bot might have written on the day a check runs: Jon played and won; a busy, fresh counts file.
 LIVE = {
     "games/maffscards/daily.json": {"date": "2026-11-27", "result": "won", "rounds": 15, "line": "Beat that."},
     "schools/assets/answer-counts.json": {"as_of": "2026-11-27T05:00:00Z", "since": "2026-09-01", "total": 50000,
                                           "games": {"maffscards": 4000, "six-sevens-bruv": 9000}},
-    "schools/assets/ugh-stats.json": {"as_of": "2026-11-27T05:00:00Z", "marker": "on disk"},
+    "schools/assets/ugh-stats.json": {"as_of": "2026-11-27T05:00:00Z", "daily": [{"date": "2026-11-26", "starts": 812}],
+                                      "levels": [{"level": "gcse", "starts": 500}],
+                                      "countries": [{"country": "United Kingdom", "sessions": 700}],
+                                      "hours": {"weekday": [3] * 24, "weekend": ["<10"] * 24}},
 }
 
 
@@ -291,9 +321,9 @@ def serve_test(table):
                             continue
                         ok = BODY_OK.get(path)
                         if ok is None:
-                            faults.append("%s is pinned with no rule for a 'shows nothing' body (add it to BODY_OK)" % path)
+                            faults.append("%s is pinned with no rule for its fixed body (add it to BODY_OK)" % path)
                         elif not ok(obj):
-                            faults.append("/%s's pin is not its 'shows nothing' body: %s" % (rel, got[:160]))
+                            faults.append("/%s's pin is not its fixed body: %s" % (rel, got[:160]))
             finally:
                 srv.shutdown()
                 srv.server_close()
@@ -318,20 +348,24 @@ def selftest():
     extra = dict(wf)
     extra["planted.yml"] = "      - run: |\n          git add schools/assets/new-bot-file.json\n"
     no_daily = {k: v for k, v in BOT_WRITTEN.items() if k != "games/maffscards/daily.json"}
-    disk = dict(BOT_WRITTEN)
-    disk["games/maffscards/daily.json"] = ("pinned", lambda: json.load(open(
-        os.path.join(serving_root[0], "games", "maffscards", "daily.json"), encoding="utf-8")))
+    def on_disk(path):
+        table = dict(BOT_WRITTEN)
+        table[path] = ("pinned", lambda: json.load(open(os.path.join(serving_root[0], *path.split("/")), encoding="utf-8")))
+        return table
     old = dict(BOT_WRITTEN)
     eight = (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=8)).strftime("%Y-%m-%dT%H:%M:%SZ")
     old["schools/assets/answer-counts.json"] = ("pinned", lambda: dict(counts_nothing(), as_of=eight))
     plants = [("a workflow line adding an unlisted path", lambda: guard(BOT_WRITTEN, extra), "new-bot-file.json"),
               ("daily.json removed from the table", lambda: guard(no_daily, wf), "games/maffscards/daily.json"),
-              ("a pin answering with the file on disk", lambda: serve_test(disk), "file on disk"),
-              ("answer-counts.json's pin with an as_of 8 days old", lambda: serve_test(old), "answer-counts.json's pin")]
+              ("a pin answering with the file on disk", lambda: serve_test(on_disk("games/maffscards/daily.json")),
+               "daily.json answers with the file on disk"),
+              ("answer-counts.json's pin with an as_of 8 days old", lambda: serve_test(old), "answer-counts.json's pin"),
+              ("ugh-stats.json's pin answering with the file on disk",
+               lambda: serve_test(on_disk("schools/assets/ugh-stats.json")), "ugh-stats.json answers with the file on disk")]
     for label, run, want in plants:
         faults = run()
         caught = any(want in f for f in faults)
-        print("plant %-50s %s" % (label + ":", "caught" if caught else "MISSED (%s)" % ("; ".join(faults) or "no fault")))
+        print("plant %-55s %s" % (label + ":", "caught" if caught else "MISSED (%s)" % ("; ".join(faults) or "no fault")))
         if not caught:
             bad.append(label)
     print("selftest: %s (%d plants)" % ("FAILED: " + "; ".join(bad) if bad else "PASS", len(plants)))
