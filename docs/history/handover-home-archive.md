@@ -1,5 +1,26 @@
 # Handover archive: home lane
 
+## Moved 2026-11-28 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
+
+## 2026-11-27 (home): NEXT-NO-FALLBACK (the shared Next control no longer advances by itself; canon §7.6 says so, and that a revealing right answer waits too)
+
+Claude Code (home lane), worktree `~/mg-next-no-fallback`, branch `claude/next-no-fallback`. PR #937. The contract is at `docs/history/contracts/2026-11-27-next-no-fallback.md` (verbatim). The first commit closed out MERGE-GUARD.
+
+- **Jon (27 Nov 2026, 18:27):** "I'd remove the auto advance … the student needs to press continue, it gives them a chance to check where they went wrong, and write down the correct method before moving on".
+- **The helper (`schools/assets/next-control.js`):** no timer unless `fallbackMs` is passed; the 20 s default and the exported `FALLBACK_MS` are gone (nothing read the constant but canon). `fallbackMs` stays for test harnesses. The floor, the in-view scroll, advance-once, clear(), the 44 px target and the MaffsLock clearing are untouched.
+- **The seven pages:** the-6-ps, take-a-walk, squared-squirrel, just-pythag-it-bruv, how-many-parts, 52dle and distinctly-average no longer pass `fallbackMs` (the NO_FALLBACK constants and the day-long literal are gone). Nothing else in them changed.
+- **The guard, in `scripts/test-next-control.py` (the "Shared asset tests" job, which runs on every PR):** a static scan fails on any `.html` or `.js` under games/, escape-rooms/, the-6-ps/ or any page in the site root that names `fallbackMs` (plant: a page passing `fallbackMs: 20000`, caught); with no `fallbackMs` the control does not advance in 90 s on a fast clock (the page's setTimeout at 1/100) and Enter still advances once (plant: the 20 s default restored, caught). The existing fallback cases already passed `fallbackMs` themselves.
+- **One verifier changed, because it held a page's workaround:** `verify-just-pythag-it-bruv.py` required the worked example's Next to be given the day-long delay; it now requires that the page passes none.
+- **One check relied on the 20 s default, and now advances for itself:** `check-teacher-invite.py` plays factor-theorem to its results screen, and its step never pressed the shared Next (its harness cut every timer to 25 ms, so the fallback moved it on). The first Gate (check-site 46053172613) failed there. The step now presses Next; what the check tests, the teacher line on the results screen, is unchanged. The same Gate also failed Text writes (the new test's two planted files were written without newline=''; fixed) and one job on a Docker pull.
+- **Canon §7.6:** a wrong answer waits with no timer (Jon's reason); the new line on a right answer that reveals something new, in the contract's words; the three other mentions of the fallback in the section now say "a test's `fallbackMs`".
+- **Stale words fixed:** `check-answer-lock.py`'s docstring and `docs/sandbox-checks.md` spoke of the 20 s fallback. `scripts/check-site.py:2680` still does, in a comment; that file is the cloud lane's.
+- **A wrong answer advanced by a page's own timer (the contract's STOP IF list; none changed here):** trig-wars (a miss shows its tip for 2.8 s and passes the turn; exempt by Jon's ruling of 19 Nov) and higher-power (a wrong guess ends the run). correlation-or-coincidence falls back to 4 s only if next-control.js did not load. CI's pause check (WRONG-PAUSE-NEXT) holds every other judged game for 3 s; a scan of the pages for timers of 3 s or more found no other. Six games that check cannot judge are on its own list (WRONG_PAUSE_UNCHECKED).
+- **/updates/:** one line, 27 Nov.
+- **Gate on the PR head 1640c8e0:** check-site 46055742396 and phone-fit-full 46055742477, both green.
+- **Merged** 27 Nov at 19:38 UTC as e91a25a (#937, squash) via merge-pr.py, which ended "main e91a25a run 46058091551: GREEN". Main on e91a25a: check-site 46058091551, phone-fit-full 46058091615 and the pages build 46058090668, each success.
+
+Record: agent Claude Code; wall 0:45; review cycles 0; amendments 0; usage n/a.
+
 ## Moved 2026-11-27 by check-context-size.py --fix from docs/handover/home.md (history, unchanged)
 
 ## 2026-11-27 (home): MERGE-GUARD (merge-pr.py refuses a PR whose Gate or phone-fit run started before main's newest merge)
