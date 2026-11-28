@@ -16,9 +16,16 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-28 (home): TODO-AUDIT (every item in docs/todo.md checked against main: finished and duplicated items moved out with evidence, stale ones listed for Jon)
+
+Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. In flight. The contract is at `docs/handover/contracts/2026-11-28-todo-audit.md` (verbatim).
+
+- **Close-out of TODO-SEARCH-DEMAND (#942), each confirmed from GitHub Actions:** merged 28 Nov as a0c6f53 (squash) by main's merge-pr.py, which ended "main a0c6f53 run 46095376807: GREEN". PR head 59cd56a2: check-site 46093722219 and phone-fit-full 46093722236, both success. Main on a0c6f53: check-site 46095376807, phone-fit-full 46095376824 and the pages build 46095376554, each success. Its contract moved to `docs/history/contracts/2026-11-27-todo-search-demand.md`.
+- **Next:** the audit itself (verdicts, moves, `docs/audits/todo-audit-2026-11-28.md`), then the PR.
+
 ## 2026-11-28 (home): TODO-SEARCH-DEMAND (the 27 Nov search-log findings, 3-gon Line-up and the Level 3 full-release plan in the backlog; two Events-sheet tasks closed; canon's ticker line; todo.md trimmed)
 
-Claude Code (home lane), worktree `~/mg-todo-search-demand`, branch `claude/todo-search-demand`. PR #942. The contract is at `docs/handover/contracts/2026-11-27-todo-search-demand.md` (verbatim). The first commit closed out D-BY-DX-POLISH.
+Claude Code (home lane), worktree `~/mg-todo-search-demand`, branch `claude/todo-search-demand`. PR #942. The contract is at `docs/history/contracts/2026-11-27-todo-search-demand.md` (verbatim). The first commit closed out D-BY-DX-POLISH.
 
 - **`docs/todo.md`:** rows 3-GON-LINE-UP, SEARCH-DEMAND and L3-FULL-RELEASE after PLOT-MIGRATE, copied from the contract by script; the ideas edits (Venn Diagrams AGAIN?, Not in Pen, Plans and elevations, Whack-a-mole); in §6 the Functional Skills Maths decision in place of "None open", and the two Events-sheet manual tasks gone. Every "before" line was on main as quoted.
 - **`docs/history/todo-done.md`:** "## Part closed by TODO-SEARCH-DEMAND (27 Nov 2026)" holds the two manual tasks, each with its answer line, the "None open" line, and every trimmed part word for word.
