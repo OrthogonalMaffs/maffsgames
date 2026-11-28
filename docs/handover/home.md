@@ -16,6 +16,21 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-28 (home): TODO-SEARCH-DEMAND (the 27 Nov search-log findings, 3-gon Line-up and the Level 3 full-release plan in the backlog; two Events-sheet tasks closed; canon's ticker line; todo.md trimmed)
+
+Claude Code (home lane), worktree `~/mg-todo-search-demand`, branch `claude/todo-search-demand`. PR #942. The contract is at `docs/handover/contracts/2026-11-27-todo-search-demand.md` (verbatim). The first commit closed out D-BY-DX-POLISH.
+
+- **`docs/todo.md`:** rows 3-GON-LINE-UP, SEARCH-DEMAND and L3-FULL-RELEASE after PLOT-MIGRATE, copied from the contract by script; the ideas edits (Venn Diagrams AGAIN?, Not in Pen, Plans and elevations, Whack-a-mole); in §6 the Functional Skills Maths decision in place of "None open", and the two Events-sheet manual tasks gone. Every "before" line was on main as quoted.
+- **`docs/history/todo-done.md`:** "## Part closed by TODO-SEARCH-DEMAND (27 Nov 2026)" holds the two manual tasks, each with its answer line, the "None open" line, and every trimmed part word for word.
+- **`docs/canon.md` line 3335:** the ticker reads the latest 50 and shows the newest 20 from games with a portal card. Nothing else in canon changed.
+- **The trim:** 107,496 bytes before; 109,932 with the new text; 106,470 now, 1,050 under TODO_LIMIT. Finished rows and parts verified on main 4ae47558 came to 2,281 bytes (15 moves; the PR lists each with its evidence), 1,155 short of the headroom. The rest is 1,181 bytes of notes of where a row came from ("Moved from cloud.md's Queue ...", "... live pointers", "... §6 (TODO-TIDY)"), taken out of 30 rows: history, not owed work. **For Project Claude to rule if that reading is wrong:** by finished work alone the file would have been 131 bytes over its limit and the contract's STOP IF (1) would apply.
+- **Left in place, finished state unclear** (listed in the PR): §5's bank growth for four games (two now pass B4); §6's Spot the Error and New Shapes reviews; WHEN-WILL-I-USE-THIS's owner cell; CHECK-CHANGED-ONE-RUN (superseded, not finished); §4 item 14; LARGE-SCREEN-LAYER's and LOCAL-CHECKS's finished descriptions; §1's index paragraph.
+- **Also seen:** the contract's SUCCESS CONDITION says four moved lines; steps 2 and 3 name three, and three moved.
+- **/updates/:** none (internal work).
+- **Run IDs and the merge:** in the next home contract's first commit, as usual (AGENTS.md, close-outs).
+
+Record: agent Claude Code; wall 0:15; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-27 (home): D-BY-DX-POLISH (d by dx? Why?: two columns from 1280 px with a larger graph and the table under it; a table that cannot scroll; room round the working's stacked fractions; a regenerated bank with bracketed arguments, numbered labels and Stage 5 in descending powers)
 
 Claude Code (home lane), worktree `~/mg-d-by-dx-polish`, branch `claude/d-by-dx-polish`. PR #941. The contract is at `docs/history/contracts/2026-11-27-d-by-dx-polish.md` (verbatim). The first commit closed out D-BY-DX-GRAPH.
