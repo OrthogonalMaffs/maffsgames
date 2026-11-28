@@ -447,8 +447,14 @@ def selftest(root):
         if base:
             print('self-test: the tree fails before any fault is planted: %s' % base[0])
             return False
-        # 1. a fixed entry with no PR
-        name = sorted(n for n in os.listdir(os.path.join(tmp, FINDINGS)) if n.endswith('.yml'))[0]
+        # 1. a fixed entry with no PR. Plants 1 and 2 write into a findings file's first and last entries, so the file is
+        # chosen by content, never by name: the first, in name order, whose findings list is not empty (contract
+        # 3-GON-LINE-UP-BUILD, Amendment 2, 28 Nov 2026: a new game's file is `findings: []`, and 3-gon-line-up.yml sorts first).
+        name = next((n for n in sorted(os.listdir(os.path.join(tmp, FINDINGS))) if n.endswith('.yml')
+                     and (yaml.safe_load(open(os.path.join(tmp, FINDINGS, n), encoding='utf-8').read()) or {}).get('findings')), None)
+        if name is None:
+            print('self-test: no findings file has a finding, so plants 1 and 2 have nowhere to go')
+            return False
         p = os.path.join(tmp, FINDINGS, name)
         src = open(p, encoding='utf-8').read()
         data = yaml.safe_load(src)
@@ -473,14 +479,25 @@ def selftest(root):
         # 3. an excluded game that has been relisted
         rp = os.path.join(tmp, ROSTER)
         rsrc = open(rp, encoding='utf-8', newline='').read()
+        if not GATE_EXCLUDED or '## Unlisted' not in rsrc:
+            print('self-test: plant 3 needs a GATE_EXCLUDED game and the roster\'s "## Unlisted" section; %s' % (
+                'GATE_EXCLUDED is empty' if not GATE_EXCLUDED else 'the roster has no "## Unlisted" heading'))
+            return False
         open(rp, 'w', encoding='utf-8', newline='').write(rsrc.replace('## Unlisted', '## Resit Fluency Strand', 1))
         errs, _ = run(tmp)
         caught = any('GATE_EXCLUDED' in e for e in errs)
         print('  self-test %-34s %s' % ('a relisted excluded game', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
         open(rp, 'w', encoding='utf-8', newline='').write(rsrc)
-        # 4. the correction notice: missing from an unlisted game, and carried by a listed one
-        gp = os.path.join(tmp, 'games', 'glorious-gantt', 'index.html')
+        # 4. the correction notice: missing from an unlisted game, and carried by a listed one. The unlisted game is chosen by
+        # content, never by name: the first, in name order, whose page carries the notice (Amendment 2).
+        r_games, r_unlisted = roster(tmp)
+        noticed = [g for g in sorted(r_unlisted) if os.path.isfile(os.path.join(tmp, 'games', g, 'index.html'))
+                   and NOTICE_MARKER in open(os.path.join(tmp, 'games', g, 'index.html'), encoding='utf-8').read()]
+        if not noticed:
+            print('self-test: no unlisted game\'s page carries %s, so plant 4 has nowhere to go' % NOTICE_MARKER)
+            return False
+        gp = os.path.join(tmp, 'games', noticed[0], 'index.html')
         gsrc = open(gp, encoding='utf-8', newline='').read()
         open(gp, 'w', encoding='utf-8', newline='').write(gsrc.replace(NOTICE_MARKER, ''))
         errs, _ = run(tmp)
@@ -488,8 +505,10 @@ def selftest(root):
         print('  self-test %-34s %s' % ('an unlisted game with no notice', 'caught' if caught else '*** MISSED ***'))
         ok = ok and caught
         open(gp, 'w', encoding='utf-8', newline='').write(gsrc)
-        r_games, r_unlisted = roster(tmp)
-        other = next(g for g in sorted(r_games) if g not in r_unlisted and os.path.isfile(os.path.join(tmp, 'games', g, 'index.html')))
+        other = next((g for g in sorted(r_games) if g not in r_unlisted and os.path.isfile(os.path.join(tmp, 'games', g, 'index.html'))), None)
+        if other is None:
+            print('self-test: no listed game has a page, so plant 4\'s second half has nowhere to go')
+            return False
         op = os.path.join(tmp, 'games', other, 'index.html')
         osrc = open(op, encoding='utf-8', newline='').read()
         open(op, 'w', encoding='utf-8', newline='').write(osrc.replace('</body>', NOTICE_MARKER + '</body>', 1))
