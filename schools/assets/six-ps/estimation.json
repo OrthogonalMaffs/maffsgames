@@ -473,15 +473,15 @@
    },
    "band": 3,
    "calc": false,
-   "stem": "Estimate the value of \\(0.392 \\div 0.0021\\) by rounding each number to 1 significant figure.",
+   "stem": "Estimate the value of \\(0.83 \\div 0.21\\) by rounding each number to 1 significant figure.",
    "diagram": null,
    "format": "number",
    "answer": {
-    "value": 200
+    "value": 4
    },
    "worked": [
-    "Round each number to 1 significant figure: 0.392 is 0.4, 0.0021 is 0.002.",
-    "Work it out with the rounded numbers: \\(0.4 \\div 0.002 = 200\\)."
+    "Round each number to 1 significant figure: 0.83 is 0.8, 0.21 is 0.2.",
+    "Work it out with the rounded numbers: \\(0.8 \\div 0.2 = 4\\)."
    ],
    "slip": []
   },
@@ -683,15 +683,15 @@
    },
    "band": 4,
    "calc": false,
-   "stem": "Estimate the value of \\((197 \\times 0.62) \\div 0.31\\) by rounding each number to 1 significant figure.",
+   "stem": "Estimate the value of \\((197 \\times 0.62) \\div 0.52\\) by rounding each number to 1 significant figure.",
    "diagram": null,
    "format": "number",
    "answer": {
-    "value": 400
+    "value": 240
    },
    "worked": [
-    "Round each number to 1 significant figure: 197 is 200, 0.62 is 0.6, 0.31 is 0.3.",
-    "Work it out with the rounded numbers: \\(200 \\times 0.6 \\div 0.3 = 400\\)."
+    "Round each number to 1 significant figure: 197 is 200, 0.62 is 0.6, 0.52 is 0.5.",
+    "Work it out with the rounded numbers: \\(200 \\times 0.6 \\div 0.5 = 240\\)."
    ],
    "slip": []
   },

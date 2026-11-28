@@ -246,7 +246,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   {"id": "C04", "group": "C", "nums": ["0.087", "412"], "shape": "a*b", "rounded": ["0.09", "400"], "estimate": "36", "exact": "35.84", "show": "0.087 × 412", "tex": "0.087 \\times 412", "approx": true},
   {"id": "C05", "group": "C", "nums": ["0.61", "0.29"], "shape": "a*b", "rounded": ["0.6", "0.3"], "estimate": "0.18", "exact": "0.1769", "show": "0.61 × 0.29", "tex": "0.61 \\times 0.29"},
   {"id": "C06", "group": "C", "nums": ["7.8", "0.0213"], "shape": "a*b", "rounded": ["8", "0.02"], "estimate": "0.16", "exact": "0.1661", "show": "7.8 × 0.0213", "tex": "7.8 \\times 0.0213", "approx": true},
-  {"id": "C07", "group": "C", "nums": ["0.392", "0.0021"], "shape": "a/b", "rounded": ["0.4", "0.002"], "estimate": "200", "exact": "186.7", "show": "0.392 ÷ 0.0021", "tex": "0.392 \\div 0.0021", "approx": true},
+  {"id": "C07", "group": "C", "nums": ["0.83", "0.21"], "shape": "a/b", "rounded": ["0.8", "0.2"], "estimate": "4", "exact": "3.952", "show": "0.83 ÷ 0.21", "tex": "0.83 \\div 0.21", "approx": true},
   {"id": "C08", "group": "C", "nums": ["52.1", "0.038"], "shape": "a*b", "rounded": ["50", "0.04"], "estimate": "2", "exact": "1.980", "show": "52.1 × 0.038", "tex": "52.1 \\times 0.038", "approx": true},
   {"id": "D01", "group": "D", "nums": ["21.3", "3.98", "0.49"], "shape": "(a*b)/c", "rounded": ["20", "4", "0.5"], "estimate": "160", "exact": "173.0", "show": "(21.3 × 3.98) ÷ 0.49", "tex": "(21.3 \\times 3.98) \\div 0.49", "approx": true},
   {"id": "D02", "group": "D", "nums": ["6.12", "19.8", "3.94"], "shape": "(a*b)/c", "rounded": ["6", "20", "4"], "estimate": "30", "exact": "30.76", "show": "(6.12 × 19.8) ÷ 3.94", "tex": "(6.12 \\times 19.8) \\div 3.94", "approx": true},
@@ -256,7 +256,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   {"id": "D06", "group": "D", "nums": ["81.2", "18.9", "2.11"], "shape": "(a-b)/c", "rounded": ["80", "20", "2"], "estimate": "30", "exact": "29.53", "show": "(81.2 − 18.9) ÷ 2.11", "tex": "(81.2 - 18.9) \\div 2.11", "approx": true},
   {"id": "D07", "group": "D", "nums": ["29.4", "61.7", "3.12", "1.96"], "shape": "(a*b)/(c*d)", "rounded": ["30", "60", "3", "2"], "estimate": "300", "exact": "296.6", "show": "(29.4 × 61.7) ÷ (3.12 × 1.96)", "tex": "(29.4 \\times 61.7) \\div (3.12 \\times 1.96)", "approx": true},
   {"id": "D08", "group": "D", "nums": ["0.38", "412", "7.6"], "shape": "(a*b)/c", "rounded": ["0.4", "400", "8"], "estimate": "20", "exact": "20.60", "show": "(0.38 × 412) ÷ 7.6", "tex": "(0.38 \\times 412) \\div 7.6"},
-  {"id": "D09", "group": "D", "nums": ["197", "0.62", "0.31"], "shape": "(a*b)/c", "rounded": ["200", "0.6", "0.3"], "estimate": "400", "exact": "394", "show": "(197 × 0.62) ÷ 0.31", "tex": "(197 \\times 0.62) \\div 0.31"},
+  {"id": "D09", "group": "D", "nums": ["197", "0.62", "0.52"], "shape": "(a*b)/c", "rounded": ["200", "0.6", "0.5"], "estimate": "240", "exact": "234.9", "show": "(197 × 0.62) ÷ 0.52", "tex": "(197 \\times 0.62) \\div 0.52", "approx": true},
   {"id": "D10", "group": "D", "nums": ["9.87", "20.3", "4.1"], "shape": "(a+b)*c", "rounded": ["10", "20", "4"], "estimate": "120", "exact": "123.7", "show": "(9.87 + 20.3) × 4.1", "tex": "(9.87 + 20.3) \\times 4.1", "approx": true},
   {"id": "E01", "group": "E", "nums": ["3.9"], "shape": "a**2", "rounded": ["4"], "estimate": "16", "exact": "15.21", "show": "3.9²", "tex": "3.9^2"},
   {"id": "E02", "group": "E", "nums": ["19.2", "4.1"], "shape": "a**2/b", "rounded": ["20", "4"], "estimate": "100", "exact": "89.91", "show": "19.2² ÷ 4.1", "tex": "19.2^2 \\div 4.1", "approx": true},
@@ -326,6 +326,26 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
   EE.percentLine = function (q) {
     var n = EE.percentOff(q);
     return 'The estimate is ' + (n < 1 ? 'less than 1%' : n + '%') + ' off the calculator answer. That’s what estimates are for.';
+  };
+
+  // ---- Dividing by a decimal: the method, under the working (contract ESTIMATION-FOUNDATION, 28 Nov 2026) ----
+  // The divisor is the shape's denominator on the rounded numbers (b in a/b, c * d in (a*b)/(c*d), a in b/a),
+  // multiplied exactly as digits / 10^scale. A line only for 0.5 and 0.2: the verifier allows no other
+  // divisor under 1.
+  var METHOD = { '0.5': '2', '0.2': '5' };
+  EE.divisor = function (q) {
+    var at = q.shape.indexOf('/');
+    if (at < 0) return null;
+    var n = 1, s = 0;
+    q.shape.slice(at + 1).replace(/[abcd]/g, function (v) { var d = dec(q.rounded['abcd'.indexOf(v)]); n *= d.n; s += d.s; });
+    while (s > 0 && n % 10 === 0) { n /= 10; s--; }
+    var digits = String(n);
+    while (digits.length <= s) digits = '0' + digits;
+    return s ? digits.slice(0, digits.length - s) + '.' + digits.slice(digits.length - s) : digits;
+  };
+  EE.methodLine = function (q) {
+    var d = EE.divisor(q);
+    return d !== null && METHOD[d] ? 'Dividing by ' + d + ' is the same as multiplying by ' + METHOD[d] + '.' : '';
   };
 
   // ---- Drawing a game: one from each group, four more from the rest, served A to F ----
@@ -473,6 +493,7 @@ body.accessible p,body.accessible .fb{line-height:2;max-width:65ch}
     fb.className = 'feedback fb ' + (ok ? 'right' : 'wrong');
     fb.innerHTML = '<div class="fb-verdict">' + (ok ? '✓ Right.' : '✗ Not quite. You put ' + esc(raw) + '.') + '</div>' +
       '<div class="fb-work">' + mathHtml(f.tex + ' = ' + (q.money ? '\\text{\u00a3}' : '') + q.estimate, f.plain + ' = ' + cur + q.estimate) + '</div>' +
+      (EE.methodLine(q) ? '<div class="fb-line">' + esc(EE.methodLine(q)) + '</div>' : '') +
       '<div class="fb-line">' + esc(EE.calcLine(q)) + '</div>' +
       '<div class="fb-line">' + esc(EE.percentLine(q)) + '</div>';
     $('qcard').classList.add('fb-open'); document.body.classList.add('fb-open');
