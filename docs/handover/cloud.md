@@ -66,6 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-28 (cloud): 3-GON-LINE-UP-BUILD (3-gon Line-up, triangle congruence as a police line-up in four stages, merged unlisted; `docs/handover/contracts/2026-11-28-3-gon-line-up-build.md`)
+
+Claude Code (cloud), branch `claude/compassionate-meitner-yjumad` from main 4ae4755. Medium tier (merge on green).
+- **Close-out, TICKER-LISTED:** [#940](https://github.com/OrthogonalMaffs/maffsgames/pull/940) squash-merged as 95d82bf by merge-pr.py, its last line "main 95d82bf run 46078109241: GREEN". Main's runs on 95d82bf, read from GitHub Actions in this session: check-site 46078109241, phone-fit-full 46078109207, pages 46078108698, each success (attempt 1). Contract file moved to `docs/history/contracts/`.
+- **The bank:** `tools/3-gon-line-up/bank.py` saved verbatim: file sha256 ea863565..., output "total 48", "failures 0", sha256 a69d0470..., all as the contract states (Python 3.13). A first save had `'\u00b0'` on line 325 written as a literal degree sign (file hash 0d7931cd...); corrected to the contract's escape before anything else was run.
+- **Next:** the page, its integration lines and the verifier.
+
 ## 2026-11-27 (cloud): TICKER-LISTED (the front page's score ticker shows only scores from games with a portal card; `docs/handover/contracts/2026-11-27-ticker-listed.md`)
 
 Claude Code (cloud), branch `claude/funny-fermat-12gj5x` from main b5a7a8f. Medium tier (merge on green).
