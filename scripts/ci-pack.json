@@ -1,5 +1,6 @@
 {
  "content": {
+  "3-gon Line-up (the 48-item bank held to the contract's SHA-256 and counts, the generator's file to its own; every line-up's congruent pair, every SSA decoy's two triangles, every drawing's marks, every stage 3 rule and every witness worked out again with this script's own triangle solver, never the generator; every label one per fact, clear of every edge, mark and other label, on its own side and inside or outside its triangle as it should be; LINES exactly the contract's fourteen, every one used; every stage played to the end, the score, one game_completed and one submission; every working line the contract's; every rendered label's ink box inside its bank box at four sizes (Amendment 1); every item's every answer, right or wrong, showing its own line(s), the answer lit, the working and Next above the fold at 375x667, 390x844, 1280x720 and 1366x768, normal and Aa; fault-injection self-test), part 1 of 1": "22",
   "52-dle (every clue ladder recomputed and narrowing to one number, the page's ladders the generator's output, daily, run, scoring, broken clues and exact marking played in Chromium)": "64",
   "Aa flag (game_started carries aa from the body class the Aa toggle switches: every toggle found by analytics.js's one selector, every switch one of its three known classes; in Chromium aa false, then true after the toggle, never from storage, none on a page with no toggle; planted faults)": "76",
   "Analytics report (docs/apps-script-endpoint.js: each kind of game by its own measure, hardest questions by question_id, rooms by escapes, shot games left out, games.json fallback, pre-29-Sep blanks, doPost's column order with detail then elapsed_s last; B2's fresh and resumed starts and time to quit; planted faults caught)": "73",
@@ -324,6 +325,12 @@
    "label": "Level resolver in play (every migrated game loads at its default for constructor, __proto__ and nonsense, and at each declared level, with no page error)",
    "parts": 2,
    "tier": "lock"
+  },
+  "verify-3-gon-line-up.py": {
+   "how": "chosen from 24 timed unit(s)",
+   "label": "3-gon Line-up (the 48-item bank held to the contract's SHA-256 and counts, the generator's file to its own; every line-up's congruent pair, every SSA decoy's two triangles, every drawing's marks, every stage 3 rule and every witness worked out again with this script's own triangle solver, never the generator; every label one per fact, clear of every edge, mark and other label, on its own side and inside or outside its triangle as it should be; LINES exactly the contract's fourteen, every one used; every stage played to the end, the score, one game_completed and one submission; every working line the contract's; every rendered label's ink box inside its bank box at four sizes (Amendment 1); every item's every answer, right or wrong, showing its own line(s), the answer lit, the working and Next above the fold at 375x667, 390x844, 1280x720 and 1366x768, normal and Aa; fault-injection self-test)",
+   "parts": 1,
+   "tier": "content"
   },
   "verify-bearing-blitz.py": {
    "how": "kept from the pack (2 needed)",
