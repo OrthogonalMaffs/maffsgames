@@ -285,6 +285,8 @@ The bytes against OWED are history clauses (a past state, or where a row came fr
 
 ## For Jon: STALE? items
 
+Ruled by Jon, 28 Nov 2026; applied by TODO-RULINGS.
+
 Nothing here was moved. Each line: what it is, why it may no longer matter, and the choice.
 
 1. chart-interrogator "submits a constant 100" (§2): the page now multiplies its score (:1277), so the constant may be gone; the `l4` key is still there. Keep (and re-check the score), or close the constant-100 half.
