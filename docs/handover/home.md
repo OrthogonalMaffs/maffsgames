@@ -16,9 +16,15 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-28 (home): TODO-RULINGS (Jon's rulings on TODO-AUDIT's 35 STALE? items applied to docs/todo.md; three rows corrected)
+
+Claude Code (home lane), worktree `~/mg-todo-rulings`, branch `claude/todo-rulings`. In flight. The contract is at `docs/handover/contracts/2026-11-28-todo-rulings.md` (verbatim).
+
+- **Close-out of TODO-AUDIT (#944), each confirmed from GitHub Actions:** merged 28 Nov as 9072d16 (squash) by main's merge-pr.py from the primary checkout, which ended "main 9072d16 run 46128288170: GREEN". The first Gate (head f5caf612: check-site 46125369409, phone-fit-full 46125369349, both success) was refused because main gained c5d9d70 (3-GON-LINE-UP-BUILD); main was merged in. PR head 7f060ad9: check-site 46126859607 and phone-fit-full 46126859615, both success. Main on 9072d16: check-site 46128288170, phone-fit-full 46128288177 and the pages build 46128287938, each success. Its contract moved to `docs/history/contracts/2026-11-28-todo-audit.md`.
+
 ## 2026-11-28 (home): TODO-AUDIT (every item in docs/todo.md checked against main: finished and duplicated items moved out with evidence, stale ones listed for Jon)
 
-Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. PR #944. The contract is at `docs/handover/contracts/2026-11-28-todo-audit.md` (verbatim).
+Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. PR #944. The contract is at `docs/history/contracts/2026-11-28-todo-audit.md` (verbatim).
 
 - **Close-out of TODO-SEARCH-DEMAND (#942), each confirmed from GitHub Actions:** merged 28 Nov as a0c6f53 (squash) by main's merge-pr.py, which ended "main a0c6f53 run 46095376807: GREEN". PR head 59cd56a2: check-site 46093722219 and phone-fit-full 46093722236, both success. Main on a0c6f53: check-site 46095376807, phone-fit-full 46095376824 and the pages build 46095376554, each success. Its contract moved to `docs/history/contracts/2026-11-27-todo-search-demand.md`.
 - **The audit:** 259 items (every table row, every §4 item, every bullet and paragraph of the prose sections), each with one verdict and its evidence in `docs/audits/todo-audit-2026-11-28.md`. Checked on main abb9b605.
