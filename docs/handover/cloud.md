@@ -66,6 +66,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 > STANDING RULE (Jon, Tue 10 Nov 2026, 13:13): cloud close-outs ride on the lane's next task.
 > A PR cannot record its own merge, because main's run on the merge commit exists only after the merge, so there is no separate close-out PR. The first commit of each cloud task (straight after the claim commit, where the task claims a listed game) closes out every cloud PR merged since the last close-out: (1) its contract file moves from docs/handover/contracts/ to docs/history/contracts/; (2) its handover entry records the merge commit, the merge route (merge-pr.py, or the standing merge-route ruling with the gh auth output), and main's run IDs on the merge commit with their results. If main's run on any of those merge commits is red, or neither the session nor the contract can confirm it, STOP and report before the task's own work. The task's PR body lists the close-outs it carries. Close-outs left when the lane has no next task go in the home lane's next docs PR. The home lane records this rule in AGENTS.md in its next docs PR.
 
+## 2026-11-28 (cloud): ESTIMATION-FOUNDATION (Estimation Engine: every estimate that divides by a decimal is Foundation-paper standard, with the method shown; `docs/handover/contracts/2026-11-28-estimation-foundation.md`)
+
+Claude Code (cloud), branch `claude/estimation-engine-decimal-division-5f5smt` from main 3d370fa. Small tier (merge on green).
+- **Close-out, 3-GON-LINE-UP-BUILD (as the contract states it):** [#943](https://github.com/OrthogonalMaffs/maffsgames/pull/943) squash-merged as c5d9d70 by merge-pr.py, its last line "main c5d9d70 run 46125518930: GREEN". Main's runs on c5d9d70: check-site 46125518930, phone-fit-full 46125518849, pages 46125518642, each success, first attempt. end-task.py refused (branch checked out in the primary checkout, the known cloud case; nothing deleted). The contract and its two amendments moved to `docs/history/contracts/`.
+- **Claim:** estimation-engine added to `scripts/answer-lock-state.json` in its own commit (9cc5f3f); taken off in this PR.
+- **Next:** the bank's two lines (C07, D09), the method line, the verifier's rule and plant, the /updates/ line; PR; merge-pr.py on green.
+
 ## 2026-11-28 (cloud): 3-GON-LINE-UP-BUILD (3-gon Line-up, triangle congruence as a police line-up in four stages, merged unlisted; `docs/handover/contracts/2026-11-28-3-gon-line-up-build.md`)
 
 Claude Code (cloud), branch `claude/compassionate-meitner-yjumad` from main 4ae4755. Medium tier (merge on green).
