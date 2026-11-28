@@ -90,6 +90,7 @@ UNLISTED_NOT_BY_AUDIT = {'just-pythag-it-bruv': 'new, unlisted until Jon has pla
                          'some-thingies': 'new (contract SOME-THINGIES); listed 24 Nov 2026 (Jon approved 24 Nov 2026)',
                          'its-just-base-60-bruv': 'new (contract BASE-60); listed 26 Nov 2026 (Jon approved 26 Nov 2026)',
                          'd-by-dx-why': 'new, unlisted until Jon has played and approved it (contract D-BY-DX-BUILD)',
+                         '3-gon-line-up': 'new, unlisted until Jon has played and approved it (contract 3-GON-LINE-UP-BUILD)',
                          'maffscards': 'new (contract MAFFSCARDS-GAME); listed 24 Nov 2026 (Jon approved 24 Nov 2026)'}
 
 # A verifier named for something other than its game, or one that covers only part of a game.

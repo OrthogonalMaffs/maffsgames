@@ -4,16 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Unlisted (contract 3-GON-LINE-UP-BUILD, 28 Nov 2026): merged for Jon to play all four stages; listed under GCSE when he approves it. -->
-<meta name="description" content="Congruent triangles as a police line-up: find the matching pair, name the rule that proves it (SSS, SAS, ASA, RHS) and check the witness. For GCSE. Free, no sign-up.">
+<meta name="description" content="Congruent triangles as a police line-up: find the matching pair and name the rule that proves it, SSS, SAS, ASA or RHS. For GCSE. Free, no sign-up.">
 <link rel="canonical" href="https://maffsgames.co.uk/games/3-gon-line-up/">
-<meta property="og:title" content="Congruent Triangles Game – GCSE Maths | MaffsGames">
-<meta property="og:description" content="Congruent triangles as a police line-up: find the matching pair, name the rule that proves it (SSS, SAS, ASA, RHS) and check the witness. For GCSE. Free, no sign-up.">
+<meta property="og:title" content="Congruent triangles Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Congruent triangles as a police line-up: find the matching pair and name the rule that proves it, SSS, SAS, ASA or RHS. For GCSE. Free, no sign-up.">
 <meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
 <meta property="og:url" content="https://maffsgames.co.uk/games/3-gon-line-up/">
 <meta property="og:type" content="website">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
-<title>Congruent Triangles Game – GCSE Maths | MaffsGames</title>
+<title>Congruent triangles Game – GCSE Maths | MaffsGames</title>
 <link rel="stylesheet" href="/schools/assets/theme.css">
 <script src="../../schools/assets/analytics.js"></script>
 <script src="../../schools/assets/answer-count.js" defer></script>
@@ -21,10 +21,10 @@
 <style>
 /* Theme: schools/assets/theme.css (canon §7.5), light row: the roster level is GCSE (the palette rule).
    This game's own tokens. The accent is police navy: 10.4:1 on white, 9.6:1 on --surface-alt and 9.7:1 on the Aa background;
-   white on it 10.4:1. --sel-bg is the picked suspect's ground (the accent's text 8.9:1 on it). --tri is the triangles' pale
+   white on it 10.4:1; --on-mark is the number on a lit placard (white on --correct or --wrong). --sel-bg is the picked suspect's ground (the accent's text 8.9:1 on it). --tri is the triangles' pale
    fill; --wall-line the line-up wall's height lines, decoration only and never behind text a student must read. */
 :root{--accent:#1e3a8a;--accent-dim:#e6ebf7;--on-accent:#ffffff;--right-bg:#dcfce7;--wrong-bg:#fee2e2;--sel-bg:#dbe4fb;
-  --tri:#eef2fb;--grid:#c9d1e3;--wall-line:#d7dce8}
+  --tri:#eef2fb;--grid:#c9d1e3;--wall-line:#d7dce8;--on-mark:#ffffff}
 *{margin:0;padding:0;box-sizing:border-box}
 body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
 .container{max-width:720px;width:100%;padding:1rem}
@@ -108,9 +108,9 @@ a.back-link:hover{color:var(--text)}
 /* On Confirm the two accused step forward (still under prefers-reduced-motion: the global rule below stops it). */
 .suspect.accused{transform:translateY(-5px)}
 .suspect.is-right{border-color:var(--correct);background:var(--right-bg)}
-.suspect.is-right .placard{background:var(--correct);color:#fff}
+.suspect.is-right .placard{background:var(--correct);color:var(--on-mark)}
 .suspect.is-wrong{border-color:var(--wrong);background:var(--wrong-bg)}
-.suspect.is-wrong .placard{background:var(--wrong);color:#fff}
+.suspect.is-wrong .placard{background:var(--wrong);color:var(--on-mark)}
 .accuse-row{display:flex;justify-content:center;margin-top:.35rem}
 .accuse-row.waiting{visibility:hidden}
 .accuse{min-width:12em}

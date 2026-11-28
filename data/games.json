@@ -1993,6 +1993,23 @@
    ]
   },
   {
+   "slug": "3-gon-line-up",
+   "search_phrase": "Congruent triangles",
+   "description": "Congruent triangles as a police line-up: find the matching pair and name the rule that proves it, SSS, SAS, ASA or RHS.",
+   "keywords": [
+    "congruent",
+    "congruence",
+    "congruent triangles",
+    "sss",
+    "sas",
+    "asa",
+    "rhs",
+    "aas",
+    "triangles",
+    "police line-up"
+   ]
+  },
+  {
    "slug": "maffscards",
    "search_phrase": "MaffsCards Number Card",
    "description": "Compare-and-win number cards against Marvin, the computer: factors, primes, Roman numerals, squares, superpowers and pi.",
