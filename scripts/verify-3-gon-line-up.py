@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-shards: 3-gon Line-up (the 48-item bank held to the contract's SHA-256 and counts, the generator's file to its own; every line-up's congruent pair, every SSA decoy's two triangles, every drawing's marks, every stage 3 rule and every witness worked out again with this script's own triangle solver, never the generator; every label one per fact, clear of every edge, mark and other label, on its own side and inside or outside its triangle as it should be; LINES exactly the contract's fourteen, every one used; every stage played to the end, the score, one game_completed and one submission; every working line the contract's; every rendered label's getBBox inside its bank box at four sizes; every item's every answer, right or wrong, showing its own line(s), the answer lit, the working and Next above the fold at 375x667, 390x844, 1280x720 and 1366x768, normal and Aa; fault-injection self-test) | | 4
+# ci-shards: 3-gon Line-up (the 48-item bank held to the contract's SHA-256 and counts, the generator's file to its own; every line-up's congruent pair, every SSA decoy's two triangles, every drawing's marks, every stage 3 rule and every witness worked out again with this script's own triangle solver, never the generator; every label one per fact, clear of every edge, mark and other label, on its own side and inside or outside its triangle as it should be; LINES exactly the contract's fourteen, every one used; every stage played to the end, the score, one game_completed and one submission; every working line the contract's; every rendered label's ink box inside its bank box at four sizes (Amendment 1); every item's every answer, right or wrong, showing its own line(s), the answer lit, the working and Next above the fold at 375x667, 390x844, 1280x720 and 1366x768, normal and Aa; fault-injection self-test) | | 4
 # ci-deps: games/3-gon-line-up/ tools/3-gon-line-up/
 r"""Independent verification for 3-gon Line-up (games/3-gon-line-up/), contract 3-GON-LINE-UP-BUILD (28 Nov 2026).
 SR-30: checked from its first PR.
@@ -35,8 +35,10 @@ from the page and works everything out again with its own code:
            this bank allows, none unused.
   Working  for every item the page's working line is the contract's, worked out here from the item.
   Labels   in Chromium, on every drawing of every item at 375x667, 390x844, 1280x720 and 1366x768: each triangle drawn at the
-  drawn    bank's corners (y turned down), each label's text at its point, and each rendered label's getBBox() inside its
-           bank box turned into the drawing's coordinates; every arc of radius 0.4 and square of side 0.45 at its corner.
+  drawn    bank's corners (y turned down), each label's text at its point in Outfit 600 at its size, anchored middle and
+           central, and each rendered label's INK box (Amendment 1: the browser's own text measurement, never getBBox)
+           inside its bank box turned into the drawing's coordinates; every arc of radius 0.4 and square of side 0.45 at
+           its corner.
   Play     at 375x667 every stage played to the end: eight different items of that stage, Stage 1 opening with s1-01;
            right and wrong answers in turn; the score is the right answers, one game_completed, one submission on the
            run's board, and no events but game_started, question_answered (with the item's id) and game_completed.
@@ -738,13 +740,40 @@ def check_fit(page, items, size, aa, out, info):
     info.setdefault('fit', []).append(('%dx%d%s' % (size + (' Aa' if aa else '',)), n, worst))
 
 
-LABELS_JS = r"""() => [...document.querySelectorAll('svg.tri')].filter(s => s.getClientRects().length).map(s => ({
-  vb: s.getAttribute('viewBox'),
-  poly: s.querySelector('polygon.edge').getAttribute('points'),
-  texts: [...s.querySelectorAll('text.lab')].map(t => { const b = t.getBBox(); return { text: t.textContent, x: +t.getAttribute('x'), y: +t.getAttribute('y'),
-    size: +t.getAttribute('font-size'), font: getComputedStyle(t).fontFamily, box: [b.x, b.y, b.x + b.width, b.y + b.height] }; }),
-  arcs: [...s.querySelectorAll('path.arc')].map(p => p.getAttribute('d')),
-  squares: [...s.querySelectorAll('path.sq')].map(p => p.getAttribute('d')) }))"""
+# THE INK BOX (contract 3-GON-LINE-UP-BUILD, Amendment 1, 28 Nov 2026). getBBox() is not used for the containment check:
+# it measures Outfit's full font box, 1.21 to 1.28 em tall, against the bank's 1.1 em box, so every one of the 468 labels
+# "left" its box by 0.03 to 0.07 units at the top and bottom while its glyphs, 0.72 em tall, sat about 0.13 em inside it
+# (and at least 0.137 units inside at the sides). Jon's rule is that a label never visibly clashes, so the check tests ink:
+# the browser's own text measurement (canvas measureText's actualBoundingBox), in the label's own computed font, weight
+# and size, centred (text-anchor middle) on the label's rendered x, with dominant-baseline central placing the middle of
+# the font's ascent-to-descent box on its rendered y (the alphabetic baseline is then y + (ascent - descent) / 2). Checked
+# against the rendered pixels of "9 cm", "12 cm" and "135°" drawn 100 times larger: within 0.01 units, never smaller.
+LABELS_JS = r"""async () => {
+  const svgs = [...document.querySelectorAll('svg.tri')].filter(s => s.getClientRects().length);
+  const c = document.createElement('canvas').getContext('2d');
+  const ink = async (t) => {
+    const cs = getComputedStyle(t), size = +t.getAttribute('font-size'), x = +t.getAttribute('x'), y = +t.getAttribute('y');
+    const font = cs.fontWeight + ' 100px ' + cs.fontFamily;
+    await document.fonts.load(font, t.textContent);
+    c.font = font; c.textAlign = 'center'; c.textBaseline = 'alphabetic';
+    const m = c.measureText(t.textContent), k = size / 100;
+    const base = y + (m.fontBoundingBoxAscent - m.fontBoundingBoxDescent) * k / 2;
+    return [x - m.actualBoundingBoxLeft * k, base - m.actualBoundingBoxAscent * k, x + m.actualBoundingBoxRight * k, base + m.actualBoundingBoxDescent * k];
+  };
+  const out = [];
+  for (const s of svgs) {
+    const texts = [];
+    for (const t of s.querySelectorAll('text.lab')) {
+      const cs = getComputedStyle(t);
+      texts.push({ text: t.textContent, x: +t.getAttribute('x'), y: +t.getAttribute('y'), size: +t.getAttribute('font-size'),
+        font: cs.fontFamily, weight: cs.fontWeight, anchor: cs.textAnchor, baseline: cs.dominantBaseline, box: await ink(t) });
+    }
+    out.push({ vb: s.getAttribute('viewBox'), poly: s.querySelector('polygon.edge').getAttribute('points'), texts,
+      arcs: [...s.querySelectorAll('path.arc')].map(p => p.getAttribute('d')),
+      squares: [...s.querySelectorAll('path.sq')].map(p => p.getAttribute('d')) });
+  }
+  return out;
+}"""
 
 
 def check_drawn(tag, P, labels, got, out, info):
@@ -761,15 +790,17 @@ def check_drawn(tag, P, labels, got, out, info):
     for t, l in zip(got['texts'], texted):
         if abs(t['x'] - l['x']) > 1e-3 or abs(t['y'] - (6 - l['y'])) > 1e-3:
             out.append('%s: label %s drawn at (%g, %g), not the bank\'s point turned' % (tag, t['text'], t['x'], t['y']))
-        if t['size'] != (0.75 if l['type'] == 'side' else 0.68) or not t['font'].startswith('Outfit'):
-            out.append('%s: label %s at font-size %g in %s' % (tag, t['text'], t['size'], t['font']))
+        if (t['size'] != (0.75 if l['type'] == 'side' else 0.68) or not t['font'].startswith('Outfit') or t['weight'] != '600'
+                or t['anchor'] != 'middle' or t['baseline'] != 'central'):
+            out.append('%s: label %s drawn at font-size %g, %s %s, anchor %s, baseline %s (the contract: %g, Outfit 600, middle, central)'
+                       % (tag, t['text'], t['size'], t['font'], t['weight'], t['anchor'], t['baseline'], 0.75 if l['type'] == 'side' else 0.68))
         b = l['box']
         want = (b[0], 6 - b[3], b[2], 6 - b[1])
         r = t['box']
         over = max(want[0] - r[0], r[2] - want[2], want[1] - r[1], r[3] - want[3])
-        info['bbox_worst'] = max(info.get('bbox_worst', -9), over)
+        info['ink_worst'] = max(info.get('ink_worst', -9), over)
         if over > 1e-3:
-            out.append('%s: label %s renders at x %.3f..%.3f, y %.3f..%.3f, outside its bank box x %.3f..%.3f, y %.3f..%.3f (by %.3f)'
+            out.append('%s: label %s\'s ink is at x %.3f..%.3f, y %.3f..%.3f, outside its bank box x %.3f..%.3f, y %.3f..%.3f (by %.3f)'
                        % ((tag, t['text']) + tuple(r[i] for i in (0, 2, 1, 3)) + tuple(want[i] for i in (0, 2, 1, 3)) + (over,)))
     Q = [(p[0], 6 - p[1]) for p in P]
     nums = lambda d: [float(x) for x in re.findall(r'-?\d+(?:\.\d+)?', d)]  # noqa: E731
@@ -924,7 +955,7 @@ def check(html, out, units, shard=None, sample=None):
     return info
 
 
-# ---------------------------------------------------------------- the self-test: the contract's eight plants (5e)
+# ---------------------------------------------------------------- the self-test: the contract's eight plants (5e) and Amendment 1's ninth
 PLANT_SAMPLE = 2
 PLANTS = [
     ('a second congruent pair in a stage 1 line-up',
@@ -935,6 +966,8 @@ PLANTS = [
     ('an angle label moved beside another vertex', [], 'bank', r'angle label .* is not nearer its own corner'),
     ('a label moved onto its arc', [], 'bank', r'from the arc or square at corner'),
     ('a stage 3 answer changed', [], 'bank', r'^s3-01: answer SAS, the marks give SSS'),
+    # Amendment 1: one label's bank y moved by 0.2 units (its box left where it was), so the drawn ink leaves the box.
+    ('a label\'s bank y moved by 0.2 units', [], 'labels 375x667', r"^s2-01 #1 at 375x667: label .*'s ink is at .* outside its bank box"),
     ('the turn wording swapped (clockwise for anticlockwise)',
      [("rot90: 'a quarter turn anticlockwise', rot270: 'a quarter turn clockwise'", "rot90: 'a quarter turn clockwise', rot270: 'a quarter turn anticlockwise'")],
      'working 375x667', r'the working reads .*a quarter turn clockwise.*, not .*a quarter turn anticlockwise'),
@@ -1007,6 +1040,11 @@ def _bank_plants(html):
         l['box'] = [round(l['box'][0] + dx, 3), round(l['box'][1] + dy, 3), round(l['box'][2] + dx, 3), round(l['box'][3] + dy, 3)]
     built['a label moved onto its arc'] = swap(qa['id'], onto_arc)
 
+    def y_moved(q):
+        l = next(x for x in q['suspects'][0]['labels'] if x['type'] == 'side')
+        l['y'] = round(l['y'] + 0.2, 3)
+    built["a label's bank y moved by 0.2 units"] = swap(q['id'], y_moved)
+
     def answer_changed(q):
         q['answer'] = 'SAS'
     built['a stage 3 answer changed'] = swap('s3-01', answer_changed)
@@ -1065,8 +1103,8 @@ def main():
         print('%s: the working line of all %d items is the contract\'s' % (SLUG, info['working']))
     for size, n in info.get('labels', []):
         print('%s: %d drawings at %dx%d: corners, label points, arcs and squares the bank\'s' % (SLUG, n, size[0], size[1]))
-    if 'bbox_worst' in info:
-        print('%s: the furthest any rendered label reaches outside its bank box: %.3f drawing units' % (SLUG, info['bbox_worst']))
+    if 'ink_worst' in info:
+        print('%s: every label\'s ink inside its bank box; the least room at any edge: %.3f drawing units' % (SLUG, -info['ink_worst']))
     if 'played' in info:
         print('%s: %d stages played to the end at 375x667 (right and wrong in turn)' % (SLUG, info['played']))
     for tag, n, worst in info.get('fit', []):
