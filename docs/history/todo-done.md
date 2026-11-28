@@ -4070,3 +4070,146 @@ Rows MAFFSCARDS-LIST, SUMS-IN-DISGUISE-LIST and SOME-THINGIES-LIST as they stood
 | D-BY-DX | **"d by dx? Why?": Jon's Level 3 calculus game** (EAL AME3-004, assessment 004C, probably the 3rd week of January 2027). Scope (Jon, 17 Nov 2026): differentiation of power terms (including √(r³)) and cos(at); integration of power terms, ∫5/x² (not an ln question) and e^(5x); much easier than the calculus duels, one joined-up game, with his cheat sheet; a sequel in name to Y So Steep?. Rulings (Jon, 26 Nov 2026): one game, differentiation then integration; integration as reverse differentiation ("what do I need to differentiate to get this answer?"); every integration item has a check step differentiating the answer back, mandatory and not scored; a missing + C is a wrong answer. Built and played before the Christmas break (no building over Christmas). | Project Claude (spec), then a lane |
 
 **Part closed 26 Nov 2026 (D-BY-DX-BUILD).** The row above, moved word for word: its differentiation scope (power terms, including √(r³), and cos(at); much easier than the calculus duels; with his cheat sheet) is built as Phase 1, `games/d-by-dx-why/`, merged unlisted. The row in docs/todo.md now holds what is still owed: Jon's play, lines, tagline, look and listing ruling, and Phase 2 (integration); D-BY-DX-TYPED is a new row.
+
+## Part closed by TODO-SEARCH-DEMAND (27 Nov 2026)
+
+From §6 "Manual tasks", word for word, each with its answer:
+
+- Events sheet: confirm no `game_abandoned` against the homepage, 1–15 Sep.
+Answered 27 Nov 2026 by Project Claude from Jon's Events sheet download: 53 `game_abandoned` events on 1–15 Sep carry no game_slug, i.e. fired from pages with no game (the homepage among them). The fault is fixed: the last blank-slug abandon is 3 Nov 2026 18:44 UTC and there are none since 4 Nov.
+
+- Events sheet (optional): `binomial-blaster` `game_completed`, score 400, about 17:16 UTC 16 Sep; if present, the deleted Firebase score was real and can be restored.
+Answered 27 Nov 2026 by Project Claude from Jon's Events sheet download: not present. binomial-blaster has no event of any kind on 16 Sep (the Sheet holds 2 events between 16:30 and 18:00 UTC that day, both misunderstood-maths). The score is not restored.
+
+From §6 "Decisions", word for word (the Functional Skills Maths decision stands in its place):
+
+- None open (11 Nov 2026: matrix-crunch's fourth distractor, §1.4, ruled by Jon on 10 Nov and closed by CLOUD-QUEUE-1111 PR 1).
+
+Finished parts moved by the trim, each word for word between the markers; the evidence for each is in the contract's PR.
+
+**Game ideas, not yet built: the whole line:**
+
+```
+- **It's Just Base 60, Bruv**: time only.
+```
+
+**Game ideas, not yet built: the whole line:**
+
+```
+- **Sine and cosine rule game**: for Jon's Level 3 class (asked 6 Nov 2026).
+```
+
+**Check-ledger debt table: row PHONE-FIT-PR, whole:**
+
+```
+| PHONE-FIT-PR | **A PR that changes a game page is never phone-fit measured before merge:** phone-fit-full runs on main only, and only when a shared path changed (`.github/workflows/phone-fit-full.yml`:42-79), so #840 turned main red unseen (#843's stop, 19 Nov 2026). Measure the PR's changed games in the Gate. | home lane |
+```
+
+**§4 item 38, PHONE-FIT-PR-COVERAGE, whole:**
+
+```
+38. **PHONE-FIT-PR-COVERAGE**: only the nightly full run measures laptop mode; a push touching one game's page skips the full measure. Recorded 9 Nov 2026 (DOCS-BUNDLE). Owner: cloud lane (gate files).
+```
+
+**§5, the Expectation Station bank-growth bullet, whole:**
+
+```
+- Expectation Station bank growth to the 40–50 platform minimum (core 20, GCSE 15, A-level 10
+  today) — content depth, not code. See 1.11.
+```
+
+**§4 item 20, GATE-STEP-4: its finished part:**
+
+```
+~~Take a Walk's `Date.now` seed is fixed~~ DONE 12 Nov 2026 (TAKE-A-WALK-SEED): no game's seed reads the clock (take-a-walk, how-many-parts, just-pythag-it-bruv, squared-squirrel), and check-site.py tier 2's clock-seed scan keeps it so (allow-list: equatle's and free-daily-pizza's daily seeds; Jon's option A); 
+```
+
+**Row LEDGER-B4-FORMULA-FORGE: its finished part:**
+
+```
+ gcse and alevel are 40 (FORMULA-FORGE-40, 19 Nov 2026).
+```
+
+**§4 item 48, NEW-GAME-GATE: its finished part:**
+
+```
+ Half there on 11 Nov 2026: layer A runs on every PR (`check-banks.py --ci`, `check-site.yml:530`) and fails any violation not in the ledger, and a merge needs a green Gate (merge-pr.py's check (a); the standing merge-route ruling).
+```
+
+**Row 1.36: its finished part:**
+
+```
+ Done: the shared `MaffsAnswer` marker and money boxes (`schools/assets/answer.js`), split-it, tax-theft, growth-and-decay, percentage-flip; history in `docs/history/todo-done.md` under 1.36.
+```
+
+**Row 3.21: its finished part:**
+
+```
+ **`estimation-engine` is the first game on MaffsKeypad (PR #74, 6 Oct 2026).**
+```
+
+**Row 3.9: its finished part:**
+
+```
+ Done: New Shapes (batch 1, 1 Oct) and `graph-sketcher` (9 Oct 2026); history in `docs/history/todo-done.md` under 3.9.
+```
+
+**Row 1.14: its finished part:**
+
+```
+ The answer keys were fixed on 30 Sep 2026 and are held by `scripts/verify-test-the-claim.py` in CI; the full record is in `docs/history/todo-done.md` under 1.14.
+```
+
+**§4 item 18, CI Contract B: its finished part:**
+
+```
+ **Triggers and concurrency DONE 4 Oct 2026 (selective CI, canon §7.8).**
+```
+
+**Row 1.34: its finished part:**
+
+```
+ The rest of the pages first listed here are fixed; history in `docs/history/todo-done.md` under 1.34.
+```
+
+**Row 3.5: its finished part:**
+
+```
+ Ruling (1), the adult register, is carried by canon §7.5 / §7.5.1 since 2 Oct 2026, and (5) is done; the full row is in `docs/history/todo-done.md` under 3.5.
+```
+
+**A note of where the row came from, taken out of 9 rows (ESTIMATION-GOLF-ART, HIGHER-POWER-PHONE, SCREENING-ROOM-PANELS, ANSWER-CONTROL-TALL-INPUT, §4 item 32, §4 item 33, §4 item 34, §4 item 35, BURST-CLEANUP):**
+
+```
+ Moved from cloud.md's Queue 8 Nov (BRANCH-CLEANUP).
+```
+
+**A note of where the row came from, taken out of 9 rows (FOLD-COMPONENTS, KEYPAD-FRACTION, LOOK-REFRESH-PALETTE, SPEC-MAP-SHORT-BANKS, §4 item 20, §4 item 21, §4 item 31, CANON-SEARCH-RULE, CANON-ROOM-ESCAPED):**
+
+```
+ Moved from cloud.md's live pointers.
+```
+
+**A note of where the row came from, taken out of 9 rows (§2's like-terms-collector bullet, EXPECTATION-EXACT, KILN-FOLLOW-UPS, §4 item 44, §4 item 45, §4 item 46, CHECK-CHANGED-ONE-RUN, PORTAL-RESET-TRIGGER, ESCAPE-FEEDBACK-LINK):**
+
+```
+ Moved from §6 (TODO-TIDY).
+```
+
+**A note of where the row came from, taken out of 1 row (SIX-PS-SHORT-WRONG):**
+
+```
+ Moved from §6, 11 Nov 2026 (TODO-TIDY).
+```
+
+**A note of where the row came from, taken out of 1 row (WHOSE-SIDE-TIMER-LINE):**
+
+```
+ Moved from home.md's Queue.
+```
+
+**A note of where the row came from, taken out of 1 row (§4 item 48):**
+
+```
+ Moved from §6 (TODO-TIDY; Jon's ruling 2 of 11 Nov 2026).
+```
