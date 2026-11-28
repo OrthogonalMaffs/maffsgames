@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# ci-line: Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit) |
+# ci-line: Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; a decimal divisor only 0.5 or 0.2, its method line shown; phone keypad fit) |
 """Estimation Engine (GCSE N14, canon SR-12): every method answer recomputed from the stored numbers.
 
 The game asks: round each number to 1 significant figure, then estimate. It marks both steps by exact
@@ -17,15 +17,22 @@ and, for every item:
     write;
   - the exact value, recomputed from the original numbers, rounds (half up, at the stored precision)
     to the stored one, which is shown as the calculator answer; money items are pence;
+  - the number it divides by (the shape's denominator on the 1 s.f. numbers: b in a/b, c * d in
+    (a*b)/(c*d), a in b/a), where that is under 1, is 0.5 or 0.2, the divisors a Foundation paper uses
+    (Jon, 28 Nov 2026, contract ESTIMATION-FOUNDATION);
   - ids are unique and each item's group is its id's letter.
 
 And for the bank: every group A-F has at least 5 items, 45 in all. Then, unless --static, it plays the
 page in Chromium (stub server): on D01 the rounding step accepts 20, 4, 0.5 and the estimate accepts
 160 and rejects 173; a wrong rounding still lets 160 earn the estimate mark; F02 accepts 10 for 9.8
-and rejects 9; a full 10-question game draws every group, shows no timer and scores out of 20.
+and rejects 9; a full 10-question game draws every group, shows no timer and scores out of 20. D01's
+feedback shows "Dividing by 0.5 is the same as multiplying by 2.", A01's shows no such line, and every
+item's feedback shows exactly the method line this script works out for it (one for a divisor of 0.5 or
+0.2, none otherwise).
 
-Self-test (--selftest, also run by default first): a wrong rounding, a wrong estimate and an exact-half
-number are planted in a copy of the bank; each must fail.
+Self-test (--selftest, also run by default first): a count as money, a wrong rounding, a wrong estimate,
+an exact-half number and a divisor of 0.3 are planted in a copy of the bank; each must fail, and the
+divisor of 0.3 must fail on the divisor rule alone.
 
     python scripts/verify-estimation-engine.py             # self-test, bank, then the page in Chromium
     python scripts/verify-estimation-engine.py --static    # self-test and bank only (no browser)
@@ -122,6 +129,29 @@ def calc_line(it):
         "less than 1%" if n < 1 else "%d%%" % n)
 
 
+FOUNDATION_DIVISORS = {sp.Rational(1, 2): "2", sp.Rational(1, 5): "5"}    # divisor -> what to multiply by
+DIVISOR_RULE = "a Foundation estimate divides by 0.5 or 0.2"
+
+
+def divisor(it):
+    """The number the estimate divides by: the shape's denominator on the 1 s.f. numbers, each rounded
+    here from the stored number (never read from the bank's roundings). None for a shape with no division."""
+    names = sp.symbols("a b c d")
+    expr = sp.sympify(it["shape"], locals={"sqrt": sp.sqrt, "a": names[0], "b": names[1], "c": names[2], "d": names[3]})
+    den = sp.fraction(expr)[1]
+    if not den.free_symbols:
+        return None
+    return sp.nsimplify(den.subs({names[i]: sp.Rational(str(round_1sf(n)[0])) for i, n in enumerate(it["nums"])}))
+
+
+def method_line(it):
+    """The line the page must show under the working: only where the divisor is 0.5 or 0.2."""
+    d = divisor(it)
+    if d is None or d not in FOUNDATION_DIVISORS:
+        return ""
+    return "Dividing by %s is the same as multiplying by %s." % (fmt(dec(d)), FOUNDATION_DIVISORS[d])
+
+
 def shown_numbers(item):
     """The numbers in what the student reads, in order."""
     text = item.get("tex") or item.get("text") or ""
@@ -158,6 +188,9 @@ def check_bank(bank):
             elif not same(it["estimate"], dec(est)):
                 fails.append("%s: %s on the 1 s.f. numbers is %s, the bank says %s"
                              % (iid, it["shape"], fmt(dec(est)), it["estimate"]))
+            d = divisor(it)
+            if d is not None and d < 1 and d not in FOUNDATION_DIVISORS:
+                fails.append("%s: divides by %s; %s" % (iid, fmt(dec(d)) if terminating(d) else d, DIVISOR_RULE))
             exact = evaluate(it["shape"], nums)
             places = len(it["exact"].split(".")[1]) if "." in it["exact"] else 0
             got = dec(exact).quantize(Decimal(1).scaleb(-places), rounding=ROUND_HALF_UP)
@@ -214,19 +247,34 @@ def selftest(bank):
         it["nums"][0], it["tex"], it["exact"] = "45", "45 \\times 21", "945"
     def count_as_money(by):
         by["F01"].pop("moneyAt", None)                # 42 tickets labelled and marked as £42 (s1-001)
-    cases = [("a count as money (F01: £42)", count_as_money),
-             ("a wrong rounding (A07: 9.2 -> 10)", wrong_rounding),
-             ("a wrong estimate (D01: 170)", wrong_estimate),
-             ("an exact-half number (A01: 45)", exact_half)]
+
+    def divisor_03(by):
+        # D01 dividing by 0.3 (0.31 to 1 s.f.), a whole consistent item, so only the divisor rule can
+        # catch it. The first number moves too, 21.3 -> 29.4: 20 x 4 / 0.3 does not terminate (the
+        # estimate rule would catch that first), 30 x 4 / 0.3 = 400; 29.4 x 3.98 / 0.31 = 377.458...
+        by["D01"].update(nums=["29.4", "3.98", "0.31"], rounded=["30", "4", "0.3"], estimate="400", exact="377.5",
+                         show="(29.4 × 3.98) ÷ 0.31", tex="(29.4 \\times 3.98) \\div 0.31")
+    # (name, plant, the words every failure must carry, or None for any failure)
+    cases = [("a count as money (F01: £42)", count_as_money, None),
+             ("a wrong rounding (A07: 9.2 -> 10)", wrong_rounding, None),
+             ("a wrong estimate (D01: 170)", wrong_estimate, None),
+             ("an exact-half number (A01: 45)", exact_half, None),
+             ("a divisor of 0.3 (D01: ÷ 0.31)", divisor_03, DIVISOR_RULE)]
     out = []
     if check_bank(bank):
         out.append("self-test: the clean bank does not pass")
-    for name, fn in cases:
+    for name, fn, only in cases:
         caught = check_bank(plant(fn))
         print("  planted %-36s %s" % (name, ("CAUGHT (%s)" % caught[0]) if caught else "*** MISSED ***"))
         if not caught:
             out.append("self-test: planted %s was NOT caught" % name)
+        elif only and [c for c in caught if only not in c]:
+            out.append("self-test: planted %s must fail on its own rule alone, but also failed: %s"
+                       % (name, [c for c in caught if only not in c]))
     return out
+
+
+PLANTS = 5
 
 
 # ---------------------------------------------------------------- the page in Chromium
@@ -241,6 +289,7 @@ FIT_JS = """() => { const R = s => { const e = document.querySelector(s); return
 
 # Every item at 320px, both steps answered: the question, the step 2 line and the working never make the
 # page scroll sideways, and where KaTeX loaded each of them is KaTeX (never the plain-text fallback).
+METHOD_JS = "[...document.querySelectorAll('#feedback .fb-line')].map(e => e.textContent).filter(t => t.startsWith('Dividing by'))"
 ALL_JS = """() => { const has = s => { const e = document.querySelector(s); return !!e && !!e.querySelector('.katex'); };
   return { sw: document.documentElement.scrollWidth, cw: document.documentElement.clientWidth, katex: !!window.katex,
     question: has('#question'), head: has('#stepHead'), work: has('.fb-work'), words: !!EE.ui.item().text }; }"""
@@ -308,6 +357,24 @@ def play(fails, shots=None, katex_dir=None):
                 got = await page.evaluate("EE.ui.marks()")
                 if got != want:
                     fails.append("page, %s: marks %r, expected %r" % (label, got, want))
+            # The method line (ESTIMATION-FOUNDATION): D01 divides by 0.5 and says so, on a right and a wrong
+            # answer alike, directly under the working; A01 (48 x 21) has no such line.
+            for iid, est, want in [("D01", "160", ["Dividing by 0.5 is the same as multiplying by 2."]),
+                                   ("D01", "173", ["Dividing by 0.5 is the same as multiplying by 2."]),
+                                   ("A01", None, [])]:
+                it = next(x for x in bank if x["id"] == iid)
+                await page.evaluate("id => EE.ui.startWith([id])", iid)
+                await answer_rounding(it["rounded"])
+                await answer_estimate(est or it["estimate"])
+                got = await page.evaluate(METHOD_JS)
+                if got != want:
+                    fails.append("page, %s answered %s: the method lines are %r, expected %r" % (iid, est or it["estimate"], got, want))
+                after = await page.evaluate("(() => { const w = document.querySelector('#feedback .fb-work'); "
+                                            "return w && w.nextElementSibling ? w.nextElementSibling.textContent : ''; })()")
+                if want and after != want[0]:
+                    fails.append("page, %s: the line directly under the working is %r, expected the method line" % (iid, after))
+                if await page.locator(".maffs-next").count() == 0:
+                    fails.append("page, %s: no Next control with the method line" % iid)
             # F01: the £ only on the ticket price, never on the 42 tickets; a right amount in the wrong form
             # (20.0, 800.0) gets the format message and is not marked (SR-3; estimation-engine-s1-001, s1-002).
             await page.evaluate("EE.ui.startWith(['F01'])")
@@ -415,6 +482,9 @@ def play(fails, shots=None, katex_dir=None):
                         await page.evaluate("v => EE.ui.typeEstimate(v)", it["estimate"])
                         await page.locator("#checkBtn").tap()
                         a = await page.evaluate(ALL_JS)
+                        ml = await page.evaluate(METHOD_JS)
+                        if ml != ([method_line(it)] if method_line(it) else []):
+                            fails.append("320x568 %s: the method lines shown are %r, expected %r" % (it["id"], ml, method_line(it)))
                         if a["sw"] > a["cw"]:
                             fails.append("320x568 %s: the page is %dpx wide after both steps" % (it["id"], a["sw"]))
                         if a["katex"] and not (a["head"] and a["work"] and (a["words"] or a["question"])):
@@ -467,9 +537,10 @@ def main():
         return 1
     counts = ", ".join("%s %d" % (g, sum(1 for it in bank if it["group"] == g)) for g in GROUPS)
     print("PASS: %d items (%s); every 1 s.f. rounding (Decimal, half up), estimate (SymPy, exact) and calculator "
-          "answer recomputed from the stored numbers; no exact halves; 3 planted faults caught%s"
-          % (len(bank), counts, "" if args.static or args.selftest else
-             "; in Chromium D01 and F02 marked as the contract states, a full game draws A-F, no timer, 20 out of 20"))
+          "answer recomputed from the stored numbers; no exact halves; a decimal divisor only 0.5 or 0.2; %d planted faults caught%s"
+          % (len(bank), counts, PLANTS, "" if args.static or args.selftest else
+             "; in Chromium D01 and F02 marked as the contract states, a full game draws A-F, no timer, 20 out of 20, "
+             "the method line on every item that divides by 0.5 or 0.2 and on no other"))
     return 0
 
 

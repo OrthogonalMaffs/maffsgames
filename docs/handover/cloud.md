@@ -71,7 +71,13 @@ start-up load). When the work merges, move the file to `docs/history/contracts/`
 Claude Code (cloud), branch `claude/estimation-engine-decimal-division-5f5smt` from main 3d370fa. Small tier (merge on green).
 - **Close-out, 3-GON-LINE-UP-BUILD (as the contract states it):** [#943](https://github.com/OrthogonalMaffs/maffsgames/pull/943) squash-merged as c5d9d70 by merge-pr.py, its last line "main c5d9d70 run 46125518930: GREEN". Main's runs on c5d9d70: check-site 46125518930, phone-fit-full 46125518849, pages 46125518642, each success, first attempt. end-task.py refused (branch checked out in the primary checkout, the known cloud case; nothing deleted). The contract and its two amendments moved to `docs/history/contracts/`.
 - **Claim:** estimation-engine added to `scripts/answer-lock-state.json` in its own commit (9cc5f3f); taken off in this PR.
-- **Next:** the bank's two lines (C07, D09), the method line, the verifier's rule and plant, the /updates/ line; PR; merge-pr.py on green.
+- **The bank:** C07 and D09 are the contract's two lines, nothing else changed. The verifier's own recomputation agrees with both (0.8 ÷ 0.2 = 4, 3.952; 200 × 0.6 ÷ 0.5 = 240, 234.9). Seven items now divide by a number under 1: B06, D01, D05, D09 by 0.5; B07, C07, D03 by 0.2.
+- **The method line (`EE.divisor`, `EE.methodLine`):** the shape's denominator on the rounded numbers, multiplied as exact digits; a `fb-line` directly under the working, on right and wrong answers alike.
+- **The verifier:** `divisor()` takes the denominator from the shape (SymPy) on roundings it computes itself; under 1 and not 0.5 or 0.2 fails. On the old bank it fails exactly C07 (0.002) and D09 (0.3). Fifth plant caught on the divisor rule alone. In Chromium: D01 right and wrong show the 0.5 line directly under the working, A01 none, and all 45 items show exactly the line the verifier works out.
+- **Decided for you:** the plant also moves D01's first number (21.3 to 29.4), because 20 × 4 ÷ 0.3 does not terminate and the estimate rule would catch it first; as planted (30 × 4 ÷ 0.3 = 400) only the divisor rule fires, and the self-test fails if any other rule does. The /updates/ line names the game as a link, as its neighbours do.
+- **Fit, by hand (the PR's phone-fit run is the check):** the seven items, right and wrong, at 320x568, 375x667 and 390x844, normal and Aa: Next above the footer every time (10 px clear at the tightest), the feedback's top never above the window (76 px at 320x568 Aa).
+- **Report only, estimation-golf:** three items divide by a number under 1, none at Year 6, KS3 or GCSE: A-Level :684 (÷ h, h = 0.001) and :688 (3 ÷ (1 − 0.5)); Level 4 :696 (340 ÷ 0.5).
+- **Next:** PR, the Gate, merge-pr.py on green.
 
 ## 2026-11-28 (cloud): 3-GON-LINE-UP-BUILD (3-gon Line-up, triangle congruence as a police line-up in four stages, merged unlisted; `docs/handover/contracts/2026-11-28-3-gon-line-up-build.md`)
 
