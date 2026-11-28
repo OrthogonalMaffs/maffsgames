@@ -1,5 +1,5 @@
 {
- "as_of": "2026-11-27T15:33:44Z",
+ "as_of": "2026-11-28T00:40:56Z",
  "games": {
   "52dle": 25,
   "angle-ace": 60,
@@ -20,7 +20,7 @@
   "core-maths-paper2c": 4,
   "correlation-or-coincidence": 368,
   "curling-friction": 4,
-  "d-by-dx-why": 13,
+  "d-by-dx-why": 86,
   "decimal-detective": 193,
   "differentiation-duel": 103,
   "dimension-checker": 1,
@@ -28,7 +28,7 @@
   "eigenvalue-extractor": 2,
   "eigenvector-engine": 47,
   "equation-builder": 9,
-  "equatle": 50,
+  "equatle": 54,
   "escape-big-school-begins": 766,
   "escape-canteen-hack": 189,
   "escape-car-trap": 165,
@@ -87,7 +87,7 @@
   "prime-factorisation": 124,
   "prime-or-composite": 2184,
   "prisoners-dilemma": 363,
-  "probability-paradox": 28,
+  "probability-paradox": 34,
   "probability-pioneer": 60,
   "proof-builder": 65,
   "proportion-blaster": 8,
@@ -99,14 +99,14 @@
   "shape-shifter": 55,
   "simultaneous-solver": 59,
   "six-sevens-bruv": 4407,
-  "some-thingies": 980,
+  "some-thingies": 1095,
   "split-it": 1084,
   "spot-the-error": 71,
   "spot-the-muppet": 75,
   "squared-squirrel": 41,
   "standard-form-blitz": 317,
   "sums-in-disguise": 328,
-  "surd-simplifier": 302,
+  "surd-simplifier": 322,
   "suvat": 22,
   "take-a-walk": 23,
   "tax-theft": 451,
@@ -128,5 +128,5 @@
   "y-so-steep": 13
  },
  "since": "2026-09-01",
- "total": 34113
+ "total": 34331
 }
