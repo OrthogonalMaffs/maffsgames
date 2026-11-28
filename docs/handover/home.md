@@ -18,10 +18,21 @@
 
 ## 2026-11-28 (home): TODO-AUDIT (every item in docs/todo.md checked against main: finished and duplicated items moved out with evidence, stale ones listed for Jon)
 
-Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. In flight. The contract is at `docs/handover/contracts/2026-11-28-todo-audit.md` (verbatim).
+Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. PR #944. The contract is at `docs/handover/contracts/2026-11-28-todo-audit.md` (verbatim).
 
 - **Close-out of TODO-SEARCH-DEMAND (#942), each confirmed from GitHub Actions:** merged 28 Nov as a0c6f53 (squash) by main's merge-pr.py, which ended "main a0c6f53 run 46095376807: GREEN". PR head 59cd56a2: check-site 46093722219 and phone-fit-full 46093722236, both success. Main on a0c6f53: check-site 46095376807, phone-fit-full 46095376824 and the pages build 46095376554, each success. Its contract moved to `docs/history/contracts/2026-11-27-todo-search-demand.md`.
-- **Next:** the audit itself (verdicts, moves, `docs/audits/todo-audit-2026-11-28.md`), then the PR.
+- **The audit:** 259 items (every table row, every §4 item, every bullet and paragraph of the prose sections), each with one verdict and its evidence in `docs/audits/todo-audit-2026-11-28.md`. Checked on main abb9b605.
+- **Totals:** `docs/todo.md` 106,470 bytes before, 101,535 after (4,935 moved; 5,985 under TODO_LIMIT). DONE 5 items (3,283 bytes); PART DONE 4 (302); DUPLICATE 2 (439); OWED 213 (911 bytes of history clauses cut from 10 rows that stay); STALE? 35 (nothing moved).
+- **Moved whole (DONE):** §1's index of closed rows; §3.9's "Seen while reading" (the nine games' wrong-answer timers); §4 item 2 (§7.6 Group B and the floor); §4 item 46 (ESCAPE-COUNT-SOURCE); the parked GA4 inline-gtag line. **DUPLICATE:** §5's bank growth for four games (two done, two in their LEDGER rows); §6's spec-map spot-check (row 3.1's own cell). **PART DONE:** §3.9's rulings (1) and (3); §4 item 12's DONE clause; row 3.21 and §4 item 17 are half done but nothing could be cut without rewording.
+- **`docs/history/todo-done.md`:** "## Closed by TODO-AUDIT (28 Nov 2026)" holds each piece word for word with its evidence line, and each cut row as it stood. `scripts/check-todo-trim.py --base origin/main` passes: no ID or sentence lost.
+- **For Jon, 35 STALE? items** (the report's own section, one line each with keep or close): the parked 27 Oct queue items, §3.9's order and Aa paragraphs, rows the code has moved past (3.20, WHEN-WILL-I-USE-THIS, FOLD-COMPONENTS), local-check items since check-changed stopped being run, and reviews whose counts no longer hold. His rulings come back as a follow-up contract.
+- **Found, not recorded (STOP IF 1, nothing added):** row CGD-PHONE-LONG waits for PHONE-FIT-ALL-ITEMS, which has no row.
+- **For Project Claude:** wording inside rows that stay has drifted (counts, line numbers; GRAPH-SKETCHER-REDESIGN says the shared calculator has no sin or cos, and it has had them since 9 Oct). Not changed: it would reword owed text. Listed under "Seen while auditing".
+- **Why so little moved:** most of the file is genuinely owed. The 43 LEDGER rows match `data/check-ledger.json` entry for entry, and the earlier trims had already taken the finished rows.
+- **/updates/:** none (internal work).
+- **Run IDs and the merge:** in the next home contract's first commit, as usual (AGENTS.md, close-outs).
+
+Record: agent Claude Code; wall 0:30; review cycles 0; amendments 0; usage n/a.
 
 ## 2026-11-28 (home): TODO-SEARCH-DEMAND (the 27 Nov search-log findings, 3-gon Line-up and the Level 3 full-release plan in the backlog; two Events-sheet tasks closed; canon's ticker line; todo.md trimmed)
 
