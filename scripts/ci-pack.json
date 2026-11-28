@@ -68,7 +68,7 @@
   "Escape-room times (every live room played on a fake clock: game_completed's detail is exactly \"escaped or timeout, wrongs, hints, used, played, locks\", used - played is the wrong-setting penalties, capped when a wrong runs the clock out, locks in lock order with \"-\" unopened, a resumed save keeps played and openAt, an old save resumes from nought, every room's worst case at most 100 characters; planted fault caught)": "45",
   "Escape-room token minus sign (formatToken in rating.js and format_token in escape_set_checks.py print a fixed table identically, negatives with U+2212; a hyphen-printing JS rule and a hyphen-printing Python rule planted and caught)": "87",
   "Essentials filter (the shared card filter on /essentials/, played in Chromium: every card's data-topic is its section (including Exam technique) and its data-calc is the roster's Calculator field read separately with the named CALC_ACROSS_PAPERS exception, each topic chip shows its section alone, the likely-calculator chips, search across sections, the empty message, the URL read on load and written on change, filter_applied and game_card_clicked events in the portal's v1 format with page=essentials, the sticky bar at 320x568, 360x640, 375x667, 390x844 and 1280x720; planted faults, each caught), part 1 of 1": "69",
-  "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; phone keypad fit)": "12",
+  "Estimation Engine (SR-12: every rounding and estimate recomputed; marked by exact match in Chromium; a decimal divisor only 0.5 or 0.2, its method line shown; phone keypad fit)": "42",
   "Estimation Golf (every key recomputed from its question, exactly, at its own precision; every key scores a Hole in One in Chromium)": "68",
   "Expectation Station (every table, E(X) and explanation figure exact; all 480 Stage 3 cards reviewed against the distribution; Stage 1 has exactly one completion; every stage played in Chromium)": "7",
   "Expected Damage (every E(X) recomputed exactly, no ties, shown probabilities read back)": "61",
@@ -447,7 +447,7 @@
    "tier": "content"
   },
   "verify-its-on-sale.py": {
-   "how": "kept from the pack (2 needed)",
+   "how": "kept from the pack (1 needed)",
    "label": "It's on Sale! (every question of the five stages over 40 seeds a slot recomputed from its own params with exact fractions, never from the module's code: answer, every named slip, the numbers in the stem, the worked lines; sessions of 10 slots easiest first with the example never among them; the game's marking against an independent marker on thousands of typed answers: format, unreadable, slip, wrong, right; every stage played in the page at 390 px, a full stage each, and at 375 px, the first questions: worked example, typed answers on the tag with the keypad open, a format answer never marked, a named slip, the calculator note and badge by stage, the Stage 5 calculator open; answer box, Check and Next above the fold; no sideways scroll; one submission a stage; every stage played at 360, 320, 1280 and 1366 px, the first questions: the same checks, the short phones and the two laptop sizes; fault-injection self-test: the planted faults, each caught, including a wrong new price, a reverse percentage worked the wrong way round and a format answer marked right)",
    "parts": 2,
    "tier": "content"
