@@ -80,6 +80,7 @@ MIGRATED = [
     "maffscards",  # built to the theme, 20 Nov 2026 (contract MAFFSCARDS-GAME); listed 24 Nov 2026 (Jon approved 24 Nov 2026)
     "its-just-base-60-bruv",  # built to the theme, 24 Nov 2026 (contract BASE-60); listed 26 Nov 2026 (Jon approved 26 Nov 2026)
     "d-by-dx-why",  # built to the theme, 26 Nov 2026 (contract D-BY-DX-BUILD; unlisted until Jon approves it)
+    "3-gon-line-up",  # built to the theme, 28 Nov 2026 (contract 3-GON-LINE-UP-BUILD; unlisted until Jon approves it)
     "correlation-or-coincidence",  # rebuilt to the theme, 4 Oct 2026 (resit audit rebuild)
     "estimation-engine",  # rebuilt to the theme, 5 Oct 2026 (SR-12 rebuild)
     "factor-race",  # migrated 25 Oct 2026 (contract THEME-FR-DA)

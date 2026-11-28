@@ -1,0 +1,11 @@
+# Findings register for 3-gon-line-up (docs/audits/REGISTER.md; schema in scripts/audit-register.py).
+# New build (contract 3-GON-LINE-UP-BUILD, 28 Nov 2026; SR-30: checked from its first PR by scripts/verify-3-gon-line-up.py).
+# Not yet audited: tranche says so, head is main when the file was made, served is empty. A fix PR sets status: fixed
+# and pr: <n> on the entries it closes.
+game: 3-gon-line-up
+audited:
+  tranche: none (not yet audited)
+  head: 4ae4755d
+  date: 2026-11-28
+  served: {}
+findings: []

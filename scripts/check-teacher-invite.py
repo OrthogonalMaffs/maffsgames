@@ -98,6 +98,7 @@ RESULTS = {
     "some-thingies": "results",
     "its-just-base-60-bruv": "results",
     "d-by-dx-why": "results",
+    "3-gon-line-up": "results",
     "maffscards": "results",
 }
 
