@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Unlisted (contract 3-GON-LINE-UP-BUILD, 28 Nov 2026): merged for Jon to play all four stages; listed under GCSE when he approves it. -->
+<meta name="description" content="Congruent triangles as a police line-up: find the matching pair, name the rule that proves it (SSS, SAS, ASA, RHS) and check the witness. For GCSE. Free, no sign-up.">
+<link rel="canonical" href="https://maffsgames.co.uk/games/3-gon-line-up/">
+<meta property="og:title" content="Congruent Triangles Game – GCSE Maths | MaffsGames">
+<meta property="og:description" content="Congruent triangles as a police line-up: find the matching pair, name the rule that proves it (SSS, SAS, ASA, RHS) and check the witness. For GCSE. Free, no sign-up.">
+<meta property="og:image" content="https://maffsgames.co.uk/schools/assets/og-image.png">
+<meta property="og:url" content="https://maffsgames.co.uk/games/3-gon-line-up/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="../../schools/assets/favicon.svg">
+<title>Congruent Triangles Game – GCSE Maths | MaffsGames</title>
+<link rel="stylesheet" href="/schools/assets/theme.css">
+<script src="../../schools/assets/analytics.js"></script>
+<script src="../../schools/assets/answer-count.js" defer></script>
+<link rel="stylesheet" href="../../schools/assets/opendyslexic.css">
+<style>
+/* Theme: schools/assets/theme.css (canon §7.5), light row: the roster level is GCSE (the palette rule).
+   This game's own tokens. The accent is police navy: 10.4:1 on white, 9.6:1 on --surface-alt and 9.7:1 on the Aa background;
+   white on it 10.4:1. --sel-bg is the picked suspect's ground (the accent's text 8.9:1 on it). --tri is the triangles' pale
+   fill; --wall-line the line-up wall's height lines, decoration only and never behind text a student must read. */
+:root{--accent:#1e3a8a;--accent-dim:#e6ebf7;--on-accent:#ffffff;--right-bg:#dcfce7;--wrong-bg:#fee2e2;--sel-bg:#dbe4fb;
+  --tri:#eef2fb;--grid:#c9d1e3;--wall-line:#d7dce8}
+*{margin:0;padding:0;box-sizing:border-box}
+body{padding-bottom:44px;min-height:100vh;display:flex;flex-direction:column;align-items:center}
+.container{max-width:720px;width:100%;padding:1rem}
+a.back-link{display:inline-flex;align-items:center;min-height:44px;margin:.1rem 0;color:var(--muted);text-decoration:none;font-size:.82rem}
+a.back-link:hover{color:var(--text)}
+.header{text-align:center;padding:.3rem 0}
+.header h1{font-size:1.9rem;font-weight:700;line-height:1.15;color:var(--accent)}
+.header .sub{font-size:.95rem;color:var(--muted);margin:.3rem auto .4rem;max-width:34em}
+@media (max-width:420px){.header h1{font-size:1.45rem}}
+.screen{display:none}.screen.active{display:block}
+[hidden]{display:none!important}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1rem 1.1rem;margin:.8rem auto;max-width:620px}
+.btn{min-height:44px;padding:.55rem 1.1rem;border-radius:10px;border:2px solid var(--accent);background:transparent;color:var(--accent);font-size:.95rem;font-weight:600;cursor:pointer;font-family:inherit}
+.btn:hover{background:var(--accent-dim)}
+.btn.solid{background:var(--accent);color:var(--on-accent)}
+.btn:disabled{opacity:.45;cursor:default}
+.res-btns{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap}
+.lb-link{text-align:center;font-size:.88rem;margin:.6rem 0}.lb-link a{color:var(--accent)}
+.mode-h{font-size:.74rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:0 0 .35rem}
+.stages{display:flex;flex-direction:column;gap:.5rem}
+.stage-btn{display:flex;align-items:center;gap:.7rem;width:100%;text-align:left;min-height:56px;padding:.45rem .8rem;border-radius:12px;border:1px solid var(--border);background:var(--surface-alt);color:var(--text);cursor:pointer;font:inherit}
+.stage-btn:hover{border-color:var(--accent)}
+.stage-btn .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:var(--on-accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-num);font-weight:700}
+.stage-btn .t{font-weight:700;font-size:.95rem;line-height:1.2}
+.stage-btn .d{display:block;font-weight:400;font-size:.8rem;color:var(--muted);line-height:1.3}
+.calc-row{text-align:center;margin:.2rem 0 .5rem}
+.note{font-size:.85rem;color:var(--muted);text-align:center;margin-top:.7rem}
+
+.hud{display:flex;justify-content:space-between;align-items:center;padding:.25rem .7rem;background:var(--surface);border-radius:10px;border:1px solid var(--border);margin-bottom:.35rem;gap:.3rem}
+.hud-item{text-align:center;min-width:44px}
+.hud-label{font-size:.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.hud-val{font-family:var(--font-num);font-size:.92rem;font-weight:700}
+.qcard{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:.6rem .7rem}
+.stage-row{display:flex;justify-content:space-between;align-items:baseline;gap:.5rem;flex-wrap:wrap;margin-bottom:.3rem}
+.stage-label{font-size:.74rem;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.05em}
+/* Stages 2-4, as an exam paper says it. */
+.nda{font-size:.74rem;font-style:italic;color:var(--muted)}
+
+/* The play area. A phone or tablet: one column, in the order below. A computer (900 px and wider): the line-up (or the pair)
+   on the left, the question, the witness, the rule buttons and the feedback on the right, so nothing pushes the board down. */
+.play{display:flex;flex-direction:column;gap:.45rem}
+.side{display:contents}
+.ask{order:10;font-size:1.02rem;line-height:1.35;text-align:center;font-weight:600}
+.witness{order:20}
+.board{order:30}
+.rules{order:40}
+.feedback{order:50}
+.feedback:empty{display:none}
+/* A phone or tablet with the feedback open: the feedback comes up under the question, before the board, so the line, the
+   working and Next are on screen without scrolling; the board, its choices locked and marked, stays below (canon §7.6.1). */
+.play.fb-open .feedback{order:15}
+/* SR-35: once the witness has been judged, the speech bubble gives way to the feedback (its numbers are in the working);
+   the Right and Wrong buttons stay, lit. */
+.play.fb-open .bubble{display:none}
+/* One column with the feedback open: the stage's name gives way (the HUD still shows its number), as Base 60's stage row does
+   on a short screen; "Diagrams not drawn accurately" stays. */
+@media (max-width:899px){#qcard:has(.play.fb-open) .stage-label{display:none}}
+/* Stage 4's rule buttons belong to the witness's question, so on one column they come straight after it, above the line-up. */
+.play.s4 .rules{order:25}
+@media (min-width:900px){
+  .container{max-width:1180px}
+  .play{display:grid;grid-template-columns:minmax(0,1fr) clamp(330px,33vw,440px);gap:1rem;align-items:start}
+  .side{display:flex;flex-direction:column;gap:.55rem;grid-column:2;grid-row:1}
+  .board{grid-column:1;grid-row:1}
+  .ask{text-align:left}
+  .play.fb-open .feedback{order:50}
+}
+
+/* The line-up wall: faint height lines behind the suspects (SR-35: it gives way on a short screen). */
+.lineup{display:grid;grid-template-columns:repeat(2,var(--cell,140px));justify-content:center;gap:.4rem .5rem;padding:.3rem;border-radius:12px;
+  background-image:repeating-linear-gradient(180deg,var(--wall-line) 0 1px,transparent 1px 22px)}
+@media (min-width:600px){.lineup{grid-template-columns:repeat(3,var(--cell,140px))}}
+@media (max-height:600px){.lineup{background-image:none}}
+.suspect{display:flex;flex-direction:column;align-items:center;width:var(--cell,140px);padding:0;border:2px solid transparent;border-radius:10px;background:transparent;color:var(--text);cursor:pointer;font:inherit;transition:transform .2s}
+.suspect:hover:not(:disabled){border-color:var(--border)}
+.suspect:disabled{cursor:default;opacity:1}
+.suspect svg{display:block;width:100%;height:auto;aspect-ratio:1;background:var(--surface);border-radius:8px}
+.placard{display:block;min-width:2.2em;margin-top:-2px;padding:0 .4em;border-radius:5px;background:var(--text);color:var(--surface);font-family:var(--font-num);font-weight:700;font-size:.8rem;line-height:1.3;text-align:center}
+.suspect[aria-pressed="true"]{border-color:var(--accent);background:var(--sel-bg)}
+.suspect[aria-pressed="true"] .placard{background:var(--accent);color:var(--on-accent)}
+/* On Confirm the two accused step forward (still under prefers-reduced-motion: the global rule below stops it). */
+.suspect.accused{transform:translateY(-5px)}
+.suspect.is-right{border-color:var(--correct);background:var(--right-bg)}
+.suspect.is-right .placard{background:var(--correct);color:#fff}
+.suspect.is-wrong{border-color:var(--wrong);background:var(--wrong-bg)}
+.suspect.is-wrong .placard{background:var(--wrong);color:#fff}
+.accuse-row{display:flex;justify-content:center;margin-top:.35rem}
+.accuse-row.waiting{visibility:hidden}
+.accuse{min-width:12em}
+
+/* The drawings. Every position is the bank's (tools/3-gon-line-up/bank.py); the page only flips y. */
+.tri .edge{fill:var(--tri);stroke:var(--text);stroke-width:2;stroke-linejoin:round}
+.tri .gridl{stroke:var(--grid);stroke-width:1}
+.tri .arc,.tri .sq{fill:none;stroke:var(--accent);stroke-width:1.6}
+.tri text{font-family:'Outfit',sans-serif;fill:var(--text);font-weight:600}
+
+/* Stage 3: triangles A and B. */
+.pair{display:grid;grid-template-columns:repeat(2,var(--cell,140px));justify-content:center;gap:.5rem}
+.pair figure{display:flex;flex-direction:column;align-items:center}
+.pair figcaption{font-weight:700;font-size:.9rem;color:var(--accent)}
+.pair svg{display:block;width:100%;height:auto;aspect-ratio:1}
+
+/* The witness (Stage 4): one line in a speech bubble, then Right or Wrong. */
+.witness{display:flex;flex-direction:column;gap:.4rem;align-items:center}
+.bubble{position:relative;max-width:26em;padding:.45rem .8rem;border:2px solid var(--accent);border-radius:14px;background:var(--surface-alt);font-size:1rem;line-height:1.35;text-align:center}
+.bubble::after{content:"";position:absolute;left:1.4rem;bottom:-9px;width:14px;height:14px;background:var(--surface-alt);border-right:2px solid var(--accent);border-bottom:2px solid var(--accent);transform:rotate(45deg)}
+.judge,.rules{display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center}
+.choice{min-height:48px;min-width:4.6em;padding:.4rem .8rem;border-radius:10px;border:2px solid var(--border);background:var(--surface-alt);color:var(--text);font-family:var(--font-num);font-size:1.02rem;font-weight:700;cursor:pointer}
+.choice.wide{font-family:inherit;flex-basis:100%}
+@media (min-width:900px){.choice.wide{flex-basis:auto}}
+.choice:hover:not(:disabled){border-color:var(--accent)}
+.choice:disabled{cursor:default;opacity:1}
+.choice.is-right{border-color:var(--correct);background:var(--right-bg);color:var(--correct)}
+.choice.is-wrong{border-color:var(--wrong);background:var(--wrong-bg);color:var(--wrong)}
+
+.fb{border-radius:12px;padding:.5rem .7rem;border:1px solid var(--border);background:var(--surface-alt);display:flex;flex-direction:column;gap:.35rem}
+.fb-head{font-weight:700;font-size:1rem;line-height:1.4}
+.fb.right .fb-head{color:var(--correct)}
+.fb-err{font-size:1rem;font-weight:700;color:var(--wrong);line-height:1.4}
+.worked{font-size:.96rem;line-height:1.45}
+.w-line+.w-line{margin-top:.2rem}
+.fb-next{display:flex;justify-content:center}
+
+.results{text-align:center;padding:.6rem 0}
+.results h2{font-size:1.35rem;margin-bottom:.3rem}
+.final-score{font-family:var(--font-num);font-size:2.6rem;font-weight:700;color:var(--accent);margin:.3rem 0 .1rem}
+.final-of{color:var(--muted);font-size:.9rem;margin-bottom:.8rem}
+
+@media (max-width:420px){
+  .container{padding:.5rem}
+  .qcard{padding:.45rem .45rem}
+  .ask{font-size:.97rem}
+}
+@media (max-height:620px){.hud-label{display:none}}
+body.accessible p,body.accessible .fb-err,body.accessible .worked,body.accessible .fb-head{line-height:1.6}
+@media (max-width:420px){
+  body.accessible .hud-label{display:none}
+  body.accessible .hud .stage-exit-stages,body.accessible .hud .stage-exit-home{font-size:.72rem;line-height:1.15}
+}
+.a11y-toggle{background:var(--surface-alt);color:var(--text);border:1px solid var(--border);border-radius:6px;width:36px;height:36px;font-size:12px;font-weight:700;cursor:pointer}
+.a11y-toggle.active,.a11y-toggle:hover{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}.suspect.accused{transform:none}}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="../../schools/assets/level.js"></script>
+<script src="../../schools/assets/firebase-leaderboard.js"></script>
+<script src="../../schools/assets/score-history.js"></script>
+<script src="../../schools/assets/scroll.js"></script>
+<script src="../../schools/assets/next-control.js"></script>
+<script src="../../schools/assets/answer-lock.js"></script>
+<script src="../../schools/assets/options.js"></script>
+<script src="/schools/assets/site-nav.js" data-game-name="3-gon Line-up"></script>
+<script src="../../schools/assets/stage-exit.js"></script>
+<!-- maffs-lock-hint (canon §7.6.0): how scripts/check-answer-lock.py plays this game. 'answer' with i = 0 accuses the right pair; with i >= 1 a wrong one, which is marked wrong and waits on Next.
+{
+  "start": "G3.ui.start('stage-1')",
+  "ready": "!!window.G3 && G3.ui.state() === 'asking'",
+  "answer": [
+    "G3.ui.answer(i === 0);"
+  ]
+}
+-->
+<link rel="stylesheet" href="../../schools/assets/stage-exit.css">
+<link rel="stylesheet" href="/schools/assets/site-footer.css">
+</head>
+<body>
+<div class="container">
+  <a href="../../" class="back-link">← Back to Games</a>
+  <div id="menu" class="screen active">
+    <div class="header"><h1>3-gon Line-up</h1><div class="sub">Congruent triangles: find the matching pair, name the rule that proves it, and check the witness.</div><button class="a11y-toggle" id="a11yToggle" aria-label="Toggle dyslexia-friendly mode" title="Dyslexia-friendly mode">Aa</button></div>
+    <div class="panel">
+      <div class="mode-h">Pick a stage</div>
+      <div class="calc-row"><span class="calc-badge" data-calc="not-allowed">Non-calculator</span></div>
+      <div class="stages" id="stageList">
+        <button class="stage-btn" type="button" data-stage="1" data-mode="stage-1"><span class="n">1</span><span><span class="t">On Squared Paper</span><span class="d">Find the two that fit exactly, turned or flipped.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="2" data-mode="stage-2"><span class="n">2</span><span><span class="t">Not Drawn Accurately</span><span class="d">Trust the marks, not the pictures.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="3" data-mode="stage-3"><span class="n">3</span><span><span class="t">Which Rule Proves It?</span><span class="d">SSS, SAS, ASA, RHS, or not enough evidence.</span></span></button>
+        <button class="stage-btn" type="button" data-stage="4" data-mode="stage-4"><span class="n">4</span><span><span class="t">Is the Witness Right?</span><span class="d">Check the witness, then prove it or find the real pair.</span></span></button>
+      </div>
+      <p class="note">8 questions a run, from 12 in each stage. A point for each one right first time.</p>
+    </div>
+    <div class="lb-link"><a href="/leaderboards/">Global leaderboard</a></div>
+    <div class="maffs-start-note" data-maffs-start-note></div>
+  </div>
+
+  <div id="game" class="screen">
+    <div class="hud">
+      <div class="hud-item"><div class="hud-label">Stage</div><div class="hud-val" id="hudStage">1</div></div>
+      <div class="hud-item"><div class="hud-label">Question</div><div class="hud-val" id="hudQ">1/8</div></div>
+      <div class="hud-item"><div class="hud-label">Score</div><div class="hud-val" id="hudScore">0</div></div>
+    </div>
+    <div class="qcard" id="qcard">
+      <div class="stage-row"><div class="stage-label" id="stageLabel"></div><div class="nda" id="nda">Diagrams not drawn accurately</div></div>
+      <div class="play" id="play">
+        <div class="side">
+          <div class="ask" id="ask"></div>
+          <div class="witness" id="witness" hidden>
+            <div class="bubble" id="bubble"></div>
+            <div class="judge" id="judge">
+              <button class="choice" type="button" data-val="right">Right</button>
+              <button class="choice" type="button" data-val="wrong">Wrong</button>
+            </div>
+          </div>
+          <div class="rules" id="rules" hidden></div>
+          <div class="feedback" id="feedback" aria-live="polite"></div>
+        </div>
+        <div class="board" id="board">
+          <div id="lineupWrap" hidden>
+            <div class="lineup" id="lineup"></div>
+            <div class="accuse-row" id="accuseRow"><button class="btn solid accuse" id="accuseBtn" type="button" disabled>Confirm accusation</button></div>
+          </div>
+          <div class="pair" id="pair" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="results" class="screen">
+    <div class="results">
+      <h2 id="resTitle">Stage done</h2>
+      <div class="final-score" id="resScore">0</div>
+      <div class="final-of" id="resOf">out of 8</div>
+      <div class="res-btns">
+        <button class="btn solid" id="nextStageBtn" type="button">Next: Stage 2</button>
+        <button class="btn" id="againBtn" type="button">Play this stage again</button>
+        <button class="btn" id="menuBtn" type="button">All stages</button>
+      </div>
+      <p id="teacherInvite"></p>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SLUG = '3-gon-line-up', PER = 8, REVEAL_MS = 600;
+  var MODES = ['stage-1', 'stage-2', 'stage-3', 'stage-4'];
+  // One level of content (GCSE); the stages are boards, not levels, each its own analytics mode.
+  var level = MaffsLevel.resolve({ slug: '3-gon-line-up', levels: ['gcse'], fallback: 'gcse',
+    boards: ['stage-1', 'stage-2', 'stage-3', 'stage-4'] });
+  var STAGES = { 1: 'On Squared Paper', 2: 'Not Drawn Accurately', 3: 'Which Rule Proves It?', 4: 'Is the Witness Right?' };
+  var $ = function (id) { return document.getElementById(id); };
+  function ev(name, params) { if (typeof window.mfg === 'function') window.mfg(name, params); }
+  function lsGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function lsSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+
+  /* =====================================================================================================
+     THE BANK: the output of tools/3-gon-line-up/bank.py (contract 3-GON-LINE-UP-BUILD, 28 Nov 2026), one item a line,
+     exactly as the generator writes it. Never edited by hand: change the generator and embed its output again. Every
+     triangle's corners and every label's place and box are the bank's; this page only turns y up into y down.
+     scripts/verify-3-gon-line-up.py holds these lines to the contract's SHA-256 and works every answer out again.
+     ===================================================================================================== */
+  var BANK = [
+{"id":"s1-01","stage":1,"suspects":[{"n":1,"role":"one_square_out","pts":[[4,4],[0,1],[3,0]],"how":"moved"},{"n":2,"role":"culprit","pts":[[4,3],[1,0],[0,3]],"how":"rot0"},{"n":3,"role":"one_square_out","pts":[[0,0],[4,3],[4,0]],"how":"moved"},{"n":4,"role":"stranger","pts":[[5,0],[0,0],[3,5]],"how":"other"},{"n":5,"role":"enlarged","pts":[[8,0],[2,6],[0,0]],"how":"x2"},{"n":6,"role":"twin","pts":[[3,4],[0,1],[3,0]],"how":"refl_diag"}],"pair":[2,6],"twin_move":"reflection","twin_op":"refl_diag"},
+{"id":"s1-02","stage":1,"suspects":[{"n":1,"role":"culprit","pts":[[0,1],[4,2],[3,0]],"how":"rot0"},{"n":2,"role":"stranger","pts":[[2,5],[0,3],[0,0]],"how":"other"},{"n":3,"role":"one_square_out","pts":[[0,2],[4,2],[3,0]],"how":"moved"},{"n":4,"role":"twin","pts":[[4,1],[0,0],[1,2]],"how":"rot180"},{"n":5,"role":"enlarged","pts":[[8,2],[0,0],[2,4]],"how":"x2"},{"n":6,"role":"one_square_out","pts":[[0,1],[5,0],[3,2]],"how":"moved"}],"pair":[1,4],"twin_move":"rotation","twin_op":"rot180"},
+{"id":"s1-03","stage":1,"suspects":[{"n":1,"role":"culprit","pts":[[3,2],[1,0],[0,4]],"how":"rot0"},{"n":2,"role":"stranger","pts":[[0,1],[3,2],[5,0]],"how":"other"},{"n":3,"role":"one_square_out","pts":[[0,1],[2,0],[3,3]],"how":"moved"},{"n":4,"role":"one_square_out","pts":[[2,0],[0,3],[4,4]],"how":"moved"},{"n":5,"role":"enlarged","pts":[[0,4],[4,0],[6,8]],"how":"x2"},{"n":6,"role":"twin","pts":[[2,0],[0,2],[4,3]],"how":"rot270"}],"pair":[1,6],"twin_move":"rotation","twin_op":"rot270"},
+{"id":"s1-04","stage":1,"suspects":[{"n":1,"role":"twin","pts":[[0,0],[4,0],[0,2]],"how":"rot90"},{"n":2,"role":"one_square_out","pts":[[5,2],[0,2],[5,0]],"how":"moved"},{"n":3,"role":"culprit","pts":[[0,4],[0,0],[2,4]],"how":"rot0"},{"n":4,"role":"stranger","pts":[[2,0],[2,3],[0,3]],"how":"other"},{"n":5,"role":"enlarged","pts":[[0,0],[8,0],[0,4]],"how":"x2"},{"n":6,"role":"one_square_out","pts":[[0,1],[4,2],[0,0]],"how":"moved"}],"pair":[1,3],"twin_move":"rotation","twin_op":"rot90"},
+{"id":"s1-05","stage":1,"suspects":[{"n":1,"role":"enlarged","pts":[[0,4],[6,0],[2,8]],"how":"x2"},{"n":2,"role":"twin","pts":[[3,2],[0,4],[2,0]],"how":"refl_anti"},{"n":3,"role":"one_square_out","pts":[[0,3],[3,5],[1,0]],"how":"moved"},{"n":4,"role":"stranger","pts":[[4,5],[5,0],[0,5]],"how":"other"},{"n":5,"role":"culprit","pts":[[2,0],[0,3],[4,1]],"how":"rot0"},{"n":6,"role":"one_square_out","pts":[[2,2],[0,4],[1,0]],"how":"moved"}],"pair":[2,5],"twin_move":"reflection","twin_op":"refl_anti"},
+{"id":"s1-06","stage":1,"suspects":[{"n":1,"role":"twin","pts":[[0,1],[2,2],[4,0]],"how":"rot180"},{"n":2,"role":"culprit","pts":[[4,1],[2,0],[0,2]],"how":"rot0"},{"n":3,"role":"one_square_out","pts":[[0,1],[3,0],[5,2]],"how":"moved"},{"n":4,"role":"enlarged","pts":[[2,0],[4,4],[0,8]],"how":"x2"},{"n":5,"role":"stranger","pts":[[2,0],[5,1],[0,1]],"how":"other"},{"n":6,"role":"one_square_out","pts":[[0,1],[3,2],[4,0]],"how":"moved"}],"pair":[1,2],"twin_move":"rotation","twin_op":"rot180"},
+{"id":"s1-07","stage":1,"suspects":[{"n":1,"role":"stranger","pts":[[0,0],[4,0],[0,3]],"how":"other"},{"n":2,"role":"enlarged","pts":[[0,2],[2,0],[4,6]],"how":"x2"},{"n":3,"role":"culprit","pts":[[0,2],[1,3],[2,0]],"how":"rot0"},{"n":4,"role":"one_square_out","pts":[[2,0],[1,0],[0,3]],"how":"moved"},{"n":5,"role":"twin","pts":[[2,2],[1,3],[0,0]],"how":"refl_y"},{"n":6,"role":"one_square_out","pts":[[0,3],[1,4],[2,0]],"how":"moved"}],"pair":[3,5],"twin_move":"reflection","twin_op":"refl_y"},
+{"id":"s1-08","stage":1,"suspects":[{"n":1,"role":"enlarged","pts":[[0,2],[2,8],[2,0]],"how":"x2"},{"n":2,"role":"twin","pts":[[1,1],[4,0],[0,0]],"how":"refl_diag"},{"n":3,"role":"stranger","pts":[[3,3],[2,5],[0,0]],"how":"other"},{"n":4,"role":"one_square_out","pts":[[3,2],[0,1],[4,0]],"how":"moved"},{"n":5,"role":"one_square_out","pts":[[0,1],[0,4],[1,0]],"how":"moved"},{"n":6,"role":"culprit","pts":[[1,1],[0,4],[0,0]],"how":"rot0"}],"pair":[2,6],"twin_move":"reflection","twin_op":"refl_diag"},
+{"id":"s1-09","stage":1,"suspects":[{"n":1,"role":"culprit","pts":[[0,2],[4,3],[4,0]],"how":"rot0"},{"n":2,"role":"one_square_out","pts":[[2,4],[2,0],[0,0]],"how":"moved"},{"n":3,"role":"enlarged","pts":[[4,8],[6,0],[0,0]],"how":"x2"},{"n":4,"role":"stranger","pts":[[5,1],[0,2],[5,0]],"how":"other"},{"n":5,"role":"twin","pts":[[2,4],[3,0],[0,0]],"how":"rot270"},{"n":6,"role":"one_square_out","pts":[[1,0],[0,5],[3,5]],"how":"moved"}],"pair":[1,5],"twin_move":"rotation","twin_op":"rot270"},
+{"id":"s1-10","stage":1,"suspects":[{"n":1,"role":"stranger","pts":[[1,0],[5,3],[0,1]],"how":"other"},{"n":2,"role":"enlarged","pts":[[0,6],[8,0],[2,2]],"how":"x2"},{"n":3,"role":"one_square_out","pts":[[3,3],[0,0],[3,1]],"how":"moved"},{"n":4,"role":"culprit","pts":[[0,0],[3,4],[2,1]],"how":"rot0"},{"n":5,"role":"one_square_out","pts":[[5,0],[0,3],[4,2]],"how":"moved"},{"n":6,"role":"twin","pts":[[0,4],[3,0],[2,3]],"how":"refl_x"}],"pair":[4,6],"twin_move":"reflection","twin_op":"refl_x"},
+{"id":"s1-11","stage":1,"suspects":[{"n":1,"role":"one_square_out","pts":[[0,3],[4,1],[3,0]],"how":"moved"},{"n":2,"role":"enlarged","pts":[[4,8],[2,0],[0,2]],"how":"x2"},{"n":3,"role":"one_square_out","pts":[[4,2],[0,1],[0,0]],"how":"moved"},{"n":4,"role":"culprit","pts":[[0,4],[1,0],[2,1]],"how":"rot0"},{"n":5,"role":"twin","pts":[[0,0],[4,1],[3,2]],"how":"rot90"},{"n":6,"role":"stranger","pts":[[3,2],[0,0],[1,4]],"how":"other"}],"pair":[4,5],"twin_move":"rotation","twin_op":"rot90"},
+{"id":"s1-12","stage":1,"suspects":[{"n":1,"role":"one_square_out","pts":[[3,2],[4,1],[0,0]],"how":"moved"},{"n":2,"role":"twin","pts":[[2,4],[1,4],[0,0]],"how":"refl_x"},{"n":3,"role":"stranger","pts":[[3,4],[0,0],[4,0]],"how":"other"},{"n":4,"role":"enlarged","pts":[[0,0],[2,0],[4,8]],"how":"x2"},{"n":5,"role":"culprit","pts":[[2,0],[1,0],[0,4]],"how":"rot0"},{"n":6,"role":"one_square_out","pts":[[1,0],[0,0],[0,4]],"how":"moved"}],"pair":[2,5],"twin_move":"reflection","twin_op":"refl_x"},
+{"id":"s2-01","stage":2,"criterion":"SSS","suspects":[{"n":1,"role":"one_differs","facts":[["side",1,2,9],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,5.08],[6.4,5.08],[3.449,0.92]],"labels":[{"type":"side","fact":["side",1,2,9],"text":"9 cm","x":5.903,"y":2.306,"box":[4.873,1.893,6.933,2.718]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":0.497,"y":2.049,"box":[-0.766,1.637,1.759,2.462]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":5.68,"box":[1.738,5.268,4.263,6.092]}]},{"n":2,"role":"one_differs","facts":[["side",1,2,7],["side",0,2,10],["side",0,1,14]],"criterion":"SSS","pts":[[-0.4,4.144],[6.4,4.144],[3.885,1.856]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":5.95,"y":2.112,"box":[4.92,1.7,6.98,2.525]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.224,"y":2.03,"box":[-0.038,1.617,2.487,2.442]},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":3.0,"y":4.744,"box":[1.738,4.332,4.263,5.156]}]},{"n":3,"role":"twin","facts":[["side",1,2,7],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[1.577,-0.4],[2.091,6.4],[4.423,3.598]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":4.179,"y":5.767,"box":[3.149,5.354,5.209,6.179]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":4.141,"y":0.787,"box":[2.878,0.375,5.403,1.2]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":0.338,"y":3.113,"box":[-0.924,2.701,1.601,3.526]}]},{"n":4,"role":"drawn_alike","facts":[["side",1,2,7],["side",0,2,10],["side",0,1,13]],"criterion":"SSS","pts":[[-0.4,1.348],[6.4,1.348],[4.204,4.652]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.385,"y":3.72,"box":[5.355,3.307,7.415,4.132]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.202,"y":3.975,"box":[-0.06,3.562,2.465,4.387]},{"type":"side","fact":["side",0,1,13],"text":"13 cm","x":3.0,"y":0.748,"box":[1.738,0.335,4.263,1.161]}]},{"n":5,"role":"stranger","facts":[["side",0,1,7],["side",0,2,11],["angle",0,90]],"criterion":"SAS","pts":[[5.6,4.655],[5.6,1.345],[0.4,4.655]],"labels":[{"type":"right","vertex":0},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":6.8,"y":3.0,"box":[5.77,2.587,7.83,3.413]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":3.0,"y":5.255,"box":[1.738,4.843,4.263,5.668]}]},{"n":6,"role":"culprit","facts":[["side",1,2,7],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,1.348],[6.4,1.348],[4.204,4.652]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.385,"y":3.72,"box":[5.355,3.307,7.415,4.132]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.202,"y":3.975,"box":[-0.06,3.562,2.465,4.387]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.748,"box":[1.738,0.335,4.263,1.161]}]}],"pair":[3,6]},
+{"id":"s2-02","stage":2,"criterion":"SSS","suspects":[{"n":1,"role":"stranger","facts":[["angle",0,60],["angle",1,55],["side",0,1,8]],"criterion":"ASA","pts":[[6.4,5.661],[-0.4,5.661],[3.327,0.339]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.755,"y":4.711,"box":[4.022,4.337,5.487,5.085]},{"type":"angle","fact":["angle",1,55],"text":"55°","x":1.463,"y":4.691,"box":[0.73,4.317,2.195,5.065]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":6.261,"box":[1.97,5.848,4.03,6.673]}]},{"n":2,"role":"drawn_alike","facts":[["side",1,2,6],["side",0,2,7],["side",0,1,8]],"criterion":"SSS","pts":[[-0.4,1.16],[6.4,1.16],[4.275,4.84]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.463,"y":3.65,"box":[5.433,3.238,7.493,4.063]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":1.257,"y":3.864,"box":[0.227,3.452,2.287,4.277]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":0.56,"box":[1.97,0.147,4.03,0.972]}]},{"n":3,"role":"twin","facts":[["side",1,2,5],["side",0,2,7],["side",0,1,8]],"criterion":"SSS","pts":[[4.815,-0.4],[4.174,6.4],[1.185,4.583]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":2.108,"y":6.431,"box":[1.078,6.019,3.138,6.844]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":2.03,"y":1.385,"box":[1.0,0.972,3.06,1.797]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":5.689,"y":3.113,"box":[4.659,2.7,6.719,3.525]}]},{"n":4,"role":"culprit","facts":[["side",1,2,5],["side",0,2,7],["side",0,1,8]],"criterion":"SSS","pts":[[-0.4,1.16],[6.4,1.16],[4.275,4.84]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.463,"y":3.65,"box":[5.433,3.238,7.493,4.063]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":1.257,"y":3.864,"box":[0.227,3.452,2.287,4.277]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":0.56,"box":[1.97,0.147,4.03,0.972]}]},{"n":5,"role":"one_differs","facts":[["side",1,2,5],["side",0,2,7],["side",0,1,7]],"criterion":"SSS","pts":[[6.4,0.732],[-0.4,0.732],[1.335,5.268]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":-0.747,"y":3.464,"box":[-1.777,3.052,0.283,3.877]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":4.668,"y":3.894,"box":[3.638,3.481,5.698,4.306]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":0.132,"box":[1.97,-0.281,4.03,0.544]}]},{"n":6,"role":"one_differs","facts":[["side",1,2,5],["side",0,2,7],["side",0,1,10]],"criterion":"SSS","pts":[[6.4,4.105],[-0.4,4.105],[2.184,1.895]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":0.112,"y":2.088,"box":[-0.918,1.676,1.142,2.501]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":4.756,"y":2.114,"box":[3.726,1.702,5.786,2.527]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":4.705,"box":[1.738,4.293,4.263,5.117]}]}],"pair":[3,4]},
+{"id":"s2-03","stage":2,"criterion":"SSS","suspects":[{"n":1,"role":"twin","facts":[["side",1,2,6],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[5.315,-0.4],[5.02,6.4],[0.685,5.727]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":2.745,"y":6.755,"box":[1.715,6.343,3.775,7.168]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":1.883,"y":1.819,"box":[0.621,1.407,3.146,2.232]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":6.566,"y":3.061,"box":[5.304,2.648,7.829,3.473]}]},{"n":2,"role":"one_differs","facts":[["side",1,2,8],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,0.979],[6.4,0.979],[4.346,5.021]],"labels":[{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.532,"y":3.589,"box":[5.502,3.176,7.562,4.001]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":1.13,"y":3.99,"box":[-0.132,3.577,2.393,4.402]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.379,"box":[1.738,-0.034,4.263,0.791]}]},{"n":3,"role":"one_differs","facts":[["side",1,2,5],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[-0.2,1.778],[6.2,1.778],[5.133,4.222]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.858,"y":3.52,"box":[5.828,3.108,7.888,3.933]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":2.008,"y":4.0,"box":[0.746,3.587,3.271,4.412]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":1.178,"box":[1.738,0.765,4.263,1.591]}]},{"n":4,"role":"culprit","facts":[["side",1,2,6],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,1.449],[6.4,1.449],[5.007,4.551]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.889,"y":3.533,"box":[5.859,3.12,7.919,3.945]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":1.706,"y":4.041,"box":[0.444,3.628,2.969,4.453]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.849,"box":[1.738,0.436,4.263,1.262]}]},{"n":5,"role":"stranger","facts":[["angle",2,90],["side",0,1,10],["side",1,2,6]],"criterion":"RHS","pts":[[1.368,-0.4],[1.368,6.4],[4.632,3.952]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":-0.032,"y":3.0,"box":[-1.294,2.587,1.23,3.413]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":3.66,"y":6.056,"box":[2.63,5.644,4.69,6.468]}]},{"n":6,"role":"drawn_alike","facts":[["side",1,2,6],["side",0,2,13],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,1.449],[6.4,1.449],[5.007,4.551]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.889,"y":3.533,"box":[5.859,3.12,7.919,3.945]},{"type":"side","fact":["side",0,2,13],"text":"13 cm","x":1.706,"y":4.041,"box":[0.444,3.628,2.969,4.453]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.849,"box":[1.738,0.436,4.263,1.262]}]}],"pair":[1,4]},
+{"id":"s2-04","stage":2,"criterion":"SAS","suspects":[{"n":1,"role":"drawn_alike","facts":[["side",0,1,7],["side",0,2,9],["angle",0,45]],"criterion":"SAS","pts":[[-0.4,0.19],[6.4,0.19],[6.297,5.81]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.41,"box":[1.97,-0.823,4.03,0.002]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":2.241,"y":3.843,"box":[1.211,3.43,3.271,4.255]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":2.043,"y":1.079,"box":[1.311,0.705,2.776,1.453]}]},{"n":2,"role":"twin","facts":[["side",0,1,7],["side",0,2,9],["angle",0,40]],"criterion":"SAS","pts":[[6.4,0.646],[-0.252,-0.038],[-0.4,6.038]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.146,"y":-0.392,"box":[2.116,-0.805,4.176,0.02]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":3.683,"y":4.204,"box":[2.653,3.791,4.713,4.616]},{"type":"angle","fact":["angle",0,40],"text":"40°","x":4.096,"y":1.318,"box":[3.364,0.944,4.829,1.692]}]},{"n":3,"role":"culprit","facts":[["side",0,1,7],["side",0,2,9],["angle",0,40]],"criterion":"SAS","pts":[[-0.4,0.19],[6.4,0.19],[6.297,5.81]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.41,"box":[1.97,-0.823,4.03,0.002]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":2.241,"y":3.843,"box":[1.211,3.43,3.271,4.255]},{"type":"angle","fact":["angle",0,40],"text":"40°","x":2.043,"y":1.079,"box":[1.311,0.705,2.776,1.453]}]},{"n":4,"role":"one_differs","facts":[["side",0,1,7],["side",0,2,9],["angle",0,50]],"criterion":"SAS","pts":[[6.4,-0.349],[-0.4,-0.349],[0.78,6.349]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.949,"box":[1.97,-1.362,4.03,-0.536]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":4.509,"y":3.771,"box":[3.479,3.359,5.539,4.184]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":4.406,"y":0.581,"box":[3.674,0.207,5.139,0.955]}]},{"n":5,"role":"angle_moved","facts":[["side",0,1,7],["side",0,2,9],["angle",2,40]],"criterion":"SSA","pts":[[0.342,-0.4],[5.658,-0.4],[1.025,6.4]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":-0.51,"y":3.12,"box":[-1.54,2.707,0.52,3.532]},{"type":"angle","fact":["angle",2,40],"text":"40°","x":1.715,"y":3.686,"box":[0.983,3.312,2.447,4.06]}]},{"n":6,"role":"stranger","facts":[["side",0,1,7],["side",0,2,11],["angle",0,110]],"criterion":"SAS","pts":[[1.977,6.266],[6.4,6.266],[-0.4,-0.266]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":4.189,"y":6.866,"box":[3.159,6.454,5.219,7.278]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":-0.621,"y":3.513,"box":[-1.884,3.1,0.641,3.925]},{"type":"angle","fact":["angle",0,110],"text":"110°","x":2.78,"y":5.119,"box":[1.837,4.745,3.723,5.493]}]}],"pair":[2,3]},
+{"id":"s2-05","stage":2,"criterion":"SAS","suspects":[{"n":1,"role":"twin","facts":[["side",0,1,7],["side",0,2,9],["angle",0,50]],"criterion":"SAS","pts":[[-0.4,5.898],[1.226,0.102],[6.4,1.272]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":-0.839,"y":2.649,"box":[-1.869,2.236,0.191,3.061]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":3.619,"y":4.494,"box":[2.589,4.082,4.649,4.907]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.235,"y":3.625,"box":[0.502,3.251,1.967,3.999]}]},{"n":2,"role":"angle_moved","facts":[["side",0,1,7],["side",0,2,9],["angle",2,50]],"criterion":"SSA","pts":[[6.4,-0.347],[-0.4,-0.347],[0.776,6.347]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.947,"box":[1.97,-1.36,4.03,-0.534]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":4.507,"y":3.772,"box":[3.477,3.359,5.537,4.184]},{"type":"angle","fact":["angle",2,50],"text":"50°","x":1.347,"y":4.222,"box":[0.614,3.848,2.079,4.596]}]},{"n":3,"role":"drawn_alike","facts":[["side",0,1,7],["side",0,2,10],["angle",0,50]],"criterion":"SAS","pts":[[-0.4,-0.349],[6.4,-0.349],[5.22,6.349]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.949,"box":[1.97,-1.362,4.03,-0.536]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.338,"y":3.9,"box":[0.075,3.487,2.6,4.312]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.594,"y":0.581,"box":[0.861,0.207,2.326,0.955]}]},{"n":4,"role":"stranger","facts":[["side",1,2,7],["side",0,2,9],["side",0,1,11]],"criterion":"SSS","pts":[[-0.4,4.766],[6.4,4.766],[3.899,1.234]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.129,"y":2.307,"box":[5.099,1.894,7.159,2.719]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.051,"y":2.15,"box":[0.021,1.738,2.081,2.563]},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":5.366,"box":[1.738,4.954,4.263,5.778]}]},{"n":5,"role":"one_differs","facts":[["side",0,1,7],["side",0,2,9],["angle",0,60]],"criterion":"SAS","pts":[[5.6,0.665],[5.6,5.335],[0.4,3.667]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":6.8,"y":3.0,"box":[5.77,2.587,7.83,3.413]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":2.5,"y":1.3,"box":[1.47,0.887,3.53,1.712]},{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.7,"y":2.224,"box":[3.968,1.85,5.432,2.598]}]},{"n":6,"role":"culprit","facts":[["side",0,1,7],["side",0,2,9],["angle",0,50]],"criterion":"SAS","pts":[[-0.4,-0.349],[6.4,-0.349],[5.22,6.349]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.949,"box":[1.97,-1.362,4.03,-0.536]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.491,"y":3.771,"box":[0.461,3.359,2.521,4.184]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.594,"y":0.581,"box":[0.861,0.207,2.326,0.955]}]}],"pair":[1,6]},
+{"id":"s2-06","stage":2,"criterion":"SAS","suspects":[{"n":1,"role":"one_differs","facts":[["side",0,1,5],["side",0,2,6],["angle",0,50]],"criterion":"SAS","pts":[[5.758,0.0],[5.758,6.0],[0.242,4.628]],"labels":[{"type":"side","fact":["side",0,1,5],"text":"5 cm","x":6.958,"y":3.0,"box":[5.928,2.587,7.988,3.413]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":2.293,"y":1.471,"box":[1.263,1.059,3.323,1.884]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":4.87,"y":1.903,"box":[4.138,1.529,5.603,2.277]}]},{"n":2,"role":"twin","facts":[["side",0,1,5],["side",0,2,6],["angle",0,55]],"criterion":"SAS","pts":[[5.498,1.381],[0.502,-0.4],[2.437,6.4]],"labels":[{"type":"side","fact":["side",0,1,5],"text":"5 cm","x":3.302,"y":-0.357,"box":[2.272,-0.77,4.332,0.055]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":5.077,"y":4.567,"box":[4.047,4.155,6.107,4.98]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.084,"y":1.882,"box":[3.352,1.508,4.816,2.256]}]},{"n":3,"role":"culprit","facts":[["side",0,1,5],["side",0,2,6],["angle",0,55]],"criterion":"SAS","pts":[[-0.4,-0.342],[6.4,-0.342],[4.28,6.342]],"labels":[{"type":"side","fact":["side",0,1,5],"text":"5 cm","x":3.0,"y":-0.942,"box":[1.97,-1.355,4.03,-0.53]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":0.875,"y":3.746,"box":[-0.155,3.333,1.905,4.158]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":0.628,"box":[0.73,0.254,2.195,1.002]}]},{"n":4,"role":"drawn_alike","facts":[["side",0,1,5],["side",0,2,8],["angle",0,55]],"criterion":"SAS","pts":[[-0.4,-0.342],[6.4,-0.342],[4.28,6.342]],"labels":[{"type":"side","fact":["side",0,1,5],"text":"5 cm","x":3.0,"y":-0.942,"box":[1.97,-1.355,4.03,-0.53]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":0.875,"y":3.746,"box":[-0.155,3.333,1.905,4.158]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":0.628,"box":[0.73,0.254,2.195,1.002]}]},{"n":5,"role":"angle_moved","facts":[["side",0,1,5],["side",0,2,6],["angle",2,55]],"criterion":"SSA","pts":[[0.257,-0.2],[0.257,6.2],[5.743,5.175]],"labels":[{"type":"side","fact":["side",0,1,5],"text":"5 cm","x":-0.943,"y":3.0,"box":[-1.973,2.587,0.087,3.413]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":3.84,"y":1.63,"box":[2.81,1.218,4.87,2.043]},{"type":"angle","fact":["angle",2,55],"text":"55°","x":3.83,"y":4.593,"box":[3.097,4.219,4.562,4.967]}]},{"n":6,"role":"stranger","facts":[["side",1,2,6],["side",0,2,8],["side",0,1,9]],"criterion":"SSS","pts":[[6.4,4.975],[-0.4,4.975],[1.825,1.025]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":-0.42,"y":2.362,"box":[-1.45,1.949,0.61,2.774]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":4.897,"y":2.092,"box":[3.867,1.679,5.927,2.504]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":5.575,"box":[1.97,5.162,4.03,5.987]}]}],"pair":[2,3]},
+{"id":"s2-07","stage":2,"criterion":"ASA","suspects":[{"n":1,"role":"drawn_alike","facts":[["angle",0,45],["angle",1,80],["side",0,1,6]],"criterion":"ASA","pts":[[-0.4,0.11],[6.4,0.11],[5.381,5.89]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":1.028,"box":[1.085,0.654,2.55,1.402]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":5.251,"y":1.074,"box":[4.519,0.7,5.983,1.448]},{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.49,"box":[1.97,-0.903,4.03,-0.078]}]},{"n":2,"role":"culprit","facts":[["angle",0,45],["angle",1,80],["side",0,1,7]],"criterion":"ASA","pts":[[-0.4,0.11],[6.4,0.11],[5.381,5.89]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":1.028,"box":[1.085,0.654,2.55,1.402]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":5.251,"y":1.074,"box":[4.519,0.7,5.983,1.448]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.49,"box":[1.97,-0.903,4.03,-0.078]}]},{"n":3,"role":"one_differs","facts":[["angle",0,45],["angle",1,80],["side",0,1,8]],"criterion":"ASA","pts":[[5.72,-0.2],[5.72,6.2],[0.28,5.241]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":4.802,"y":2.017,"box":[4.069,1.643,5.534,2.391]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":4.82,"y":5.128,"box":[4.088,4.754,5.552,5.502]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":6.92,"y":3.0,"box":[5.89,2.587,7.95,3.413]}]},{"n":4,"role":"stranger","facts":[["side",1,2,7],["side",0,2,8],["side",0,1,10]],"criterion":"SSS","pts":[[1.109,-0.4],[1.109,6.4],[4.891,3.51]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":3.668,"y":5.829,"box":[2.638,5.417,4.698,6.242]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":3.863,"y":0.721,"box":[2.833,0.308,4.893,1.133]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":-0.291,"y":3.0,"box":[-1.554,2.587,0.971,3.413]}]},{"n":5,"role":"twin","facts":[["angle",0,45],["angle",1,80],["side",0,1,7]],"criterion":"ASA","pts":[[6.4,6.217],[-0.4,6.338],[0.014,-0.338]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":4.273,"y":5.342,"box":[3.541,4.968,5.005,5.716]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":0.539,"y":5.439,"box":[-0.193,5.065,1.272,5.813]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.011,"y":6.877,"box":[1.981,6.465,4.041,7.29]}]},{"n":6,"role":"angles_only","facts":[["angle",0,45],["angle",1,80],["angle",2,55]],"criterion":"AAA","pts":[[5.89,-0.4],[5.89,6.4],[0.11,5.381]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":4.972,"y":1.817,"box":[4.239,1.443,5.704,2.191]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":4.99,"y":5.328,"box":[4.258,4.954,5.722,5.702]},{"type":"angle","fact":["angle",2,55],"text":"55°","x":2.017,"y":4.779,"box":[1.285,4.405,2.75,5.153]}]}],"pair":[2,5]},
+{"id":"s2-08","stage":2,"criterion":"ASA","suspects":[{"n":1,"role":"stranger","facts":[["angle",2,90],["side",0,1,10],["side",1,2,5]],"criterion":"RHS","pts":[[6.4,1.528],[-0.4,1.528],[1.3,4.472]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.928,"box":[1.738,0.515,4.263,1.341]},{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":-0.676,"y":3.65,"box":[-1.706,3.238,0.354,4.063]}]},{"n":2,"role":"one_differs","facts":[["angle",0,45],["angle",1,65],["side",0,1,12]],"criterion":"ASA","pts":[[0.681,6.4],[0.681,-0.4],[5.319,1.763]],"labels":[{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.6,"y":4.183,"box":[0.867,3.809,2.332,4.557]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":1.541,"y":0.949,"box":[0.808,0.575,2.273,1.323]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":-0.719,"y":3.0,"box":[-1.982,2.587,0.543,3.413]}]},{"n":3,"role":"angles_only","facts":[["angle",0,35],["angle",1,65],["angle",2,80]],"criterion":"AAA","pts":[[-0.4,1.205],[6.4,1.205],[4.726,4.795]],"labels":[{"type":"angle","fact":["angle",0,35],"text":"35°","x":2.366,"y":2.077,"box":[1.633,1.703,3.098,2.451]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":2.172,"box":[4.15,1.798,5.614,2.546]},{"type":"angle","fact":["angle",2,80],"text":"80°","x":4.338,"y":3.346,"box":[3.605,2.972,5.07,3.72]}]},{"n":4,"role":"twin","facts":[["angle",0,35],["angle",1,65],["side",0,1,12]],"criterion":"ASA","pts":[[1.016,6.4],[0.989,-0.4],[5.011,1.119]],"labels":[{"type":"angle","fact":["angle",0,35],"text":"35°","x":1.965,"y":3.554,"box":[1.233,3.18,2.697,3.928]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":1.901,"y":0.914,"box":[1.169,0.54,2.634,1.288]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":-0.397,"y":3.006,"box":[-1.66,2.593,0.865,3.418]}]},{"n":5,"role":"drawn_alike","facts":[["angle",0,40],["angle",1,65],["side",0,1,12]],"criterion":"ASA","pts":[[-0.4,1.205],[6.4,1.205],[4.726,4.795]],"labels":[{"type":"angle","fact":["angle",0,40],"text":"40°","x":2.366,"y":2.077,"box":[1.633,1.703,3.098,2.451]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":2.172,"box":[4.15,1.798,5.614,2.546]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.605,"box":[1.738,0.192,4.263,1.018]}]},{"n":6,"role":"culprit","facts":[["angle",0,35],["angle",1,65],["side",0,1,12]],"criterion":"ASA","pts":[[-0.4,1.205],[6.4,1.205],[4.726,4.795]],"labels":[{"type":"angle","fact":["angle",0,35],"text":"35°","x":2.366,"y":2.077,"box":[1.633,1.703,3.098,2.451]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":2.172,"box":[4.15,1.798,5.614,2.546]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.605,"box":[1.738,0.192,4.263,1.018]}]}],"pair":[4,6]},
+{"id":"s2-09","stage":2,"criterion":"ASA","suspects":[{"n":1,"role":"stranger","facts":[["angle",0,70],["angle",1,45],["side",0,1,12]],"criterion":"ASA","pts":[[5.199,6.0],[5.199,0.0],[0.801,4.399]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":4.339,"y":4.771,"box":[3.606,4.397,5.071,5.145]},{"type":"angle","fact":["angle",1,45],"text":"45°","x":4.281,"y":2.217,"box":[3.548,1.843,5.013,2.591]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":6.599,"y":3.0,"box":[5.337,2.587,7.862,3.413]}]},{"n":2,"role":"one_differs","facts":[["angle",0,60],["angle",1,80],["side",0,1,12]],"criterion":"ASA","pts":[[5.563,-0.4],[0.437,-0.4],[1.637,6.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":3.918,"y":0.55,"box":[3.185,0.176,4.65,0.924]},{"type":"angle","fact":["angle",1,80],"text":"80°","x":1.586,"y":0.564,"box":[0.854,0.19,2.319,0.938]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":-1.0,"box":[1.738,-1.413,4.263,-0.587]}]},{"n":3,"role":"angles_only","facts":[["angle",0,60],["angle",1,70],["angle",2,50]],"criterion":"AAA","pts":[[6.4,6.2],[6.4,-0.2],[-0.4,2.275]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":5.5,"y":4.641,"box":[4.768,4.267,6.232,5.015]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":5.54,"y":1.029,"box":[4.807,0.655,6.272,1.403]},{"type":"angle","fact":["angle",2,50],"text":"50°","x":1.592,"y":2.449,"box":[0.86,2.075,2.325,2.823]}]},{"n":4,"role":"twin","facts":[["angle",0,60],["angle",1,70],["side",0,1,12]],"criterion":"ASA","pts":[[-0.4,6.21],[6.4,5.905],[3.406,-0.21]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.315,"y":5.181,"box":[0.583,4.807,2.048,5.555]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":4.852,"y":4.987,"box":[4.119,4.613,5.584,5.361]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.027,"y":6.657,"box":[1.764,6.244,4.289,7.069]}]},{"n":5,"role":"culprit","facts":[["angle",0,60],["angle",1,70],["side",0,1,12]],"criterion":"ASA","pts":[[-0.2,-0.4],[6.2,-0.4],[3.725,6.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.445,"y":0.55,"box":[0.713,0.176,2.178,0.924]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":4.807,"y":0.575,"box":[4.075,0.201,5.54,0.949]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":-1.0,"box":[1.738,-1.413,4.263,-0.587]}]},{"n":6,"role":"drawn_alike","facts":[["angle",0,60],["angle",1,70],["side",0,1,13]],"criterion":"ASA","pts":[[-0.2,-0.4],[6.2,-0.4],[3.725,6.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.445,"y":0.55,"box":[0.713,0.176,2.178,0.924]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":4.807,"y":0.575,"box":[4.075,0.201,5.54,0.949]},{"type":"side","fact":["side",0,1,13],"text":"13 cm","x":3.0,"y":-1.0,"box":[1.738,-1.413,4.263,-0.587]}]}],"pair":[4,5]},
+{"id":"s2-10","stage":2,"criterion":"ASA","suspects":[{"n":1,"role":"culprit","facts":[["angle",0,75],["angle",1,50],["side",0,1,7]],"criterion":"ASA","pts":[[-0.4,-0.071],[6.4,-0.071],[1.246,6.071]],"labels":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":0.869,"y":0.903,"box":[0.137,0.529,1.602,1.277]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":0.859,"box":[3.674,0.485,5.139,1.233]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.671,"box":[1.97,-1.084,4.03,-0.259]}]},{"n":2,"role":"twin","facts":[["angle",0,75],["angle",1,50],["side",0,1,7]],"criterion":"ASA","pts":[[0.559,0.367],[0.2,5.633],[5.8,1.626]],"labels":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":1.388,"y":1.495,"box":[0.655,1.121,2.12,1.869]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":1.223,"y":3.799,"box":[0.491,3.425,1.956,4.173]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":-0.818,"y":2.918,"box":[-1.848,2.506,0.212,3.331]}]},{"n":3,"role":"one_differs","facts":[["angle",0,70],["angle",1,50],["side",0,1,7]],"criterion":"ASA","pts":[[-0.4,5.826],[6.4,5.826],[1.657,0.174]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":0.993,"y":4.851,"box":[0.26,4.477,1.725,5.225]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":4.896,"box":[3.674,4.522,5.139,5.27]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":6.426,"box":[1.97,6.014,4.03,6.838]}]},{"n":4,"role":"stranger","facts":[["side",1,2,4],["side",0,2,9],["side",0,1,11]],"criterion":"SSS","pts":[[6.4,2.046],[-0.4,2.046],[1.174,3.954]],"labels":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":-0.539,"y":3.764,"box":[-1.569,3.351,0.491,4.176]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":4.096,"y":3.845,"box":[3.066,3.433,5.126,4.258]},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":1.446,"box":[1.738,1.033,4.263,1.858]}]},{"n":5,"role":"drawn_alike","facts":[["angle",0,75],["angle",1,50],["side",0,1,6]],"criterion":"ASA","pts":[[-0.4,-0.071],[6.4,-0.071],[1.246,6.071]],"labels":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":0.869,"y":0.903,"box":[0.137,0.529,1.602,1.277]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":0.859,"box":[3.674,0.485,5.139,1.233]},{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.671,"box":[1.97,-1.084,4.03,-0.259]}]},{"n":6,"role":"angles_only","facts":[["angle",0,75],["angle",1,50],["angle",2,55]],"criterion":"AAA","pts":[[6.4,6.071],[-0.4,6.071],[4.754,-0.071]],"labels":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":5.131,"y":5.097,"box":[4.398,4.723,5.863,5.471]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":1.594,"y":5.141,"box":[0.861,4.767,2.326,5.515]},{"type":"angle","fact":["angle",2,55],"text":"55°","x":4.299,"y":1.979,"box":[3.567,1.605,5.032,2.353]}]}],"pair":[1,2]},
+{"id":"s2-11","stage":2,"criterion":"RHS","suspects":[{"n":1,"role":"one_differs","facts":[["angle",2,90],["side",0,1,11],["side",1,2,7]],"criterion":"RHS","pts":[[4.669,6.4],[4.669,-0.4],[1.331,2.354]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":6.069,"y":3.0,"box":[4.806,2.587,7.332,3.413]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":2.3,"y":0.129,"box":[1.27,-0.284,3.33,0.541]}]},{"n":2,"role":"drawn_alike","facts":[["angle",2,90],["side",0,1,12],["side",1,2,7]],"criterion":"RHS","pts":[[-0.4,1.3],[6.4,1.3],[3.068,4.7]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.7,"box":[1.738,0.287,4.263,1.113]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":5.591,"y":3.84,"box":[4.561,3.427,6.621,4.252]}]},{"n":3,"role":"twin","facts":[["angle",2,90],["side",0,1,10],["side",1,2,7]],"criterion":"RHS","pts":[[6.4,4.7],[-0.4,4.7],[2.932,1.3]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":5.3,"box":[1.738,4.888,4.263,5.713]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":0.409,"y":2.16,"box":[-0.621,1.748,1.439,2.573]}]},{"n":4,"role":"one_differs","facts":[["angle",2,90],["side",0,1,10],["side",1,2,8]],"criterion":"RHS","pts":[[4.632,-0.4],[4.632,6.4],[1.368,2.048]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":6.032,"y":3.0,"box":[4.769,2.587,7.295,3.413]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":2.04,"y":4.944,"box":[1.01,4.532,3.07,5.356]}]},{"n":5,"role":"culprit","facts":[["angle",2,90],["side",0,1,10],["side",1,2,7]],"criterion":"RHS","pts":[[-0.4,1.3],[6.4,1.3],[3.068,4.7]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.7,"box":[1.738,0.287,4.263,1.113]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":5.591,"y":3.84,"box":[4.561,3.427,6.621,4.252]}]},{"n":6,"role":"stranger","facts":[["side",0,1,10],["side",0,2,12],["angle",0,35]],"criterion":"SAS","pts":[[6.4,0.66],[-0.4,0.66],[-0.284,5.34]],"labels":[{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.06,"box":[1.738,-0.353,4.263,0.472]},{"type":"side","fact":["side",0,2,12],"text":"12 cm","x":3.746,"y":3.983,"box":[2.484,3.57,5.009,4.395]},{"type":"angle","fact":["angle",0,35],"text":"35°","x":3.634,"y":1.532,"box":[2.902,1.158,4.367,1.906]}]}],"pair":[3,5]},
+{"id":"s2-12","stage":2,"criterion":"RHS","suspects":[{"n":1,"role":"stranger","facts":[["angle",0,50],["angle",1,65],["side",0,1,9]],"criterion":"ASA","pts":[[6.4,0.395],[-0.4,0.395],[2.029,5.605]],"labels":[{"type":"angle","fact":["angle",0,50],"text":"50°","x":4.406,"y":1.325,"box":[3.674,0.951,5.139,1.699]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":1.118,"y":1.362,"box":[0.386,0.988,1.85,1.736]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":-0.205,"box":[1.97,-0.618,4.03,0.207]}]},{"n":2,"role":"drawn_alike","facts":[["angle",2,90],["side",0,1,10],["side",1,2,8]],"criterion":"RHS","pts":[[-0.4,1.303],[6.4,1.303],[2.803,4.697]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.703,"box":[1.738,0.29,4.263,1.115]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":5.425,"y":3.873,"box":[4.395,3.46,6.455,4.285]}]},{"n":3,"role":"one_differs","facts":[["angle",2,90],["side",0,1,11],["side",1,2,10]],"criterion":"RHS","pts":[[1.712,-0.4],[1.712,6.4],[4.288,0.78]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":0.312,"y":3.0,"box":[-0.951,2.587,1.574,3.413]},{"type":"side","fact":["side",1,2,10],"text":"10 cm","x":4.364,"y":4.215,"box":[3.101,3.803,5.626,4.628]}]},{"n":4,"role":"twin","facts":[["angle",2,90],["side",0,1,11],["side",1,2,8]],"criterion":"RHS","pts":[[4.697,-0.4],[4.697,6.4],[1.303,2.803]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":6.097,"y":3.0,"box":[4.835,2.587,7.36,3.413]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":2.127,"y":5.425,"box":[1.097,5.013,3.157,5.838]}]},{"n":5,"role":"one_differs","facts":[["angle",2,90],["side",0,1,11],["side",1,2,7]],"criterion":"RHS","pts":[[6.4,1.331],[-0.4,1.331],[2.354,4.669]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":0.731,"box":[1.738,0.318,4.263,1.143]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":0.051,"y":3.764,"box":[-0.979,3.351,1.081,4.176]}]},{"n":6,"role":"culprit","facts":[["angle",2,90],["side",0,1,11],["side",1,2,8]],"criterion":"RHS","pts":[[-0.4,1.303],[6.4,1.303],[2.803,4.697]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":0.703,"box":[1.738,0.29,4.263,1.115]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":5.425,"y":3.873,"box":[4.395,3.46,6.455,4.285]}]}],"pair":[4,6]},
+{"id":"s3-01","stage":3,"facts":[["side",1,2,4],["side",0,2,8],["side",0,1,9]],"answer":"SSS","shown":"SSS","pts_a":[[-0.4,1.657],[6.4,1.657],[5.015,4.343]],"labels_a":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":6.863,"y":3.596,"box":[5.833,3.183,7.893,4.008]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":1.863,"y":3.896,"box":[0.833,3.483,2.893,4.308]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":1.057,"box":[1.97,0.644,4.03,1.47]}],"pts_b":[[6.4,4.237],[-0.4,4.124],[0.808,1.763]],"labels_b":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":-0.953,"y":2.351,"box":[-1.983,1.939,0.077,2.764]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":4.009,"y":2.086,"box":[2.979,1.673,5.039,2.498]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":2.99,"y":4.78,"box":[1.96,4.368,4.02,5.193]}]},
+{"id":"s3-02","stage":3,"facts":[["side",1,2,4],["side",0,2,9],["side",0,1,10]],"answer":"SSS","shown":"SSS","pts_a":[[-0.2,1.849],[6.2,1.849],[5.08,4.151]],"labels_a":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":6.809,"y":3.569,"box":[5.779,3.156,7.839,3.981]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":2.04,"y":3.917,"box":[1.01,3.504,3.07,4.329]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":1.249,"box":[1.738,0.836,4.263,1.661]}],"pts_b":[[-0.4,3.379],[6.4,4.197],[4.762,1.803]],"labels_b":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":6.654,"y":2.266,"box":[5.624,1.853,7.684,2.678]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.918,"y":1.73,"box":[0.888,1.318,2.948,2.143]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":2.916,"y":4.483,"box":[1.654,4.07,4.179,4.895]}]},
+{"id":"s3-03","stage":3,"facts":[["side",0,1,12],["side",0,2,9],["angle",0,70]],"answer":"SAS","shown":"SAS","pts_a":[[-0.4,0.604],[6.4,0.604],[1.344,5.396]],"labels_a":[{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.004,"box":[1.738,-0.409,4.263,0.416]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":-0.75,"y":3.445,"box":[-1.78,3.032,0.28,3.857]},{"type":"angle","fact":["angle",0,70],"text":"70°","x":0.993,"y":1.579,"box":[0.26,1.205,1.725,1.953]}],"pts_b":[[6.4,0.619],[-0.4,0.654],[4.655,5.381]],"labels_b":[{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":2.997,"y":0.037,"box":[1.734,-0.376,4.259,0.449]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":6.748,"y":3.447,"box":[5.718,3.035,7.778,3.86]},{"type":"angle","fact":["angle",0,70],"text":"70°","x":5.009,"y":1.596,"box":[4.276,1.222,5.741,1.97]}]},
+{"id":"s3-04","stage":3,"facts":[["side",0,1,6],["side",0,2,7],["angle",0,90]],"answer":"SAS","shown":"SAS_right","pts_a":[[0.257,-0.2],[5.743,-0.2],[0.257,6.2]],"labels_a":[{"type":"right","vertex":0},{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.8,"box":[1.97,-1.213,4.03,-0.388]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":-0.943,"y":3.0,"box":[-1.973,2.587,0.087,3.413]}],"pts_b":[[5.743,-0.2],[0.257,-0.2],[5.743,6.2]],"labels_b":[{"type":"right","vertex":0},{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.8,"box":[1.97,-1.213,4.03,-0.388]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":6.943,"y":3.0,"box":[5.913,2.587,7.973,3.413]}]},
+{"id":"s3-05","stage":3,"facts":[["angle",0,50],["angle",1,75],["side",0,1,7]],"answer":"ASA","shown":"ASA","pts_a":[[-0.4,-0.071],[6.4,-0.071],[4.754,6.071]],"labels_a":[{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.594,"y":0.859,"box":[0.861,0.485,2.326,1.233]},{"type":"angle","fact":["angle",1,75],"text":"75°","x":5.131,"y":0.903,"box":[4.398,0.529,5.863,1.277]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.671,"box":[1.97,-1.084,4.03,-0.259]}],"pts_b":[[0.559,5.867],[0.0,0.133],[6.0,1.732]],"labels_b":[{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.32,"y":4.126,"box":[0.587,3.752,2.052,4.5]},{"type":"angle","fact":["angle",1,75],"text":"75°","x":1.035,"y":1.353,"box":[0.303,0.979,1.768,1.727]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":-0.915,"y":3.116,"box":[-1.945,2.704,0.115,3.529]}]},
+{"id":"s3-06","stage":3,"facts":[["angle",0,75],["angle",1,60],["side",1,2,10]],"answer":"ASA","shown":"AAS","pts_a":[[0.126,-0.4],[5.874,-0.4],[1.948,6.4]],"labels_a":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":1.395,"y":0.574,"box":[0.663,0.2,2.128,0.948]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":4.229,"y":0.55,"box":[3.496,0.176,4.961,0.924]},{"type":"side","fact":["side",1,2,10],"text":"10 cm","x":5.21,"y":3.75,"box":[3.948,3.338,6.473,4.163]}],"pts_b":[[5.486,-0.4],[0.514,-0.193],[4.481,6.4]],"labels_b":[{"type":"angle","fact":["angle",0,75],"text":"75°","x":4.371,"y":0.603,"box":[3.639,0.229,5.103,0.977]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":2.187,"y":0.707,"box":[1.455,0.333,2.919,1.081]},{"type":"side","fact":["side",1,2,10],"text":"10 cm","x":1.212,"y":3.877,"box":[-0.05,3.464,2.475,4.289]}]},
+{"id":"s3-07","stage":3,"facts":[["angle",2,90],["side",0,1,14],["side",1,2,8]],"answer":"RHS","shown":"RHS","pts_a":[[-0.4,1.406],[6.4,1.406],[4.18,4.594]],"labels_a":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":3.0,"y":0.806,"box":[1.738,0.393,4.263,1.218]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.357,"y":3.743,"box":[5.327,3.33,7.387,4.155]}],"pts_b":[[1.406,6.4],[1.406,-0.4],[4.594,1.82]],"labels_b":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":0.006,"y":3.0,"box":[-1.257,2.587,1.268,3.413]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":3.629,"y":-0.193,"box":[2.599,-0.605,4.659,0.22]}]},
+{"id":"s3-08","stage":3,"facts":[["angle",2,90],["side",0,1,9],["side",1,2,6]],"answer":"RHS","shown":"RHS","pts_a":[[-0.4,1.311],[6.4,1.311],[3.378,4.689]],"labels_a":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":0.711,"box":[1.97,0.298,4.03,1.123]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":5.783,"y":3.8,"box":[4.753,3.388,6.813,4.213]}],"pts_b":[[6.4,1.311],[-0.4,1.311],[2.622,4.689]],"labels_b":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":0.711,"box":[1.97,0.298,4.03,1.123]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":0.217,"y":3.8,"box":[-0.813,3.388,1.247,4.213]}]},
+{"id":"s3-09","stage":3,"facts":[["angle",0,60],["angle",1,40],["angle",2,80]],"answer":"NOT_ENOUGH","shown":"AAA","pts_a":[[-0.4,1.078],[6.4,1.078],[1.819,4.922]],"labels_a":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.245,"y":2.028,"box":[0.513,1.654,1.978,2.402]},{"type":"angle","fact":["angle",1,40],"text":"40°","x":3.957,"y":1.967,"box":[3.224,1.593,4.689,2.341]},{"type":"angle","fact":["angle",2,80],"text":"80°","x":2.08,"y":3.445,"box":[1.347,3.071,2.812,3.819]}],"pts_b":[[5.157,-0.4],[4.505,6.4],[0.843,1.786]],"labels_b":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.086,"y":1.17,"box":[3.354,0.796,4.819,1.544]},{"type":"angle","fact":["angle",1,40],"text":"40°","x":3.796,"y":4.003,"box":[3.063,3.629,4.528,4.377]},{"type":"angle","fact":["angle",2,80],"text":"80°","x":2.308,"y":2.107,"box":[1.576,1.733,3.041,2.481]}]},
+{"id":"s3-10","stage":3,"facts":[["angle",0,40],["angle",1,50],["angle",2,90]],"answer":"NOT_ENOUGH","shown":"AAA","pts_a":[[-0.4,1.326],[6.4,1.326],[3.59,4.674]],"labels_a":[{"type":"right","vertex":2},{"type":"angle","fact":["angle",0,40],"text":"40°","x":2.043,"y":2.215,"box":[1.311,1.841,2.776,2.589]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":2.256,"box":[3.674,1.882,5.138,2.63]}],"pts_b":[[-0.4,4.674],[6.4,4.674],[3.59,1.326]],"labels_b":[{"type":"right","vertex":2},{"type":"angle","fact":["angle",0,40],"text":"40°","x":2.043,"y":3.785,"box":[1.311,3.411,2.776,4.159]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":3.744,"box":[3.674,3.37,5.138,4.118]}]},
+{"id":"s3-11","stage":3,"facts":[["side",0,1,7],["side",0,2,12],["angle",2,35]],"answer":"NOT_ENOUGH","shown":"SSA","pts_a":[[0.82,-0.4],[5.18,-0.4],[3.92,6.4]],"labels_a":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]},{"type":"side","fact":["side",0,2,12],"text":"12 cm","x":1.005,"y":3.622,"box":[-0.257,3.21,2.268,4.035]},{"type":"angle","fact":["angle",2,35],"text":"35°","x":3.53,"y":3.224,"box":[2.797,2.85,4.262,3.598]}],"pts_b":[[6.4,-0.342],[0.838,-0.342],[-0.4,6.342]],"labels_b":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.619,"y":-0.942,"box":[2.589,-1.355,4.649,-0.53]},{"type":"side","fact":["side",0,2,12],"text":"12 cm","x":3.911,"y":3.927,"box":[2.649,3.515,5.174,4.34]},{"type":"angle","fact":["angle",2,35],"text":"35°","x":1.055,"y":3.605,"box":[0.323,3.231,1.787,3.979]}]},
+{"id":"s3-12","stage":3,"facts":[["side",0,1,10],["side",0,2,13],["angle",2,50]],"answer":"NOT_ENOUGH","shown":"SSA","pts_a":[[-0.4,-0.137],[6.4,-0.137],[5.827,6.137]],"labels_a":[{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":-0.737,"box":[1.738,-1.15,4.263,-0.325]},{"type":"side","fact":["side",0,2,13],"text":"13 cm","x":1.72,"y":3.986,"box":[0.457,3.574,2.982,4.399]},{"type":"angle","fact":["angle",2,50],"text":"50°","x":5.082,"y":4.067,"box":[4.35,3.693,5.815,4.441]}],"pts_b":[[6.4,5.362],[0.031,5.362],[-0.4,0.638]],"labels_b":[{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.216,"y":5.962,"box":[1.953,5.55,4.478,6.374]},{"type":"side","fact":["side",0,2,13],"text":"13 cm","x":3.685,"y":2.014,"box":[2.422,1.602,4.947,2.427]},{"type":"angle","fact":["angle",2,50],"text":"50°","x":0.657,"y":2.453,"box":[-0.076,2.079,1.389,2.827]}]},
+{"id":"s4-01","stage":4,"criterion":"SSS","rule":"SSS","suspects":[{"n":1,"role":"stranger","facts":[["side",0,1,9],["side",0,2,12],["angle",0,60]],"criterion":"SAS","pts":[[5.944,-0.4],[0.056,-0.4],[2.019,6.4]],"labels":[{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]},{"type":"side","fact":["side",0,2,12],"text":"12 cm","x":5.281,"y":3.75,"box":[4.018,3.337,6.543,4.162]},{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.299,"y":0.55,"box":[3.566,0.176,5.031,0.924]}]},{"n":2,"role":"drawn_alike","facts":[["side",1,2,5],["side",0,2,12],["side",0,1,12]],"criterion":"SSS","pts":[[-0.2,1.778],[6.2,1.778],[5.133,4.222]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.858,"y":3.52,"box":[5.828,3.108,7.888,3.933]},{"type":"side","fact":["side",0,2,12],"text":"12 cm","x":2.008,"y":4.0,"box":[0.746,3.587,3.271,4.412]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":1.178,"box":[1.738,0.765,4.263,1.591]}]},{"n":3,"role":"twin","facts":[["side",1,2,5],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[2.371,6.4],[1.612,-0.4],[4.388,0.534]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":3.287,"y":-0.786,"box":[2.257,-1.199,4.317,-0.374]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":4.798,"y":3.955,"box":[3.535,3.542,6.06,4.367]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":0.501,"y":3.166,"box":[-0.762,2.754,1.763,3.579]}]},{"n":4,"role":"one_differs","facts":[["side",1,2,5],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[1.841,-0.4],[1.841,6.4],[4.159,4.771]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":3.632,"y":6.485,"box":[2.602,6.073,4.662,6.898]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":4.369,"y":1.572,"box":[3.106,1.159,5.631,1.984]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":0.441,"y":3.0,"box":[-0.822,2.587,1.703,3.413]}]},{"n":5,"role":"culprit","facts":[["side",1,2,5],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[-0.2,1.778],[6.2,1.778],[5.133,4.222]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.858,"y":3.52,"box":[5.828,3.108,7.888,3.933]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":2.008,"y":4.0,"box":[0.746,3.587,3.271,4.412]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":1.178,"box":[1.738,0.765,4.263,1.591]}]},{"n":6,"role":"one_differs","facts":[["side",1,2,5],["side",0,2,11],["side",0,1,13]],"criterion":"SSS","pts":[[1.918,-0.4],[1.918,6.4],[4.082,4.931]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":3.618,"y":6.576,"box":[2.588,6.163,4.648,6.988]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":4.39,"y":1.701,"box":[3.127,1.289,5.652,2.114]},{"type":"side","fact":["side",0,1,13],"text":"13 cm","x":0.518,"y":3.0,"box":[-0.745,2.587,1.78,3.413]}]}],"pair":[3,5],"witness_says":[3,5],"witness_right":true,"witness_fooled_by":null},
+{"id":"s4-02","stage":4,"criterion":"SAS","rule":"SAS","suspects":[{"n":1,"role":"stranger","facts":[["side",0,1,12],["side",0,2,7],["angle",0,70]],"criterion":"SAS","pts":[[6.4,4.864],[-0.4,4.864],[5.043,1.136]],"labels":[{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":5.464,"box":[1.738,5.052,4.263,5.877]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":6.943,"y":2.555,"box":[5.913,2.143,7.973,2.968]},{"type":"angle","fact":["angle",0,70],"text":"70°","x":5.007,"y":3.889,"box":[4.275,3.515,5.74,4.263]}]},{"n":2,"role":"drawn_alike","facts":[["side",0,1,8],["side",0,2,11],["angle",0,45]],"criterion":"SAS","pts":[[-0.4,-0.005],[6.4,-0.005],[5.61,6.005]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-0.605,"box":[1.97,-1.018,4.03,-0.193]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":1.615,"y":3.99,"box":[0.353,3.577,2.878,4.402]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":0.913,"box":[1.085,0.539,2.55,1.287]}]},{"n":3,"role":"twin","facts":[["side",0,1,8],["side",0,2,10],["angle",0,45]],"criterion":"SAS","pts":[[6.4,0.464],[-0.4,0.452],[1.641,5.548]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.001,"y":-0.142,"box":[1.971,-0.554,4.031,0.271]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":5.043,"y":3.963,"box":[3.78,3.55,6.305,4.375]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":4.289,"y":1.377,"box":[3.557,1.003,5.021,1.751]}]},{"n":4,"role":"angle_moved","facts":[["side",0,1,8],["side",0,2,10],["angle",2,45]],"criterion":"SSA","pts":[[5.846,6.4],[0.154,6.4],[3.752,-0.4]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":7.0,"box":[1.97,6.588,4.03,7.412]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":6.233,"y":2.559,"box":[4.97,2.146,7.495,2.971]},{"type":"angle","fact":["angle",2,45],"text":"45°","x":3.517,"y":2.089,"box":[2.785,1.715,4.25,2.463]}]},{"n":5,"role":"culprit","facts":[["side",0,1,8],["side",0,2,10],["angle",0,45]],"criterion":"SAS","pts":[[-0.4,-0.005],[6.4,-0.005],[5.61,6.005]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-0.605,"box":[1.97,-1.018,4.03,-0.193]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.615,"y":3.99,"box":[0.353,3.577,2.878,4.402]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":0.913,"box":[1.085,0.539,2.55,1.287]}]},{"n":6,"role":"one_differs","facts":[["side",0,1,8],["side",0,2,10],["angle",0,40]],"criterion":"SAS","pts":[[6.4,0.268],[-0.4,0.268],[-0.111,5.732]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-0.332,"box":[1.97,-0.745,4.03,0.08]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":3.98,"y":3.996,"box":[2.718,3.583,5.243,4.408]},{"type":"angle","fact":["angle",0,40],"text":"40°","x":3.957,"y":1.157,"box":[3.224,0.783,4.689,1.531]}]}],"pair":[3,5],"witness_says":[3,5],"witness_right":true,"witness_fooled_by":null},
+{"id":"s4-03","stage":4,"criterion":"ASA","rule":"ASA","suspects":[{"n":1,"role":"drawn_alike","facts":[["angle",0,65],["angle",1,75],["side",0,1,7]],"criterion":"ASA","pts":[[0.177,-0.4],[5.823,-0.4],[3.348,6.4]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":1.695,"y":0.567,"box":[0.963,0.193,2.428,0.941]},{"type":"angle","fact":["angle",1,75],"text":"75°","x":4.43,"y":0.575,"box":[3.698,0.201,5.163,0.949]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]}]},{"n":2,"role":"stranger","facts":[["side",0,1,8],["side",0,2,11],["angle",0,50]],"criterion":"SAS","pts":[[0.4,5.468],[0.4,0.532],[5.6,1.105]],"labels":[{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":-0.8,"y":3.0,"box":[-1.83,2.587,0.23,3.413]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":3.836,"y":4.282,"box":[2.573,3.87,5.098,4.695]},{"type":"angle","fact":["angle",0,50],"text":"50°","x":1.288,"y":3.565,"box":[0.555,3.191,2.02,3.939]}]},{"n":3,"role":"angles_only","facts":[["angle",0,65],["angle",1,70],["angle",2,45]],"criterion":"AAA","pts":[[0.177,-0.4],[5.823,-0.4],[3.348,6.4]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":1.695,"y":0.567,"box":[0.963,0.193,2.428,0.941]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":4.43,"y":0.575,"box":[3.698,0.201,5.163,0.949]},{"type":"angle","fact":["angle",2,45],"text":"45°","x":3.239,"y":3.902,"box":[2.507,3.528,3.971,4.276]}]},{"n":4,"role":"twin","facts":[["angle",0,65],["angle",1,70],["side",0,1,7]],"criterion":"ASA","pts":[[5.471,-0.4],[0.529,-0.31],[3.054,6.4]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":4.091,"y":0.593,"box":[3.359,0.219,4.824,0.967]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":1.936,"y":0.645,"box":[1.203,0.271,2.668,1.019]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":2.989,"y":-0.955,"box":[1.959,-1.367,4.019,-0.542]}]},{"n":5,"role":"culprit","facts":[["angle",0,65],["angle",1,70],["side",0,1,7]],"criterion":"ASA","pts":[[0.177,-0.4],[5.823,-0.4],[3.348,6.4]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":1.695,"y":0.567,"box":[0.963,0.193,2.428,0.941]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":4.43,"y":0.575,"box":[3.698,0.201,5.163,0.949]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]}]},{"n":6,"role":"one_differs","facts":[["angle",0,65],["angle",1,70],["side",0,1,8]],"criterion":"ASA","pts":[[5.823,-0.4],[0.177,-0.4],[2.652,6.4]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":4.305,"y":0.567,"box":[3.572,0.193,5.037,0.941]},{"type":"angle","fact":["angle",1,70],"text":"70°","x":1.57,"y":0.575,"box":[0.837,0.201,2.302,0.949]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-1.0,"box":[1.97,-1.413,4.03,-0.587]}]}],"pair":[4,5],"witness_says":[4,5],"witness_right":true,"witness_fooled_by":null},
+{"id":"s4-04","stage":4,"criterion":"RHS","rule":"RHS","suspects":[{"n":1,"role":"one_differs","facts":[["angle",2,90],["side",0,1,14],["side",1,2,7]],"criterion":"RHS","pts":[[-0.4,1.528],[6.4,1.528],[4.7,4.472]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":3.0,"y":0.928,"box":[1.738,0.515,4.263,1.341]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.676,"y":3.65,"box":[5.646,3.238,7.706,4.063]}]},{"n":2,"role":"drawn_alike","facts":[["angle",2,90],["side",0,1,14],["side",1,2,8]],"criterion":"RHS","pts":[[-0.4,1.683],[6.4,1.683],[5.151,4.317]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":3.0,"y":1.083,"box":[1.738,0.67,4.263,1.496]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.95,"y":3.557,"box":[5.92,3.144,7.98,3.969]}]},{"n":3,"role":"twin","facts":[["angle",2,90],["side",0,1,14],["side",1,2,6]],"criterion":"RHS","pts":[[1.683,-0.4],[1.683,6.4],[4.317,5.151]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":0.283,"y":3.0,"box":[-0.98,2.587,1.545,3.413]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":3.428,"y":6.679,"box":[2.398,6.267,4.458,7.092]}]},{"n":4,"role":"stranger","facts":[["side",1,2,7],["side",0,2,8],["side",0,1,10]],"criterion":"SSS","pts":[[4.891,6.4],[4.891,-0.4],[1.109,2.49]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":2.332,"y":0.171,"box":[1.302,-0.242,3.362,0.583]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":2.137,"y":5.279,"box":[1.107,4.867,3.167,5.692]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":6.291,"y":3.0,"box":[5.029,2.587,7.554,3.413]}]},{"n":5,"role":"one_differs","facts":[["angle",2,90],["side",0,1,16],["side",1,2,6]],"criterion":"RHS","pts":[[6.0,1.957],[0.0,1.957],[0.844,4.043]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,16],"text":"16 cm","x":3.0,"y":1.357,"box":[1.738,0.944,4.263,1.77]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":-0.968,"y":3.563,"box":[-1.998,3.15,0.062,3.975]}]},{"n":6,"role":"culprit","facts":[["angle",2,90],["side",0,1,14],["side",1,2,6]],"criterion":"RHS","pts":[[-0.4,1.683],[6.4,1.683],[5.151,4.317]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":3.0,"y":1.083,"box":[1.738,0.67,4.263,1.496]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.95,"y":3.557,"box":[5.92,3.144,7.98,3.969]}]}],"pair":[3,6],"witness_says":[3,6],"witness_right":true,"witness_fooled_by":null},
+{"id":"s4-05","stage":4,"criterion":"AAS","rule":"ASA","suspects":[{"n":1,"role":"culprit","facts":[["angle",0,60],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[-0.4,-0.258],[6.4,-0.258],[3.362,6.258]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.245,"y":0.692,"box":[0.513,0.318,1.978,1.066]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":0.709,"box":[4.15,0.335,5.614,1.083]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.059,"y":3.549,"box":[5.029,3.137,7.089,3.962]}]},{"n":2,"role":"one_differs","facts":[["angle",0,55],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[-0.4,5.915],[6.4,5.915],[3.682,0.085]],"labels":[{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":4.945,"box":[0.73,4.571,2.195,5.319]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":4.948,"box":[4.15,4.574,5.614,5.322]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.219,"y":2.451,"box":[5.189,2.038,7.249,2.863]}]},{"n":3,"role":"twin","facts":[["angle",0,60],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[6.4,0.116],[-0.4,0.427],[3.019,5.884]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.688,"y":1.15,"box":[3.955,0.776,5.42,1.524]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":1.283,"y":1.309,"box":[0.551,0.935,2.015,1.683]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":0.208,"y":3.846,"box":[-0.822,3.433,1.238,4.258]}]},{"n":4,"role":"stranger","facts":[["angle",2,90],["side",0,1,12],["side",1,2,9]],"criterion":"RHS","pts":[[-0.4,4.687],[6.4,4.687],[2.575,1.313]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":5.287,"box":[1.738,4.875,4.263,5.7]},{"type":"side","fact":["side",1,2,9],"text":"9 cm","x":5.281,"y":2.1,"box":[4.251,1.688,6.311,2.513]}]},{"n":5,"role":"angles_only","facts":[["angle",0,60],["angle",1,65],["angle",2,55]],"criterion":"AAA","pts":[[6.4,6.258],[-0.4,6.258],[2.638,-0.258]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":4.755,"y":5.308,"box":[4.022,4.934,5.487,5.682]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":1.118,"y":5.291,"box":[0.386,4.917,1.85,5.665]},{"type":"angle","fact":["angle",2,55],"text":"55°","x":2.73,"y":1.84,"box":[1.997,1.466,3.462,2.214]}]},{"n":6,"role":"drawn_alike","facts":[["angle",0,70],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[-0.4,-0.258],[6.4,-0.258],[3.362,6.258]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":1.245,"y":0.692,"box":[0.513,0.318,1.978,1.066]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.882,"y":0.709,"box":[4.15,0.335,5.614,1.083]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":6.059,"y":3.549,"box":[5.029,3.137,7.089,3.962]}]}],"pair":[1,3],"witness_says":[1,3],"witness_right":true,"witness_fooled_by":null},
+{"id":"s4-06","stage":4,"criterion":"ASA","rule":"ASA","suspects":[{"n":1,"role":"stranger","facts":[["angle",2,90],["side",0,1,15],["side",1,2,7]],"criterion":"RHS","pts":[[6.4,4.403],[-0.4,4.403],[1.081,1.597]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,15],"text":"15 cm","x":3.0,"y":5.003,"box":[1.738,4.591,4.263,5.415]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":-0.809,"y":2.393,"box":[-1.839,1.981,0.221,2.806]}]},{"n":2,"role":"angles_only","facts":[["angle",0,60],["angle",1,50],["angle",2,70]],"criterion":"AAA","pts":[[-0.4,0.6],[6.4,0.6],[2.372,5.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.246,"y":1.55,"box":[0.513,1.176,1.978,1.924]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":1.53,"box":[3.674,1.156,5.139,1.904]},{"type":"angle","fact":["angle",2,70],"text":"70°","x":2.52,"y":3.706,"box":[1.788,3.332,3.253,4.08]}]},{"n":3,"role":"culprit","facts":[["angle",0,60],["angle",1,50],["side",0,1,11]],"criterion":"ASA","pts":[[-0.4,0.6],[6.4,0.6],[2.372,5.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.246,"y":1.55,"box":[0.513,1.176,1.978,1.924]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":1.53,"box":[3.674,1.156,5.139,1.904]},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":-0.0,"box":[1.738,-0.413,4.263,0.412]}]},{"n":4,"role":"drawn_alike","facts":[["angle",0,60],["angle",1,55],["side",0,1,11]],"criterion":"ASA","pts":[[-0.4,0.6],[6.4,0.6],[2.372,5.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.246,"y":1.55,"box":[0.513,1.176,1.978,1.924]},{"type":"angle","fact":["angle",1,55],"text":"55°","x":4.406,"y":1.53,"box":[3.674,1.156,5.139,1.904]},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":3.0,"y":-0.0,"box":[1.738,-0.413,4.263,0.412]}]},{"n":5,"role":"twin","facts":[["angle",0,60],["angle",1,50],["side",0,1,11]],"criterion":"ASA","pts":[[1.067,-0.2],[0.594,6.2],[5.406,2.818]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.841,"y":1.425,"box":[1.109,1.051,2.574,1.799]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":1.63,"y":4.373,"box":[0.898,3.999,2.363,4.747]},{"type":"side","fact":["side",0,1,11],"text":"11 cm","x":-0.665,"y":2.889,"box":[-1.928,2.477,0.597,3.302]}]},{"n":6,"role":"one_differs","facts":[["angle",0,60],["angle",1,50],["side",0,1,13]],"criterion":"ASA","pts":[[-0.4,0.6],[6.4,0.6],[2.372,5.4]],"labels":[{"type":"angle","fact":["angle",0,60],"text":"60°","x":1.246,"y":1.55,"box":[0.513,1.176,1.978,1.924]},{"type":"angle","fact":["angle",1,50],"text":"50°","x":4.406,"y":1.53,"box":[3.674,1.156,5.139,1.904]},{"type":"side","fact":["side",0,1,13],"text":"13 cm","x":3.0,"y":-0.0,"box":[1.738,-0.413,4.263,0.412]}]}],"pair":[3,5],"witness_says":[2,3],"witness_right":false,"witness_fooled_by":"angles_only"},
+{"id":"s4-07","stage":4,"criterion":"AAS","rule":"ASA","suspects":[{"n":1,"role":"one_differs","facts":[["angle",0,65],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[6.4,6.171],[6.4,-0.171],[-0.4,3.0]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":5.54,"y":4.822,"box":[4.808,4.448,6.273,5.196]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":5.54,"y":1.178,"box":[4.808,0.804,6.273,1.552]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":2.577,"y":0.508,"box":[1.547,0.096,3.607,0.921]}]},{"n":2,"role":"angles_only","facts":[["angle",0,70],["angle",1,65],["angle",2,45]],"criterion":"AAA","pts":[[-0.4,5.823],[-0.4,0.177],[6.4,3.348]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":0.46,"y":4.594,"box":[-0.272,4.22,1.193,4.968]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":0.46,"y":1.526,"box":[-0.273,1.152,1.192,1.9]},{"type":"angle","fact":["angle",2,45],"text":"45°","x":4.302,"y":3.256,"box":[3.57,2.882,5.034,3.63]}]},{"n":3,"role":"stranger","facts":[["angle",2,90],["side",0,1,9],["side",1,2,6]],"criterion":"RHS","pts":[[4.689,-0.4],[4.689,6.4],[1.311,3.378]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":5.889,"y":3.0,"box":[4.859,2.587,6.919,3.413]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":2.2,"y":5.783,"box":[1.17,5.371,3.23,6.196]}]},{"n":4,"role":"drawn_alike","facts":[["angle",0,70],["angle",1,65],["side",1,2,10]],"criterion":"AAS","pts":[[0.177,-0.4],[5.823,-0.4],[2.652,6.4]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":1.57,"y":0.575,"box":[0.837,0.201,2.302,0.949]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.305,"y":0.567,"box":[3.572,0.193,5.037,0.941]},{"type":"side","fact":["side",1,2,10],"text":"10 cm","x":5.597,"y":3.634,"box":[4.334,3.221,6.859,4.046]}]},{"n":5,"role":"culprit","facts":[["angle",0,70],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[0.177,-0.4],[5.823,-0.4],[2.652,6.4]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":1.57,"y":0.575,"box":[0.837,0.201,2.302,0.949]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":4.305,"y":0.567,"box":[3.572,0.193,5.037,0.941]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":5.416,"y":3.549,"box":[4.386,3.137,6.446,3.962]}]},{"n":6,"role":"twin","facts":[["angle",0,70],["angle",1,65],["side",1,2,8]],"criterion":"AAS","pts":[[0.504,6.365],[5.496,6.4],[2.186,-0.4]],"labels":[{"type":"angle","fact":["angle",0,70],"text":"70°","x":1.689,"y":5.445,"box":[0.957,5.071,2.421,5.819]},{"type":"angle","fact":["angle",1,65],"text":"65°","x":3.973,"y":5.44,"box":[3.241,5.066,4.706,5.814]},{"type":"side","fact":["side",1,2,8],"text":"8 cm","x":5.01,"y":2.431,"box":[3.98,2.019,6.04,2.844]}]}],"pair":[5,6],"witness_says":[2,5],"witness_right":false,"witness_fooled_by":"angles_only"},
+{"id":"s4-08","stage":4,"criterion":"SAS","rule":"SAS","suspects":[{"n":1,"role":"twin","facts":[["side",0,1,7],["side",0,2,9],["angle",0,45]],"criterion":"SAS","pts":[[0.514,5.654],[0.0,0.346],[6.0,1.154]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":-0.937,"y":3.116,"box":[-1.967,2.703,0.093,3.528]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":3.955,"y":4.254,"box":[2.925,3.842,4.985,4.667]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.243,"y":3.899,"box":[0.51,3.525,1.975,4.273]}]},{"n":2,"role":"drawn_alike","facts":[["side",0,1,7],["side",0,2,9],["angle",0,55]],"criterion":"SAS","pts":[[-0.4,-0.091],[6.4,-0.091],[5.782,6.091]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.691,"box":[1.97,-1.104,4.03,-0.279]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.842,"y":3.849,"box":[0.812,3.436,2.872,4.261]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.817,"y":0.827,"box":[1.085,0.453,2.55,1.201]}]},{"n":3,"role":"angle_moved","facts":[["side",0,1,7],["side",0,2,9],["angle",2,45]],"criterion":"SSA","pts":[[0.179,6.4],[5.821,6.4],[2.706,-0.4]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":7.0,"box":[1.97,6.588,4.03,7.412]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":0.224,"y":2.547,"box":[-0.806,2.135,1.254,2.96]},{"type":"angle","fact":["angle",2,45],"text":"45°","x":2.798,"y":2.098,"box":[2.066,1.724,3.531,2.472]}]},{"n":4,"role":"culprit","facts":[["side",0,1,7],["side",0,2,9],["angle",0,45]],"criterion":"SAS","pts":[[-0.4,-0.091],[6.4,-0.091],[5.782,6.091]],"labels":[{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":-0.691,"box":[1.97,-1.104,4.03,-0.279]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.842,"y":3.849,"box":[0.812,3.436,2.872,4.261]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":0.827,"box":[1.085,0.453,2.55,1.201]}]},{"n":5,"role":"stranger","facts":[["side",1,2,5],["side",0,2,6],["side",0,1,7]],"criterion":"SSS","pts":[[-0.4,0.96],[6.4,0.96],[3.763,5.04]],"labels":[{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.173,"y":3.706,"box":[5.143,3.293,7.203,4.118]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":0.842,"y":3.857,"box":[-0.188,3.445,1.872,4.27]},{"type":"side","fact":["side",0,1,7],"text":"7 cm","x":3.0,"y":0.36,"box":[1.97,-0.053,4.03,0.772]}]},{"n":6,"role":"one_differs","facts":[["side",0,1,6],["side",0,2,9],["angle",0,45]],"criterion":"SAS","pts":[[-0.4,6.4],[6.011,6.4],[6.4,-0.4]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":2.805,"y":7.0,"box":[1.775,6.588,3.835,7.412]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":2.151,"y":2.151,"box":[1.121,1.739,3.181,2.564]},{"type":"angle","fact":["angle",0,45],"text":"45°","x":1.817,"y":5.482,"box":[1.085,5.108,2.55,5.856]}]}],"pair":[1,4],"witness_says":[3,4],"witness_right":false,"witness_fooled_by":"angle_moved"},
+{"id":"s4-09","stage":4,"criterion":"SAS","rule":"SAS","suspects":[{"n":1,"role":"drawn_alike","facts":[["side",0,1,6],["side",0,2,8],["angle",0,55]],"criterion":"SAS","pts":[[-0.4,-0.249],[6.4,-0.249],[4.15,6.249]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.849,"box":[1.97,-1.262,4.03,-0.437]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":0.81,"y":3.746,"box":[-0.22,3.333,1.84,4.158]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":0.721,"box":[0.73,0.347,2.195,1.095]}]},{"n":2,"role":"twin","facts":[["side",0,1,6],["side",0,2,7],["angle",0,55]],"criterion":"SAS","pts":[[5.146,-0.4],[5.585,6.4],[0.415,3.901]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":6.563,"y":2.923,"box":[5.533,2.51,7.593,3.335]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":1.973,"y":0.863,"box":[0.943,0.45,3.003,1.275]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.359,"y":1.547,"box":[3.626,1.173,5.091,1.921]}]},{"n":3,"role":"stranger","facts":[["side",1,2,7],["side",0,2,8],["side",0,1,9]],"criterion":"SSS","pts":[[-0.4,5.253],[6.4,5.253],[3.63,0.747]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.122,"y":2.319,"box":[5.092,1.907,7.152,2.732]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":0.721,"y":2.2,"box":[-0.309,1.788,1.751,2.613]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":5.853,"box":[1.97,5.441,4.03,6.265]}]},{"n":4,"role":"culprit","facts":[["side",0,1,6],["side",0,2,7],["angle",0,55]],"criterion":"SAS","pts":[[-0.4,-0.249],[6.4,-0.249],[4.15,6.249]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":3.0,"y":-0.849,"box":[1.97,-1.262,4.03,-0.437]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":0.81,"y":3.746,"box":[-0.22,3.333,1.84,4.158]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":0.721,"box":[0.73,0.347,2.195,1.095]}]},{"n":5,"role":"one_differs","facts":[["side",0,1,6],["side",0,2,6],["angle",0,55]],"criterion":"SAS","pts":[[5.621,6.2],[5.621,-0.2],[0.379,2.529]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":6.821,"y":3.0,"box":[5.791,2.587,7.851,3.413]},{"type":"side","fact":["side",0,2,6],"text":"6 cm","x":2.369,"y":5.266,"box":[1.339,4.853,3.399,5.678]},{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.744,"y":4.515,"box":[4.011,4.141,5.476,4.889]}]},{"n":6,"role":"angle_moved","facts":[["side",0,1,6],["side",0,2,7],["angle",2,55]],"criterion":"SSA","pts":[[5.763,0.0],[5.763,6.0],[0.237,4.298]],"labels":[{"type":"side","fact":["side",0,1,6],"text":"6 cm","x":6.963,"y":3.0,"box":[5.933,2.587,7.993,3.413]},{"type":"side","fact":["side",0,2,7],"text":"7 cm","x":2.325,"y":1.281,"box":[1.295,0.868,3.355,1.693]},{"type":"angle","fact":["angle",2,55],"text":"55°","x":2.106,"y":3.956,"box":[1.374,3.582,2.838,4.33]}]}],"pair":[2,4],"witness_says":[4,6],"witness_right":false,"witness_fooled_by":"angle_moved"},
+{"id":"s4-10","stage":4,"criterion":"SSS","rule":"SSS","suspects":[{"n":1,"role":"stranger","facts":[["side",1,2,4],["side",0,2,8],["side",0,1,10]],"criterion":"SSS","pts":[[-0.4,4.034],[6.4,4.034],[4.632,1.966]],"labels":[{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":6.428,"y":2.22,"box":[5.398,1.808,7.458,2.633]},{"type":"side","fact":["side",0,2,8],"text":"8 cm","x":1.774,"y":2.168,"box":[0.744,1.755,2.804,2.58]},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":4.634,"box":[1.738,4.222,4.263,5.046]}]},{"n":2,"role":"drawn_alike","facts":[["side",1,2,7],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,1.586],[6.4,1.586],[4.511,4.414]],"labels":[{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":6.537,"y":3.722,"box":[5.507,3.31,7.567,4.135]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.457,"y":4.04,"box":[0.194,3.627,2.719,4.452]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.986,"box":[1.738,0.573,4.263,1.399]}]},{"n":3,"role":"one_differs","facts":[["side",1,2,6],["side",0,2,11],["side",0,1,12]],"criterion":"SSS","pts":[[6.4,4.551],[-0.4,4.551],[0.993,1.449]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":-0.889,"y":2.467,"box":[-1.919,2.055,0.141,2.88]},{"type":"side","fact":["side",0,2,11],"text":"11 cm","x":4.294,"y":1.959,"box":[3.031,1.547,5.556,2.372]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":5.151,"box":[1.738,4.739,4.263,5.563]}]},{"n":4,"role":"one_differs","facts":[["side",1,2,6],["side",0,2,9],["side",0,1,12]],"criterion":"SSS","pts":[[4.235,6.4],[4.235,-0.4],[1.765,1.938]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":2.175,"y":-0.102,"box":[1.145,-0.515,3.205,0.31]},{"type":"side","fact":["side",0,2,9],"text":"9 cm","x":1.863,"y":4.799,"box":[0.833,4.386,2.893,5.211]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":5.635,"y":3.0,"box":[4.373,2.587,6.898,3.413]}]},{"n":5,"role":"culprit","facts":[["side",1,2,6],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[-0.4,1.586],[6.4,1.586],[4.511,4.414]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.537,"y":3.722,"box":[5.507,3.31,7.567,4.135]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":1.457,"y":4.04,"box":[0.194,3.627,2.719,4.452]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":3.0,"y":0.986,"box":[1.738,0.573,4.263,1.399]}]},{"n":6,"role":"twin","facts":[["side",1,2,6],["side",0,2,10],["side",0,1,12]],"criterion":"SSS","pts":[[6.4,1.724],[-0.4,2.33],[2.053,4.276]],"labels":[{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":0.143,"y":4.165,"box":[-0.887,3.752,1.173,4.577]},{"type":"side","fact":["side",0,2,10],"text":"10 cm","x":4.834,"y":4.035,"box":[3.572,3.622,6.097,4.447]},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":2.938,"y":1.33,"box":[1.675,0.917,4.2,1.742]}]}],"pair":[5,6],"witness_says":[2,5],"witness_right":false,"witness_fooled_by":"drawn_alike"},
+{"id":"s4-11","stage":4,"criterion":"ASA","rule":"ASA","suspects":[{"n":1,"role":"angles_only","facts":[["angle",0,55],["angle",1,60],["angle",2,65]],"criterion":"AAA","pts":[[5.661,-0.4],[5.661,6.4],[0.339,3.327]],"labels":[{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.784,"y":1.285,"box":[4.051,0.911,5.516,1.659]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":4.761,"y":4.841,"box":[4.029,4.467,5.493,5.215]},{"type":"angle","fact":["angle",2,65],"text":"65°","x":1.937,"y":3.257,"box":[1.205,2.883,2.67,3.631]}]},{"n":2,"role":"culprit","facts":[["angle",0,55],["angle",1,60],["side",0,1,8]],"criterion":"ASA","pts":[[-0.4,0.339],[6.4,0.339],[3.327,5.661]],"labels":[{"type":"angle","fact":["angle",0,55],"text":"55°","x":1.463,"y":1.309,"box":[0.73,0.935,2.195,1.683]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":4.755,"y":1.289,"box":[4.022,0.915,5.487,1.663]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-0.261,"box":[1.97,-0.674,4.03,0.151]}]},{"n":3,"role":"one_differs","facts":[["angle",0,55],["angle",1,60],["side",0,1,9]],"criterion":"ASA","pts":[[5.661,6.4],[5.661,-0.4],[0.339,2.673]],"labels":[{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.784,"y":4.715,"box":[4.051,4.341,5.516,5.089]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":4.761,"y":1.159,"box":[4.029,0.785,5.493,1.533]},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":6.861,"y":3.0,"box":[5.831,2.587,7.891,3.413]}]},{"n":4,"role":"twin","facts":[["angle",0,55],["angle",1,60],["side",0,1,8]],"criterion":"ASA","pts":[[6.4,0.008],[-0.4,0.432],[3.741,5.992]],"labels":[{"type":"angle","fact":["angle",0,55],"text":"55°","x":4.84,"y":1.092,"box":[4.108,0.718,5.572,1.466]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":1.414,"y":1.273,"box":[0.682,0.899,2.147,1.647]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":2.963,"y":-0.379,"box":[1.933,-0.791,3.993,0.034]}]},{"n":5,"role":"stranger","facts":[["angle",2,90],["side",0,1,9],["side",1,2,4]],"criterion":"RHS","pts":[[6.4,1.646],[-0.4,1.646],[0.943,4.354]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,9],"text":"9 cm","x":3.0,"y":1.046,"box":[1.97,0.633,4.03,1.458]},{"type":"side","fact":["side",1,2,4],"text":"4 cm","x":-0.893,"y":3.578,"box":[-1.923,3.165,0.137,3.99]}]},{"n":6,"role":"drawn_alike","facts":[["angle",0,65],["angle",1,60],["side",0,1,8]],"criterion":"ASA","pts":[[-0.4,0.339],[6.4,0.339],[3.327,5.661]],"labels":[{"type":"angle","fact":["angle",0,65],"text":"65°","x":1.463,"y":1.309,"box":[0.73,0.935,2.195,1.683]},{"type":"angle","fact":["angle",1,60],"text":"60°","x":4.755,"y":1.289,"box":[4.022,0.915,5.487,1.663]},{"type":"side","fact":["side",0,1,8],"text":"8 cm","x":3.0,"y":-0.261,"box":[1.97,-0.674,4.03,0.151]}]}],"pair":[2,4],"witness_says":[2,6],"witness_right":false,"witness_fooled_by":"drawn_alike"},
+{"id":"s4-12","stage":4,"criterion":"RHS","rule":"RHS","suspects":[{"n":1,"role":"culprit","facts":[["angle",2,90],["side",0,1,10],["side",1,2,5]],"criterion":"RHS","pts":[[-0.4,1.528],[6.4,1.528],[4.7,4.472]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.928,"box":[1.738,0.515,4.263,1.341]},{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":6.676,"y":3.65,"box":[5.646,3.238,7.706,4.063]}]},{"n":2,"role":"stranger","facts":[["angle",2,90],["side",0,1,14],["side",1,2,6]],"criterion":"RHS","pts":[[4.317,-0.4],[4.317,6.4],[1.683,5.151]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,14],"text":"14 cm","x":5.717,"y":3.0,"box":[4.455,2.587,6.98,3.413]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":2.572,"y":6.679,"box":[1.542,6.267,3.602,7.092]}]},{"n":3,"role":"drawn_alike","facts":[["angle",2,90],["side",0,1,10],["side",1,2,6]],"criterion":"RHS","pts":[[-0.4,1.528],[6.4,1.528],[4.7,4.472]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.928,"box":[1.738,0.515,4.263,1.341]},{"type":"side","fact":["side",1,2,6],"text":"6 cm","x":6.676,"y":3.65,"box":[5.646,3.238,7.706,4.063]}]},{"n":4,"role":"one_differs","facts":[["angle",2,90],["side",0,1,10],["side",1,2,7]],"criterion":"RHS","pts":[[4.7,-0.4],[4.7,6.4],[1.3,3.068]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":6.1,"y":3.0,"box":[4.838,2.587,7.363,3.413]},{"type":"side","fact":["side",1,2,7],"text":"7 cm","x":2.16,"y":5.591,"box":[1.13,5.179,3.19,6.004]}]},{"n":5,"role":"twin","facts":[["angle",2,90],["side",0,1,10],["side",1,2,5]],"criterion":"RHS","pts":[[6.4,1.528],[-0.4,1.528],[1.3,4.472]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,10],"text":"10 cm","x":3.0,"y":0.928,"box":[1.738,0.515,4.263,1.341]},{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":-0.676,"y":3.65,"box":[-1.706,3.238,0.354,4.063]}]},{"n":6,"role":"one_differs","facts":[["angle",2,90],["side",0,1,12],["side",1,2,5]],"criterion":"RHS","pts":[[4.288,-0.4],[4.288,6.4],[1.712,5.219]],"labels":[{"type":"right","vertex":2},{"type":"side","fact":["side",0,1,12],"text":"12 cm","x":5.688,"y":3.0,"box":[4.426,2.587,6.951,3.413]},{"type":"side","fact":["side",1,2,5],"text":"5 cm","x":2.583,"y":6.719,"box":[1.553,6.306,3.613,7.131]}]}],"pair":[1,5],"witness_says":[1,4],"witness_right":false,"witness_fooled_by":"one_differs"}
+  ];
+
+  // Placeholders by Project Claude, 28 Nov 2026; Jon writes the real lines after playing.
+  var LINES = {
+    enlarged: "Same shape, different size. That's an enlargement: similar, not congruent.",
+    one_square_out: "Close, but one corner is a square out. Count the squares along each side.",
+    stranger: "That's a different triangle altogether.",
+    reflection_missed: "Flipped still counts: a reflection is congruent.",
+    one_differs: "One of the marks is different, so they can't be the same triangle.",
+    drawn_alike: "It looks identical, but a number is different. The picture lied; the numbers don't.",
+    angles_only: "Matching angles prove the shape, not the size. It could be an enlargement.",
+    angle_moved: "Same numbers, but the angle isn't between the same two sides. That doesn't prove it.",
+    angle_not_between: "SAS needs the angle between the two sides. This one isn't.",
+    no_hypotenuse: "RHS needs the hypotenuse, the side opposite the right angle. It isn't marked.",
+    not_enough_wrong: "There is enough: these marks match a rule.",
+    wrong_rule: "Not that rule. Check which sides and angles are marked, and where.",
+    witness_believed: "The witness was fooled.",
+    witness_doubted: "The witness was right this time."
+  };
+
+  /* =====================================================================================================
+     THE WORKING (contract 3h): one function, so a right answer and a wrong one say the same thing.
+     ===================================================================================================== */
+  var SHARE = {
+    SSS: 'all three sides',
+    SAS: 'two sides and the angle between them',
+    ASA: 'two angles and the side between them',
+    RHS: 'a right angle, the hypotenuse and one other side'
+  };
+  function sus(q, role) { for (var i = 0; i < q.suspects.length; i++) if (q.suspects[i].role === role) return q.suspects[i]; return null; }
+  function suspectN(q, n) { for (var i = 0; i < q.suspects.length; i++) if (q.suspects[i].n === n) return q.suspects[i]; return null; }
+  // 180 minus the two marked angles: the third angle of an AAS (or ASA) triangle.
+  function third(facts) {
+    var s = 0;
+    facts.forEach(function (f) { if (f[0] === 'angle') s += f[2]; });
+    return 180 - s;
+  }
+  function s1Line(q) {
+    var C = sus(q, 'culprit').n, T = sus(q, 'twin').n;
+    if (q.twin_move === 'reflection') return 'Flip number ' + C + ' over and it fits exactly on number ' + T + '. A reflection is still congruent.';
+    var turn = { rot90: 'a quarter turn anticlockwise', rot270: 'a quarter turn clockwise', rot180: 'a half turn' }[q.twin_op];
+    return 'Turn number ' + C + ' ' + turn + ' and it fits exactly on number ' + T + '.';
+  }
+  function s2Line(q) {
+    var c = sus(q, 'culprit'), C = c.n, T = sus(q, 'twin').n;
+    var R = q.criterion === 'AAS'
+      ? 'two angles and a side; the third angle is ' + third(c.facts) + '°, so the side is between two known angles: ASA'
+      : SHARE[q.criterion];
+    return C + ' and ' + T + ' share ' + R + '. That proves it, whatever the pictures look like.';
+  }
+  function s3Line(q) {
+    if (q.shown === 'SAS_right') return 'two sides and the angle between them: a right angle between two sides is SAS, not RHS';
+    if (q.shown === 'AAS') return 'Find the third angle first: angles in a triangle add up to 180°, so it\'s ' + third(q.facts) + '°. Now the side is between two known angles: ASA.';
+    if (q.shown === 'AAA') return 'Same angles fix the shape, not the size: one could be an enlargement of the other. Not enough evidence.';
+    if (q.shown === 'SSA') return 'The angle isn\'t between the two sides, so the same marks fit two different triangles. Look at A and B: not enough evidence.';
+    return SHARE[q.shown];
+  }
+  function working(q) {
+    return q.stage === 1 ? s1Line(q) : q.stage === 3 ? s3Line(q) : s2Line(q);
+  }
+
+  /* =====================================================================================================
+     THE DRAWINGS: SVG from the bank's own numbers. Stages 2-4 in viewBox -2 -2 10 10 with screen y = 6 - y; Stage 1 on an
+     8 by 8 grid in viewBox -0.5 -0.5 9 9 with screen y = 8 - y. Nothing is placed here: a label sits where the bank put it.
+     ===================================================================================================== */
+  var SVGNS = 'http://www.w3.org/2000/svg';
+  function r3(v) { return String(Math.round(v * 1000) / 1000); }
+  function flip(P, top) { return P.map(function (p) { return [p[0], top - p[1]]; }); }
+  function unit(a, b) { var dx = b[0] - a[0], dy = b[1] - a[1], l = Math.sqrt(dx * dx + dy * dy); return [dx / l, dy / l]; }
+  function svgOpen(vb, label, cls) {
+    return '<svg class="tri ' + cls + '" viewBox="' + vb + '" role="img" aria-label="' + esc(label) + '" focusable="false">';
+  }
+  function drawGrid(q, s) {
+    var out = '', i;
+    for (i = 0; i <= 8; i++) {
+      out += '<line class="gridl" x1="' + i + '" y1="0" x2="' + i + '" y2="8" vector-effect="non-scaling-stroke"/>' +
+        '<line class="gridl" x1="0" y1="' + i + '" x2="8" y2="' + i + '" vector-effect="non-scaling-stroke"/>';
+    }
+    var P = flip(s.pts, 8);
+    out += '<polygon class="edge" points="' + P.map(function (p) { return r3(p[0]) + ',' + r3(p[1]); }).join(' ') + '" vector-effect="non-scaling-stroke"/>';
+    return svgOpen('-0.5 -0.5 9 9', 'Triangle ' + s.n + ' on squared paper', 's1') + out + '</svg>';
+  }
+  // The marks on one triangle: its labels, in the bank's order.
+  function drawMarked(pts, labels, title) {
+    var P = flip(pts, 6), out = '<polygon class="edge" points="' + P.map(function (p) { return r3(p[0]) + ',' + r3(p[1]); }).join(' ') + '" vector-effect="non-scaling-stroke"/>';
+    labels.forEach(function (l) {
+      var v = l.type === 'right' ? l.vertex : l.type === 'angle' ? l.fact[1] : -1;
+      if (v >= 0) {
+        var V = P[v], o = [0, 1, 2].filter(function (j) { return j !== v; }), u1 = unit(V, P[o[0]]), u2 = unit(V, P[o[1]]);
+        if (l.type === 'right') {
+          var s = 0.45;
+          out += '<path class="sq" d="M' + r3(V[0] + s * u1[0]) + ' ' + r3(V[1] + s * u1[1]) + ' L' + r3(V[0] + s * (u1[0] + u2[0])) + ' ' +
+            r3(V[1] + s * (u1[1] + u2[1])) + ' L' + r3(V[0] + s * u2[0]) + ' ' + r3(V[1] + s * u2[1]) + '" vector-effect="non-scaling-stroke"/>';
+        } else {
+          var r = 0.4, cross = u1[0] * u2[1] - u1[1] * u2[0];
+          out += '<path class="arc" d="M' + r3(V[0] + r * u1[0]) + ' ' + r3(V[1] + r * u1[1]) + ' A' + r + ' ' + r + ' 0 0 ' + (cross > 0 ? 1 : 0) + ' ' +
+            r3(V[0] + r * u2[0]) + ' ' + r3(V[1] + r * u2[1]) + '" vector-effect="non-scaling-stroke"/>';
+        }
+      }
+      if (l.type === 'side' || l.type === 'angle') {
+        out += '<text class="lab" data-type="' + l.type + '" x="' + r3(l.x) + '" y="' + r3(6 - l.y) + '" text-anchor="middle" dominant-baseline="central" font-family="Outfit" font-size="' +
+          (l.type === 'side' ? '0.75' : '0.68') + '">' + esc(l.text) + '</text>';
+      }
+    });
+    return svgOpen('-2 -2 10 10', title, 'marked') + out + '</svg>';
+  }
+  // What a screen reader hears for a suspect: its number and its marks, in the bank's order of facts.
+  function marksSaid(facts) {
+    return facts.map(function (f) {
+      return f[0] === 'side' ? f[3] + ' cm' : f[2] === 90 ? 'a right angle' : f[2] + ' degrees';
+    }).join(', ');
+  }
+  function corners(pts) { return pts.map(function (p) { return '(' + p[0] + ', ' + p[1] + ')'; }).join(', '); }
+
+  /* =====================================================================================================
+     THE GAME
+     ===================================================================================================== */
+  var mode = 'stage-1', Q = null, qs = [], qi = 0, state = 'menu', score = 0, picked = [], step = 0;
+  function stageItems(n) { return BANK.filter(function (q) { return q.stage === n; }); }
+  // A run: PER items from the stage's 12, no repeats, at random each time. Stage 1 always opens with s1-01, the witness's
+  // own line-up (2 and 6), and its other seven come from the remaining eleven.
+  function run(m) {
+    var n = Number(m.slice(-1)), all = stageItems(n);
+    if (n !== 1) return MaffsOptions.shuffle(all.slice()).slice(0, PER);
+    var first = all.filter(function (q) { return q.id === 's1-01'; });
+    return first.concat(MaffsOptions.shuffle(all.filter(function (q) { return q.id !== 's1-01'; })).slice(0, PER - 1));
+  }
+  function show(id) {
+    ['menu', 'game', 'results'].forEach(function (s) { $(s).classList.toggle('active', s === id); });
+    document.body.classList.toggle('playing', id !== 'menu');
+    MaffsLock.screen($(id));
+  }
+  function begin(m, list) {
+    MaffsLock.newSession();
+    mode = m; qs = list; qi = 0; score = 0;
+    show('game');
+    $('hudStage').textContent = m.slice(-1);
+    $('stageLabel').textContent = 'Stage ' + m.slice(-1) + ' · ' + STAGES[m.slice(-1)];
+    $('nda').hidden = m === 'stage-1';
+    ev('game_started', { game_slug: SLUG, level: level, mode: mode });
+    nextQuestion();
+  }
+  function startMode(m) { if (MODES.indexOf(m) !== -1) begin(m, run(m)); }
+
+  function buildLineup() {
+    var box = $('lineup');
+    box.innerHTML = '';
+    Q.suspects.forEach(function (s) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'suspect'; b.dataset.val = String(s.n);
+      b.setAttribute('aria-pressed', 'false');
+      b.setAttribute('aria-label', 'Suspect ' + s.n + ': ' + (Q.stage === 1 ? 'a triangle on squared paper, corners at ' + corners(s.pts) : marksSaid(s.facts)));
+      b.innerHTML = (Q.stage === 1 ? drawGrid(Q, s) : drawMarked(s.pts, s.labels, 'Triangle ' + s.n)) + '<span class="placard" aria-hidden="true">' + s.n + '</span>';
+      b.addEventListener('click', function () { toggle(b); });
+      box.appendChild(b);
+    });
+  }
+  function buildPair() {
+    var who = 'Triangle A: ' + marksSaid(Q.facts) + '. Triangle B: the same marks.';
+    $('pair').innerHTML =
+      '<figure>' + drawMarked(Q.pts_a, Q.labels_a, 'Triangle A: ' + marksSaid(Q.facts)) + '<figcaption>Triangle A</figcaption></figure>' +
+      '<figure>' + drawMarked(Q.pts_b, Q.labels_b, 'Triangle B: ' + marksSaid(Q.facts)) + '<figcaption>Triangle B</figcaption></figure>';
+    $('pair').setAttribute('aria-label', who);
+  }
+  function buildRules(withNotEnough) {
+    var box = $('rules');
+    box.innerHTML = '';
+    var list = ['SSS', 'SAS', 'ASA', 'RHS'];
+    if (withNotEnough) list.push('NOT_ENOUGH');
+    list.forEach(function (v) {   // a fixed order, never shuffled (contract 3f)
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'choice' + (v === 'NOT_ENOUGH' ? ' wide' : ''); b.dataset.val = v;
+      b.textContent = v === 'NOT_ENOUGH' ? 'Not enough evidence' : v;
+      b.addEventListener('click', function () { pickRule(b); });
+      box.appendChild(b);
+    });
+    box.hidden = false;
+  }
+
+  function nextQuestion() {
+    var fb = $('feedback');
+    if (window.MaffsNext) MaffsNext.clear(fb);
+    fb.innerHTML = '';
+    $('play').classList.remove('fb-open');
+    if (qi >= qs.length) { finish(); return; }
+    Q = qs[qi++];
+    $('play').classList.toggle('s4', Q.stage === 4);
+    picked = []; step = 1;
+    $('hudQ').textContent = qi + '/' + qs.length;
+    $('hudScore').textContent = score;
+    var lineup = Q.stage !== 3;
+    $('lineupWrap').hidden = !lineup;
+    $('pair').hidden = lineup;
+    $('rules').hidden = true; $('rules').innerHTML = '';
+    $('witness').hidden = Q.stage !== 4;
+    $('accuseBtn').disabled = true;
+    $('accuseRow').classList.toggle('waiting', Q.stage === 4);
+    if (lineup) buildLineup(); else buildPair();
+    if (Q.stage === 1) $('ask').textContent = 'Which two triangles are congruent? Tap two, then confirm.';
+    else if (Q.stage === 2) $('ask').textContent = 'Which two triangles must be congruent? Tap two, then confirm.';
+    else if (Q.stage === 3) { $('ask').textContent = 'A and B have the same marks. Which rule proves they are congruent?'; buildRules(true); }
+    else {
+      $('ask').textContent = 'Is the witness right?';
+      $('bubble').textContent = 'It was number ' + Q.witness_says[0] + ' and number ' + Q.witness_says[1] + ', I\'m sure.';
+      var js = $('judge').querySelectorAll('.choice');
+      for (var i = 0; i < js.length; i++) js[i].classList.remove('is-right', 'is-wrong');
+      MaffsLock.fresh($('judge'));
+      setSuspects(false);   // the line-up waits until the student has judged the witness
+    }
+    if (lineup) MaffsLock.fresh($('lineupWrap'));
+    if (Q.stage === 3) MaffsLock.fresh($('rules'));
+    state = 'asking';
+    fitBoard();
+  }
+  function setSuspects(on) {
+    var bs = $('lineup').querySelectorAll('.suspect');
+    for (var i = 0; i < bs.length; i++) bs[i].disabled = !on;
+  }
+
+  /* ---------- choosing two suspects ---------- */
+  function toggle(b) {
+    if (state !== 'asking' || MaffsLock.isLocked($('lineupWrap')) || b.disabled) return;
+    var n = Number(b.dataset.val), at = picked.indexOf(n);
+    if (at !== -1) picked.splice(at, 1);
+    else if (picked.length < 2) picked.push(n);
+    else return;   // at most two: tap one of the two to drop it first
+    b.setAttribute('aria-pressed', String(picked.indexOf(n) !== -1));
+    $('accuseBtn').disabled = picked.length !== 2;
+  }
+  function accuse() {
+    if (state !== 'asking' || picked.length !== 2) return;
+    if (!MaffsLock.lock($('lineupWrap'))) return;
+    var said = picked.slice().sort(function (a, b) { return a - b; });
+    var val = said[0] + '-' + said[1], right = val === Q.pair[0] + '-' + Q.pair[1];
+    var bs = $('lineup').querySelectorAll('.suspect');
+    for (var i = 0; i < bs.length; i++) {
+      var n = Number(bs[i].dataset.val);
+      if (said.indexOf(n) !== -1) bs[i].classList.add('accused');
+      if (Q.pair.indexOf(n) !== -1) bs[i].classList.add('is-right');
+      else if (said.indexOf(n) !== -1) bs[i].classList.add('is-wrong');
+    }
+    $('accuseBtn').dataset.val = val;
+    if (right) return mark(true, [], [working(Q)]);
+    // The line for each suspect wrongly accused (once per kind), and in Stage 1 the flipped twin missed.
+    var keys = [];
+    said.forEach(function (n) {
+      if (Q.pair.indexOf(n) !== -1) return;
+      var role = suspectN(Q, n).role;
+      if (keys.indexOf(role) === -1) keys.push(role);
+    });
+    if (Q.stage === 1 && Q.twin_move === 'reflection' && said.indexOf(sus(Q, 'twin').n) === -1) keys.push('reflection_missed');
+    mark(false, keys, [working(Q)]);
+  }
+
+  /* ---------- the rule (Stage 3, and Stage 4 when the witness was right) ---------- */
+  function pickRule(b) {
+    if (state !== 'asking') return;
+    if (!MaffsLock.lock($('rules'))) return;
+    var val = b.dataset.val, want = Q.stage === 3 ? Q.answer : Q.rule, right = val === want;
+    var bs = $('rules').querySelectorAll('.choice');
+    for (var i = 0; i < bs.length; i++) {
+      if (bs[i].dataset.val === want) bs[i].classList.add('is-right');
+      else if (bs[i] === b) bs[i].classList.add('is-wrong');
+    }
+    if (right) return mark(true, [], [working(Q)]);
+    mark(false, [Q.stage === 3 ? ruleKey(val) : 'wrong_rule'], [working(Q)]);
+  }
+  // Stage 3's line for the button pressed (contract 3i).
+  function ruleKey(val) {
+    if (val === 'NOT_ENOUGH') return 'not_enough_wrong';
+    if (Q.answer === 'NOT_ENOUGH') return Q.shown === 'AAA' ? 'angles_only' : 'angle_not_between';
+    if (val === 'RHS' && Q.shown === 'SAS_right') return 'no_hypotenuse';
+    if (val === 'SAS' && Q.shown === 'RHS') return 'angle_not_between';
+    return 'wrong_rule';
+  }
+
+  /* ---------- the witness (Stage 4, step 1) ---------- */
+  function judge(b) {
+    if (state !== 'asking' || Q.stage !== 4 || step !== 1) return;
+    if (!MaffsLock.lock($('judge'))) return;
+    var val = b.dataset.val, want = Q.witness_right ? 'right' : 'wrong';
+    var bs = $('judge').querySelectorAll('.choice');
+    for (var i = 0; i < bs.length; i++) {
+      if (bs[i].dataset.val === want) bs[i].classList.add('is-right');
+      else if (bs[i] === b) bs[i].classList.add('is-wrong');
+    }
+    if (val !== want) {
+      // A wrong first step ends the item: the real pair lit in the line-up, the line, the working, Next.
+      var bs2 = $('lineup').querySelectorAll('.suspect');
+      for (var j = 0; j < bs2.length; j++) if (Q.pair.indexOf(Number(bs2[j].dataset.val)) !== -1) bs2[j].classList.add('is-right');
+      if (Q.witness_right) return mark(false, ['witness_doubted'], [s2Line(Q)]);
+      var F = sus(Q, Q.witness_fooled_by).n;
+      return mark(false, ['witness_believed'], ['The witness was fooled by number ' + F + '.', LINES[Q.witness_fooled_by], s2Line(Q)]);
+    }
+    step = 2;
+    if (Q.witness_right) {
+      $('ask').textContent = 'The witness is right. Which rule proves it?';
+      buildRules(false);
+      MaffsLock.fresh($('rules'));
+    } else {
+      $('ask').textContent = 'Then which two must be congruent? Tap two, then confirm.';
+      $('accuseRow').classList.remove('waiting');
+      setSuspects(true);
+      MaffsLock.fresh($('lineupWrap'));
+    }
+  }
+
+  /* ---------- marking ---------- */
+  function mark(right, keys, work) {
+    var fb = $('feedback');
+    state = right ? 'done' : 'wrong';
+    if (right) score++;
+    $('hudScore').textContent = score;
+    ev('question_answered', { game_slug: SLUG, level: level, mode: mode, question_index: qi, question_id: Q.id, correct: right });
+    var label = qi >= qs.length ? 'See results →' : 'Next →';
+    $('play').classList.add('fb-open');
+    if (right) {
+      // "Right:" and the working, then Next: a right answer that shows something new waits for the student (canon §7.6).
+      fb.innerHTML = '<div class="fb right" data-why="right"><div class="fb-head">Right: <span class="w-line">' + esc(work[0]) + '</span></div><div class="fb-next"></div></div>';
+      MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'), label: label, floorMs: REVEAL_MS });
+      return;
+    }
+    // A wrong answer, in order: the line(s), the working, then Next (it waits). The answer is lit on the board.
+    fb.innerHTML = '<div class="fb wrong" data-why="wrong" data-err="' + esc(keys.join(' ')) + '">' +
+      keys.map(function (k) { return '<div class="fb-err" data-key="' + esc(k) + '">' + esc(LINES[k]) + '</div>'; }).join('') +
+      '<div class="worked">' + work.map(function (w) { return '<div class="w-line">' + esc(w) + '</div>'; }).join('') + '</div>' +
+      '<div class="fb-next"></div></div>';
+    MaffsNext.wrong({ mount: fb.querySelector('.fb-next'), onAdvance: advance, keep: $('ask'), label: label });
+  }
+  function advance() {
+    if (state !== 'done' && state !== 'wrong') return;
+    state = 'moving';
+    nextQuestion();
+  }
+  // Once per run (MaffsLock.finishOnce): game_completed and submitScore can never be sent twice.
+  var finish = MaffsLock.finishOnce(function () {
+    state = 'over';
+    ev('game_completed', { game_slug: SLUG, level: level, mode: mode, score: score, questions_answered: qs.length, questions_correct: score });
+    if (window.MaffsLeaderboard) MaffsLeaderboard.submitScore(SLUG, mode, score, qs.length).catch(function () {});
+    if (window.MaffsScoreHistory) MaffsScoreHistory.record(SLUG, mode, score);
+    $('resTitle').textContent = 'Stage ' + mode.slice(-1) + ' done: ' + STAGES[mode.slice(-1)];
+    $('resScore').textContent = score;
+    $('resOf').textContent = 'out of ' + qs.length;
+    var i = MODES.indexOf(mode);
+    $('nextStageBtn').hidden = i >= MODES.length - 1;
+    $('nextStageBtn').textContent = 'Next: Stage ' + (i + 2);
+    show('results');
+  });
+
+  /* ---------- the board's size (measured, never a breakpoint) ----------
+     Each drawing is a square --cell px wide: the column's width at most, and on any screen no taller than lets the last
+     answer control (Confirm, or the rule buttons under the pair) end above the fold, the viewport less the fixed footer.
+     The labels are in the drawing's own units, so they scale with it; CELL.MIN keeps them readable. Chosen when a question is drawn and on a change of
+     width; marking never changes it, so nothing jumps. */
+  // MIN: the smallest a marked drawing is drawn (its side labels 11 px at 150), however short the screen: below it the line-up
+  // scrolls rather than shrink the numbers a student must read. Stage 1 has no labels and can go smaller (MIN1).
+  var CELL = { MAX: 300, MIN1: 86, MIN: 150, SPARE: 6 };
+  function foldLine() {
+    var f = document.querySelector('.site-footer');
+    return window.innerHeight - (f && getComputedStyle(f).position === 'fixed' ? f.getBoundingClientRect().height : 0);
+  }
+  function fitBoard() {
+    if (!Q || !$('game').classList.contains('active')) return;
+    var board = $('board'), lineup = Q.stage !== 3, grid = lineup ? $('lineup') : $('pair');
+    var cols = lineup ? (window.innerWidth >= 600 ? 3 : 2) : 2, rows = lineup ? 6 / cols : 1;
+    var gap = parseFloat(getComputedStyle(grid).columnGap) || 0, pad = lineup ? 2 * (parseFloat(getComputedStyle(grid).paddingLeft) || 0) : 0;
+    var wide = Math.floor((board.clientWidth - pad - (cols - 1) * gap) / cols);
+    var probe = CELL.MIN;
+    board.style.setProperty('--cell', probe + 'px');
+    var last = lineup ? $('accuseBtn') : (window.innerWidth >= 900 ? $('pair') : $('rules'));
+    var low = last.getBoundingClientRect().bottom + window.scrollY;
+    var room = foldLine() - CELL.SPARE - low;
+    var cell = Math.floor(probe + room / rows);
+    cell = Math.min(cell, wide, CELL.MAX);
+    cell = Math.max(cell, Q.stage === 1 ? CELL.MIN1 : CELL.MIN);
+    board.style.setProperty('--cell', Math.min(cell, wide) + 'px');
+  }
+  var fitFrame = 0, fitW = window.innerWidth;
+  window.addEventListener('resize', function () {
+    if (fitFrame) return;
+    fitFrame = requestAnimationFrame(function () {
+      fitFrame = 0;
+      if (window.innerWidth !== fitW || state === 'asking') { fitW = window.innerWidth; fitBoard(); }
+    });
+  });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { if (state === 'asking') fitBoard(); });
+
+  /* ---------- wiring ---------- */
+  $('stageList').addEventListener('click', function (e) { var b = e.target.closest('.stage-btn[data-mode]'); if (b) startMode(b.dataset.mode); });
+  $('nextStageBtn').addEventListener('click', function () { var i = MODES.indexOf(mode); startMode(MODES[Math.min(i + 1, MODES.length - 1)]); });
+  $('againBtn').addEventListener('click', function () { startMode(mode); });
+  $('menuBtn').addEventListener('click', function () { state = 'menu'; show('menu'); });
+  $('accuseBtn').addEventListener('click', accuse);
+  var jb = $('judge').querySelectorAll('.choice');
+  for (var k = 0; k < jb.length; k++) (function (b) { b.addEventListener('click', function () { judge(b); }); })(jb[k]);
+  // Keys 1 to 6 pick and drop suspects, as a tap does (the press goes through the button, so MaffsLock sees it).
+  document.addEventListener('keydown', function (e) {
+    if (state !== 'asking' || e.ctrlKey || e.metaKey || e.altKey || !/^[1-6]$/.test(e.key) || $('lineupWrap').hidden) return;
+    var b = $('lineup').querySelector('.suspect[data-val="' + e.key + '"]');
+    if (b && !b.disabled) { e.preventDefault(); b.click(); }
+  });
+  (function () {
+    var KEY = 'mfg_accessible', btn = $('a11yToggle');
+    function apply(on) { document.body.classList.toggle('accessible', on); btn.classList.toggle('active', on); btn.setAttribute('aria-pressed', String(on)); }
+    apply(lsGet(KEY) === 'true');
+    btn.addEventListener('click', function () { var on = !document.body.classList.contains('accessible'); lsSet(KEY, String(on)); apply(on); });
+  })();
+
+  // Read-only views of the bank and live state, for scripts/verify-3-gon-line-up.py and the lock hint above.
+  function copy(o) { return JSON.parse(JSON.stringify(o)); }
+  function item(id) { for (var i = 0; i < BANK.length; i++) if (BANK[i].id === id) return BANK[i]; return null; }
+  function clickVal(sel, v) { var b = document.querySelector(sel + '[data-val="' + v + '"]'); if (b) b.click(); return !!b; }
+  // A pair that is not the answer: the first two suspects by number that are not both the pair.
+  function wrongPair() {
+    for (var a = 1; a <= 6; a++) for (var b = a + 1; b <= 6; b++) if (!(a === Q.pair[0] && b === Q.pair[1])) return [a, b];
+    return null;
+  }
+  window.G3 = {
+    SLUG: SLUG, MODES: MODES, PER: PER, STAGES: copy(STAGES), LINES: copy(LINES),
+    bank: function () { return copy(BANK); },
+    working: function (id) { var q = item(id); return q ? working(q) : null; },
+    ui: {
+      state: function () { return state; },
+      level: function () { return level; },
+      mode: function () { return mode; },
+      step: function () { return step; },
+      question: function () { return Q ? copy(Q) : null; },
+      score: function () { return score; },
+      start: function (m) { startMode(m); },
+      // One item on screen by itself in its own stage, so a verifier can see any item.
+      preview: function (id) { var q = item(id); if (q) begin('stage-' + q.stage, [q]); return !!q; },
+      pick: function (n) { return clickVal('#lineup .suspect', n); },
+      accuse: function () { $('accuseBtn').click(); },
+      rule: function (v) { return clickVal('#rules .choice', v); },
+      judge: function (v) { return clickVal('#judge .choice', v); },
+      // The whole answer to the item on screen: right, or wrong (in Stage 4, a wrong first step).
+      answer: function (right) {
+        if (state !== 'asking') return;
+        var p = right ? Q.pair : wrongPair();
+        if (Q.stage === 3) { G3.ui.rule(right ? Q.answer : (Q.answer === 'SSS' ? 'SAS' : 'SSS')); return; }
+        if (Q.stage === 4 && step === 1) {
+          G3.ui.judge(right === Q.witness_right ? 'right' : 'wrong');
+          if (!right) return;
+          if (Q.witness_right) { G3.ui.rule(Q.rule); return; }
+        }
+        picked.slice().forEach(function (n) { G3.ui.pick(n); });
+        G3.ui.pick(p[0]); G3.ui.pick(p[1]); G3.ui.accuse();
+      },
+      next: function () { var b = document.querySelector('#feedback .maffs-next'); if (b && !b.disabled) b.click(); }
+    }
+  };
+})();
+</script>
+<script src="../../schools/assets/teacher-invite.js"></script>
+<script>MaffsInvite.mount(document.getElementById('teacherInvite'), '3-gon-line-up');</script>
+<footer class="site-footer"><a href="/about/">About</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/leaderboards/">Leaderboards</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/spec-map/">Spec Map</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/parents/">Parent guides</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/updates/">What's changed</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/ugh-stats/">Ugh, stats</a><span class="sep sf-wide">&middot;</span><a class="sf-wide" href="/printables/">Printable packs</a><span class="sep">&middot;</span><a href="mailto:contact@maffsgames.co.uk">Contact</a><span class="sep">&middot;</span><a href="/privacy/">Privacy</a><span class="sep">&middot;</span><a href="/feedback/">Feedback</a></footer>
+</body>
+</html>
