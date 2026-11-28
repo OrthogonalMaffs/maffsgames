@@ -4469,3 +4469,374 @@ The item as it stood before the cut, word for word:
 ```
 
 Evidence: No page carries the inline snippet now: GA4 loads from `schools/assets/analytics.js` on the live host only (:31-37, `var LIVE = location.hostname === ...`; GA4-LIVE-ONLY, #311, 7c4c8115); `grep "gtag('config'" games/*/index.html index.html` finds nothing.
+
+## Closed by Jon's rulings on TODO-AUDIT (28 Nov 2026)
+
+Jon, 28 Nov 2026, 08:23, accepted Project Claude's recommendation on each of the 35 STALE? items of `docs/audits/todo-audit-2026-11-28.md` (contract TODO-RULINGS). Each piece below left `docs/todo.md` word for word (between the markers) and is followed by its line. The numbers are that report's "For Jon" list.
+
+**TODO-AUDIT item 2: §3, 3.20:**
+
+```
+| 3.20 | **Back links/headers: 40 games are not on the standard pattern** (survey 4 Oct 2026, all 99 `games/` folders). Standard, used by 59 since just-pythag-it-bruv moved to it (PR #32, 4 Oct): `<a href="../../" class="back-link">← Back to Games</a>` above the game header (its CSS varies cosmetically). Fold each game onto it in its §3.12 theme migration, never by sweep. **Entity only, looks identical (10):** chart-interrogator, complex-converter, gradient-hunter, higher-power, matrix-crunch, proportion-blaster, screening-room, tax-theft, trig-identity-duel, the-perfect-prank (off-roster prototype). **Split It's header bar, `class="back"` (15):** differentiation-duel, distinctly-average, factor-race, fraction-equivalence, index-laws, integration-duel, log-laws, modular-battle, percentage-flip, prime-factorisation (`href="/"`), quadratic-factoriser, regression-rumble (withdrawn), split-it, suvat, trig-worms. **`back-link` saying "MaffsGames" (4):** core-maths-paper1, -paper2a, -paper2b, -paper2c. **`back-link` to `/` (1):** fermi-lab. **Inline-styled link at the bottom (4):** better-value, expected-damage, formula-plug-in, new-shapes. **Inline-styled themed link (2):** estimation-golf, trig-wars. **A logo, not a back link (2):** 52dle, equatle. **`home-btn` (2):** boolean-blitz, truth-will-set-you-free. Whether the standard should become split-it's bar instead is Jon's call (§7.5 design). Start-screen links added to 19 games by BACK-LINK-START (14 Nov 2026) use the standard pattern; their style still folds in with each theme migration. Where a back link goes is now site-nav.js's (canon §7.5.8, SITE-NAV, 21 Nov 2026), not each page's. | Jon / per game |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 2): site-nav.js now owns back links on 117 pages, so folding each game onto one pattern may no longer matter.
+
+**TODO-AUDIT item 3: §3, FOLD-COMPONENTS:**
+
+```
+| FOLD-COMPONENTS | **FOLD-COMPONENTS PRs 3–6, on branches, each needing main merged in:** PR 3 `claude/fold-options-v2` (44a4ef8), PR 4 `claude/fold-figures-v2` (227c3d6), PR 5 `claude/fold-canon` (4a526a6), PR 6 `claude/fold-publish` (ed00d80; stops before merge for Project Claude's live 404 check). PRs 1–2 merged (#563, #564). Contract: `docs/handover/contracts/2026-10-27-fold-components.md`. | cloud lane (the contract's lane exception) |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 3): four branches untouched since 27 Oct.
+Its four branches, each recorded here before it was deleted from the remote (git push origin --delete): `claude/fold-options-v2` 44a4ef8effecad9ad56668705559dbc1b3e56856 (last commit 2026-10-27); `claude/fold-figures-v2` 227c3d6da20588ef76357321797aac75a682da6a (last commit 2026-10-27); `claude/fold-canon` 4a526a631b957ef4f8e6285bf5e5aa8ff3016063 (last commit 2026-10-27); `claude/fold-publish` ed00d80f965eb223c8bad7f85e8e6a00c17ab59b (last commit 2026-10-27). Nothing else was deleted.
+
+**TODO-AUDIT item 4: §3, CURLING-TEACH:**
+
+```
+| CURLING-TEACH | **Curling Friction teaching, Level 4.** Low priority. | held by Project Claude since 4 Nov |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 4): low priority, held since 4 Nov, nothing since.
+
+**TODO-AUDIT item 5: §3, ABOUT-PAGE:**
+
+```
+| ABOUT-PAGE | **Project Claude's About-page contract (27 Oct), never sent.** | **Jon**: keep or drop |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 5): an About-page contract from 27 Oct that was never sent.
+
+**TODO-AUDIT item 7: §3, ESTIMATION-GOLF-ART:**
+
+```
+| ESTIMATION-GOLF-ART | **Estimation Golf art parked: the game has no start screen; placement to be decided** (Jon, 2 Nov; branch `art/estimation-golf`, 028cf683, the PNG unchanged, no PR). Parked with the older Queue items (Jon, 3 Nov). | **Jon** — placement |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 7): parked 3 Nov, the game still has no start screen for the art.
+
+**TODO-AUDIT item 9: §3, SCREENING-ROOM-PANELS:**
+
+```
+| SCREENING-ROOM-PANELS | **Screening Room panels and the hardened top-scores check** ("item E", item 5 of the 27 Oct session queue): no contract text found in the repo; ask Jon. Parked (Jon, 3 Nov). | **Jon** — the contract; then cloud lane |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 9): parked, and nobody has the contract text.
+
+**TODO-AUDIT item 10: §3, ANSWER-CONTROL-TALL-INPUT:**
+
+```
+| ANSWER-CONTROL-TALL-INPUT | **The answer-control (8) and tall-input (6) games** (item 7 of the 27 Oct session queue). Parked (Jon, 3 Nov). | cloud lane |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 10): parked 3 Nov; ANSWER-BOX-TEXT has since reworked answer boxes in 12 games, so the lists of 8 and 6 may be out of date.
+
+**TODO-AUDIT item 11: §3, WHEN-WILL-I-USE-THIS:**
+
+```
+| WHEN-WILL-I-USE-THIS | WHEN-WILL-I-USE-THIS — a 'When will I use this?' section: for each area of maths, where it appears in real life and careers, by topic and by vocational route (Skills England's 15 routes), each scenario sourced and linked to the games that practise it; as many areas of maths as possible (Jon, 10 Nov 2026). Spec: Project Claude (draft 10 Nov), then contract. | pilot in build (this contract: `docs/handover/contracts/2026-11-22-when-will-i-use-this.md`) |
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 11): the section is built and has grown to 47 jobs (#883, #888, #891). What the row still owes (more topics? nothing?) is not written.
+
+**TODO-AUDIT item 12: §3.9 order, The rule for the order. First, the failing g:**
+
+```
+### 3.9 — Phone fit order (Jon, 1 Oct 2026)
+
+**The rule for the order.** First, the failing games in the candidate resit suite (`docs/resit-coverage-audit.md` §10.5), worst first; then `like-terms-collector`; then the rest, worst first. "Worst" is the report's ranking: pixels past the fold at the worst size, with sideways-only failures after every fold failure. Batches of three, so each game can be play-tested after its fix. Within a batch, still one game at a time, never by sweep.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 12): fixes now come game by game off the gate's known-failures list.
+
+**TODO-AUDIT item 13: §3.9 order, The order (batch 1, New Shapes, done 1 Oct 2:**
+
+```
+**The order (batch 1, New Shapes, done 1 Oct 2026).** Resit suite: batch 2 `distinctly-average`, `estimation-golf`, `angle-ace`; 3 `think-of-a-number`, `decimal-detective`, `percentage-flip`; 4 `correlation-or-coincidence`, `prime-or-composite`, `chart-interrogator`; 5 `factor-race`, `given-that`, `formula-forge`; 6 `prime-factorisation`, `formula-unlocked`, `linear-equation-solver`; 7 `estimation-engine`, `probability-pioneer`, `like-terms-collector` (not one of the 56: measure its feedback screen, right and wrong, before deciding there is anything to fix). The rest (Group 3): 8 `fermi-lab`, `index-laws`, `differentiation-duel`; 9 `log-laws`, `integration-duel`, `boolean-blitz`; 10 `maths-court`, `truth-will-set-you-free`, `tax-theft`; 11 `wrong-on-the-internet`, `complex-converter`, `terrible-advice`; 12 `seven-bridges`, `suvat`, `equatle`; 13 `quadratic-factoriser`, `word-problem-decoder`, `curling-friction`; 14 `matrix-crunch`, `52dle`, `coordinate-geometry-dash`; 15 `normal-navigator`, `modular-battle`, `spot-the-muppet`; 16 `trig-worms`, `constructions-lab`, `circle-theorem-spotter`; 17 `partial-fractions-duel`, `proof-builder`, `eigenvector-engine`; 18 `higher-power`, `expectation-station`, `screening-room`; 19 `test-the-claim`, `moments-master`, `trig-wars`. In no batch yet, placing them is Jon's call: `negative-number-line` and `truth-buster`. The 1 Oct measurements, each game's behaviour after a right answer (with line numbers), and the checks behind this list: `docs/history/todo-done.md` under 3.9.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 13): not followed since October; the gate's known-failures list (31 games in normal mode) is the live record.
+
+**TODO-AUDIT item 14: §3.9 order, Aa mode: one fix across three games (Jon, 1:**
+
+```
+**Aa mode: one fix across three games (Jon, 1 Oct 2026).** `six-sevens-bruv`, `free-daily-pizza` and `new-shapes` are each fitted to the phone rule in normal mode. Two are known to be over the fold in Aa (OpenDyslexic) mode: Six Sevens' Next at 320×568 and 375×667 (canon §7.6.1's known gap), and New Shapes' parallelogram asking screen at 320×568, 11px over (Enter at 539 against a fold of 528), because "AREA OF A PARALLELOGRAM" wraps. Free Daily Pizza has not been measured in Aa. To be fixed **once, for all three**, not game by game. All three load the shared `schools/assets/opendyslexic.css`, which makes it the candidate layer; the fix design, and measuring Free Daily Pizza in Aa, are for that contract. Canon §7.6.1's "needs its own ruling" is now ruled.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 14): the gate now measures Aa and lists none of the three as failing the fold (New Shapes scrolls sideways at 320 in Aa).
+
+**TODO-AUDIT item 16: Game ideas, IT Vengeance: rebuild (withdrawn, awaiting i:**
+
+```
+**Escape rooms:**
+- **IT Vengeance**: rebuild (withdrawn, awaiting its voice rewrite).
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 16): its URL now redirects to The Rightful King.
+
+**TODO-AUDIT item 17: §4, item 4:**
+
+```
+4. **The `4b3d7d3` timer audit — still open from 21 Sep.** Seven files unaudited against
+   `.claude/rules/timer-policy.md`: `complex-converter`, `integration-duel`, `log-laws`, `suvat`,
+   `trig-identity-duel`, `schools/index.html`, `schools/spec-map/index.html`. All pass tier 1;
+   timer policy is play-time behaviour and tier 1 is structurally blind to it. Note `suvat`,
+   `integration-duel` and `log-laws` were edited and played on 22 Sep, but for KaTeX/theme/advance,
+   not timer policy.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 17): every game's wrong-answer pause is now checked in CI and the five games have been reworked.
+
+**TODO-AUDIT item 18: §4, item 5:**
+
+```
+5. **Tier-3 UNSUPPORTED ledger — 35 of 42 games still to read.** Groundwork for tier 4. An entry
+   in `checker-allowlist.json`'s `tier3_exceptions` is a claim you've read the game, so it was not
+   bulk-filled from the run; 7 read so far.
+   - Related: four games use rejection sampling safe only because their banks are big enough
+     (`complex-converter`, `gradient-hunter`, `maths-court`, `negative-number-line`) — no present
+     bug, deliberately left alone, but a content edit could trip any of them.
+   - Rule worth writing into CLAUDE.md: never mark by re-parsing a displayed value — tile identity
+     belongs in `dataset.val` or a closure. Whether other games do this is unaudited.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 18): tier 3 was re-surveyed on 24 Nov and the numbers no longer hold.
+
+**TODO-AUDIT item 19: §4, item 14:**
+
+```
+14. **Self-host Outfit; then switch the phone gate to measure in Outfit** (Jon, 2 Oct 2026).
+   `parents/fractions` is +1px in Outfit and is hidden by fallback measurement, and 12 of the 44
+   recorded overflows fit in Outfit. The gate blocks Google's fonts so its verdict is the same every
+   run; it therefore measures a font no student sees (the same known gap as the verifiers' holding step,
+   `.github/workflows/check-site.yml`). The real fix is one contract: serve Outfit and KaTeX from the
+   repo, measure in Outfit with a minimum margin, then re-record `tier1_phone_overflow`.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 19): the gate half is done (it measures in Outfit from `scripts/fonts/`).
+
+**TODO-AUDIT item 20: §4, item 18:**
+
+```
+18. **CI Contract B: local/CI parity** (named "CI Contract B" to keep it apart from Chart Interrogator's 28 Sep "Contract B"). **Parity still open (Windows-only local failures, for a later tidy-up; `check-changed.py` avoids the first by not running tier 1 locally):** (a) tier 1's 13 "stale: now fits" phone entries, from the fallback font; (b) `verify-test-the-claim.py` fails locally with `ReferenceError: generateWrongContexts is not defined` under Playwright's node v24 (it passes in CI; CRLF checkouts are the suspected cause); (c) node is not on PATH on Windows (Playwright's bundled node works; `check-changed.py` does not need it unless Test the Claim is selected); (e) under `check-changed.py`'s parallel load, Chromium sometimes crashes in the answer-lock parts and `verify-characteristic-quest.py` ("Page crashed", "Target page, context or browser has been closed", 13 Oct); a re-run or CI passes. (d), the shared calculator check, did not reproduce (13 Oct 2026: if it fails locally, install WebKit first). Jon adds branch protection after it (none today: API 404, 0 rulesets). History: `docs/history/todo-done.md` under §4 item 18. M.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 20): the listed failures are Windows-local, and local runs are no longer a merge condition.
+
+**TODO-AUDIT item 21: §4, item 19:**
+
+```
+19. **CI flake: tier 4 lint reported B4 "level bank below 40" for `proportion-blaster::gcse`** in one of
+   two identical runs of PR #36 (same commit; the other passed, as did a re-run). Locally the extraction
+   reads 50 GCSE items and the game never mutates its bank, so the extraction or its grouping is
+   intermittently short. Not investigated further (outside that PR). S.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 21): not seen since.
+
+**TODO-AUDIT item 22: §4, item 21:**
+
+```
+21. **GATE-STEP-6: the shard migration** (step 6 of GATE-WARN-THEN-ENFORCE, `docs/handover/contracts/2026-10-27-gate-warn-then-enforce.md`; steps 1, 2, 3 and 5 merged as #590, #630, #592 and #631). Step 6 supersedes PLAN-SHARED-ASSETS (`docs/history/contracts/2026-10-27-plan-shared-assets.md`). The warn list is empty; moving Factor Theorem (88 s), Growth and Decay (123 s) and Screening Room (94 s) to work units is insurance only. Owner: **Jon** to say; cloud lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 22): "insurance only", waiting on Jon since October.
+
+**TODO-AUDIT item 23: §4, item 23:**
+
+```
+23. **LOCAL-CHECKS**: browser verifiers fail intermittently in WSL `maffs`, on clean main too; CI is the authority (AGENTS.md). Lead TESTED 15 Nov 2026 (ANSWER-LOCK-FLAKE): WSL's wall clock runs fast and is stepped back about every 29.8 s; since MONOTONIC-CLOCK (15 Nov 2026) the shared assets' input windows read `performance.now()`, which the steps do not move. A page's own `Date.now()` timing is still exposed. Still failing locally and passing in CI: teacher-feedback-line on prisoners-dilemma's tournament at 390 px; 9 Nov: verifiers of squared-squirrel, its-on-sale, estimation-engine, the-6-ps and the Burst, Chart drawings and two Feedback-that-teaches checks. History: `docs/history/todo-done.md` under §4 item 23. Owner: home lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 23): CI is the authority and local runs are optional.
+
+**TODO-AUDIT item 24: §4, item 32:**
+
+```
+32. **PHONE-FIT-DRIVER-RULINGS**: PHONE-FIT-DRIVER's two rulings, the 11-game exception and a start-screen rule, are Jon's (a live tail of the Queue DONE items moved 4 Nov, `docs/history/handover-cloud-archive.md`). Owner: Jon.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 24): Jon's 20 Nov start-screen ruling (row START-SIDEWAYS-GATE) may cover it.
+Closed into row START-SIDEWAYS-GATE, which gains its owed sentence word for word.
+
+**TODO-AUDIT item 25: §4, item 33:**
+
+```
+33. **SIX-PS-PHONE-FIT**: The 6 P's in the phone-fit gate, a driver change (item 3 of the cloud lane's 27 Oct session queue); `/the-6-ps/` is not in the nightly phone-fit run. Parked (Jon, 3 Nov). Owner: cloud lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 25): parked 3 Nov, unchanged.
+
+**TODO-AUDIT item 26: §4, item 34:**
+
+```
+34. **MODE-DIMENSION**: the mode dimension ("item D", item 6 of the 27 Oct session queue): no contract text found in the repo; ask Jon. Parked (Jon, 3 Nov). Owner: Jon, then cloud lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 26): parked, no contract text anywhere.
+
+**TODO-AUDIT item 27: §4, item 35:**
+
+```
+35. **START-SCREEN-RULE**: the start-screen rule, only once a shared compact start screen exists, else write up what it needs and stop (item 8 of the 27 Oct session queue; Jon's ruling is in PHONE-FIT-DRIVER-RULINGS). Parked (Jon, 3 Nov). Owner: cloud lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 27): parked; START-SIDEWAYS-GATE now carries Jon's start-screen ruling.
+Closed into row START-SIDEWAYS-GATE, which gains its owed clause word for word.
+
+**TODO-AUDIT item 28: §4, item 50:**
+
+```
+50. **AA-KEY-MISMATCH**: probability-pioneer, shape-shifter and like-terms-collector read only mfg_dyslexia; measure-phone-fit.py --aa sets mfg_accessible, so the Gate never measures their Aa mode. Fix at the measuring layer or the games' key. Owner: cloud lane (Gate files). Recorded 12 Nov 2026 (contract PP-AA-STACK).
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 28): the same fault as item 37(c), with a different owner.
+Closed into §4 item 37(c). Item 37 already names its owner ("Owner: home lane, its own contract."), so no owner line was added.
+
+**TODO-AUDIT item 29: §5, Matrix Crunch bank expansion to 50+50.:**
+
+```
+- Matrix Crunch bank expansion to 50+50.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 29): the ledger row already asks for 40 per level.
+Closed into row LEDGER-B4-MATRIX-CRUNCH, which asks for 40 per level.
+
+**TODO-AUDIT item 30: §5, Escape rooms: the Car Trap voice rewrite (it:**
+
+```
+- Escape rooms: the Car Trap voice rewrite (it needs a premise/image conversation
+  first), rooms A and B.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 30): Car Trap went live rewritten on 10 Oct.
+
+**TODO-AUDIT item 31: §6, Spot the Error banks (§1.23): KS3 35, Level:**
+
+```
+**Content to review:**
+- Spot the Error banks (§1.23): KS3 35, Level 4 30.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 31): every level now has 40 or more.
+
+**TODO-AUDIT item 32: §6, New Shapes banks (§1.27): 15 / 20 / 15.:**
+
+```
+- New Shapes banks (§1.27): 15 / 20 / 15.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 32): every bank now has 40 or more.
+
+**TODO-AUDIT item 33: §7, The project's own copies of canon.md and CLA:**
+
+```
+- The project's own copies of `canon.md` and `CLAUDE.md` lag the repo. Refresh them, or delete
+  them and treat the repo as the only source — and delete the temporary `plan` doc once this
+  merge lands (see the note at the top of this file).
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 33): the note it points to is gone.
+
+**TODO-AUDIT item 34: §7, HANDOVER-IN-TASK-PRS: BACKLOG-ONE's rule a::**
+
+```
+- **HANDOVER-IN-TASK-PRS:** BACKLOG-ONE's rule a: task PRs never edit `docs/handover/home.md` or `cloud.md`. A lane's close-out entry goes in the PR body under "Close-out entry (for <file>)", then into that lane's own file in a docs-only close-out PR, opened when no other live open PR edits the same file; stale PRs are reported for closing, not waited for. Parked by BACKLOG-ONE: AGENTS.md's "keep the branch handover current" (Contracts and handovers) and the takeover paragraph built on it assume a task branch edits its lane's handover. Owner: Project Claude to rule; home lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 34): practice and every contract since do the opposite.
+
+**TODO-AUDIT item 35: §7, CHECK-CHANGED-ONE-RUN (Jon, 29 Oct 2026): fu:**
+
+```
+- **CHECK-CHANGED-ONE-RUN** (Jon, 29 Oct 2026): full `check-changed` runs must not run concurrently on this machine. Two 225-check runs ran out of memory on 28 Oct and Claude Code stopped them. Run one at a time with nothing else heavy open; `--workers 2` is a safe setting (the default is half the CPUs, at most 6; heavy checks already run one at a time). A run killed this way is not a check failure. Not yet written as a rule: AGENTS.md and canon do not state it, and `docs/rules/scripts.md`'s two queues cover heavy checks inside one run, not two runs at once (11 Nov 2026). Write it into `docs/rules/scripts.md`, its reason in canon §12. Owner: home lane.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 35): check-changed is no longer run before pushing.
+
+**TODO-AUDIT item 15: the idea line:**
+
+```
+- **Bond. Number Bond.** [PROPOSED]: number bonds to 10/100/1000, and decimals to 1.
+```
+
+Folded into NUMBER-BONDS (Jon, 28 Nov 2026).
+
+**§2, chart-interrogator submits a constant 10: the part removed:**
+
+```
+submits a constant 100 for every completed scenario (the time
+    multiplier was removed), so its board can only ever be a tie.
+```
+
+**§2, chart-interrogator submits a constant 10: the item as it stood before the change, word for word:**
+
+```
+  - `chart-interrogator` submits a constant 100 for every completed scenario (the time
+    multiplier was removed), so its board can only ever be a tie. Its Level 4 key is `l4`, not
+    `level4`.
+```
+
+Closed by Jon, 28 Nov 2026 (TODO-AUDIT item 1): the page now multiplies its score (:1277), so the constant may be gone; the `l4` key is still there. Only the constant-100 part closed; the `l4` wording stays.
+
+**§3, row PRIME-SPRINT-LOOK-REDS: the item as it stood before the change, word for word:**
+
+```
+| PRIME-SPRINT-LOOK-REDS | **Prime Sprint's look reds were settled by LOOK-REFRESH-1** (#660, 4 Nov 2026: on theme.css, no Press Start 2P, MIGRATED in `scripts/check-theme.py`). Left from that PR, "not a gate": in Aa mode at 375x667 its Start button ends at 657 against the 627 fold. Close the row, or contract that fix. History: `docs/history/todo-done.md` under PRIME-SPRINT-LOOK-REDS. | **Jon** — close it, or the contract |
+```
+
+Kept with Jon's change, 28 Nov 2026 (TODO-AUDIT item 6): contract that fix.
+
+**§3, row HIGHER-POWER-PHONE: the item as it stood before the change, word for word:**
+
+```
+| HIGHER-POWER-PHONE | **Higher Power's card values spill on phones** (item 4 of the cloud lane's session queue, Jon, 27 Oct). Parked (Jon, 3 Nov). | cloud lane |
+```
+
+Kept with Jon's change, 28 Nov 2026 (TODO-AUDIT item 8): unparked.
+
+**§3, row NUMBER-BONDS: the item as it stood before the change, word for word:**
+
+```
+| NUMBER-BONDS | **A number bonds to 10 and 20 fluency game**, "needs building soon" (Jon, 18 Nov 2026). Spec from Project Claude. | Project Claude (spec) |
+```
+
+Kept with Jon's change, 28 Nov 2026 (TODO-AUDIT item 15): one game, not two.
+
+**§3, row START-SIDEWAYS-GATE: the item as it stood before the change, word for word:**
+
+```
+| START-SIDEWAYS-GATE | **Sideways scroll on a start screen becomes a CI gate in every mode; the start screen's fold stays report-only** (Jon's ruling (b), LARGE-SCREEN-PILOT, 20 Nov 2026; independent of zoom). Survey first, today's offenders on a known list, each with a row. Known case: formula-forge in Aa is 490 px wide at every phone size, its stage-preview grid overflowing. | Project Claude (contract) |
+```
+
+§4 items 32 and 35 closed into this row (TODO-AUDIT items 24 and 27), their owed text added word for word.
+
+**§3, row GRAPH-SKETCHER-REDESIGN: the item as it stood before the change, word for word:**
+
+```
+| GRAPH-SKETCHER-REDESIGN | **Graph Sketcher: the redesign it needs before it is relisted** (unlisted 15 Nov 2026 by Jon, 10:29, canon SR-20; contract UNLIST-GRAPH-SKETCHER). Jon played it on 15 Nov after its completion figure (13 starts, 0 completions; every recent abandon in the Sheets backend on question 0). Found on main 984851c (`games/graph-sketcher/index.html`): (1) table cells are type="number" with onchange="checkCell(this)" (:698): one click of the box's arrows submits the value; a wrong value adds a penalty (G.qPenalties++, :753) and the box is wiped after 0.8 s (:754); (2) no calculator, though its scenarios need powers (100 x 1.05^t), e and sin/cos (degrees and radians); the site calculator (`schools/assets/calculator.js`) has none of x^y, e, sin, cos; (3) L4_15 (:608-614): yRange [0, 1.1e7] for values up to 1e6, so the curve fills the bottom tenth, and its "read" question asks a value off that curve; (4) the table header is text-transform:uppercase (:79), so stress σ shows as Σ (summation); (5) values and axes in JavaScript e-notation (toExponential, :715, :873: "1.0e+7", "1.00e+6"), against canon's KaTeX standard form; (6) "Give each value to 0 decimal places" for whole numbers; (7) the y-axis title overlaps its numbers; (8) the table scrolls sideways with its last column cut off at 1250-1266 px wide. The redesign also: (9) extends `scripts/verify-graph-sketcher.py` (in CI; it recomputes keys from each printed equation but checks no axis range, notation or label, which is why L4_15 and the σ/Σ fault passed) to check every scenario's axis range against its function's values, its notation and its labels; (10) depends on the shared calculator gaining x^y, e, sin and cos (a later contract); (11) takes its answer boxes from the type="number" class fix across 12 games (contract ANSWER-BOX-TEXT). Relisting follows canon SR-21 after the redesign; UNLIST-GRAPH-SKETCHER's PR lists every place it was taken off. | Project Claude to spec; Jon approves |
+```
+
+Corrected (Project Claude, 28 Nov 2026): `schools/assets/calculator.js:38-40` has x^y, e, sin and cos in scientific mode (SCI-CALC, 9 Oct 2026).
+
+**§3, row CGD-PHONE-LONG: the item as it stood before the change, word for word:**
+
+```
+| CGD-PHONE-LONG | Coordinate Geometry Dash overflows the phone fold on many items, old and new (table on #910): GCSE 13/40 at 320x568, 7/40 Aa at 375x667; A-Level 25/40 and 14/40; worst 55 px and 88 px over; Next below the fold after a wrong answer on every item. The phone-fit Gate measures one seeded item, so it cannot hold this; fix the layout (look contract) after the Gate measures every item (PHONE-FIT-ALL-ITEMS). (Jon, 25 Nov 2026; the two phone entries left scripts/phone-fit-state.json in #910, the laptop entries stay.) | Project Claude to spec, after PHONE-FIT-ALL-ITEMS; cloud lane |
+```
+
+Corrected (Project Claude, 28 Nov 2026): PHONE-FIT-ALL-ITEMS is no row; the work it means is §4 item 37(b).
+
+**§3, row 3.21: the part removed:**
+
+```
+**Games with a typed answer box (22, survey 4 Oct 2026):** `52dle`, `chart-interrogator`, `component-crusher`, `estimation-engine`, `estimation-golf`, `factor-theorem`, `fermi-lab`, `given-that`, `glorious-gantt`, `graph-sketcher`, `growth-and-decay`, `just-pythag-it-bruv` (done: MaffsCalc's answer target, canon §4.4), `like-terms-collector`, `log-laws`, `percentage-flip`, `quadratic-factoriser`, `screening-room`, `split-it`, `stat-attack`, `suvat`, `tax-theft`, `test-the-claim`. Which of the rest are done is not recounted here;
+```
+
+**§3, row 3.21: the item as it stood before the change, word for word:**
+
+```
+| 3.21 | **The MaffsKeypad rollout to the typed-answer games, one game per contract, each game's phone fit measured with the keypad.** **Jon ruled (b), 4 Oct 2026:** the shared keypad, which fixes the cause once, in one place (`MaffsKeypad`, `schools/assets/keypad.js`, canon §4.4; MaffsCalc's answer mode composes it). **Games with a typed answer box (22, survey 4 Oct 2026):** `52dle`, `chart-interrogator`, `component-crusher`, `estimation-engine`, `estimation-golf`, `factor-theorem`, `fermi-lab`, `given-that`, `glorious-gantt`, `graph-sketcher`, `growth-and-decay`, `just-pythag-it-bruv` (done: MaffsCalc's answer target, canon §4.4), `like-terms-collector`, `log-laws`, `percentage-flip`, `quadratic-factoriser`, `screening-room`, `split-it`, `stat-attack`, `suvat`, `tax-theft`, `test-the-claim`. Which of the rest are done is not recounted here; history in `docs/history/todo-done.md` under 3.21. | Code Claude |
+```
+
+Done by 28 Nov 2026: component-crusher, estimation-engine, graph-sketcher, growth-and-decay, just-pythag-it-bruv, log-laws, quadratic-factoriser, split-it, stat-attack, suvat, test-the-claim (each loads schools/assets/keypad.js).

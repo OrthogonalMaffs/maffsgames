@@ -16,9 +16,26 @@
 
 - Cloud owns Gate files and docs/handover/cloud.md; home does not edit them. GATE-FIX #634 merged as 16c40530; incorporated here by merge dd370c69. GATE-RESUME #630–#632 and root-image removal #633 are merged.
 
+## 2026-11-28 (home): TODO-RULINGS (Jon's rulings on TODO-AUDIT's 35 STALE? items applied to docs/todo.md; three rows corrected)
+
+Claude Code (home lane), worktree `~/mg-todo-rulings`, branch `claude/todo-rulings`. PR #945. The contract is at `docs/handover/contracts/2026-11-28-todo-rulings.md` (verbatim).
+
+- **Close-out of TODO-AUDIT (#944), each confirmed from GitHub Actions:** merged 28 Nov as 9072d16 (squash) by main's merge-pr.py from the primary checkout, which ended "main 9072d16 run 46128288170: GREEN". The first Gate (head f5caf612: check-site 46125369409, phone-fit-full 46125369349, both success) was refused because main gained c5d9d70 (3-GON-LINE-UP-BUILD); main was merged in. PR head 7f060ad9: check-site 46126859607 and phone-fit-full 46126859615, both success. Main on 9072d16: check-site 46128288170, phone-fit-full 46128288177 and the pages build 46128287938, each success. Its contract moved to `docs/history/contracts/2026-11-28-todo-audit.md`.
+- **Totals:** `docs/todo.md` 101,535 bytes before, 87,803 after (13,732 moved; 19,717 under TODO_LIMIT). Of the 35: 32 closed (31 items moved whole, and the constant-100 part of item 1), 3 kept with Jon's change (items 6, 8, 15; item 15's idea line folded into NUMBER-BONDS). 3 rows corrected (GRAPH-SKETCHER-REDESIGN, CGD-PHONE-LONG, 3.21).
+- **`docs/history/todo-done.md`:** "## Closed by Jon's rulings on TODO-AUDIT (28 Nov 2026)" holds each moved item word for word with its "Closed by Jon" line, and each changed row as it stood. `scripts/check-todo-trim.py --base origin/main` passes (20 row IDs moved whole, 7 rewritten, 109 sentences and cells each found verbatim); `check-context-size.py` passes.
+- **FOLD-COMPONENTS:** the four branches' names and full SHAs are in the todo-done entry; each matched the audit's SHA and was last committed on 27 Oct 2026. Deleted from the remote after this branch was pushed: `claude/fold-options-v2`, `claude/fold-figures-v2`, `claude/fold-canon`, `claude/fold-publish`. Nothing else deleted (`claude/fold-options` and `claude/fold-figures` are not this row's and stay).
+- **The keypad recount (step 4)** matched the contract: exactly the 11 named load `schools/assets/keypad.js` and the other 11 do not.
+- **Three readings, for Project Claude to confirm:** (1) items 24 and 27: START-SIDEWAYS-GATE gained one sentence from each, word for word, under its old name (the 11-game exception; "only once a shared compact start screen exists"). (2) Item 28: §4 item 37 already ends "Owner: home lane, its own contract.", so no owner line was added. (3) Item 1: with only the constant-100 part cut, the line reads "`chart-interrogator` Its Level 4 key is `l4`, not `level4`."
+- **References left pointing at closed items (rows not named by the contract, so not touched):** row 3.9 ("in the order of the subsection ... directly below"; the subsection now holds only its rulings and the right-answer rule); row 3.12 ("§3.9's batches of three", "§3.9's Group 3 batch order"); EVERYDAY-MAFFS ("Separate from WHEN-WILL-I-USE-THIS"); and six `tier1_phone_overflow` entries in `scripts/checker-allowlist.json` tagged "§3.9 batch N".
+- **`docs/audits/todo-audit-2026-11-28.md`:** the one line under "For Jon"; nothing else.
+- **/updates/:** none (internal work).
+- **Run IDs and the merge:** in the next home contract's first commit, as usual (AGENTS.md, close-outs).
+
+Record: agent Claude Code; wall 0:40; review cycles 0; amendments 0; usage n/a.
+
 ## 2026-11-28 (home): TODO-AUDIT (every item in docs/todo.md checked against main: finished and duplicated items moved out with evidence, stale ones listed for Jon)
 
-Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. PR #944. The contract is at `docs/handover/contracts/2026-11-28-todo-audit.md` (verbatim).
+Claude Code (home lane), worktree `~/mg-todo-audit`, branch `claude/todo-audit`. PR #944. The contract is at `docs/history/contracts/2026-11-28-todo-audit.md` (verbatim).
 
 - **Close-out of TODO-SEARCH-DEMAND (#942), each confirmed from GitHub Actions:** merged 28 Nov as a0c6f53 (squash) by main's merge-pr.py, which ended "main a0c6f53 run 46095376807: GREEN". PR head 59cd56a2: check-site 46093722219 and phone-fit-full 46093722236, both success. Main on a0c6f53: check-site 46095376807, phone-fit-full 46095376824 and the pages build 46095376554, each success. Its contract moved to `docs/history/contracts/2026-11-27-todo-search-demand.md`.
 - **The audit:** 259 items (every table row, every §4 item, every bullet and paragraph of the prose sections), each with one verdict and its evidence in `docs/audits/todo-audit-2026-11-28.md`. Checked on main abb9b605.
