@@ -4213,3 +4213,259 @@ Finished parts moved by the trim, each word for word between the markers; the ev
 ```
  Moved from §6 (TODO-TIDY; Jon's ruling 2 of 11 Nov 2026).
 ```
+
+## Closed by TODO-AUDIT (28 Nov 2026)
+
+Every item in `docs/todo.md` was checked against main abb9b605 (contract TODO-AUDIT; the table is `docs/audits/todo-audit-2026-11-28.md`). Each piece below left `docs/todo.md` word for word (between the markers) and is followed by its evidence.
+
+**§1, "Done rows moved word for word to docs/histor...": the whole item (DONE):**
+
+```
+## 1. Live bugs and false claims
+
+Done rows moved word for word to `docs/history/todo-done.md` ("Done rows from §1 and §3", 10 Oct 2026, TODO-SLIM); their numbers still resolve there: 1.3, 1.6, 1.7, 1.9, 1.10, 1.13, 1.15, 1.18, 1.19, 1.20, 1.21, 1.22, 1.28, 1.29, 1.31, 1.41, 1.42, 1.43, 1.44, 1.45, 1.46, 1.47, 1.49, 1.50, 1.55, 1.57, 3.13. Closed by LIVE-BUG-RECHECK (8 Nov 2026), under that heading there: 1.8, 1.24, 1.30, 1.40. Closed by fix PRs (Nov 2026), under that heading there: 1.32, FORGE-HINT-SPACES, 1.37, 1.38, CAST-AWAY (from §3). Closed by RULES-EMULATOR-TEST (11 Nov 2026), under that heading there: FIREBASE-ESCAPING. Closed by HOME-QUEUE-1111 (11 Nov 2026), under that heading there: PACK-APPROVED, STAGE-EXIT-LABEL. Closed by PP-AA-STACK (12 Nov 2026), under that heading there: PP-AA-OVERFLOW. Closed by ANSWER-LOGGING-WRONG (13 Nov 2026), under that heading there: ANSWER-LOGGING-WRONG. Closed by QF-HCF-FIRST (15 Nov 2026), under that heading there: QF-HCF-FIRST. Closed by FOOTER-PHONE-FOUR (16 Nov 2026): 1.52, 3.11, CLOUD-MERGE-TOKEN, LEDGER-B4-PERCENTAGE-FLIP, LEDGER-B4-BETTER-VALUE. Moved by TODO-TRIM (19 Nov 2026), under that heading there: 3.4, 3.6, 3.7, 3.10, SIX-PS-LOOK-REDS; the history from 1.14, 1.26, 1.34, 1.36, 3.1, 3.5, 3.8, 3.9, 3.12, 3.21, PRIME-SPRINT-LOOK-REDS, TAKE-A-WALK-PHONE-LAYOUT, DD-LINEUP-FEEDBACK, PACKS-V2-UPLOAD, the LEDGER rows, §3.9's order and §4 items 1, 2, 6, 7, 12, 16, 18, 23, 27 and 28.
+```
+
+Evidence: An index of closed rows, not work (who moved what where): every heading it names is in `docs/history/todo-done.md` (`grep '^## '`), where the numbers resolve.
+
+**§1, row 1.26: a history clause; the item stays (OWED):**
+
+```
+ (`normal-navigator`, `core-maths-paper2a` and `maths-court` are done, their verifiers in CI)
+```
+
+Evidence: `games/regression-rumble/index.html` is still the holding page (:12); the game is in the roster's Withdrawn section. History clause moved: the three done games' verifiers each carry a ci header (`scripts/verify-normal-navigator.py`, `verify-core-maths-paper2a.py`, `verify-maths-court.py`).
+
+The item as it stood before the cut, word for word:
+
+```
+| 1.26 | **`regression-rumble`'s data needs Jon's ruling before it can be fixed**: the last of the four games in §1.14's class (`normal-navigator`, `core-maths-paper2a` and `maths-court` are done, their verifiers in CI). `scripts/verify-regression-rumble.py` (NOT in CI until the data is ruled) ends `FAILED: 62 FAIL(s) across 37 of 40 scenarios`: Level 4 sums that are impossible or disagree with the stated r, scatters that contradict their stated r, and the regression line drawn before it is asked on all 14 Level 4 scenarios. Fixing it is new data (and a scatter generator whose r is the stated r), which is Jon's content call. The game is withdrawn (holding page). Full findings, and two notes for Jon on the done games (core-maths-paper2a Q14; maths-court mc_core_009): `docs/history/todo-done.md` under 1.26. | **Jon** — rule on regression-rumble's data; then **CC** fixes it and wires its verifier into CI |
+```
+
+**§1, row 1.71: a history clause; the item stays (OWED):**
+
+```
+ Re-checked 2026-11-08 on main f8a287b4: STILL LIVE — still unlisted: no card in `index.html`, no `sitemap.xml` entry, still on `NOT_ON_HUB` (`scripts/check-leaderboard-coverage.js:163`); no `scripts/verify-glorious-gantt.py`; all 13 findings in `docs/audits/findings/glorious-gantt.yml` open. No checklist item is done.
+```
+
+Evidence: Still unlisted on 28 Nov: no `glorious-gantt` in `index.html` or `sitemap.xml`; no `scripts/verify-glorious-gantt.py`; 13 findings open in `docs/audits/findings/glorious-gantt.yml`; roster Unlisted (`.claude/rules/game-roster.md:174`). The 8 Nov re-check sentence moved as a past state.
+
+The item as it stood before the cut, word for word:
+
+```
+| 1.71 | **RELIST checklist: Glorious Gantt Game (`glorious-gantt`), unlisted 6 Oct 2026** for the tranche 4 audit's faults (Jon's rulings of 20:30, canon SR-20). Relist when this game's verifier merges and its register entries are fixed, in that PR, every item: [ ] roster row back to the Core Maths section (was #72); [ ] portal card in `index.html` (`games/glorious-gantt/?mode=a&level=core`); [ ] `sitemap.xml`; [ ] spec-map rows LO2, §3.8: "(being fixed)" text back to links, removed links restored; [ ] leaderboard hub row `['glorious-gantt','Glorious Gantt',['core','level4']]` in `leaderboards/index.html`, and its entry removed from `NOT_ON_HUB`; [ ] canon §6.1's §3.8 row and note back to Covered; [ ] every entry in `docs/audits/findings/glorious-gantt.yml` fixed, with its PR. Jon, 6 Oct 2026 20:30. Re-checked 2026-11-08 on main f8a287b4: STILL LIVE — still unlisted: no card in `index.html`, no `sitemap.xml` entry, still on `NOT_ON_HUB` (`scripts/check-leaderboard-coverage.js:163`); no `scripts/verify-glorious-gantt.py`; all 13 findings in `docs/audits/findings/glorious-gantt.yml` open. No checklist item is done. | open |
+```
+
+**§3, row 3.8: a history clause; the item stays (OWED):**
+
+```
+ The tidy itself was built 30 Sep 2026 (PR 23); record in `docs/history/todo-done.md` under 3.8.
+```
+
+Evidence: Follow-ups not shown done. History clause moved (the tidy was built 30 Sep).
+
+The item as it stood before the cut, word for word:
+
+```
+| 3.8 | **Leaderboard tidy follow-ups:** seven other scripts start the stub server unchecked, and 14 games keep in-game level-name maps. The tidy itself was built 30 Sep 2026 (PR 23); record in `docs/history/todo-done.md` under 3.8. | follow-ups; no owner named |
+```
+
+**§3, row HOW-MANY-PARTS-FRACTION: a history clause; the item stays (OWED):**
+
+```
+: home.md's Queue line "how-many-parts to move next", moved here 7 Nov; part of the FRACTION-STACK follow-up in cloud.md's Queue
+```
+
+Evidence: `scripts/fraction-input-warn.json` still lists how-many-parts. History clause moved (where the row came from).
+
+The item as it stood before the cut, word for word:
+
+```
+| HOW-MANY-PARTS-FRACTION | **How Many Parts? moves onto MaffsFractionInput** (`scripts/fraction-input-warn.json`): home.md's Queue line "how-many-parts to move next", moved here 7 Nov; part of the FRACTION-STACK follow-up in cloud.md's Queue. | cloud lane |
+```
+
+**§3, row BASE60-LIST: a history clause; the item stays (OWED):**
+
+```
+ Listed 26 Nov 2026 (contract BASE-60-LIST).
+```
+
+Evidence: Jon's trims not recorded. History sentence moved (listed 26 Nov, #930).
+
+The item as it stood before the cut, word for word:
+
+```
+| BASE60-LIST | **It's Just Base 60, Bruv (`its-just-base-60-bruv`): Jon's lines.** Listed 26 Nov 2026 (contract BASE-60-LIST). **Jon:** trims LINES, the "Why 60?" panel and CUCKOO's lines after playing. | Jon |
+```
+
+**§3, row WRONG-PAUSE-UNCHECKED: a history clause; the item stays (OWED):**
+
+```
+ (52dle, removed by 52DLE-REBUILD)
+```
+
+Evidence: `scripts/check-answer-lock.py:1031` still lists the 6; `WRONG_PAUSE_KNOWN_FAIL` (:1047) is empty. History clause moved (52dle's removal).
+
+The item as it stood before the cut, word for word:
+
+```
+| WRONG-PAUSE-UNCHECKED | **Games the wrong-answer pause check cannot judge, and games known to fail it** (WRONG-PAUSE-NEXT, 19 Nov 2026; Jon's ruling): `WRONG_PAUSE_UNCHECKED` (6: the run reaches no wrong answer it can judge) and `WRONG_PAUSE_KNOWN_FAIL` (52dle, removed by 52DLE-REBUILD) in `scripts/check-answer-lock.py`, each with its reason; reported, never failed, both only shrink. For each unchecked game, trace its wrong path; if it moves on without Next, give it MaffsNext.wrong; take a game off its list in the PR that settles it. | Project Claude to queue |
+```
+
+**§3.9 order, "Rulings on this list (Jon, 1 Oct 2026). (1)...": its finished part (PART DONE):**
+
+```
+(1) New Shapes' right-answer Next: fix, in batch 1. 
+```
+
+Evidence: (1) New Shapes' right-answer Next: `games/new-shapes/index.html` uses MaffsNext (batch 1, 1 Oct; record in todo-done under 3.9). (3) Wrong-answer timers: all nine games named now call `MaffsNext.wrong`, held by the pause check in `scripts/check-answer-lock.py:691` (#842, 8ab38d17; ci-shards "lock", self-test plants).
+
+**§3.9 order, "Rulings on this list (Jon, 1 Oct 2026). (1)...": its finished part (PART DONE):**
+
+```
+(3) **Wrong-answer timers** (the "Seen while reading" list below): fixed in each game's own batch where the game already has an explanation to show; where it has none, it is §7.6 Group C, left on its timer and listed there. 
+```
+
+Evidence: (1) New Shapes' right-answer Next: `games/new-shapes/index.html` uses MaffsNext (batch 1, 1 Oct; record in todo-done under 3.9). (3) Wrong-answer timers: all nine games named now call `MaffsNext.wrong`, held by the pause check in `scripts/check-answer-lock.py:691` (#842, 8ab38d17; ci-shards "lock", self-test plants).
+
+The item as it stood before the cut, word for word:
+
+```
+**Rulings on this list (Jon, 1 Oct 2026).** (1) New Shapes' right-answer Next: fix, in batch 1. (2) `expected-damage`, `estimation-golf` and `fermi-lab` (WAITS, unmarked) **keep waiting for Next after every answer**: each answer's rating is worth reading (§7.6). Their Next must still be above the fold. (3) **Wrong-answer timers** (the "Seen while reading" list below): fixed in each game's own batch where the game already has an explanation to show; where it has none, it is §7.6 Group C, left on its timer and listed there. (4) `like-terms-collector`: measure its feedback screen first. **The batch contract is one template for every batch** (Jon's "Phone-fit batch <N>" contract of 1 Oct): measure before, apply §7.6.1, apply §7.6 as ruled above, measure after, update the report and this list.
+```
+
+**§3.9 order, "Seen while reading, not part of this order:...": the whole item (DONE):**
+
+```
+**Seen while reading, not part of this order:** eight of the games above still run a fixed timer after a **wrong** answer with no Next (`percentage-flip`, `factor-race`, `estimation-engine`, `word-problem-decoder`, `circle-theorem-spotter`, `partial-fractions-duel`, `moments-master`, `complex-converter`'s Roulette), and `suvat`'s phase 0 and phase 2 do too. That is canon §7.6's open rollout. **Ruled 1 Oct: fixed in each game's own batch where it already has an explanation to show; otherwise §7.6 Group C, listed and left.**
+```
+
+Evidence: All nine games call `MaffsNext.wrong` (e.g. `games/percentage-flip/index.html`, `games/suvat/index.html` 5 calls; complex-converter by #874, 842aa2e4), none is on an exempt or known-fail list, and the pause check holds it: `scripts/check-answer-lock.py:691` `wrong_pause` (#842, 8ab38d17; ci-shards "lock"; self-test plants).
+
+**§4 item 2: the whole item (DONE):**
+
+```
+2. **§7.6 rollout, Group B — 11 games whose explanations are already written but never shown.**
+   The cheapest real quality win on the site:
+   - `mc` (misconception): `characteristic-quest`, `dimension-checker`, `eigenvalue-extractor`,
+     `eigenvector-engine`, `scale-factor-scaling`, `unit-converter`
+   - `steps`: `angle-ace`, `matrix-crunch`, `proof-builder`
+   - `hint` + `steps`: `formula-forge`, `formula-unlocked`
+
+   Surface it on the wrong path, *then* add `MaffsNext.wrong(...)`. Do not add the button first —
+   canon §7.6 forbids a pause with nothing to read.
+   - **Does §7.6 want a floor as well as a button?** `probability-pioneer` already enforces a 5s
+     minimum before its next button will act. If Jon likes it, it's one change to
+     `next-control.js`, applying platform-wide. `linear-equation-solver` hand-rolled the pattern
+     before §7.6 existed; both left alone for now. **Jon's call** — see §6.
+```
+
+Evidence: All 11 games show the worked solution or misconception and then call `MaffsNext.wrong` (e.g. `games/angle-ace/index.html:824-827`, `games/characteristic-quest/index.html:157-159`; commits 0470870b, 0d665c31, 10e73ae6, 95f63221, 2427414d, 27d0a43d, 02b6cefa, ace43bd5). The floor exists platform-wide: `schools/assets/next-control.js:24` FLOOR_MS, 3 s. Enforced by the pause check, `scripts/check-answer-lock.py:691` (#842; ci-shards "lock"; self-test plants).
+
+**§4 item 12: its finished part (PART DONE):**
+
+```
+: DONE 2 Oct 2026 (PR 62)
+```
+
+Evidence: `scripts/check-site.py` loads every served page through `jekyll_serves()` (:1006) and has `--live` (:42, :3225); the DONE clause moved. The `--live` confirmation is not recorded.
+
+The item as it stood before the cut, word for word:
+
+```
+12. **Tier 1 loads every served `.html`: DONE 2 Oct 2026 (PR 62)**; `jekyll_serves()` decides what is served. The `--live` confirmation is still owed (owner not named). History: `docs/history/todo-done.md` under §4 item 12.
+```
+
+**§4 item 46: the whole item (DONE):**
+
+```
+46. **ESCAPE-COUNT-SOURCE** (after 2 Nov): one source for the live escape-room count and roster; index.html and escape-rooms/index.html read from it or a CI check compares them; the check proved by a planted mismatch. Owner: home lane.
+```
+
+Evidence: A CI check compares them, with plants: `scripts/check-escape-rooms.py:22-28` holds the front page's `data-room-count` and its number words to the live rooms and the hub's cards, seven faults planted on every run (ESC-BAND-SLIM, #786, d5381e86); it runs in the Gate (its `# ci-line: Escape rooms` header).
+
+**§4 item 49: a history clause; the item stays (OWED):**
+
+```
+ Moved from §6 (TODO-TIDY; Jon's ruling 3 of 11 Nov 2026).
+```
+
+Evidence: Not shown done: factor-race still shows only the factor counts (`games/factor-race/index.html:381`) and equation-builder is still listed "Answer shown, no reason" in row WRONG-PAUSE-REASONS. History note moved (where the row came from).
+
+The item as it stood before the cut, word for word:
+
+```
+49. **GROUP-C-EXPLANATIONS** — §7.6 Group C. **RULED 29 Sep 2026 (Jon): author real explanations** for all 6 (`equation-builder`, `factor-race`, `simultaneous-solver`, `estimation-engine`, `fraction-equivalence`, `quadratic-factoriser`). Four are still answer-only (Jon, 11 Nov 2026): `simultaneous-solver` A-Level (`:1274`, "The answer is …"), `equation-builder` (`:657`, the key only), `factor-race` (`:398`, the two factor counts) and Fraction Snap (`fraction-equivalence:360`, one cross-multiplication line). `estimation-engine`, `quadratic-factoriser` and Simultaneous Solver's Foundation stages show the working. Moved from §6 (TODO-TIDY; Jon's ruling 3 of 11 Nov 2026). Owner: cloud lane (per-game).
+```
+
+**§5, "Bank growth for 1.13's four over-promising g...": the whole item (DUPLICATE):**
+
+```
+- Bank growth for 1.13's four over-promising games — content depth, not code. All below the
+  40–50 platform minimum, and all resit-audience games: `wrong-on-the-internet` core 10 /
+  ks3 15 / gcse 20; `spot-the-muppet` core 12 / ks3 18 / gcse 20; `expected-damage` ks3 15 /
+  core 15 / gcse 20; `better-value` gcse 20.
+```
+
+Evidence: Duplicate of rows LEDGER-B4-WRONG-ON-THE-INTERNET (ks3 15, gcse 20, core 10) and LEDGER-B4-EXPECTED-DAMAGE (ks3 15, gcse 20, core 15), which hold the same counts. The other two games are done: spot-the-muppet and better-value pass B4 in `data/check-ledger.json` (better-value by FOOTER-PHONE-FOUR). Nothing to add to the ledger rows.
+
+**§6, "Spec-map spot-check (blocks §3.1): 10 of the...": the whole item (DUPLICATE):**
+
+```
+**Manual tasks:**
+- Spec-map spot-check (blocks §3.1): 10 of the 34 mixed statements in `data/dfe-gcse-parts.json` against the PDF.
+```
+
+Evidence: Duplicate of row 3.1's "Blocked on" cell, which already reads "Jon: spot-check 10 of the 34 mixed statements in `data/dfe-gcse-parts.json` against the PDF". Nothing to add to 3.1.
+
+**§7, "canon.md: game_restarted event not in canon'...": a history clause; the item stays (OWED):**
+
+```
+ (moved from §6, 11 Nov 2026, TODO-TIDY)
+```
+
+Evidence: `docs/canon.md` has no `game_restarted` (grep: none); `schools/assets/analytics.js:149` sends it. History note moved (where the line came from).
+
+The item as it stood before the cut, word for word:
+
+```
+- canon.md: `game_restarted` event not in canon's event table; factor-theorem start counts now
+  reflect real runs from `883b3ca` (completion-rate jump is a measurement correction). Also `analytics.js`: `game_restarted` ignoring mode? Not investigated 29 Sep — carried forward, still open (moved from §6, 11 Nov 2026, TODO-TIDY).
+```
+
+**§7, "WHOSE-SIDE-TIMER-LINE: .claude/rules/timer-...": a history clause; the item stays (OWED):**
+
+```
+ It waited for WHOSE-SIDE-FIT, merged as #688.
+```
+
+Evidence: `.claude/rules/timer-policy.md` has no Whose Side line. History sentence moved (#688).
+
+The item as it stood before the cut, word for word:
+
+```
+- **WHOSE-SIDE-TIMER-LINE:** `.claude/rules/timer-policy.md` gains Whose Side's line from the code (counts up, no lives, a faster right answer scores more); docs only; Project Claude reviews. It waited for WHOSE-SIDE-FIT, merged as #688. Owner: home lane.
+```
+
+**§7, "ESCAPE-FEEDBACK-LINK — the escape-room feedb...": a history clause; the item stays (OWED):**
+
+```
+; footer standardisation done, PR 57, 2 Oct 2026
+```
+
+Evidence: `scripts/check-footer.py:64` still exempts `escape-rooms/`. History clause moved (the footer PR).
+
+The item as it stood before the cut, word for word:
+
+```
+- **ESCAPE-FEEDBACK-LINK** — the escape-room feedback link, the remainder of "Footers everywhere" (**RULED 29 Sep 2026 (Jon): yes, standardise**; footer standardisation done, PR 57, 2 Oct 2026). No room page has a footer, and the footer PR left `escape-rooms/` alone: a fixed bar over the room engine needs its own layout check, so it is exempt in `check-footer.py` until that is done. Owner: home lane.
+```
+
+**Parked, low priority, "GA4 inline gtag page_view still fires on non...": the whole item (DONE):**
+
+```
+- GA4 inline `gtag` `page_view` still fires on non-production hosts; needs a hostname condition in
+  every page's snippet, or a saved hostname filter.
+```
+
+Evidence: No page carries the inline snippet now: GA4 loads from `schools/assets/analytics.js` on the live host only (:31-37, `var LIVE = location.hostname === ...`; GA4-LIVE-ONLY, #311, 7c4c8115); `grep "gtag('config'" games/*/index.html index.html` finds nothing.
